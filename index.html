@@ -174,6 +174,33 @@
   .sres .st b{font-size:15px;font-weight:700}
   .sres .st small{display:block;color:var(--muted);font-size:12.5px}
 
+  /* QUICK BAR */
+  .quickbar{display:flex;gap:7px;margin-top:11px}
+  .quickbar a{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:11px 4px;
+    background:var(--card);border:1px solid var(--line);border-radius:13px;font-size:11px;font-weight:700;color:var(--muted)}
+  .quickbar a span:first-child{font-size:20px}
+  .quickbar a span:last-child{color:var(--ink)}
+
+  /* WEATHER SHEET */
+  .wxrow{display:flex;align-items:center;gap:10px;padding:9px 2px;border-bottom:1px solid var(--line)}
+  .wxrow .wh{width:44px;font-weight:700;color:var(--muted);font-size:13px}
+  .wxrow .wi{width:26px;font-size:18px;text-align:center}
+  .wxrow .wt{width:42px;font-weight:700;font-size:15px}
+  .wxrow .wp{flex:1;height:7px;border-radius:4px;background:rgba(255,255,255,.07);overflow:hidden}
+  .wxrow .wpbar{display:block;height:100%}
+  .wxrow .wpn{width:42px;text-align:right;font-size:12.5px;color:var(--muted)}
+  #temp{cursor:pointer;border-bottom:1px dotted var(--muted)}
+
+  /* PLACE CARDS (mangiare & bere) */
+  .subh{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);font-weight:800;margin:15px 2px 4px}
+  .qrow{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:4px}
+  .qrow a{font-size:12.5px;font-weight:700;padding:9px 12px;border-radius:11px;
+    background:rgba(46,196,182,.14);border:1px solid rgba(46,196,182,.3);color:var(--teal)}
+  .place-card{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:11px 13px;margin:8px 0}
+  .place-card h4{font-family:"DM Sans",sans-serif;font-size:15px;font-weight:700}
+  .place-card .pa{font-size:12px;color:var(--muted);margin-top:1px}
+  .place-card .pd{font-size:13px;color:#dfe7f0;margin-top:3px}
+
   /* BOTTOM NAV */
   .botnav{position:fixed;left:0;right:0;bottom:0;z-index:60;background:rgba(14,31,51,.94);
     -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-top:1px solid var(--line);
@@ -191,7 +218,7 @@
 <!-- STATUS BAR -->
 <div class="topbar">
   <div class="row">
-    <div class="status"><span class="dot"></span><span id="phase">—</span> · <b id="clock" class="tnum">--:--</b> · <span id="temp">🌡️ ~22°</span></div>
+    <div class="status"><span class="dot"></span><span id="phase">—</span> · <b id="clock" class="tnum">--:--</b> · <span id="temp" onclick="openWeather()" title="Andamento orario della giornata">🌡️ ~22°</span></div>
     <button class="searchbtn" onclick="openSearch()" aria-label="Cerca">🔎</button>
   </div>
 </div>
@@ -202,6 +229,12 @@
   <section id="adesso">
     <div class="seclab">Adesso</div>
     <div class="now" id="nowCard"><div class="muted">caricamento…</div></div>
+    <div class="quickbar">
+      <a href="#food" onclick="openDet('food')"><span>🍽️</span><span>Mangia</span></a>
+      <a href="https://www.thefork.com/restaurants/barcelona-c41710/poblenou-a608" target="_blank"><span>🍴</span><span>TheFork</span></a>
+      <a href="https://www.tripadvisor.it/Restaurants-g187497-Barcelona_Catalonia.html" target="_blank"><span>🦉</span><span>TripAdv.</span></a>
+      <a href="https://free-now.com/es/" target="_blank"><span>🚖</span><span>Taxi</span></a>
+    </div>
   </section>
 
   <!-- PROSSIME 2 ORE -->
@@ -229,6 +262,10 @@
         <h4 style="margin-top:8px">Ritorno · FR5220</h4>
         <p class="kv">Barcellona <b>23:05</b> → Bologna <b>00:50</b> · notte dom→lun · <b>Terminal 2</b></p>
         <p class="muted">Amici (se vengono): arrivo FR5219, BCN 09:45 sab.</p>
+        <div class="acts">
+          <a class="tealb" href="https://www.flightradar24.com/data/flights/fr2097" target="_blank">📡 Stato andata FR2097</a>
+          <a class="tealb" href="https://www.flightradar24.com/data/flights/fr5220" target="_blank">📡 Stato ritorno FR5220</a>
+        </div>
       </div>
       <div class="doc">
         <div class="dt">🏨 Hotel</div>
@@ -262,6 +299,22 @@
         <div class="dt">☎ Contatti rapidi</div>
         <div id="contactsList"></div>
       </div>
+    </div>
+  </details>
+
+  <!-- MANGIARE & BERE -->
+  <details id="food">
+    <summary><span class="ic">🍽️</span> Mangiare & bere · quartiere <span class="caret">▸</span></summary>
+    <div class="det-body">
+      <div class="qrow">
+        <a href="https://www.thefork.com/restaurants/barcelona-c41710/poblenou-a608" target="_blank">🍴 TheFork Poblenou · sconti</a>
+        <a href="https://www.tripadvisor.it/RestaurantsNear-g187497-d7208916-Rambla_del_Poblenou-Barcelona_Catalonia.html" target="_blank">🦉 TripAdvisor zona</a>
+      </div>
+      <div class="subh">Ristoranti · Poblenou / Vila Olímpica</div>
+      <div id="ristList"></div>
+      <div class="subh">Cocktail bar · Poblenou</div>
+      <div id="cocktailList"></div>
+      <p class="muted" style="font-size:11.5px;margin-top:9px">Prenoti su <b>TheFork</b> (con sconto) o sul sito. "Mappe" mostra recensioni e prenotazione. Nessuna telefonata.</p>
     </div>
   </details>
 
@@ -388,6 +441,15 @@
   <div class="res" id="searchRes"></div>
 </div>
 
+<!-- WEATHER SHEET -->
+<div class="sheet" id="weatherSheet">
+  <div class="bar">
+    <div style="flex:1"><b id="wxTitle">Meteo · prossime ore</b><div class="muted" id="wxSub" style="font-size:12.5px"></div></div>
+    <button class="close" onclick="closeWeather()">Chiudi</button>
+  </div>
+  <div class="res" id="wxRes"></div>
+</div>
+
 <!-- BOTTOM NAV -->
 <nav class="botnav">
   <a href="#adesso"><span class="bi">⚡</span>Adesso</a>
@@ -412,7 +474,7 @@ const KIND={
 
 const ITINERARY=[
   // VENERDÌ 16
-  {id:'v1',day:'16',start:'2026-10-16T06:20',end:'2026-10-16T08:05',kind:'flight',title:'Volo FR2097 · BLQ → BCN',place:'Aeroporto · partenza',note:'In BLQ entro 04:50 · solo bagaglio a mano'},
+  {id:'v1',day:'16',start:'2026-10-16T06:20',end:'2026-10-16T08:05',kind:'flight',title:'Volo FR2097 · BLQ → BCN',place:'Aeroporto · partenza',note:'In BLQ entro 04:50 · solo bagaglio a mano',track:'https://www.flightradar24.com/data/flights/fr2097'},
   {id:'v2',day:'16',start:'2026-10-16T08:30',end:'2026-10-16T09:00',kind:'transfer',title:'Aeroporto → H10 Marina',place:'H10 Marina',lat:41.3928,lng:2.1924,phone:'+34933097917',note:'Taxi ~25 min · ~€35 (o Aerobús+metro ~€10)'},
   {id:'v3',day:'16',start:'2026-10-16T09:00',end:'2026-10-16T13:00',kind:'work',title:'Smart working · 1ª parte',place:'H10 Marina',lat:41.3928,lng:2.1924,note:'Stesso fuso (CET). WiFi camera/lobby/Privilege'},
   {id:'v4',day:'16',start:'2026-10-16T13:00',end:'2026-10-16T14:00',kind:'food',title:'Pranzo + spiaggia',place:'Cuadro · Bogatell',lat:41.3936,lng:2.1954,note:'Boccone veloce + 20 min di mare'},
@@ -432,8 +494,8 @@ const ITINERARY=[
   {id:'d3',day:'18',start:'2026-10-18T18:00',end:'2026-10-18T19:50',kind:'admin',title:'Doccia prima del volo',place:'H10 Marina',lat:41.3928,lng:2.1924,phone:'+34933097917',note:'Day-use fino ~20:00 o late check-out + deposito'},
   {id:'d4',day:'18',start:'2026-10-18T19:50',end:'2026-10-18T20:15',kind:'transfer',title:'H10 → Aeroporto T2',place:'Aeroporto BCN · T2',lat:41.3018,lng:2.0793,note:'Taxi ~25 min · ~€35 · volo Schengen'},
   {id:'d5',day:'18',start:'2026-10-18T20:15',end:'2026-10-18T22:00',kind:'admin',title:'Sala VIP Canudas · T2',place:'Aeroporto BCN · T2',lat:41.3018,lng:2.0793,note:'Entri dalle 19:05, chiude 22:00. Cibo+drink'},
-  {id:'d6',day:'18',start:'2026-10-18T22:25',end:'2026-10-18T23:05',kind:'flight',title:'Al gate',place:'Aeroporto BCN · T2'},
-  {id:'d7',day:'18',start:'2026-10-18T23:05',end:'2026-10-19T00:50',kind:'flight',title:'Volo FR5220 · BCN → BLQ',place:'Rientro a casa',note:'Atterri 00:50 lunedì'}
+  {id:'d6',day:'18',start:'2026-10-18T22:25',end:'2026-10-18T23:05',kind:'flight',title:'Al gate',place:'Aeroporto BCN · T2',track:'https://www.flightradar24.com/data/flights/fr5220'},
+  {id:'d7',day:'18',start:'2026-10-18T23:05',end:'2026-10-19T00:50',kind:'flight',title:'Volo FR5220 · BCN → BLQ',place:'Rientro a casa',note:'Atterri 00:50 lunedì',track:'https://www.flightradar24.com/data/flights/fr5220'}
 ];
 
 const CONTACTS=[
@@ -446,6 +508,26 @@ const CONTACTS=[
   {n:'FREE NOW · taxi',v:'app',url:'https://free-now.com/es/',i:'🚖'},
   {n:'Emergenze UE',v:'112',tel:'112',i:'🆘'}
 ];
+
+const DINING={
+  rist:[
+    {n:'Can Recasens',a:'Rambla del Poblenou 102',d:'Formaggi, salumi e vini in un modernista. Bohémien.',site:'https://canrecasens.restaurant/'},
+    {n:'Els Tres Porquets',a:'Rambla del Poblenou 165',d:'Tapas creative & carni · 9,4 su TheFork.',fork:'https://www.thefork.com/restaurant/els-tres-porquets-r16747'},
+    {n:'Els Pescadors',a:'Plaça de Prim 1',d:'Pesce e arroces, riferimento storico.',fork:'https://www.thefork.com/restaurant/els-pescadors-r17877'},
+    {n:'El 58',a:'Rambla del Poblenou 58',d:'Tapas locali: bravas, croquetas. Da gente del posto.'},
+    {n:'Els Pollos de Llull',a:'C/ de Ramon Turró 13',d:'Pollo arrosto, un classico di Barcellona.',site:'https://elspollos.com/'},
+    {n:'Masa Vins',a:'C/ de Pallars 154',d:'Wine bar con cucina, calici e cocktail.',site:'https://www.instagram.com/masa.vins/'},
+    {n:'Barriteca',a:'Poblenou',d:'Catalana vera, trattano benissimo chi cena solo.'},
+    {n:'Cuadro',a:'Vila Olímpica',d:'Bistrot sotto casa, comodo e veloce.'}
+  ],
+  cocktail:[
+    {n:'Balius',a:'C/ de Pujades 196',d:'Cocktail classici in una ex-farmacia · jazz la domenica.',site:'https://baliusbar.com/'},
+    {n:'Dreamboat Bar & Deli',a:'C/ de la Llacuna 136',d:'Cocktail giocosi + grilled cheese gourmet.',site:'https://dreamboatbar.com/'},
+    {n:"Henry's Bar",a:'C/ de la Llacuna 92',d:'Dive bar creativo, dog-friendly, terrazza.',site:'https://www.instagram.com/henrys.cocktailbar/'},
+    {n:'Madame George',a:'C/ de Pujades 179',d:'Speakeasy raffinato, atmosfera intima.'},
+    {n:'Bubar',a:'Poblenou',d:'Vini naturali e cocktail di quartiere.'}
+  ]
+};
 
 /* ============ MOTORE ============ */
 const DONE_KEY='bcn40_done_v1';
@@ -569,6 +651,7 @@ function renderTimeline(){
     if(it.lat)acts+='<a href="'+mapsDir(it.lat,it.lng)+'" target="_blank" title="Vai">🧭</a>';
     if(it.phone)acts+='<a href="tel:'+it.phone+'" title="Chiama">☎</a>';
     if(it.book)acts+='<a href="'+it.book+'" target="_blank" title="Prenota">🎟️</a>';
+    if(it.track)acts+='<a href="'+it.track+'" target="_blank" title="Stato volo">📡</a>';
     return '<div class="ti-row '+stCls+'">'+
       '<button class="ti-tick" onclick="toggleDone(\''+it.id+'\')" title="Segna fatto">'+tick+'</button>'+
       '<div class="ti-body"><div class="ti-time tnum">'+fmtHM(it._s)+nowBadge+'</div>'+
@@ -584,6 +667,44 @@ function renderContacts(){
       return '<a href="'+href+'"'+tgt+' style="display:flex;justify-content:space-between;text-align:left"><span>'+c.i+' '+c.n+'</span><span class="muted tnum">'+c.v+'</span></a>';}).join('')+'</div>';
 }
 
+function placeCard(it){
+  let acts='';
+  if(it.site)acts+='<a href="'+it.site+'" target="_blank">🔗 Sito</a>';
+  if(it.fork)acts+='<a class="prim" href="'+it.fork+'" target="_blank">🍴 TheFork</a>';
+  acts+='<a class="tealb" href="'+mapsAt(0,0,it.n+' Barcelona')+'" target="_blank">📍 Mappe</a>';
+  return '<div class="place-card"><h4>'+it.n+'</h4><div class="pa">'+it.a+'</div><div class="pd">'+it.d+'</div><div class="acts">'+acts+'</div></div>';
+}
+function renderDining(){
+  document.getElementById('ristList').innerHTML=DINING.rist.map(placeCard).join('');
+  document.getElementById('cocktailList').innerHTML=DINING.cocktail.map(placeCard).join('');
+}
+
+/* ===== METEO ORARIO ===== */
+const WMO={0:'☀️',1:'🌤️',2:'⛅',3:'☁️',45:'🌫️',48:'🌫️',51:'🌦️',53:'🌦️',55:'🌧️',56:'🌧️',57:'🌧️',61:'🌧️',63:'🌧️',65:'🌧️',66:'🌧️',67:'🌧️',71:'🌨️',73:'🌨️',75:'❄️',80:'🌦️',81:'🌧️',82:'⛈️',85:'🌨️',86:'❄️',95:'⛈️',96:'⛈️',99:'⛈️'};
+function openWeather(){document.getElementById('weatherSheet').classList.add('on');loadWeather();}
+function closeWeather(){document.getElementById('weatherSheet').classList.remove('on');}
+function loadWeather(){
+  const res=document.getElementById('wxRes');res.innerHTML='<div class="empty" style="margin-top:14px">Carico…</div>';
+  fetch('https://api.open-meteo.com/v1/forecast?latitude=41.39&longitude=2.19&hourly=temperature_2m,precipitation_probability,weather_code&forecast_days=2&timezone='+TZ)
+   .then(r=>r.json()).then(d=>{
+    const H=d.hourly;
+    // "adesso" in ora di Barcellona come stringa ISO comparabile (YYYY-MM-DDTHH)
+    const m=new Date().toLocaleString('sv-SE',{timeZone:TZ}); // "2026-06-04 15:00:00"
+    const cutoff=m.slice(0,10)+'T'+m.slice(11,13);
+    const rows=[];
+    for(let i=0;i<H.time.length&&rows.length<14;i++){
+      if(H.time[i].slice(0,13)<cutoff)continue;
+      rows.push({hh:H.time[i].slice(11,16),temp:Math.round(H.temperature_2m[i]),pop:H.precipitation_probability[i]||0,code:H.weather_code[i]});
+    }
+    const rain=rows.slice(0,8).find(r=>r.pop>=40);
+    document.getElementById('wxSub').textContent=rain?('🌧️ Possibile pioggia verso le '+rain.hh):'☀️ Niente pioggia in vista nelle prossime ore';
+    res.innerHTML=rows.map(r=>{
+      const bar=r.pop>=40?'#ff7a4d':(r.pop>=20?'#ffb86b':'#2ec4b6');
+      return '<div class="wxrow"><span class="wh tnum">'+r.hh+'</span><span class="wi">'+(WMO[r.code]||'•')+'</span><span class="wt tnum">'+r.temp+'°</span><span class="wp"><span class="wpbar" style="width:'+Math.max(4,r.pop)+'%;background:'+bar+'"></span></span><span class="wpn tnum">'+r.pop+'%</span></div>';
+    }).join('');
+   }).catch(()=>{res.innerHTML='<div class="empty" style="margin-top:14px">Meteo non disponibile (sei offline?).</div>';});
+}
+
 function renderAll(){renderNow();renderSoon();renderTimeline();}
 
 /* ============ RICERCA ============ */
@@ -592,11 +713,13 @@ function searchIndex(){
   ITINERARY.forEach(it=>idx.push({i:(KIND[it.kind]||{e:'•'}).e,t:it.title,s:(DAYS[it.day]||'')+(it.note?' · '+it.note:''),href:it.lat?mapsDir(it.lat,it.lng):'#oggi',day:it.day}));
   CONTACTS.forEach(c=>idx.push({i:c.i,t:c.n,s:c.v,href:c.tel?'tel:'+c.tel:c.url}));
   [['🏨','H10 Marina','Hotel · Vila Olímpica','tel:+34933097917'],
-   ['✈️','Volo andata FR2097','BLQ 06:20 → BCN 08:05','#docs'],
-   ['✈️','Volo ritorno FR5220','BCN 23:05 → BLQ 00:50 · T2','#docs'],
+   ['📡','Stato volo andata FR2097','BLQ 06:20 → BCN 08:05','https://www.flightradar24.com/data/flights/fr2097'],
+   ['📡','Stato volo ritorno FR5220','BCN 23:05 → BLQ 00:50 · T2','https://www.flightradar24.com/data/flights/fr5220'],
    ['🅿️','Parcheggio P2 Business','Codice P2932537 · €51','#docs'],
    ['🎟️','Sagrada Família','Biglietto slot','https://sagradafamilia.org/']
   ].forEach(d=>idx.push({i:d[0],t:d[1],s:d[2],href:d[3]}));
+  DINING.rist.forEach(it=>idx.push({i:'🍽️',t:it.n,s:it.a+' · '+it.d,href:it.fork||it.site||mapsAt(0,0,it.n+' Barcelona')}));
+  DINING.cocktail.forEach(it=>idx.push({i:'🍸',t:it.n,s:it.a+' · '+it.d,href:it.site||mapsAt(0,0,it.n+' Barcelona')}));
   return idx;
 }
 const IDX=searchIndex();
@@ -622,6 +745,7 @@ if(navigator.geolocation)navigator.geolocation.getCurrentPosition(p=>{myPos={lat
 
 renderAll();
 renderContacts();
+renderDining();
 setInterval(renderAll,60000);
 
 /* ============ MAPPA (lazy) ============ */
