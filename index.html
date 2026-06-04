@@ -25,7 +25,7 @@
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
   body{background:var(--bg);color:var(--ink);font-family:"DM Sans",system-ui,sans-serif;line-height:1.5;
-    -webkit-font-smoothing:antialiased;padding-bottom:78px;overflow-x:hidden}
+    -webkit-font-smoothing:antialiased;padding-bottom:calc(108px + env(safe-area-inset-bottom));overflow-x:hidden}
   .wrap{max-width:var(--maxw);margin:0 auto;padding:0 16px}
   h1,h2,h3{font-family:"Fraunces",serif;font-weight:600;line-height:1.1;letter-spacing:-.01em}
   .accent{font-style:italic;font-weight:400;color:var(--coral)}
@@ -174,11 +174,18 @@
   .sres .st b{font-size:15px;font-weight:700}
   .sres .st small{display:block;color:var(--muted);font-size:12.5px}
 
-  /* QUICK BAR */
-  .quickbar{display:flex;gap:7px;margin-top:11px}
-  .quickbar a{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:11px 4px;
-    background:var(--card);border:1px solid var(--line);border-radius:13px;font-size:11px;font-weight:700;color:var(--muted)}
-  .quickbar a span:first-child{font-size:20px}
+  /* PLAN B (pioggia) nella card Adesso */
+  .now .planb{margin-top:12px;background:rgba(255,122,77,.13);border:1px solid rgba(255,122,77,.32);
+    color:#ffd9c9;border-radius:12px;padding:10px 13px;font-size:13px;font-weight:600}
+
+  /* DOCK fisso: quick-bar + bottom nav, sempre visibili */
+  .dock{position:fixed;left:0;right:0;bottom:0;z-index:60;background:rgba(14,31,51,.96);
+    -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-top:1px solid var(--line);
+    padding-bottom:env(safe-area-inset-bottom);max-width:var(--maxw);margin:0 auto}
+  .quickbar{display:flex;gap:6px;padding:7px 9px 0}
+  .quickbar a{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 3px;
+    background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:11px;font-size:10px;font-weight:700;color:var(--muted)}
+  .quickbar a span:first-child{font-size:17px}
   .quickbar a span:last-child{color:var(--ink)}
 
   /* WEATHER SHEET */
@@ -201,10 +208,8 @@
   .place-card .pa{font-size:12px;color:var(--muted);margin-top:1px}
   .place-card .pd{font-size:13px;color:#dfe7f0;margin-top:3px}
 
-  /* BOTTOM NAV */
-  .botnav{position:fixed;left:0;right:0;bottom:0;z-index:60;background:rgba(14,31,51,.94);
-    -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-top:1px solid var(--line);
-    display:flex;justify-content:space-around;padding:8px 4px env(safe-area-inset-bottom)}
+  /* BOTTOM NAV (dentro il dock) */
+  .botnav{display:flex;justify-content:space-around;padding:6px 4px 8px}
   .botnav a,.botnav button{font-size:10px;color:var(--muted);text-align:center;font-weight:700;flex:1;background:none}
   .botnav .bi{display:block;font-size:19px;margin-bottom:1px}
   .botnav .on{color:var(--amber)}
@@ -229,12 +234,6 @@
   <section id="adesso">
     <div class="seclab">Adesso</div>
     <div class="now" id="nowCard"><div class="muted">caricamento…</div></div>
-    <div class="quickbar">
-      <a href="#food" onclick="openDet('food')"><span>🍽️</span><span>Mangia</span></a>
-      <a href="https://www.thefork.com/restaurants/barcelona-c41710/poblenou-a608" target="_blank"><span>🍴</span><span>TheFork</span></a>
-      <a href="https://www.tripadvisor.it/Restaurants-g187497-Barcelona_Catalonia.html" target="_blank"><span>🦉</span><span>TripAdv.</span></a>
-      <a href="https://free-now.com/es/" target="_blank"><span>🚖</span><span>Taxi</span></a>
-    </div>
   </section>
 
   <!-- PROSSIME 2 ORE -->
@@ -308,7 +307,8 @@
     <div class="det-body">
       <div class="qrow">
         <a href="https://www.thefork.com/restaurants/barcelona-c41710/poblenou-a608" target="_blank">🍴 TheFork Poblenou · sconti</a>
-        <a href="https://www.tripadvisor.it/RestaurantsNear-g187497-d7208916-Rambla_del_Poblenou-Barcelona_Catalonia.html" target="_blank">🦉 TripAdvisor zona</a>
+        <a onclick="nearMe('ristoranti')">📍 Mangiare vicino a me</a>
+        <a onclick="nearMe('cocktail bar')">🍸 Bere vicino a me</a>
       </div>
       <div class="subh">Ristoranti · Poblenou / Vila Olímpica</div>
       <div id="ristList"></div>
@@ -450,14 +450,22 @@
   <div class="res" id="wxRes"></div>
 </div>
 
-<!-- BOTTOM NAV -->
-<nav class="botnav">
-  <a href="#adesso"><span class="bi">⚡</span>Adesso</a>
-  <a href="#oggi"><span class="bi">🗓️</span>Oggi</a>
-  <a href="#docs" onclick="openDet('docs')"><span class="bi">🎫</span>Docs</a>
-  <a href="#mappa" onclick="openDet('mappa')"><span class="bi">📍</span>Mappa</a>
-  <button onclick="openSearch()"><span class="bi">🔎</span>Cerca</button>
-</nav>
+<!-- DOCK FISSO: pulsanti rapidi + navigazione -->
+<div class="dock">
+  <div class="quickbar">
+    <a href="#food" onclick="openDet('food')"><span>🍽️</span><span>Mangia</span></a>
+    <a href="https://www.thefork.com/restaurants/barcelona-c41710/poblenou-a608" target="_blank" rel="noopener"><span>🍴</span><span>TheFork</span></a>
+    <a href="https://www.tripadvisor.it/Restaurants-g187497-Barcelona_Catalonia.html" target="_blank" rel="noopener"><span>🦉</span><span>TripAdvisor</span></a>
+    <a href="https://free-now.com/es/" target="_blank" rel="noopener"><span>🚖</span><span>Taxi</span></a>
+  </div>
+  <nav class="botnav">
+    <a href="#adesso"><span class="bi">⚡</span>Adesso</a>
+    <a href="#oggi"><span class="bi">🗓️</span>Oggi</a>
+    <a href="#docs" onclick="openDet('docs')"><span class="bi">🎫</span>Docs</a>
+    <a href="#mappa" onclick="openDet('mappa')"><span class="bi">📍</span>Mappa</a>
+    <button onclick="openSearch()"><span class="bi">🔎</span>Cerca</button>
+  </nav>
+</div>
 
 <script>
 /* ============ DATI: fonte unica ============ */
@@ -477,19 +485,19 @@ const ITINERARY=[
   {id:'v1',day:'16',start:'2026-10-16T06:20',end:'2026-10-16T08:05',kind:'flight',title:'Volo FR2097 · BLQ → BCN',place:'Aeroporto · partenza',note:'In BLQ entro 04:50 · solo bagaglio a mano',track:'https://www.flightradar24.com/data/flights/fr2097'},
   {id:'v2',day:'16',start:'2026-10-16T08:30',end:'2026-10-16T09:00',kind:'transfer',title:'Aeroporto → H10 Marina',place:'H10 Marina',lat:41.3928,lng:2.1924,phone:'+34933097917',note:'Taxi ~25 min · ~€35 (o Aerobús+metro ~€10)'},
   {id:'v3',day:'16',start:'2026-10-16T09:00',end:'2026-10-16T13:00',kind:'work',title:'Smart working · 1ª parte',place:'H10 Marina',lat:41.3928,lng:2.1924,note:'Stesso fuso (CET). WiFi camera/lobby/Privilege'},
-  {id:'v4',day:'16',start:'2026-10-16T13:00',end:'2026-10-16T14:00',kind:'food',title:'Pranzo + spiaggia',place:'Cuadro · Bogatell',lat:41.3936,lng:2.1954,note:'Boccone veloce + 20 min di mare'},
+  {id:'v4',day:'16',start:'2026-10-16T13:00',end:'2026-10-16T14:00',kind:'food',title:'Pranzo + spiaggia',place:'Cuadro · Bogatell',lat:41.3936,lng:2.1954,note:'Boccone veloce + 20 min di mare',outdoor:true,planB:'pranzo al chiuso da Cuadro'},
   {id:'v5',day:'16',start:'2026-10-16T14:00',end:'2026-10-16T18:00',kind:'work',title:'Smart working · 2ª parte',place:'H10 Marina',lat:41.3928,lng:2.1924},
-  {id:'v6',day:'16',start:'2026-10-16T18:30',end:'2026-10-16T20:30',kind:'sight',title:'Gòtic & El Born a piedi',place:'Barri Gòtic',lat:41.3839,lng:2.1765,note:'~15 min a piedi · Cattedrale, Sta. Maria del Mar'},
+  {id:'v6',day:'16',start:'2026-10-16T18:30',end:'2026-10-16T20:30',kind:'sight',title:'Gòtic & El Born a piedi',place:'Barri Gòtic',lat:41.3839,lng:2.1765,note:'~15 min a piedi · Cattedrale, Sta. Maria del Mar',outdoor:true,planB:'musei o un caffè coperto nel Born'},
   {id:'v7',day:'16',start:'2026-10-16T20:30',end:'2026-10-16T22:30',kind:'food',title:'Cena catalana · Barriteca',place:'Barriteca',lat:41.4013,lng:2.2031,phone:'+34934851859',book:'tel:+34934851859',note:'Prenota · chiuso lun-mer'},
   {id:'v8',day:'16',start:'2026-10-16T22:30',end:'2026-10-17T01:00',kind:'night',title:'Cocktail nel Born',place:'No Sé · Born',lat:41.3850,lng:2.1828,note:'Solo-friendly · tutto a piedi'},
   // SABATO 17
   {id:'s1',day:'17',start:'2026-10-17T09:30',end:'2026-10-17T11:30',kind:'sight',title:'Sagrada Família',place:'Sagrada Família',lat:41.4036,lng:2.1744,book:'https://sagradafamilia.org/',note:'Slot prenotato · salti la fila'},
   {id:'s2',day:'17',start:'2026-10-17T13:30',end:'2026-10-17T16:30',kind:'sight',title:'MNAC · Montjuïc',place:'MNAC',lat:41.3685,lng:2.1533,note:'Arte catalana + vista. Alt: mare a Barceloneta'},
   {id:'s3',day:'17',start:'2026-10-17T17:30',end:'2026-10-17T19:30',kind:'spa',title:'Aire Ancient Baths',place:'Aire Ancient Baths',lat:41.3870,lng:2.1835,book:'https://relax.beaire.com/es/aire-ancient-baths-barcelona',note:'Il regalo a te stesso · ~15 min a piedi'},
-  {id:'s4',day:'17',start:'2026-10-17T19:30',end:'2026-10-17T21:30',kind:'night',title:'Aperitivo rooftop · Sir Victor',place:'Sir Victor rooftop',lat:41.3962,lng:2.1610,phone:'+34681084156',note:'DJ + riscaldatori. Alt: Ohla / Alaire'},
+  {id:'s4',day:'17',start:'2026-10-17T19:30',end:'2026-10-17T21:30',kind:'night',title:'Aperitivo rooftop · Sir Victor',place:'Sir Victor rooftop',lat:41.3962,lng:2.1610,phone:'+34681084156',note:'DJ + riscaldatori. Alt: Ohla / Alaire',outdoor:true,planB:'cocktail al chiuso nel Born'},
   {id:'s5',day:'17',start:'2026-10-17T21:30',end:'2026-10-18T02:00',kind:'night',title:'Cena + giro cocktail · festa 40°',place:'El Born',lat:41.3850,lng:2.1828,note:'Mariposa Negra · Aldea · Bestiari · No Sé'},
   // DOMENICA 18
-  {id:'d1',day:'18',start:'2026-10-18T10:00',end:'2026-10-18T13:00',kind:'sea',title:'Spiaggia + brunch (o spa hotel)',place:'Bogatell · Barceloneta',lat:41.3957,lng:2.2002,note:'Plan B pioggia: spa/piscina H10'},
+  {id:'d1',day:'18',start:'2026-10-18T10:00',end:'2026-10-18T13:00',kind:'sea',title:'Spiaggia + brunch (o spa hotel)',place:'Bogatell · Barceloneta',lat:41.3957,lng:2.2002,note:'Mare e brunch',outdoor:true,planB:'spa e piscina dell\'H10'},
   {id:'d2',day:'18',start:'2026-10-18T13:30',end:'2026-10-18T17:30',kind:'sight',title:'Museo Picasso o Park Güell',place:'Museo Picasso',lat:41.3853,lng:2.1809,note:'Quello che non hai fatto venerdì'},
   {id:'d3',day:'18',start:'2026-10-18T18:00',end:'2026-10-18T19:50',kind:'admin',title:'Doccia prima del volo',place:'H10 Marina',lat:41.3928,lng:2.1924,phone:'+34933097917',note:'Day-use fino ~20:00 o late check-out + deposito'},
   {id:'d4',day:'18',start:'2026-10-18T19:50',end:'2026-10-18T20:15',kind:'transfer',title:'H10 → Aeroporto T2',place:'Aeroporto BCN · T2',lat:41.3018,lng:2.0793,note:'Taxi ~25 min · ~€35 · volo Schengen'},
@@ -511,21 +519,21 @@ const CONTACTS=[
 
 const DINING={
   rist:[
-    {n:'Can Recasens',a:'Rambla del Poblenou 102',d:'Formaggi, salumi e vini in un modernista. Bohémien.',site:'https://canrecasens.restaurant/'},
-    {n:'Els Tres Porquets',a:'Rambla del Poblenou 165',d:'Tapas creative & carni · 9,4 su TheFork.',fork:'https://www.thefork.com/restaurant/els-tres-porquets-r16747'},
-    {n:'Els Pescadors',a:'Plaça de Prim 1',d:'Pesce e arroces, riferimento storico.',fork:'https://www.thefork.com/restaurant/els-pescadors-r17877'},
-    {n:'El 58',a:'Rambla del Poblenou 58',d:'Tapas locali: bravas, croquetas. Da gente del posto.'},
-    {n:'Els Pollos de Llull',a:'C/ de Ramon Turró 13',d:'Pollo arrosto, un classico di Barcellona.',site:'https://elspollos.com/'},
-    {n:'Masa Vins',a:'C/ de Pallars 154',d:'Wine bar con cucina, calici e cocktail.',site:'https://www.instagram.com/masa.vins/'},
-    {n:'Barriteca',a:'Poblenou',d:'Catalana vera, trattano benissimo chi cena solo.'},
-    {n:'Cuadro',a:'Vila Olímpica',d:'Bistrot sotto casa, comodo e veloce.'}
+    {n:'Can Recasens',a:'Rambla del Poblenou 102',d:'Formaggi, salumi e vini in un modernista. Bohémien.',site:'https://canrecasens.restaurant/',lat:41.4006,lng:2.1976},
+    {n:'Els Tres Porquets',a:'Rambla del Poblenou 165',d:'Tapas creative & carni · 9,4 su TheFork.',fork:'https://www.thefork.com/restaurant/els-tres-porquets-r16747',lat:41.4031,lng:2.1991},
+    {n:'Els Pescadors',a:'Plaça de Prim 1',d:'Pesce e arroces, riferimento storico.',fork:'https://www.thefork.com/restaurant/els-pescadors-r17877',lat:41.4046,lng:2.2061},
+    {n:'El 58',a:'Rambla del Poblenou 58',d:'Tapas locali: bravas, croquetas. Da gente del posto.',lat:41.3981,lng:2.1958},
+    {n:'Els Pollos de Llull',a:'C/ de Ramon Turró 13',d:'Pollo arrosto, un classico di Barcellona.',site:'https://elspollos.com/',lat:41.3906,lng:2.1929},
+    {n:'Masa Vins',a:'C/ de Pallars 154',d:'Wine bar con cucina, calici e cocktail.',site:'https://www.instagram.com/masa.vins/',lat:41.4007,lng:2.1931},
+    {n:'Barriteca',a:'Poblenou',d:'Catalana vera, trattano benissimo chi cena solo.',lat:41.4013,lng:2.2031},
+    {n:'Cuadro',a:'Vila Olímpica',d:'Bistrot sotto casa, comodo e veloce.',lat:41.3936,lng:2.1954}
   ],
   cocktail:[
-    {n:'Balius',a:'C/ de Pujades 196',d:'Cocktail classici in una ex-farmacia · jazz la domenica.',site:'https://baliusbar.com/'},
-    {n:'Dreamboat Bar & Deli',a:'C/ de la Llacuna 136',d:'Cocktail giocosi + grilled cheese gourmet.',site:'https://dreamboatbar.com/'},
-    {n:"Henry's Bar",a:'C/ de la Llacuna 92',d:'Dive bar creativo, dog-friendly, terrazza.',site:'https://www.instagram.com/henrys.cocktailbar/'},
-    {n:'Madame George',a:'C/ de Pujades 179',d:'Speakeasy raffinato, atmosfera intima.'},
-    {n:'Bubar',a:'Poblenou',d:'Vini naturali e cocktail di quartiere.'}
+    {n:'Balius',a:'C/ de Pujades 196',d:'Cocktail classici in una ex-farmacia · jazz la domenica.',site:'https://baliusbar.com/',lat:41.4011,lng:2.1996},
+    {n:'Dreamboat Bar & Deli',a:'C/ de la Llacuna 136',d:'Cocktail giocosi + grilled cheese gourmet.',site:'https://dreamboatbar.com/',lat:41.4002,lng:2.1966},
+    {n:"Henry's Bar",a:'C/ de la Llacuna 92',d:'Dive bar creativo, dog-friendly, terrazza.',site:'https://www.instagram.com/henrys.cocktailbar/',lat:41.3991,lng:2.1958},
+    {n:'Madame George',a:'C/ de Pujades 179',d:'Speakeasy raffinato, atmosfera intima.',lat:41.4008,lng:2.1989},
+    {n:'Bubar',a:'Poblenou',d:'Vini naturali e cocktail di quartiere.',lat:41.4000,lng:2.1980}
   ]
 };
 
@@ -568,6 +576,8 @@ function haversine(a,b){
   return R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x)); // km
 }
 let myPos=null;
+let WX=null; // previsione oraria (hourly) Open-Meteo, condivisa
+function rainProb(startStr){if(!WX)return null;const k=startStr.slice(0,13);for(let i=0;i<WX.time.length;i++)if(WX.time[i].slice(0,13)===k)return WX.precipitation_probability[i]||0;return null;}
 
 /* ============ RENDER ============ */
 function renderNow(){
@@ -601,6 +611,12 @@ function renderNow(){
   } else {
     html+='<hr><div class="nlab">Fine</div><div class="next">Buon rientro</div>';
   }
+
+  // Plan B pioggia (si attiva quando il meteo copre le date del viaggio)
+  if(next&&next.outdoor){const p=rainProb(next.start);if(p!=null&&p>=50)html+='<div class="planb">🌧️ Pioggia probabile ('+p+'%) a quell\'ora · Plan B: '+(next.planB||'attività al chiuso')+'</div>';}
+  // Stato volo direttamente qui
+  const ft=(current&&current.track)||(next&&next.track);
+  if(ft)html+='<a class="go" style="background:rgba(46,196,182,.16);border-color:rgba(46,196,182,.45);color:var(--teal)" href="'+ft+'" target="_blank">📡 Il volo è in orario?</a>';
 
   // PORTAMI ADESSO
   if(navTarget&&navTarget.lat){
@@ -678,6 +694,10 @@ function renderDining(){
   document.getElementById('ristList').innerHTML=DINING.rist.map(placeCard).join('');
   document.getElementById('cocktailList').innerHTML=DINING.cocktail.map(placeCard).join('');
 }
+function nearMe(q){
+  const url=myPos?('https://www.google.com/maps/search/'+encodeURIComponent(q)+'/@'+myPos.lat+','+myPos.lng+',16z'):mapsAt(0,0,q+' Poblenou Barcelona');
+  window.open(url,'_blank');
+}
 
 /* ===== METEO ORARIO ===== */
 const WMO={0:'☀️',1:'🌤️',2:'⛅',3:'☁️',45:'🌫️',48:'🌫️',51:'🌦️',53:'🌦️',55:'🌧️',56:'🌧️',57:'🌧️',61:'🌧️',63:'🌧️',65:'🌧️',66:'🌧️',67:'🌧️',71:'🌨️',73:'🌨️',75:'❄️',80:'🌦️',81:'🌧️',82:'⛈️',85:'🌨️',86:'❄️',95:'⛈️',96:'⛈️',99:'⛈️'};
@@ -741,6 +761,8 @@ function tick(){try{document.getElementById('clock').textContent=new Date().toLo
 tick();setInterval(tick,15000);
 fetch('https://api.open-meteo.com/v1/forecast?latitude=41.39&longitude=2.19&current=temperature_2m')
   .then(r=>r.json()).then(d=>{document.getElementById('temp').textContent='🌡️ '+Math.round(d.current.temperature_2m)+'°';}).catch(()=>{});
+fetch('https://api.open-meteo.com/v1/forecast?latitude=41.39&longitude=2.19&hourly=temperature_2m,precipitation_probability,weather_code&forecast_days=2&timezone='+TZ)
+  .then(r=>r.json()).then(d=>{WX=d.hourly;renderNow();}).catch(()=>{});
 if(navigator.geolocation)navigator.geolocation.getCurrentPosition(p=>{myPos={lat:p.coords.latitude,lng:p.coords.longitude};renderNow();},()=>{},{timeout:8000,maximumAge:6e5});
 
 renderAll();
@@ -760,6 +782,11 @@ document.getElementById('mappa').addEventListener('toggle',function(){
     L.circleMarker([it.lat,it.lng],{radius:8,color:'#0e1f33',weight:2,fillColor:c,fillOpacity:1}).addTo(map)
       .bindPopup('<b>'+it.place+'</b><br><a href="'+mapsDir(it.lat,it.lng)+'" target="_blank">📍 Indicazioni</a>');
     g.push([it.lat,it.lng]);});
+  // locali di quartiere (cibo/notte)
+  DINING.rist.concat(DINING.cocktail).forEach(function(it){if(!it.lat)return;
+    var link=it.fork?(' · <a href="'+it.fork+'" target="_blank">TheFork</a>'):(it.site?(' · <a href="'+it.site+'" target="_blank">Sito</a>'):'');
+    var pop='<b>'+it.n+'</b><br>'+it.a+'<br><a href="'+mapsAt(0,0,it.n+' Barcelona')+'" target="_blank">📍 Mappe</a>'+link;
+    L.circleMarker([it.lat,it.lng],{radius:6,color:'#0e1f33',weight:2,fillColor:'#f4ece0',fillOpacity:.95}).addTo(map).bindPopup(pop);});
   map.fitBounds(g,{padding:[30,30]});
 });
 
