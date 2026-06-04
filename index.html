@@ -630,7 +630,7 @@ document.getElementById('mappa').addEventListener('toggle',function(){
   if(!this.open||mapDone||typeof L==='undefined')return;mapDone=true;
   const pts=ITINERARY.filter(it=>it.lat).reduce((a,it)=>{a[it.place]=it;return a;},{});
   const map=L.map('map',{scrollWheelZoom:false}).setView([41.388,2.14],12);
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OpenStreetMap &copy; CARTO',maxZoom:19,subdomains:'abcd'}).addTo(map);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OpenStreetMap &copy; CARTO',maxZoom:19,subdomains:'abcd'}).addTo(map);
   const g=[];
   Object.values(pts).forEach(it=>{const c=(KIND[it.kind]||{c:'#fff'}).c;
     L.circleMarker([it.lat,it.lng],{radius:8,color:'#0e1f33',weight:2,fillColor:c,fillOpacity:1}).addTo(map)
