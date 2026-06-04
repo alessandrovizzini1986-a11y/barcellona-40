@@ -482,7 +482,7 @@ const KIND={
 
 const ITINERARY=[
   // VENERDÌ 16
-  {id:'v1',day:'16',start:'2026-10-16T06:20',end:'2026-10-16T08:05',kind:'flight',title:'Volo FR2097 · BLQ → BCN',place:'Aeroporto · partenza',note:'In BLQ entro 04:50 · solo bagaglio a mano',track:'https://www.flightradar24.com/data/flights/fr2097'},
+  {id:'v1',day:'16',start:'2026-10-16T06:20',end:'2026-10-16T08:05',kind:'flight',title:'Volo FR2097 · BLQ → BCN',place:'Aeroporto · partenza',note:'In BLQ entro 04:50 · solo bagaglio a mano',track:'https://www.flightradar24.com/data/flights/fr2097',flightNo:'FR2097',fdate:'2026-10-16'},
   {id:'v2',day:'16',start:'2026-10-16T08:30',end:'2026-10-16T09:00',kind:'transfer',title:'Aeroporto → H10 Marina',place:'H10 Marina',lat:41.3928,lng:2.1924,phone:'+34933097917',note:'Taxi ~25 min · ~€35 (o Aerobús+metro ~€10)'},
   {id:'v3',day:'16',start:'2026-10-16T09:00',end:'2026-10-16T13:00',kind:'work',title:'Smart working · 1ª parte',place:'H10 Marina',lat:41.3928,lng:2.1924,note:'Stesso fuso (CET). WiFi camera/lobby/Privilege'},
   {id:'v4',day:'16',start:'2026-10-16T13:00',end:'2026-10-16T14:00',kind:'food',title:'Pranzo + spiaggia',place:'Cuadro · Bogatell',lat:41.3936,lng:2.1954,note:'Boccone veloce + 20 min di mare',outdoor:true,planB:'pranzo al chiuso da Cuadro'},
@@ -502,8 +502,8 @@ const ITINERARY=[
   {id:'d3',day:'18',start:'2026-10-18T18:00',end:'2026-10-18T19:50',kind:'admin',title:'Doccia prima del volo',place:'H10 Marina',lat:41.3928,lng:2.1924,phone:'+34933097917',note:'Day-use fino ~20:00 o late check-out + deposito'},
   {id:'d4',day:'18',start:'2026-10-18T19:50',end:'2026-10-18T20:15',kind:'transfer',title:'H10 → Aeroporto T2',place:'Aeroporto BCN · T2',lat:41.3018,lng:2.0793,note:'Taxi ~25 min · ~€35 · volo Schengen'},
   {id:'d5',day:'18',start:'2026-10-18T20:15',end:'2026-10-18T22:00',kind:'admin',title:'Sala VIP Canudas · T2',place:'Aeroporto BCN · T2',lat:41.3018,lng:2.0793,note:'Entri dalle 19:05, chiude 22:00. Cibo+drink'},
-  {id:'d6',day:'18',start:'2026-10-18T22:25',end:'2026-10-18T23:05',kind:'flight',title:'Al gate',place:'Aeroporto BCN · T2',track:'https://www.flightradar24.com/data/flights/fr5220'},
-  {id:'d7',day:'18',start:'2026-10-18T23:05',end:'2026-10-19T00:50',kind:'flight',title:'Volo FR5220 · BCN → BLQ',place:'Rientro a casa',note:'Atterri 00:50 lunedì',track:'https://www.flightradar24.com/data/flights/fr5220'}
+  {id:'d6',day:'18',start:'2026-10-18T22:25',end:'2026-10-18T23:05',kind:'flight',title:'Al gate',place:'Aeroporto BCN · T2',track:'https://www.flightradar24.com/data/flights/fr5220',flightNo:'FR5220',fdate:'2026-10-18'},
+  {id:'d7',day:'18',start:'2026-10-18T23:05',end:'2026-10-19T00:50',kind:'flight',title:'Volo FR5220 · BCN → BLQ',place:'Rientro a casa',note:'Atterri 00:50 lunedì',track:'https://www.flightradar24.com/data/flights/fr5220',flightNo:'FR5220',fdate:'2026-10-18'}
 ];
 
 const CONTACTS=[
@@ -546,6 +546,35 @@ function tp(t){return new Date(t.length<=16?t+':00':t);} // ora locale del dispo
 function fmtHM(d){return d.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});}
 function mapsDir(lat,lng){return 'https://www.google.com/maps/dir/?api=1&destination='+lat+','+lng+'&travelmode=walking';}
 function mapsAt(lat,lng,q){return 'https://www.google.com/maps/search/?api=1&query='+(q?encodeURIComponent(q):lat+','+lng);}
+
+/* ===== STATO VOLO LIVE (AeroDataBox via RapidAPI) =====
+   Incolla qui sotto la tua chiave RapidAPI per attivare lo stato live nella card.
+   Se vuota o in errore, resta il link a Flightradar24 (nessun problema). */
+const RAPIDAPI_KEY=''; // <-- INCOLLA QUI LA CHIAVE RapidAPI AeroDataBox
+const _fcache={};
+function flightStatus(no,date){
+  if(!RAPIDAPI_KEY||!no||!date)return Promise.resolve(null);
+  const ck=no+'_'+date, c=_fcache[ck];
+  if(c&&Date.now()-c.t<6e5)return Promise.resolve(c.v);
+  return fetch('https://aerodatabox.p.rapidapi.com/flights/number/'+encodeURIComponent(no)+'/'+date,
+    {headers:{'X-RapidAPI-Key':RAPIDAPI_KEY,'X-RapidAPI-Host':'aerodatabox.p.rapidapi.com'}})
+    .then(r=>r.ok?r.json():null).then(arr=>{
+      let v=null;
+      if(arr&&arr.length){
+        const f=arr[arr.length-1], d=f.departure||{};
+        const sched=d.scheduledTime&&(d.scheduledTime.local||d.scheduledTime.utc);
+        const rev=d.revisedTime&&(d.revisedTime.local||d.revisedTime.utc);
+        const delay=(sched&&rev)?Math.round((new Date(rev.replace(' ','T'))-new Date(sched.replace(' ','T')))/60000):0;
+        const st=(f.status||'').toLowerCase();
+        let text;
+        if(/cancel/.test(st))text='❌ Volo cancellato';
+        else if(delay>=10||/delay/.test(st))text='⏱️ Ritardo '+delay+' min'+(rev?(' · stima '+rev.slice(11,16)):'');
+        else text='✅ In orario'+(d.terminal?(' · T'+d.terminal):'')+(d.gate?(' · gate '+d.gate):'');
+        v={text:text,bad:(delay>=10||/cancel|delay/.test(st))};
+      }
+      _fcache[ck]={t:Date.now(),v:v};return v;
+    }).catch(()=>null);
+}
 
 function model(now){
   const done=getDone();
@@ -614,9 +643,9 @@ function renderNow(){
 
   // Plan B pioggia (si attiva quando il meteo copre le date del viaggio)
   if(next&&next.outdoor){const p=rainProb(next.start);if(p!=null&&p>=50)html+='<div class="planb">🌧️ Pioggia probabile ('+p+'%) a quell\'ora · Plan B: '+(next.planB||'attività al chiuso')+'</div>';}
-  // Stato volo direttamente qui
-  const ft=(current&&current.track)||(next&&next.track);
-  if(ft)html+='<a class="go" style="background:rgba(46,196,182,.16);border-color:rgba(46,196,182,.45);color:var(--teal)" href="'+ft+'" target="_blank">📡 Il volo è in orario?</a>';
+  // Stato volo direttamente qui (live se c'è la chiave, altrimenti link)
+  const fItem=(current&&current.track)?current:((next&&next.track)?next:null);
+  if(fItem)html+='<a id="flightStatusBtn" class="go" style="background:rgba(46,196,182,.16);border-color:rgba(46,196,182,.45);color:var(--teal)" href="'+fItem.track+'" target="_blank">📡 Il volo è in orario?</a>';
 
   // PORTAMI ADESSO
   if(navTarget&&navTarget.lat){
@@ -631,6 +660,14 @@ function renderNow(){
   else if(next)html+='<button class="btn" onclick="toggleDone(\''+next.id+'\')">✓ Salta</button>';
   html+='</div>';
   el.innerHTML=html;
+
+  // aggiorna lo stato volo in modo asincrono (se chiave presente e dati disponibili)
+  if(fItem&&fItem.flightNo)flightStatus(fItem.flightNo,fItem.fdate).then(v=>{
+    if(!v)return;const b=document.getElementById('flightStatusBtn');if(!b)return;
+    b.innerHTML='📡 '+v.text;
+    if(v.bad){b.style.background='rgba(255,122,77,.18)';b.style.borderColor='rgba(255,122,77,.5)';b.style.color='var(--coral)';}
+    else{b.style.background='rgba(46,196,182,.16)';b.style.borderColor='rgba(46,196,182,.45)';b.style.color='var(--teal)';}
+  });
 
   // fase in topbar
   const ph=document.getElementById('phase');
