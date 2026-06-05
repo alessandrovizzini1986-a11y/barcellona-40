@@ -130,10 +130,10 @@
   .doc .kv{font-size:13px;color:var(--muted)}
   .doc .kv b{color:var(--ink)}
   .acts{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px}
-  .acts a{font-size:12.5px;font-weight:700;padding:8px 11px;border-radius:10px;background:rgba(255,255,255,.05);
+  .acts a,.acts button{font-size:12.5px;font-weight:700;padding:8px 11px;border-radius:10px;background:rgba(255,255,255,.05);
     border:1px solid var(--line)}
-  .acts a.prim{background:var(--coral);border-color:var(--coral);color:#1a0d06}
-  .acts a.tealb{background:rgba(46,196,182,.14);border-color:rgba(46,196,182,.3);color:var(--teal)}
+  .acts a.prim,.acts button.prim{background:var(--coral);border-color:var(--coral);color:#1a0d06}
+  .acts a.tealb,.acts button.tealb{background:rgba(46,196,182,.14);border-color:rgba(46,196,182,.3);color:var(--teal)}
 
   ul.tight{margin:6px 0 2px;list-style:none}
   ul.tight li{font-size:13.8px;color:#dfe7f0;padding:4px 0 4px 17px;position:relative}
@@ -201,7 +201,7 @@
   /* PLACE CARDS (mangiare & bere) */
   .subh{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);font-weight:800;margin:15px 2px 4px}
   .qrow{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:4px}
-  .qrow a{font-size:12.5px;font-weight:700;padding:9px 12px;border-radius:11px;
+  .qrow a,.qrow button{font-size:12.5px;font-weight:700;padding:9px 12px;border-radius:11px;
     background:rgba(46,196,182,.14);border:1px solid rgba(46,196,182,.3);color:var(--teal)}
   .place-card{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:11px 13px;margin:8px 0}
   .place-card h4{font-family:"DM Sans",sans-serif;font-size:15px;font-weight:700}
@@ -316,8 +316,8 @@
     <div class="det-body">
       <div class="qrow">
         <a href="https://www.thefork.com/restaurants/barcelona-c41710/poblenou-a608">🍴 TheFork Poblenou · sconti</a>
-        <a onclick="nearMe('ristoranti')">📍 Mangiare vicino a me</a>
-        <a onclick="nearMe('cocktail bar')">🍸 Bere vicino a me</a>
+        <button type="button" onclick="nearMe('ristoranti')">📍 Mangiare vicino a me</button>
+        <button type="button" onclick="nearMe('cocktail bar')">🍸 Bere vicino a me</button>
       </div>
       <div class="subh">Ristoranti · Poblenou / Vila Olímpica</div>
       <div id="ristList"></div>
@@ -399,8 +399,8 @@
           <div class="note"><b>Promemoria:</b> già su calendario. ntfy (push extra, max 3 giorni avanti):</div>
           <input id="ntfyTopic" class="fld" placeholder="es. ale-stomaco-bcn-9f3">
           <div class="acts">
-            <a class="tealb" onclick="ntfyTest()">Notifica di prova</a>
-            <a class="prim" onclick="ntfyArm()">Arma prossimi 3 giorni</a>
+            <button type="button" class="tealb" onclick="ntfyTest()">Notifica di prova</button>
+            <button type="button" class="prim" onclick="ntfyArm()">Arma prossimi 3 giorni</button>
           </div>
           <p class="muted" id="ntfyMsg" style="margin-top:6px;font-size:12.5px"></p>
         </div>
