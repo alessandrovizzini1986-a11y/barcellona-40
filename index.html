@@ -471,7 +471,7 @@
   </div>
   <nav class="botnav">
     <a href="#adesso"><span class="bi">⚡</span>Adesso</a>
-    <a href="#oggi"><span class="bi">🗓️</span>Oggi</a>
+    <a href="#oggi" onclick="setTimeout(scrollNow,80)"><span class="bi">🗓️</span>Oggi</a>
     <a href="#docs" onclick="openDet('docs')"><span class="bi">🎫</span>Docs</a>
     <a href="#mappa" onclick="openDet('mappa')"><span class="bi">📍</span>Mappa</a>
     <button onclick="openSearch()"><span class="bi">🔎</span>Cerca</button>
@@ -621,7 +621,7 @@ function renderNow(){
     html+='<hr><div class="nlab">Prossima · '+humanIn(next._s-now)+'</div><div class="next">'+next.title+'</div>';
     html+='<div class="meta">';
     html+='<span class="chip big tnum">◷ '+fmtHM(next._s)+'</span>';
-    if(myPos&&next.lat){const km=haversine(myPos,{lat:next.lat,lng:next.lng});html+='<span class="chip tnum">📍 '+(km<10?km.toFixed(1):Math.round(km))+' km</span>';}
+    if(myPos&&next.lat){const km=haversine(myPos,{lat:next.lat,lng:next.lng});const mins=Math.max(1,Math.round(km*12));html+='<span class="chip tnum">🚶 ~'+mins+' min</span>';}
     if(next.note){const t=(next.note.match(/~?\d+\s?min/)||[])[0];if(t)html+='<span class="chip">🚶 '+t+'</span>';}
     html+='</div>';
   } else {
@@ -672,7 +672,8 @@ function renderSoon(){
 }
 
 let SELDAY=null;
-function setDay(d){SELDAY=d;renderTimeline();document.getElementById('oggi').scrollIntoView({behavior:'smooth'});}
+function scrollNow(){const cur=document.querySelector('#timeline .st-current');(cur||document.getElementById('oggi')).scrollIntoView({behavior:'smooth',block:cur?'center':'start'});}
+function setDay(d){SELDAY=d;renderTimeline();scrollNow();}
 function renderDayTabs(){
   document.getElementById('dayTabs').innerHTML=Object.keys(DAYS).map(d=>'<button class="'+(d===SELDAY?'on':'')+'" onclick="setDay(\''+d+'\')"><b>'+d+'</b>'+({'16':'VEN','17':'SAB','18':'DOM'}[d])+'</button>').join('');
 }
