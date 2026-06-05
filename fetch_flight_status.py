@@ -17,6 +17,10 @@ PLAN = {"FR2097": "2026-10-16", "FR5220": "2026-10-18"}
 FORCE_F = os.environ.get("FORCE_FLIGHT", "").strip()
 FORCE_D = os.environ.get("FORCE_DATE", "").strip()
 
+# Topic ntfy per gli avvisi volo (pubblicato dal workflow, l'utente vi si iscrive nell'app).
+# Sovrascrivibile via env NTFY_TOPIC. Stringa lunga = non indovinabile a caso.
+NTFY_TOPIC = os.environ.get("NTFY_TOPIC", "").strip() or "bcn40-volo-9f3k2x7q4m"
+
 
 def load():
     try:
@@ -100,6 +104,50 @@ def parse(arr):
     }
 
 
+def ntfy(title, body, priority="default", tags=""):
+    """Pubblica una notifica su ntfy.sh. Fail-soft: un errore non blocca la pipeline.
+    Gli header HTTP devono essere ASCII → titolo/tag senza emoji (le emoji stanno nel body)."""
+    if not NTFY_TOPIC:
+        return
+    req = urllib.request.Request(
+        "https://ntfy.sh/" + NTFY_TOPIC, data=body.encode("utf-8"), method="POST",
+        headers={"Title": title, "Priority": priority, "Tags": tags})
+    try:
+        urllib.request.urlopen(req, timeout=15)
+        print("ntfy ->", title, "|", body.replace("\n", " · "))
+    except Exception as e:
+        print("ntfy errore:", e, file=sys.stderr)
+
+
+def detect_changes(old, new):
+    """Confronta vecchio/nuovo stato e ritorna (priority, tags, lines) se c'è da avvisare, altrimenti None."""
+    if not new:
+        return None
+    old = old or {}
+    o_st, n_st = (old.get("status") or "").lower(), (new.get("status") or "").lower()
+    od, nd = (old.get("dep") or {}), (new.get("dep") or {})
+    o_delay, n_delay = old.get("delay") or 0, new.get("delay") or 0
+
+    if "cancel" in n_st and "cancel" not in o_st:        # cancellazione: massima priorità
+        return ("urgent", "rotating_light", ["❌ Volo CANCELLATO"])
+
+    lines, prio, tags = [], "default", []
+    if n_delay >= 15 and (o_delay < 15 or abs(n_delay - o_delay) >= 10):   # ritardo nuovo o variato ≥10'
+        lines.append(f"⏱️ Ritardo {n_delay} min" + (f" · stima {nd.get('est')}" if nd.get("est") else ""))
+        prio = "high"; tags.append("hourglass_flowing_sand")
+    if nd.get("gate") and nd.get("gate") != od.get("gate"):               # gate assegnato/cambiato
+        lines.append(f"🚪 Gate {nd['gate']}" + (f" · Terminal {nd.get('terminal')}" if nd.get("terminal") else ""))
+        tags.append("door")
+    elif nd.get("terminal") and nd.get("terminal") != od.get("terminal"): # solo terminal cambiato
+        lines.append(f"🏢 Terminal {nd['terminal']}")
+        tags.append("office")
+    if old.get("bad") and not new.get("bad") and "cancel" not in n_st:     # tornato in orario
+        lines.append("✅ Di nuovo in orario")
+        tags.append("white_check_mark")
+
+    return (prio, ",".join(tags), lines) if lines else None
+
+
 def main():
     data = load()
     data.setdefault("flights", {})
@@ -111,8 +159,13 @@ def main():
         print(f"Nessun volo in programma oggi ({today}). Skip."); return
     for no, date in jobs:
         try:
-            data["flights"][no] = parse(api(no, date))
-            print(no, date, "->", data["flights"][no])
+            old = data["flights"].get(no)
+            new = parse(api(no, date))
+            data["flights"][no] = new
+            print(no, date, "->", new)
+            ch = detect_changes(old, new)   # avvisa solo se qualcosa di rilevante è cambiato
+            if ch:
+                ntfy(f"Volo {no}", "\n".join(ch[2]), ch[0], ch[1])
         except Exception as e:
             print("Errore", no, ":", e, file=sys.stderr)
         time.sleep(2)  # rispetta il limite per-secondo del piano BASIC
