@@ -73,7 +73,7 @@ def side(o):
 
 
 def parse(arr):
-    if not arr:
+    if not arr or not isinstance(arr, list):
         return None
     f = arr[-1]
     dep, arr_ = side(f.get("departure")), side(f.get("arrival"))
