@@ -208,6 +208,14 @@
   .place-card .pa{font-size:12px;color:var(--muted);margin-top:1px}
   .place-card .pd{font-size:13px;color:#dfe7f0;margin-top:3px}
 
+  /* STATO VOLO (dettagli) */
+  .flive{background:var(--bg2);border:1px solid var(--line);border-radius:11px;padding:10px 12px;margin:8px 0}
+  .flive-h{font-size:13px;font-weight:800;margin-bottom:6px}
+  .flive-g{display:flex;gap:10px;font-size:12.5px;color:#dfe7f0}
+  .flive-g>div{flex:1}
+  .flive-g b{color:var(--amber);font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.05em}
+  .flive-x{font-size:11.5px;color:var(--muted);margin-top:6px}
+
   /* BOTTOM NAV (dentro il dock) */
   .botnav{display:flex;justify-content:space-around;padding:6px 4px 8px}
   .botnav a,.botnav button{font-size:10px;color:var(--muted);text-align:center;font-weight:700;flex:1;background:none}
@@ -261,9 +269,10 @@
         <h4 style="margin-top:8px">Ritorno · FR5220</h4>
         <p class="kv">Barcellona <b>23:05</b> → Bologna <b>00:50</b> · notte dom→lun · <b>Terminal 2</b></p>
         <p class="muted">Amici (se vengono): arrivo FR5219, BCN 09:45 sab.</p>
+        <div id="flightLive"></div>
         <div class="acts">
-          <a class="tealb" href="https://www.flightradar24.com/data/flights/fr2097" target="_blank">📡 Stato andata FR2097</a>
-          <a class="tealb" href="https://www.flightradar24.com/data/flights/fr5220" target="_blank">📡 Stato ritorno FR5220</a>
+          <a class="tealb" href="https://www.flightradar24.com/data/flights/fr2097" target="_blank">📡 Andata FR2097 su Flightradar</a>
+          <a class="tealb" href="https://www.flightradar24.com/data/flights/fr5220" target="_blank">📡 Ritorno FR5220 su Flightradar</a>
         </div>
       </div>
       <div class="doc">
@@ -547,34 +556,10 @@ function fmtHM(d){return d.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-
 function mapsDir(lat,lng){return 'https://www.google.com/maps/dir/?api=1&destination='+lat+','+lng+'&travelmode=walking';}
 function mapsAt(lat,lng,q){return 'https://www.google.com/maps/search/?api=1&query='+(q?encodeURIComponent(q):lat+','+lng);}
 
-/* ===== STATO VOLO LIVE (AeroDataBox via RapidAPI) =====
-   Incolla qui sotto la tua chiave RapidAPI per attivare lo stato live nella card.
-   Se vuota o in errore, resta il link a Flightradar24 (nessun problema). */
-const RAPIDAPI_KEY=''; // <-- INCOLLA QUI LA CHIAVE RapidAPI AeroDataBox
-const _fcache={};
-function flightStatus(no,date){
-  if(!RAPIDAPI_KEY||!no||!date)return Promise.resolve(null);
-  const ck=no+'_'+date, c=_fcache[ck];
-  if(c&&Date.now()-c.t<6e5)return Promise.resolve(c.v);
-  return fetch('https://aerodatabox.p.rapidapi.com/flights/number/'+encodeURIComponent(no)+'/'+date,
-    {headers:{'X-RapidAPI-Key':RAPIDAPI_KEY,'X-RapidAPI-Host':'aerodatabox.p.rapidapi.com'}})
-    .then(r=>r.ok?r.json():null).then(arr=>{
-      let v=null;
-      if(arr&&arr.length){
-        const f=arr[arr.length-1], d=f.departure||{};
-        const sched=d.scheduledTime&&(d.scheduledTime.local||d.scheduledTime.utc);
-        const rev=d.revisedTime&&(d.revisedTime.local||d.revisedTime.utc);
-        const delay=(sched&&rev)?Math.round((new Date(rev.replace(' ','T'))-new Date(sched.replace(' ','T')))/60000):0;
-        const st=(f.status||'').toLowerCase();
-        let text;
-        if(/cancel/.test(st))text='❌ Volo cancellato';
-        else if(delay>=10||/delay/.test(st))text='⏱️ Ritardo '+delay+' min'+(rev?(' · stima '+rev.slice(11,16)):'');
-        else text='✅ In orario'+(d.terminal?(' · T'+d.terminal):'')+(d.gate?(' · gate '+d.gate):'');
-        v={text:text,bad:(delay>=10||/cancel|delay/.test(st))};
-      }
-      _fcache[ck]={t:Date.now(),v:v};return v;
-    }).catch(()=>null);
-}
+/* ===== STATO VOLO (sicuro): legge flight-status.json prodotto da GitHub Actions =====
+   La chiave API NON è qui: sta nei GitHub Secrets, usata dal workflow lato server. */
+let FSTATUS={};
+function flightStatus(no){return Promise.resolve(FSTATUS[no]||null);}
 
 function model(now){
   const done=getDone();
@@ -735,6 +720,16 @@ function nearMe(q){
   const url=myPos?('https://www.google.com/maps/search/'+encodeURIComponent(q)+'/@'+myPos.lat+','+myPos.lng+',16z'):mapsAt(0,0,q+' Poblenou Barcelona');
   window.open(url,'_blank');
 }
+function flightLiveCard(no,label){
+  const v=FSTATUS[no]; if(!v||!v.dep)return '';
+  const d=v.dep,a=v.arr||{}, head=v.bad?'var(--coral)':'var(--teal)';
+  return '<div class="flive"><div class="flive-h" style="color:'+head+'">'+label+' · '+no+' — '+(v.text||v.status||'')+'</div>'+
+    '<div class="flive-g">'+
+      '<div><b>Partenza</b><br>'+(d.airport||'')+' '+(d.sched||'')+(d.est&&d.est!==d.sched?(' → '+d.est):'')+'<br>Term '+(d.terminal||'–')+' · Gate '+(d.gate||'–')+'</div>'+
+      '<div><b>Arrivo</b><br>'+(a.airport||'')+' '+(a.sched||'')+(a.est&&a.est!==a.sched?(' → '+a.est):'')+'<br>Term '+(a.terminal||'–')+' · Nastro '+(a.belt||'–')+'</div>'+
+    '</div>'+(v.aircraft?('<div class="flive-x">✈️ '+v.aircraft+(v.updated?(' · agg. '+v.updated):'')+'</div>'):'')+'</div>';
+}
+function renderFlightDocs(){const el=document.getElementById('flightLive');if(el)el.innerHTML=flightLiveCard('FR2097','Andata')+flightLiveCard('FR5220','Ritorno');}
 
 /* ===== METEO ORARIO ===== */
 const WMO={0:'☀️',1:'🌤️',2:'⛅',3:'☁️',45:'🌫️',48:'🌫️',51:'🌦️',53:'🌦️',55:'🌧️',56:'🌧️',57:'🌧️',61:'🌧️',63:'🌧️',65:'🌧️',66:'🌧️',67:'🌧️',71:'🌨️',73:'🌨️',75:'❄️',80:'🌦️',81:'🌧️',82:'⛈️',85:'🌨️',86:'❄️',95:'⛈️',96:'⛈️',99:'⛈️'};
@@ -800,11 +795,13 @@ fetch('https://api.open-meteo.com/v1/forecast?latitude=41.39&longitude=2.19&curr
   .then(r=>r.json()).then(d=>{document.getElementById('temp').textContent='🌡️ '+Math.round(d.current.temperature_2m)+'°';}).catch(()=>{});
 fetch('https://api.open-meteo.com/v1/forecast?latitude=41.39&longitude=2.19&hourly=temperature_2m,precipitation_probability,weather_code&forecast_days=2&timezone='+TZ)
   .then(r=>r.json()).then(d=>{WX=d.hourly;renderNow();}).catch(()=>{});
+fetch('flight-status.json?t='+Date.now()).then(r=>r.ok?r.json():null).then(d=>{if(d&&d.flights){FSTATUS=d.flights;renderNow();renderFlightDocs();}}).catch(()=>{});
 if(navigator.geolocation)navigator.geolocation.getCurrentPosition(p=>{myPos={lat:p.coords.latitude,lng:p.coords.longitude};renderNow();},()=>{},{timeout:8000,maximumAge:6e5});
 
 renderAll();
 renderContacts();
 renderDining();
+renderFlightDocs();
 setInterval(renderAll,60000);
 
 /* ============ MAPPA (lazy) ============ */
