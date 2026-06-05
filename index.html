@@ -271,8 +271,8 @@
         <p class="muted">Amici (se vengono): arrivo FR5219, BCN 09:45 sab.</p>
         <div id="flightLive"></div>
         <div class="acts">
-          <a class="tealb" href="https://www.flightradar24.com/data/flights/fr2097" target="_blank">📡 Andata FR2097 su Flightradar</a>
-          <a class="tealb" href="https://www.flightradar24.com/data/flights/fr5220" target="_blank">📡 Ritorno FR5220 su Flightradar</a>
+          <a class="tealb" href="https://www.bologna-airport.it/voli/vola-da-bologna/voli-in-tempo-reale/?idC=62178" target="_blank">🛫 Partenze BLQ in tempo reale</a>
+          <a class="tealb" href="https://www.aena.es/en/flight-info.html" target="_blank">🛬 Partenze BCN in tempo reale</a>
         </div>
       </div>
       <div class="doc">
@@ -491,7 +491,7 @@ const KIND={
 
 const ITINERARY=[
   // VENERDÌ 16
-  {id:'v1',day:'16',start:'2026-10-16T06:20',end:'2026-10-16T08:05',kind:'flight',title:'Volo FR2097 · BLQ → BCN',place:'Aeroporto · partenza',note:'In BLQ entro 04:50 · solo bagaglio a mano',track:'https://www.flightradar24.com/data/flights/fr2097',flightNo:'FR2097',fdate:'2026-10-16'},
+  {id:'v1',day:'16',start:'2026-10-16T06:20',end:'2026-10-16T08:05',kind:'flight',title:'Volo FR2097 · BLQ → BCN',place:'Aeroporto · partenza',note:'In BLQ entro 04:50 · solo bagaglio a mano',track:'https://www.bologna-airport.it/voli/vola-da-bologna/voli-in-tempo-reale/?idC=62178',flightNo:'FR2097',fdate:'2026-10-16'},
   {id:'v2',day:'16',start:'2026-10-16T08:30',end:'2026-10-16T09:00',kind:'transfer',title:'Aeroporto → H10 Marina',place:'H10 Marina',lat:41.3928,lng:2.1924,phone:'+34933097917',note:'Taxi ~25 min · ~€35 (o Aerobús+metro ~€10)'},
   {id:'v3',day:'16',start:'2026-10-16T09:00',end:'2026-10-16T13:00',kind:'work',title:'Smart working · 1ª parte',place:'H10 Marina',lat:41.3928,lng:2.1924,note:'Stesso fuso (CET). WiFi camera/lobby/Privilege'},
   {id:'v4',day:'16',start:'2026-10-16T13:00',end:'2026-10-16T14:00',kind:'food',title:'Pranzo + spiaggia',place:'Cuadro · Bogatell',lat:41.3936,lng:2.1954,note:'Boccone veloce + 20 min di mare',outdoor:true,planB:'pranzo al chiuso da Cuadro'},
@@ -511,8 +511,8 @@ const ITINERARY=[
   {id:'d3',day:'18',start:'2026-10-18T18:00',end:'2026-10-18T19:50',kind:'admin',title:'Doccia prima del volo',place:'H10 Marina',lat:41.3928,lng:2.1924,phone:'+34933097917',note:'Day-use fino ~20:00 o late check-out + deposito'},
   {id:'d4',day:'18',start:'2026-10-18T19:50',end:'2026-10-18T20:15',kind:'transfer',title:'H10 → Aeroporto T2',place:'Aeroporto BCN · T2',lat:41.3018,lng:2.0793,note:'Taxi ~25 min · ~€35 · volo Schengen'},
   {id:'d5',day:'18',start:'2026-10-18T20:15',end:'2026-10-18T22:00',kind:'admin',title:'Sala VIP Canudas · T2',place:'Aeroporto BCN · T2',lat:41.3018,lng:2.0793,note:'Entri dalle 19:05, chiude 22:00. Cibo+drink'},
-  {id:'d6',day:'18',start:'2026-10-18T22:25',end:'2026-10-18T23:05',kind:'flight',title:'Al gate',place:'Aeroporto BCN · T2',track:'https://www.flightradar24.com/data/flights/fr5220',flightNo:'FR5220',fdate:'2026-10-18'},
-  {id:'d7',day:'18',start:'2026-10-18T23:05',end:'2026-10-19T00:50',kind:'flight',title:'Volo FR5220 · BCN → BLQ',place:'Rientro a casa',note:'Atterri 00:50 lunedì',track:'https://www.flightradar24.com/data/flights/fr5220',flightNo:'FR5220',fdate:'2026-10-18'}
+  {id:'d6',day:'18',start:'2026-10-18T22:25',end:'2026-10-18T23:05',kind:'flight',title:'Al gate',place:'Aeroporto BCN · T2',track:'https://www.aena.es/en/flight-info.html',flightNo:'FR5220',fdate:'2026-10-18'},
+  {id:'d7',day:'18',start:'2026-10-18T23:05',end:'2026-10-19T00:50',kind:'flight',title:'Volo FR5220 · BCN → BLQ',place:'Rientro a casa',note:'Atterri 00:50 lunedì',track:'https://www.aena.es/en/flight-info.html',flightNo:'FR5220',fdate:'2026-10-18'}
 ];
 
 const CONTACTS=[
@@ -765,8 +765,8 @@ function searchIndex(){
   ITINERARY.forEach(it=>idx.push({i:(KIND[it.kind]||{e:'•'}).e,t:it.title,s:(DAYS[it.day]||'')+(it.note?' · '+it.note:''),href:it.lat?mapsDir(it.lat,it.lng):'#oggi',day:it.day}));
   CONTACTS.forEach(c=>idx.push({i:c.i,t:c.n,s:c.v,href:c.tel?'tel:'+c.tel:c.url}));
   [['🏨','H10 Marina','Hotel · Vila Olímpica','tel:+34933097917'],
-   ['📡','Stato volo andata FR2097','BLQ 06:20 → BCN 08:05','https://www.flightradar24.com/data/flights/fr2097'],
-   ['📡','Stato volo ritorno FR5220','BCN 23:05 → BLQ 00:50 · T2','https://www.flightradar24.com/data/flights/fr5220'],
+   ['📡','Stato volo andata FR2097','BLQ 06:20 → BCN 08:05','https://www.bologna-airport.it/voli/vola-da-bologna/voli-in-tempo-reale/?idC=62178'],
+   ['📡','Stato volo ritorno FR5220','BCN 23:05 → BLQ 00:50 · T2','https://www.aena.es/en/flight-info.html'],
    ['🅿️','Parcheggio P2 Business','Codice P2932537 · €51','#docs'],
    ['🎟️','Sagrada Família','Biglietto slot','https://sagradafamilia.org/']
   ].forEach(d=>idx.push({i:d[0],t:d[1],s:d[2],href:d[3]}));
@@ -797,6 +797,21 @@ fetch('https://api.open-meteo.com/v1/forecast?latitude=41.39&longitude=2.19&hour
   .then(r=>r.json()).then(d=>{WX=d.hourly;renderNow();}).catch(()=>{});
 fetch('flight-status.json?t='+Date.now()).then(r=>r.ok?r.json():null).then(d=>{if(d&&d.flights){FSTATUS=d.flights;renderNow();renderFlightDocs();}}).catch(()=>{});
 if(navigator.geolocation)navigator.geolocation.getCurrentPosition(p=>{myPos={lat:p.coords.latitude,lng:p.coords.longitude};renderNow();},()=>{},{timeout:8000,maximumAge:6e5});
+
+/* ===== Deep-link app native (FreeNow, TheFork, TripAdvisor): tenta lo schema dell'app,
+   poi ricade sul sito. Da PWA installata gli Universal Link non aprono le app: serve lo schema. */
+const APP_SCHEMES=[{host:'free-now.com',app:'freenow://'},{host:'thefork.',app:'thefork://'},{host:'tripadvisor.',app:'tripadvisor://'}];
+document.addEventListener('click',e=>{
+  const a=e.target.closest&&e.target.closest('a[href]'); if(!a)return;
+  const web=a.href, m=APP_SCHEMES.find(s=>web.includes(s.host)); if(!m)return;
+  e.preventDefault();
+  let opened=false;
+  const fb=setTimeout(()=>{if(!opened)location.href=web;},700); // app assente → sito
+  const cancel=()=>{opened=true;clearTimeout(fb);};             // app aperta → niente fallback
+  window.addEventListener('pagehide',cancel,{once:true});
+  document.addEventListener('visibilitychange',()=>{if(document.hidden)cancel();},{once:true});
+  location.href=m.app;
+},true);
 
 renderAll();
 renderContacts();
