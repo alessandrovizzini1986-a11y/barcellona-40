@@ -232,6 +232,7 @@
 <div class="topbar">
   <div class="row">
     <div class="status"><span class="dot"></span><span id="phase">—</span> · <b id="clock" class="tnum">--:--</b> · <span id="temp" onclick="openWeather()" title="Andamento orario della giornata">🌡️ ~22°</span><span id="offBadge" style="display:none;margin-left:8px;font-size:11px;font-weight:700;color:var(--amber);border:1px solid rgba(255,184,107,.45);border-radius:6px;padding:1px 6px">offline</span></div>
+    <button class="searchbtn" onclick="shareGuide()" aria-label="Condividi la guida">📤</button>
     <button class="searchbtn" onclick="openSearch()" aria-label="Cerca">🔎</button>
   </div>
 </div>
@@ -785,6 +786,13 @@ function searchIndex(){
 const IDX=searchIndex();
 function openSearch(){document.getElementById('searchSheet').classList.add('on');setTimeout(()=>document.getElementById('searchInput').focus(),50);runSearch('');}
 function closeSearch(){document.getElementById('searchSheet').classList.remove('on');}
+function shareGuide(){
+  const url=location.href.split('#')[0];
+  const data={title:'Barcellona · I 40 di Ale',text:'La guida del weekend a Barcellona (16–18 ott)',url:url};
+  if(navigator.share){navigator.share(data).catch(()=>{});}
+  else if(navigator.clipboard){navigator.clipboard.writeText(url).then(()=>alert('Link della guida copiato!'),()=>prompt('Copia il link:',url));}
+  else{prompt('Copia il link:',url);}
+}
 function runSearch(q){
   q=(q||'').trim().toLowerCase();
   const res=document.getElementById('searchRes');
