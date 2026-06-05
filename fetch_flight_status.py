@@ -36,7 +36,10 @@ def api(no, date):
     for attempt in range(4):
         try:
             with urllib.request.urlopen(req, timeout=30) as r:
-                return json.load(r)
+                payload = json.load(r)
+            if not isinstance(payload, list):  # errori/rate-limit del provider arrivano come oggetto
+                raise RuntimeError((payload or {}).get("message") or "risposta non-lista")
+            return payload
         except urllib.error.HTTPError as e:
             last = e
             if e.code in (403, 429, 502, 503):  # transitori: riprova con backoff
@@ -81,7 +84,8 @@ def parse(arr):
     if "cancel" in st:
         text, bad = "❌ Volo cancellato", True
     elif delay >= 10 or "delay" in st:
-        text = f"⏱️ Ritardo {delay} min" + (f" · stima {dep['est']}" if dep["est"] else "")
+        text = (f"⏱️ Ritardo {delay} min" if delay > 0 else "⏱️ In ritardo") + \
+               (f" · stima {dep['est']}" if dep["est"] and dep["est"] != dep["sched"] else "")
         bad = True
     else:
         text = "✅ In orario" + (f" · T{dep['terminal']}" if dep["terminal"] else "") + (f" · gate {dep['gate']}" if dep["gate"] else "")
