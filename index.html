@@ -557,6 +557,8 @@ function toggleDone(id){const s=getDone();s.has(id)?s.delete(id):s.add(id);saveD
 function tp(t){return new Date(t.length<=16?t+':00':t);} // ora locale del dispositivo
 function fmtHM(d){return d.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});}
 function mapsDir(lat,lng){return 'https://www.google.com/maps/dir/?api=1&destination='+lat+','+lng+'&travelmode=walking';}
+function mapsMode(lat,lng,mode){return 'https://www.google.com/maps/dir/?api=1&destination='+lat+','+lng+'&travelmode='+mode;}
+function citymapper(lat,lng,name){return 'https://citymapper.com/directions?endcoord='+lat+'%2C'+lng+(name?'&endname='+encodeURIComponent(name):'');}
 function mapsAt(lat,lng,q){return 'https://www.google.com/maps/search/?api=1&query='+(q?encodeURIComponent(q):lat+','+lng);}
 
 /* ===== STATO VOLO (sicuro): legge flight-status.json prodotto da GitHub Actions =====
@@ -638,6 +640,11 @@ function renderNow(){
   // PORTAMI ADESSO
   if(navTarget&&navTarget.lat){
     html+='<a class="go" href="'+mapsDir(navTarget.lat,navTarget.lng)+'" target="_blank">▶ PORTAMI ADESSO<span class="muted" style="font-weight:600;font-size:12px"> · '+navTarget.place+'</span></a>';
+    html+='<div class="nrow" style="margin-top:7px">'+
+      '<a class="btn" href="'+citymapper(navTarget.lat,navTarget.lng,navTarget.place)+'" target="_blank">🚇 Mezzi</a>'+
+      '<a class="btn" href="'+mapsMode(navTarget.lat,navTarget.lng,'transit')+'" target="_blank">🗺️ Maps</a>'+
+      '<a class="btn" href="https://free-now.com/es/" target="_blank">🚖 Taxi</a>'+
+    '</div>';
   }
   // azioni
   const callPhone=(current&&current.phone)||(next&&next.phone);
