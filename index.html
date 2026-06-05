@@ -694,10 +694,12 @@ function renderTimeline(){
     if(it.phone)acts+='<a href="tel:'+it.phone+'" title="Chiama">☎</a>';
     if(it.book)acts+='<a href="'+it.book+'" target="_blank" title="Prenota">🎟️</a>';
     if(it.track)acts+='<a href="'+it.track+'" target="_blank" title="Stato volo">📡</a>';
+    let rainChip='';
+    if(it.outdoor){const p=rainProb(it.start);if(p!=null&&p>=30){const col=p>=40?'var(--coral)':'var(--amber)';rainChip=' <span style="font-size:11px;font-weight:700;color:'+col+'">🌧️ '+p+'%</span>';}}
     return '<div class="ti-row '+stCls+'">'+
       '<button class="ti-tick" onclick="toggleDone(\''+it.id+'\')" title="Segna fatto">'+tick+'</button>'+
       '<div class="ti-body"><div class="ti-time tnum">'+fmtHM(it._s)+nowBadge+'</div>'+
-      '<div class="ti-title">'+it.title+'</div>'+
+      '<div class="ti-title">'+it.title+rainChip+'</div>'+
       (it.note?'<div class="ti-note">'+it.note+'</div>':'')+'</div>'+
       '<div class="ti-act">'+acts+'</div></div>';
   }).join('');
@@ -814,7 +816,7 @@ try{const c=JSON.parse(localStorage.getItem(TEMP_KEY)||'null');if(c&&c.t!=null)d
 fetch('https://api.open-meteo.com/v1/forecast?latitude=41.39&longitude=2.19&current=temperature_2m')
   .then(r=>r.json()).then(d=>{const t=Math.round(d.current.temperature_2m);document.getElementById('temp').textContent='🌡️ '+t+'°';try{localStorage.setItem(TEMP_KEY,JSON.stringify({at:Date.now(),t:t}))}catch(e){}}).catch(()=>{});
 fetch('https://api.open-meteo.com/v1/forecast?latitude=41.39&longitude=2.19&hourly=temperature_2m,precipitation_probability,weather_code&forecast_days=2&timezone='+TZ)
-  .then(r=>r.json()).then(d=>{WX=d.hourly;try{localStorage.setItem(WX_KEY,JSON.stringify({at:Date.now(),hourly:d.hourly}))}catch(e){}renderNow();}).catch(()=>{});
+  .then(r=>r.json()).then(d=>{WX=d.hourly;try{localStorage.setItem(WX_KEY,JSON.stringify({at:Date.now(),hourly:d.hourly}))}catch(e){}renderAll();}).catch(()=>{});
 function updateOnline(){const b=document.getElementById('offBadge');if(b)b.style.display=navigator.onLine?'none':'inline-block';}
 window.addEventListener('online',updateOnline);window.addEventListener('offline',updateOnline);updateOnline();
 fetch('flight-status.json?t='+Date.now()).then(r=>r.ok?r.json():null).then(d=>{if(d&&d.flights){FSTATUS=d.flights;renderNow();renderFlightDocs();}}).catch(()=>{});
