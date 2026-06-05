@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#05080f">
-<title>40 · Ale a Barcellona</title>
-<meta name="description" content="I quaranta di Ale. Barcellona, 16–18 ottobre 2026.">
+<title>Vieni a Barcellona · I 40 di Ale</title>
+<meta name="description" content="Ale fa 40 a Barcellona, 16–18 ottobre 2026. Manchi solo tu.">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,13 +14,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,300;1,9..144,400&family=DM+Sans:opsz,wght@9..40,500;9..40,700&display=swap" rel="stylesheet">
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
-  :root{--ink:#f6f1e8;--coral:#ff7e54;--dim:rgba(246,241,232,.62)}
+  :root{--ink:#f6f1e8;--coral:#ff7e54;--gold:#ffcf8a;--dim:rgba(246,241,232,.62)}
   html{scroll-behavior:smooth;background:#05080f}
   body{font-family:"DM Sans",system-ui,sans-serif;color:var(--ink);background:#05080f;-webkit-font-smoothing:antialiased;overflow-x:hidden}
-  h1,h2{font-family:"Fraunces",serif;font-weight:600;line-height:.94;letter-spacing:-.035em}
+  h1,h2{font-family:"Fraunces",serif;font-weight:600;line-height:.96;letter-spacing:-.035em}
   a{color:inherit;text-decoration:none}
+  .c{color:var(--coral);font-style:italic;font-weight:400}
 
-  /* grana filmica su tutto */
   body::after{content:"";position:fixed;inset:0;z-index:70;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
     background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
 
@@ -30,65 +30,70 @@
     opacity:0;transform:translateY(-100%);transition:.55s cubic-bezier(.2,.7,.2,1)}
   .tb.on{opacity:1;transform:none}
   .tb b{font-family:"Fraunces",serif;font-size:15px;letter-spacing:.02em}
-  .tb .cta{font-size:12.5px;font-weight:700;padding:7px 15px;border-radius:980px;background:var(--ink);color:#05080f}
+  .tb .cta{font-size:12.5px;font-weight:700;padding:7px 16px;border-radius:980px;background:var(--coral);color:#05080f}
 
   .panel{position:relative;min-height:100svh;display:flex;overflow:hidden;padding:0 26px}
   .panel.ph::before{content:"";position:absolute;inset:0;z-index:1;
-    background:linear-gradient(180deg,rgba(5,8,15,.55) 0%,rgba(5,8,15,.2) 38%,rgba(5,8,15,.9) 100%)}
+    background:linear-gradient(180deg,rgba(5,8,15,.5) 0%,rgba(5,8,15,.18) 36%,rgba(5,8,15,.92) 100%)}
   .panel.ph::after{content:"";position:absolute;inset:0;z-index:1;mix-blend-mode:soft-light;
-    background:radial-gradient(120% 80% at 75% 12%,rgba(255,126,84,.5),transparent 55%)}
-  /* color grade unico su ogni foto */
+    background:radial-gradient(120% 80% at 76% 12%,rgba(255,126,84,.5),transparent 55%)}
   .bg{position:absolute;inset:0;z-index:0;background-size:cover;background-position:center;
     filter:saturate(.72) contrast(1.06) brightness(.64);
     transform:scale(1.16);transition:transform 8s cubic-bezier(.22,.61,.36,1)}
   .panel.in .bg{transform:scale(1)}
 
-  .wrap{position:relative;z-index:2;width:100%;max-width:980px;margin:auto;align-self:center;padding:14svh 0}
+  .wrap{position:relative;z-index:2;width:100%;max-width:1000px;margin:auto;align-self:center;padding:14svh 0}
   .cap{opacity:0;transform:translateY(30px);transition:opacity 1.1s cubic-bezier(.2,.7,.2,1),transform 1.1s cubic-bezier(.2,.7,.2,1)}
   .panel.in .cap{opacity:1;transform:none}
-  .kick{font-size:12.5px;font-weight:700;letter-spacing:.36em;text-transform:uppercase;color:var(--coral);margin-bottom:22px}
+  .kick{font-size:12.5px;font-weight:700;letter-spacing:.34em;text-transform:uppercase;color:var(--coral);margin-bottom:22px}
   .cap h2{font-size:clamp(40px,9.5vw,104px);max-width:15ch}
-  .cap h2 .c{color:var(--coral);font-style:italic;font-weight:400}
-  .lede{font-size:clamp(16px,4vw,20px);color:var(--dim);margin-top:18px;max-width:30ch;line-height:1.5}
+  .lede{font-size:clamp(16px,4vw,21px);color:var(--dim);margin-top:18px;max-width:32ch;line-height:1.5}
 
-  /* hero */
   .hero{align-items:center;text-align:center}
   .hero .wrap{text-align:center}
-  .hero .big{font-family:"Fraunces",serif;font-weight:300;font-size:clamp(160px,52vw,420px);line-height:.8;letter-spacing:-.05em}
-  .hero .sub{font-family:"Fraunces",serif;font-style:italic;font-weight:300;font-size:clamp(22px,6.5vw,44px);color:var(--ink);margin-top:.18em}
+  .hero .big{font-family:"Fraunces",serif;font-weight:300;font-size:clamp(170px,54vw,440px);line-height:.8;letter-spacing:-.05em}
+  .hero .sub{font-family:"Fraunces",serif;font-style:italic;font-weight:300;font-size:clamp(22px,6.5vw,46px);margin-top:.16em}
   .hero .kick{margin-bottom:30px}
   .chev{position:absolute;left:50%;bottom:30px;transform:translateX(-50%);z-index:3;color:var(--dim);
     font-size:11px;letter-spacing:.24em;text-transform:uppercase;text-align:center;animation:bob 2.4s infinite}
   .chev span{display:block;font-size:18px;margin-top:7px}
   @keyframes bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,9px)}}
 
-  /* pannello nero (respiro editoriale) */
   .black{background:#05080f;align-items:center}
-  .black h2{font-size:clamp(38px,8.5vw,86px);max-width:16ch}
+  .black h2{font-size:clamp(38px,8.5vw,92px);max-width:16ch}
+  .center{text-align:center}.center .wrap{text-align:center}.center h2{margin:0 auto}
 
-  /* finale */
-  .end{align-items:center;text-align:center;background:#05080f}
+  /* rassicurazioni */
+  .feat{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:30px}
+  .feat .f{border:1px solid rgba(246,241,232,.14);border-radius:18px;padding:22px 16px;background:rgba(246,241,232,.03)}
+  .feat .f b{font-family:"Fraunces",serif;font-weight:600;font-size:clamp(20px,5.5vw,27px);display:block;letter-spacing:-.01em}
+  .feat .f span{color:var(--dim);font-size:13px;margin-top:8px;display:block;line-height:1.4}
+  @media(min-width:720px){.feat{grid-template-columns:repeat(4,1fr)}}
+
+  .payoff h2{font-size:clamp(54px,15vw,150px);text-align:center;max-width:none}
+
+  /* finale / invito */
+  .end{align-items:center;text-align:center;background:radial-gradient(120% 90% at 50% 0%,#16243a,#05080f 70%)}
   .end .wrap{text-align:center}
-  .end .ghost{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);z-index:0;
-    font-family:"Fraunces",serif;font-weight:300;font-size:clamp(280px,75vw,560px);color:rgba(246,241,232,.045);letter-spacing:-.05em;pointer-events:none}
-  .end h2{font-size:clamp(46px,12vw,128px);position:relative;z-index:2}
+  .end h2{font-size:clamp(60px,17vw,170px)}
   .end .em{font-style:italic;color:var(--coral)}
-  .btn{display:inline-flex;align-items:center;gap:9px;margin-top:32px;padding:16px 32px;border-radius:980px;
-    background:var(--ink);color:#05080f;font-weight:700;font-size:17px;box-shadow:0 24px 60px -24px rgba(0,0,0,.9);transition:transform .3s;position:relative;z-index:2}
+  .btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:34px}
+  .btn{display:inline-flex;align-items:center;gap:9px;padding:17px 30px;border-radius:980px;font-weight:700;font-size:17px;transition:transform .3s}
+  .btn.pri{background:var(--coral);color:#05080f;box-shadow:0 24px 60px -22px rgba(255,126,84,.6)}
+  .btn.sec{border:1px solid rgba(246,241,232,.32);color:var(--ink)}
   .btn:active{transform:scale(.97)}
-  .credit{margin-top:28px;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(246,241,232,.32);position:relative;z-index:2}
+  .note{margin-top:22px;font-size:13.5px;color:var(--dim)}
+  .credit{margin-top:30px;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(246,241,232,.3)}
 
-  @media(prefers-reduced-motion:reduce){
-    html{scroll-behavior:auto}.bg{transform:none}.cap{opacity:1;transform:none}.chev{animation:none}
-  }
+  @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.bg{transform:none}.cap{opacity:1;transform:none}.chev{animation:none}}
 </style>
 </head>
 <body>
 <div class="prog" id="prog"></div>
-<div class="tb" id="tb"><b>Ale · 40</b><a class="cta" href="index.html">La guida</a></div>
+<div class="tb" id="tb"><b>Ale · 40</b><a class="cta" href="https://wa.me/?text=Ci%20sto!%20Vengo%20a%20Barcellona%20per%20i%2040%20di%20Ale%20%F0%9F%8E%89">Ci sei?</a></div>
 
 <!-- 1 · HERO -->
-<section class="panel ph hero" data-first>
+<section class="panel ph hero">
   <div class="bg" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Sagrada_Familia_March_2015-14a.jpg/3840px-Sagrada_Familia_March_2015-14a.jpg')"></div>
   <div class="wrap"><div class="cap">
     <div class="kick">Barcellona · 16 – 18 Ottobre 2026</div>
@@ -98,52 +103,84 @@
   <div class="chev">scorri<span>↓</span></div>
 </section>
 
-<!-- 2 · NERO / manifesto -->
-<section class="panel black">
+<!-- 2 · HOOK -->
+<section class="panel black center">
   <div class="wrap"><div class="cap">
-    <h2>Quarant'anni si festeggiano <span class="c">una volta sola.</span></h2>
-    <p class="lede">Così abbiamo scelto la città giusta, e tre giorni senza un minuto sprecato.</p>
+    <h2>Ale fa quaranta.<br>E non vuole farlo <span class="c">senza di te.</span></h2>
   </div></div>
 </section>
 
-<!-- 3 · GAUDÍ -->
+<!-- 3 · NOTTE -->
 <section class="panel ph">
-  <div class="bg" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/View_Park_Guell_Sagrada.jpg/1920px-View_Park_Guell_Sagrada.jpg')"></div>
-  <div class="wrap"><div class="cap">
-    <h2>La città di Gaudí, vista dall'alto.</h2>
-  </div></div>
+  <div class="bg" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Panorama_of_night_in_Barcelona.jpg/1920px-Panorama_of_night_in_Barcelona.jpg')"></div>
+  <div class="wrap"><div class="cap"><h2>Una città che non dorme mai.</h2></div></div>
 </section>
 
 <!-- 4 · MARE -->
 <section class="panel ph">
   <div class="bg" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Beach%2C_Barcelona_%28P1170712%29.jpg/3840px-Beach%2C_Barcelona_%28P1170712%29.jpg')"></div>
-  <div class="wrap"><div class="cap">
-    <h2>Mare la mattina,<br><span class="c">vermut</span> al tramonto.</h2>
-  </div></div>
+  <div class="wrap"><div class="cap"><h2>Colazione con il <span class="c">mare</span> davanti.</h2></div></div>
 </section>
 
-<!-- 5 · NERO / notte -->
+<!-- 5 · GAUDÍ -->
+<section class="panel ph">
+  <div class="bg" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/View_Park_Guell_Sagrada.jpg/1920px-View_Park_Guell_Sagrada.jpg')"></div>
+  <div class="wrap"><div class="cap"><h2>Gaudí a ogni angolo,<br>vermut a ogni <span class="c">tramonto.</span></h2></div></div>
+</section>
+
+<!-- 6 · CIBO -->
+<section class="panel ph">
+  <div class="bg" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Paella_de_marisco_01.jpg/1920px-Paella_de_marisco_01.jpg')"></div>
+  <div class="wrap"><div class="cap"><h2>Tapas, vino e brindisi<br>che non vogliono finire.</h2></div></div>
+</section>
+
+<!-- 7 · FOMO -->
 <section class="panel black">
   <div class="wrap"><div class="cap">
-    <h2>E una notte che <span class="c">non vuole finire.</span></h2>
+    <h2>Tra vent'anni ti ricorderai<br>di <span class="c">esserci stato.</span></h2>
+    <p class="lede">Non di averci pensato su. Di averci detto sì.</p>
   </div></div>
 </section>
 
-<!-- 6 · BRINDISI -->
+<!-- 8 · RASSICURAZIONI -->
+<section class="panel black">
+  <div class="wrap"><div class="cap">
+    <div class="kick">Nessuna scusa</div>
+    <h2>È più facile di quanto credi.</h2>
+    <div class="feat">
+      <div class="f"><b>3 giorni</b><span>Un weekend lungo: vai e torni.</span></div>
+      <div class="f"><b>Da Bologna</b><span>Voli low cost diretti, 1h45.</span></div>
+      <div class="f"><b>Sul mare</b><span>Hotel già preso, in Vila Olímpica.</span></div>
+      <div class="f"><b>Zero pensieri</b><span>Itinerario e prenotazioni: già pronti.</span></div>
+    </div>
+  </div></div>
+</section>
+
+<!-- 9 · LA FESTA -->
 <section class="panel ph">
-  <div class="bg" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Park_Guell_Detail_Terrace.jpg/1920px-Park_Guell_Detail_Terrace.jpg')"></div>
+  <div class="bg" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Barcelona_by_night_-_panoramio.jpg/1920px-Barcelona_by_night_-_panoramio.jpg')"></div>
   <div class="wrap"><div class="cap">
-    <h2>Brindiamo a quello che sei diventato.</h2>
+    <h2>Sabato sera <span class="c">si festeggia.</span></h2>
+    <p class="lede">E ti vogliamo proprio lì, a quel tavolo.</p>
   </div></div>
 </section>
 
-<!-- 7 · FINALE -->
+<!-- 10 · PAYOFF -->
+<section class="panel black payoff center">
+  <div class="wrap"><div class="cap"><h2>Manchi <span class="c">solo tu.</span></h2></div></div>
+</section>
+
+<!-- 11 · INVITO -->
 <section class="panel end">
-  <div class="ghost">40</div>
   <div class="wrap"><div class="cap">
-    <h2>Buon <span class="em">quaranta</span>, Ale.</h2>
-    <a class="btn" href="index.html">Apri la guida →</a>
-    <div class="credit">Barcellona 2026 · foto Wikimedia Commons</div>
+    <div class="kick">Allora</div>
+    <h2>Ci <span class="em">sei?</span></h2>
+    <div class="btns">
+      <a class="btn pri" href="https://wa.me/?text=Ci%20sto!%20Vengo%20a%20Barcellona%20per%20i%2040%20di%20Ale%20%F0%9F%8E%89">Dimmi che ci sei →</a>
+      <a class="btn sec" href="index.html">Sfoglia il programma</a>
+    </div>
+    <p class="note">Il volo costa meno se lo prenoti presto. 16 – 18 ottobre 2026.</p>
+    <div class="credit">Barcellona · I 40 di Ale · foto Wikimedia Commons</div>
   </div></div>
 </section>
 
