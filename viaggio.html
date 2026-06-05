@@ -22,7 +22,6 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preconnect" href="https://upload.wikimedia.org" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,300;1,9..144,400&family=DM+Sans:opsz,wght@9..40,500;9..40,700&display=swap" rel="stylesheet">
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
@@ -97,16 +96,31 @@
   .note{margin-top:22px;font-size:13.5px;color:var(--dim)}
   .credit{margin-top:30px;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(246,241,232,.3)}
 
-  @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.bg{transform:none}.cap{opacity:1;transform:none}.chev{animation:none}}
+  .hero .big{transition:transform 1.5s cubic-bezier(.2,.7,.2,1) .05s}
+  .hero:not(.in) .big{transform:scale(1.07)}
+
+  /* CTA fissa in basso — l'invito sempre a un tap */
+  .dock{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:55;
+    display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 12px 11px 18px;max-width:560px;margin:0 auto;
+    border-radius:18px;background:rgba(12,18,28,.74);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
+    border:1px solid rgba(246,241,232,.12);box-shadow:0 18px 50px -20px rgba(0,0,0,.85);
+    opacity:0;transform:translateY(150%);transition:.55s cubic-bezier(.2,.7,.2,1)}
+  .dock.on{opacity:1;transform:none}
+  .dock small{font-family:"Fraunces",serif;font-size:15px;color:var(--ink);line-height:1.1}
+  .dock small i{display:block;font-style:normal;font-size:11px;letter-spacing:.03em;color:var(--dim);margin-top:2px}
+  .dock b{flex:none;background:var(--coral);color:#05080f;font-weight:700;font-size:15px;padding:11px 18px;border-radius:980px}
+
+  @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.bg{transform:none}.cap{opacity:1;transform:none}.chev{animation:none}.hero .big{transform:none}.dock{transition:opacity .3s}}
 </style>
 </head>
 <body>
 <div class="prog" id="prog"></div>
 <div class="tb" id="tb"><b>Ale · 40</b><a class="cta" href="https://wa.me/393474227732?text=Ci%20sto!%20Vengo%20a%20Barcellona%20per%20i%2040%20di%20Ale%20%F0%9F%8E%89">Ci sei?</a></div>
+<a class="dock" id="dock" href="https://wa.me/393474227732?text=Ci%20sto!%20Vengo%20a%20Barcellona%20per%20i%2040%20di%20Ale%20%F0%9F%8E%89"><small>I 40 di Ale<i>Barcellona · 16–18 ott 2026</i></small><b>Ci sei? →</b></a>
 
 <!-- 1 · HERO -->
 <section class="panel ph hero">
-  <div class="bg" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Sagrada_Familia_March_2015-14a.jpg/3840px-Sagrada_Familia_March_2015-14a.jpg')"></div>
+  <div class="bg" style="background-image:url('img/sagrada.jpg')"></div>
   <div class="wrap"><div class="cap">
     <div class="kick">Barcellona · 16 – 18 Ottobre 2026</div>
     <div class="big">40</div>
@@ -124,25 +138,25 @@
 
 <!-- 3 · NOTTE -->
 <section class="panel ph">
-  <div class="bg" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Panorama_of_night_in_Barcelona.jpg/1920px-Panorama_of_night_in_Barcelona.jpg')"></div>
+  <div class="bg" style="background-image:url('img/notte.jpg')"></div>
   <div class="wrap"><div class="cap"><h2>Una città che non dorme mai.</h2></div></div>
 </section>
 
 <!-- 4 · MARE -->
 <section class="panel ph">
-  <div class="bg" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Beach%2C_Barcelona_%28P1170712%29.jpg/3840px-Beach%2C_Barcelona_%28P1170712%29.jpg')"></div>
+  <div class="bg" style="background-image:url('img/mare.jpg')"></div>
   <div class="wrap"><div class="cap"><h2>Colazione con il <span class="c">mare</span> davanti.</h2></div></div>
 </section>
 
 <!-- 5 · GAUDÍ -->
 <section class="panel ph">
-  <div class="bg" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/View_Park_Guell_Sagrada.jpg/1920px-View_Park_Guell_Sagrada.jpg')"></div>
+  <div class="bg" style="background-image:url('img/gaudi.jpg')"></div>
   <div class="wrap"><div class="cap"><h2>Gaudí a ogni angolo,<br>vermut a ogni <span class="c">tramonto.</span></h2></div></div>
 </section>
 
 <!-- 6 · CIBO -->
 <section class="panel ph">
-  <div class="bg" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Paella_de_marisco_01.jpg/1920px-Paella_de_marisco_01.jpg')"></div>
+  <div class="bg" style="background-image:url('img/cibo.jpg')"></div>
   <div class="wrap"><div class="cap"><h2>Tapas, vino e brindisi<br>che non vogliono finire.</h2></div></div>
 </section>
 
@@ -170,7 +184,7 @@
 
 <!-- 9 · LA FESTA -->
 <section class="panel ph">
-  <div class="bg" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Barcelona_by_night_-_panoramio.jpg/1920px-Barcelona_by_night_-_panoramio.jpg')"></div>
+  <div class="bg" style="background-image:url('img/festa.jpg')"></div>
   <div class="wrap"><div class="cap">
     <h2>Sabato sera <span class="c">si festeggia.</span></h2>
     <p class="lede">E ti vogliamo proprio lì, a quel tavolo.</p>
@@ -205,12 +219,14 @@
     panels.forEach(p=>io.observe(p));
     requestAnimationFrame(()=>panels[0].classList.add('in'));
   }
-  const bar=document.getElementById('prog'), tb=document.getElementById('tb');
+  const bar=document.getElementById('prog'), tb=document.getElementById('tb'), dock=document.getElementById('dock');
   let t=false;
   addEventListener('scroll',()=>{ if(t)return; t=true; requestAnimationFrame(()=>{
-    const h=document.documentElement, max=h.scrollHeight-h.clientHeight;
-    bar.style.transform='scaleX('+(max?h.scrollTop/max:0)+')';
-    tb.classList.toggle('on', scrollY>innerHeight*0.55); t=false; }); },{passive:true});
+    const h=document.documentElement, max=h.scrollHeight-h.clientHeight, y=h.scrollTop;
+    bar.style.transform='scaleX('+(max?y/max:0)+')';
+    tb.classList.toggle('on', y>innerHeight*0.55);
+    dock.classList.toggle('on', y>innerHeight*0.85 && y < max-innerHeight*0.7);  // nascondi vicino all'invito finale
+    t=false; }); },{passive:true});
 </script>
 </body>
 </html>
