@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0a1626">
+<title>Barcellona · I 40 di Ale</title>
+<meta name="description" content="Tre giorni a Barcellona per i 40 di Ale · 16–18 ottobre 2026.">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a1626; --bg2:#0e1f33; --ink:#f4ece0; --muted:#9db1c6;
+    --coral:#ff7a4d; --amber:#ffb86b; --teal:#2ec4b6; --line:rgba(255,255,255,.10);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+  body{background:var(--bg);color:var(--ink);font-family:"DM Sans",system-ui,sans-serif;
+    line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  h1,h2,h3{font-family:"Fraunces",serif;line-height:1.02;letter-spacing:-.02em;font-weight:600}
+  em{font-style:italic}
+  a{color:inherit;text-decoration:none}
+  .accent{color:var(--coral)}
+  .teal{color:var(--teal)}
+
+  /* progress + topbar */
+  .prog{position:fixed;top:0;left:0;height:2px;width:100%;transform:scaleX(0);transform-origin:0 50%;
+    background:linear-gradient(90deg,var(--coral),var(--amber),var(--teal));z-index:90}
+  .tb{position:fixed;top:0;left:0;right:0;z-index:80;display:flex;align-items:center;justify-content:space-between;
+    padding:11px 18px;background:rgba(10,22,38,.6);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
+    border-bottom:1px solid transparent;transform:translateY(-110%);transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+  .tb.on{transform:none;border-bottom-color:var(--line)}
+  .tb b{font-family:"Fraunces",serif;font-size:16px;letter-spacing:-.01em}
+  .tb a.cta{font-size:13px;font-weight:700;padding:7px 14px;border-radius:980px;
+    background:var(--ink);color:#0a1626}
+
+  /* layout */
+  section{position:relative;padding:14vh 22px;max-width:1000px;margin:0 auto}
+  .full{min-height:100svh;display:flex;flex-direction:column;justify-content:center}
+  .eyebrow{font-size:13px;font-weight:700;letter-spacing:.32em;text-transform:uppercase;color:var(--teal);margin-bottom:18px}
+  .lead{font-size:clamp(19px,4.5vw,26px);color:var(--muted);max-width:30ch;margin-top:22px;line-height:1.45}
+
+  /* reveal */
+  .reveal{opacity:0;transform:translateY(42px);transition:opacity 1s cubic-bezier(.2,.7,.2,1),transform 1s cubic-bezier(.2,.7,.2,1)}
+  .reveal.in{opacity:1;transform:none}
+  .reveal.d1{transition-delay:.08s}.reveal.d2{transition-delay:.16s}.reveal.d3{transition-delay:.24s}.reveal.d4{transition-delay:.32s}
+
+  /* HERO */
+  .hero{min-height:100svh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;
+    padding:0 22px;overflow:hidden}
+  .hero h1{font-size:clamp(64px,23vw,200px);font-weight:600;letter-spacing:-.04em}
+  .hero .sub{font-family:"Fraunces",serif;font-style:italic;font-weight:400;
+    font-size:clamp(24px,7vw,52px);color:var(--coral);margin-top:.1em}
+  .hero .tag{margin-top:26px;font-size:clamp(15px,3.6vw,20px);color:var(--muted);max-width:24ch}
+  .blob{position:absolute;border-radius:50%;filter:blur(60px);opacity:.5;z-index:-1;pointer-events:none}
+  .b1{width:60vw;height:60vw;background:radial-gradient(circle,#ff7a4d,transparent 70%);top:-10vh;left:-15vw}
+  .b2{width:55vw;height:55vw;background:radial-gradient(circle,#2ec4b6,transparent 70%);bottom:-8vh;right:-18vw}
+  .b3{width:40vw;height:40vw;background:radial-gradient(circle,#ffb86b,transparent 70%);top:38vh;right:8vw;opacity:.35}
+  .float{position:absolute;font-size:clamp(28px,6vw,46px);opacity:.9;z-index:-1;will-change:transform}
+  .f1{top:18%;left:12%}.f2{top:26%;right:14%}.f3{bottom:22%;left:18%}.f4{bottom:28%;right:16%}
+  .chev{position:absolute;bottom:34px;left:50%;transform:translateX(-50%);color:var(--muted);font-size:13px;
+    letter-spacing:.2em;text-transform:uppercase;animation:bob 2s infinite}
+  .chev span{display:block;font-size:20px;margin-top:6px}
+  @keyframes bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,8px)}}
+
+  /* statement */
+  .stmt h2{font-size:clamp(34px,8.5vw,76px);font-weight:600;max-width:14ch}
+  .stmt .g{color:var(--muted)}
+
+  /* stats */
+  .stats{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+  .stat{background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));
+    border:1px solid var(--line);border-radius:22px;padding:26px 18px;text-align:center}
+  .stat .num{font-family:"Fraunces",serif;font-size:clamp(46px,12vw,72px);font-weight:600;line-height:1;
+    background:linear-gradient(180deg,var(--ink),var(--muted));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .stat .lab{margin-top:10px;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+
+  /* boarding pass */
+  .pass{background:linear-gradient(135deg,#14283f,#0e1f33);border:1px solid var(--line);border-radius:26px;
+    overflow:hidden;max-width:560px;box-shadow:0 30px 80px -40px rgba(0,0,0,.8)}
+  .pass-top{padding:24px 26px;display:flex;justify-content:space-between;align-items:center;
+    border-bottom:1px dashed rgba(255,255,255,.2);position:relative}
+  .pass-top::before,.pass-top::after{content:"";position:absolute;bottom:-11px;width:22px;height:22px;
+    border-radius:50%;background:var(--bg)}
+  .pass-top::before{left:-11px}.pass-top::after{right:-11px}
+  .pass .route{display:flex;align-items:center;gap:14px;padding:26px;font-family:"Fraunces",serif}
+  .pass .iata{font-size:clamp(34px,9vw,52px);font-weight:600}
+  .pass .arr{flex:1;text-align:center;color:var(--teal);font-size:22px}
+  .pass .time{font-size:13px;color:var(--muted);font-family:"DM Sans";margin-top:4px;letter-spacing:.04em}
+  .pass .meta{padding:0 26px 24px;display:flex;gap:22px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+  .pass .meta b{color:var(--ink);font-weight:700;display:block;font-size:15px;font-family:"Fraunces",serif}
+  .ret{margin-top:18px;font-size:14px;color:var(--muted)}
+  .ret b{color:var(--ink)}
+
+  /* days */
+  .day .day-head{position:sticky;top:64px;padding:10px 0 22px;background:linear-gradient(180deg,var(--bg) 60%,transparent)}
+  .day .n{font-family:"Fraunces",serif;font-size:15px;font-weight:700;letter-spacing:.2em;color:var(--coral)}
+  .day h2{font-size:clamp(36px,9vw,68px);margin-top:6px}
+  .day h2 em{display:block;font-weight:300;font-size:.62em;color:var(--muted)}
+  .tl{list-style:none;margin-top:14px;border-left:2px solid var(--line);padding-left:22px}
+  .tl li{position:relative;padding:18px 0}
+  .tl li::before{content:"";position:absolute;left:-29px;top:24px;width:12px;height:12px;border-radius:50%;
+    background:var(--bg);border:2px solid var(--teal)}
+  .tl .t{font-family:"DM Sans";font-variant-numeric:tabular-nums;font-size:13px;letter-spacing:.06em;color:var(--teal);font-weight:700}
+  .tl .ti{font-family:"Fraunces",serif;font-size:clamp(21px,5vw,28px);font-weight:600;margin-top:3px}
+  .tl .ds{color:var(--muted);font-size:14.5px;margin-top:3px}
+  .day.gold h2 .n,.day.gold .n{color:var(--amber)}
+  .day.gold .tl li::before{border-color:var(--amber)}
+  .day.gold .tl .t{color:var(--amber)}
+  .badge40{display:inline-block;margin-top:14px;padding:8px 16px;border-radius:980px;font-weight:700;font-size:13px;
+    letter-spacing:.12em;text-transform:uppercase;color:#1a0d06;background:linear-gradient(90deg,var(--amber),var(--coral))}
+
+  /* food */
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:18px}
+  .tile{background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));border:1px solid var(--line);
+    border-radius:18px;padding:18px}
+  .tile .e{font-size:26px}
+  .tile h4{font-family:"Fraunces",serif;font-size:18px;font-weight:600;margin-top:8px}
+  .tile p{color:var(--muted);font-size:13px;margin-top:4px;line-height:1.4}
+  .tile .star{color:var(--amber);font-weight:700;font-size:13px;margin-top:6px;font-variant-numeric:tabular-nums}
+
+  /* stay */
+  .stay{background:radial-gradient(120% 120% at 20% 0%,rgba(46,196,182,.16),transparent 60%);
+    border:1px solid var(--line);border-radius:26px;padding:34px 26px}
+  .stay h3{font-size:clamp(28px,7vw,46px)}
+  .stay .row{display:flex;gap:24px;flex-wrap:wrap;margin-top:20px;color:var(--muted);font-size:14px}
+  .stay .row b{display:block;color:var(--ink);font-family:"Fraunces",serif;font-size:18px}
+
+  /* closing */
+  .close{text-align:center;min-height:100svh;display:flex;flex-direction:column;justify-content:center;align-items:center}
+  .close h2{font-size:clamp(48px,16vw,150px);font-weight:600}
+  .close .em{font-style:italic;color:var(--coral)}
+  .btn{display:inline-flex;align-items:center;gap:10px;margin-top:34px;padding:16px 30px;border-radius:980px;
+    background:var(--ink);color:#0a1626;font-weight:700;font-size:17px;transition:transform .3s,box-shadow .3s;
+    box-shadow:0 20px 50px -20px rgba(244,236,224,.4)}
+  .btn:hover{transform:translateY(-2px)}
+  footer{padding:40px 22px 60px;text-align:center;color:var(--muted);font-size:12px;letter-spacing:.14em;text-transform:uppercase}
+
+  @media(min-width:720px){
+    .stats{grid-template-columns:repeat(4,1fr)}
+    .grid{grid-template-columns:repeat(3,1fr)}
+  }
+  @media(prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    .reveal{opacity:1;transform:none;transition:none}
+    .chev{animation:none}
+  }
+</style>
+</head>
+<body>
+<div class="prog" id="prog"></div>
+<div class="tb" id="tb"><b>Barça 40</b><a class="cta" href="index.html">Apri la guida</a></div>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="blob b1" data-par="0.10"></div>
+  <div class="blob b2" data-par="0.16"></div>
+  <div class="blob b3" data-par="0.22"></div>
+  <div class="float f1" data-par="0.30">✈️</div>
+  <div class="float f2" data-par="0.22">🍸</div>
+  <div class="float f3" data-par="0.26">🏖️</div>
+  <div class="float f4" data-par="0.18">🎉</div>
+  <div class="eyebrow">16 – 18 Ottobre 2026</div>
+  <h1>Barcellona</h1>
+  <div class="sub">I quaranta di Ale.</div>
+  <p class="tag">Tre giorni. Una città. Un compleanno che non si dimentica.</p>
+  <div class="chev">scorri<span>↓</span></div>
+</header>
+
+<!-- STATEMENT -->
+<section class="full stmt">
+  <div class="eyebrow reveal">Il piano</div>
+  <h2 class="reveal d1">Non un viaggio qualsiasi. <span class="g">Un weekend cucito su misura.</span></h2>
+  <p class="lead reveal d2">Voli all'alba, mare a mezzogiorno, Gaudí di mattina, cocktail fino a notte. Ogni ora ha già il suo posto.</p>
+</section>
+
+<!-- STATS -->
+<section class="stats">
+  <div class="stat reveal"><div class="num" data-to="3">0</div><div class="lab">Giorni</div></div>
+  <div class="stat reveal d1"><div class="num" data-to="2">0</div><div class="lab">Notti</div></div>
+  <div class="stat reveal d2"><div class="num" data-to="13">0</div><div class="lab">Tavoli & bar</div></div>
+  <div class="stat reveal d3"><div class="num" data-to="40">0</div><div class="lab">Anni</div></div>
+</section>
+
+<!-- FLIGHT -->
+<section class="full">
+  <div class="eyebrow reveal">L'andata</div>
+  <h2 class="reveal d1" style="font-size:clamp(34px,8.5vw,72px)">All'alba<br>si vola.</h2>
+  <p class="lead reveal d2" style="margin-bottom:30px">Sveglia presto, solo bagaglio a mano. Alle 8 del mattino sei già con i piedi in Catalogna.</p>
+  <div class="pass reveal d3">
+    <div class="pass-top">
+      <div><div class="eyebrow" style="margin:0;color:var(--muted)">Ryanair</div><b style="font-family:'Fraunces',serif;font-size:20px">FR2097</b></div>
+      <div style="text-align:right;font-size:13px;color:var(--muted)">Venerdì<br><b style="color:var(--ink)">16 Ott</b></div>
+    </div>
+    <div class="route">
+      <div><div class="iata">BLQ</div><div class="time">06:20 · Bologna</div></div>
+      <div class="arr">✈</div>
+      <div style="text-align:right"><div class="iata">BCN</div><div class="time">08:05 · Barcellona</div></div>
+    </div>
+    <div class="meta">
+      <div><b>Diretto</b>1h 45m</div>
+      <div><b>Cabina</b>Solo bagaglio a mano</div>
+      <div><b>In aeroporto</b>entro le 04:50</div>
+    </div>
+  </div>
+  <p class="ret reveal d4">…e il ritorno? <b>FR5220</b>, domenica notte: BCN 23:05 → BLQ 00:50, dal Terminal 2.</p>
+</section>
+
+<!-- DAY 1 -->
+<section class="day reveal">
+  <div class="day-head"><div class="n">GIORNO 01 · VENERDÌ</div><h2>Il primo<br><em>assaggio.</em></h2></div>
+  <ol class="tl">
+    <li class="reveal"><div class="t">08:05</div><div class="ti">Atterraggio + workation</div><div class="ds">Check-in al volo, poi un po' di lavoro vista mare. Stesso fuso, zero jet-lag.</div></li>
+    <li class="reveal"><div class="t">13:00</div><div class="ti">Pranzo & mare al Bogatell</div><div class="ds">Boccone veloce e venti minuti di Mediterraneo.</div></li>
+    <li class="reveal"><div class="t">18:30</div><div class="ti">Gòtic & El Born a piedi</div><div class="ds">Cattedrale, vicoli, Santa Maria del Mar. La Barcellona di sempre.</div></li>
+    <li class="reveal"><div class="t">20:30</div><div class="ti">Cena catalana · Barriteca</div><div class="ds">Cucina vera, trattano benissimo chi cena da solo.</div></li>
+    <li class="reveal"><div class="t">22:30</div><div class="ti">Cocktail nel Born · No Sé</div><div class="ds">Ultimo giro, tutto a piedi. Buonanotte Barcellona.</div></li>
+  </ol>
+</section>
+
+<!-- DAY 2 -->
+<section class="day gold reveal">
+  <div class="day-head"><div class="n">GIORNO 02 · SABATO</div><h2>Il giorno<br><em>del quaranta.</em></h2></div>
+  <ol class="tl">
+    <li class="reveal"><div class="t">09:30</div><div class="ti">Sagrada Família</div><div class="ds">Slot prenotato, niente fila. Gaudí che toglie il fiato.</div></li>
+    <li class="reveal"><div class="t">13:30</div><div class="ti">MNAC · Montjuïc</div><div class="ds">Arte catalana e una vista che vale la salita.</div></li>
+    <li class="reveal"><div class="t">17:30</div><div class="ti">Aire Ancient Baths</div><div class="ds">Il regalo a sé stessi: terme, vapore, silenzio.</div></li>
+    <li class="reveal"><div class="t">19:30</div><div class="ti">Aperitivo rooftop · Sir Victor</div><div class="ds">Tetti, DJ e skyline. Si comincia in alto.</div></li>
+    <li class="reveal"><div class="t">21:30</div><div class="ti">La festa · El Born</div><div class="ds">Cena e giro di cocktail: Mariposa Negra, Aldea, Bestiari, No Sé.</div><span class="badge40">🎉 Buon 40</span></li>
+  </ol>
+</section>
+
+<!-- DAY 3 -->
+<section class="day reveal">
+  <div class="day-head"><div class="n">GIORNO 03 · DOMENICA</div><h2>L'ultimo sole,<br><em>poi a casa.</em></h2></div>
+  <ol class="tl">
+    <li class="reveal"><div class="t">10:00</div><div class="ti">Spiaggia & brunch</div><div class="ds">Mare e relax, o la spa dell'hotel. Niente sveglie.</div></li>
+    <li class="reveal"><div class="t">13:30</div><div class="ti">Museo Picasso o Park Güell</div><div class="ds">Quello che non hai fatto venerdì.</div></li>
+    <li class="reveal"><div class="t">20:15</div><div class="ti">Lounge VIP Canudas · T2</div><div class="ds">Cibo e drink prima del gate. Si chiude in stile.</div></li>
+    <li class="reveal"><div class="t">23:05</div><div class="ti">Volo di rientro</div><div class="ds">Atterri all'una di notte, con la testa ancora in Rambla.</div></li>
+  </ol>
+</section>
+
+<!-- FOOD -->
+<section class="full">
+  <div class="eyebrow reveal">A tavola</div>
+  <h2 class="reveal d1" style="font-size:clamp(34px,8.5vw,72px)">Mangiare,<br>bere, ripetere.</h2>
+  <p class="lead reveal d2">Poblenou e Vila Olímpica, dove mangiano i local. Una selezione, già scelta.</p>
+  <div class="grid">
+    <div class="tile reveal"><div class="e">🥩</div><h4>Els Tres Porquets</h4><p>Tapas creative e carni, modernista bohémien.</p><div class="star">★ 9,4 su TheFork</div></div>
+    <div class="tile reveal d1"><div class="e">🐟</div><h4>Els Pescadors</h4><p>Pesce e arroces in Plaça de Prim. Un'istituzione dal 1980.</p></div>
+    <div class="tile reveal d2"><div class="e">🧀</div><h4>Can Recasens</h4><p>Formaggi, salumi e vini sotto le lampadine.</p></div>
+    <div class="tile reveal"><div class="e">🍸</div><h4>Balius</h4><p>Cocktail classici in una ex-farmacia. Jazz la domenica.</p></div>
+    <div class="tile reveal d1"><div class="e">🥪</div><h4>Dreamboat</h4><p>Drink giocosi e grilled cheese gourmet.</p></div>
+    <div class="tile reveal d2"><div class="e">🥃</div><h4>Madame George</h4><p>Speakeasy raffinato, atmosfera intima.</p></div>
+  </div>
+</section>
+
+<!-- STAY -->
+<section>
+  <div class="stay reveal">
+    <div class="eyebrow" style="color:var(--teal)">Il rifugio</div>
+    <h3>A due passi<br>dal mare.</h3>
+    <div class="row">
+      <div><b>H10 Marina</b>Vila Olímpica</div>
+      <div><b>2 notti</b>Check-in dalle 15:00</div>
+      <div><b>Piscina & spa</b>Per ricaricare</div>
+    </div>
+  </div>
+</section>
+
+<!-- CLOSE -->
+<section class="close">
+  <div class="eyebrow reveal">16 – 18 Ottobre 2026</div>
+  <h2 class="reveal d1">Buon <span class="em">quaranta</span>,<br>Ale.</h2>
+  <a class="btn reveal d2" href="index.html">Apri la guida completa →</a>
+</section>
+
+<footer>Barcellona · I 40 di Ale</footer>
+
+<script>
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // reveal on scroll
+  const io = new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}})},{threshold:.16,rootMargin:'0px 0px -8% 0px'});
+  document.querySelectorAll('.reveal').forEach(el=>reduce?el.classList.add('in'):io.observe(el));
+
+  // count-up
+  const cu = new IntersectionObserver((es)=>{es.forEach(e=>{if(!e.isIntersecting)return;const el=e.target,to=+el.dataset.to;
+    if(reduce){el.textContent=to;cu.unobserve(el);return;}
+    let n=0;const step=Math.max(1,Math.round(to/38));const t=setInterval(()=>{n+=step;if(n>=to){n=to;clearInterval(t);}el.textContent=n;},22);
+    cu.unobserve(el);})},{threshold:.6});
+  document.querySelectorAll('.num').forEach(el=>cu.observe(el));
+
+  // progress bar + topbar + parallax
+  const bar=document.getElementById('prog'), tb=document.getElementById('tb');
+  const pars=[...document.querySelectorAll('[data-par]')];
+  let ticking=false;
+  function onScroll(){
+    if(ticking)return; ticking=true;
+    requestAnimationFrame(()=>{
+      const h=document.documentElement, max=h.scrollHeight-h.clientHeight;
+      bar.style.transform='scaleX('+(max?h.scrollTop/max:0)+')';
+      tb.classList.toggle('on', scrollY > innerHeight*0.65);
+      if(!reduce){const y=scrollY; for(const el of pars){el.style.transform='translateY('+(y*+el.dataset.par)+'px)';}}
+      ticking=false;
+    });
+  }
+  addEventListener('scroll',onScroll,{passive:true}); onScroll();
+</script>
+</body>
+</html>
