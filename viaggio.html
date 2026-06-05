@@ -96,6 +96,13 @@
   .note{margin-top:22px;font-size:13.5px;color:var(--dim)}
   .credit{margin-top:30px;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(246,241,232,.3)}
 
+  /* trova-volo Skyscanner */
+  .flight{margin-top:32px;display:flex;flex-direction:column;align-items:flex-start;gap:16px}
+  .seg{display:inline-flex;background:rgba(246,241,232,.06);border:1px solid rgba(246,241,232,.14);border-radius:980px;padding:4px}
+  .seg button{font-family:inherit;font-weight:700;font-size:14px;color:var(--dim);padding:10px 20px;border-radius:980px;transition:.25s}
+  .seg button.on{background:var(--ink);color:#05080f}
+  .flight .hint{font-size:13px;color:var(--dim)}
+
   .hero .big{transition:transform 1.5s cubic-bezier(.2,.7,.2,1) .05s}
   .hero:not(.in) .big{transform:scale(1.07)}
 
@@ -179,6 +186,15 @@
       <div class="f"><b>Sul mare</b><span>Hotel già preso, in Vila Olímpica.</span></div>
       <div class="f"><b>Zero pensieri</b><span>Itinerario e prenotazioni: già pronti.</span></div>
     </div>
+    <div class="flight">
+      <div class="seg" id="seg">
+        <button type="button" data-r="261017">1 giorno</button>
+        <button type="button" data-r="261018" class="on">2 giorni</button>
+        <button type="button" data-r="261019">3 giorni</button>
+      </div>
+      <a id="fly" class="btn pri" target="_blank" rel="noopener" href="https://www.skyscanner.it/transport/flights/blq/bcn/261016/261018/">✈︎ Cerca il volo da Bologna →</a>
+      <p class="hint">Andata ven 16 ott · il ritorno cambia coi giorni che scegli tu.</p>
+    </div>
   </div></div>
 </section>
 
@@ -227,6 +243,12 @@
     tb.classList.toggle('on', y>innerHeight*0.55);
     dock.classList.toggle('on', y>innerHeight*0.85 && y < max-innerHeight*0.7);  // nascondi vicino all'invito finale
     t=false; }); },{passive:true});
+
+  // trova-volo: il selettore giorni aggiorna il ritorno su Skyscanner
+  const fly=document.getElementById('fly'), seg=document.getElementById('seg');
+  if(seg) seg.addEventListener('click',e=>{ const b=e.target.closest('button[data-r]'); if(!b)return;
+    seg.querySelectorAll('button').forEach(x=>x.classList.remove('on')); b.classList.add('on');
+    fly.href='https://www.skyscanner.it/transport/flights/blq/bcn/261016/'+b.dataset.r+'/'; });
 </script>
 </body>
 </html>
