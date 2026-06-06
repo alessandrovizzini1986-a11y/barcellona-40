@@ -8,295 +8,63 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Barça 40">
 <title>Vieni a Barcellona · I 40 di Ale</title>
-<meta name="description" content="Ale fa 40 a Barcellona, 16–18 ottobre 2026. Manchi solo tu.">
+<meta name="description" content="Ale fa 40 a Barcellona, 16–18 ottobre 2026. Guarda e scopri il tour.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/viaggio.html">
 <meta property="og:title" content="Vieni a Barcellona · I 40 di Ale">
-<meta property="og:description" content="Ale fa 40 a Barcellona, 16–18 ottobre 2026. Tre giorni, voli low cost da Bologna o Milano, hotel sul mare. Manchi solo tu.">
+<meta property="og:description" content="Ale fa 40 a Barcellona, 16–18 ottobre 2026. Voli da Bologna o Milano, hotel sul mare, e forse il Camp Nou.">
 <meta property="og:image" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/og-viaggio.jpg?v=4">
-<meta property="og:image:secure_url" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/og-viaggio.jpg?v=4">
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="I 40 di Ale — Barcellona, 16–18 ottobre 2026">
 <meta property="og:locale" content="it_IT">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Vieni a Barcellona · I 40 di Ale">
-<meta name="twitter:description" content="Ale fa 40 a Barcellona, 16–18 ottobre. Manchi solo tu.">
 <meta name="twitter:image" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/og-viaggio.jpg?v=4">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=DM+Sans:opsz,wght@9..40,500;9..40,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=DM+Sans:wght@500;700;800&display=swap" rel="stylesheet">
 <style>
-  *{box-sizing:border-box;margin:0;padding:0}
-  :root{--bg:#08080b;--bg2:#15151c;--ink:#f3ede3;--muted:#99a1ac;--coral:#ff7a4d;--line:rgba(255,255,255,.12);
-    --grad:linear-gradient(100deg,#ff5e2e 0%,#ff9a3d 45%,#ffd486 100%)}
-  html{scroll-behavior:smooth;background:var(--bg)}
-  body{font-family:"DM Sans",system-ui,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased;overflow-x:hidden}
-  h1,h2{font-family:"Fraunces",serif;font-weight:600;line-height:.96;letter-spacing:-.035em}
-  a{color:inherit;text-decoration:none}
-  .c{color:var(--coral);font-style:italic;font-weight:500}
-  .grad{background:var(--grad);background-size:220% 220%;-webkit-background-clip:text;background-clip:text;
-    color:transparent;animation:sheen 7s ease-in-out infinite}
-  @keyframes sheen{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
-
-  .prog{position:fixed;top:0;left:0;height:3px;width:100%;transform:scaleX(0);transform-origin:0 50%;z-index:60;background:var(--grad)}
-  .tb{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;
-    padding:12px 20px;background:rgba(8,8,11,.55);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
-    border-bottom:1px solid transparent;opacity:0;transform:translateY(-100%);transition:.5s cubic-bezier(.2,.7,.2,1)}
-  .tb.on{opacity:1;transform:none;border-bottom-color:var(--line)}
-  .tb b{font-family:"Fraunces",serif;font-size:16px}
-  .tb .cta{font-size:13px;font-weight:700;padding:8px 16px;border-radius:980px;background:var(--grad);color:#08080b}
-
-  /* HERO a tutta pagina: scorre via subito (niente blocco), entrata + parallasse in uscita */
-  .hero{align-items:center;justify-content:center;text-align:center;overflow:hidden}
-  .hero .inner{position:relative;z-index:2;will-change:transform,opacity}
-  .glow{position:absolute;left:50%;top:46%;width:95vmax;height:95vmax;border-radius:50%;pointer-events:none;
-    background:radial-gradient(circle,rgba(255,110,48,.42),rgba(255,90,40,.10) 42%,transparent 64%);
-    transform:translate(-50%,-50%) scale(.8);opacity:0;transition:opacity 1.2s ease,transform 1.2s ease;will-change:transform,opacity}
-  .hero.in .glow{opacity:.6;transform:translate(-50%,-50%) scale(1)}
-  .hk{font-size:12.5px;font-weight:700;letter-spacing:.34em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
-  .big{font-family:"Fraunces",serif;font-weight:600;font-size:clamp(120px,50vw,460px);line-height:.78;letter-spacing:-.05em;
-    opacity:0;transform:scale(.9);transition:opacity 1s cubic-bezier(.2,.7,.2,1),transform 1.2s cubic-bezier(.2,.7,.2,1);animation:none}
-  .hero.in .big{opacity:1;transform:scale(1)}
-  .hero .sub{font-family:"Fraunces",serif;font-style:italic;font-weight:400;font-size:clamp(22px,6vw,44px);color:var(--ink);margin-top:.16em;
-    opacity:0;transform:translateY(18px);transition:opacity 1s ease .25s,transform 1s ease .25s}
-  .hero.in .sub{opacity:1;transform:none}
-  .chev{position:absolute;left:50%;bottom:28px;transform:translateX(-50%);z-index:2;color:var(--muted);font-size:11px;letter-spacing:.22em;text-transform:uppercase;animation:bob 2.4s infinite}
-  .chev span{display:block;font-size:18px;margin-top:6px}
-  @keyframes bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,8px)}}
-
-  .panel{position:relative;min-height:100vh;min-height:100svh;display:flex;overflow:hidden;padding:0 26px}
-  .bg{position:absolute;inset:0;z-index:0;background-size:cover;background-position:center;
-    filter:saturate(1.05) contrast(1.08) brightness(.62);transform:scale(1.16);transition:transform 8s cubic-bezier(.22,.61,.36,1)}
-  .panel.in .bg{transform:scale(1)}
-  .panel.ph::before{content:"";position:absolute;inset:0;z-index:1;mix-blend-mode:soft-light;
-    background:radial-gradient(120% 80% at 78% 14%,rgba(255,110,50,.55),transparent 56%)}
-  .panel.ph::after{content:"";position:absolute;inset:0;z-index:1;
-    background:linear-gradient(180deg,rgba(8,8,11,.5) 0%,rgba(8,8,11,.12) 36%,rgba(8,8,11,.92) 100%)}
-  /* pannello Barça — colori blaugrana */
-  .panel.barca::before{background:radial-gradient(120% 80% at 50% 16%,rgba(165,0,68,.5),transparent 60%);mix-blend-mode:normal}
-  .panel.barca::after{background:linear-gradient(180deg,rgba(0,40,90,.5) 0%,rgba(0,28,66,.22) 34%,rgba(2,16,45,.92) 100%)}
-  .panel.barca .bg{filter:saturate(1.16) contrast(1.05) brightness(.74)}
-
-  .wrap{position:relative;z-index:2;width:100%;max-width:1000px;margin:auto;align-self:center;padding:14svh 0}
-  .ph .wrap{align-self:flex-end;padding:0 0 12svh}
-  .cap{opacity:0;transform:translateY(28px);transition:opacity 1s cubic-bezier(.2,.7,.2,1),transform 1s cubic-bezier(.2,.7,.2,1)}
-  .panel.in .cap{opacity:1;transform:none}
-  .kick{font-size:12.5px;font-weight:700;letter-spacing:.32em;text-transform:uppercase;color:var(--coral);margin-bottom:20px}
-  .cap h2{font-size:clamp(40px,9.5vw,104px);max-width:15ch}
-  .lede{font-size:clamp(16px,4vw,21px);color:var(--muted);margin-top:18px;max-width:32ch;line-height:1.5}
-
-  .black{background:var(--bg);align-items:center}
-  .black h2{font-size:clamp(38px,8.5vw,92px);max-width:16ch}
-  .center{text-align:center}.center .wrap{text-align:center}.center h2{margin:0 auto}
-
-  .feat{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:30px}
-  .feat .f{border:1px solid var(--line);border-radius:18px;padding:20px 16px;background:var(--bg2)}
-  .feat .f b{font-family:"Fraunces",serif;font-weight:600;font-size:clamp(20px,5.2vw,26px);display:block}
-  .feat .f span{color:var(--muted);font-size:13px;margin-top:7px;display:block;line-height:1.4}
-  @media(min-width:720px){.feat{grid-template-columns:repeat(4,1fr)}}
-
-  .finder{margin-top:32px}
-  .finder .q{font-size:13px;font-weight:700;letter-spacing:.04em;color:var(--muted);margin:0 0 10px}
-  .finder .q.mt{margin-top:18px}
-  .seg{display:inline-flex;flex-wrap:wrap;gap:8px}
-  .seg button{font-family:inherit;text-align:left;line-height:1.1;border:1.5px solid var(--line);background:var(--bg2);
-    border-radius:14px;padding:11px 16px;font-weight:700;font-size:15px;color:var(--ink);transition:.2s;cursor:pointer}
-  .seg button small{display:block;font-weight:500;font-size:11px;color:var(--muted);margin-top:3px}
-  .seg button.on{background:var(--grad);border-color:transparent;color:#08080b}
-  .seg button.on small{color:rgba(8,8,11,.7)}
-
-  .payoff h2{font-size:clamp(54px,15vw,150px);text-align:center;max-width:none}
-  .end{align-items:center;text-align:center;position:relative;overflow:hidden}
-  .end .glow{opacity:.5}
-  .end .wrap{text-align:center}
-  .end h2{font-size:clamp(60px,17vw,168px)}
-  .btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:32px}
-  .btn{display:inline-flex;align-items:center;gap:9px;padding:16px 30px;border-radius:980px;font-weight:700;font-size:17px;transition:transform .25s;cursor:pointer}
-  .btn.pri{background:var(--grad);color:#08080b;box-shadow:0 20px 50px -18px rgba(255,120,60,.7)}
-  .btn.sec{border:1.5px solid var(--line);color:var(--ink)}
-  .btn:active{transform:scale(.97)}
-  .note{margin-top:22px;font-size:13.5px;color:var(--muted)}
-  .credit{margin-top:28px;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);opacity:.6}
-
-  .dock{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:55;
-    display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 12px 11px 18px;max-width:560px;margin:0 auto;
-    border-radius:18px;background:rgba(18,18,24,.74);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
-    border:1px solid var(--line);box-shadow:0 16px 44px -18px rgba(0,0,0,.8);opacity:0;transform:translateY(150%);transition:.5s cubic-bezier(.2,.7,.2,1)}
-  .dock.on{opacity:1;transform:none}
-  .dock small{font-family:"Fraunces",serif;font-size:15px;color:var(--ink);line-height:1.1}
-  .dock small i{display:block;font-style:normal;font-size:11px;color:var(--muted);margin-top:2px}
-  .dock b{flex:none;background:var(--grad);color:#08080b;font-weight:700;font-size:15px;padding:11px 18px;border-radius:980px}
-
-  @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.bg{transform:none}.cap{opacity:1;transform:none}
-    .chev{animation:none}.grad{animation:none}.dock{transition:opacity .3s}
-    .hero .big,.hero .sub{opacity:1!important;transform:none!important}.hero .glow{opacity:.5!important}}
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;background:#08080b;color:#f3ede3;font-family:"DM Sans",system-ui,sans-serif;overflow:hidden}
+  #v{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;background:#08080b}
+  .tap{position:fixed;inset:0;z-index:1}
+  .ui{position:fixed;inset:0;z-index:2;display:flex;flex-direction:column;justify-content:space-between;pointer-events:none}
+  .top{display:flex;justify-content:space-between;align-items:center;padding:calc(14px + env(safe-area-inset-top)) 18px 14px}
+  .brand{font-family:"Fraunces",serif;font-weight:600;font-size:17px;text-shadow:0 2px 14px rgba(0,0,0,.7)}
+  .mute{pointer-events:auto;background:rgba(0,0,0,.42);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+    border:1px solid rgba(255,255,255,.22);color:#fff;font-family:inherit;font-weight:700;font-size:13px;padding:8px 14px;border-radius:980px;cursor:pointer}
+  .bottom{display:flex;flex-direction:column;align-items:center;gap:11px;padding:0 20px calc(28px + env(safe-area-inset-bottom))}
+  .cta{pointer-events:auto;background:linear-gradient(100deg,#ff5e2e,#ff9a3d 45%,#ffd486);color:#08080b;font-weight:800;
+    font-size:18px;padding:17px 36px;border-radius:980px;text-decoration:none;box-shadow:0 18px 50px -16px rgba(255,120,60,.75)}
+  .skip{pointer-events:auto;color:rgba(255,255,255,.72);font-size:12.5px;letter-spacing:.04em;text-decoration:none}
+  .hint{position:fixed;left:0;right:0;bottom:50%;z-index:2;text-align:center;color:rgba(255,255,255,.85);font-size:13px;
+    letter-spacing:.04em;pointer-events:none;transition:opacity .5s}
 </style>
 </head>
 <body>
-<div class="prog" id="prog"></div>
-<div class="tb" id="tb"><b>Ale · 40</b><a class="cta" href="tour.html">Il tour →</a></div>
-<a class="dock" id="dock" href="tour.html"><small>I 40 di Ale<i>Barcellona · 16–18 ott 2026</i></small><b>Il tour →</b></a>
-
-<!-- 1 · HERO -->
-<section class="panel hero">
-  <div class="glow"></div>
-  <div class="inner">
-    <div class="hk">Barcellona — 16.18 Ottobre 2026</div>
-    <div class="big grad">40</div>
-    <div class="sub">I quaranta di Ale.</div>
+<video id="v" playsinline autoplay muted preload="auto" poster="poster.jpg">
+  <source src="teaser.mp4" type="video/mp4">
+</video>
+<div class="tap" id="tap"></div>
+<div class="hint" id="hint">tocca per l'audio 🔊</div>
+<div class="ui">
+  <div class="top"><span class="brand">Ale · 40</span><button class="mute" id="mute">🔇 Audio</button></div>
+  <div class="bottom">
+    <a class="cta" href="tour.html">Scopri il tour →</a>
+    <a class="skip" href="tour.html">salta ⏭</a>
   </div>
-  <div class="chev" id="chev">scorri<span>↓</span></div>
-</section>
-
-<!-- 2 · STATEMENT -->
-<section class="panel black center">
-  <div class="wrap"><div class="cap">
-    <h2>Quarant'anni si festeggiano <span class="grad">una volta sola.</span></h2>
-  </div></div>
-</section>
-
-<!-- 3 · SAGRADA -->
-<section class="panel ph">
-  <div class="bg" style="background-image:url('img/sagrada.jpg')"></div>
-  <div class="wrap"><div class="cap"><h2>La città di Gaudí.<br>Di notte non <span class="c">dorme.</span></h2></div></div>
-</section>
-
-<!-- 4 · MARE -->
-<section class="panel ph">
-  <div class="bg" style="background-image:url('img/mare.jpg')"></div>
-  <div class="wrap"><div class="cap"><h2>La mattina<br>è solo <span class="c">mare.</span></h2></div></div>
-</section>
-
-<!-- 5 · GAUDÍ -->
-<section class="panel ph">
-  <div class="bg" style="background-image:url('img/gaudi.jpg')"></div>
-  <div class="wrap"><div class="cap"><h2>Tramonti<br>che non sembrano veri.</h2></div></div>
-</section>
-
-<!-- 6 · CIBO -->
-<section class="panel ph">
-  <div class="bg" style="background-image:url('img/cibo.jpg')"></div>
-  <div class="wrap"><div class="cap"><h2>Tapas, vermut<br>e brindisi <span class="c">infiniti.</span></h2></div></div>
-</section>
-
-<!-- 7 · FESTA -->
-<section class="panel ph">
-  <div class="bg" style="background-image:url('img/festa.jpg')"></div>
-  <div class="wrap"><div class="cap">
-    <h2>Sabato sera<br>si <span class="c">accende tutto.</span></h2>
-    <p class="lede">E ti vogliamo proprio lì, a quel tavolo.</p>
-  </div></div>
-</section>
-
-<!-- 7b · BARÇA -->
-<section class="panel ph barca">
-  <div class="bg" style="background-image:url('img/barca.jpg')"></div>
-  <div class="wrap"><div class="cap">
-    <div class="kick" style="color:#FFED02">Bonus · Camp Nou</div>
-    <h2>E se gioca il <span style="color:#FFED02">Barça?</span><br>Ci andiamo.</h2>
-    <p class="lede" style="color:rgba(255,255,255,.88)">Se gioca in casa quel weekend, serata allo stadio. E ai biglietti ci pensa Ale: ha la <b>tessera Culers</b> — pre-vendita e sconto.</p>
-  </div></div>
-</section>
-
-<!-- 8 · FOMO -->
-<section class="panel black">
-  <div class="wrap"><div class="cap">
-    <h2>Tra vent'anni te lo <span class="grad">ricorderai.</span></h2>
-    <p class="lede">Perché c'eri. Non perché ci avevi pensato su.</p>
-  </div></div>
-</section>
-
-<!-- 9 · RASSICURAZIONI + TROVA-VOLO -->
-<section class="panel black no-dock">
-  <div class="wrap"><div class="cap">
-    <div class="kick">Nessuna scusa</div>
-    <h2>È più facile di quanto credi.</h2>
-    <div class="feat">
-      <div class="f"><b>3 giorni</b><span>Un weekend lungo: vai e torni.</span></div>
-      <div class="f"><b>Voli low cost</b><span>Da Bologna o Milano, ~1h45.</span></div>
-      <div class="f"><b>Sul mare</b><span>Hotel già preso, in Vila Olímpica.</span></div>
-      <div class="f"><b>Zero pensieri</b><span>Itinerario e prenotazioni: pronti.</span></div>
-    </div>
-    <div class="finder">
-      <p class="q">Da dove parti?</p>
-      <div class="seg" id="segO">
-        <button type="button" data-o="blq" class="on">Bologna<small>Aeroporto BLQ</small></button>
-        <button type="button" data-o="mila">Milano<small>Linate · Malpensa</small></button>
-      </div>
-      <p class="q mt">Quante notti ti fermi?</p>
-      <div class="seg" id="segN">
-        <button type="button" data-r="261017">1 notte<small>rientro sab 17</small></button>
-        <button type="button" data-r="261018" class="on">2 notti<small>rientro dom 18</small></button>
-        <button type="button" data-r="261019">3 notti<small>rientro lun 19</small></button>
-      </div>
-      <a id="fly" class="btn pri" target="_blank" rel="noopener" href="https://www.skyscanner.it/transport/flights/blq/bcn/261016/261018/" style="margin-top:22px">✈︎ Cerca il volo su Skyscanner →</a>
-    </div>
-  </div></div>
-</section>
-
-<!-- 10 · PAYOFF -->
-<section class="panel black payoff center">
-  <div class="wrap"><div class="cap"><h2>Roba da <span class="grad">ricordare.</span></h2></div></div>
-</section>
-
-<!-- 11 · INVITO -->
-<section class="panel end black no-dock">
-  <div class="glow"></div>
-  <div class="wrap"><div class="cap">
-    <div class="kick">Senza fretta</div>
-    <h2>Dai un'occhiata <span class="grad">ai dettagli.</span></h2>
-    <div class="btns">
-      <a class="btn pri" href="tour.html">Scopri il tour →</a>
-    </div>
-    <p class="note">Quando, dove e quanto: tutto in chiaro. Poi decidi con calma.</p>
-    <div class="credit">Barcellona · I 40 di Ale · foto Wikimedia Commons</div>
-  </div></div>
-</section>
-
+</div>
 <script>
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const panels = [...document.querySelectorAll('.panel')];
-  if(reduce){ panels.forEach(p=>p.classList.add('in')); }
-  else{
-    const io = new IntersectionObserver((es)=>es.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in'); }),{threshold:.32});
-    panels.forEach(p=>io.observe(p));
-    requestAnimationFrame(()=>panels[0].classList.add('in'));
-  }
-  // nascondi la dock dove c'è già una CTA in pagina (finder / invito finale)
-  let ndCount=0;
-  const ndIO=new IntersectionObserver(es=>es.forEach(e=>{ndCount+=e.isIntersecting?1:-1;if(ndCount<0)ndCount=0;}),{threshold:.15});
-  document.querySelectorAll('.no-dock').forEach(el=>ndIO.observe(el));
-  // hero: parallasse in uscita — scorre via naturale, nessun blocco dello scroll
-  const heroInner=document.querySelector('.hero .inner'), heroGlow=document.querySelector('.hero .glow'), chev=document.getElementById('chev');
-  function heroPar(y){
-    const p=Math.min(1,y/innerHeight);
-    heroInner.style.transform='translateY('+(-y*0.32)+'px) scale('+(1-p*0.07)+')';
-    heroInner.style.opacity=(1-p*1.05);
-    if(heroGlow) heroGlow.style.transform='translate(-50%,-50%) scale('+(1+p*0.5)+')';
-    if(chev) chev.style.opacity=Math.max(0,1-p*3);
-  }
-  // prog + topbar + dock + scrub in un solo rAF
-  const bar=document.getElementById('prog'), tb=document.getElementById('tb'), dock=document.getElementById('dock');
-  let t=false;
-  function onScroll(){ if(t)return; t=true; requestAnimationFrame(()=>{
-    const h=document.documentElement, max=h.scrollHeight-h.clientHeight, y=h.scrollTop;
-    bar.style.transform='scaleX('+(max?y/max:0)+')';
-    tb.classList.toggle('on', y>innerHeight*0.8);
-    dock.classList.toggle('on', y>innerHeight*0.95 && ndCount===0);
-    if(!reduce && y<innerHeight*1.25) heroPar(y);
-    t=false; }); }
-  addEventListener('scroll',onScroll,{passive:true}); onScroll();
-  // trova-volo
-  const fly=document.getElementById('fly'); let O='blq', R='261018';
-  function up(){ fly.href='https://www.skyscanner.it/transport/flights/'+O+'/bcn/261016/'+R+'/'; }
-  function bind(id,set){ const s=document.getElementById(id); if(!s)return;
-    s.addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b)return;
-      s.querySelectorAll('button').forEach(x=>x.classList.remove('on')); b.classList.add('on'); set(b); up(); }); }
-  bind('segO',b=>O=b.dataset.o); bind('segN',b=>R=b.dataset.r);
+  const v=document.getElementById('v'), mute=document.getElementById('mute'), tap=document.getElementById('tap'), hint=document.getElementById('hint');
+  function setlbl(){ mute.textContent = v.muted ? '🔇 Audio' : '🔊 Audio'; }
+  function unmute(){ v.muted=false; setlbl(); hint.style.opacity=0; if(v.paused)v.play().catch(()=>{}); }
+  mute.addEventListener('click',e=>{ e.stopPropagation(); v.muted=!v.muted; setlbl(); hint.style.opacity=0; if(!v.muted&&v.paused)v.play().catch(()=>{}); });
+  tap.addEventListener('click',()=>{ if(v.muted) unmute(); });
+  v.play().catch(()=>{});                 // autoplay (muto); se bloccato, parte al tap
+  v.addEventListener('ended',()=>{ location.href='tour.html'; });
+  setTimeout(()=>{ hint.style.opacity=0; }, 4000);
 </script>
 </body>
 </html>
