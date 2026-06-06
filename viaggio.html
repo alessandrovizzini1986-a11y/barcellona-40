@@ -47,15 +47,20 @@
   .tb b{font-family:"Fraunces",serif;font-size:16px}
   .tb .cta{font-size:13px;font-weight:700;padding:8px 16px;border-radius:980px;background:var(--grad);color:#08080b}
 
-  /* HERO pinned scroll-scrub */
-  .scrub{position:relative;height:260vh}
-  .stick{position:sticky;top:0;height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden;padding:0 22px}
-  .glow{position:absolute;width:95vmax;height:95vmax;border-radius:50%;pointer-events:none;
-    background:radial-gradient(circle,rgba(255,110,48,.45),rgba(255,90,40,.10) 42%,transparent 64%);transform:scale(.72);opacity:.55;will-change:transform,opacity}
-  .hk{position:relative;z-index:2;font-size:12.5px;font-weight:700;letter-spacing:.34em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
-  .big{position:relative;z-index:2;font-family:"Fraunces",serif;font-weight:600;font-size:clamp(180px,50vw,500px);line-height:.78;letter-spacing:-.05em;will-change:transform;animation:none}
-  .taglines{position:relative;z-index:2;height:1.5em;width:100%;margin-top:.22em}
-  .tg{position:absolute;left:0;right:0;font-family:"Fraunces",serif;font-style:italic;font-weight:400;font-size:clamp(22px,6vw,44px);color:var(--ink);opacity:0;will-change:opacity}
+  /* HERO a tutta pagina: scorre via subito (niente blocco), entrata + parallasse in uscita */
+  .hero{align-items:center;justify-content:center;text-align:center;overflow:hidden}
+  .hero .inner{position:relative;z-index:2;will-change:transform,opacity}
+  .glow{position:absolute;left:50%;top:46%;width:95vmax;height:95vmax;border-radius:50%;pointer-events:none;
+    background:radial-gradient(circle,rgba(255,110,48,.42),rgba(255,90,40,.10) 42%,transparent 64%);
+    transform:translate(-50%,-50%) scale(.8);opacity:0;transition:opacity 1.2s ease,transform 1.2s ease;will-change:transform,opacity}
+  .hero.in .glow{opacity:.6;transform:translate(-50%,-50%) scale(1)}
+  .hk{font-size:12.5px;font-weight:700;letter-spacing:.34em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+  .big{font-family:"Fraunces",serif;font-weight:600;font-size:clamp(180px,52vw,500px);line-height:.78;letter-spacing:-.05em;
+    opacity:0;transform:scale(.9);transition:opacity 1s cubic-bezier(.2,.7,.2,1),transform 1.2s cubic-bezier(.2,.7,.2,1);animation:none}
+  .hero.in .big{opacity:1;transform:scale(1)}
+  .hero .sub{font-family:"Fraunces",serif;font-style:italic;font-weight:400;font-size:clamp(22px,6vw,44px);color:var(--ink);margin-top:.16em;
+    opacity:0;transform:translateY(18px);transition:opacity 1s ease .25s,transform 1s ease .25s}
+  .hero.in .sub{opacity:1;transform:none}
   .chev{position:absolute;left:50%;bottom:28px;transform:translateX(-50%);z-index:2;color:var(--muted);font-size:11px;letter-spacing:.22em;text-transform:uppercase;animation:bob 2.4s infinite}
   .chev span{display:block;font-size:18px;margin-top:6px}
   @keyframes bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,8px)}}
@@ -120,7 +125,8 @@
   .dock b{flex:none;background:var(--grad);color:#08080b;font-weight:700;font-size:15px;padding:11px 18px;border-radius:980px}
 
   @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.bg{transform:none}.cap{opacity:1;transform:none}
-    .chev{animation:none}.grad{animation:none}.dock{transition:opacity .3s}.big{transform:none!important}.tg[data-i="0"]{opacity:1!important}}
+    .chev{animation:none}.grad{animation:none}.dock{transition:opacity .3s}
+    .hero .big,.hero .sub{opacity:1!important;transform:none!important}.hero .glow{opacity:.5!important}}
 </style>
 </head>
 <body>
@@ -128,18 +134,15 @@
 <div class="tb" id="tb"><b>Ale · 40</b><a class="cta" href="https://wa.me/393474227732?text=Ci%20sto%21%20%F0%9F%8E%89%20Vengo%20a%20Barcellona%20per%20i%2040%20di%20Ale.%20Dimmi%20solo%20quando%20prenotare%20il%20volo%20%E2%9C%88%EF%B8%8F">Ci sei?</a></div>
 <a class="dock" id="dock" href="https://wa.me/393474227732?text=Ci%20sto%21%20%F0%9F%8E%89%20Vengo%20a%20Barcellona%20per%20i%2040%20di%20Ale.%20Dimmi%20solo%20quando%20prenotare%20il%20volo%20%E2%9C%88%EF%B8%8F"><small>I 40 di Ale<i>Barcellona · 16–18 ott 2026</i></small><b>Ci sei? →</b></a>
 
-<!-- 1 · HERO pinned -->
-<section class="scrub" id="hero">
-  <div class="stick">
-    <div class="glow" id="glow"></div>
+<!-- 1 · HERO -->
+<section class="panel hero">
+  <div class="glow"></div>
+  <div class="inner">
     <div class="hk">Barcellona — 16.18 Ottobre 2026</div>
-    <div class="big grad" id="big40">40</div>
-    <div class="taglines">
-      <span class="tg" data-i="0">I quaranta di Ale.</span>
-      <span class="tg" data-i="1">Tutto, tranne le mezze misure.</span>
-    </div>
-    <div class="chev" id="chev">scorri<span>↓</span></div>
+    <div class="big grad">40</div>
+    <div class="sub">I quaranta di Ale.</div>
   </div>
+  <div class="chev" id="chev">scorri<span>↓</span></div>
 </section>
 
 <!-- 2 · STATEMENT -->
@@ -245,17 +248,16 @@
   else{
     const io = new IntersectionObserver((es)=>es.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in'); }),{threshold:.32});
     panels.forEach(p=>io.observe(p));
+    requestAnimationFrame(()=>panels[0].classList.add('in'));
   }
-  // hero scrub
-  const hero=document.getElementById('hero'), big=document.getElementById('big40'), glow=document.getElementById('glow'),
-        chev=document.getElementById('chev'), tg0=document.querySelector('.tg[data-i="0"]'), tg1=document.querySelector('.tg[data-i="1"]');
-  function scrub(){
-    const total=hero.offsetHeight-innerHeight, p=Math.min(1,Math.max(0,-hero.getBoundingClientRect().top/total));
-    big.style.transform='scale('+(1-p*0.42)+')';
-    glow.style.transform='scale('+(0.72+p*0.7)+')'; glow.style.opacity=(0.45+p*0.5);
-    tg0.style.opacity = p<0.42 ? 1 : Math.max(0,1-(p-0.42)/0.14);
-    tg1.style.opacity = p>0.5 ? Math.min(1,(p-0.5)/0.16) : 0;
-    chev.style.opacity = Math.max(0,1-p*4);
+  // hero: parallasse in uscita — scorre via naturale, nessun blocco dello scroll
+  const heroInner=document.querySelector('.hero .inner'), heroGlow=document.querySelector('.hero .glow'), chev=document.getElementById('chev');
+  function heroPar(y){
+    const p=Math.min(1,y/innerHeight);
+    heroInner.style.transform='translateY('+(-y*0.32)+'px) scale('+(1-p*0.07)+')';
+    heroInner.style.opacity=(1-p*1.05);
+    if(heroGlow) heroGlow.style.transform='translate(-50%,-50%) scale('+(1+p*0.5)+')';
+    if(chev) chev.style.opacity=Math.max(0,1-p*3);
   }
   // prog + topbar + dock + scrub in un solo rAF
   const bar=document.getElementById('prog'), tb=document.getElementById('tb'), dock=document.getElementById('dock');
@@ -265,7 +267,7 @@
     bar.style.transform='scaleX('+(max?y/max:0)+')';
     tb.classList.toggle('on', y>innerHeight*0.8);
     dock.classList.toggle('on', y>innerHeight*1.4 && y < max-innerHeight*0.7);
-    if(!reduce) scrub();
+    if(!reduce && y<innerHeight*1.25) heroPar(y);
     t=false; }); }
   addEventListener('scroll',onScroll,{passive:true}); onScroll();
   // trova-volo

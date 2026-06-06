@@ -2,7 +2,7 @@
 // Strategia: precache della shell, poi stale-while-revalidate.
 // I dati dinamici (meteo, tile mappa) NON vengono cachati: restano live e fail-soft.
 
-const CACHE = 'bcn40-v26';
+const CACHE = 'bcn40-v27';
 
 const SHELL = [
   './',
