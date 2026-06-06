@@ -116,6 +116,10 @@
       <span class="chip">🎉 Festa sabato sera</span>
     </div>
     <p class="muted" style="margin-top:16px">Voli low cost (~1h45), hotel a due passi dal mare e dalla movida, e il sabato sera si festeggia il quarantesimo. Tu pensi solo a prenotare il volo: al resto pensiamo noi.</p>
+    <div class="card">
+      <h3>Come funziona</h3>
+      <p class="muted" style="margin-top:6px">Non è un pacchetto: <b>ognuno prenota il proprio volo e hotel</b>. Noi diamo le dritte (date, zona, orari) e organizziamo ritrovi e serate. Ci si coordina su <b>WhatsApp</b> — appena dici che ci sei, ti aggiungo.</p>
+    </div>
   </div>
 </section>
 
@@ -142,8 +146,38 @@
       <div class="big" id="flyTitle">Da Bologna · andata ven 16 → rientro dom 18 ott</div>
       <div class="ref" id="flyRef">Andata di riferimento (quella di Ale): Ryanair <b>FR2097</b> · BLQ 06:20 → BCN 08:05.</div>
       <div class="ref">Gli orari e i prezzi del ritorno cambiano di giorno in giorno: te li apro aggiornati su Skyscanner.</div>
-      <a id="fly" class="btn pri" target="_blank" rel="noopener" href="https://www.skyscanner.it/transport/flights/blq/bcn/261016/261018/">✈︎ Vedi voli, orari e prezzi →</a>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:16px">
+        <a id="fly" class="btn pri" target="_blank" rel="noopener" style="margin-top:0" href="https://www.skyscanner.it/transport/flights/blq/bcn/261016/261018/">✈︎ Vedi voli e prezzi →</a>
+        <a id="gfly" class="btn sec" target="_blank" rel="noopener" style="margin-top:0" href="https://www.google.com/travel/flights?q=Flights%20from%20Bologna%20to%20Barcelona%20on%202026-10-16%20through%202026-10-18">🔔 Alert prezzi · Google Flights</a>
+      </div>
     </div>
+  </div>
+</section>
+
+<!-- QUANDO COMPRARE -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Quando comprare</div>
+    <h2>Il momento giusto per il biglietto.</h2>
+    <p class="muted" style="margin-top:8px;margin-bottom:18px">Andamento <b>tipico</b> dei prezzi sui voli brevi in Europa — è <b>indicativo</b>, non una previsione su questa tratta.</p>
+    <div class="card" style="padding:18px 14px 10px">
+      <svg viewBox="0 0 320 176" width="100%" role="img" aria-label="Curva indicativa del prezzo dei voli nel tempo">
+        <defs><linearGradient id="cg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ff5e2e"/><stop offset="1" stop-color="#ffd486"/></linearGradient></defs>
+        <rect x="198" y="12" width="56" height="128" rx="6" fill="url(#cg)" opacity=".16"/>
+        <text x="226" y="26" text-anchor="middle" fill="#ffce8a" font-size="9" font-weight="700">finestra consigliata</text>
+        <line x1="14" y1="140" x2="306" y2="140" stroke="rgba(255,255,255,.18)"/>
+        <path d="M14,88 L62,96 L110,107 L158,118 L206,130 L232,133 L256,114 L282,60 L306,20" fill="none" stroke="url(#cg)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+        <circle cx="86" cy="101" r="4.5" fill="#f3ede3"/>
+        <text x="86" y="91" text-anchor="middle" fill="#f3ede3" font-size="9" font-weight="700">oggi</text>
+        <g fill="#99a1ac" font-size="9" text-anchor="middle">
+          <text x="86" y="156">Giu</text><text x="150" y="156">Lug</text><text x="205" y="156">Ago</text><text x="255" y="156">Set</text><text x="300" y="156">16 Ott</text>
+        </g>
+        <text x="8" y="22" fill="#99a1ac" font-size="9">€ più caro</text>
+        <text x="306" y="172" fill="#99a1ac" font-size="9" text-anchor="end">sotto data →</text>
+      </svg>
+    </div>
+    <p style="margin-top:14px"><b>La finestra migliore</b> è di solito <b>~6–8 settimane prima</b>: per il 16 ottobre, all'incirca <b>fine agosto – metà settembre</b>. Troppo presto o sotto data si paga di più.</p>
+    <p class="muted" style="margin-top:10px;font-size:13.5px">Non vuoi controllare ogni giorno? Usa <b>"Alert prezzi · Google Flights"</b> (qui sopra): attiva <b>Segui i prezzi</b> e ti avvisa lui quando scendono.</p>
   </div>
 </section>
 
@@ -205,6 +239,10 @@
       <div class="kv"><span class="k">🚕 Transfer</span><span>Aeroporto → quartiere: taxi ~25 min (~€35) o Aerobús + metro (~€6)</span></div>
       <div class="kv"><span class="k">📶 Telefono</span><span>Roaming UE incluso · fuso uguale all'Italia</span></div>
       <div class="kv"><span class="k">🌤️ Meteo</span><span>Metà ottobre: di solito mite, mare ancora godibile</span></div>
+      <div class="kv"><span class="k">💶 Valuta</span><span>Euro — nessun cambio da fare</span></div>
+      <div class="kv"><span class="k">🗣️ Lingua</span><span>Spagnolo e catalano · l'inglese va ovunque</span></div>
+      <div class="kv"><span class="k">⚕️ Salute</span><span>Tessera sanitaria europea (TEAM) · assicurazione viaggio consigliata</span></div>
+      <div class="kv"><span class="k">📌 Da prenotare</span><span>Il volo (presto = meno caro) e, se la vuoi vedere, la Sagrada Família</span></div>
     </div>
   </div>
 </section>
@@ -225,15 +263,17 @@
 </div>
 
 <script>
-  const N={'261017':{lbl:'rientro sab 17 ott'},'261018':{lbl:'rientro dom 18 ott'},'261019':{lbl:'rientro lun 19 ott'}};
+  const N={'261017':{lbl:'rientro sab 17 ott',iso:'2026-10-17'},'261018':{lbl:'rientro dom 18 ott',iso:'2026-10-18'},'261019':{lbl:'rientro lun 19 ott',iso:'2026-10-19'}};
   const ORG={
-    blq:{name:'Bologna', ref:'Andata di riferimento (quella di Ale): Ryanair <b>FR2097</b> · BLQ 06:20 → BCN 08:05.'},
-    mila:{name:'Milano', ref:'Da Linate e Malpensa ci sono più voli al giorno: scegli orario e prezzo che preferisci su Skyscanner.'}
+    blq:{name:'Bologna', gf:'Bologna', ref:'Andata di riferimento (quella di Ale): Ryanair <b>FR2097</b> · BLQ 06:20 → BCN 08:05.'},
+    mila:{name:'Milano', gf:'Milan', ref:'Da Linate e Malpensa ci sono più voli al giorno: scegli orario e prezzo che preferisci.'}
   };
   let O='blq', R='261018';
-  const fly=document.getElementById('fly'), flyTitle=document.getElementById('flyTitle'), flyRef=document.getElementById('flyRef');
+  const fly=document.getElementById('fly'), gfly=document.getElementById('gfly'),
+        flyTitle=document.getElementById('flyTitle'), flyRef=document.getElementById('flyRef');
   function up(){
     fly.href='https://www.skyscanner.it/transport/flights/'+O+'/bcn/261016/'+R+'/';
+    gfly.href='https://www.google.com/travel/flights?q='+encodeURIComponent('Flights from '+ORG[O].gf+' to Barcelona on 2026-10-16 through '+N[R].iso);
     flyTitle.textContent='Da '+ORG[O].name+' · andata ven 16 → '+N[R].lbl;
     flyRef.innerHTML=ORG[O].ref;
   }
