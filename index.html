@@ -841,7 +841,8 @@ fetch('https://api.open-meteo.com/v1/forecast?latitude=41.39&longitude=2.19&hour
 function updateOnline(){const b=document.getElementById('offBadge');if(b)b.style.display=navigator.onLine?'none':'inline-block';}
 window.addEventListener('online',updateOnline);window.addEventListener('offline',updateOnline);updateOnline();
 fetch('flight-status.json?t='+Date.now()).then(r=>r.ok?r.json():null).then(d=>{if(d&&d.flights){FSTATUS=d.flights;renderNow();renderFlightDocs();}}).catch(()=>{});
-if(navigator.geolocation)navigator.geolocation.getCurrentPosition(p=>{myPos={lat:p.coords.latitude,lng:p.coords.longitude};renderNow();},()=>{},{timeout:8000,maximumAge:6e5});
+function askGeo(){if(myPos||!navigator.geolocation)return;navigator.geolocation.getCurrentPosition(p=>{myPos={lat:p.coords.latitude,lng:p.coords.longitude};renderNow();},()=>{},{timeout:8000,maximumAge:6e5});}
+addEventListener('pointerdown',askGeo,{once:true}); // posizione solo dopo un gesto, niente prompt all'apertura
 
 /* ===== Deep-link app native (FreeNow, TheFork, TripAdvisor): tenta lo schema dell'app,
    poi ricade sul sito. Da PWA installata gli Universal Link non aprono le app: serve lo schema. */

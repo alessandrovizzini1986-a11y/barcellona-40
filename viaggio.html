@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#08080b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Barça 40">
 <title>Vieni a Barcellona · I 40 di Ale</title>
 <meta name="description" content="Ale fa 40 a Barcellona, 16–18 ottobre 2026. Manchi solo tu.">
 <meta property="og:type" content="website">
@@ -55,7 +58,7 @@
     transform:translate(-50%,-50%) scale(.8);opacity:0;transition:opacity 1.2s ease,transform 1.2s ease;will-change:transform,opacity}
   .hero.in .glow{opacity:.6;transform:translate(-50%,-50%) scale(1)}
   .hk{font-size:12.5px;font-weight:700;letter-spacing:.34em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
-  .big{font-family:"Fraunces",serif;font-weight:600;font-size:clamp(180px,52vw,500px);line-height:.78;letter-spacing:-.05em;
+  .big{font-family:"Fraunces",serif;font-weight:600;font-size:clamp(120px,50vw,460px);line-height:.78;letter-spacing:-.05em;
     opacity:0;transform:scale(.9);transition:opacity 1s cubic-bezier(.2,.7,.2,1),transform 1.2s cubic-bezier(.2,.7,.2,1);animation:none}
   .hero.in .big{opacity:1;transform:scale(1)}
   .hero .sub{font-family:"Fraunces",serif;font-style:italic;font-weight:400;font-size:clamp(22px,6vw,44px);color:var(--ink);margin-top:.16em;
@@ -65,7 +68,7 @@
   .chev span{display:block;font-size:18px;margin-top:6px}
   @keyframes bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,8px)}}
 
-  .panel{position:relative;min-height:100svh;display:flex;overflow:hidden;padding:0 26px}
+  .panel{position:relative;min-height:100vh;min-height:100svh;display:flex;overflow:hidden;padding:0 26px}
   .bg{position:absolute;inset:0;z-index:0;background-size:cover;background-position:center;
     filter:saturate(1.05) contrast(1.08) brightness(.62);transform:scale(1.16);transition:transform 8s cubic-bezier(.22,.61,.36,1)}
   .panel.in .bg{transform:scale(1)}
@@ -208,7 +211,7 @@
 </section>
 
 <!-- 9 · RASSICURAZIONI + TROVA-VOLO -->
-<section class="panel black">
+<section class="panel black no-dock">
   <div class="wrap"><div class="cap">
     <div class="kick">Nessuna scusa</div>
     <h2>È più facile di quanto credi.</h2>
@@ -241,7 +244,7 @@
 </section>
 
 <!-- 11 · INVITO -->
-<section class="panel end black">
+<section class="panel end black no-dock">
   <div class="glow"></div>
   <div class="wrap"><div class="cap">
     <div class="kick">Senza fretta</div>
@@ -263,6 +266,10 @@
     panels.forEach(p=>io.observe(p));
     requestAnimationFrame(()=>panels[0].classList.add('in'));
   }
+  // nascondi la dock dove c'è già una CTA in pagina (finder / invito finale)
+  let ndCount=0;
+  const ndIO=new IntersectionObserver(es=>es.forEach(e=>{ndCount+=e.isIntersecting?1:-1;if(ndCount<0)ndCount=0;}),{threshold:.15});
+  document.querySelectorAll('.no-dock').forEach(el=>ndIO.observe(el));
   // hero: parallasse in uscita — scorre via naturale, nessun blocco dello scroll
   const heroInner=document.querySelector('.hero .inner'), heroGlow=document.querySelector('.hero .glow'), chev=document.getElementById('chev');
   function heroPar(y){
@@ -279,7 +286,7 @@
     const h=document.documentElement, max=h.scrollHeight-h.clientHeight, y=h.scrollTop;
     bar.style.transform='scaleX('+(max?y/max:0)+')';
     tb.classList.toggle('on', y>innerHeight*0.8);
-    dock.classList.toggle('on', y>innerHeight*1.4 && y < max-innerHeight*0.7);
+    dock.classList.toggle('on', y>innerHeight*0.95 && ndCount===0);
     if(!reduce && y<innerHeight*1.25) heroPar(y);
     t=false; }); }
   addEventListener('scroll',onScroll,{passive:true}); onScroll();
