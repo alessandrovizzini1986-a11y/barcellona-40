@@ -62,6 +62,10 @@
   .seg button small{display:block;font-weight:500;font-size:11px;color:var(--muted);margin-top:3px}
   .seg button.on{background:var(--grad);border-color:transparent;color:#08080b}
   .seg button.on small{color:rgba(8,8,11,.72)}
+  .tots{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+  .totcard{flex:1;min-width:96px;background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:14px;text-align:center}
+  .totcard b{font-family:"Fraunces",serif;font-weight:500;display:block;font-size:14px;color:var(--muted)}
+  .totcard span{display:block;font-family:"Fraunces",serif;font-weight:600;font-size:clamp(18px,5vw,22px);margin-top:4px;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
   .flybox{margin-top:20px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px}
   .flybox .big{font-family:"Fraunces",serif;font-size:21px;font-weight:600}
   .flybox .ref{color:var(--muted);font-size:14px;margin-top:8px}
@@ -92,7 +96,7 @@
 </style>
 </head>
 <body>
-<div class="tb"><a class="back" href="viaggio.html">‹ Indietro</a><a class="cta" href="https://wa.me/393474227732?text=Ci%20sto%21%20%F0%9F%8E%89%20Vengo%20a%20Barcellona%20per%20i%2040%20di%20Ale.%20Dimmi%20solo%20quando%20prenotare%20il%20volo%20%E2%9C%88%EF%B8%8F">Ci sei?</a></div>
+<div class="tb"><a class="back" href="viaggio.html">‹ Indietro</a><a class="cta" href="https://wa.me/393474227732?text=Ciao%20Ale%21%20Ho%20visto%20il%20viaggio%20a%20Barcellona%2C%20ti%20chiedo%20una%20cosa%3A">Scrivimi</a></div>
 
 <div class="hero">
   <div class="glow"></div>
@@ -118,7 +122,7 @@
     <p class="muted" style="margin-top:16px">Voli low cost (~1h45), hotel a due passi dal mare e dalla movida, e il sabato sera si festeggia il quarantesimo. Tu pensi solo a prenotare il volo: al resto pensiamo noi.</p>
     <div class="card">
       <h3>Come funziona</h3>
-      <p class="muted" style="margin-top:6px">Non è un pacchetto: <b>ognuno prenota il proprio volo e hotel</b>. Noi diamo le dritte (date, zona, orari) e organizziamo ritrovi e serate. Ci si coordina su <b>WhatsApp</b> — appena dici che ci sei, ti aggiungo.</p>
+      <p class="muted" style="margin-top:6px">Non è un pacchetto: <b>ognuno prenota il proprio volo e hotel</b>. Noi diamo le dritte (date, zona, orari) e organizziamo ritrovi e serate. Ci si coordina su <b>WhatsApp</b> — se vieni, ti aggiungo al gruppo.</p>
     </div>
   </div>
 </section>
@@ -178,20 +182,33 @@
     </div>
     <p style="margin-top:14px"><b>La finestra migliore</b> è di solito <b>~6–8 settimane prima</b>: per il 16 ottobre, all'incirca <b>fine agosto – metà settembre</b>. Troppo presto o sotto data si paga di più.</p>
     <p class="muted" style="margin-top:10px;font-size:13.5px">Non vuoi controllare ogni giorno? Usa <b>"Alert prezzi · Google Flights"</b> (qui sopra): attiva <b>Segui i prezzi</b> e ti avvisa lui quando scendono.</p>
+    <div class="card" style="margin-top:16px;border-color:rgba(255,206,138,.4);background:linear-gradient(180deg,rgba(255,126,76,.10),transparent)">
+      <h3>📌 In due parole</h3>
+      <p style="margin-top:6px"><b>Prenota tra fine agosto e fine settembre</b> (circa 1–2 mesi prima). Su una data fissa come questa, aspettare l'ultimo è rischioso: i posti calano e i prezzi salgono.</p>
+    </div>
   </div>
 </section>
 
 <!-- COSTI -->
 <section>
   <div class="wrap">
-    <div class="eyebrow">Quanto costa</div>
-    <h2>Per farti un'idea.</h2>
-    <div class="card">
-      <div class="kv"><span class="k">✈️ Volo A/R</span><span>low cost, spesso <b>€40–120</b> — controlla in tempo reale su Skyscanner</span></div>
-      <div class="kv"><span class="k">🏨 Hotel</span><span>~<b>€90–170</b> a notte in zona mare <span class="tbd">indicativo</span></span></div>
-      <div class="kv"><span class="k">🍽️ In loco</span><span>~<b>€50–70</b> al giorno tra cibo e serate</span></div>
+    <div class="eyebrow">Quanto spendi</div>
+    <h2>Le cifre, in chiaro.</h2>
+    <p class="muted" style="margin-top:8px;margin-bottom:16px">Stime <b>reali</b> a persona (fonti: momondo, Booking, BudgetYourTrip), non preventivi. Ipotesi: <b>camera doppia condivisa</b>, volo low-cost preso per tempo, cibo medio con qualche serata.</p>
+    <div class="card" style="padding:8px 20px">
+      <div class="kv"><span class="k">✈️ Volo A/R</span><span>~€40–120 (media ~€90 da Bologna; simile da Milano)</span></div>
+      <div class="kv"><span class="k">🏨 Hotel</span><span>~€50–90 a notte, a testa (camera doppia, zona mare)</span></div>
+      <div class="kv"><span class="k">🍽️ Cibo & serate</span><span>~€50–80 al giorno</span></div>
+      <div class="kv"><span class="k">🚇 Trasporti</span><span>~€25–40 in tutto (Aerobús + metro)</span></div>
+      <div class="kv"><span class="k">🏛️ Tassa soggiorno</span><span>~€5–8 a notte (raddoppiata nel 2026)</span></div>
     </div>
-    <p class="muted" style="margin-top:12px;font-size:13.5px">Stime per orientarti, non preventivi. Il volo preso per tempo è la voce che pesa di più: prima prenoti, meno spendi.</p>
+    <p class="q" style="margin-top:22px">Totale indicativo, a persona</p>
+    <div class="tots">
+      <div class="totcard"><b>1 notte</b><span>~€220–360</span></div>
+      <div class="totcard"><b>2 notti</b><span>~€330–520</span></div>
+      <div class="totcard"><b>3 notti</b><span>~€430–660</span></div>
+    </div>
+    <p class="muted" style="margin-top:14px;font-size:13.5px">⚠️ Sono <b>stime</b>, per non avere sorprese — non un preventivo. Il volo preso per tempo è la leva che pesa di più. Musei e ingressi (es. Sagrada ~€26) sono extra, a scelta. Condividendo la camera si risparmia parecchio.</p>
   </div>
 </section>
 
@@ -247,13 +264,13 @@
   </div>
 </section>
 
-<!-- CTA -->
+<!-- CHIUSURA -->
 <section class="cta-final">
   <div class="wrap">
-    <div class="eyebrow">Allora</div>
-    <h2>Ci <span class="grad">sei?</span></h2>
-    <p class="muted" style="margin-bottom:6px">Dimmi solo che vieni: ai dettagli pensiamo insieme.</p>
-    <a class="btn pri" href="https://wa.me/393474227732?text=Ci%20sto%21%20%F0%9F%8E%89%20Vengo%20a%20Barcellona%20per%20i%2040%20di%20Ale.%20Dimmi%20solo%20quando%20prenotare%20il%20volo%20%E2%9C%88%EF%B8%8F">Dimmi che ci sei →</a>
+    <div class="eyebrow">Senza pressioni</div>
+    <h2>Ora sai <span class="grad">tutto.</span></h2>
+    <p class="muted" style="margin:0 auto 14px;max-width:38ch">Quando, dove e quanto: in chiaro. Se ti va, prenoti il volo con calma e fai un fischio ad Ale. Nessuna fretta, nessun obbligo.</p>
+    <a class="btn sec" href="https://wa.me/393474227732?text=Ciao%20Ale%21%20Ho%20visto%20il%20viaggio%20a%20Barcellona%2C%20ti%20chiedo%20una%20cosa%3A">Scrivi ad Ale</a>
   </div>
 </section>
 
