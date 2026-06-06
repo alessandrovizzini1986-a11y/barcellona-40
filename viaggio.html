@@ -3,15 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#05080f">
+<meta name="theme-color" content="#f7f3ec">
 <title>Vieni a Barcellona · I 40 di Ale</title>
 <meta name="description" content="Ale fa 40 a Barcellona, 16–18 ottobre 2026. Manchi solo tu.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/viaggio.html">
 <meta property="og:title" content="Vieni a Barcellona · I 40 di Ale">
-<meta property="og:description" content="Ale fa 40 a Barcellona, 16–18 ottobre 2026. Tre giorni, voli low cost da Bologna, hotel sul mare. Manchi solo tu.">
-<meta property="og:image" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/og-viaggio.jpg?v=2">
-<meta property="og:image:secure_url" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/og-viaggio.jpg?v=2">
+<meta property="og:description" content="Ale fa 40 a Barcellona, 16–18 ottobre 2026. Tre giorni, voli low cost da Bologna o Milano, hotel sul mare. Manchi solo tu.">
+<meta property="og:image" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/og-viaggio.jpg?v=3">
+<meta property="og:image:secure_url" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/og-viaggio.jpg?v=3">
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -20,113 +20,109 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Vieni a Barcellona · I 40 di Ale">
 <meta name="twitter:description" content="Ale fa 40 a Barcellona, 16–18 ottobre. Manchi solo tu.">
-<meta name="twitter:image" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/og-viaggio.jpg?v=2">
+<meta name="twitter:image" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/og-viaggio.jpg?v=3">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,300;1,9..144,400&family=DM+Sans:opsz,wght@9..40,500;9..40,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=DM+Sans:opsz,wght@9..40,500;9..40,700&display=swap" rel="stylesheet">
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
-  :root{--ink:#f6f1e8;--coral:#ff7e54;--gold:#ffcf8a;--dim:rgba(246,241,232,.62)}
-  html{scroll-behavior:smooth;background:#05080f}
-  body{font-family:"DM Sans",system-ui,sans-serif;color:var(--ink);background:#05080f;-webkit-font-smoothing:antialiased;overflow-x:hidden}
-  h1,h2{font-family:"Fraunces",serif;font-weight:600;line-height:.96;letter-spacing:-.035em}
+  :root{--bg:#f7f3ec;--bg2:#fffdf8;--ink:#16212e;--muted:#5e6b78;--coral:#e9551f;--coralB:#ff6a3c;--teal:#0e8f7e;--line:rgba(22,33,46,.13)}
+  html{scroll-behavior:smooth;background:var(--bg)}
+  body{font-family:"DM Sans",system-ui,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  h1,h2{font-family:"Fraunces",serif;font-weight:600;line-height:.98;letter-spacing:-.03em;color:var(--ink)}
   a{color:inherit;text-decoration:none}
-  .c{color:var(--coral);font-style:italic;font-weight:400}
+  .c{color:var(--coral);font-style:italic;font-weight:500}
 
-  body::after{content:"";position:fixed;inset:0;z-index:70;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
-    background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
-
-  .prog{position:fixed;top:0;left:0;height:2px;width:100%;transform:scaleX(0);transform-origin:0 50%;z-index:60;background:var(--coral)}
+  .prog{position:fixed;top:0;left:0;height:3px;width:100%;transform:scaleX(0);transform-origin:0 50%;z-index:60;background:var(--coralB)}
   .tb{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;
-    padding:13px 20px;background:rgba(5,8,15,.55);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
-    opacity:0;transform:translateY(-100%);transition:.55s cubic-bezier(.2,.7,.2,1)}
-  .tb.on{opacity:1;transform:none}
-  .tb b{font-family:"Fraunces",serif;font-size:15px;letter-spacing:.02em}
-  .tb .cta{font-size:12.5px;font-weight:700;padding:7px 16px;border-radius:980px;background:var(--coral);color:#05080f}
+    padding:12px 20px;background:rgba(255,253,248,.72);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
+    border-bottom:1px solid transparent;opacity:0;transform:translateY(-100%);transition:.5s cubic-bezier(.2,.7,.2,1)}
+  .tb.on{opacity:1;transform:none;border-bottom-color:var(--line)}
+  .tb b{font-family:"Fraunces",serif;font-size:16px}
+  .tb .cta{font-size:13px;font-weight:700;padding:8px 16px;border-radius:980px;background:var(--coralB);color:#fff}
 
   .panel{position:relative;min-height:100svh;display:flex;overflow:hidden;padding:0 26px}
-  .panel.ph::before{content:"";position:absolute;inset:0;z-index:1;
-    background:linear-gradient(180deg,rgba(5,8,15,.5) 0%,rgba(5,8,15,.18) 36%,rgba(5,8,15,.92) 100%)}
-  .panel.ph::after{content:"";position:absolute;inset:0;z-index:1;mix-blend-mode:soft-light;
-    background:radial-gradient(120% 80% at 76% 12%,rgba(255,126,84,.5),transparent 55%)}
   .bg{position:absolute;inset:0;z-index:0;background-size:cover;background-position:center;
-    filter:saturate(.72) contrast(1.06) brightness(.64);
-    transform:scale(1.16);transition:transform 8s cubic-bezier(.22,.61,.36,1)}
+    filter:saturate(1.12) contrast(1.02) brightness(1.06);
+    transform:scale(1.14);transition:transform 8s cubic-bezier(.22,.61,.36,1)}
   .panel.in .bg{transform:scale(1)}
+  /* foto: fade chiaro in basso → testo scuro leggibile e raccordo col crema */
+  .panel.ph::after{content:"";position:absolute;inset:0;z-index:1;
+    background:linear-gradient(to top,var(--bg) 1%,rgba(247,243,236,.72) 20%,rgba(247,243,236,0) 52%)}
+  .panel.ph::before{content:"";position:absolute;inset:0 0 auto 0;height:120px;z-index:1;
+    background:linear-gradient(to bottom,rgba(247,243,236,.55),transparent)}
 
-  .wrap{position:relative;z-index:2;width:100%;max-width:1000px;margin:auto;align-self:center;padding:14svh 0}
-  .cap{opacity:0;transform:translateY(30px);transition:opacity 1.1s cubic-bezier(.2,.7,.2,1),transform 1.1s cubic-bezier(.2,.7,.2,1)}
+  .wrap{position:relative;z-index:2;width:100%;max-width:1000px;margin:auto;align-self:center;padding:13svh 0}
+  .ph .wrap{align-self:flex-end;padding:0 0 12svh}
+  .ph .cap h2,.ph .cap .lede{text-shadow:0 1px 16px rgba(247,243,236,.75),0 1px 3px rgba(247,243,236,.9)}
+  .cap{opacity:0;transform:translateY(28px);transition:opacity 1s cubic-bezier(.2,.7,.2,1),transform 1s cubic-bezier(.2,.7,.2,1)}
   .panel.in .cap{opacity:1;transform:none}
-  .kick{font-size:12.5px;font-weight:700;letter-spacing:.34em;text-transform:uppercase;color:var(--coral);margin-bottom:22px}
-  .cap h2{font-size:clamp(40px,9.5vw,104px);max-width:15ch}
-  .lede{font-size:clamp(16px,4vw,21px);color:var(--dim);margin-top:18px;max-width:32ch;line-height:1.5}
+  .kick{font-size:12.5px;font-weight:700;letter-spacing:.32em;text-transform:uppercase;color:var(--teal);margin-bottom:20px}
+  .cap h2{font-size:clamp(40px,9.5vw,100px);max-width:15ch}
+  .lede{font-size:clamp(16px,4vw,21px);color:var(--muted);margin-top:18px;max-width:32ch;line-height:1.5}
 
-  .hero{align-items:center;text-align:center}
-  .hero .wrap{text-align:center}
-  .hero .big{font-family:"Fraunces",serif;font-weight:300;font-size:clamp(170px,54vw,440px);line-height:.8;letter-spacing:-.05em}
-  .hero .sub{font-family:"Fraunces",serif;font-style:italic;font-weight:300;font-size:clamp(22px,6.5vw,46px);margin-top:.16em}
-  .hero .kick{margin-bottom:30px}
-  .chev{position:absolute;left:50%;bottom:30px;transform:translateX(-50%);z-index:3;color:var(--dim);
-    font-size:11px;letter-spacing:.24em;text-transform:uppercase;text-align:center;animation:bob 2.4s infinite}
-  .chev span{display:block;font-size:18px;margin-top:7px}
-  @keyframes bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,9px)}}
+  .hero{align-items:flex-end}
+  .hero .wrap{align-self:flex-end;padding-bottom:13svh}
+  .hero .kick{margin-bottom:14px}
+  .hero .big{font-family:"Fraunces",serif;font-weight:500;font-size:clamp(150px,46vw,380px);line-height:.82;letter-spacing:-.05em;color:var(--coral)}
+  .hero .sub{font-family:"Fraunces",serif;font-style:italic;font-weight:400;font-size:clamp(24px,7vw,52px);margin-top:.06em;color:var(--ink)}
+  .chev{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);z-index:3;color:var(--muted);
+    font-size:11px;letter-spacing:.22em;text-transform:uppercase;text-align:center;animation:bob 2.4s infinite}
+  .chev span{display:block;font-size:18px;margin-top:6px}
+  @keyframes bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,8px)}}
 
-  .black{background:#05080f;align-items:center}
-  .black h2{font-size:clamp(38px,8.5vw,92px);max-width:16ch}
   .center{text-align:center}.center .wrap{text-align:center}.center h2{margin:0 auto}
+  .light h2{font-size:clamp(38px,8.5vw,88px);max-width:16ch}
 
-  /* rassicurazioni */
   .feat{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:30px}
-  .feat .f{border:1px solid rgba(246,241,232,.14);border-radius:18px;padding:22px 16px;background:rgba(246,241,232,.03)}
-  .feat .f b{font-family:"Fraunces",serif;font-weight:600;font-size:clamp(20px,5.5vw,27px);display:block;letter-spacing:-.01em}
-  .feat .f span{color:var(--dim);font-size:13px;margin-top:8px;display:block;line-height:1.4}
+  .feat .f{border:1px solid var(--line);border-radius:18px;padding:20px 16px;background:var(--bg2);box-shadow:0 10px 30px -22px rgba(22,33,46,.5)}
+  .feat .f b{font-family:"Fraunces",serif;font-weight:600;font-size:clamp(20px,5.2vw,26px);display:block}
+  .feat .f span{color:var(--muted);font-size:13px;margin-top:7px;display:block;line-height:1.4}
   @media(min-width:720px){.feat{grid-template-columns:repeat(4,1fr)}}
 
+  /* trova-volo */
+  .finder{margin-top:32px}
+  .finder .q{font-size:13px;font-weight:700;letter-spacing:.04em;color:var(--muted);margin:0 0 10px}
+  .finder .q.mt{margin-top:18px}
+  .seg{display:inline-flex;flex-wrap:wrap;gap:8px}
+  .seg button{font-family:inherit;text-align:left;line-height:1.1;border:1.5px solid var(--line);background:var(--bg2);
+    border-radius:14px;padding:11px 16px;font-weight:700;font-size:15px;color:var(--ink);transition:.2s;cursor:pointer}
+  .seg button small{display:block;font-weight:500;font-size:11px;color:var(--muted);margin-top:3px;letter-spacing:.02em}
+  .seg button.on{background:var(--coralB);border-color:var(--coralB);color:#fff}
+  .seg button.on small{color:rgba(255,255,255,.9)}
+
   .payoff h2{font-size:clamp(54px,15vw,150px);text-align:center;max-width:none}
-
-  /* finale / invito */
-  .end{align-items:center;text-align:center;background:radial-gradient(120% 90% at 50% 0%,#16243a,#05080f 70%)}
+  .end{align-items:center;text-align:center;background:radial-gradient(120% 90% at 50% 0%,#fff,var(--bg) 72%)}
   .end .wrap{text-align:center}
-  .end h2{font-size:clamp(60px,17vw,170px)}
+  .end h2{font-size:clamp(60px,17vw,168px)}
   .end .em{font-style:italic;color:var(--coral)}
-  .btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:34px}
-  .btn{display:inline-flex;align-items:center;gap:9px;padding:17px 30px;border-radius:980px;font-weight:700;font-size:17px;transition:transform .3s}
-  .btn.pri{background:var(--coral);color:#05080f;box-shadow:0 24px 60px -22px rgba(255,126,84,.6)}
-  .btn.sec{border:1px solid rgba(246,241,232,.32);color:var(--ink)}
+  .btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:32px}
+  .btn{display:inline-flex;align-items:center;gap:9px;padding:16px 30px;border-radius:980px;font-weight:700;font-size:17px;transition:transform .25s;cursor:pointer}
+  .btn.pri{background:var(--coralB);color:#fff;box-shadow:0 20px 46px -18px rgba(255,106,60,.7)}
+  .btn.sec{border:1.5px solid var(--line);color:var(--ink)}
   .btn:active{transform:scale(.97)}
-  .note{margin-top:22px;font-size:13.5px;color:var(--dim)}
-  .credit{margin-top:30px;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(246,241,232,.3)}
+  .note{margin-top:22px;font-size:13.5px;color:var(--muted)}
+  .credit{margin-top:28px;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);opacity:.7}
 
-  /* trova-volo Skyscanner */
-  .flight{margin-top:32px;display:flex;flex-direction:column;align-items:flex-start;gap:16px}
-  .seg{display:inline-flex;background:rgba(246,241,232,.06);border:1px solid rgba(246,241,232,.14);border-radius:980px;padding:4px}
-  .seg button{font-family:inherit;font-weight:700;font-size:14px;color:var(--dim);padding:10px 20px;border-radius:980px;transition:.25s}
-  .seg button.on{background:var(--ink);color:#05080f}
-  .flight .hint{font-size:13px;color:var(--dim)}
-
-  .hero .big{transition:transform 1.5s cubic-bezier(.2,.7,.2,1) .05s}
-  .hero:not(.in) .big{transform:scale(1.07)}
-
-  /* CTA fissa in basso — l'invito sempre a un tap */
   .dock{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:55;
     display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 12px 11px 18px;max-width:560px;margin:0 auto;
-    border-radius:18px;background:rgba(12,18,28,.74);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
-    border:1px solid rgba(246,241,232,.12);box-shadow:0 18px 50px -20px rgba(0,0,0,.85);
-    opacity:0;transform:translateY(150%);transition:.55s cubic-bezier(.2,.7,.2,1)}
+    border-radius:18px;background:rgba(255,253,248,.82);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
+    border:1px solid var(--line);box-shadow:0 16px 44px -18px rgba(22,33,46,.4);
+    opacity:0;transform:translateY(150%);transition:.5s cubic-bezier(.2,.7,.2,1)}
   .dock.on{opacity:1;transform:none}
   .dock small{font-family:"Fraunces",serif;font-size:15px;color:var(--ink);line-height:1.1}
-  .dock small i{display:block;font-style:normal;font-size:11px;letter-spacing:.03em;color:var(--dim);margin-top:2px}
-  .dock b{flex:none;background:var(--coral);color:#05080f;font-weight:700;font-size:15px;padding:11px 18px;border-radius:980px}
+  .dock small i{display:block;font-style:normal;font-size:11px;color:var(--muted);margin-top:2px}
+  .dock b{flex:none;background:var(--coralB);color:#fff;font-weight:700;font-size:15px;padding:11px 18px;border-radius:980px}
 
-  @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.bg{transform:none}.cap{opacity:1;transform:none}.chev{animation:none}.hero .big{transform:none}.dock{transition:opacity .3s}}
+  @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.bg{transform:none}.cap{opacity:1;transform:none}.chev{animation:none}.dock{transition:opacity .3s}}
 </style>
 </head>
 <body>
 <div class="prog" id="prog"></div>
-<div class="tb" id="tb"><b>Ale · 40</b><a class="cta" href="https://wa.me/393474227732?text=Ci%20sto!%20Vengo%20a%20Barcellona%20per%20i%2040%20di%20Ale%20%F0%9F%8E%89">Ci sei?</a></div>
-<a class="dock" id="dock" href="https://wa.me/393474227732?text=Ci%20sto!%20Vengo%20a%20Barcellona%20per%20i%2040%20di%20Ale%20%F0%9F%8E%89"><small>I 40 di Ale<i>Barcellona · 16–18 ott 2026</i></small><b>Ci sei? →</b></a>
+<div class="tb" id="tb"><b>Ale · 40</b><a class="cta" href="https://wa.me/393474227732?text=Ci%20sto%21%20%F0%9F%8E%89%20Vengo%20a%20Barcellona%20per%20i%2040%20di%20Ale.%20Dimmi%20solo%20quando%20prenotare%20il%20volo%20%E2%9C%88%EF%B8%8F">Ci sei?</a></div>
+<a class="dock" id="dock" href="https://wa.me/393474227732?text=Ci%20sto%21%20%F0%9F%8E%89%20Vengo%20a%20Barcellona%20per%20i%2040%20di%20Ale.%20Dimmi%20solo%20quando%20prenotare%20il%20volo%20%E2%9C%88%EF%B8%8F"><small>I 40 di Ale<i>Barcellona · 16–18 ott 2026</i></small><b>Ci sei? →</b></a>
 
 <!-- 1 · HERO -->
 <section class="panel ph hero">
@@ -140,68 +136,67 @@
 </section>
 
 <!-- 2 · HOOK -->
-<section class="panel black center">
+<section class="panel light center">
   <div class="wrap"><div class="cap">
     <h2>Ale fa quaranta.<br>E non vuole farlo <span class="c">senza di te.</span></h2>
   </div></div>
 </section>
 
-<!-- 3 · NOTTE -->
-<section class="panel ph">
-  <div class="bg" style="background-image:url('img/notte.jpg')"></div>
-  <div class="wrap"><div class="cap"><h2>Una città che non dorme mai.</h2></div></div>
-</section>
-
-<!-- 4 · MARE -->
+<!-- 3 · MARE -->
 <section class="panel ph">
   <div class="bg" style="background-image:url('img/mare.jpg')"></div>
   <div class="wrap"><div class="cap"><h2>Colazione con il <span class="c">mare</span> davanti.</h2></div></div>
 </section>
 
-<!-- 5 · GAUDÍ -->
+<!-- 4 · GAUDÍ -->
 <section class="panel ph">
   <div class="bg" style="background-image:url('img/gaudi.jpg')"></div>
   <div class="wrap"><div class="cap"><h2>Gaudí a ogni angolo,<br>vermut a ogni <span class="c">tramonto.</span></h2></div></div>
 </section>
 
-<!-- 6 · CIBO -->
+<!-- 5 · CIBO -->
 <section class="panel ph">
   <div class="bg" style="background-image:url('img/cibo.jpg')"></div>
   <div class="wrap"><div class="cap"><h2>Tapas, vino e brindisi<br>che non vogliono finire.</h2></div></div>
 </section>
 
-<!-- 7 · FOMO -->
-<section class="panel black">
+<!-- 6 · FOMO -->
+<section class="panel light">
   <div class="wrap"><div class="cap">
     <h2>Tra vent'anni ti ricorderai<br>di <span class="c">esserci stato.</span></h2>
     <p class="lede">Non di averci pensato su. Di averci detto sì.</p>
   </div></div>
 </section>
 
-<!-- 8 · RASSICURAZIONI -->
-<section class="panel black">
+<!-- 7 · RASSICURAZIONI + TROVA-VOLO -->
+<section class="panel light">
   <div class="wrap"><div class="cap">
     <div class="kick">Nessuna scusa</div>
     <h2>È più facile di quanto credi.</h2>
     <div class="feat">
       <div class="f"><b>3 giorni</b><span>Un weekend lungo: vai e torni.</span></div>
-      <div class="f"><b>Da Bologna</b><span>Voli low cost diretti, 1h45.</span></div>
+      <div class="f"><b>Voli low cost</b><span>Da Bologna o Milano, ~1h45.</span></div>
       <div class="f"><b>Sul mare</b><span>Hotel già preso, in Vila Olímpica.</span></div>
-      <div class="f"><b>Zero pensieri</b><span>Itinerario e prenotazioni: già pronti.</span></div>
+      <div class="f"><b>Zero pensieri</b><span>Itinerario e prenotazioni: pronti.</span></div>
     </div>
-    <div class="flight">
-      <div class="seg" id="seg">
-        <button type="button" data-r="261017" data-lab="Ven 16 → Sab 17 ott">1 notte</button>
-        <button type="button" data-r="261018" data-lab="Ven 16 → Dom 18 ott" class="on">2 notti</button>
-        <button type="button" data-r="261019" data-lab="Ven 16 → Lun 19 ott">3 notti</button>
+    <div class="finder">
+      <p class="q">Da dove parti?</p>
+      <div class="seg" id="segO">
+        <button type="button" data-o="blq" class="on">Bologna<small>Aeroporto BLQ</small></button>
+        <button type="button" data-o="mila">Milano<small>Linate · Malpensa</small></button>
       </div>
-      <a id="fly" class="btn pri" target="_blank" rel="noopener" href="https://www.skyscanner.it/transport/flights/blq/bcn/261016/261018/">✈︎ Cerca il volo da Bologna →</a>
-      <p class="hint">Da Bologna · <span id="flydate">Ven 16 → Dom 18 ott</span></p>
+      <p class="q mt">Quante notti ti fermi?</p>
+      <div class="seg" id="segN">
+        <button type="button" data-r="261017">1 notte<small>rientro sab 17</small></button>
+        <button type="button" data-r="261018" class="on">2 notti<small>rientro dom 18</small></button>
+        <button type="button" data-r="261019">3 notti<small>rientro lun 19</small></button>
+      </div>
+      <a id="fly" class="btn pri" target="_blank" rel="noopener" href="https://www.skyscanner.it/transport/flights/blq/bcn/261016/261018/" style="margin-top:22px">✈︎ Cerca il volo su Skyscanner →</a>
     </div>
   </div></div>
 </section>
 
-<!-- 9 · LA FESTA -->
+<!-- 8 · LA FESTA -->
 <section class="panel ph">
   <div class="bg" style="background-image:url('img/festa.jpg')"></div>
   <div class="wrap"><div class="cap">
@@ -210,18 +205,18 @@
   </div></div>
 </section>
 
-<!-- 10 · PAYOFF -->
-<section class="panel black payoff center">
+<!-- 9 · PAYOFF -->
+<section class="panel light payoff center">
   <div class="wrap"><div class="cap"><h2>Manchi <span class="c">solo tu.</span></h2></div></div>
 </section>
 
-<!-- 11 · INVITO -->
+<!-- 10 · INVITO -->
 <section class="panel end">
   <div class="wrap"><div class="cap">
     <div class="kick">Allora</div>
     <h2>Ci <span class="em">sei?</span></h2>
     <div class="btns">
-      <a class="btn pri" href="https://wa.me/393474227732?text=Ci%20sto!%20Vengo%20a%20Barcellona%20per%20i%2040%20di%20Ale%20%F0%9F%8E%89">Dimmi che ci sei →</a>
+      <a class="btn pri" href="https://wa.me/393474227732?text=Ci%20sto%21%20%F0%9F%8E%89%20Vengo%20a%20Barcellona%20per%20i%2040%20di%20Ale.%20Dimmi%20solo%20quando%20prenotare%20il%20volo%20%E2%9C%88%EF%B8%8F">Dimmi che ci sei →</a>
       <a class="btn sec" href="index.html">Sfoglia il programma</a>
     </div>
     <p class="note">Il volo costa meno se lo prenoti presto. 16 – 18 ottobre 2026.</p>
@@ -244,15 +239,16 @@
     const h=document.documentElement, max=h.scrollHeight-h.clientHeight, y=h.scrollTop;
     bar.style.transform='scaleX('+(max?y/max:0)+')';
     tb.classList.toggle('on', y>innerHeight*0.55);
-    dock.classList.toggle('on', y>innerHeight*0.85 && y < max-innerHeight*0.7);  // nascondi vicino all'invito finale
+    dock.classList.toggle('on', y>innerHeight*0.85 && y < max-innerHeight*0.7);
     t=false; }); },{passive:true});
 
-  // trova-volo: il selettore giorni aggiorna il ritorno su Skyscanner
-  const fly=document.getElementById('fly'), seg=document.getElementById('seg');
-  if(seg) seg.addEventListener('click',e=>{ const b=e.target.closest('button[data-r]'); if(!b)return;
-    seg.querySelectorAll('button').forEach(x=>x.classList.remove('on')); b.classList.add('on');
-    fly.href='https://www.skyscanner.it/transport/flights/blq/bcn/261016/'+b.dataset.r+'/';
-    const fd=document.getElementById('flydate'); if(fd) fd.textContent=b.dataset.lab; });
+  // trova-volo: partenza (Bologna/Milano) + notti → link Skyscanner dinamico
+  const fly=document.getElementById('fly'); let O='blq', R='261018';
+  function up(){ fly.href='https://www.skyscanner.it/transport/flights/'+O+'/bcn/261016/'+R+'/'; }
+  function bind(id,set){ const s=document.getElementById(id); if(!s)return;
+    s.addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b)return;
+      s.querySelectorAll('button').forEach(x=>x.classList.remove('on')); b.classList.add('on'); set(b); up(); }); }
+  bind('segO',b=>O=b.dataset.o); bind('segN',b=>R=b.dataset.r);
 </script>
 </body>
 </html>
