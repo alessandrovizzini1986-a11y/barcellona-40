@@ -54,6 +54,12 @@
 
   .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
   .chip{background:var(--bg2);border:1px solid var(--line);border-radius:980px;padding:8px 14px;font-size:13.5px;font-weight:600}
+  .rosa{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+  .player{margin:0}
+  .player .pcard{width:100%;aspect-ratio:9/16;border-radius:16px;border:1px solid var(--line);background:var(--bg2);display:block;object-fit:cover}
+  .player figcaption{margin-top:8px;font-size:13px;font-weight:700;text-align:center}
+  .player.empty .pcard{display:flex;align-items:center;justify-content:center;border-style:dashed;color:var(--muted);font-size:54px;font-weight:800;font-family:"Fraunces",serif}
+  .player.empty figcaption{color:var(--muted);font-weight:600}
 
   .card{background:var(--bg2);border:1px solid var(--line);border-radius:18px;padding:20px;margin-top:14px}
   .card h3{font-size:19px;margin-bottom:4px}
@@ -133,6 +139,27 @@
       <h3>Come funziona</h3>
       <p class="muted" style="margin-top:6px">Non è un pacchetto: <b>il volo lo prenoti tu</b> (prima = meno caro). L'<b>alloggio — hotel o appartamento — lo scegliamo insieme</b> appena sappiamo quanti siamo: così stiamo vicini e dividiamo le spese. Ci si coordina su <b>WhatsApp</b> — se vieni, ti aggiungo al gruppo.</p>
     </div>
+  </div>
+</section>
+
+<!-- LA ROSA -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">La Rosa</div>
+    <h2>Chi è già in campo.</h2>
+    <p class="muted" style="margin-top:8px">Compri il biglietto, entri in gioco: diventi un <b>giocatore</b> con la tua card. Più siamo, più forte è la squadra. <span class="grad">#MésQueUnAle</span></p>
+    <div class="rosa">
+      <figure class="player">
+        <video class="pcard" controls preload="none" playsinline poster="cards/ale.jpg">
+          <source src="cards/ale-turn.mp4" type="video/mp4">
+        </video>
+        <figcaption>ALE · VIZZO · #10 — <span class="grad">Capitano · già a bordo</span></figcaption>
+      </figure>
+      <figure class="player empty"><div class="pcard">?</div><figcaption>Prossimo acquisto…</figcaption></figure>
+      <figure class="player empty"><div class="pcard">?</div><figcaption>Posto libero</figcaption></figure>
+      <figure class="player empty"><div class="pcard">?</div><figcaption>Posto libero</figcaption></figure>
+    </div>
+    <a class="btn gold" href="https://wa.me/393474227732?text=Ciao%20Ale%21%20Ci%20sto%3A%20entro%20in%20rosa%20per%20Barcellona%20%F0%9F%94%B5%F0%9F%94%B4" style="margin-top:18px">⚽ Entra in rosa →</a>
   </div>
 </section>
 
