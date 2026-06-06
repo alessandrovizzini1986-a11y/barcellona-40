@@ -73,6 +73,10 @@
     background:radial-gradient(120% 80% at 78% 14%,rgba(255,110,50,.55),transparent 56%)}
   .panel.ph::after{content:"";position:absolute;inset:0;z-index:1;
     background:linear-gradient(180deg,rgba(8,8,11,.5) 0%,rgba(8,8,11,.12) 36%,rgba(8,8,11,.92) 100%)}
+  /* pannello Barça — colori blaugrana */
+  .panel.barca::before{background:radial-gradient(120% 80% at 50% 16%,rgba(165,0,68,.5),transparent 60%);mix-blend-mode:normal}
+  .panel.barca::after{background:linear-gradient(180deg,rgba(0,40,90,.5) 0%,rgba(0,28,66,.22) 34%,rgba(2,16,45,.92) 100%)}
+  .panel.barca .bg{filter:saturate(1.16) contrast(1.05) brightness(.74)}
 
   .wrap{position:relative;z-index:2;width:100%;max-width:1000px;margin:auto;align-self:center;padding:14svh 0}
   .ph .wrap{align-self:flex-end;padding:0 0 12svh}
@@ -182,6 +186,16 @@
   <div class="wrap"><div class="cap">
     <h2>Sabato sera<br>si <span class="c">accende tutto.</span></h2>
     <p class="lede">E ti vogliamo proprio lì, a quel tavolo.</p>
+  </div></div>
+</section>
+
+<!-- 7b · BARÇA -->
+<section class="panel ph barca">
+  <div class="bg" style="background-image:url('img/barca.jpg')"></div>
+  <div class="wrap"><div class="cap">
+    <div class="kick" style="color:#FFED02">Bonus · Camp Nou</div>
+    <h2>E se gioca il <span style="color:#FFED02">Barça?</span><br>Ci andiamo.</h2>
+    <p class="lede" style="color:rgba(255,255,255,.88)">Se la squadra è in casa quel weekend, serata allo stadio. Da verificare il calendario.</p>
   </div></div>
 </section>
 
