@@ -188,12 +188,12 @@
     </div>
     <div class="flight">
       <div class="seg" id="seg">
-        <button type="button" data-r="261017">1 giorno</button>
-        <button type="button" data-r="261018" class="on">2 giorni</button>
-        <button type="button" data-r="261019">3 giorni</button>
+        <button type="button" data-r="261017" data-lab="Ven 16 → Sab 17 ott">1 notte</button>
+        <button type="button" data-r="261018" data-lab="Ven 16 → Dom 18 ott" class="on">2 notti</button>
+        <button type="button" data-r="261019" data-lab="Ven 16 → Lun 19 ott">3 notti</button>
       </div>
       <a id="fly" class="btn pri" target="_blank" rel="noopener" href="https://www.skyscanner.it/transport/flights/blq/bcn/261016/261018/">✈︎ Cerca il volo da Bologna →</a>
-      <p class="hint">Andata ven 16 ott · il ritorno cambia coi giorni che scegli tu.</p>
+      <p class="hint">Da Bologna · <span id="flydate">Ven 16 → Dom 18 ott</span></p>
     </div>
   </div></div>
 </section>
@@ -248,7 +248,8 @@
   const fly=document.getElementById('fly'), seg=document.getElementById('seg');
   if(seg) seg.addEventListener('click',e=>{ const b=e.target.closest('button[data-r]'); if(!b)return;
     seg.querySelectorAll('button').forEach(x=>x.classList.remove('on')); b.classList.add('on');
-    fly.href='https://www.skyscanner.it/transport/flights/blq/bcn/261016/'+b.dataset.r+'/'; });
+    fly.href='https://www.skyscanner.it/transport/flights/blq/bcn/261016/'+b.dataset.r+'/';
+    const fd=document.getElementById('flydate'); if(fd) fd.textContent=b.dataset.lab; });
 </script>
 </body>
 </html>
