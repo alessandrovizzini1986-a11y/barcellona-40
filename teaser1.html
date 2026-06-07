@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#08080b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>I want you · I 40 di Ale</title>
+<meta name="description" content="Ale fa 40 a Barcellona. Da solo non può segnare: ti vuole in squadra. Scopri il tour.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/teaser1.html">
+<meta property="og:title" content="I want you · I 40 di Ale">
+<meta property="og:description" content="Da solo non può segnare. Ale ti vuole a Barcellona per i suoi 40. Scopri il tour.">
+<meta property="og:image" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/og-viaggio.jpg?v=4">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="it_IT">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/og-viaggio.jpg?v=4">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=DM+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;background:#08080b;color:#f3ede3;font-family:"DM Sans",system-ui,sans-serif;overflow:hidden}
+  #v{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;background:#08080b}
+  .tap{position:fixed;inset:0;z-index:1}
+  .ui{position:fixed;inset:0;z-index:2;display:flex;flex-direction:column;justify-content:space-between;pointer-events:none}
+  .top{display:flex;justify-content:space-between;align-items:center;padding:calc(14px + env(safe-area-inset-top)) 18px 14px}
+  .brand{font-family:"Fraunces",serif;font-weight:600;font-size:17px;text-shadow:0 2px 14px rgba(0,0,0,.7)}
+  .mute{pointer-events:auto;background:rgba(0,0,0,.42);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+    border:1px solid rgba(255,255,255,.22);color:#fff;font-family:inherit;font-weight:700;font-size:13px;padding:8px 14px;border-radius:980px;cursor:pointer}
+  .bottom{display:flex;flex-direction:column;align-items:center;gap:11px;padding:0 20px calc(28px + env(safe-area-inset-bottom))}
+  .cta{pointer-events:auto;background:linear-gradient(100deg,#ff5e2e,#ff9a3d 45%,#ffd486);color:#08080b;font-weight:800;
+    font-size:18px;padding:17px 36px;border-radius:980px;text-decoration:none;box-shadow:0 18px 50px -16px rgba(255,120,60,.75)}
+  .skip{pointer-events:auto;color:rgba(255,255,255,.72);font-size:12.5px;letter-spacing:.04em;text-decoration:none}
+  .tag{font-family:"Fraunces",serif;font-weight:600;font-size:13.5px;letter-spacing:.02em;
+    background:linear-gradient(100deg,#ff7a4d,#ffd486);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hint{position:fixed;left:0;right:0;bottom:50%;z-index:2;text-align:center;color:rgba(255,255,255,.85);font-size:13px;
+    letter-spacing:.04em;pointer-events:none;transition:opacity .5s}
+  /* overlay di fine video, prima del redirect */
+  .end{position:fixed;inset:0;z-index:3;display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;
+    background:radial-gradient(120% 100% at 50% 40%,rgba(20,10,6,.86),rgba(8,8,11,.96));text-align:center;padding:0 28px}
+  .end.on{display:flex}
+  .end h1{font-family:"Fraunces",serif;font-weight:600;font-size:clamp(26px,8vw,40px);line-height:1.1}
+  .end p{color:rgba(255,255,255,.7);font-size:14px}
+</style>
+</head>
+<body>
+<video id="v" playsinline autoplay muted preload="auto" poster="poster.jpg">
+  <source src="teaser1.mp4" type="video/mp4">
+</video>
+<div class="tap" id="tap"></div>
+<div class="hint" id="hint">tocca per l'audio 🔊</div>
+<div class="ui">
+  <div class="top"><span class="brand">Ale · 40</span><button class="mute" id="mute">🔇 Audio</button></div>
+  <div class="bottom">
+    <span class="tag">#MésQueUnAle</span>
+    <a class="cta" href="tour.html">Scopri il tour →</a>
+    <a class="skip" href="tour.html">salta ⏭</a>
+  </div>
+</div>
+<div class="end" id="end">
+  <h1>Ti voglio<br>in squadra.</h1>
+  <p>Ti porto al tour…</p>
+  <a class="cta" href="tour.html">Scopri il tour →</a>
+</div>
+<script>
+  const v=document.getElementById('v'), mute=document.getElementById('mute'), tap=document.getElementById('tap'), hint=document.getElementById('hint'), end=document.getElementById('end');
+  function setlbl(){ mute.textContent = v.muted ? '🔇 Audio' : '🔊 Audio'; }
+  function unmute(){ v.muted=false; setlbl(); hint.style.opacity=0; if(v.paused)v.play().catch(()=>{}); }
+  mute.addEventListener('click',e=>{ e.stopPropagation(); v.muted=!v.muted; setlbl(); hint.style.opacity=0; if(!v.muted&&v.paused)v.play().catch(()=>{}); });
+  tap.addEventListener('click',()=>{ if(v.muted) unmute(); });
+  v.play().catch(()=>{});
+  // Fine video: mostro l'overlay e poi redirect automatico al tour.
+  v.addEventListener('ended',()=>{ end.classList.add('on'); setTimeout(()=>{ location.href='tour.html'; }, 1600); });
+  setTimeout(()=>{ hint.style.opacity=0; }, 4000);
+</script>
+</body>
+</html>
