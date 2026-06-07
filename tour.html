@@ -12,7 +12,7 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/tour.html">
 <meta property="og:title" content="Scopri il tour · I 40 di Ale a Barcellona">
-<meta property="og:description" content="Voli da Bologna o Milano, 1/2/3 notti, programma e costi. Tutto pronto: manchi solo tu.">
+<meta property="og:description" content="Voli da Bologna o Milano, 1 o 2 notti, programma e costi. Tutto pronto: manchi solo tu.">
 <meta property="og:image" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/og-viaggio.jpg?v=4">
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
@@ -177,9 +177,9 @@
     </div>
     <p class="q mt">Quante notti ti fermi?</p>
     <div class="seg" id="segN">
+      <button type="button" data-k="vs">1 notte<small>ven 16 → sab 17</small></button>
       <button type="button" data-k="sd">1 notte<small>sab 17 → dom 18</small></button>
       <button type="button" data-k="vd" class="on">2 notti<small>ven 16 → dom 18</small></button>
-      <button type="button" data-k="gd">3 notti<small>gio 15 → dom 18</small></button>
     </div>
 
     <div class="flybox">
@@ -252,7 +252,6 @@
     <div class="tots">
       <div class="totcard"><b>1 notte</b><span>~€420</span></div>
       <div class="totcard"><b>2 notti</b><span>~€600</span></div>
-      <div class="totcard"><b>3 notti</b><span>~€780</span></div>
     </div>
     <p class="q" style="margin-top:20px">Extra a scelta (non nei totali)</p>
     <div class="card" style="padding:8px 20px">
@@ -295,7 +294,7 @@
         <li>Mare & brunch</li><li>Museo Picasso o Park Güell</li>
         <li>Rientro in serata (volo in nottata)</li></ul></div>
     </div>
-    <p class="muted" style="margin-top:12px;font-size:13.5px">Se resti 1 notte fai il cuore della festa (sab); con 2–3 notti ti godi mare, Gaudí e città con calma.</p>
+    <p class="muted" style="margin-top:12px;font-size:13.5px">Con 1 notte fai la festa (sab→dom è il cuore del weekend); con 2 notti (ven→dom) ti godi anche mare, Gaudí e città con calma.</p>
   </div>
 </section>
 
@@ -368,9 +367,9 @@
 
 <script>
   const OPT={
+    vs:{dep:'261016',ret:'261017',title:'andata ven 16 → rientro sab 17 ott',depIso:'2026-10-16',retIso:'2026-10-17',fri:true},
     sd:{dep:'261017',ret:'261018',title:'andata sab 17 → rientro dom 18 ott',depIso:'2026-10-17',retIso:'2026-10-18',fri:false},
-    vd:{dep:'261016',ret:'261018',title:'andata ven 16 → rientro dom 18 ott',depIso:'2026-10-16',retIso:'2026-10-18',fri:true},
-    gd:{dep:'261015',ret:'261018',title:'andata gio 15 → rientro dom 18 ott',depIso:'2026-10-15',retIso:'2026-10-18',fri:false}
+    vd:{dep:'261016',ret:'261018',title:'andata ven 16 → rientro dom 18 ott',depIso:'2026-10-16',retIso:'2026-10-18',fri:true}
   };
   const ORG={
     blq:{name:'Bologna', gf:'Bologna', ref:'Andata di riferimento (quella di Ale): Ryanair <b>FR2097</b> · BLQ 06:20 → BCN 08:05.'},
