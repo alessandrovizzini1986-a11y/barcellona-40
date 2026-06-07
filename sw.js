@@ -2,7 +2,7 @@
 // Strategia: precache della shell, poi stale-while-revalidate.
 // I dati dinamici (meteo, tile mappa) NON vengono cachati: restano live e fail-soft.
 
-const CACHE = 'bcn40-v56';
+const CACHE = 'bcn40-v57';
 
 const SHELL = [
   './',
@@ -47,7 +47,25 @@ self.addEventListener('fetch', (e) => {
     return;
   }
 
-  // Resto: stale-while-revalidate con fallback offline alla home.
+  // Pagine HTML (navigazioni): network-first → online sempre l'ultima versione,
+  // offline fallback alla cache. Evita di mostrare HTML vecchio dopo un deploy.
+  if (req.mode === 'navigate') {
+    e.respondWith((async () => {
+      try {
+        const net = await fetch(req);
+        if (net && net.status === 200) {
+          const copy = net.clone();
+          caches.open(CACHE).then((c) => c.put(req, copy));
+        }
+        return net;
+      } catch {
+        return (await caches.match(req)) || caches.match('./index.html');
+      }
+    })());
+    return;
+  }
+
+  // Resto (CSS/JS/font/icone): stale-while-revalidate con fallback offline alla home.
   e.respondWith((async () => {
     const cached = await caches.match(req);
     const network = fetch(req).then((res) => {
