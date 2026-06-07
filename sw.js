@@ -11,6 +11,8 @@ const SHELL = [
   './tour.html',
   './teaser1.html',
   './mario.html',
+  './teaser2.html',
+  './teasers.html',
   './manifest.json',
   './icon-192.png',
   './icon-512.png',
