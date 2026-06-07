@@ -177,9 +177,9 @@
     </div>
     <p class="q mt">Quante notti ti fermi?</p>
     <div class="seg" id="segN">
-      <button type="button" data-r="261017">1 notte<small>rientro sab 17</small></button>
-      <button type="button" data-r="261018" class="on">2 notti<small>rientro dom 18</small></button>
-      <button type="button" data-r="261019">3 notti<small>rientro lun 19</small></button>
+      <button type="button" data-k="sd">1 notte<small>sab 17 → dom 18</small></button>
+      <button type="button" data-k="vd" class="on">2 notti<small>ven 16 → dom 18</small></button>
+      <button type="button" data-k="gd">3 notti<small>gio 15 → dom 18</small></button>
     </div>
 
     <div class="flybox">
@@ -367,23 +367,29 @@
 </div>
 
 <script>
-  const N={'261017':{lbl:'rientro sab 17 ott',iso:'2026-10-17'},'261018':{lbl:'rientro dom 18 ott',iso:'2026-10-18'},'261019':{lbl:'rientro lun 19 ott',iso:'2026-10-19'}};
+  const OPT={
+    sd:{dep:'261017',ret:'261018',title:'andata sab 17 → rientro dom 18 ott',depIso:'2026-10-17',retIso:'2026-10-18',fri:false},
+    vd:{dep:'261016',ret:'261018',title:'andata ven 16 → rientro dom 18 ott',depIso:'2026-10-16',retIso:'2026-10-18',fri:true},
+    gd:{dep:'261015',ret:'261018',title:'andata gio 15 → rientro dom 18 ott',depIso:'2026-10-15',retIso:'2026-10-18',fri:false}
+  };
   const ORG={
     blq:{name:'Bologna', gf:'Bologna', ref:'Andata di riferimento (quella di Ale): Ryanair <b>FR2097</b> · BLQ 06:20 → BCN 08:05.'},
     mila:{name:'Milano', gf:'Milan', ref:'Da Linate e Malpensa ci sono più voli al giorno: scegli orario e prezzo che preferisci.'}
   };
-  let O='blq', R='261018';
+  let O='blq', K='vd';
   const fly=document.getElementById('fly'), gfly=document.getElementById('gfly'),
         flyTitle=document.getElementById('flyTitle'), flyRef=document.getElementById('flyRef');
   function up(){
-    fly.href='https://www.skyscanner.it/transport/flights/'+O+'/bcn/261016/'+R+'/';
-    gfly.href='https://www.google.com/travel/flights?q='+encodeURIComponent('Flights from '+ORG[O].gf+' to Barcelona on 2026-10-16 through '+N[R].iso);
-    flyTitle.textContent='Da '+ORG[O].name+' · andata ven 16 → '+N[R].lbl;
-    flyRef.innerHTML=ORG[O].ref;
+    const o=OPT[K];
+    fly.href='https://www.skyscanner.it/transport/flights/'+O+'/bcn/'+o.dep+'/'+o.ret+'/';
+    gfly.href='https://www.google.com/travel/flights?q='+encodeURIComponent('Flights from '+ORG[O].gf+' to Barcelona on '+o.depIso+' through '+o.retIso);
+    flyTitle.textContent='Da '+ORG[O].name+' · '+o.title;
+    flyRef.innerHTML = (O==='mila') ? ORG.mila.ref : (o.fri ? ORG.blq.ref : 'Da Bologna: per gli altri giorni scegli orario e prezzo che preferisci — la ricerca è già impostata.');
+    const bcta=document.getElementById('bookCta'); if(bcta) bcta.href=fly.href;
   }
   function bind(id,set){ const s=document.getElementById(id); s.addEventListener('click',e=>{const b=e.target.closest('button'); if(!b)return;
     s.querySelectorAll('button').forEach(x=>x.classList.remove('on')); b.classList.add('on'); set(b); up(); }); }
-  bind('segO',b=>O=b.dataset.o); bind('segN',b=>R=b.dataset.r); up();
+  bind('segO',b=>O=b.dataset.o); bind('segN',b=>K=b.dataset.k); up();
 
   // grafico "quando comprare": marker "oggi" alla data reale + messaggio/CTA condizionali alla finestra
   (function(){
