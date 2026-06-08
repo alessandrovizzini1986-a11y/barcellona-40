@@ -107,9 +107,13 @@
   .cta-final h2{margin-bottom:8px}
   .foot{padding:34px 0 70px;text-align:center;color:var(--muted);font-size:13px}
   .foot a{color:var(--coral);font-weight:700}
+  /* B4: barra di avanzamento scroll (stories-feel, non invasiva) */
+  .progress{position:fixed;top:0;left:0;height:3px;width:0;z-index:200;
+    background:linear-gradient(90deg,#ff5e2e,#ffd486);box-shadow:0 0 8px rgba(255,138,77,.6);transition:width .08s linear}
 </style>
 </head>
 <body>
+<div class="progress" id="progress" role="progressbar" aria-label="Avanzamento pagina"></div>
 <div class="tb"><a class="back" href="viaggio.html">‹ Indietro</a><a class="cta" href="https://wa.me/393474227732?text=Ciao%20Ale%21%20Ho%20visto%20il%20viaggio%20a%20Barcellona%2C%20ti%20chiedo%20una%20cosa%3A">Scrivimi</a></div>
 
 <div class="hero">
@@ -412,6 +416,14 @@
     title.textContent=t; msg.textContent=m; cta.textContent=label;
     cta.style.display=show?'inline-flex':'none';
     if(green){box.style.borderColor='rgba(46,196,182,.5)';box.style.background='linear-gradient(180deg,rgba(46,196,182,.12),transparent)';}
+  })();
+
+  /* B4: barra di avanzamento scroll */
+  (function(){
+    const bar=document.getElementById('progress');
+    function upd(){ const h=document.documentElement; const max=h.scrollHeight-h.clientHeight;
+      bar.style.width=(max>0?(h.scrollTop/max*100):0)+'%'; }
+    addEventListener('scroll',upd,{passive:true}); addEventListener('resize',upd,{passive:true}); upd();
   })();
 </script>
 </body>
