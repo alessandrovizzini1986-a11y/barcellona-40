@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Barça 40">
 <title>Vieni a Barcellona · I 40 di Ale</title>
-<meta name="description" content="Ale fa 40 a Barcellona, 16–18 ottobre 2026. Guarda e scopri il tour.">
+<meta name="description" content="Ale fa 40 a Barcellona, 16–18 ottobre 2026. Guarda, prendi posto in squadra e dimmi se ci sei.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/viaggio.html">
 <meta property="og:title" content="Vieni a Barcellona · I 40 di Ale">
@@ -27,72 +27,200 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=DM+Sans:wght@500;700;800&display=swap" rel="stylesheet">
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
-  html,body{height:100%;background:#08080b;color:#f3ede3;font-family:"DM Sans",system-ui,sans-serif;overflow:hidden}
-  #v{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;background:#08080b}
-  .tap{position:fixed;inset:0;z-index:1}
-  .ui{position:fixed;inset:0;z-index:2;display:flex;flex-direction:column;justify-content:space-between;pointer-events:none}
+  :root{--coral:#ff7a4d;--gold:#ffd486;--ink:#f3ede3;--line:rgba(255,255,255,.12)}
+  html{scroll-behavior:smooth}
+  body{background:#08080b;color:var(--ink);font-family:"DM Sans",system-ui,sans-serif;overflow-x:hidden}
+  /* ===== HERO VIDEO ===== */
+  .hero{position:relative;height:100svh;width:100%;overflow:hidden;background:#08080b}
+  #v{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#08080b}
+  .tap{position:absolute;inset:0;z-index:1}
+  .ui{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;justify-content:space-between;pointer-events:none}
   .top{display:flex;justify-content:space-between;align-items:center;padding:calc(14px + env(safe-area-inset-top)) 18px 14px}
   .brand{font-family:"Fraunces",serif;font-weight:600;font-size:17px;text-shadow:0 2px 14px rgba(0,0,0,.7)}
   .mute{pointer-events:auto;background:rgba(0,0,0,.42);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
     border:1px solid rgba(255,255,255,.22);color:#fff;font-family:inherit;font-weight:700;font-size:13px;padding:8px 14px;border-radius:980px;cursor:pointer}
-  .bottom{display:flex;flex-direction:column;align-items:center;gap:11px;padding:0 20px calc(28px + env(safe-area-inset-bottom))}
-  .cta{pointer-events:auto;background:linear-gradient(100deg,#ff5e2e,#ff9a3d 45%,#ffd486);color:#08080b;font-weight:800;
-    font-size:18px;padding:17px 36px;border-radius:980px;text-decoration:none;box-shadow:0 18px 50px -16px rgba(255,120,60,.75)}
-  .skip{pointer-events:auto;color:rgba(255,255,255,.72);font-size:12.5px;letter-spacing:.04em;text-decoration:none}
+  .bottom{display:flex;flex-direction:column;align-items:center;gap:10px;padding:0 20px calc(24px + env(safe-area-inset-bottom))}
   .tag{font-family:"Fraunces",serif;font-weight:600;font-size:13.5px;letter-spacing:.02em;
     background:linear-gradient(100deg,#ff7a4d,#ffd486);-webkit-background-clip:text;background-clip:text;color:transparent}
-  .hint{position:fixed;left:0;right:0;bottom:50%;z-index:2;text-align:center;color:rgba(255,255,255,.85);font-size:13px;
-    letter-spacing:.04em;pointer-events:none;transition:opacity .5s}
-  /* fallback foto+testo se il video non parte */
-  .fb{position:fixed;inset:0;z-index:4;display:none;align-items:center;justify-content:center;
-    background:#08080b center/cover no-repeat;text-align:center;padding:0 26px}
+  .scroll{pointer-events:auto;color:#fff;font-weight:700;font-size:14px;display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;text-shadow:0 2px 12px rgba(0,0,0,.6)}
+  .scroll .ar{font-size:20px;animation:bob 1.6s infinite}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
+  .hint{position:absolute;left:0;right:0;top:46%;z-index:2;text-align:center;color:rgba(255,255,255,.85);font-size:13px;pointer-events:none;transition:opacity .5s}
+  .cta{pointer-events:auto;background:linear-gradient(100deg,#ff5e2e,#ff9a3d 45%,#ffd486);color:#08080b;font-weight:800;
+    font-size:17px;padding:15px 32px;border-radius:980px;text-decoration:none;box-shadow:0 18px 50px -16px rgba(255,120,60,.75)}
+  /* fallback foto+testo */
+  .fb{position:absolute;inset:0;z-index:4;display:none;align-items:center;justify-content:center;background:#08080b center/cover no-repeat;text-align:center;padding:0 26px}
   .fb.on{display:flex}
-  .fb .fbcard{background:rgba(8,8,11,.62);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
-    border:1px solid rgba(255,255,255,.14);border-radius:20px;padding:26px 22px;display:flex;flex-direction:column;gap:13px;align-items:center;max-width:340px}
+  .fb .fbcard{background:rgba(8,8,11,.62);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);border:1px solid var(--line);border-radius:20px;padding:26px 22px;display:flex;flex-direction:column;gap:13px;align-items:center;max-width:340px}
   .fb .fbk{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#ff9a3d;font-weight:700}
   .fb .fbt{font-family:"Fraunces",serif;font-weight:600;font-size:34px;line-height:1}
-  .fb .fbplay{pointer-events:auto;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.4);
-    color:#fff;font-family:inherit;font-weight:700;font-size:15px;padding:12px 22px;border-radius:980px;cursor:pointer}
+  .fb .fbplay{pointer-events:auto;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.4);color:#fff;font-family:inherit;font-weight:700;font-size:15px;padding:12px 22px;border-radius:980px;cursor:pointer}
+  /* ===== GUEST SECTION ===== */
+  .guest{padding:40px 20px calc(48px + env(safe-area-inset-bottom));max-width:540px;margin:0 auto}
+  .geyebrow{color:var(--coral);font-weight:700;font-size:12px;letter-spacing:.16em;text-transform:uppercase;text-align:center}
+  .ghead{font-family:"Fraunces",serif;font-weight:600;font-size:clamp(30px,9vw,44px);line-height:1.05;text-align:center;margin-top:10px}
+  .ghead .accent{background:linear-gradient(100deg,#ff7a4d,#ffd486);-webkit-background-clip:text;background-clip:text;color:transparent;font-style:italic}
+  .gsub{color:#aeb4be;text-align:center;margin-top:12px;font-size:15px;line-height:1.5}
+  /* countdown */
+  .cd{display:flex;justify-content:center;gap:9px;margin-top:22px}
+  .cd .u{background:#15151c;border:1px solid var(--line);border-radius:14px;padding:12px 6px;min-width:66px;text-align:center}
+  .cd .n{font-family:"Fraunces",serif;font-weight:600;font-size:30px;line-height:1;font-variant-numeric:tabular-nums}
+  .cd .l{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:#8b919c;margin-top:5px}
+  .cd.zero{font-family:"Fraunces",serif;font-size:22px;color:var(--gold);justify-content:center}
+  /* boarding pass */
+  .bpass{margin-top:26px;background:linear-gradient(135deg,#1a1622,#221a16);border:1px solid var(--line);border-radius:18px;
+    overflow:hidden;box-shadow:0 20px 50px -22px rgba(0,0,0,.8)}
+  .bpass .bh{display:flex;justify-content:space-between;align-items:center;padding:13px 16px;background:linear-gradient(100deg,#ff5e2e,#ffb86b);color:#1a0d06}
+  .bpass .bh b{font-family:"Fraunces",serif;font-weight:600;font-size:15px}
+  .bpass .bh span{font-weight:800;font-size:12px;letter-spacing:.04em}
+  .bpass .bbody{padding:16px;display:flex;align-items:center;gap:10px}
+  .bpass .leg{text-align:center}
+  .bpass .leg .ap{font-family:"Fraunces",serif;font-size:30px;font-weight:600;line-height:1}
+  .bpass .leg .ci{font-size:11px;color:#9aa0ab;margin-top:2px}
+  .bpass .arrow{flex:1;text-align:center;color:var(--coral);font-size:18px;position:relative}
+  .bpass .arrow:before{content:"";position:absolute;top:50%;left:6px;right:6px;height:1px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.3) 0 6px,transparent 6px 12px)}
+  .bpass .arrow span{position:relative;background:#1d1820;padding:0 6px}
+  .bpass .grid3{display:flex;border-top:1px dashed var(--line)}
+  .bpass .grid3 .c{flex:1;padding:11px 14px}
+  .bpass .grid3 .c+.c{border-left:1px dashed var(--line)}
+  .bpass .grid3 .k{font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:#8b919c}
+  .bpass .grid3 .vv{font-weight:800;font-size:14px;margin-top:3px}
+  .bpass .barcode{height:34px;background:repeating-linear-gradient(90deg,#0c0a10 0 2px,transparent 2px 4px,#0c0a10 4px 5px,transparent 5px 9px);opacity:.55;margin:0 14px 14px;border-radius:4px}
+  .shot{text-align:center;color:#8b919c;font-size:12px;margin-top:9px}
+  /* rsvp */
+  .rsvp{display:flex;gap:10px;margin-top:24px}
+  .rb{flex:1;text-align:center;padding:16px;border-radius:14px;font-weight:800;font-size:16px;text-decoration:none;color:#08080b}
+  .rb.yes{background:linear-gradient(100deg,#2ec4b6,#8be9c8)}
+  .rb.maybe{background:#15151c;border:1px solid var(--line);color:var(--ink)}
+  .rsvp2{display:flex;gap:10px;margin-top:10px}
+  .rb2{flex:1;text-align:center;padding:13px;border-radius:13px;font-weight:700;font-size:14px;background:rgba(255,255,255,.05);border:1px solid var(--line);color:var(--ink);text-decoration:none;cursor:pointer;font-family:inherit}
+  .gcta{display:block;text-align:center;margin-top:22px}
+  .gskip{display:block;text-align:center;color:#8b919c;font-size:13px;margin-top:14px;text-decoration:none}
 </style>
 </head>
 <body>
-<video id="v" playsinline autoplay muted preload="metadata" poster="poster.jpg">
-  <source src="teaser.mp4" type="video/mp4">
-</video>
-<!-- Fallback foto+testo se il video non parte (rete lenta / autoplay bloccato / errore) -->
-<div class="fb" id="fb" style="background-image:url(poster.jpg)">
-  <div class="fbcard">
-    <div class="fbk">Barcellona · 16–18 ott 2026</div>
-    <div class="fbt">I 40 di Ale</div>
-    <button class="fbplay" id="fbplay">▶ Guarda il teaser</button>
-    <a class="cta" href="tour.html" style="position:static">Scopri il tour →</a>
+
+<section class="hero">
+  <video id="v" playsinline autoplay muted preload="metadata" poster="poster.jpg">
+    <source src="teaser.mp4" type="video/mp4">
+  </video>
+  <div class="fb" id="fb" style="background-image:url(poster.jpg)">
+    <div class="fbcard">
+      <div class="fbk">Barcellona · 16–18 ott 2026</div>
+      <div class="fbt">I 40 di Ale</div>
+      <button class="fbplay" id="fbplay">▶ Guarda il teaser</button>
+      <a class="cta" href="#guest">Vieni ai miei 40 →</a>
+    </div>
   </div>
-</div>
-<div class="tap" id="tap"></div>
-<div class="hint" id="hint">tocca per l'audio 🔊</div>
-<div class="ui">
-  <div class="top"><span class="brand">Ale · 40</span><button class="mute" id="mute">🔇 Audio</button></div>
-  <div class="bottom">
-    <span class="tag">#MésQueUnAle</span>
-    <a class="cta" href="tour.html">Scopri il tour →</a>
-    <a class="skip" href="tour.html">salta ⏭</a>
+  <div class="tap" id="tap"></div>
+  <div class="hint" id="hint">tocca per l'audio 🔊</div>
+  <div class="ui">
+    <div class="top"><span class="brand">Ale · 40</span><button class="mute" id="mute">🔇 Audio</button></div>
+    <div class="bottom">
+      <span class="tag">#MésQueUnAle</span>
+      <a class="scroll" href="#guest"><span>Vieni ai miei 40</span><span class="ar">↓</span></a>
+    </div>
   </div>
-</div>
+</section>
+
+<section class="guest" id="guest">
+  <p class="geyebrow">16–18 Ottobre 2026 · Barcellona</p>
+  <h1 class="ghead"><span id="gname">Vieni</span> <span class="accent">ai miei 40.</span></h1>
+  <p class="gsub">Tre giorni a Barcellona: mare, Gaudí, e — se gioca il Barça — il Camp Nou. Manchi solo tu. <b>#MésQueUnAle</b></p>
+
+  <!-- COUNTDOWN -->
+  <div class="cd" id="cd"></div>
+
+  <!-- CARTA D'IMBARCO (screenshottabile) -->
+  <div class="bpass" id="bpass">
+    <div class="bh"><b>I 40 di Ale</b><span>#MésQueUnAle</span></div>
+    <div class="bbody">
+      <div class="leg"><div class="ap">BLQ</div><div class="ci">Bologna</div></div>
+      <div class="arrow"><span>✈︎</span></div>
+      <div class="leg"><div class="ap">BCN</div><div class="ci">Barcellona</div></div>
+    </div>
+    <div class="grid3">
+      <div class="c"><div class="k">Passeggero</div><div class="vv" id="bpName">OSPITE</div></div>
+      <div class="c"><div class="k">Data</div><div class="vv">16 OTT 2026</div></div>
+      <div class="c"><div class="k">Posto</div><div class="vv">40 · FESTA</div></div>
+    </div>
+    <div class="barcode"></div>
+  </div>
+  <p class="shot">📸 Fai uno screenshot del tuo biglietto</p>
+
+  <!-- RSVP -->
+  <div class="rsvp">
+    <a class="rb yes" id="rsvpYes" target="_blank" rel="noopener">✅ Ci sono</a>
+    <a class="rb maybe" id="rsvpMaybe" target="_blank" rel="noopener">🤔 Forse</a>
+  </div>
+  <div class="rsvp2">
+    <button class="rb2" id="shareBtn">📤 Condividi</button>
+    <a class="rb2" id="calBtn" download="i-40-di-ale.ics">📅 Calendario</a>
+  </div>
+
+  <div class="gcta"><a class="cta" href="tour.html">Scopri il tour →</a></div>
+  <a class="gskip" href="tour.html">Voli, costi e programma completo →</a>
+</section>
+
 <script>
-  const v=document.getElementById('v'), mute=document.getElementById('mute'), tap=document.getElementById('tap'), hint=document.getElementById('hint'), fb=document.getElementById('fb'), fbplay=document.getElementById('fbplay');
+  /* ====== HERO VIDEO (preload metadata, tap-to-play, fallback) ====== */
+  const v=document.getElementById('v'), mute=document.getElementById('mute'), tap=document.getElementById('tap'),
+        hint=document.getElementById('hint'), fb=document.getElementById('fb'), fbplay=document.getElementById('fbplay');
   function setlbl(){ mute.textContent = v.muted ? '🔇 Audio' : '🔊 Audio'; }
   function unmute(){ v.muted=false; setlbl(); hint.style.opacity=0; if(v.paused)v.play().catch(()=>{}); }
-  function showFB(){ fb.classList.add('on'); }
-  function hideFB(){ fb.classList.remove('on'); }
+  function showFB(){ fb.classList.add('on'); } function hideFB(){ fb.classList.remove('on'); }
   mute.addEventListener('click',e=>{ e.stopPropagation(); v.muted=!v.muted; setlbl(); hint.style.opacity=0; if(!v.muted&&v.paused)v.play().catch(()=>{}); });
-  tap.addEventListener('click',()=>{ if(v.paused) v.play().catch(()=>{}); if(v.muted) unmute(); });   // tap-to-play
+  tap.addEventListener('click',()=>{ if(v.paused) v.play().catch(()=>{}); if(v.muted) unmute(); });
   fbplay.addEventListener('click',()=>{ hideFB(); v.muted=false; setlbl(); v.play().catch(()=>{ v.muted=true; v.play().catch(()=>{}); }); hint.style.opacity=0; });
   v.addEventListener('playing',hideFB);
   v.addEventListener('error',showFB);
-  v.play().catch(()=>{});                 // autoplay muto; se bloccato → tap o fallback
-  setTimeout(()=>{ if(v.paused && v.readyState<2) showFB(); }, 5000); // watchdog: rete lenta → foto+testo
-  v.addEventListener('ended',()=>{ location.href='tour.html'; });
+  v.play().catch(()=>{});
+  setTimeout(()=>{ if(v.paused && v.readyState<2) showFB(); }, 5000);
+  v.addEventListener('ended',()=>{ document.getElementById('guest').scrollIntoView({behavior:'smooth'}); });
   setTimeout(()=>{ hint.style.opacity=0; }, 4000);
+
+  /* ====== B1 · invito personalizzato (?nome) + carta d'imbarco ====== */
+  const params=new URLSearchParams(location.search);
+  const nome=(params.get('nome')||'').trim().replace(/[<>]/g,'').slice(0,24);
+  if(nome){
+    document.getElementById('gname').textContent=nome+', vieni';
+    document.getElementById('bpName').textContent=nome.toUpperCase();
+    document.title=nome+' · vieni ai miei 40 a Barcellona';
+  }
+
+  /* ====== B2 · countdown ai 40 (16 ott 2026) ====== */
+  const TARGET=new Date('2026-10-16T06:20:00+02:00').getTime();
+  function pad(n){return String(n).padStart(2,'0');}
+  function cd(){
+    const cdEl=document.getElementById('cd'); const diff=TARGET-Date.now();
+    if(diff<=0){ cdEl.className='cd zero'; cdEl.textContent='È oggi. Barcellona ci aspetta. 🔵🔴'; return; }
+    const d=Math.floor(diff/864e5), h=Math.floor(diff/36e5)%24, m=Math.floor(diff/6e4)%60, s=Math.floor(diff/1e3)%60;
+    cdEl.className='cd';
+    cdEl.innerHTML=[[d,'giorni'],[pad(h),'ore'],[pad(m),'min'],[pad(s),'sec']]
+      .map(u=>'<div class="u"><div class="n">'+u[0]+'</div><div class="l">'+u[1]+'</div></div>').join('');
+  }
+  cd(); setInterval(cd,1000);
+
+  /* ====== B3 · RSVP WhatsApp + condividi + calendario ====== */
+  const WA='https://wa.me/393474227732?text=';
+  document.getElementById('rsvpYes').href=WA+encodeURIComponent('Ciao Ale! Ci sono per i tuoi 40 a Barcellona 🎉');
+  document.getElementById('rsvpMaybe').href=WA+encodeURIComponent('Ciao Ale, per Barcellona (16-18 ott) forse ci sono, ti confermo a breve');
+  document.getElementById('shareBtn').addEventListener('click',()=>{
+    const url=location.href; // mantiene ?nome se presente
+    const data={title:'Vieni ai miei 40 · Barcellona',text:'Ale fa 40 a Barcellona (16–18 ott 2026). Ci sei?',url:url};
+    if(navigator.share){navigator.share(data).catch(()=>{});}
+    else if(navigator.clipboard){navigator.clipboard.writeText(url).then(()=>alert('Link copiato!'),()=>prompt('Copia il link:',url));}
+    else{prompt('Copia il link:',url);}
+  });
+  // .ics 16–18 ott generato al volo (self-contained, niente file esterno)
+  const ICS=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//I40diAle//Barcellona//IT','CALSCALE:GREGORIAN',
+    'BEGIN:VEVENT','UID:i40-ale-bcn-2026@github','DTSTAMP:20260101T000000Z',
+    'DTSTART;VALUE=DATE:20261016','DTEND;VALUE=DATE:20261019',
+    'SUMMARY:I 40 di Ale · Barcellona','LOCATION:Barcellona, Spagna',
+    'DESCRIPTION:Tre giorni a Barcellona per i 40 di Ale. #MesQueUnAle — dettagli: https://alessandrovizzini1986-a11y.github.io/barcellona-40/tour.html',
+    'END:VEVENT','END:VCALENDAR'].join('\r\n');
+  try{ document.getElementById('calBtn').href=URL.createObjectURL(new Blob([ICS],{type:'text/calendar'})); }
+  catch(e){ document.getElementById('calBtn').href='data:text/calendar;charset=utf-8,'+encodeURIComponent(ICS); }
 </script>
 </body>
 </html>
