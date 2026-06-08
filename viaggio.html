@@ -71,6 +71,9 @@
     letter-spacing:-.025em;text-shadow:0 6px 30px rgba(0,0,0,.6)}
   .htitle em{font-style:italic;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
   .hsub{font-size:15.5px;color:#e7e2da;max-width:30ch;text-shadow:0 2px 12px rgba(0,0,0,.7)}
+  /* il titolo hero sfuma quando il video parte, per non coprire il testo del video */
+  .hlede{display:flex;flex-direction:column;gap:14px;transition:opacity .6s ease}
+  .hlede.gone{opacity:0;pointer-events:none}
   .hrow{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
   .scroll{pointer-events:auto;display:inline-flex;align-items:center;gap:9px;white-space:nowrap;
     background:var(--grad);color:#08080b;font-weight:800;font-size:15.5px;padding:13px 22px;border-radius:980px;
@@ -250,9 +253,11 @@
       <button class="mute" id="mute">🔇 Audio</button>
     </div>
     <div class="hbottom">
-      <span class="hbadge"><span class="dot"></span>Convocazione ufficiale · 2026</span>
-      <h1 class="htitle">Ti voglio<br><em>a Barcellona.</em></h1>
-      <p class="hsub">16-18 ottobre. Tre giorni per i miei 40. La squadra è quasi fatta.</p>
+      <div class="hlede" id="hlede">
+        <span class="hbadge"><span class="dot"></span>Convocazione ufficiale · 2026</span>
+        <h1 class="htitle">Ti voglio<br><em>a Barcellona.</em></h1>
+        <p class="hsub">16-18 ottobre. Tre giorni per i miei 40. La squadra è quasi fatta.</p>
+      </div>
       <div class="hrow">
         <a class="scroll" href="#guest"><span>Apri la convocazione</span><span class="ar">↓</span></a>
         <span class="htag">#MésQueUnAle</span>
@@ -399,7 +404,10 @@
   function videoFail(){ v.style.display='none'; mute.style.display='none'; hint.style.display='none'; }
   mute.addEventListener('click',e=>{ e.stopPropagation(); v.muted=!v.muted; setlbl(); hint.style.opacity=0; if(!v.muted&&v.paused)v.play().catch(()=>{}); });
   tap.addEventListener('click',()=>{ if(v.paused) v.play().catch(()=>{}); if(v.muted) unmute(); });
+  let ledeGone=false;
+  function fadeLede(){ if(ledeGone)return; ledeGone=true; setTimeout(()=>{const l=document.getElementById('hlede'); if(l)l.classList.add('gone');},2400); }
   v.addEventListener('playing',showHint);
+  v.addEventListener('playing',fadeLede);
   v.addEventListener('error',videoFail);
   v.play().catch(()=>{});
   setTimeout(()=>{ if(v.readyState<2) videoFail(); }, 6000);
