@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Barça 40">
-<meta name="theme-color" content="#0a0a0e">
+<meta name="theme-color" content="#08080b">
 <title>Barcellona · I 40 di Ale</title>
 <meta name="description" content="La guida del weekend a Barcellona per i 40 di Ale · 16–18 ottobre 2026.">
 <meta property="og:type" content="website">
@@ -31,9 +31,10 @@
 <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
   :root{
-    --bg:#0a0a0e; --bg2:#15131b; --card:#17141d; --ink:#f4ece0; --muted:#9aa0ab;
-    --coral:#ff7a4d; --amber:#ffb86b; --teal:#2ec4b6; --line:rgba(255,255,255,.10);
+    --bg:#08080b; --bg2:#15151c; --card:#16131d; --ink:#f3ede3; --muted:#99a1ac;
+    --coral:#ff7a4d; --amber:#ffb86b; --gold:#ffd486; --teal:#2ec4b6; --line:rgba(255,255,255,.12);
     --done:#5b6270; --maxw:680px; --grad:linear-gradient(100deg,#ff5e2e,#ff9a3d 45%,#ffd486);
+    --blau:#004D98; --grana:#A50044;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
@@ -51,6 +52,9 @@
   .topbar{position:sticky;top:0;z-index:50;background:rgba(10,10,14,.85);
     -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
   .topbar .row{display:flex;align-items:center;gap:10px;padding:9px 16px;max-width:var(--maxw);margin:0 auto}
+  .tbrand{display:flex;align-items:center;gap:7px;font-family:"Fraunces",serif;font-weight:600;font-size:14.5px;flex:none;margin-right:2px}
+  .tcrest{width:16px;height:20px;border-radius:2px 2px 8px 8px;flex:none;
+    background:linear-gradient(90deg,var(--blau) 0 50%,var(--grana) 50% 100%);box-shadow:0 1px 4px rgba(0,0,0,.5)}
   .status{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--muted);flex:1;min-width:0}
   .status b{color:var(--ink);font-weight:700}
   .dot{width:7px;height:7px;border-radius:50%;background:var(--teal);flex:none;
@@ -60,7 +64,8 @@
     border:1px solid var(--line);font-size:16px;display:flex;align-items:center;justify-content:center}
 
   /* SECTION HEADERS */
-  .seclab{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:22px 2px 8px}
+  .seclab{display:flex;align-items:center;gap:9px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--coral);font-weight:700;margin:24px 2px 9px}
+  .seclab::before{content:"";width:20px;height:1px;background:linear-gradient(90deg,transparent,var(--coral));flex:none}
 
   /* ===== ADESSO (hero card) ===== */
   #adesso{margin-top:14px}
@@ -236,7 +241,22 @@
   .botnav .on{color:var(--amber)}
 
   footer{text-align:center;padding:34px 0 20px;color:var(--muted)}
-  footer .sig{font-family:"Fraunces",serif;font-style:italic;font-size:16px;color:var(--ink)}
+  footer .sig{font-family:"Fraunces",serif;font-style:italic;font-size:clamp(22px,7vw,30px);color:var(--ink);font-weight:600}
+  footer .sig b{font-style:normal;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  footer .htag{margin-top:10px;font-family:"Fraunces",serif;font-weight:600;font-size:14px;
+    background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  /* banner ospite in stile firma */
+  .guestcta{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px;padding:14px 16px;
+    border-radius:15px;border:1px solid rgba(255,170,120,.3);
+    background:linear-gradient(100deg,rgba(255,94,46,.14),rgba(255,212,134,.07));
+    box-shadow:0 14px 34px -20px rgba(255,120,60,.6)}
+  .guestcta:active{transform:translateY(1px)}
+  .guestcta .gc-l{display:flex;align-items:center;gap:12px;min-width:0}
+  .guestcta .gc-ic{font-size:21px;flex:none}
+  .guestcta .gc-tx{font-weight:700;font-size:14.5px;color:var(--ink);line-height:1.2}
+  .guestcta .gc-tx small{display:block;font-weight:500;font-size:12px;color:var(--muted);margin-top:2px}
+  .guestcta .gc-ar{flex:none;font-size:17px;font-weight:700;color:#08080b;background:var(--grad);
+    width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center}
 </style>
 </head>
 <body>
@@ -244,6 +264,7 @@
 <!-- STATUS BAR -->
 <div class="topbar">
   <div class="row">
+    <span class="tbrand"><span class="tcrest"></span>40</span>
     <div class="status"><span class="dot"></span><span id="phase">—</span> · <b id="clock" class="tnum">--:--</b> · <span id="temp" onclick="openWeather()" title="Andamento orario della giornata">🌡️ ~22°</span><span id="offBadge" style="display:none;margin-left:8px;font-size:11px;font-weight:700;color:var(--amber);border:1px solid rgba(255,184,107,.45);border-radius:6px;padding:1px 6px">offline</span></div>
     <button class="searchbtn" onclick="shareGuide()" aria-label="Condividi la guida">📤</button>
     <button class="searchbtn" onclick="openSearch()" aria-label="Cerca">🔎</button>
@@ -253,7 +274,10 @@
 <div class="wrap">
 
   <!-- FUNNEL OSPITE: questa è la plancia operativa di Ale; un ospite parte dalla presentazione -->
-  <a href="viaggio.html" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px;padding:12px 15px;border-radius:13px;background:rgba(46,196,182,.12);border:1px solid rgba(46,196,182,.32);color:var(--teal);font-weight:700;font-size:13.5px">👋 Sei un ospite? Parti da qui<span style="font-size:16px">→</span></a>
+  <a href="viaggio.html" class="guestcta">
+    <span class="gc-l"><span class="gc-ic">👋</span><span class="gc-tx">Sei un ospite?<small>Apri la convocazione ufficiale</small></span></span>
+    <span class="gc-ar">→</span>
+  </a>
 
   <!-- ADESSO -->
   <section id="adesso">
@@ -377,6 +401,7 @@
             <a id="invWa" class="prim" target="_blank" rel="noopener">💬 Invia su WhatsApp</a>
           </div>
           <p class="muted" id="invMsg" style="font-size:12px;margin-top:6px"></p>
+          <a href="condividi.html" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:11px;padding:12px 14px;border-radius:12px;background:linear-gradient(100deg,rgba(255,94,46,.13),rgba(255,212,134,.06));border:1px solid rgba(255,170,120,.3);font-weight:700;font-size:13.5px">✨ Apri il Kit condivisione · carte pronte<span style="font-size:16px">→</span></a>
         </div>
       </details>
 
@@ -469,8 +494,9 @@
   </details>
 
   <footer>
-    <div class="sig">Buon 40, Ale.</div>
-    <div style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;margin-top:8px">Barcellona · 16–18 ott 2026</div>
+    <div class="sig">Buon 40, <b>Ale.</b></div>
+    <div style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;margin-top:10px">Barcellona · 16–18 ott 2026</div>
+    <div class="htag">#MésQueUnAle</div>
     <a href="viaggio.html" style="display:inline-block;margin-top:18px;padding:10px 20px;border-radius:980px;border:1px solid var(--line);color:var(--teal);font-size:13px;font-weight:700;letter-spacing:.03em">✨ Sfoglia la presentazione →</a>
   </footer>
 </div>
