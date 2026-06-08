@@ -110,6 +110,17 @@
   /* B4: barra di avanzamento scroll (stories-feel, non invasiva) */
   .progress{position:fixed;top:0;left:0;height:3px;width:0;z-index:200;
     background:linear-gradient(90deg,#ff5e2e,#ffd486);box-shadow:0 0 8px rgba(255,138,77,.6);transition:width .08s linear}
+  /* ===== B4: TOUR IN FORMATO STORIES — schede full-screen + scroll-snap morbido ===== */
+  html{scroll-snap-type:y proximity;scroll-padding-top:54px}
+  .hero,section{scroll-snap-align:start;min-height:100vh;min-height:100svh;
+    display:flex;flex-direction:column;justify-content:center}
+  section{padding:80px 0;position:relative;overflow:hidden}
+  section:nth-of-type(odd){background:radial-gradient(120% 70% at 50% 0%,rgba(255,110,48,.06),transparent 62%)}
+  section:nth-of-type(even){background:radial-gradient(120% 70% at 50% 100%,rgba(70,150,230,.055),transparent 62%)}
+  /* desktop: niente full-screen forzato, scorrimento normale */
+  @media(min-width:900px){.hero,section{min-height:auto;padding:74px 0}html{scroll-snap-type:none}}
+  /* schermi bassi (es. landscape): non intrappolare contenuti alti */
+  @media(max-height:560px){.hero,section{min-height:auto}html{scroll-snap-type:none}}
 </style>
 </head>
 <body>
