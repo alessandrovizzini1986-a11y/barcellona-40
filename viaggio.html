@@ -43,12 +43,31 @@
     background:linear-gradient(100deg,#ff7a4d,#ffd486);-webkit-background-clip:text;background-clip:text;color:transparent}
   .hint{position:fixed;left:0;right:0;bottom:50%;z-index:2;text-align:center;color:rgba(255,255,255,.85);font-size:13px;
     letter-spacing:.04em;pointer-events:none;transition:opacity .5s}
+  /* fallback foto+testo se il video non parte */
+  .fb{position:fixed;inset:0;z-index:4;display:none;align-items:center;justify-content:center;
+    background:#08080b center/cover no-repeat;text-align:center;padding:0 26px}
+  .fb.on{display:flex}
+  .fb .fbcard{background:rgba(8,8,11,.62);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+    border:1px solid rgba(255,255,255,.14);border-radius:20px;padding:26px 22px;display:flex;flex-direction:column;gap:13px;align-items:center;max-width:340px}
+  .fb .fbk{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#ff9a3d;font-weight:700}
+  .fb .fbt{font-family:"Fraunces",serif;font-weight:600;font-size:34px;line-height:1}
+  .fb .fbplay{pointer-events:auto;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.4);
+    color:#fff;font-family:inherit;font-weight:700;font-size:15px;padding:12px 22px;border-radius:980px;cursor:pointer}
 </style>
 </head>
 <body>
-<video id="v" playsinline autoplay muted preload="auto" poster="poster.jpg">
+<video id="v" playsinline autoplay muted preload="metadata" poster="poster.jpg">
   <source src="teaser.mp4" type="video/mp4">
 </video>
+<!-- Fallback foto+testo se il video non parte (rete lenta / autoplay bloccato / errore) -->
+<div class="fb" id="fb" style="background-image:url(poster.jpg)">
+  <div class="fbcard">
+    <div class="fbk">Barcellona · 16–18 ott 2026</div>
+    <div class="fbt">I 40 di Ale</div>
+    <button class="fbplay" id="fbplay">▶ Guarda il teaser</button>
+    <a class="cta" href="tour.html" style="position:static">Scopri il tour →</a>
+  </div>
+</div>
 <div class="tap" id="tap"></div>
 <div class="hint" id="hint">tocca per l'audio 🔊</div>
 <div class="ui">
@@ -60,12 +79,18 @@
   </div>
 </div>
 <script>
-  const v=document.getElementById('v'), mute=document.getElementById('mute'), tap=document.getElementById('tap'), hint=document.getElementById('hint');
+  const v=document.getElementById('v'), mute=document.getElementById('mute'), tap=document.getElementById('tap'), hint=document.getElementById('hint'), fb=document.getElementById('fb'), fbplay=document.getElementById('fbplay');
   function setlbl(){ mute.textContent = v.muted ? '🔇 Audio' : '🔊 Audio'; }
   function unmute(){ v.muted=false; setlbl(); hint.style.opacity=0; if(v.paused)v.play().catch(()=>{}); }
+  function showFB(){ fb.classList.add('on'); }
+  function hideFB(){ fb.classList.remove('on'); }
   mute.addEventListener('click',e=>{ e.stopPropagation(); v.muted=!v.muted; setlbl(); hint.style.opacity=0; if(!v.muted&&v.paused)v.play().catch(()=>{}); });
-  tap.addEventListener('click',()=>{ if(v.muted) unmute(); });
-  v.play().catch(()=>{});                 // autoplay (muto); se bloccato, parte al tap
+  tap.addEventListener('click',()=>{ if(v.paused) v.play().catch(()=>{}); if(v.muted) unmute(); });   // tap-to-play
+  fbplay.addEventListener('click',()=>{ hideFB(); v.muted=false; setlbl(); v.play().catch(()=>{ v.muted=true; v.play().catch(()=>{}); }); hint.style.opacity=0; });
+  v.addEventListener('playing',hideFB);
+  v.addEventListener('error',showFB);
+  v.play().catch(()=>{});                 // autoplay muto; se bloccato → tap o fallback
+  setTimeout(()=>{ if(v.paused && v.readyState<2) showFB(); }, 5000); // watchdog: rete lenta → foto+testo
   v.addEventListener('ended',()=>{ location.href='tour.html'; });
   setTimeout(()=>{ hint.style.opacity=0; }, 4000);
 </script>
