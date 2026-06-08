@@ -366,7 +366,7 @@
     <summary><span class="ic">✨</span> Extra <span class="caret">▸</span></summary>
     <div class="det-body">
 
-      <details open>
+      <details open id="invDet">
         <summary style="padding:13px 0;font-size:15px">📨 Invita gli amici · link col nome <span class="caret">▸</span></summary>
         <div>
           <p class="muted" style="font-size:13px;margin:2px 0 9px">Scrivi il nome: gli generi un link che lo <b>saluta per nome</b> e gli fa la <b>carta d'imbarco</b> personalizzata.</p>
@@ -506,7 +506,7 @@
     <a href="#oggi" onclick="setTimeout(scrollNow,80)"><span class="bi">🗓️</span>Oggi</a>
     <a href="#docs" onclick="openDet('docs')"><span class="bi">🎫</span>Docs</a>
     <a href="#mappa" onclick="openDet('mappa')"><span class="bi">📍</span>Mappa</a>
-    <button onclick="openSearch()"><span class="bi">🔎</span>Cerca</button>
+    <button onclick="openInvite()"><span class="bi">📨</span>Invita</button>
   </nav>
 </div>
 
@@ -928,6 +928,11 @@ window.Notifier={
 };
 
 /* ============ Generatore inviti personalizzati (?nome) ============ */
+function openInvite(){
+  const ex=document.getElementById('extra'); if(ex)ex.open=true;
+  const inv=document.getElementById('invDet'); if(inv)inv.open=true;
+  setTimeout(()=>{const i=document.getElementById('invName'); if(i){i.scrollIntoView({behavior:'smooth',block:'center'});try{i.focus()}catch(e){}}},140);
+}
 function invUrl(){
   const n=(document.getElementById('invName').value||'').trim();
   const base=location.href.split('#')[0].split('?')[0].replace(/[^/]*$/,'')+'viaggio.html';
