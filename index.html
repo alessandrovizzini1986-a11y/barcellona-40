@@ -366,6 +366,20 @@
     <summary><span class="ic">✨</span> Extra <span class="caret">▸</span></summary>
     <div class="det-body">
 
+      <details open>
+        <summary style="padding:13px 0;font-size:15px">📨 Invita gli amici · link col nome <span class="caret">▸</span></summary>
+        <div>
+          <p class="muted" style="font-size:13px;margin:2px 0 9px">Scrivi il nome: gli generi un link che lo <b>saluta per nome</b> e gli fa la <b>carta d'imbarco</b> personalizzata.</p>
+          <input id="invName" class="fld" placeholder="es. Marco" autocomplete="off" oninput="invUpd()">
+          <div class="muted" id="invLink" style="font-size:12px;word-break:break-all;margin:9px 0"></div>
+          <div class="acts">
+            <button type="button" class="tealb" onclick="invCopy()">📋 Copia link</button>
+            <a id="invWa" class="prim" target="_blank" rel="noopener">💬 Invia su WhatsApp</a>
+          </div>
+          <p class="muted" id="invMsg" style="font-size:12px;margin-top:6px"></p>
+        </div>
+      </details>
+
       <details>
         <summary style="padding:13px 0;font-size:15px">🎉 Eventi del weekend <span class="caret">▸</span></summary>
         <div>
@@ -912,6 +926,27 @@ window.Notifier={
   ntfy:{available:true, send:(topic,t,b)=>fetch('https://ntfy.sh/'+encodeURIComponent(topic),{method:'POST',headers:{'Title':t},body:b})},
   telegram:{available:false, /* stub: richiede bot token + chat id, da configurare in futuro */ send(){console.warn('Telegram non configurato');}}
 };
+
+/* ============ Generatore inviti personalizzati (?nome) ============ */
+function invUrl(){
+  const n=(document.getElementById('invName').value||'').trim();
+  const base=location.href.split('#')[0].split('?')[0].replace(/[^/]*$/,'')+'viaggio.html';
+  return n?base+'?nome='+encodeURIComponent(n):base;
+}
+function invUpd(){
+  const n=(document.getElementById('invName').value||'').trim(), u=invUrl();
+  document.getElementById('invLink').textContent=u;
+  const msg=(n?(n+', vieni'):'Vieni')+' ai miei 40 a Barcellona 🔵🔴 (16–18 ott 2026)\n'+u;
+  document.getElementById('invWa').href='https://wa.me/?text='+encodeURIComponent(msg);
+  document.getElementById('invMsg').textContent='';
+}
+function invCopy(){
+  const u=invUrl();
+  (navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject())
+    .then(()=>document.getElementById('invMsg').textContent='Link copiato ✓',
+          ()=>prompt('Copia il link:',u));
+}
+invUpd();
 
 /* ============ Service Worker ============ */
 if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
