@@ -4,834 +4,983 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#0e1f33">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Barça 40">
+<meta name="theme-color" content="#08080b">
 <title>Barcellona · I 40 di Ale</title>
+<meta name="description" content="La guida del weekend a Barcellona per i 40 di Ale · 16–18 ottobre 2026.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/">
+<meta property="og:title" content="Barcellona · I 40 di Ale">
+<meta property="og:description" content="La guida del weekend: itinerario, voli, stato volo live, mappe e locali. 16–18 ottobre 2026.">
+<meta property="og:image" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/og-viaggio.jpg?v=4">
+<meta property="og:image:secure_url" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/og-viaggio.jpg?v=4">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="it_IT">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/og-viaggio.jpg?v=4">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400;1,9..144,600&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
   :root{
-    --bg:#0e1f33; --bg2:#13263d; --card:#162c46; --ink:#f4ece0; --muted:#9db1c6;
-    --coral:#ff7a4d; --amber:#ffb86b; --teal:#2ec4b6; --line:rgba(255,255,255,.09);
-    --maxw:680px;
+    --bg:#08080b; --bg2:#15151c; --card:#16131d; --ink:#f3ede3; --muted:#99a1ac;
+    --coral:#ff7a4d; --amber:#ffb86b; --gold:#ffd486; --teal:#2ec4b6; --line:rgba(255,255,255,.12);
+    --done:#5b6270; --maxw:680px; --grad:linear-gradient(100deg,#ff5e2e,#ff9a3d 45%,#ffd486);
+    --blau:#004D98; --grana:#A50044;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
-  body{background:var(--bg);color:var(--ink);font-family:"DM Sans",system-ui,sans-serif;line-height:1.55;
-    -webkit-font-smoothing:antialiased;padding-bottom:70px;overflow-x:hidden}
-  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 18px}
-  section{scroll-margin-top:64px}
-  h1,h2,h3{font-family:"Fraunces",serif;font-weight:600;line-height:1.08;letter-spacing:-.01em}
-  .accent{font-style:italic;font-weight:400;color:var(--coral)}
+  body{background:var(--bg);color:var(--ink);font-family:"DM Sans",system-ui,sans-serif;line-height:1.5;
+    -webkit-font-smoothing:antialiased;padding-bottom:calc(108px + env(safe-area-inset-bottom));overflow-x:hidden}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 16px}
+  h1,h2,h3{font-family:"Fraunces",serif;font-weight:600;line-height:1.1;letter-spacing:-.01em}
+  .accent{font-style:italic;font-weight:400;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
   a{color:inherit;text-decoration:none}
+  button{font-family:inherit;color:inherit;cursor:pointer;border:none;background:none}
+  .muted{color:var(--muted)}
+  .tnum{font-variant-numeric:tabular-nums}
 
-  /* TOP BAR */
-  .topbar{position:sticky;top:0;z-index:50;background:rgba(14,31,51,.86);backdrop-filter:blur(14px);
-    border-bottom:1px solid var(--line)}
-  .topbar .row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 16px;max-width:var(--maxw);margin:0 auto}
-  .now-pill{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted)}
-  .now-pill b{color:var(--ink);font-weight:700;font-variant-numeric:tabular-nums}
-  .dot{width:7px;height:7px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 0 rgba(46,196,182,.6);animation:pulse 2.2s infinite}
+  /* TOP BAR / STATUS */
+  .topbar{position:sticky;top:0;z-index:50;background:rgba(10,10,14,.85);
+    -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+  .topbar .row{display:flex;align-items:center;gap:10px;padding:9px 16px;max-width:var(--maxw);margin:0 auto}
+  .tbrand{display:flex;align-items:center;gap:7px;font-family:"Fraunces",serif;font-weight:600;font-size:14.5px;flex:none;margin-right:2px}
+  .tcrest{width:16px;height:20px;border-radius:2px 2px 8px 8px;flex:none;
+    background:linear-gradient(90deg,var(--blau) 0 50%,var(--grana) 50% 100%);box-shadow:0 1px 4px rgba(0,0,0,.5)}
+  .status{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--muted);flex:1;min-width:0}
+  .status b{color:var(--ink);font-weight:700}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--teal);flex:none;
+    box-shadow:0 0 0 0 rgba(46,196,182,.6);animation:pulse 2.2s infinite}
   @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(46,196,182,.5)}70%{box-shadow:0 0 0 8px rgba(46,196,182,0)}100%{box-shadow:0 0 0 0 rgba(46,196,182,0)}}
-  .tabs{display:flex;gap:6px}
-  .tabs a{font-size:11px;font-weight:700;color:var(--muted);padding:5px 9px;border:1px solid var(--line);border-radius:20px}
-  .tabs a small{display:block;font-size:8.5px;letter-spacing:.12em;opacity:.7}
-  .tabs a.on{color:var(--bg);background:var(--amber);border-color:var(--amber)}
+  .searchbtn{flex:none;width:44px;height:44px;border-radius:11px;background:rgba(255,255,255,.06);
+    border:1px solid var(--line);font-size:16px;display:flex;align-items:center;justify-content:center}
 
-  /* HERO */
-  .hero{padding:46px 0 30px;text-align:left}
-  .kick{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--amber);font-weight:700}
-  .hero h1{font-size:clamp(44px,13vw,76px);margin:14px 0 16px}
-  .hero .who{font-size:16px;color:var(--ink);font-weight:500}
-  .hero .who span{color:var(--muted);font-weight:400}
-  .poem{font-family:"Fraunces",serif;font-style:italic;color:var(--muted);font-size:15.5px;margin-top:18px;line-height:1.7}
+  /* SECTION HEADERS */
+  .seclab{display:flex;align-items:center;gap:9px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--coral);font-weight:700;margin:24px 2px 9px}
+  .seclab::before{content:"";width:20px;height:1px;background:linear-gradient(90deg,transparent,var(--coral));flex:none}
 
-  /* NEXT MOMENT */
-  .nextbox{margin:22px 0 6px;background:linear-gradient(135deg,#16314e,#13263d);border:1px solid var(--line);
-    border-radius:18px;padding:16px 18px}
-  .nextbox .lab{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--teal);font-weight:700}
-  .nextbox .big{font-family:"Fraunces",serif;font-size:22px;margin-top:4px}
-  .nextbox .sub{font-size:13px;color:var(--muted);margin-top:3px}
+  /* ===== ADESSO (hero card) ===== */
+  #adesso{margin-top:14px}
+  .now{background:linear-gradient(160deg,#1c1922,#141118);border:1px solid var(--line);border-radius:22px;
+    padding:18px;box-shadow:0 12px 34px rgba(0,0,0,.28)}
+  .now .lab{font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--teal);font-weight:800}
+  .now .where{font-size:13px;color:var(--muted);margin-top:10px}
+  .now .place{font-family:"Fraunces",serif;font-size:26px;margin-top:1px;line-height:1.12}
+  .now hr{border:none;border-top:1px solid var(--line);margin:15px 0}
+  .now .nlab{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);font-weight:800}
+  .now .next{font-family:"Fraunces",serif;font-size:28px;margin-top:3px;line-height:1.1}
+  .now .meta{display:flex;flex-wrap:wrap;gap:7px;margin-top:11px}
+  .chip{display:inline-flex;align-items:center;gap:5px;font-size:13px;font-weight:700;padding:6px 11px;
+    border-radius:11px;background:rgba(255,255,255,.06);border:1px solid var(--line);color:var(--ink)}
+  .chip.big{font-size:15px}
+  .chip .c{color:var(--muted);font-weight:600;font-size:12px}
+  .go{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:14px;
+    background:var(--coral);color:#1a0d06;font-weight:800;font-size:16px;padding:15px;border-radius:14px}
+  .go:active{transform:translateY(1px)}
+  .nrow{display:flex;gap:8px;margin-top:9px}
+  .nrow .btn{flex:1;text-align:center;background:rgba(255,255,255,.05);border:1px solid var(--line);
+    border-radius:12px;padding:11px 8px;font-size:13.5px;font-weight:700}
+  .nrow .btn.tealb{background:rgba(46,196,182,.14);border-color:rgba(46,196,182,.3);color:var(--teal)}
+  .nrow .btn[disabled]{opacity:.35}
 
-  /* SECTION HEAD */
-  .shead{padding:34px 0 6px}
-  .snum{font-family:"Fraunces",serif;font-size:60px;line-height:1;color:var(--coral);opacity:.9}
-  .sdate{font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:6px 0}
-  .stitle{font-size:clamp(30px,8vw,42px)}
+  /* ===== PROSSIME 2 ORE ===== */
+  .soon{display:flex;flex-direction:column;gap:8px}
+  .soon .row{display:flex;align-items:center;gap:11px;background:var(--card);border:1px solid var(--line);
+    border-radius:13px;padding:11px 13px}
+  .soon .row .t{font-weight:800;font-size:14px;color:var(--amber);flex:none;width:46px}
+  .soon .row .ti{flex:1;font-size:14.5px}
+  .soon .row .ti small{display:block;color:var(--muted);font-size:12px}
+  .soon .row .arr{color:var(--muted);font-size:18px}
+  .empty{background:var(--card);border:1px dashed var(--line);border-radius:13px;padding:16px;
+    text-align:center;color:var(--muted);font-size:14px}
 
-  /* PART LABEL */
-  .part{display:flex;align-items:center;gap:10px;margin:26px 0 10px}
-  .part .emo{font-size:22px}
-  .part .pl{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);font-weight:700}
-  .part .pn{font-size:13px;color:var(--muted)}
+  /* ===== TIMELINE OGGI ===== */
+  .daytabs{display:flex;gap:6px;margin:2px 0 10px}
+  .daytabs button{flex:1;height:40px;border-radius:11px;background:rgba(255,255,255,.05);
+    border:1px solid var(--line);color:var(--muted);font-size:13px;font-weight:700}
+  .daytabs button b{display:block;font-size:15px;color:inherit}
+  .daytabs button.on{background:var(--amber);border-color:var(--amber);color:var(--bg)}
+  .tl{position:relative}
+  .ti-row{display:flex;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);align-items:flex-start}
+  .ti-row:last-child{border-bottom:none}
+  .ti-tick{flex:none;width:26px;height:26px;border-radius:50%;border:2px solid var(--line);
+    display:flex;align-items:center;justify-content:center;font-size:13px;margin-top:1px;color:var(--muted)}
+  .ti-body{flex:1;min-width:0}
+  .ti-time{font-size:12px;font-weight:800;color:var(--muted);letter-spacing:.02em}
+  .ti-title{font-size:15.5px;font-weight:600;margin-top:1px}
+  .ti-note{font-size:12.5px;color:var(--muted);margin-top:1px}
+  .ti-act{flex:none;display:flex;gap:6px;margin-top:2px}
+  .ti-act a{width:44px;height:44px;border-radius:11px;background:rgba(255,255,255,.05);
+    border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:15px}
+  /* states */
+  .st-current .ti-tick{border-color:var(--coral);background:var(--coral);color:#1a0d06}
+  .st-current{background:rgba(255,122,77,.05);margin:0 -10px;padding-left:10px;padding-right:10px;border-radius:12px}
+  .st-current .ti-title{color:var(--coral)}
+  .st-done .ti-tick{border-color:var(--teal);background:var(--teal);color:#08231f}
+  .st-done .ti-title{color:var(--done);text-decoration:line-through}
+  .st-done .ti-note{opacity:.6}
+  .st-future .ti-tick{border-color:var(--amber)}
+  .badge-now{font-size:9.5px;font-weight:800;letter-spacing:.1em;color:var(--coral);margin-left:6px}
 
-  /* CARD */
-  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:15px 16px;margin:10px 0}
-  .card .time{display:inline-block;font-size:11px;font-weight:700;color:var(--bg);background:var(--ink);
-    padding:2px 9px;border-radius:20px;font-variant-numeric:tabular-nums;margin-bottom:8px}
-  .card h3{font-size:19px;margin-bottom:5px}
-  .card p{font-size:14.5px;color:#dfe7f0;margin:5px 0}
-  .card .muted{color:var(--muted);font-size:13.5px}
-  .tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
-    padding:3px 8px;border-radius:6px;margin:2px 6px 6px 0}
-  .t-go{background:rgba(46,196,182,.16);color:var(--teal)}
-  .t-alt{background:rgba(157,177,198,.16);color:var(--muted)}
-  .t-warn{background:rgba(255,122,77,.16);color:var(--coral)}
-  .t-low{background:rgba(255,184,107,.16);color:var(--amber)}
-  .t-top{background:rgba(255,184,107,.2);color:var(--amber)}
-  .sub-h{font-size:14.5px;font-weight:700;margin:10px 0 2px}
-  .price{font-size:12px;color:var(--muted);font-weight:500;margin-top:6px}
-  ul.tight{margin:6px 0 4px 2px;list-style:none}
-  ul.tight li{font-size:14px;color:#dfe7f0;padding:3px 0 3px 18px;position:relative}
-  ul.tight li::before{content:"·";position:absolute;left:4px;color:var(--coral);font-weight:700}
+  /* ===== DETAILS (collapsible) ===== */
+  details{background:var(--card);border:1px solid var(--line);border-radius:16px;margin:10px 0;overflow:hidden}
+  summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:11px;padding:15px 16px;font-weight:700;font-size:16px}
+  summary::-webkit-details-marker{display:none}
+  summary .ic{font-size:19px}
+  summary .cnt{margin-left:auto;color:var(--muted);font-size:12.5px;font-weight:600}
+  summary .caret{color:var(--muted);transition:transform .2s;font-size:13px}
+  details[open] summary .caret{transform:rotate(90deg)}
+  .det-body{padding:0 16px 16px}
 
-  /* BUTTONS */
-  .btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-  .btn{font-size:12.5px;font-weight:600;padding:8px 12px;border-radius:10px;border:1px solid var(--line);
-    background:rgba(255,255,255,.03);color:var(--ink);display:inline-flex;align-items:center;gap:5px}
-  .btn.go{background:var(--coral);border-color:var(--coral);color:#1a0d06}
-  .btn.teal{background:rgba(46,196,182,.14);border-color:rgba(46,196,182,.3);color:var(--teal)}
+  /* DOC / generic cards */
+  .doc{background:var(--bg2);border:1px solid var(--line);border-radius:13px;padding:13px 14px;margin:9px 0}
+  .doc .dt{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--amber);font-weight:800}
+  .doc h4{font-family:"Fraunces",serif;font-size:18px;font-weight:600;margin:3px 0 2px}
+  .doc p{font-size:13.5px;color:#dfe7f0;margin:3px 0}
+  .doc .kv{font-size:13px;color:var(--muted)}
+  .doc .kv b{color:var(--ink)}
+  .acts{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px}
+  .acts a,.acts button{font-size:12.5px;font-weight:700;padding:8px 11px;border-radius:10px;background:rgba(255,255,255,.05);
+    border:1px solid var(--line)}
+  .acts a.prim,.acts button.prim{background:var(--coral);border-color:var(--coral);color:#1a0d06}
+  .acts a.tealb,.acts button.tealb{background:rgba(46,196,182,.14);border-color:rgba(46,196,182,.3);color:var(--teal)}
 
-  /* NOTE */
-  .note{border-left:3px solid var(--amber);background:rgba(255,184,107,.06);padding:11px 14px;border-radius:0 12px 12px 0;
-    margin:12px 0;font-size:14px;color:#e9eef4}
+  ul.tight{margin:6px 0 2px;list-style:none}
+  ul.tight li{font-size:13.8px;color:#dfe7f0;padding:4px 0 4px 17px;position:relative}
+  ul.tight li::before{content:"";position:absolute;left:3px;top:11px;width:6px;height:6px;border-radius:50%;background:var(--coral)}
+  .note{border-left:3px solid var(--amber);background:rgba(255,184,107,.06);padding:10px 13px;
+    border-radius:0 11px 11px 0;margin:11px 0;font-size:13.5px;color:#e9eef4}
   .note b{color:var(--amber)}
-  .note.local{border-color:var(--teal);background:rgba(46,196,182,.06)}
-  .note.local b{color:var(--teal)}
-  .note.plan{border-color:var(--coral);background:rgba(255,122,77,.06)}
-  .note.plan b{color:var(--coral)}
-
-  /* RESOURCES / GRID BTNS */
-  .seclab{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:30px 0 4px}
-  .lead{font-size:15px;color:#dfe7f0;margin-bottom:14px}
-  .grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-  .gbtn{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:12px;display:block}
-  .gbtn .gt{font-size:14px;font-weight:700}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}
+  .gbtn{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:11px;display:block}
+  .gbtn .gt{font-size:13.5px;font-weight:700}
   .gbtn .gs{font-size:11.5px;color:var(--muted);margin-top:2px}
+  table.bud{width:100%;border-collapse:collapse;font-size:13.5px;margin:4px 0 10px}
+  table.bud td{padding:8px 0;border-bottom:1px solid var(--line)}
+  table.bud .tot td{font-family:"Fraunces",serif;font-size:17px;font-weight:700;border-bottom:none;color:var(--amber)}
+  input.fld{width:100%;padding:11px 12px;border-radius:10px;border:1px solid var(--line);
+    background:rgba(255,255,255,.04);color:var(--ink);font-size:14px;font-family:"DM Sans",sans-serif}
 
-  /* WEATHER */
-  .wx{display:flex;gap:9px;margin:14px 0}
-  .wx .d{flex:1;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 8px;text-align:center}
-  .wx .d .dd{font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.1em}
-  .wx .d .ic{font-size:26px;margin:5px 0}
-  .wx .d .tp{font-size:18px;font-weight:700}
-  .wx .d .cc{font-size:10.5px;color:var(--muted);margin-top:2px}
-
-  /* CONTACTS */
-  .contacts{display:flex;flex-direction:column;gap:7px;margin-top:10px}
-  .contacts a{display:flex;justify-content:space-between;align-items:center;background:var(--card);
-    border:1px solid var(--line);border-radius:12px;padding:11px 14px;font-size:14px}
-  .contacts a .n{color:var(--muted);font-size:12.5px;font-variant-numeric:tabular-nums}
-
-  .divider{text-align:center;color:var(--line);letter-spacing:.5em;margin:34px 0 6px;font-size:13px}
-
-  /* FOOTER */
-  footer{text-align:center;padding:44px 0 30px}
-  footer .big{font-family:"Fraunces",serif;font-size:26px}
-  footer .big .accent{display:block;margin-top:4px}
-  footer .lab{font-size:11px;color:var(--muted);letter-spacing:.14em;text-transform:uppercase;margin-top:18px}
-
-  /* BOTTOM NAV */
-  .botnav{position:fixed;left:0;right:0;bottom:0;z-index:60;background:rgba(14,31,51,.92);backdrop-filter:blur(14px);
-    border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:8px 6px env(safe-area-inset-bottom)}
-  .botnav a{font-size:10px;color:var(--muted);text-align:center;font-weight:600;flex:1}
-  .botnav a .bi{display:block;font-size:18px;margin-bottom:1px}
-  .botnav a.on{color:var(--amber)}
-  #map{height:380px;border-radius:16px;border:1px solid var(--line);margin:6px 0 10px;z-index:0}
-  .leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#13263d;color:var(--ink)}
+  /* MAP */
+  #map{height:340px;border-radius:14px;border:1px solid var(--line);margin-top:4px;z-index:0}
+  .leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#17141d;color:var(--ink)}
   .leaflet-popup-content{font-family:"DM Sans",sans-serif;font-size:13px}
   .leaflet-popup-content a{color:var(--coral);font-weight:700}
-  .legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--muted);margin-bottom:6px}
-  .legend i{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:4px;vertical-align:middle;border:1px solid rgba(0,0,0,.4)}
+  .legend{display:flex;flex-wrap:wrap;gap:11px;font-size:11.5px;color:var(--muted);margin:8px 0 2px}
+  .legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px;border:1px solid rgba(0,0,0,.4)}
+
+  /* SEARCH OVERLAY */
+  .sheet{position:fixed;inset:0;z-index:200;background:rgba(8,18,30,.97);
+    -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);display:none;flex-direction:column}
+  .sheet.on{display:flex}
+  .sheet .bar{display:flex;gap:9px;padding:14px 16px;border-bottom:1px solid var(--line)}
+  .sheet input{flex:1;font-size:16px;padding:13px 14px;border-radius:12px;border:1px solid var(--line);
+    background:var(--card);color:var(--ink);font-family:"DM Sans",sans-serif}
+  .sheet .close{font-size:15px;font-weight:700;color:var(--muted);padding:0 6px}
+  .sheet .res{overflow:auto;padding:8px 16px 30px}
+  .sres{display:flex;align-items:center;gap:12px;padding:13px 4px;border-bottom:1px solid var(--line)}
+  .sres .si{font-size:20px;flex:none}
+  .sres .st{flex:1;min-width:0}
+  .sres .st b{font-size:15px;font-weight:700}
+  .sres .st small{display:block;color:var(--muted);font-size:12.5px}
+
+  /* PLAN B (pioggia) nella card Adesso */
+  .now .planb{margin-top:12px;background:rgba(255,122,77,.13);border:1px solid rgba(255,122,77,.32);
+    color:#ffd9c9;border-radius:12px;padding:10px 13px;font-size:13px;font-weight:600}
+
+  /* DOCK fisso: quick-bar + bottom nav, sempre visibili */
+  .dock{position:fixed;left:0;right:0;bottom:0;z-index:60;background:rgba(10,10,14,.94);
+    -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-top:1px solid var(--line);
+    padding-bottom:env(safe-area-inset-bottom);max-width:var(--maxw);margin:0 auto}
+  .quickbar{display:flex;gap:6px;padding:7px 9px 0}
+  .quickbar a{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 3px;
+    background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:11px;font-size:10px;font-weight:700;color:var(--muted)}
+  .quickbar a span:first-child{font-size:17px}
+  .quickbar a span:last-child{color:var(--ink)}
+
+  /* WEATHER SHEET */
+  .wxrow{display:flex;align-items:center;gap:10px;padding:9px 2px;border-bottom:1px solid var(--line)}
+  .wxrow .wh{width:44px;font-weight:700;color:var(--muted);font-size:13px}
+  .wxrow .wi{width:26px;font-size:18px;text-align:center}
+  .wxrow .wt{width:42px;font-weight:700;font-size:15px}
+  .wxrow .wp{flex:1;height:7px;border-radius:4px;background:rgba(255,255,255,.07);overflow:hidden}
+  .wxrow .wpbar{display:block;height:100%}
+  .wxrow .wpn{width:42px;text-align:right;font-size:12.5px;color:var(--muted)}
+  #temp{cursor:pointer;border-bottom:1px dotted var(--muted)}
+
+  /* PLACE CARDS (mangiare & bere) */
+  .subh{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);font-weight:800;margin:15px 2px 4px}
+  .qrow{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:4px}
+  .qrow a,.qrow button{font-size:12.5px;font-weight:700;padding:9px 12px;border-radius:11px;
+    background:rgba(46,196,182,.14);border:1px solid rgba(46,196,182,.3);color:var(--teal)}
+  .place-card{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:11px 13px;margin:8px 0}
+  .place-card h4{font-family:"DM Sans",sans-serif;font-size:15px;font-weight:700}
+  .place-card .pa{font-size:12px;color:var(--muted);margin-top:1px}
+  .place-card .pd{font-size:13px;color:#dfe7f0;margin-top:3px}
+
+  /* STATO VOLO (dettagli) */
+  .flive{background:var(--bg2);border:1px solid var(--line);border-radius:11px;padding:10px 12px;margin:8px 0}
+  .flive-h{font-size:13px;font-weight:800;margin-bottom:6px}
+  .flive-g{display:flex;gap:10px;font-size:12.5px;color:#dfe7f0}
+  .flive-g>div{flex:1}
+  .flive-g b{color:var(--amber);font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.05em}
+  .flive-x{font-size:11.5px;color:var(--muted);margin-top:6px}
+
+  /* BOTTOM NAV (dentro il dock) */
+  .botnav{display:flex;justify-content:space-around;padding:6px 4px 8px}
+  .botnav a,.botnav button{font-size:10px;color:var(--muted);text-align:center;font-weight:700;flex:1;background:none}
+  .botnav .bi{display:block;font-size:19px;margin-bottom:1px}
+  .botnav .on{color:var(--amber)}
+
+  footer{text-align:center;padding:34px 0 20px;color:var(--muted)}
+  footer .sig{font-family:"Fraunces",serif;font-style:italic;font-size:clamp(22px,7vw,30px);color:var(--ink);font-weight:600}
+  footer .sig b{font-style:normal;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  footer .htag{margin-top:10px;font-family:"Fraunces",serif;font-weight:600;font-size:14px;
+    background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  /* banner ospite in stile firma */
+  .guestcta{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px;padding:14px 16px;
+    border-radius:15px;border:1px solid rgba(255,170,120,.3);
+    background:linear-gradient(100deg,rgba(255,94,46,.14),rgba(255,212,134,.07));
+    box-shadow:0 14px 34px -20px rgba(255,120,60,.6)}
+  .guestcta:active{transform:translateY(1px)}
+  .guestcta .gc-l{display:flex;align-items:center;gap:12px;min-width:0}
+  .guestcta .gc-ic{font-size:21px;flex:none}
+  .guestcta .gc-tx{font-weight:700;font-size:14.5px;color:var(--ink);line-height:1.2}
+  .guestcta .gc-tx small{display:block;font-weight:500;font-size:12px;color:var(--muted);margin-top:2px}
+  .guestcta .gc-ar{flex:none;font-size:17px;font-weight:700;color:#08080b;background:var(--grad);
+    width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center}
 </style>
 </head>
 <body>
 
-<!-- TOP BAR -->
+<!-- STATUS BAR -->
 <div class="topbar">
   <div class="row">
-    <div class="now-pill"><span class="dot"></span> OGGI · <b id="clock">--:--</b> <span id="temp">🌡️ ~22°</span> · Barcelona</div>
-    <div class="tabs">
-      <a href="#ven">16<small>VEN</small></a>
-      <a href="#sab">17<small>SAB</small></a>
-      <a href="#dom">18<small>DOM</small></a>
-    </div>
+    <span class="tbrand"><span class="tcrest"></span>40</span>
+    <div class="status"><span class="dot"></span><span id="phase">—</span> · <b id="clock" class="tnum">--:--</b> · <span id="temp" onclick="openWeather()" title="Andamento orario della giornata">🌡️ ~22°</span><span id="offBadge" style="display:none;margin-left:8px;font-size:11px;font-weight:700;color:var(--amber);border:1px solid rgba(255,184,107,.45);border-radius:6px;padding:1px 6px">offline</span></div>
+    <button class="searchbtn" onclick="shareGuide()" aria-label="Condividi la guida">📤</button>
+    <button class="searchbtn" onclick="openSearch()" aria-label="Cerca">🔎</button>
   </div>
 </div>
 
 <div class="wrap">
 
-  <!-- HERO -->
-  <header class="hero">
-    <div class="kick">Weekend · 16 — 18 ottobre 2026</div>
-    <h1>Barcellona,<br><span class="accent">per i miei 40.</span></h1>
-    <div class="who">Ale · <span>mare, città e una notte che non scordi.</span></div>
-    <div class="poem">Quaranta giri di sole,<br>e il Mediterraneo che applaude piano —<br><span class="accent">Barcellona sa già il tuo nome.</span></div>
+  <!-- FUNNEL OSPITE: questa è la plancia operativa di Ale; un ospite parte dalla presentazione -->
+  <a href="viaggio.html" class="guestcta">
+    <span class="gc-l"><span class="gc-ic">👋</span><span class="gc-tx">Sei un ospite?<small>Apri la convocazione ufficiale</small></span></span>
+    <span class="gc-ar">→</span>
+  </a>
 
-    <!-- NEXT MOMENT -->
-    <div class="nextbox">
-      <div class="lab">Prossimo momento</div>
-      <div class="big" id="next-big">—</div>
-      <div class="sub" id="next-sub">caricamento…</div>
-    </div>
-  </header>
-
-  <!-- DA FARE ADESSO -->
-  <section>
-    <div class="seclab">Da fare adesso · prima del volo</div>
-    <h2 style="font-size:28px;margin-bottom:12px">Tre prenotazioni <span class="accent">in cinque minuti.</span></h2>
-    <div class="card">
-      <div class="sub-h">1 · Aire Ancient Baths</div>
-      <p class="muted">Le terme migliori della città vanno sold-out: blocca lo slot del sabato pomeriggio.</p>
-      <div class="btns"><a class="btn go" href="https://relax.beaire.com/es/aire-ancient-baths-barcelona" target="_blank">Prenota spa ›</a></div>
-    </div>
-    <div class="card">
-      <div class="sub-h">2 · Sagrada Família + Museo Picasso</div>
-      <p class="muted">Slot orario obbligatorio, si esauriscono. Picasso chiuso il lunedì (tu ci sei ven-dom).</p>
-      <div class="btns">
-        <a class="btn" href="https://sagradafamilia.org/" target="_blank">Sagrada ›</a>
-        <a class="btn" href="https://museupicassobcn.cat/" target="_blank">Picasso ›</a>
-      </div>
-    </div>
-    <div class="card">
-      <div class="sub-h">3 · Cena & rooftop</div>
-      <p class="muted">Prenota una cena (Barriteca/Cuadro) e, per la serata, un tavolo al rooftop con DJ (Sir Victor / Ohla).</p>
-      <div class="btns">
-        <a class="btn" href="tel:+34934851859">☎ Barriteca</a>
-        <a class="btn" href="tel:+34681084156">☎ Sir Victor</a>
-      </div>
-    </div>
+  <!-- ADESSO -->
+  <section id="adesso">
+    <div class="seclab">Adesso</div>
+    <div class="now" id="nowCard"><div class="muted">caricamento…</div></div>
   </section>
 
-  <!-- RISORSE -->
-  <section>
-    <div class="seclab">Risorse esterne</div>
-    <h2 style="font-size:26px">Quando ti serve <span class="accent">una seconda opinione.</span></h2>
-    <p class="lead" style="margin-top:10px">Meteo affidabile, trasporti e TripAdvisor già filtrati su Barcellona. Nessuna ricerca: tap e ci sei.</p>
-    <div class="grid">
-      <a class="gbtn" href="https://www.aemet.es/es/eltiempo/prediccion/municipios/barcelona-id08019" target="_blank"><div class="gt">🇪🇸 AEMET</div><div class="gs">Meteo ufficiale Spagna</div></a>
-      <a class="gbtn" href="https://www.meteoblue.com/it/tempo/previsioni/week/barcellona_spagna_3128760" target="_blank"><div class="gt">🌦️ Meteoblue</div><div class="gs">Multi-modello tecnico</div></a>
-      <a class="gbtn" href="https://www.tripadvisor.it/Attractions-g187497-Activities-Barcelona_Catalonia.html" target="_blank"><div class="gt">🧭 Cose da fare</div><div class="gs">TripAdvisor attività</div></a>
-      <a class="gbtn" href="https://www.tripadvisor.it/Restaurants-g187497-Barcelona_Catalonia.html" target="_blank"><div class="gt">🍽️ Ristoranti</div><div class="gs">TripAdvisor filtrato</div></a>
-      <a class="gbtn" href="https://www.tmb.cat/en/barcelona-transport/map/metro" target="_blank"><div class="gt">🚇 Metro TMB</div><div class="gs">Mappa + Aerobús</div></a>
-      <a class="gbtn" href="https://free-now.com/es/" target="_blank"><div class="gt">🚖 FREE NOW</div><div class="gs">App taxi Barcellona</div></a>
-    </div>
+  <!-- PROSSIME 2 ORE -->
+  <section id="prossime">
+    <div class="seclab">Prossime 2 ore</div>
+    <div class="soon" id="soonList"></div>
   </section>
 
-  <div class="divider">· · ·</div>
-
-  <!-- EVENTI -->
-  <section id="eventi">
-    <div class="seclab">Eventi del weekend</div>
-    <h2 style="font-size:28px">Cosa c'è <span class="accent">in città.</span></h2>
-
-    <div class="card">
-      <span class="time">16 – 17 OTT</span>
-      <h3>Morat · Palau Sant Jordi</h3>
-      <p>Concerto latin-pop, due serate (ven e sab), al palazzetto di Montjuïc. Riempie l'arena: città viva quelle sere.</p>
-      <span class="tag t-alt">Pop mainstream</span>
-      <p class="muted">Non proprio "movida adulta", ma se ti va è un'opzione serata. Vicino a Sant Antoni/Poble-sec.</p>
-      <div class="btns">
-        <a class="btn" href="https://www.google.com/search?q=Morat+Palau+Sant+Jordi+ottobre+2026+biglietti" target="_blank">Biglietti →</a>
-      </div>
-    </div>
-
-    <div class="card">
-      <span class="time">DA VERIFICARE · 15 LUG</span>
-      <h3>⚽ Barça in casa? · 🏛️ Fira</h3>
-      <p>Il calendario della Liga 2026-27 esce a metà luglio. <b>Se il Barça gioca in casa il 17-18 → ci vado.</b> Controlla anche eventuali congressi alla Fira, che alzano i prezzi degli alloggi.</p>
-      <span class="tag t-warn">Promemoria impostato per il 15 luglio</span>
-      <div class="btns">
-        <a class="btn" href="https://www.laliga.com/en-GB/clubs/fc-barcelona/next-matches" target="_blank">Calendario Barça →</a>
-        <a class="btn" href="https://www.firabarcelona.com/en/" target="_blank">Calendario Fira →</a>
-      </div>
-    </div>
-
-    <div class="card">
-      <span class="time">SE GIOCANO IN CASA</span>
-      <h3>🎟️ Come comprare il biglietto</h3>
-      <p><b>Solo sito ufficiale</b> fcbarcelona.com — niente rivenditori terzi (prezzi gonfiati e rischio biglietti non validi).</p>
-      <span class="tag t-go">✅ Sei Culers Premium</span> <span class="tag t-top">Pre-sale 48h + 10% off</span>
-      <p class="muted">Hai l'<b>accesso anticipato di 48h</b> e il <b>10% di sconto</b> sui biglietti. Ti arriva una <b>mail</b> quando saranno disponibili (di solito ~fine settembre/inizio ottobre, dopo l'uscita del calendario a luglio).</p>
-      <div class="note"><b>Ora:</b> attiva i benefit (tap su APPLY su "Early access to tickets" e "Football tickets 10%") e tieni le notifiche accese, così non perdi la mail della pre-sale.</div>
-      <div class="sub-h">Settori migliori (Spotify Camp Nou)</div>
-      <ul class="tight">
-        <li><b>Lateral</b>, 1ª-2ª gradería, centrale — miglior vista/prezzo 🥇</li>
-        <li><b>Tribuna</b> — coperta, vista top, più cara</li>
-        <li><b>Gol Sud "1957"</b> — economico, curva del tifo (3º anello chiuso per cantiere)</li>
-      </ul>
-      <p class="muted">Prezzi indicativi ~€60-150 (di più per i big match). Camp Nou ancora a capienza ridotta → muoviti appena aprono le vendite.</p>
-      <div class="btns">
-        <a class="btn go" href="https://www.fcbarcelona.com/en/tickets" target="_blank">Biglietti ufficiali →</a>
-      </div>
-    </div>
-
-    <div class="note"><b>Niente di bloccante:</b> nessun grande festival cittadino quel weekend (la Mercè è a settembre, Primavera a giugno). Città viva ma non in tilt.</div>
+  <!-- OGGI -->
+  <section id="oggi">
+    <div class="seclab">Il programma · <span id="dayLabel"></span></div>
+    <div class="daytabs" id="dayTabs"></div>
+    <div class="tl" id="timeline"></div>
   </section>
 
-  <div class="divider">· · ·</div>
-
-  <!-- ===== VENERDÌ ===== -->
-  <section id="ven">
-    <div class="shead">
-      <div class="snum">16</div>
-      <div class="sdate">Venerdì 16 ottobre · arrivo</div>
-      <h2 class="stitle">Atterro <span class="accent">nella luce.</span></h2>
-    </div>
-
-    <div class="part"><span class="emo">✈️</span><div><div class="pl">Mattina presto</div><div class="pn">Il volo</div></div></div>
-
-    <div class="card">
-      <span class="time">06:20</span>
-      <h3>FR2097 · Bologna → Barcellona</h3>
-      <p>Solo bagaglio a mano: in aeroporto BLQ entro le <b>04:50</b> (1h30 prima). Atterri a <b>08:05</b>, giornata intera davanti.</p>
-      <div class="note local"><b>Da furbo:</b> dormi poco e recupera in spiaggia. Crema solare e una felpa leggera nel bagaglio a mano.</div>
-    </div>
-
-    <div class="card">
-      <span class="time">08:30</span>
-      <h3>Aeroporto → H10 Marina</h3>
-      <p class="muted">~12 km, Vila Olímpica. La camera è dalle 15:00 ma puoi lasciare i bagagli e partire subito.</p>
-      <span class="tag t-go">Comodo</span>
-      <div class="sub-h">Taxi · ~€35 · 25 min</div>
-      <p class="muted">Tariffa aeroporto, fila fuori arrivi. Il più semplice con la valigia.</p>
-      <span class="tag t-low">Economico</span>
-      <div class="sub-h">Aerobús + metro · ~€10 · 50 min</div>
-      <p class="muted">Aerobús fino a Pl. Catalunya (€7,25), poi metro L4 fino a Ciutadella–Vila Olímpica.</p>
-      <div class="btns">
-        <a class="btn" href="https://www.google.com/maps/search/?api=1&query=H10+Marina+Barcelona&query_place_id=ChIJCVb49RqjpBIRHMtV8HEErzU" target="_blank">📍 Hotel</a>
-        <a class="btn" href="tel:+34933097917">☎ Reception</a>
-        <a class="btn" href="https://free-now.com/es/" target="_blank">🚖 FREE NOW</a>
+  <!-- DOCUMENTI -->
+  <details id="docs">
+    <summary><span class="ic">🎫</span> Documenti & prenotazioni <span class="caret">▸</span></summary>
+    <div class="det-body">
+      <div class="doc">
+        <div class="dt">✈️ Voli · Ryanair</div>
+        <h4>Andata · FR2097</h4>
+        <p class="kv">Bologna <b>06:20</b> → Barcellona <b>08:05</b> · ven 16 ott</p>
+        <p class="muted">In aeroporto BLQ entro le 04:50. Solo bagaglio a mano.</p>
+        <h4 style="margin-top:8px">Ritorno · FR5220</h4>
+        <p class="kv">Barcellona <b>23:05</b> → Bologna <b>00:50</b> · notte dom→lun · <b>Terminal 2</b></p>
+        <p class="muted">Amici (se vengono): arrivo FR5219, BCN 09:45 sab.</p>
+        <div id="flightLive"></div>
+        <div class="acts">
+          <a class="tealb" href="https://www.bologna-airport.it/voli/vola-da-bologna/voli-in-tempo-reale/?idC=62178" target="_blank">🛫 Partenze BLQ in tempo reale</a>
+          <a class="tealb" href="https://www.aena.es/en/flight-info.html" target="_blank">🛬 Partenze BCN in tempo reale</a>
+          <a class="prim" href="https://ntfy.sh/bcn40-volo-9f3k2x7q4m" target="_blank">🔔 Attiva avvisi volo</a>
+        </div>
+        <p class="muted" style="font-size:11px;margin-top:7px">Iscriviti col tasto qui sopra (app <b>ntfy</b>): il 16 e 18 ott, <b>se il volo cambia</b>, parte un avviso automatico su <b>gate/ritardi/cancellazioni</b> anche ad app chiusa. In ogni caso i link <b>“in tempo reale”</b> qui sopra restano sempre aggiornati.</p>
+      </div>
+      <div class="doc">
+        <div class="dt">🏨 Hotel</div>
+        <h4>H10 Marina Barcelona</h4>
+        <p class="kv">Vila Olímpica · check-in dalle 15:00 · 2 notti</p>
+        <div class="acts">
+          <a class="prim" href="tel:+34933097917">☎ Reception</a>
+          <a href="https://www.google.com/maps/search/?api=1&query=H10+Marina+Barcelona" target="_blank">📍 Mappe</a>
+        </div>
+      </div>
+      <div class="doc">
+        <div class="dt">🅿️ Parcheggio BLQ</div>
+        <h4>P2 Business · €51</h4>
+        <p class="kv">Codice <b>P2932537</b> · QR salvato</p>
+        <p class="muted">Ingresso ven 16 h 04:00 → uscita lun 19 h 04:00 (coperto fino alle 04:00).</p>
+      </div>
+      <div class="doc">
+        <div class="dt">🎟️ Biglietti a slot orario</div>
+        <ul class="tight">
+          <li>Sagrada Família — sab 09:30 (prenota lo slot)</li>
+          <li>Museo Picasso — dom (chiuso il lunedì)</li>
+          <li>Aire Ancient Baths — sab pomeriggio</li>
+        </ul>
+        <div class="acts">
+          <a class="tealb" href="https://sagradafamilia.org/" target="_blank">Sagrada ›</a>
+          <a class="tealb" href="https://museupicassobcn.cat/" target="_blank">Picasso ›</a>
+          <a class="tealb" href="https://relax.beaire.com/es/aire-ancient-baths-barcelona" target="_blank">Aire ›</a>
+        </div>
+      </div>
+      <div class="doc">
+        <div class="dt">☎ Contatti rapidi</div>
+        <div id="contactsList"></div>
       </div>
     </div>
+  </details>
 
-    <div class="part"><span class="emo">💻</span><div><div class="pl">Giornata</div><div class="pn">Smart working</div></div></div>
-
-    <div class="card">
-      <span class="time">09:00 – 13:00</span>
-      <h3>Lavoro · prima parte</h3>
-      <p>Posa i bagagli e ti metti a lavorare. Stesso fuso dell'Italia (CET): nessuno sfasamento d'orario.</p>
-      <span class="tag t-go">WiFi</span>
-      <p class="muted">Postazioni: camera/lobby H10, <b>Privilege Lounge</b> (se junior suite), o un caffè/coworking in zona Vila Olímpica–Poblenou.</p>
-    </div>
-
-    <div class="card">
-      <span class="time">13:00 – 14:00</span>
-      <h3>Pausa pranzo</h3>
-      <p>Boccone veloce da <b>Cuadro</b> (3 min) e 20 minuti di spiaggia Bogatell sotto casa per ricaricare.</p>
-      <div class="btns">
-        <a class="btn" href="https://www.google.com/maps/search/?api=1&query=Cuadro+Barcelona&query_place_id=ChIJjyT22LujpBIRCsjWkIva4gU" target="_blank">📍 Cuadro</a>
-        <a class="btn" href="https://www.google.com/maps/search/?api=1&query=Platja+del+Bogatell+Barcelona" target="_blank">📍 Bogatell</a>
+  <!-- MANGIARE & BERE -->
+  <details id="food">
+    <summary><span class="ic">🍽️</span> Mangiare & bere · quartiere <span class="caret">▸</span></summary>
+    <div class="det-body">
+      <div class="qrow">
+        <a href="https://www.thefork.com/restaurants/barcelona-c41710/poblenou-a608">🍴 TheFork Poblenou · sconti</a>
+        <button type="button" onclick="nearMe('ristoranti')">📍 Mangiare vicino a me</button>
+        <button type="button" onclick="nearMe('cocktail bar')">🍸 Bere vicino a me</button>
       </div>
+      <div class="subh">Ristoranti · Poblenou / Vila Olímpica</div>
+      <div id="ristList"></div>
+      <div class="subh">Cocktail bar · Poblenou</div>
+      <div id="cocktailList"></div>
+      <p class="muted" style="font-size:11.5px;margin-top:9px">Prenoti su <b>TheFork</b> (con sconto) o sul sito. "Mappe" mostra recensioni e prenotazione. Nessuna telefonata.</p>
     </div>
-
-    <div class="card">
-      <span class="time">14:00 – 18:00</span>
-      <h3>Lavoro · seconda parte</h3>
-      <p class="muted">Chiudi la giornata lavorativa. Da qui in poi Barcellona è tutta tua.</p>
-    </div>
-
-    <div class="part"><span class="emo">🏛️</span><div><div class="pl">Sera</div><div class="pn">Centro & cena</div></div></div>
-
-    <div class="card">
-      <span class="time">18:30</span>
-      <h3>Gòtic & El Born a piedi</h3>
-      <p>Staccato dal lavoro: ~15 min a piedi (o metro L4) e sei nei vicoli del Gòtic — Cattedrale, Santa Maria del Mar, El Born.</p>
-      <span class="tag t-go">Consigliato</span>
-      <div class="btns">
-        <a class="btn" href="https://www.google.com/maps/search/?api=1&query=Barri+Gotic+Barcelona" target="_blank">📍 Gòtic</a>
-        <a class="btn" href="https://www.google.com/maps/search/?api=1&query=Basilica+Santa+Maria+del+Mar+Barcelona" target="_blank">📍 Sta. Maria del Mar</a>
-      </div>
-    </div>
-
-    <div class="card">
-      <span class="time">20:30</span>
-      <h3>Cena catalana</h3>
-      <p><b>Barriteca</b>: cucina catalana vera, trattano benissimo chi cena da solo. Apre venerdì a cena, prenota.</p>
-      <span class="tag t-top">⭐ 4.8</span>
-      <div class="note plan"><b>Attenzione:</b> chiuso lun-mer, e domenica solo pranzo. Alternativa sotto casa: <b>Cuadro</b> o <b>Filo</b>.</div>
-      <div class="btns">
-        <a class="btn go" href="tel:+34934851859">☎ Prenota Barriteca</a>
-        <a class="btn" href="https://www.google.com/maps/search/?api=1&query=Barriteca+Poblenou+Barcelona&query_place_id=ChIJV9lC7D-jpBIR-LVLb3zytNk" target="_blank">📍 Mappe</a>
-      </div>
-    </div>
-
-    <div class="card">
-      <span class="time">22:30</span>
-      <h3>Cocktail nel Born</h3>
-      <p><b>No Sé</b> (i barman ti imparano il nome, super solo-friendly), oppure <b>Bestiari</b>, <b>Aldea</b>, <b>Mariposa Negra</b> a due passi.</p>
-      <span class="tag t-go">Solo-friendly</span>
-      <div class="btns">
-        <a class="btn" href="https://www.google.com/maps/search/?api=1&query=No+Se+bar+Born+Barcelona&query_place_id=ChIJTdIHcv6ipBIRSUG4UlYU0gw" target="_blank">📍 No Sé</a>
-      </div>
-    </div>
-
-    <div class="divider">· · ·</div>
-  </section>
-
-  <!-- ===== SABATO ===== -->
-  <section id="sab">
-    <div class="shead">
-      <div class="snum">17</div>
-      <div class="sdate">Sabato 17 ottobre · 40°</div>
-      <h2 class="stitle">Il giorno <span class="accent">è mio.</span></h2>
-    </div>
-
-    <div class="poem" style="margin-top:0">Quarant'anni sul mare,<br>la città intera è la mia festa —<br><span class="accent">brindo all'orizzonte.</span></div>
-
-    <div class="note"><b>Se vengono gli amici:</b> atterrano col <b>FR5219 (BCN 09:45)</b>. Li raggiungi in città o all'hotel (Aerobús/taxi), e la sera è <b>festa di gruppo</b>. Da solo, il programma sotto regge perfettamente lo stesso.</div>
-
-    <div class="part"><span class="emo">⛪</span><div><div class="pl">Mattina</div><div class="pn">Gaudí</div></div></div>
-
-    <div class="card">
-      <span class="time">09:30</span>
-      <h3>Sagrada Família</h3>
-      <p>Con slot prenotato salti la fila. Capolavoro di Gaudí, ~1h30 dentro. Poi, se hai voglia, Park Güell o Casa Batlló.</p>
-      <span class="tag t-go">Prenotato</span>
-      <div class="btns">
-        <a class="btn" href="https://www.google.com/maps/search/?api=1&query=Sagrada+Familia+Barcelona" target="_blank">📍 Mappe</a>
-        <a class="btn" href="https://sagradafamilia.org/" target="_blank">Biglietti →</a>
-      </div>
-    </div>
-
-    <div class="part"><span class="emo">🖼️</span><div><div class="pl">Pranzo / primo pomeriggio</div><div class="pn">Vista & arte</div></div></div>
-
-    <div class="card">
-      <span class="time">13:30</span>
-      <h3>MNAC · Montjuïc</h3>
-      <p>Arte catalana e una delle <b>viste più belle</b> sulla città dalla scalinata. Pranzo leggero in zona.</p>
-      <span class="tag t-alt">Alternativa</span>
-      <p class="muted">Se preferisci il mare: pranzo a Barceloneta + relax in spiaggia.</p>
-      <div class="btns">
-        <a class="btn" href="https://www.google.com/maps/search/?api=1&query=MNAC+Museu+Nacional+Art+Catalunya" target="_blank">📍 MNAC</a>
-      </div>
-    </div>
-
-    <div class="part"><span class="emo">🧖</span><div><div class="pl">Tardo pomeriggio</div><div class="pn">Il regalo a te stesso</div></div></div>
-
-    <div class="card">
-      <span class="time">17:30</span>
-      <h3>Aire Ancient Baths</h3>
-      <p>Terme a lume di candela: vasche calde/fredde, sauna, vasca di sale galleggiante, massaggio opzionale. Pensato apposta per staccare. ~15 min a piedi dall'hotel.</p>
-      <span class="tag t-top">⭐ 4.6 · prenota</span>
-      <div class="price">€€ · da prenotare online</div>
-      <div class="btns">
-        <a class="btn go" href="https://relax.beaire.com/es/aire-ancient-baths-barcelona" target="_blank">Prenota ›</a>
-        <a class="btn" href="https://www.google.com/maps/search/?api=1&query=Aire+Ancient+Baths+Barcelona&query_place_id=ChIJ_dPAk_2ipBIR4JAJ7OLhr-U" target="_blank">📍 Mappe</a>
-      </div>
-    </div>
-
-    <div class="part"><span class="emo">🌆</span><div><div class="pl">Sera · la festa</div><div class="pn">Aperitivo rooftop</div></div></div>
-
-    <div class="card">
-      <span class="time">19:30</span>
-      <h3>Rooftop con DJ</h3>
-      <p>Per la serata "da solo ma in vibe": rooftop con musica e riscaldatori, aperti anche fuori stagione.</p>
-      <span class="tag t-go">Sir Victor</span>
-      <p class="muted">Piscina + DJ + coperte. Eixample. Verifica la serata musica del tuo weekend.</p>
-      <span class="tag t-alt">Ohla / Alaire</span>
-      <p class="muted">Ohla (Via Laietana, vista Sagrada) o Alaire (Passeig de Gràcia). Tutti accettano non-clienti su prenotazione.</p>
-      <div class="btns">
-        <a class="btn go" href="tel:+34681084156">☎ Sir Victor</a>
-        <a class="btn" href="tel:+34933415050">☎ Ohla</a>
-        <a class="btn" href="https://www.google.com/maps/search/?api=1&query=The+Rooftop+Sir+Victor+Barcelona&query_place_id=ChIJZ_TUb1SjpBIRIxeQtGIq6Og" target="_blank">📍 Sir Victor</a>
-      </div>
-    </div>
-
-    <div class="card">
-      <span class="time">21:30</span>
-      <h3>Cena + giro cocktail nel Born</h3>
-      <p>Cena (Cuadro o un buon ristorante del Born), poi il giro dei cocktail bar top: <b>Mariposa Negra</b>, <b>Aldea</b>, <b>Bestiari</b>, <b>No Sé</b>. È il cuore della notte di Barcellona.</p>
-      <span class="tag t-top">Festa del 40°</span>
-      <div class="note local"><b>Da furbo:</b> i bar del Born vanno fino alle 2-3. Se vuoi tirare tardi, la zona è tutta a piedi — niente taxi tra un locale e l'altro.</div>
-    </div>
-
-    <div class="divider">· · ·</div>
-  </section>
-
-  <!-- ===== DOMENICA ===== -->
-  <section id="dom">
-    <div class="shead">
-      <div class="snum">18</div>
-      <div class="sdate">Domenica 18 ottobre · saluti</div>
-      <h2 class="stitle">Una mattina <span class="accent">lenta.</span></h2>
-    </div>
-
-    <!-- WEATHER -->
-    <div class="wx">
-      <div class="d"><div class="dd">VEN</div><div class="ic">☀️</div><div class="tp">22°</div><div class="cc">sereno</div></div>
-      <div class="d"><div class="dd">SAB</div><div class="ic">🌤️</div><div class="tp">23°</div><div class="cc">sole</div></div>
-      <div class="d"><div class="dd">DOM</div><div class="ic">⛅</div><div class="tp">21°</div><div class="cc">variabile</div></div>
-    </div>
-    <div class="note plan"><b>Indicativo:</b> metà ottobre a Barcellona ~22°C di giorno, mare ~21° (bagno per temprati). Meteo reale da controllare 3-4 giorni prima (link sopra).</div>
-
-    <div class="part"><span class="emo">☕</span><div><div class="pl">Mattina</div><div class="pn">Lentezza</div></div></div>
-
-    <div class="card">
-      <span class="time">10:00</span>
-      <h3>Spiaggia + brunch o spa hotel</h3>
-      <p>Plan A: passeggiata su Bogatell/Barceloneta e brunch. Plan B (se piove): spa e piscina dell'H10 (verifica apertura a ottobre).</p>
-      <span class="tag t-go">Plan A</span> <span class="tag t-alt">Plan B</span>
-      <div class="note"><b>Check-out</b> in tarda mattina (o late check-out Privilege ~14:00, su disponibilità). Per la <b>doccia serale</b> e il lungo pomeriggio prima del volo, vedi il blocco "Doccia & rientro" qui sotto.</div>
-    </div>
-
-    <div class="part"><span class="emo">🖼️</span><div><div class="pl">Pomeriggio</div><div class="pn">Ultimo giro</div></div></div>
-
-    <div class="card">
-      <span class="time">13:30</span>
-      <h3>Museo Picasso o Park Güell</h3>
-      <p>Quello che non hai fatto venerdì. Pranzo nel Born, poi relax. Senza fretta: il volo è a notte.</p>
-      <div class="btns">
-        <a class="btn" href="https://www.google.com/maps/search/?api=1&query=Park+Guell+Barcelona" target="_blank">📍 Park Güell</a>
-        <a class="btn" href="https://www.google.com/maps/search/?api=1&query=Museu+Picasso+Barcelona&query_place_id=ChIJa-K8mf6ipBIRY8wAB3EeASc" target="_blank">📍 Picasso</a>
-      </div>
-    </div>
-
-    <div class="part"><span class="emo">🚿</span><div><div class="pl">Tardo pomeriggio</div><div class="pn">Doccia & rientro</div></div></div>
-
-    <div class="card">
-      <span class="time">≈18:00</span>
-      <h3>Doccia prima del volo</h3>
-      <p>Il volo è a notte: meglio rinfrescarsi prima di partire. Tre modi, dal migliore:</p>
-      <span class="tag t-go">Top</span>
-      <div class="sub-h">Day-use fino alle ~20:00</div>
-      <p class="muted">Prenoti una camera "uso giornaliero" (Dayuse o tariffa H10): stanza + doccia fino a sera a una frazione del prezzo di una notte.</p>
-      <span class="tag t-alt">Semplice</span>
-      <div class="sub-h">Late check-out ~14:00 + deposito bagagli (gratis)</div>
-      <p class="muted">Doccia al check-out, bagagli in deposito, poi giro/cena in città.</p>
-      <span class="tag t-low">Bonus</span>
-      <div class="sub-h">Docce della spa Despacio</div>
-      <p class="muted">Chiedi se puoi usare le docce della spa/palestra dopo il check-out.</p>
-      <div class="btns">
-        <a class="btn go" href="https://www.dayuse.com/es/h/barcelona" target="_blank">Day-use ›</a>
-        <a class="btn" href="tel:+34933097917">☎ Reception H10</a>
-      </div>
-    </div>
-
-    <div class="part"><span class="emo">✈️</span><div><div class="pl">Sera</div><div class="pn">Aeroporto & lounge</div></div></div>
-
-    <div class="card">
-      <span class="time">≈20:00</span>
-      <h3>H10 Marina → Aeroporto T2</h3>
-      <p>È un volo <b>Schengen</b> con Ryanair: <b>non servono 6 ore</b>. Arriva verso le ~20:00 (2h-2h30 prima), taxi ~€35 / 25 min.</p>
-      <div class="note plan"><b>Attenzione:</b> Ryanair parte dal <b>T2</b>. Le lounge top con doccia (Pau Casals, Miró) sono nel T1, <b>non collegato airside</b> → da qui non sono usabili.</div>
-      <div class="btns">
-        <a class="btn" href="https://free-now.com/es/" target="_blank">🚖 FREE NOW</a>
-        <a class="btn" href="tel:+34933097917">☎ Reception</a>
-      </div>
-    </div>
-
-    <div class="card">
-      <span class="time">20:00 – 22:00</span>
-      <h3>Sala VIP Canudas (T2)</h3>
-      <p>L'unica lounge del T2. Cibo (soprattutto freddo) + drink inclusi, WiFi, zona relax.</p>
-      <span class="tag t-warn">Entri solo dalle 19:05</span> <span class="tag t-warn">Chiude 22:00</span>
-      <p class="muted">Accesso fino a 4h prima del volo (= dalle 19:05) e chiusura alle 22:00: la usi ~2 ore, poi gate.</p>
-      <div class="note plan"><b>Doccia:</b> in teoria c'è, ma di recente spesso chiusa — non contarci (per quello hai già fatto la doccia in hotel).</div>
-      <div class="price">Gratis con Priority Pass · altrimenti day-pass ~€42 (meno prenotando online)</div>
-      <div class="btns">
-        <a class="btn" href="https://www.prioritypass.com/en-GB/lounges/spain/barcelona-el-prat/bcn11-sala-vip-canudas" target="_blank">Info & pass ›</a>
-      </div>
-    </div>
-
-    <div class="card">
-      <span class="time">22:25</span>
-      <h3>Al gate</h3>
-      <p class="muted">Alla chiusura della lounge (22:00) raggiungi il gate per l'imbarco.</p>
-    </div>
-
-    <div class="card">
-      <span class="time">23:05</span>
-      <h3>FR5220 · Barcellona → Bologna</h3>
-      <p>Atterraggio <b>00:50</b> (lunedì). <span class="muted">Casa, ma più leggero di prima.</span></p>
-    </div>
-
-    <div class="divider">· · ·</div>
-  </section>
+  </details>
 
   <!-- MAPPA -->
-  <section id="mappa">
-    <div class="seclab">Mappa interattiva</div>
-    <h2 style="font-size:28px">Tutto <span class="accent">sulla cartina.</span></h2>
-    <p class="lead" style="margin-top:10px">Tocca un punto per nome e indicazioni stradali. Colori per categoria.</p>
-    <div class="legend">
-      <span><i style="background:#ff7a4d"></i> Base</span>
-      <span><i style="background:#2ec4b6"></i> Mare / Spa</span>
-      <span><i style="background:#ffb86b"></i> Musei</span>
-      <span><i style="background:#f4ece0"></i> Cibo / Notte</span>
-      <span><i style="background:#9db1c6"></i> Aeroporto</span>
-    </div>
-    <div id="map"></div>
-  </section>
-
-  <!-- CHECKLIST -->
-  <section id="checklist">
-    <div class="seclab">Prima di partire · checklist agenzia</div>
-    <h2 style="font-size:28px">I nodi <span class="accent">da chiudere.</span></h2>
-    <ul class="tight" style="margin-top:10px">
-      <li><b>Prenota subito</b> Sagrada Família, Museo Picasso e Aire (vanno sold-out, sono il rischio n.1).</li>
-      <li><b>Parcheggio BLQ</b>: ✅ fatto — P2 Business €51, ingresso ven 16 h 04:00 → uscita lun 19 h 04:00 (codice P2932537, QR salvato).</li>
-      <li><b>Rientro a casa</b> da BLQ lunedì ~01:30: auto già al P2 Business (coperto fino alle 04:00). ✅</li>
-      <li><b>Lunedì</b>: ferie/permesso? Atterri alle 00:50.</li>
-      <li><b>Day-use</b> domenica: verifica prezzo/disponibilità su Dayuse per il 18/10.</li>
-      <li><b>Assicurazione viaggio</b> + tessera sanitaria europea (TEAM).</li>
-      <li><b>Carta d'identità valida</b> (Spagna = UE/Schengen); roaming UE incluso, niente costi extra.</li>
-      <li><b>Antifurto</b>: Barcellona è tra le capitali del borseggio — attento in metro, Ramblas e locali, soprattutto da solo di sera.</li>
-      <li><b>Plan B pioggia</b>: musei + spa al posto di spiaggia e rooftop.</li>
-      <li><b>H10</b>: politica di cancellazione (se valuti l'appartamento) e conferma late check-out + deposito bagagli.</li>
-    </ul>
-  </section>
-
-  <!-- KIT STOMACO -->
-  <section id="kit">
-    <div class="seclab">Kit stomaco · lista della spesa</div>
-    <h2 style="font-size:28px">Compra questo <span class="accent">e basta.</span></h2>
-    <p class="lead" style="margin-top:10px">I vincitori per ogni sintomo. Tutto da banco, in farmacia o online (farmacie autorizzate, logo Ministero Salute).</p>
-    <ul class="tight">
-      <li><b>PPI — Nexium Control</b> (esomeprazolo 20mg) · l'armatura dello stomaco</li>
-      <li><b>Gaviscon</b> · bruciore/reflusso immediato</li>
-      <li><b>Sali — Reidrax</b> o Dicodral · reidratazione</li>
-      <li><b>Ibuprofene — Momentact</b> / Moment · mal di testa (a stomaco pieno)</li>
-      <li><b>Imodium</b> · diarrea</li>
-      <li><i>Opzionali:</i> Famotidina + Almax (in Spagna) · Peridon (nausea) · Mylicon (gonfiore) · Enterogermina</li>
-    </ul>
-    <div class="note plan"><b>NON</b> prendere paracetamolo (Tachipirina) dopo l'alcol → per il mal di testa solo ibuprofene con cibo.</div>
-
-    <div class="seclab" style="margin-top:26px">Piano · come & quando</div>
-    <div class="card"><span class="time">10 OTT</span><h3>🛒 Compra il kit</h3><p class="muted">Se ordini online, fallo ora così arriva in tempo.</p></div>
-    <div class="card"><span class="time">14 OTT</span><h3>💊 Inizia il PPI</h3><p class="muted">1 cpr al mattino a digiuno, ogni giorno fino a lunedì 19. Armatura prima del weekend.</p></div>
-    <div class="card"><span class="time">15 OTT · sera</span><h3>🎒 Prepara il kit + a letto presto</h3><p class="muted">Bagaglio a mano: PPI, Gaviscon, sali, ibuprofene, Imodium. Sveglia 4:00.</p></div>
-    <div class="card"><span class="time">16 OTT</span><h3>💊 PPI + colazione</h3><p class="muted">PPI a digiuno, colazione proteica, acqua sul volo, pennichella a pranzo. Sera: mangia prima di bere, 1 drink/ora + acqua. Prima di dormire: acqua + sali + Gaviscon.</p></div>
-    <div class="card"><span class="time">17 OTT · il 40°</span><h3>💊 PPI — il giorno</h3><p class="muted">PPI a digiuno. Mangia prima di bere, 1 drink/ora alternato ad acqua, distillati chiari. Prima di dormire: 500ml acqua + sali + cracker + Gaviscon.</p></div>
-    <div class="card"><span class="time">18 OTT</span><h3>💊 PPI + oggi leggero</h3><p class="muted">Acqua+sali, uova/pane, ibuprofene solo con cibo. Stasera voli e guidi da Bologna → alcol leggero, idratati.</p></div>
-    <div class="card"><span class="time">19 OTT</span><h3>💊 Ultimo PPI + riposa</h3><p class="muted">Ultima compressa, recupero (ferie).</p></div>
-
-    <div class="seclab" style="margin-top:26px">Notifiche automatiche</div>
-    <div class="note local"><b>✅ Calendario (già fatto):</b> ho creato tutti i promemoria qui sopra → ti suona il telefono al momento giusto, da oggi a ottobre. Non devi fare nulla.</div>
-    <div class="note"><b>ntfy (extra push, opzionale):</b> installa l'app <b>ntfy</b>, iscriviti a un tuo topic, scrivilo qui sotto. ⚠️ Il server pubblico programma <b>max 3 giorni</b> avanti: il pulsante "arma" attiva i promemoria dei prossimi 3 giorni (riaprilo quando sei vicino alle date).</div>
-    <div class="card">
-      <input id="ntfyTopic" placeholder="es. ale-stomaco-bcn-9f3" style="width:100%;padding:11px 12px;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--ink);font-size:14px;font-family:'DM Sans',sans-serif">
-      <div class="btns">
-        <a class="btn teal" onclick="ntfyTest()">Notifica di prova</a>
-        <a class="btn go" onclick="ntfyArm()">Arma prossimi 3 giorni</a>
+  <details id="mappa">
+    <summary><span class="ic">📍</span> Mappa <span class="caret">▸</span></summary>
+    <div class="det-body">
+      <div class="legend">
+        <span><i style="background:#ff7a4d"></i> Base</span>
+        <span><i style="background:#2ec4b6"></i> Mare / Spa</span>
+        <span><i style="background:#ffb86b"></i> Musei</span>
+        <span><i style="background:#f4ece0"></i> Cibo / Notte</span>
+        <span><i style="background:#9db1c6"></i> Aeroporto</span>
       </div>
-      <p class="muted" id="ntfyMsg" style="margin-top:6px"></p>
+      <div id="map"></div>
     </div>
-  </section>
+  </details>
 
-  <script>
-    const MEDS=[
-      ['2026-10-10T10:00:00','🛒 Compra il kit farmaci (lista nel sito)'],
-      ['2026-10-14T08:00:00','💊 Inizia il PPI (Nexium Control), 1/die a digiuno'],
-      ['2026-10-15T21:30:00','🎒 Prepara il kit nel bagaglio + a letto presto'],
-      ['2026-10-16T08:30:00','💊 PPI + colazione proteica. Acqua sul volo'],
-      ['2026-10-16T23:30:00','🌙 Prima di dormire: acqua + sali + Gaviscon'],
-      ['2026-10-17T09:00:00','💊 PPI. Oggi il 40°: mangia prima di bere, 1 drink/ora + acqua'],
-      ['2026-10-17T23:30:00','🌙 Reidrata: 500ml acqua + sali + cracker + Gaviscon'],
-      ['2026-10-18T09:30:00','💊 PPI + oggi leggero (stasera guidi). Acqua+sali'],
-      ['2026-10-19T10:00:00','💊 Ultimo PPI + riposa']
-    ];
-    function ntfyTopic(){return (document.getElementById('ntfyTopic').value||'').trim();}
-    function ntfyMsg(m){document.getElementById('ntfyMsg').textContent=m;}
-    function ntfyTest(){
-      const t=ntfyTopic(); if(!t){ntfyMsg('Scrivi prima il tuo topic.');return;}
-      fetch('https://ntfy.sh/'+encodeURIComponent(t),{method:'POST',headers:{'Title':'Barcellona · stomaco'},body:'✅ Funziona! I promemoria stomaco sono attivi.'})
-        .then(()=>ntfyMsg('Inviata! Controlla l\u0027app ntfy.')).catch(()=>ntfyMsg('Errore di invio.'));
-    }
-    function ntfyArm(){
-      const t=ntfyTopic(); if(!t){ntfyMsg('Scrivi prima il tuo topic.');return;}
-      const now=Date.now(), max=now+3*864e5; let n=0;
-      MEDS.forEach(function(m){
-        const at=new Date(m[0]).getTime();
-        if(at>now && at<=max){
-          fetch('https://ntfy.sh/'+encodeURIComponent(t),{method:'POST',headers:{'Title':'Barcellona · stomaco','At':String(Math.floor(at/1000))},body:m[1]});
-          n++;
-        }
-      });
-      ntfyMsg(n? ('Armati '+n+' promemoria dei prossimi 3 giorni.') : 'Nessun promemoria nei prossimi 3 giorni — riapri più vicino alle date.');
-    }
-  </script>
+  <!-- EXTRA -->
+  <details id="extra">
+    <summary><span class="ic">✨</span> Extra <span class="caret">▸</span></summary>
+    <div class="det-body">
 
-  <!-- POSSIBILITÀ -->
-  <section>
-    <div class="seclab">Extra · le possibilità</div>
-    <h2 style="font-size:28px">Se vuoi <span class="accent">cambiare il copione.</span></h2>
-    <p class="lead" style="margin-top:10px">Tutto vicino, tutto opzionale. Mischia come ti gira.</p>
-    <div class="grid">
-      <a class="gbtn" href="https://www.google.com/maps/search/?api=1&query=Casa+Batllo+Barcelona" target="_blank"><div class="gt">🏛️ Gaudí</div><div class="gs">Casa Batlló · La Pedrera</div></a>
-      <a class="gbtn" href="https://www.google.com/maps/search/?api=1&query=Bunkers+del+Carmel+Barcelona" target="_blank"><div class="gt">🌇 Bunkers del Carmel</div><div class="gs">Vista + tramonto gratis</div></a>
-      <a class="gbtn" href="https://www.google.com/maps/search/?api=1&query=Mercat+de+Santa+Caterina+Barcelona" target="_blank"><div class="gt">🥘 Mercati</div><div class="gs">Sta. Caterina · La Boqueria</div></a>
-      <a class="gbtn" href="https://www.google.com/maps/search/?api=1&query=Filo+Taberna+Poblenou+Barcelona&query_place_id=ChIJif05qKqjpBIRG2prQ6A4_Ng" target="_blank"><div class="gt">🍤 Tapas di quartiere</div><div class="gs">Filo · Bubar (Poblenou)</div></a>
-      <a class="gbtn" href="https://www.google.com/maps/search/?api=1&query=Fundacio+Joan+Miro+Barcelona" target="_blank"><div class="gt">🎨 Altri musei</div><div class="gs">Miró · MACBA · CCCB</div></a>
-      <a class="gbtn" href="https://www.google.com/maps/search/?api=1&query=El+Born+Barcelona" target="_blank"><div class="gt">🍸 Born by night</div><div class="gs">Cocktail bar a raffica</div></a>
+      <details open id="invDet">
+        <summary style="padding:13px 0;font-size:15px">📨 Invita gli amici · link col nome <span class="caret">▸</span></summary>
+        <div>
+          <p class="muted" style="font-size:13px;margin:2px 0 9px">Scrivi il nome: gli generi un link che lo <b>saluta per nome</b> e gli fa la <b>carta d'imbarco</b> personalizzata.</p>
+          <input id="invName" class="fld" placeholder="es. Marco" autocomplete="off" oninput="invUpd()">
+          <div class="muted" id="invLink" style="font-size:12px;word-break:break-all;margin:9px 0"></div>
+          <div class="acts">
+            <button type="button" class="tealb" onclick="invCopy()">📋 Copia link</button>
+            <a id="invWa" class="prim" target="_blank" rel="noopener">💬 Invia su WhatsApp</a>
+          </div>
+          <p class="muted" id="invMsg" style="font-size:12px;margin-top:6px"></p>
+          <a href="condividi.html" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:11px;padding:12px 14px;border-radius:12px;background:linear-gradient(100deg,rgba(255,94,46,.13),rgba(255,212,134,.06));border:1px solid rgba(255,170,120,.3);font-weight:700;font-size:13.5px">✨ Apri il Kit condivisione · carte pronte<span style="font-size:16px">→</span></a>
+        </div>
+      </details>
+
+      <details>
+        <summary style="padding:13px 0;font-size:15px">🎉 Eventi del weekend <span class="caret">▸</span></summary>
+        <div>
+          <div class="doc">
+            <div class="dt">16–17 ott · Palau Sant Jordi</div>
+            <h4>Morat · concerto</h4>
+            <p class="muted">Latin-pop, due serate. Città viva, ma non "movida adulta". Opzione serata vicino a Sant Antoni/Poble-sec.</p>
+          </div>
+          <div class="doc">
+            <div class="dt">Da verificare · prima del viaggio</div>
+            <h4>⚽ Barça in casa?</h4>
+            <p class="muted">Controlla il calendario della Liga. Se gioca in casa il 17–18 → biglietti SOLO da fcbarcelona.com. Sei Culers Premium: pre-sale 48h + 10% off, attiva i benefit e tieni le notifiche.</p>
+            <div class="acts">
+              <a href="https://www.fcbarcelona.com/en/tickets" target="_blank">Biglietti ufficiali ›</a>
+              <a href="https://www.laliga.com/en-GB/clubs/fc-barcelona/next-matches" target="_blank">Calendario ›</a>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <details>
+        <summary style="padding:13px 0;font-size:15px">💶 Budget <span class="caret">▸</span></summary>
+        <div>
+          <table class="bud"><tbody>
+            <tr><td>✈️ Volo A/R</td><td style="text-align:right;font-weight:700">€160</td></tr>
+            <tr><td>🅿️ Parcheggio P2</td><td style="text-align:right;font-weight:700">€51</td></tr>
+            <tr><td>🏨 H10 · 2 notti</td><td style="text-align:right;font-weight:700">€640</td></tr>
+            <tr><td>🚖 Transfer</td><td style="text-align:right;font-weight:700">€80</td></tr>
+            <tr><td>🧖 Spa Aire + massaggio</td><td style="text-align:right;font-weight:700">€110</td></tr>
+            <tr><td>🍽️ Cibo & bevande</td><td style="text-align:right;font-weight:700">€300</td></tr>
+            <tr><td>🖼️ Musei</td><td style="text-align:right;font-weight:700">€60</td></tr>
+            <tr><td>🛋️ Lounge Canudas</td><td style="text-align:right;font-weight:700">€42</td></tr>
+            <tr class="tot"><td>Totale</td><td style="text-align:right">≈ €1.440</td></tr>
+          </tbody></table>
+          <div class="note"><b>La leva:</b> hotel fisso (€640). La voce su cui agire è il cibo (€300). Day-use domenica +€70 da decidere.</div>
+        </div>
+      </details>
+
+      <details>
+        <summary style="padding:13px 0;font-size:15px">💊 Kit stomaco <span class="caret">▸</span></summary>
+        <div>
+          <ul class="tight">
+            <li><b>PPI — Nexium Control</b> (esomeprazolo 20mg)</li>
+            <li><b>Gaviscon</b> · bruciore/reflusso</li>
+            <li><b>Sali — Reidrax</b> / Dicodral</li>
+            <li><b>Ibuprofene — Momentact</b> (a stomaco pieno)</li>
+            <li><b>Imodium</b> · diarrea</li>
+          </ul>
+          <div class="note"><b>NON</b> paracetamolo dopo l'alcol → solo ibuprofene con cibo. PPI dal 14/10 al 19/10, 1/die a digiuno.</div>
+          <div class="note"><b>Promemoria:</b> già su calendario. ntfy (push extra, max 3 giorni avanti):</div>
+          <input id="ntfyTopic" class="fld" placeholder="es. ale-stomaco-bcn-9f3">
+          <div class="acts">
+            <button type="button" class="tealb" onclick="ntfyTest()">Notifica di prova</button>
+            <button type="button" class="prim" onclick="ntfyArm()">Arma prossimi 3 giorni</button>
+          </div>
+          <p class="muted" id="ntfyMsg" style="margin-top:6px;font-size:12.5px"></p>
+        </div>
+      </details>
+
+      <details>
+        <summary style="padding:13px 0;font-size:15px">✅ Checklist <span class="caret">▸</span></summary>
+        <ul class="tight">
+          <li>Prenota Sagrada, Picasso, Aire (rischio sold-out n.1)</li>
+          <li>Parcheggio BLQ P2 Business ✅ (codice P2932537)</li>
+          <li>Lunedì: ferie/permesso? Atterri 00:50</li>
+          <li>Day-use domenica: prezzo/disponibilità su Dayuse</li>
+          <li>Assicurazione + tessera sanitaria europea (TEAM)</li>
+          <li>Carta d'identità valida · roaming UE incluso</li>
+          <li>Antifurto: attento a metro/Ramblas/sera</li>
+          <li>Plan B pioggia: musei + spa</li>
+        </ul>
+      </details>
+
+      <details>
+        <summary style="padding:13px 0;font-size:15px">🧭 Risorse & possibilità <span class="caret">▸</span></summary>
+        <div class="grid">
+          <a class="gbtn" href="https://www.aemet.es/es/eltiempo/prediccion/municipios/barcelona-id08019" target="_blank"><div class="gt">🇪🇸 AEMET</div><div class="gs">Meteo ufficiale</div></a>
+          <a class="gbtn" href="https://www.meteoblue.com/it/tempo/previsioni/week/barcellona_spagna_3128760" target="_blank"><div class="gt">🌦️ Meteoblue</div><div class="gs">Multi-modello</div></a>
+          <a class="gbtn" href="https://www.tmb.cat/en/barcelona-transport/map/metro" target="_blank"><div class="gt">🚇 Metro TMB</div><div class="gs">Mappa + Aerobús</div></a>
+          <a class="gbtn" href="https://free-now.com/es/" target="_blank"><div class="gt">🚖 FREE NOW</div><div class="gs">Taxi app</div></a>
+          <a class="gbtn" href="https://www.google.com/maps/search/?api=1&query=Bunkers+del+Carmel+Barcelona" target="_blank"><div class="gt">🌇 Bunkers Carmel</div><div class="gs">Vista + tramonto</div></a>
+          <a class="gbtn" href="https://www.google.com/maps/search/?api=1&query=Mercat+de+Santa+Caterina+Barcelona" target="_blank"><div class="gt">🥘 Mercati</div><div class="gs">Sta. Caterina · Boqueria</div></a>
+        </div>
+      </details>
+
     </div>
-  </section>
-
-  <!-- BUDGET -->
-  <section id="budget">
-    <div class="seclab">Budget · stima solo (1 persona)</div>
-    <h2 style="font-size:28px">Quanto costa <span class="accent">il weekend.</span></h2>
-    <p class="lead" style="margin-top:10px">Scenario base. Volo e hotel sono i tuoi dati reali; il resto è stima di larga massima.</p>
-
-    <table style="width:100%;border-collapse:collapse;font-size:14px;margin:6px 0 14px">
-      <tbody>
-        <tr style="border-bottom:1px solid var(--line)"><td style="padding:9px 0">✈️ Volo A/R <span style="color:var(--muted);font-size:12px">(tuo dato)</span></td><td style="text-align:right;font-weight:700">€160</td></tr>
-        <tr style="border-bottom:1px solid var(--line)"><td style="padding:9px 0">🅿️ Parcheggio BLQ <span style="color:var(--muted);font-size:12px">(P2 Business, prenotato)</span></td><td style="text-align:right;font-weight:700">€51</td></tr>
-        <tr style="border-bottom:1px solid var(--line)"><td style="padding:9px 0">🏨 H10 Marina · doppia, 2 notti</td><td style="text-align:right;font-weight:700">€640</td></tr>
-        <tr style="border-bottom:1px solid var(--line)"><td style="padding:9px 0">🚖 Transfer aeroporto + città</td><td style="text-align:right;font-weight:700">€80</td></tr>
-        <tr style="border-bottom:1px solid var(--line)"><td style="padding:9px 0">🧖 Spa Aire + massaggio</td><td style="text-align:right;font-weight:700">€110</td></tr>
-        <tr style="border-bottom:1px solid var(--line)"><td style="padding:9px 0">🍽️ Cibo & bevande <span style="color:var(--muted);font-size:12px">(tutti i pasti fuori)</span></td><td style="text-align:right;font-weight:700">€300</td></tr>
-        <tr style="border-bottom:1px solid var(--line)"><td style="padding:9px 0">🖼️ Musei <span style="color:var(--muted);font-size:12px">(Sagrada+Picasso+MNAC)</span></td><td style="text-align:right;font-weight:700">€60</td></tr>
-        <tr style="border-bottom:1px solid var(--line)"><td style="padding:9px 0">🛋️ Lounge Canudas <span style="color:var(--muted);font-size:12px">(no Priority Pass)</span></td><td style="text-align:right;font-weight:700">€42</td></tr>
-        <tr><td style="padding:11px 0;font-weight:700;font-family:'Fraunces',serif;font-size:18px">Totale <span style="color:var(--muted);font-size:12px;font-family:'DM Sans'">(senza day-use)</span></td><td style="text-align:right;font-weight:700;font-family:'Fraunces',serif;font-size:18px;color:var(--amber)">≈ €1.440</td></tr>
-        <tr><td style="padding:9px 0">🛏️ Day-use domenica <span style="color:var(--muted);font-size:12px">(da decidere)</span></td><td style="text-align:right;font-weight:700;color:var(--muted)">+€70</td></tr>
-      </tbody>
-    </table>
-
-    <div class="seclab" style="margin-top:8px">Tre scenari</div>
-    <div class="wx" style="margin-top:8px">
-      <div class="d"><div class="dd">MINIMO</div><div class="ic">🎒</div><div class="tp" style="font-size:17px">~€1.240</div><div class="cc">Aerobús, no day-use, spa base, cibo medio</div></div>
-      <div class="d"><div class="dd">BASE</div><div class="ic">🎉</div><div class="tp" style="font-size:17px">~€1.510</div><div class="cc">tue scelte + day-use</div></div>
-      <div class="d"><div class="dd">COMFORT</div><div class="ic">🥂</div><div class="tp" style="font-size:17px">~€1.650</div><div class="cc">taxi, day-use, cibo top</div></div>
-    </div>
-
-    <div class="note plan"><b>La leva:</b> l'hotel (€640) è fisso e pesa ~44%. La voce su cui puoi davvero agire è il <b>cibo (€300, tutti i pasti fuori)</b>. Day-use e spa-massaggio sono i due extra opzionali.</div>
-    <div class="note"><b>Da confermare:</b> prezzo reale del <b>day-use</b> del 18/10 (Dayuse), e se la doppia H10 include la <b>colazione</b> (ridurrebbe il cibo di ~€30).</div>
-  </section>
-
-  <!-- CONTATTI -->
-  <section>
-    <div class="seclab">Contatti rapidi</div>
-    <h2 style="font-size:26px">Numeri <span class="accent">salva-serata.</span></h2>
-    <div class="contacts">
-      <a href="tel:+34933097917"><span>🏨 H10 Marina · reception</span><span class="n">+34 933 097 917</span></a>
-      <a href="https://relax.beaire.com/es/aire-ancient-baths-barcelona" target="_blank"><span>🧖 Aire Ancient Baths · spa</span><span class="n">prenota online</span></a>
-      <a href="tel:+34934851859"><span>🍽️ Barriteca · cena ven</span><span class="n">+34 934 851 859</span></a>
-      <a href="tel:+34640065174"><span>🍷 Cuadro · sotto casa</span><span class="n">+34 640 065 174</span></a>
-      <a href="tel:+34681084156"><span>🌆 Sir Victor · rooftop</span><span class="n">+34 681 084 156</span></a>
-      <a href="tel:+34932563000"><span>🖼️ Museo Picasso</span><span class="n">+34 932 563 000</span></a>
-      <a href="https://free-now.com/es/" target="_blank"><span>🚖 FREE NOW · taxi app</span><span class="n">app</span></a>
-      <a href="tel:112"><span>🆘 Emergenze EU</span><span class="n">112</span></a>
-    </div>
-  </section>
+  </details>
 
   <footer>
-    <div class="big">Buon 40°, Ale.<br><span class="accent">Barcellona ti aspetta.</span></div>
-    <div class="lab">Guida Barcellona Weekend · 16-18 ott 2026</div>
+    <div class="sig">Buon 40, <b>Ale.</b></div>
+    <div style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;margin-top:10px">Barcellona · 16–18 ott 2026</div>
+    <div class="htag">#MésQueUnAle</div>
+    <a href="viaggio.html" style="display:inline-block;margin-top:18px;padding:10px 20px;border-radius:980px;border:1px solid var(--line);color:var(--teal);font-size:13px;font-weight:700;letter-spacing:.03em">✨ Sfoglia la presentazione →</a>
   </footer>
-
 </div>
 
-<!-- BOTTOM NAV -->
-<nav class="botnav">
-  <a href="#top"><span class="bi">⚡</span>Adesso</a>
-  <a href="#ven"><span class="bi">🏖️</span>Ven</a>
-  <a href="#sab"><span class="bi">🎉</span>Sab</a>
-  <a href="#dom"><span class="bi">✈️</span>Dom</a>
-  <a href="https://claude.ai/recents" target="_blank"><span class="bi">💬</span>Chat</a>
-</nav>
+<!-- SEARCH OVERLAY -->
+<div class="sheet" id="searchSheet">
+  <div class="bar">
+    <input id="searchInput" placeholder="Cerca attività, posti, numeri…" oninput="runSearch(this.value)" autocomplete="off">
+    <button class="close" onclick="closeSearch()">Chiudi</button>
+  </div>
+  <div class="res" id="searchRes"></div>
+</div>
+
+<!-- WEATHER SHEET -->
+<div class="sheet" id="weatherSheet">
+  <div class="bar">
+    <div style="flex:1"><b id="wxTitle">Meteo · prossime ore</b><div class="muted" id="wxSub" style="font-size:12.5px"></div></div>
+    <button class="close" onclick="closeWeather()">Chiudi</button>
+  </div>
+  <div class="res" id="wxRes"></div>
+</div>
+
+<!-- DOCK FISSO: pulsanti rapidi + navigazione -->
+<div class="dock">
+  <div class="quickbar">
+    <a href="#food" onclick="openDet('food')"><span>🍽️</span><span>Mangia</span></a>
+    <a href="https://www.thefork.com/restaurants/barcelona-c41710/poblenou-a608"><span>🍴</span><span>TheFork</span></a>
+    <a href="https://www.tripadvisor.it/Restaurants-g187497-Barcelona_Catalonia.html"><span>🦉</span><span>TripAdvisor</span></a>
+    <a href="https://free-now.com/es/"><span>🚖</span><span>Taxi</span></a>
+  </div>
+  <nav class="botnav">
+    <a href="#adesso"><span class="bi">⚡</span>Adesso</a>
+    <a href="#oggi" onclick="setTimeout(scrollNow,80)"><span class="bi">🗓️</span>Oggi</a>
+    <a href="#docs" onclick="openDet('docs')"><span class="bi">🎫</span>Docs</a>
+    <a href="#mappa" onclick="openDet('mappa')"><span class="bi">📍</span>Mappa</a>
+    <button onclick="openInvite()"><span class="bi">📨</span>Invita</button>
+  </nav>
+</div>
 
 <script>
-  // Live clock (Barcelona time)
-  function tick(){
-    try{
-      const t=new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit',timeZone:'Europe/Madrid'});
-      document.getElementById('clock').textContent=t;
-    }catch(e){}
+/* ============ DATI: fonte unica ============ */
+const TZ='Europe/Madrid';
+const TRIP_START='2026-10-16T06:20';
+const DAYS={'16':'Venerdì 16 ott','17':'Sabato 17 ott · 40°','18':'Domenica 18 ott'};
+
+// kind → emoji/categoria; color per mappa
+const KIND={
+  flight:{e:'✈️',c:'#9db1c6'}, transfer:{e:'🚕',c:'#9db1c6'}, work:{e:'💻',c:'#ff7a4d'},
+  food:{e:'🍽️',c:'#f4ece0'}, sight:{e:'🏛️',c:'#ffb86b'}, spa:{e:'🧖',c:'#2ec4b6'},
+  sea:{e:'🏖️',c:'#2ec4b6'}, night:{e:'🍸',c:'#f4ece0'}, admin:{e:'🚿',c:'#9db1c6'}, base:{e:'🏨',c:'#ff7a4d'}
+};
+
+const ITINERARY=[
+  // VENERDÌ 16
+  {id:'v1',day:'16',start:'2026-10-16T06:20',end:'2026-10-16T08:05',kind:'flight',title:'Volo FR2097 · BLQ → BCN',place:'Aeroporto · partenza',note:'In BLQ entro 04:50 · solo bagaglio a mano',track:'https://www.bologna-airport.it/voli/vola-da-bologna/voli-in-tempo-reale/?idC=62178',flightNo:'FR2097',fdate:'2026-10-16'},
+  {id:'v2',day:'16',start:'2026-10-16T08:30',end:'2026-10-16T09:00',kind:'transfer',title:'Aeroporto → H10 Marina',place:'H10 Marina',lat:41.3928,lng:2.1924,phone:'+34933097917',note:'Taxi ~25 min · ~€35 (o Aerobús+metro ~€10)'},
+  {id:'v3',day:'16',start:'2026-10-16T09:00',end:'2026-10-16T13:00',kind:'work',title:'Smart working · 1ª parte',place:'H10 Marina',lat:41.3928,lng:2.1924,note:'Stesso fuso (CET). WiFi camera/lobby/Privilege'},
+  {id:'v4',day:'16',start:'2026-10-16T13:00',end:'2026-10-16T14:00',kind:'food',title:'Pranzo + spiaggia',place:'Cuadro · Bogatell',lat:41.3936,lng:2.1954,note:'Boccone veloce + 20 min di mare',outdoor:true,planB:'pranzo al chiuso da Cuadro'},
+  {id:'v5',day:'16',start:'2026-10-16T14:00',end:'2026-10-16T18:00',kind:'work',title:'Smart working · 2ª parte',place:'H10 Marina',lat:41.3928,lng:2.1924},
+  {id:'v6',day:'16',start:'2026-10-16T18:30',end:'2026-10-16T20:30',kind:'sight',title:'Gòtic & El Born a piedi',place:'Barri Gòtic',lat:41.3839,lng:2.1765,note:'~15 min a piedi · Cattedrale, Sta. Maria del Mar',outdoor:true,planB:'musei o un caffè coperto nel Born'},
+  {id:'v7',day:'16',start:'2026-10-16T20:30',end:'2026-10-16T22:30',kind:'food',title:'Cena catalana · Barriteca',place:'Barriteca',lat:41.4013,lng:2.2031,phone:'+34934851859',book:'tel:+34934851859',note:'Prenota · chiuso lun-mer'},
+  {id:'v8',day:'16',start:'2026-10-16T22:30',end:'2026-10-17T01:00',kind:'night',title:'Cocktail nel Born',place:'No Sé · Born',lat:41.3850,lng:2.1828,note:'Solo-friendly · tutto a piedi'},
+  // SABATO 17
+  {id:'s1',day:'17',start:'2026-10-17T09:30',end:'2026-10-17T11:30',kind:'sight',title:'Sagrada Família',place:'Sagrada Família',lat:41.4036,lng:2.1744,book:'https://sagradafamilia.org/',note:'Slot prenotato · salti la fila'},
+  {id:'s2',day:'17',start:'2026-10-17T13:30',end:'2026-10-17T16:30',kind:'sight',title:'MNAC · Montjuïc',place:'MNAC',lat:41.3685,lng:2.1533,note:'Arte catalana + vista. Alt: mare a Barceloneta'},
+  {id:'s3',day:'17',start:'2026-10-17T17:30',end:'2026-10-17T19:30',kind:'spa',title:'Aire Ancient Baths',place:'Aire Ancient Baths',lat:41.3870,lng:2.1835,book:'https://relax.beaire.com/es/aire-ancient-baths-barcelona',note:'Il regalo a te stesso · ~15 min a piedi'},
+  {id:'s4',day:'17',start:'2026-10-17T19:30',end:'2026-10-17T21:30',kind:'night',title:'Aperitivo rooftop · Sir Victor',place:'Sir Victor rooftop',lat:41.3962,lng:2.1610,phone:'+34681084156',note:'DJ + riscaldatori. Alt: Ohla / Alaire',outdoor:true,planB:'cocktail al chiuso nel Born'},
+  {id:'s5',day:'17',start:'2026-10-17T21:30',end:'2026-10-18T02:00',kind:'night',title:'Cena + giro cocktail · festa 40°',place:'El Born',lat:41.3850,lng:2.1828,note:'Mariposa Negra · Aldea · Bestiari · No Sé'},
+  // DOMENICA 18
+  {id:'d1',day:'18',start:'2026-10-18T10:00',end:'2026-10-18T13:00',kind:'sea',title:'Spiaggia + brunch (o spa hotel)',place:'Bogatell · Barceloneta',lat:41.3957,lng:2.2002,note:'Mare e brunch',outdoor:true,planB:'spa e piscina dell\'H10'},
+  {id:'d2',day:'18',start:'2026-10-18T13:30',end:'2026-10-18T17:30',kind:'sight',title:'Museo Picasso o Park Güell',place:'Museo Picasso',lat:41.3853,lng:2.1809,note:'Quello che non hai fatto venerdì'},
+  {id:'d3',day:'18',start:'2026-10-18T18:00',end:'2026-10-18T19:50',kind:'admin',title:'Doccia prima del volo',place:'H10 Marina',lat:41.3928,lng:2.1924,phone:'+34933097917',note:'Day-use fino ~20:00 o late check-out + deposito'},
+  {id:'d4',day:'18',start:'2026-10-18T19:50',end:'2026-10-18T20:15',kind:'transfer',title:'H10 → Aeroporto T2',place:'Aeroporto BCN · T2',lat:41.3018,lng:2.0793,note:'Taxi ~25 min · ~€35 · volo Schengen'},
+  {id:'d5',day:'18',start:'2026-10-18T20:15',end:'2026-10-18T22:00',kind:'admin',title:'Sala VIP Canudas · T2',place:'Aeroporto BCN · T2',lat:41.3018,lng:2.0793,note:'Entri dalle 19:05, chiude 22:00. Cibo+drink'},
+  {id:'d6',day:'18',start:'2026-10-18T22:25',end:'2026-10-18T23:05',kind:'flight',title:'Al gate',place:'Aeroporto BCN · T2',track:'https://www.aena.es/en/flight-info.html',flightNo:'FR5220',fdate:'2026-10-18'},
+  {id:'d7',day:'18',start:'2026-10-18T23:05',end:'2026-10-19T00:50',kind:'flight',title:'Volo FR5220 · BCN → BLQ',place:'Rientro a casa',note:'Atterri 00:50 lunedì',track:'https://www.aena.es/en/flight-info.html',flightNo:'FR5220',fdate:'2026-10-18'}
+];
+
+const CONTACTS=[
+  {n:'H10 Marina · reception',v:'+34 933 097 917',tel:'+34933097917',i:'🏨'},
+  {n:'Aire Ancient Baths · spa',v:'prenota online',url:'https://relax.beaire.com/es/aire-ancient-baths-barcelona',i:'🧖'},
+  {n:'Barriteca · cena ven',v:'+34 934 851 859',tel:'+34934851859',i:'🍽️'},
+  {n:'Cuadro · sotto casa',v:'+34 640 065 174',tel:'+34640065174',i:'🍷'},
+  {n:'Sir Victor · rooftop',v:'+34 681 084 156',tel:'+34681084156',i:'🌆'},
+  {n:'Museo Picasso',v:'+34 932 563 000',tel:'+34932563000',i:'🖼️'},
+  {n:'FREE NOW · taxi',v:'app',url:'https://free-now.com/es/',i:'🚖'},
+  {n:'Emergenze UE',v:'112',tel:'112',i:'🆘'}
+];
+
+const DINING={
+  rist:[
+    {n:'Can Recasens',a:'Rambla del Poblenou 102',d:'Formaggi, salumi e vini in un modernista. Bohémien.',site:'https://canrecasens.restaurant/',lat:41.4006,lng:2.1976},
+    {n:'Els Tres Porquets',a:'Rambla del Poblenou 165',d:'Tapas creative & carni · 9,4 su TheFork.',fork:'https://www.thefork.com/restaurant/els-tres-porquets-r16747',lat:41.4031,lng:2.1991},
+    {n:'Els Pescadors',a:'Plaça de Prim 1',d:'Pesce e arroces, riferimento storico.',fork:'https://www.thefork.com/restaurant/els-pescadors-r17877',lat:41.4046,lng:2.2061},
+    {n:'El 58',a:'Rambla del Poblenou 58',d:'Tapas locali: bravas, croquetas. Da gente del posto.',lat:41.3981,lng:2.1958},
+    {n:'Els Pollos de Llull',a:'C/ de Ramon Turró 13',d:'Pollo arrosto, un classico di Barcellona.',site:'https://elspollos.com/',lat:41.3906,lng:2.1929},
+    {n:'Masa Vins',a:'C/ de Pallars 154',d:'Wine bar con cucina, calici e cocktail.',site:'https://www.instagram.com/masa.vins/',lat:41.4007,lng:2.1931},
+    {n:'Barriteca',a:'Poblenou',d:'Catalana vera, trattano benissimo chi cena solo.',lat:41.4013,lng:2.2031},
+    {n:'Cuadro',a:'Vila Olímpica',d:'Bistrot sotto casa, comodo e veloce.',lat:41.3936,lng:2.1954}
+  ],
+  cocktail:[
+    {n:'Balius',a:'C/ de Pujades 196',d:'Cocktail classici in una ex-farmacia · jazz la domenica.',site:'https://baliusbar.com/',lat:41.4011,lng:2.1996},
+    {n:'Dreamboat Bar & Deli',a:'C/ de la Llacuna 136',d:'Cocktail giocosi + grilled cheese gourmet.',site:'https://dreamboatbar.com/',lat:41.4002,lng:2.1966},
+    {n:"Henry's Bar",a:'C/ de la Llacuna 92',d:'Dive bar creativo, dog-friendly, terrazza.',site:'https://www.instagram.com/henrys.cocktailbar/',lat:41.3991,lng:2.1958},
+    {n:'Madame George',a:'C/ de Pujades 179',d:'Speakeasy raffinato, atmosfera intima.',lat:41.4008,lng:2.1989},
+    {n:'Bubar',a:'Poblenou',d:'Vini naturali e cocktail di quartiere.',lat:41.4000,lng:2.1980}
+  ]
+};
+
+/* ============ MOTORE ============ */
+const DONE_KEY='bcn40_done_v1';
+function getDone(){try{return new Set(JSON.parse(localStorage.getItem(DONE_KEY)||'[]'))}catch(e){return new Set()}}
+function saveDone(s){localStorage.setItem(DONE_KEY,JSON.stringify([...s]))}
+function toggleDone(id){const s=getDone();s.has(id)?s.delete(id):s.add(id);saveDone(s);renderAll();}
+function tp(t){return new Date(t.length<=16?t+':00':t);} // ora locale del dispositivo
+function fmtHM(d){return d.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});}
+function mapsDir(lat,lng){return 'https://www.google.com/maps/dir/?api=1&destination='+lat+','+lng+'&travelmode=walking';}
+function mapsMode(lat,lng,mode){return 'https://www.google.com/maps/dir/?api=1&destination='+lat+','+lng+'&travelmode='+mode;}
+function citymapper(lat,lng,name){return 'https://citymapper.com/directions?endcoord='+lat+'%2C'+lng+(name?'&endname='+encodeURIComponent(name):'');}
+function mapsAt(lat,lng,q){return 'https://www.google.com/maps/search/?api=1&query='+(q?encodeURIComponent(q):lat+','+lng);}
+
+/* ===== STATO VOLO (sicuro): legge flight-status.json prodotto da GitHub Actions =====
+   La chiave API NON è qui: sta nei GitHub Secrets, usata dal workflow lato server. */
+let FSTATUS={};
+function flightStatus(no){return Promise.resolve(FSTATUS[no]||null);}
+
+function model(now){
+  const done=getDone();
+  const items=ITINERARY.map(x=>Object.assign({},x));
+  items.forEach(it=>{it._s=tp(it.start);it._e=it.end?tp(it.end):new Date(it._s.getTime()+36e5);});
+  items.sort((a,b)=>a._s-b._s);
+  items.forEach(it=>{
+    if(done.has(it.id))it._st='done';
+    else if(now>=it._s&&now<it._e)it._st='current';
+    else if(now<it._s)it._st='future';
+    else it._st='past';
+  });
+  return items;
+}
+function humanIn(ms){
+  if(ms<0)return 'ora';
+  const m=Math.round(ms/60000);
+  if(m<1)return 'adesso';
+  if(m<60)return 'tra '+m+' min';
+  const h=Math.floor(m/60),mm=m%60;
+  if(h<24)return 'tra '+h+'h'+(mm?' '+mm:'' );
+  return 'tra '+Math.round(h/24)+' giorni';
+}
+function haversine(a,b){
+  const R=6371,toR=x=>x*Math.PI/180;
+  const dLat=toR(b.lat-a.lat),dLng=toR(b.lng-a.lng);
+  const x=Math.sin(dLat/2)**2+Math.cos(toR(a.lat))*Math.cos(toR(b.lat))*Math.sin(dLng/2)**2;
+  return R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x)); // km
+}
+let myPos=null;
+let WX=null; // previsione oraria (hourly) Open-Meteo, condivisa
+function rainProb(startStr){if(!WX)return null;const k=startStr.slice(0,13);for(let i=0;i<WX.time.length;i++)if(WX.time[i].slice(0,13)===k)return WX.precipitation_probability[i]||0;return null;}
+
+/* ============ RENDER ============ */
+function renderNow(){
+  const now=new Date(), items=model(now);
+  const el=document.getElementById('nowCard');
+  const start=tp(TRIP_START);
+  const navTarget=items.find(it=>it._s>now&&it._st!=='done'&&it.lat)|| items.find(it=>it._s>now&&it.lat);
+  const next=items.find(it=>it._s>now&&it._st!=='done');
+  const current=items.find(it=>it._st==='current');
+
+  // dove dovresti essere
+  let whereLab='Dovresti essere a', wherePlace;
+  if(now<start){whereLab='Preparativi';wherePlace='Partenza il 16 ottobre';}
+  else if(current)wherePlace=current.place;
+  else {const past=[...items].reverse().find(it=>it._e<=now);wherePlace=past?past.place:'In viaggio';}
+
+  let html='<div class="lab">Adesso</div>';
+  html+='<div class="where">'+whereLab+'</div><div class="place">'+wherePlace+'</div>';
+
+  if(now<start){
+    const days=Math.ceil((start-now)/864e5);
+    html+='<hr><div class="nlab">Countdown</div><div class="next">Mancano '+days+' giorni</div>';
+    html+='<div class="meta"><span class="chip big">✈️ Ven 16 · 06:20</span><span class="chip"><span class="c">prima tappa</span> H10 Marina</span></div>';
+  } else if(next){
+    html+='<hr><div class="nlab">Prossima · '+humanIn(next._s-now)+'</div><div class="next">'+next.title+'</div>';
+    html+='<div class="meta">';
+    html+='<span class="chip big tnum">◷ '+fmtHM(next._s)+'</span>';
+    if(myPos&&next.lat){const km=haversine(myPos,{lat:next.lat,lng:next.lng});const mins=Math.max(1,Math.round(km*12));html+='<span class="chip tnum">🚶 ~'+mins+' min</span>';}
+    if(next.note){const t=(next.note.match(/~?\d+\s?min/)||[])[0];if(t)html+='<span class="chip">🚶 '+t+'</span>';}
+    html+='</div>';
+  } else {
+    html+='<hr><div class="nlab">Fine</div><div class="next">Buon rientro</div>';
   }
-  tick(); setInterval(tick,1000*20);
 
-  // Live temperature (Open-Meteo, no key)
-  fetch('https://api.open-meteo.com/v1/forecast?latitude=41.39&longitude=2.19&current=temperature_2m')
-    .then(r=>r.json()).then(d=>{
-      const t=Math.round(d.current.temperature_2m);
-      document.getElementById('temp').textContent='🌡️ '+t+'°';
-    }).catch(()=>{});
+  // Plan B pioggia (si attiva quando il meteo copre le date del viaggio)
+  if(next&&next.outdoor){const p=rainProb(next.start);if(p!=null&&p>=50)html+='<div class="planb">🌧️ Pioggia probabile ('+p+'%) a quell\'ora · Plan B: '+(next.planB||'attività al chiuso')+'</div>';}
+  // Stato volo direttamente qui (live se c'è la chiave, altrimenti link)
+  const fItem=(current&&current.track)?current:((next&&next.track)?next:null);
+  if(fItem)html+='<a id="flightStatusBtn" class="go" style="background:rgba(46,196,182,.16);border-color:rgba(46,196,182,.45);color:var(--teal)" href="'+fItem.track+'" target="_blank">📡 Il volo è in orario?</a>';
 
-  // Next moment
-  const sched=[
-    ['2026-10-16T06:20','Volo per Barcellona','FR2097 · BLQ → BCN 08:05'],
-    ['2026-10-16T15:00','Centro storico','Gòtic & El Born a piedi'],
-    ['2026-10-16T20:30','Cena catalana','Barriteca · prenota'],
-    ['2026-10-17T09:30','Sagrada Família','Slot prenotato'],
-    ['2026-10-17T17:30','Aire Ancient Baths','Il regalo a te stesso'],
-    ['2026-10-17T19:30','La festa dei 40','Rooftop + Born'],
-    ['2026-10-18T10:00','Mattina lenta','Spiaggia o spa'],
-    ['2026-10-18T18:00','Doccia & check-out','Day-use o late check-out'],
-    ['2026-10-18T20:00','Aeroporto T2','Sala VIP Canudas dalle 19:05'],
-    ['2026-10-18T23:05','Volo per casa','FR5220 · BCN → BLQ 00:50']
-  ];
-  function nextMoment(){
-    const now=new Date();
-    const big=document.getElementById('next-big'), sub=document.getElementById('next-sub');
-    const dep=new Date('2026-10-16T06:20:00');
-    if(now<dep){
-      const days=Math.ceil((dep-now)/86400000);
-      big.textContent='Mancano '+days+' giorni';
-      sub.textContent='Partenza venerdì 16 ottobre, ore 06:20 da Bologna';
-      return;
-    }
-    for(const [t,label,desc] of sched){
-      if(new Date(t+':00')>now){
-        big.textContent=label;
-        const d=new Date(t+':00');
-        const hh=d.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
-        const day=['dom','lun','mar','mer','gio','ven','sab'][d.getDay()];
-        sub.textContent=desc+' · '+day+' '+hh;
-        return;
-      }
-    }
-    big.textContent='Buon rientro';
-    sub.textContent='Weekend chiuso. Più leggero di prima.';
+  // PORTAMI ADESSO
+  if(navTarget&&navTarget.lat){
+    html+='<a class="go" href="'+mapsDir(navTarget.lat,navTarget.lng)+'" target="_blank">▶ PORTAMI ADESSO<span class="muted" style="font-weight:600;font-size:12px"> · '+navTarget.place+'</span></a>';
+    html+='<div class="nrow" style="margin-top:7px">'+
+      '<a class="btn" href="'+citymapper(navTarget.lat,navTarget.lng,navTarget.place)+'" target="_blank">🚇 Mezzi</a>'+
+      '<a class="btn" href="'+mapsMode(navTarget.lat,navTarget.lng,'transit')+'" target="_blank">🗺️ Maps</a>'+
+      '<a class="btn" href="https://free-now.com/es/" target="_blank">🚖 Taxi</a>'+
+    '</div>';
   }
-  nextMoment(); setInterval(nextMoment,60000);
+  // azioni
+  const callPhone=(current&&current.phone)||(next&&next.phone);
+  html+='<div class="nrow">';
+  html+= callPhone? '<a class="btn tealb" href="tel:'+callPhone+'">☎ Chiama</a>' : '<a class="btn" aria-disabled="true" disabled>☎ —</a>';
+  html+= next? '<a class="btn" href="#oggi" onclick="setDay(\''+next.day+'\')">📋 Dettagli</a>':'<a class="btn" href="#oggi">📋 Oggi</a>';
+  if(current)html+='<button class="btn" onclick="toggleDone(\''+current.id+'\')">✓ Fatto</button>';
+  else if(next)html+='<button class="btn" onclick="toggleDone(\''+next.id+'\')">✓ Salta</button>';
+  html+='</div>';
+  el.innerHTML=html;
 
-  // Active tab on scroll
-  const secs=['ven','sab','dom'].map(id=>document.getElementById(id));
-  const tabLinks=[...document.querySelectorAll('.tabs a')];
-  const botLinks=[...document.querySelectorAll('.botnav a')];
-  const io=new IntersectionObserver((es)=>{
-    es.forEach(e=>{
-      if(e.isIntersecting){
-        const id=e.target.id;
-        tabLinks.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+id));
-        botLinks.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+id));
-      }
-    });
-  },{rootMargin:'-45% 0px -50% 0px'});
-  secs.forEach(s=>s&&io.observe(s));
-</script>
-<script>
-  // Interactive map (Leaflet + CARTO dark tiles, no key)
-  (function(){
-    if(typeof L==='undefined')return;
-    const pts=[
-     ['H10 Marina · base',41.3928,2.1924,'#ff7a4d'],
-     ['Spiaggia Bogatell',41.3957,2.2002,'#2ec4b6'],
-     ['Aire Ancient Baths · spa',41.3870,2.1835,'#2ec4b6'],
-     ['Museo Picasso',41.3853,2.1809,'#ffb86b'],
-     ['Sagrada Família',41.4036,2.1744,'#ffb86b'],
-     ['MNAC · Montjuïc',41.3685,2.1533,'#ffb86b'],
-     ['Park Güell',41.4145,2.1527,'#ffb86b'],
-     ['Cuadro · cena',41.3936,2.1954,'#f4ece0'],
-     ['Barriteca · cena',41.4013,2.2031,'#f4ece0'],
-     ['No Sé · cocktail Born',41.3850,2.1828,'#f4ece0'],
-     ['Sir Victor · rooftop DJ',41.3962,2.1610,'#f4ece0'],
-     ['Aeroporto BCN · Terminal 2',41.3018,2.0793,'#9db1c6']
-    ];
-    const map=L.map('map',{scrollWheelZoom:false}).setView([41.388,2.14],11);
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
-      attribution:'&copy; OpenStreetMap &copy; CARTO',maxZoom:19,subdomains:'abcd'}).addTo(map);
-    const group=[];
-    pts.forEach(function(p){
-      const m=L.circleMarker([p[1],p[2]],{radius:8,color:'#0e1f33',weight:2,fillColor:p[3],fillOpacity:1}).addTo(map);
-      m.bindPopup('<b>'+p[0]+'</b><br><a href="https://www.google.com/maps/search/?api=1&query='+p[1]+','+p[2]+'" target="_blank">📍 Indicazioni</a>');
-      group.push([p[1],p[2]]);
-    });
-    map.fitBounds(group,{padding:[30,30]});
-  })();
+  // aggiorna lo stato volo in modo asincrono (se chiave presente e dati disponibili)
+  if(fItem&&fItem.flightNo)flightStatus(fItem.flightNo,fItem.fdate).then(v=>{
+    if(!v)return;const b=document.getElementById('flightStatusBtn');if(!b)return;
+    b.innerHTML='📡 '+v.text;
+    if(v.bad){b.style.background='rgba(255,122,77,.18)';b.style.borderColor='rgba(255,122,77,.5)';b.style.color='var(--coral)';}
+    else{b.style.background='rgba(46,196,182,.16)';b.style.borderColor='rgba(46,196,182,.45)';b.style.color='var(--teal)';}
+  });
+
+  // fase in topbar
+  const ph=document.getElementById('phase');
+  if(now<start)ph.textContent='Pre-partenza';
+  else if(now>tp('2026-10-19T00:50'))ph.textContent='Rientrato';
+  else {const d=current||next; ph.textContent=d?('Giorno '+({'16':1,'17':2,'18':3}[d.day]||'')) :'In viaggio';}
+}
+
+function renderSoon(){
+  const now=new Date(), items=model(now), lim=new Date(now.getTime()+2*36e5);
+  const soon=items.filter(it=>it._st!=='done'&&it._s>now&&it._s<=lim);
+  const el=document.getElementById('soonList');
+  if(!soon.length){el.innerHTML='<div class="empty">Nessun impegno nelle prossime 2 ore.</div>';return;}
+  el.innerHTML=soon.map(it=>'<a class="row" href="#oggi" onclick="setDay(\''+it.day+'\')"><span class="t tnum">'+fmtHM(it._s)+'</span><span class="ti">'+it.title+(it.note?'<small>'+it.note+'</small>':'')+'</span><span class="arr">›</span></a>').join('');
+}
+
+let SELDAY=null;
+function scrollNow(){const cur=document.querySelector('#timeline .st-current');(cur||document.getElementById('oggi')).scrollIntoView({behavior:'smooth',block:cur?'center':'start'});}
+function setDay(d){SELDAY=d;renderTimeline();scrollNow();}
+function renderDayTabs(){
+  document.getElementById('dayTabs').innerHTML=Object.keys(DAYS).map(d=>'<button class="'+(d===SELDAY?'on':'')+'" onclick="setDay(\''+d+'\')"><b>'+d+'</b>'+({'16':'VEN','17':'SAB','18':'DOM'}[d])+'</button>').join('');
+}
+function renderTimeline(){
+  const now=new Date(), items=model(now);
+  if(!SELDAY){const cur=items.find(it=>it._st==='current')||items.find(it=>it._s>now);SELDAY=cur?cur.day:(now<tp(TRIP_START)?'16':'18');}
+  document.getElementById('dayLabel').textContent=DAYS[SELDAY];
+  renderDayTabs();
+  const day=items.filter(it=>it.day===SELDAY);
+  document.getElementById('timeline').innerHTML=day.map(it=>{
+    const k=KIND[it.kind]||{e:'•'};
+    const stCls='st-'+(it._st==='past'?'done':it._st);
+    const tick=it._st==='done'?'✓':(it._st==='current'?'●':k.e);
+    const nowBadge=it._st==='current'?'<span class="badge-now">ORA</span>':'';
+    let acts='';
+    if(it.lat)acts+='<a href="'+mapsDir(it.lat,it.lng)+'" target="_blank" title="Vai">🧭</a>';
+    if(it.phone)acts+='<a href="tel:'+it.phone+'" title="Chiama">☎</a>';
+    if(it.book)acts+='<a href="'+it.book+'" target="_blank" title="Prenota">🎟️</a>';
+    if(it.track)acts+='<a href="'+it.track+'" target="_blank" title="Stato volo">📡</a>';
+    let rainChip='';
+    if(it.outdoor){const p=rainProb(it.start);if(p!=null&&p>=30){const col=p>=40?'var(--coral)':'var(--amber)';rainChip=' <span style="font-size:11px;font-weight:700;color:'+col+'">🌧️ '+p+'%</span>';}}
+    return '<div class="ti-row '+stCls+'">'+
+      '<button class="ti-tick" onclick="toggleDone(\''+it.id+'\')" title="Segna fatto">'+tick+'</button>'+
+      '<div class="ti-body"><div class="ti-time tnum">'+fmtHM(it._s)+nowBadge+'</div>'+
+      '<div class="ti-title">'+it.title+rainChip+'</div>'+
+      (it.note?'<div class="ti-note">'+it.note+'</div>':'')+'</div>'+
+      '<div class="ti-act">'+acts+'</div></div>';
+  }).join('');
+}
+
+function renderContacts(){
+  document.getElementById('contactsList').innerHTML='<div class="acts" style="flex-direction:column;align-items:stretch">'+
+    CONTACTS.map(c=>{const href=c.tel?'tel:'+c.tel:c.url;const tgt=c.url?' target="_blank"':'';
+      return '<a href="'+href+'"'+tgt+' style="display:flex;justify-content:space-between;text-align:left"><span>'+c.i+' '+c.n+'</span><span class="muted tnum">'+c.v+'</span></a>';}).join('')+'</div>';
+}
+
+function placeCard(it){
+  let acts='';
+  if(it.site)acts+='<a href="'+it.site+'" target="_blank">🔗 Sito</a>';
+  if(it.fork)acts+='<a class="prim" href="'+it.fork+'" target="_blank">🍴 TheFork</a>';
+  acts+='<a class="tealb" href="'+mapsAt(0,0,it.n+' Barcelona')+'" target="_blank">📍 Mappe</a>';
+  return '<div class="place-card"><h4>'+it.n+'</h4><div class="pa">'+it.a+'</div><div class="pd">'+it.d+'</div><div class="acts">'+acts+'</div></div>';
+}
+function renderDining(){
+  document.getElementById('ristList').innerHTML=DINING.rist.map(placeCard).join('');
+  document.getElementById('cocktailList').innerHTML=DINING.cocktail.map(placeCard).join('');
+}
+function nearMe(q){
+  const url=myPos?('https://www.google.com/maps/search/'+encodeURIComponent(q)+'/@'+myPos.lat+','+myPos.lng+',16z'):mapsAt(0,0,q+' Poblenou Barcelona');
+  window.open(url,'_blank');
+}
+function flightLiveCard(no,label){
+  const v=FSTATUS[no]; if(!v||!v.dep)return '';
+  const d=v.dep,a=v.arr||{}, head=v.bad?'var(--coral)':'var(--teal)';
+  return '<div class="flive"><div class="flive-h" style="color:'+head+'">'+label+' · '+no+' — '+(v.text||v.status||'')+'</div>'+
+    '<div class="flive-g">'+
+      '<div><b>Partenza</b><br>'+(d.airport||'')+' '+(d.sched||'')+(d.est&&d.est!==d.sched?(' → '+d.est):'')+'<br>Term '+(d.terminal||'–')+' · Gate '+(d.gate||'–')+'</div>'+
+      '<div><b>Arrivo</b><br>'+(a.airport||'')+' '+(a.sched||'')+(a.est&&a.est!==a.sched?(' → '+a.est):'')+'<br>Term '+(a.terminal||'–')+' · Nastro '+(a.belt||'–')+'</div>'+
+    '</div>'+(v.aircraft?('<div class="flive-x">✈️ '+v.aircraft+(v.updated?(' · agg. '+v.updated):'')+'</div>'):'')+'</div>';
+}
+function renderFlightDocs(){const el=document.getElementById('flightLive');if(el)el.innerHTML=flightLiveCard('FR2097','Andata')+flightLiveCard('FR5220','Ritorno');}
+
+/* ===== METEO ORARIO ===== */
+const WMO={0:'☀️',1:'🌤️',2:'⛅',3:'☁️',45:'🌫️',48:'🌫️',51:'🌦️',53:'🌦️',55:'🌧️',56:'🌧️',57:'🌧️',61:'🌧️',63:'🌧️',65:'🌧️',66:'🌧️',67:'🌧️',71:'🌨️',73:'🌨️',75:'❄️',80:'🌦️',81:'🌧️',82:'⛈️',85:'🌨️',86:'❄️',95:'⛈️',96:'⛈️',99:'⛈️'};
+function openWeather(){document.getElementById('weatherSheet').classList.add('on');loadWeather();}
+function closeWeather(){document.getElementById('weatherSheet').classList.remove('on');}
+function renderWxRows(H){
+  const m=new Date().toLocaleString('sv-SE',{timeZone:TZ}); // "adesso" a Barcellona, ISO comparabile
+  const cutoff=m.slice(0,10)+'T'+m.slice(11,13);
+  const rows=[];
+  for(let i=0;i<H.time.length&&rows.length<14;i++){
+    if(H.time[i].slice(0,13)<cutoff)continue;
+    rows.push({hh:H.time[i].slice(11,16),temp:Math.round(H.temperature_2m[i]),pop:H.precipitation_probability[i]||0,code:H.weather_code[i]});
+  }
+  return rows;
+}
+function paintWx(rows,note){
+  const res=document.getElementById('wxRes');
+  if(!rows.length){res.innerHTML='<div class="empty" style="margin-top:14px">Meteo non disponibile (sei offline?).</div>';return;}
+  const rain=rows.slice(0,8).find(r=>r.pop>=40);
+  document.getElementById('wxSub').textContent=(note?note+' · ':'')+(rain?('🌧️ Possibile pioggia verso le '+rain.hh):'☀️ Niente pioggia in vista nelle prossime ore');
+  res.innerHTML=rows.map(r=>{
+    const bar=r.pop>=40?'#ff7a4d':(r.pop>=20?'#ffb86b':'#2ec4b6');
+    return '<div class="wxrow"><span class="wh tnum">'+r.hh+'</span><span class="wi">'+(WMO[r.code]||'•')+'</span><span class="wt tnum">'+r.temp+'°</span><span class="wp"><span class="wpbar" style="width:'+Math.max(4,r.pop)+'%;background:'+bar+'"></span></span><span class="wpn tnum">'+r.pop+'%</span></div>';
+  }).join('');
+}
+function loadWeather(){
+  const res=document.getElementById('wxRes');res.innerHTML='<div class="empty" style="margin-top:14px">Carico…</div>';
+  fetch('https://api.open-meteo.com/v1/forecast?latitude=41.39&longitude=2.19&hourly=temperature_2m,precipitation_probability,weather_code&forecast_days=2&timezone='+TZ)
+   .then(r=>r.json()).then(d=>{WX=d.hourly;try{localStorage.setItem(WX_KEY,JSON.stringify({at:Date.now(),hourly:d.hourly}))}catch(e){}paintWx(renderWxRows(d.hourly));})
+   .catch(()=>{ if(WX&&WX.time)paintWx(renderWxRows(WX),'⚠️ offline'); else res.innerHTML='<div class="empty" style="margin-top:14px">Meteo non disponibile (sei offline?).</div>'; });
+}
+
+function renderAll(){renderNow();renderSoon();renderTimeline();}
+
+/* ============ RICERCA ============ */
+function searchIndex(){
+  const idx=[];
+  ITINERARY.forEach(it=>idx.push({i:(KIND[it.kind]||{e:'•'}).e,t:it.title,s:(DAYS[it.day]||'')+(it.note?' · '+it.note:''),href:it.lat?mapsDir(it.lat,it.lng):'#oggi',day:it.day}));
+  CONTACTS.forEach(c=>idx.push({i:c.i,t:c.n,s:c.v,href:c.tel?'tel:'+c.tel:c.url}));
+  [['🏨','H10 Marina','Hotel · Vila Olímpica','tel:+34933097917'],
+   ['📡','Stato volo andata FR2097','BLQ 06:20 → BCN 08:05','https://www.bologna-airport.it/voli/vola-da-bologna/voli-in-tempo-reale/?idC=62178'],
+   ['📡','Stato volo ritorno FR5220','BCN 23:05 → BLQ 00:50 · T2','https://www.aena.es/en/flight-info.html'],
+   ['🅿️','Parcheggio P2 Business','Codice P2932537 · €51','#docs'],
+   ['🎟️','Sagrada Família','Biglietto slot','https://sagradafamilia.org/']
+  ].forEach(d=>idx.push({i:d[0],t:d[1],s:d[2],href:d[3]}));
+  DINING.rist.forEach(it=>idx.push({i:'🍽️',t:it.n,s:it.a+' · '+it.d,href:it.fork||it.site||mapsAt(0,0,it.n+' Barcelona')}));
+  DINING.cocktail.forEach(it=>idx.push({i:'🍸',t:it.n,s:it.a+' · '+it.d,href:it.site||mapsAt(0,0,it.n+' Barcelona')}));
+  return idx;
+}
+const IDX=searchIndex();
+function openSearch(){document.getElementById('searchSheet').classList.add('on');setTimeout(()=>document.getElementById('searchInput').focus(),50);runSearch('');}
+function closeSearch(){document.getElementById('searchSheet').classList.remove('on');}
+function shareGuide(){
+  const url=location.href.split('#')[0];
+  const data={title:'Barcellona · I 40 di Ale',text:'La guida del weekend a Barcellona (16–18 ott)',url:url};
+  if(navigator.share){navigator.share(data).catch(()=>{});}
+  else if(navigator.clipboard){navigator.clipboard.writeText(url).then(()=>alert('Link della guida copiato!'),()=>prompt('Copia il link:',url));}
+  else{prompt('Copia il link:',url);}
+}
+function runSearch(q){
+  q=(q||'').trim().toLowerCase();
+  const res=document.getElementById('searchRes');
+  const list=!q?IDX:IDX.filter(x=>(x.t+' '+x.s).toLowerCase().includes(q));
+  if(!list.length){res.innerHTML='<div class="empty" style="margin-top:14px">Nessun risultato.</div>';return;}
+  res.innerHTML=list.map(x=>{const ext=x.href&&/^https?:/.test(x.href)?' target="_blank"':'';
+    return '<a class="sres" href="'+x.href+'"'+ext+' onclick="closeSearch()"><span class="si">'+x.i+'</span><span class="st"><b>'+x.t+'</b><small>'+x.s+'</small></span></a>';}).join('');
+}
+
+function openDet(id){const d=document.getElementById(id);if(d&&!d.open)d.open=true;}
+
+/* ============ LIVE: orologio, meteo, geo ============ */
+function tick(){try{document.getElementById('clock').textContent=new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit',timeZone:TZ});}catch(e){}}
+tick();setInterval(tick,15000);
+// Meteo con cache offline: mostra subito l'ultimo dato salvato, poi aggiorna da rete.
+const WX_KEY='bcn40_wx_v1',TEMP_KEY='bcn40_temp_v1';
+try{const c=JSON.parse(localStorage.getItem(WX_KEY)||'null');if(c&&c.hourly)WX=c.hourly;}catch(e){}
+try{const c=JSON.parse(localStorage.getItem(TEMP_KEY)||'null');if(c&&c.t!=null)document.getElementById('temp').textContent='🌡️ '+c.t+'°';}catch(e){}
+fetch('https://api.open-meteo.com/v1/forecast?latitude=41.39&longitude=2.19&current=temperature_2m')
+  .then(r=>r.json()).then(d=>{const t=Math.round(d.current.temperature_2m);document.getElementById('temp').textContent='🌡️ '+t+'°';try{localStorage.setItem(TEMP_KEY,JSON.stringify({at:Date.now(),t:t}))}catch(e){}}).catch(()=>{});
+fetch('https://api.open-meteo.com/v1/forecast?latitude=41.39&longitude=2.19&hourly=temperature_2m,precipitation_probability,weather_code&forecast_days=2&timezone='+TZ)
+  .then(r=>r.json()).then(d=>{WX=d.hourly;try{localStorage.setItem(WX_KEY,JSON.stringify({at:Date.now(),hourly:d.hourly}))}catch(e){}renderAll();}).catch(()=>{});
+function updateOnline(){const b=document.getElementById('offBadge');if(b)b.style.display=navigator.onLine?'none':'inline-block';}
+window.addEventListener('online',updateOnline);window.addEventListener('offline',updateOnline);updateOnline();
+fetch('flight-status.json?t='+Date.now()).then(r=>r.ok?r.json():null).then(d=>{if(d&&d.flights){FSTATUS=d.flights;renderNow();renderFlightDocs();}}).catch(()=>{});
+function askGeo(){if(myPos||!navigator.geolocation)return;navigator.geolocation.getCurrentPosition(p=>{myPos={lat:p.coords.latitude,lng:p.coords.longitude};renderNow();},()=>{},{timeout:8000,maximumAge:6e5});}
+addEventListener('pointerdown',askGeo,{once:true}); // posizione solo dopo un gesto, niente prompt all'apertura
+
+/* ===== Deep-link app native (FreeNow, TheFork, TripAdvisor): tenta lo schema dell'app,
+   poi ricade sul sito. Da PWA installata gli Universal Link non aprono le app: serve lo schema. */
+const APP_SCHEMES=[{host:'free-now.com',app:'freenow://'},{host:'thefork.',app:'thefork://'},{host:'tripadvisor.',app:'tripadvisor://'}];
+document.addEventListener('click',e=>{
+  const a=e.target.closest&&e.target.closest('a[href]'); if(!a)return;
+  const web=a.href, m=APP_SCHEMES.find(s=>web.includes(s.host)); if(!m)return;
+  e.preventDefault();
+  let opened=false;
+  const fb=setTimeout(()=>{if(!opened)location.href=web;},700); // app assente → sito
+  const cancel=()=>{opened=true;clearTimeout(fb);};             // app aperta → niente fallback
+  window.addEventListener('pagehide',cancel,{once:true});
+  document.addEventListener('visibilitychange',()=>{if(document.hidden)cancel();},{once:true});
+  location.href=m.app;
+},true);
+
+renderAll();
+renderContacts();
+renderDining();
+renderFlightDocs();
+setInterval(renderAll,60000);
+
+/* ============ MAPPA (lazy) ============ */
+let mapDone=false;
+document.getElementById('mappa').addEventListener('toggle',function(){
+  if(!this.open||mapDone||typeof L==='undefined')return;mapDone=true;
+  const pts=ITINERARY.filter(it=>it.lat).reduce((a,it)=>{a[it.place]=it;return a;},{});
+  const map=L.map('map',{scrollWheelZoom:false}).setView([41.388,2.14],12);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OpenStreetMap &copy; CARTO',maxZoom:19,subdomains:'abcd'}).addTo(map);
+  const g=[];
+  Object.values(pts).forEach(it=>{const c=(KIND[it.kind]||{c:'#fff'}).c;
+    L.circleMarker([it.lat,it.lng],{radius:8,color:'#0a0a0e',weight:2,fillColor:c,fillOpacity:1}).addTo(map)
+      .bindPopup('<b>'+it.place+'</b><br><a href="'+mapsDir(it.lat,it.lng)+'" target="_blank">📍 Indicazioni</a>');
+    g.push([it.lat,it.lng]);});
+  // locali di quartiere (cibo/notte)
+  DINING.rist.concat(DINING.cocktail).forEach(function(it){if(!it.lat)return;
+    var link=it.fork?(' · <a href="'+it.fork+'" target="_blank">TheFork</a>'):(it.site?(' · <a href="'+it.site+'" target="_blank">Sito</a>'):'');
+    var pop='<b>'+it.n+'</b><br>'+it.a+'<br><a href="'+mapsAt(0,0,it.n+' Barcelona')+'" target="_blank">📍 Mappe</a>'+link;
+    L.circleMarker([it.lat,it.lng],{radius:6,color:'#0a0a0e',weight:2,fillColor:'#f4ece0',fillOpacity:.95}).addTo(map).bindPopup(pop);});
+  map.fitBounds(g,{padding:[30,30]});
+});
+
+/* ============ NTFY (promemoria stomaco) ============ */
+const MEDS=[
+  ['2026-10-14T08:00:00','💊 Inizia il PPI (Nexium Control), 1/die a digiuno'],
+  ['2026-10-15T21:30:00','🎒 Prepara il kit + a letto presto'],
+  ['2026-10-16T08:30:00','💊 PPI + colazione proteica. Acqua sul volo'],
+  ['2026-10-17T09:00:00','💊 PPI. Oggi il 40°: mangia prima di bere, 1 drink/ora + acqua'],
+  ['2026-10-18T09:30:00','💊 PPI + oggi leggero (stasera guidi). Acqua+sali'],
+  ['2026-10-19T10:00:00','💊 Ultimo PPI + riposa']
+];
+function ntfyTopic(){return (document.getElementById('ntfyTopic').value||'').trim();}
+function ntfyMsg(m){document.getElementById('ntfyMsg').textContent=m;}
+function ntfyTest(){const t=ntfyTopic();if(!t){ntfyMsg('Scrivi prima il tuo topic.');return;}
+  fetch('https://ntfy.sh/'+encodeURIComponent(t),{method:'POST',headers:{'Title':'Barcellona · stomaco'},body:'✅ Funziona!'}).then(()=>ntfyMsg('Inviata! Controlla ntfy.')).catch(()=>ntfyMsg('Errore di invio.'));}
+function ntfyArm(){const t=ntfyTopic();if(!t){ntfyMsg('Scrivi prima il tuo topic.');return;}
+  const now=Date.now(),max=now+3*864e5;let n=0;
+  MEDS.forEach(m=>{const at=new Date(m[0]).getTime();if(at>now&&at<=max){fetch('https://ntfy.sh/'+encodeURIComponent(t),{method:'POST',headers:{'Title':'Barcellona · stomaco','At':String(Math.floor(at/1000))},body:m[1]});n++;}});
+  ntfyMsg(n?('Armati '+n+' promemoria dei prossimi 3 giorni.'):'Nessun promemoria nei prossimi 3 giorni — riapri più vicino alle date.');}
+
+/* ============ NOTIFICHE: architettura (pronta, no credenziali) ============ */
+window.Notifier={
+  browser:{available:'Notification'in window, async enable(){if(!('Notification'in window))return false;const p=await Notification.requestPermission();return p==='granted';}, send(t,b){if(window.Notification&&Notification.permission==='granted')new Notification(t,{body:b,icon:'icon-192.png'});}},
+  ntfy:{available:true, send:(topic,t,b)=>fetch('https://ntfy.sh/'+encodeURIComponent(topic),{method:'POST',headers:{'Title':t},body:b})},
+  telegram:{available:false, /* stub: richiede bot token + chat id, da configurare in futuro */ send(){console.warn('Telegram non configurato');}}
+};
+
+/* ============ Generatore inviti personalizzati (?nome) ============ */
+function openInvite(){
+  const ex=document.getElementById('extra'); if(ex)ex.open=true;
+  const inv=document.getElementById('invDet'); if(inv)inv.open=true;
+  setTimeout(()=>{const i=document.getElementById('invName'); if(i){i.scrollIntoView({behavior:'smooth',block:'center'});try{i.focus()}catch(e){}}},140);
+}
+function invUrl(){
+  const n=(document.getElementById('invName').value||'').trim();
+  const base=location.href.split('#')[0].split('?')[0].replace(/[^/]*$/,'')+'viaggio.html';
+  return n?base+'?nome='+encodeURIComponent(n):base;
+}
+function invUpd(){
+  const n=(document.getElementById('invName').value||'').trim(), u=invUrl();
+  document.getElementById('invLink').textContent=u;
+  const msg=(n?(n+', vieni'):'Vieni')+' ai miei 40 a Barcellona 🔵🔴 (16–18 ott 2026)\n'+u;
+  document.getElementById('invWa').href='https://wa.me/?text='+encodeURIComponent(msg);
+  document.getElementById('invMsg').textContent='';
+}
+function invCopy(){
+  const u=invUrl();
+  (navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject())
+    .then(()=>document.getElementById('invMsg').textContent='Link copiato ✓',
+          ()=>prompt('Copia il link:',u));
+}
+invUpd();
+
+/* ============ Service Worker ============ */
+if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 </script>
 </body>
 </html>

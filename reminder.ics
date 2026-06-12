@@ -1,0 +1,20 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Barcellona 40//Promemoria voli//IT
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:flights-bcn40-20260815@barcellona-40
+DTSTAMP:20260606T090000Z
+DTSTART;VALUE=DATE:20260815
+DTEND;VALUE=DATE:20260816
+SUMMARY:Controlla i voli per Barcellona (i 40 di Ale)
+DESCRIPTION:E' il momento giusto per iniziare a monitorare i voli per Barcellona (16-18 ott). Dettagli e prezzi: https://alessandrovizzini1986-a11y.github.io/barcellona-40/tour.html
+URL:https://alessandrovizzini1986-a11y.github.io/barcellona-40/tour.html
+BEGIN:VALARM
+TRIGGER:PT9H
+ACTION:DISPLAY
+DESCRIPTION:Controlla i voli per Barcellona
+END:VALARM
+END:VEVENT
+END:VCALENDAR

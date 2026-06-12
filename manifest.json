@@ -1,0 +1,17 @@
+{
+  "name": "Barcellona · I 40 di Ale",
+  "short_name": "Barça 40",
+  "description": "Weekend a Barcellona, 16–18 ottobre 2026.",
+  "lang": "it",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0e1f33",
+  "theme_color": "#0e1f33",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

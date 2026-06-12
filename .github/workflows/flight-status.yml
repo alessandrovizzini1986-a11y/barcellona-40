@@ -1,0 +1,48 @@
+name: Flight status
+
+on:
+  schedule:
+    # Ogni 30 minuti, ma SOLO il 16 e 18 ottobre (giorni dei voli). Orari UTC.
+    - cron: '*/30 * 16,18 10 *'
+  workflow_dispatch:
+    inputs:
+      flight:
+        description: 'Numero volo per test manuale (es. FR2097)'
+        required: false
+      date:
+        description: 'Data YYYY-MM-DD per test manuale'
+        required: false
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+
+      - name: Fetch flight status
+        env:
+          RAPIDAPI_KEY: ${{ secrets.RAPIDAPI_KEY }}
+          FORCE_FLIGHT: ${{ github.event.inputs.flight }}
+          FORCE_DATE: ${{ github.event.inputs.date }}
+        run: python3 fetch_flight_status.py
+
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add flight-status.json
+          if git diff --staged --quiet; then
+            echo "Nessun cambiamento"
+          else
+            git commit -m "Update flight status ($(date -u +%Y-%m-%dT%H:%MZ))"
+            git push
+          fi
