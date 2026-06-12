@@ -2,7 +2,7 @@
 // Strategia: precache della shell, poi stale-while-revalidate.
 // I dati dinamici (meteo, tile mappa) NON vengono cachati: restano live e fail-soft.
 
-const CACHE = 'bcn40-v73';
+const CACHE = 'bcn40-v74';
 
 const SHELL = [
   './',
@@ -19,9 +19,10 @@ const SHELL = [
   './icon-192.png',
   './icon-512.png',
   './apple-touch-icon.png',
+  './favicon-32.png',
   'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',
   'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js',
-  'https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400;1,9..144,600&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap'
+  'https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..600;1,6..96,400..600&family=Outfit:wght@300..600&display=swap'
 ];
 
 self.addEventListener('install', (e) => {

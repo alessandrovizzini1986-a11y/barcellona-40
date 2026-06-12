@@ -6,42 +6,48 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Barça 40">
-<meta name="theme-color" content="#08080b">
+<meta name="theme-color" content="#050507">
 <title>Barcellona · I 40 di Ale</title>
 <meta name="description" content="La guida del weekend a Barcellona per i 40 di Ale · 16–18 ottobre 2026.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/">
 <meta property="og:title" content="Barcellona · I 40 di Ale">
 <meta property="og:description" content="La guida del weekend: itinerario, voli, stato volo live, mappe e locali. 16–18 ottobre 2026.">
-<meta property="og:image" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/og-viaggio.jpg?v=4">
-<meta property="og:image:secure_url" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/og-viaggio.jpg?v=4">
+<meta property="og:image" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/og-viaggio.jpg?v=5">
+<meta property="og:image:secure_url" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/og-viaggio.jpg?v=5">
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:locale" content="it_IT">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/og-viaggio.jpg?v=4">
+<meta name="twitter:image" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/og-viaggio.jpg?v=5">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400;1,9..144,600&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..600;1,6..96,400..600&family=Outfit:wght@300..600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
   :root{
-    --bg:#08080b; --bg2:#15151c; --card:#16131d; --ink:#f3ede3; --muted:#99a1ac;
-    --coral:#ff7a4d; --amber:#ffb86b; --gold:#ffd486; --teal:#2ec4b6; --line:rgba(255,255,255,.12);
-    --done:#5b6270; --maxw:680px; --grad:linear-gradient(100deg,#ff5e2e,#ff9a3d 45%,#ffd486);
+    --night-0:#050507; --night-1:#0C0A11; --night-2:#16131C;
+    --gold-bright:#FFF3D6; --gold:#E9CE93; --gold-deep:#C9A24B; --gold-antique:#8A6D2F;
+    --ink:#F4EFE6; --muted:#A8A294; --teal:#2EC4B6; --ok:#2EC4B6;
+    --line:rgba(255,255,255,.08); --line-gold:rgba(233,206,147,.25);
+    --done:#6b6658; --maxw:680px;
+    --foil:linear-gradient(100deg,#8A6D2F 0%,#E9CE93 38%,#FFF3D6 50%,#E9CE93 62%,#8A6D2F 100%);
+    --bg:var(--night-0); --bg2:var(--night-2); --card:var(--night-2);
+    --coral:var(--gold-deep); --amber:var(--gold); --grad:var(--foil);
     --blau:#004D98; --grana:#A50044;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
-  body{background:var(--bg);color:var(--ink);font-family:"DM Sans",system-ui,sans-serif;line-height:1.5;
+  body{background:var(--bg);color:var(--ink);font-family:"Outfit",system-ui,sans-serif;line-height:1.5;
     -webkit-font-smoothing:antialiased;padding-bottom:calc(108px + env(safe-area-inset-bottom));overflow-x:hidden}
   .wrap{max-width:var(--maxw);margin:0 auto;padding:0 16px}
-  h1,h2,h3{font-family:"Fraunces",serif;font-weight:600;line-height:1.1;letter-spacing:-.01em}
+  h1,h2,h3{font-family:"Bodoni Moda",serif;font-weight:600;line-height:1.1;letter-spacing:-.01em}
   .accent{font-style:italic;font-weight:400;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
   a{color:inherit;text-decoration:none}
   button{font-family:inherit;color:inherit;cursor:pointer;border:none;background:none}
@@ -49,10 +55,10 @@
   .tnum{font-variant-numeric:tabular-nums}
 
   /* TOP BAR / STATUS */
-  .topbar{position:sticky;top:0;z-index:50;background:rgba(10,10,14,.85);
+  .topbar{position:sticky;top:0;z-index:50;background:rgba(5,5,7,.82);
     -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
   .topbar .row{display:flex;align-items:center;gap:10px;padding:9px 16px;max-width:var(--maxw);margin:0 auto}
-  .tbrand{display:flex;align-items:center;gap:7px;font-family:"Fraunces",serif;font-weight:600;font-size:14.5px;flex:none;margin-right:2px}
+  .tbrand{display:flex;align-items:center;gap:7px;font-family:"Bodoni Moda",serif;font-weight:600;font-size:14.5px;flex:none;margin-right:2px}
   .tcrest{width:16px;height:20px;border-radius:2px 2px 8px 8px;flex:none;
     background:linear-gradient(90deg,var(--blau) 0 50%,var(--grana) 50% 100%);box-shadow:0 1px 4px rgba(0,0,0,.5)}
   .status{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--muted);flex:1;min-width:0}
@@ -69,21 +75,21 @@
 
   /* ===== ADESSO (hero card) ===== */
   #adesso{margin-top:14px}
-  .now{background:linear-gradient(160deg,#1c1922,#141118);border:1px solid var(--line);border-radius:22px;
+  .now{background:linear-gradient(160deg,#16131C,#0C0A11);border:1px solid var(--line);border-radius:22px;
     padding:18px;box-shadow:0 12px 34px rgba(0,0,0,.28)}
   .now .lab{font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--teal);font-weight:800}
   .now .where{font-size:13px;color:var(--muted);margin-top:10px}
-  .now .place{font-family:"Fraunces",serif;font-size:26px;margin-top:1px;line-height:1.12}
+  .now .place{font-family:"Bodoni Moda",serif;font-size:26px;margin-top:1px;line-height:1.12}
   .now hr{border:none;border-top:1px solid var(--line);margin:15px 0}
   .now .nlab{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);font-weight:800}
-  .now .next{font-family:"Fraunces",serif;font-size:28px;margin-top:3px;line-height:1.1}
+  .now .next{font-family:"Bodoni Moda",serif;font-size:28px;margin-top:3px;line-height:1.1}
   .now .meta{display:flex;flex-wrap:wrap;gap:7px;margin-top:11px}
   .chip{display:inline-flex;align-items:center;gap:5px;font-size:13px;font-weight:700;padding:6px 11px;
     border-radius:11px;background:rgba(255,255,255,.06);border:1px solid var(--line);color:var(--ink)}
   .chip.big{font-size:15px}
   .chip .c{color:var(--muted);font-weight:600;font-size:12px}
   .go{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:14px;
-    background:var(--coral);color:#1a0d06;font-weight:800;font-size:16px;padding:15px;border-radius:14px}
+    background:var(--grad);color:#050507;font-weight:700;font-size:16px;padding:15px;border-radius:14px}
   .go:active{transform:translateY(1px)}
   .nrow{display:flex;gap:8px;margin-top:9px}
   .nrow .btn{flex:1;text-align:center;background:rgba(255,255,255,.05);border:1px solid var(--line);
@@ -121,8 +127,8 @@
   .ti-act a{width:44px;height:44px;border-radius:11px;background:rgba(255,255,255,.05);
     border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:15px}
   /* states */
-  .st-current .ti-tick{border-color:var(--coral);background:var(--coral);color:#1a0d06}
-  .st-current{background:rgba(255,122,77,.05);margin:0 -10px;padding-left:10px;padding-right:10px;border-radius:12px}
+  .st-current .ti-tick{border-color:var(--coral);background:var(--coral);color:#050507}
+  .st-current{background:rgba(233,206,147,.06);margin:0 -10px;padding-left:10px;padding-right:10px;border-radius:12px}
   .st-current .ti-title{color:var(--coral)}
   .st-done .ti-tick{border-color:var(--teal);background:var(--teal);color:#08231f}
   .st-done .ti-title{color:var(--done);text-decoration:line-through}
@@ -143,20 +149,20 @@
   /* DOC / generic cards */
   .doc{background:var(--bg2);border:1px solid var(--line);border-radius:13px;padding:13px 14px;margin:9px 0}
   .doc .dt{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--amber);font-weight:800}
-  .doc h4{font-family:"Fraunces",serif;font-size:18px;font-weight:600;margin:3px 0 2px}
+  .doc h4{font-family:"Bodoni Moda",serif;font-size:18px;font-weight:600;margin:3px 0 2px}
   .doc p{font-size:13.5px;color:#dfe7f0;margin:3px 0}
   .doc .kv{font-size:13px;color:var(--muted)}
   .doc .kv b{color:var(--ink)}
   .acts{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px}
   .acts a,.acts button{font-size:12.5px;font-weight:700;padding:8px 11px;border-radius:10px;background:rgba(255,255,255,.05);
     border:1px solid var(--line)}
-  .acts a.prim,.acts button.prim{background:var(--coral);border-color:var(--coral);color:#1a0d06}
+  .acts a.prim,.acts button.prim{background:var(--grad);border-color:transparent;color:#050507}
   .acts a.tealb,.acts button.tealb{background:rgba(46,196,182,.14);border-color:rgba(46,196,182,.3);color:var(--teal)}
 
   ul.tight{margin:6px 0 2px;list-style:none}
   ul.tight li{font-size:13.8px;color:#dfe7f0;padding:4px 0 4px 17px;position:relative}
   ul.tight li::before{content:"";position:absolute;left:3px;top:11px;width:6px;height:6px;border-radius:50%;background:var(--coral)}
-  .note{border-left:3px solid var(--amber);background:rgba(255,184,107,.06);padding:10px 13px;
+  .note{border-left:3px solid var(--amber);background:rgba(233,206,147,.06);padding:10px 13px;
     border-radius:0 11px 11px 0;margin:11px 0;font-size:13.5px;color:#e9eef4}
   .note b{color:var(--amber)}
   .grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}
@@ -165,25 +171,25 @@
   .gbtn .gs{font-size:11.5px;color:var(--muted);margin-top:2px}
   table.bud{width:100%;border-collapse:collapse;font-size:13.5px;margin:4px 0 10px}
   table.bud td{padding:8px 0;border-bottom:1px solid var(--line)}
-  table.bud .tot td{font-family:"Fraunces",serif;font-size:17px;font-weight:700;border-bottom:none;color:var(--amber)}
+  table.bud .tot td{font-family:"Bodoni Moda",serif;font-size:17px;font-weight:700;border-bottom:none;color:var(--amber)}
   input.fld{width:100%;padding:11px 12px;border-radius:10px;border:1px solid var(--line);
-    background:rgba(255,255,255,.04);color:var(--ink);font-size:14px;font-family:"DM Sans",sans-serif}
+    background:rgba(255,255,255,.04);color:var(--ink);font-size:14px;font-family:"Outfit",sans-serif}
 
   /* MAP */
   #map{height:340px;border-radius:14px;border:1px solid var(--line);margin-top:4px;z-index:0}
-  .leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#17141d;color:var(--ink)}
-  .leaflet-popup-content{font-family:"DM Sans",sans-serif;font-size:13px}
+  .leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#16131C;color:var(--ink)}
+  .leaflet-popup-content{font-family:"Outfit",sans-serif;font-size:13px}
   .leaflet-popup-content a{color:var(--coral);font-weight:700}
   .legend{display:flex;flex-wrap:wrap;gap:11px;font-size:11.5px;color:var(--muted);margin:8px 0 2px}
   .legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px;border:1px solid rgba(0,0,0,.4)}
 
   /* SEARCH OVERLAY */
-  .sheet{position:fixed;inset:0;z-index:200;background:rgba(8,18,30,.97);
+  .sheet{position:fixed;inset:0;z-index:200;background:rgba(5,5,7,.97);
     -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);display:none;flex-direction:column}
   .sheet.on{display:flex}
   .sheet .bar{display:flex;gap:9px;padding:14px 16px;border-bottom:1px solid var(--line)}
   .sheet input{flex:1;font-size:16px;padding:13px 14px;border-radius:12px;border:1px solid var(--line);
-    background:var(--card);color:var(--ink);font-family:"DM Sans",sans-serif}
+    background:var(--card);color:var(--ink);font-family:"Outfit",sans-serif}
   .sheet .close{font-size:15px;font-weight:700;color:var(--muted);padding:0 6px}
   .sheet .res{overflow:auto;padding:8px 16px 30px}
   .sres{display:flex;align-items:center;gap:12px;padding:13px 4px;border-bottom:1px solid var(--line)}
@@ -193,11 +199,11 @@
   .sres .st small{display:block;color:var(--muted);font-size:12.5px}
 
   /* PLAN B (pioggia) nella card Adesso */
-  .now .planb{margin-top:12px;background:rgba(255,122,77,.13);border:1px solid rgba(255,122,77,.32);
-    color:#ffd9c9;border-radius:12px;padding:10px 13px;font-size:13px;font-weight:600}
+  .now .planb{margin-top:12px;background:rgba(233,206,147,.12);border:1px solid var(--line-gold);
+    color:#f0e4c8;border-radius:12px;padding:10px 13px;font-size:13px;font-weight:600}
 
   /* DOCK fisso: quick-bar + bottom nav, sempre visibili */
-  .dock{position:fixed;left:0;right:0;bottom:0;z-index:60;background:rgba(10,10,14,.94);
+  .dock{position:fixed;left:0;right:0;bottom:0;z-index:60;background:rgba(5,5,7,.92);
     -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-top:1px solid var(--line);
     padding-bottom:env(safe-area-inset-bottom);max-width:var(--maxw);margin:0 auto}
   .quickbar{display:flex;gap:6px;padding:7px 9px 0}
@@ -222,7 +228,7 @@
   .qrow a,.qrow button{font-size:12.5px;font-weight:700;padding:9px 12px;border-radius:11px;
     background:rgba(46,196,182,.14);border:1px solid rgba(46,196,182,.3);color:var(--teal)}
   .place-card{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:11px 13px;margin:8px 0}
-  .place-card h4{font-family:"DM Sans",sans-serif;font-size:15px;font-weight:700}
+  .place-card h4{font-family:"Outfit",sans-serif;font-size:15px;font-weight:700}
   .place-card .pa{font-size:12px;color:var(--muted);margin-top:1px}
   .place-card .pd{font-size:13px;color:#dfe7f0;margin-top:3px}
 
@@ -241,31 +247,38 @@
   .botnav .on{color:var(--amber)}
 
   footer{text-align:center;padding:34px 0 20px;color:var(--muted)}
-  footer .sig{font-family:"Fraunces",serif;font-style:italic;font-size:clamp(22px,7vw,30px);color:var(--ink);font-weight:600}
+  footer .sig{font-family:"Bodoni Moda",serif;font-style:italic;font-size:clamp(22px,7vw,30px);color:var(--ink);font-weight:600}
   footer .sig b{font-style:normal;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
-  footer .htag{margin-top:10px;font-family:"Fraunces",serif;font-weight:600;font-size:14px;
+  footer .htag{margin-top:10px;font-family:"Bodoni Moda",serif;font-weight:600;font-size:14px;
     background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
   /* banner ospite in stile firma */
   .guestcta{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px;padding:14px 16px;
-    border-radius:15px;border:1px solid rgba(255,170,120,.3);
-    background:linear-gradient(100deg,rgba(255,94,46,.14),rgba(255,212,134,.07));
-    box-shadow:0 14px 34px -20px rgba(255,120,60,.6)}
+    border-radius:15px;border:1px solid var(--line-gold);
+    background:linear-gradient(100deg,rgba(233,206,147,.12),rgba(201,162,75,.06));
+    box-shadow:0 14px 34px -20px rgba(201,162,75,.5)}
   .guestcta:active{transform:translateY(1px)}
   .guestcta .gc-l{display:flex;align-items:center;gap:12px;min-width:0}
   .guestcta .gc-ic{font-size:21px;flex:none}
   .guestcta .gc-tx{font-weight:700;font-size:14.5px;color:var(--ink);line-height:1.2}
   .guestcta .gc-tx small{display:block;font-weight:500;font-size:12px;color:var(--muted);margin-top:2px}
-  .guestcta .gc-ar{flex:none;font-size:17px;font-weight:700;color:#08080b;background:var(--grad);
+  .guestcta .gc-ar{flex:none;font-size:17px;font-weight:700;color:#050507;background:var(--grad);
     width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+  .aurora{position:fixed;inset:0;z-index:-2;pointer-events:none;background:
+    radial-gradient(90% 55% at 70% -10%,rgba(233,206,147,.07),transparent 60%),
+    radial-gradient(80% 50% at 15% 110%,rgba(0,77,152,.06),transparent 60%),var(--night-0)}
+  .grain{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
 </style>
 </head>
 <body>
+<div class="aurora"></div>
+<div class="grain"></div>
 
 <!-- STATUS BAR -->
 <div class="topbar">
   <div class="row">
     <span class="tbrand"><span class="tcrest"></span>40</span>
-    <div class="status"><span class="dot"></span><span id="phase">—</span> · <b id="clock" class="tnum">--:--</b> · <span id="temp" onclick="openWeather()" title="Andamento orario della giornata">🌡️ ~22°</span><span id="offBadge" style="display:none;margin-left:8px;font-size:11px;font-weight:700;color:var(--amber);border:1px solid rgba(255,184,107,.45);border-radius:6px;padding:1px 6px">offline</span></div>
+    <div class="status"><span class="dot"></span><span id="phase">—</span> · <b id="clock" class="tnum">--:--</b> · <span id="temp" onclick="openWeather()" title="Andamento orario della giornata">🌡️ ~22°</span><span id="offBadge" style="display:none;margin-left:8px;font-size:11px;font-weight:700;color:var(--amber);border:1px solid var(--line-gold);border-radius:6px;padding:1px 6px">offline</span></div>
     <button class="searchbtn" onclick="shareGuide()" aria-label="Condividi la guida">📤</button>
     <button class="searchbtn" onclick="openSearch()" aria-label="Cerca">🔎</button>
   </div>
@@ -375,9 +388,9 @@
     <summary><span class="ic">📍</span> Mappa <span class="caret">▸</span></summary>
     <div class="det-body">
       <div class="legend">
-        <span><i style="background:#ff7a4d"></i> Base</span>
+        <span><i style="background:#C9A24B"></i> Base</span>
         <span><i style="background:#2ec4b6"></i> Mare / Spa</span>
-        <span><i style="background:#ffb86b"></i> Musei</span>
+        <span><i style="background:#E9CE93"></i> Musei</span>
         <span><i style="background:#f4ece0"></i> Cibo / Notte</span>
         <span><i style="background:#9db1c6"></i> Aeroporto</span>
       </div>
@@ -401,7 +414,7 @@
             <a id="invWa" class="prim" target="_blank" rel="noopener">💬 Invia su WhatsApp</a>
           </div>
           <p class="muted" id="invMsg" style="font-size:12px;margin-top:6px"></p>
-          <a href="condividi.html" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:11px;padding:12px 14px;border-radius:12px;background:linear-gradient(100deg,rgba(255,94,46,.13),rgba(255,212,134,.06));border:1px solid rgba(255,170,120,.3);font-weight:700;font-size:13.5px">✨ Apri il Kit condivisione · carte pronte<span style="font-size:16px">→</span></a>
+          <a href="condividi.html" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:11px;padding:12px 14px;border-radius:12px;background:linear-gradient(100deg,rgba(233,206,147,.12),rgba(201,162,75,.06));border:1px solid var(--line-gold);font-weight:700;font-size:13.5px">✨ Apri il Kit condivisione · carte pronte<span style="font-size:16px">→</span></a>
         </div>
       </details>
 
@@ -544,9 +557,9 @@ const DAYS={'16':'Venerdì 16 ott','17':'Sabato 17 ott · 40°','18':'Domenica 1
 
 // kind → emoji/categoria; color per mappa
 const KIND={
-  flight:{e:'✈️',c:'#9db1c6'}, transfer:{e:'🚕',c:'#9db1c6'}, work:{e:'💻',c:'#ff7a4d'},
-  food:{e:'🍽️',c:'#f4ece0'}, sight:{e:'🏛️',c:'#ffb86b'}, spa:{e:'🧖',c:'#2ec4b6'},
-  sea:{e:'🏖️',c:'#2ec4b6'}, night:{e:'🍸',c:'#f4ece0'}, admin:{e:'🚿',c:'#9db1c6'}, base:{e:'🏨',c:'#ff7a4d'}
+  flight:{e:'✈️',c:'#9db1c6'}, transfer:{e:'🚕',c:'#9db1c6'}, work:{e:'💻',c:'#C9A24B'},
+  food:{e:'🍽️',c:'#f4ece0'}, sight:{e:'🏛️',c:'#E9CE93'}, spa:{e:'🧖',c:'#2ec4b6'},
+  sea:{e:'🏖️',c:'#2ec4b6'}, night:{e:'🍸',c:'#f4ece0'}, admin:{e:'🚿',c:'#9db1c6'}, base:{e:'🏨',c:'#C9A24B'}
 };
 
 const ITINERARY=[
@@ -717,7 +730,7 @@ function renderNow(){
   if(fItem&&fItem.flightNo)flightStatus(fItem.flightNo,fItem.fdate).then(v=>{
     if(!v)return;const b=document.getElementById('flightStatusBtn');if(!b)return;
     b.innerHTML='📡 '+v.text;
-    if(v.bad){b.style.background='rgba(255,122,77,.18)';b.style.borderColor='rgba(255,122,77,.5)';b.style.color='var(--coral)';}
+    if(v.bad){b.style.background='rgba(233,206,147,.16)';b.style.borderColor='rgba(233,206,147,.5)';b.style.color='var(--coral)';}
     else{b.style.background='rgba(46,196,182,.16)';b.style.borderColor='rgba(46,196,182,.45)';b.style.color='var(--teal)';}
   });
 
@@ -821,7 +834,7 @@ function paintWx(rows,note){
   const rain=rows.slice(0,8).find(r=>r.pop>=40);
   document.getElementById('wxSub').textContent=(note?note+' · ':'')+(rain?('🌧️ Possibile pioggia verso le '+rain.hh):'☀️ Niente pioggia in vista nelle prossime ore');
   res.innerHTML=rows.map(r=>{
-    const bar=r.pop>=40?'#ff7a4d':(r.pop>=20?'#ffb86b':'#2ec4b6');
+    const bar=r.pop>=40?'#C9A24B':(r.pop>=20?'#E9CE93':'#2ec4b6');
     return '<div class="wxrow"><span class="wh tnum">'+r.hh+'</span><span class="wi">'+(WMO[r.code]||'•')+'</span><span class="wt tnum">'+r.temp+'°</span><span class="wp"><span class="wpbar" style="width:'+Math.max(4,r.pop)+'%;background:'+bar+'"></span></span><span class="wpn tnum">'+r.pop+'%</span></div>';
   }).join('');
 }
@@ -917,14 +930,14 @@ document.getElementById('mappa').addEventListener('toggle',function(){
   L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OpenStreetMap &copy; CARTO',maxZoom:19,subdomains:'abcd'}).addTo(map);
   const g=[];
   Object.values(pts).forEach(it=>{const c=(KIND[it.kind]||{c:'#fff'}).c;
-    L.circleMarker([it.lat,it.lng],{radius:8,color:'#0a0a0e',weight:2,fillColor:c,fillOpacity:1}).addTo(map)
+    L.circleMarker([it.lat,it.lng],{radius:8,color:'#050507',weight:2,fillColor:c,fillOpacity:1}).addTo(map)
       .bindPopup('<b>'+it.place+'</b><br><a href="'+mapsDir(it.lat,it.lng)+'" target="_blank">📍 Indicazioni</a>');
     g.push([it.lat,it.lng]);});
   // locali di quartiere (cibo/notte)
   DINING.rist.concat(DINING.cocktail).forEach(function(it){if(!it.lat)return;
     var link=it.fork?(' · <a href="'+it.fork+'" target="_blank">TheFork</a>'):(it.site?(' · <a href="'+it.site+'" target="_blank">Sito</a>'):'');
     var pop='<b>'+it.n+'</b><br>'+it.a+'<br><a href="'+mapsAt(0,0,it.n+' Barcelona')+'" target="_blank">📍 Mappe</a>'+link;
-    L.circleMarker([it.lat,it.lng],{radius:6,color:'#0a0a0e',weight:2,fillColor:'#f4ece0',fillOpacity:.95}).addTo(map).bindPopup(pop);});
+    L.circleMarker([it.lat,it.lng],{radius:6,color:'#050507',weight:2,fillColor:'#f4ece0',fillOpacity:.95}).addTo(map).bindPopup(pop);});
   map.fitBounds(g,{padding:[30,30]});
 });
 

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#08080b">
+<meta name="theme-color" content="#050507">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Barça 40">
@@ -13,58 +13,67 @@
 <meta property="og:url" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/teasers.html">
 <meta property="og:title" content="I teaser · I 40 di Ale">
 <meta property="og:description" content="Tutti i video dei 40 di Ale a Barcellona, in un posto solo.">
-<meta property="og:image" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/og-teaser1.jpg?v=2">
+<meta property="og:image" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/og-teaser1.jpg?v=5">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:locale" content="it_IT">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/og-teaser1.jpg?v=2">
+<meta name="twitter:image" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/og-teaser1.jpg?v=5">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,600&family=DM+Sans:opsz,wght@9..40,500;9..40,700;9..40,800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..600;1,6..96,400..600&family=Outfit:wght@300..600&display=swap" rel="stylesheet">
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
-  :root{--bg:#08080b;--ink:#f3ede3;--muted:#99a1ac;--coral:#ff7a4d;--gold:#ffd486;
-    --line:rgba(255,255,255,.12);--grad:linear-gradient(100deg,#ff5e2e,#ff9a3d 45%,#ffd486);--blau:#004D98;--grana:#A50044}
-  html,body{background:var(--bg);color:var(--ink);font-family:"DM Sans",system-ui,sans-serif;-webkit-font-smoothing:antialiased;line-height:1.5}
-  body{background-image:radial-gradient(120% 60% at 50% 0%,rgba(255,110,48,.10),transparent 60%);min-height:100svh}
+  :root{--night-0:#050507;--night-1:#0C0A11;--night-2:#16131C;
+    --gold-bright:#FFF3D6;--gold:#E9CE93;--gold-deep:#C9A24B;--gold-antique:#8A6D2F;
+    --ink:#F4EFE6;--muted:#A8A294;--line:rgba(255,255,255,.08);--line-gold:rgba(233,206,147,.25);
+    --foil:linear-gradient(100deg,#8A6D2F 0%,#E9CE93 38%,#FFF3D6 50%,#E9CE93 62%,#8A6D2F 100%);
+    --bg:var(--night-0);--coral:var(--gold-deep);--grad:var(--foil);--blau:#004D98;--grana:#A50044}
+  html,body{background:var(--bg);color:var(--ink);font-family:"Outfit",system-ui,sans-serif;-webkit-font-smoothing:antialiased;line-height:1.5}
+  body{background-image:radial-gradient(90% 60% at 70% -10%,rgba(233,206,147,.08),transparent 60%),radial-gradient(80% 50% at 15% 110%,rgba(0,77,152,.06),transparent 60%);min-height:100svh}
   a{text-decoration:none;color:inherit}
   .wrap{max-width:760px;margin:0 auto;padding:calc(28px + env(safe-area-inset-top)) 20px 70px}
   .back{display:inline-flex;align-items:center;gap:6px;color:var(--muted);font-size:13.5px;font-weight:600;margin-bottom:20px}
   .eyebrow{display:inline-flex;align-items:center;gap:9px;color:var(--coral);font-weight:700;font-size:12px;letter-spacing:.2em;text-transform:uppercase}
   .eyebrow::before{content:"";width:22px;height:1px;background:linear-gradient(90deg,transparent,var(--coral))}
-  h1{font-family:"Fraunces",serif;font-weight:600;font-size:clamp(38px,11vw,60px);margin-top:14px;line-height:1;letter-spacing:-.03em}
+  h1{font-family:"Bodoni Moda",serif;font-weight:600;font-size:clamp(38px,11vw,60px);margin-top:14px;line-height:1;letter-spacing:-.03em}
   h1 em{font-style:italic;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
   .sub{color:#c3c8d0;margin-top:14px;font-size:16px;max-width:40ch}
   .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:30px}
   .card{position:relative;display:block;border-radius:18px;overflow:hidden;border:1px solid var(--line);
-    background:#15151c;aspect-ratio:9/16;box-shadow:0 18px 40px -22px rgba(0,0,0,.9);transition:transform .25s}
+    background:#16131C;aspect-ratio:9/16;box-shadow:0 18px 40px -22px rgba(0,0,0,.9);transition:transform .25s}
   .card:active{transform:scale(.985)}
   .card.feat{grid-column:1 / -1;aspect-ratio:16/10}
   .card img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s}
   .card:hover img{transform:scale(1.05)}
-  .ov{position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,8,11,.05) 38%,rgba(8,8,11,.92));
+  .ov{position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,5,7,.05) 38%,rgba(5,5,7,.92));
     display:flex;flex-direction:column;justify-content:flex-end;padding:15px}
-  .ov .t{font-family:"Fraunces",serif;font-weight:600;font-size:19px;line-height:1.08}
+  .ov .t{font-family:"Bodoni Moda",serif;font-weight:600;font-size:19px;line-height:1.08}
   .ov .d{color:#c9cdd3;font-size:12.5px;margin-top:3px}
   .play{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:56px;height:56px;border-radius:50%;
-    background:rgba(8,8,11,.45);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);border:1.5px solid rgba(255,255,255,.6);
+    background:rgba(5,5,7,.45);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);border:1.5px solid rgba(255,255,255,.6);
     display:flex;align-items:center;justify-content:center;font-size:19px;color:#fff;padding-left:3px;transition:transform .2s,background .2s}
-  .card:hover .play{background:rgba(255,122,77,.9);transform:translate(-50%,-50%) scale(1.06)}
-  .badge{position:absolute;top:11px;left:11px;z-index:2;background:var(--coral);color:#08080b;font-weight:800;font-size:11px;
+  .card:hover .play{background:rgba(233,206,147,.9);transform:translate(-50%,-50%) scale(1.06)}
+  .badge{position:absolute;top:11px;left:11px;z-index:2;background:var(--coral);color:#050507;font-weight:600;font-size:11px;
     padding:4px 10px;border-radius:980px;letter-spacing:.04em}
-  .num{position:absolute;top:11px;right:12px;z-index:2;font-family:"Fraunces",serif;font-weight:600;font-size:13px;color:var(--gold);
-    background:rgba(8,8,11,.55);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);border:1px solid var(--line);border-radius:8px;padding:2px 8px}
+  .num{position:absolute;top:11px;right:12px;z-index:2;font-family:"Bodoni Moda",serif;font-weight:600;font-size:13px;color:var(--gold);
+    background:rgba(5,5,7,.55);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);border:1px solid var(--line-gold);border-radius:8px;padding:2px 8px}
   .foot{margin-top:34px;text-align:center}
-  .foot .cta{display:inline-flex;align-items:center;gap:8px;background:var(--grad);color:#08080b;font-weight:800;font-size:16px;padding:14px 26px;border-radius:980px}
+  .foot .cta{display:inline-flex;align-items:center;gap:8px;background:var(--grad);color:#050507;font-weight:600;font-size:16px;padding:14px 26px;border-radius:980px}
   .foot .muted{color:var(--muted);font-size:13px;margin-top:14px}
-  .foot .tag{font-family:"Fraunces",serif;font-weight:600;font-size:14px;margin-top:6px;
+  .foot .tag{font-family:"Bodoni Moda",serif;font-weight:600;font-size:14px;margin-top:6px;
     background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .aurora{position:fixed;inset:0;z-index:-2;pointer-events:none;background:var(--night-0)}
+  .grain{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
 </style>
 </head>
 <body>
+<div class="aurora"></div>
+<div class="grain"></div>
 <div class="wrap" data-screen-label="Gallery teaser">
   <a class="back" href="viaggio.html">‹ Torna alla presentazione</a>
   <div class="eyebrow">I 40 di Ale · Barcellona</div>
