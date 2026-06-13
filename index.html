@@ -69,20 +69,20 @@
   .searchbtn{flex:none;width:44px;height:44px;border-radius:11px;background:rgba(255,255,255,.06);
     border:1px solid var(--line);font-size:16px;display:flex;align-items:center;justify-content:center}
 
-  /* SECTION HEADERS */
-  .seclab{display:flex;align-items:center;gap:9px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--coral);font-weight:700;margin:24px 2px 9px}
-  .seclab::before{content:"";width:20px;height:1px;background:linear-gradient(90deg,transparent,var(--coral));flex:none}
+  /* SECTION HEADERS — sussurrati: gridi solo "Adesso" */
+  .seclab{display:flex;align-items:center;gap:9px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);font-weight:600;margin:34px 2px 11px}
+  .seclab::before{content:"";width:18px;height:1px;background:linear-gradient(90deg,transparent,var(--line-gold));flex:none}
 
-  /* ===== ADESSO (hero card) ===== */
-  #adesso{margin-top:14px}
-  .now{background:linear-gradient(160deg,#16131C,#0C0A11);border:1px solid var(--line);border-radius:22px;
-    padding:18px;box-shadow:0 12px 34px rgba(0,0,0,.28)}
-  .now .lab{font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--teal);font-weight:800}
-  .now .where{font-size:13px;color:var(--muted);margin-top:10px}
-  .now .place{font-family:"Bodoni Moda",serif;font-size:26px;margin-top:1px;line-height:1.12}
-  .now hr{border:none;border-top:1px solid var(--line);margin:15px 0}
-  .now .nlab{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);font-weight:800}
-  .now .next{font-family:"Bodoni Moda",serif;font-size:28px;margin-top:3px;line-height:1.1}
+  /* ===== ADESSO (hero card) — il palco: una cosa sola in primo piano ===== */
+  #adesso{margin-top:20px}
+  .now{background:linear-gradient(160deg,#16131C,#0C0A11);border:1px solid var(--line-gold);border-radius:24px;
+    padding:28px 24px;box-shadow:0 24px 60px -28px rgba(0,0,0,.85),0 0 44px -12px rgba(233,206,147,.18)}
+  .now .lab{font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--teal);font-weight:700}
+  .now .where{font-size:13px;color:var(--muted);margin-top:14px}
+  .now .place{font-family:"Bodoni Moda",serif;font-size:clamp(30px,8.5vw,36px);margin-top:3px;line-height:1.08}
+  .now hr{border:none;border-top:1px solid var(--line);margin:20px 0}
+  .now .nlab{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);font-weight:700}
+  .now .next{font-family:"Bodoni Moda",serif;font-size:clamp(32px,9vw,40px);margin-top:4px;line-height:1.05}
   .now .meta{display:flex;flex-wrap:wrap;gap:7px;margin-top:11px}
   .chip{display:inline-flex;align-items:center;gap:5px;font-size:13px;font-weight:700;padding:6px 11px;
     border-radius:11px;background:rgba(255,255,255,.06);border:1px solid var(--line);color:var(--ink)}
@@ -294,7 +294,6 @@
 
   <!-- ADESSO -->
   <section id="adesso">
-    <div class="seclab">Adesso</div>
     <div class="now" id="nowCard"><div class="muted">caricamento…</div></div>
   </section>
 
