@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#050507">
+<meta name="robots" content="noindex,nofollow">
+<meta name="apple-mobile-web-app-title" content="Alloggi · Ale 40">
+<title>Dove dormiamo · I 40 di Ale</title>
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..600;1,6..96,400..600&family=Outfit:wght@300..600&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --night-0:#050507;--night-1:#0C0A11;--night-2:#16131C;
+    --gold-bright:#FFF3D6;--gold:#E9CE93;--gold-deep:#C9A24B;--gold-antique:#8A6D2F;
+    --ink:#F4EFE6;--muted:#A8A294;--ok:#2EC4B6;--blau:#004D98;--grana:#A50044;
+    --line:rgba(255,255,255,.08);--line-gold:rgba(233,206,147,.25);
+    --foil:linear-gradient(100deg,#8A6D2F 0%,#E9CE93 38%,#FFF3D6 50%,#E9CE93 62%,#8A6D2F 100%);
+    --shadow-card:0 24px 60px -28px rgba(0,0,0,.85);--glow-cta:0 16px 44px -14px rgba(201,162,75,.55);
+  }
+  html{scroll-behavior:smooth;background:var(--night-0)}
+  body{background:var(--night-0);color:var(--ink);font-family:"Outfit",system-ui,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  h1,h2,h3{font-family:"Bodoni Moda",Georgia,serif;font-weight:500;line-height:1.04;letter-spacing:-.01em}
+  a{color:inherit;text-decoration:none}
+  .aurora{position:fixed;inset:0;z-index:-2;pointer-events:none;background:
+    radial-gradient(90% 60% at 70% -10%,rgba(233,206,147,.08),transparent 60%),
+    radial-gradient(80% 50% at 15% 110%,rgba(0,77,152,.06),transparent 60%),var(--night-0)}
+  .grain{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+  .wrap{max-width:600px;margin:0 auto;padding:calc(30px + env(safe-area-inset-top)) 20px 70px}
+  .eyebrow{display:inline-flex;align-items:center;gap:9px;color:var(--gold);font-weight:600;font-size:11px;letter-spacing:.2em;text-transform:uppercase}
+  .eyebrow::before{content:"";width:20px;height:1px;background:linear-gradient(90deg,transparent,var(--gold-deep))}
+  h1{font-size:clamp(36px,11vw,52px);margin-top:14px}
+  h1 em{font-style:italic;background:var(--foil);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .lead{color:#c6c1b4;margin-top:14px;font-size:15.5px;max-width:42ch}
+  .facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+  .fact{display:inline-flex;align-items:center;gap:6px;background:rgba(233,206,147,.06);border:1px solid var(--line-gold);
+    border-radius:999px;padding:7px 13px;font-size:12.5px;font-weight:500;color:#f0e4c8}
+  .engines{display:flex;flex-direction:column;gap:9px;margin-top:20px}
+  .eng{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;border-radius:14px;
+    background:linear-gradient(100deg,rgba(233,206,147,.1),rgba(201,162,75,.04));border:1px solid var(--line-gold);font-weight:600;font-size:14px}
+  .eng small{display:block;font-weight:400;font-size:11.5px;color:var(--muted);margin-top:2px;letter-spacing:.02em}
+  .eng .go{flex:none;color:#050507;background:var(--foil);width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700}
+  .seclab{display:flex;align-items:baseline;gap:9px;font-family:"Bodoni Moda",serif;font-size:22px;margin:38px 2px 4px}
+  .seclab .n{margin-left:auto;font-family:"Outfit";font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:600}
+  .sechint{color:var(--muted);font-size:12.5px;margin:0 2px 14px}
+  .card{display:block;background:var(--night-2);border:1px solid var(--line);border-radius:16px;padding:15px 16px;margin-bottom:11px;
+    box-shadow:var(--shadow-card);transition:transform .18s,border-color .18s}
+  .card:active{transform:scale(.99)}
+  .card.near{border-color:var(--line-gold)}
+  .card .top{display:flex;align-items:flex-start;gap:10px}
+  .card .nm{font-family:"Bodoni Moda",serif;font-size:18px;font-weight:600;line-height:1.12;flex:1}
+  .card .stars{flex:none;color:var(--gold);font-size:12px;letter-spacing:1px;margin-top:3px}
+  .card .zona{color:var(--muted);font-size:12.5px;margin-top:3px}
+  .badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+  .b{font-size:11px;font-weight:600;letter-spacing:.02em;padding:4px 9px;border-radius:999px;border:1px solid var(--line)}
+  .b.gold{color:#050507;background:var(--foil);border-color:transparent}
+  .b.pool{color:#bfe9ff;background:rgba(0,77,152,.18);border-color:rgba(120,180,255,.25)}
+  .b.spa{color:#a9efe6;background:rgba(46,196,182,.13);border-color:rgba(46,196,182,.3)}
+  .b.ok{color:var(--gold);background:rgba(233,206,147,.08);border-color:var(--line-gold)}
+  .card .note{color:#c6c1b4;font-size:13px;margin-top:10px}
+  .card .price{font-family:"Bodoni Moda",serif;font-size:14px;color:var(--gold);margin-top:9px}
+  .card .cta{display:inline-flex;align-items:center;gap:7px;margin-top:12px;font-weight:600;font-size:13.5px;color:#050507;
+    background:var(--foil);padding:10px 16px;border-radius:999px;box-shadow:var(--glow-cta)}
+  .disc{margin-top:30px;padding:15px 16px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.02);
+    color:var(--muted);font-size:12.5px;line-height:1.6}
+  .disc b{color:var(--ink)}
+  .foot{margin-top:30px;text-align:center;color:var(--muted);font-size:12px}
+  .foot a{color:var(--gold);font-weight:600}
+  .back{display:inline-flex;align-items:center;gap:6px;color:var(--muted);font-size:13px;font-weight:500;margin-bottom:18px}
+</style>
+</head>
+<body>
+<div class="aurora"></div>
+<div class="grain"></div>
+<div class="wrap">
+  <a class="back" href="index.html">‹ Plancia</a>
+  <span class="eyebrow">Pagina riservata · shortlist alloggi</span>
+  <h1>Dove <em>dormiamo.</em></h1>
+  <p class="lead">10 hotel con piscina coperta + spa e 10 appartamenti a El Born. Ogni link apre i <b style="color:var(--ink)">prezzi live</b> per le nostre date.</p>
+  <div class="facts">
+    <span class="fact">📅 16–18 ott 2026 · 2 notti</span>
+    <span class="fact">👥 3 persone</span>
+    <span class="fact">✅ filtra “cancellazione gratuita”</span>
+  </div>
+
+  <div class="engines" id="engines"></div>
+
+  <div class="seclab">Hotel <span class="n">piscina coperta + spa</span></div>
+  <p class="sechint">Per gli hotel scegli la tariffa con <b style="color:#c6c1b4">colazione inclusa + cancellazione gratuita</b>. I primi due sono i più vicini a El Born.</p>
+  <div id="hotels"></div>
+
+  <div class="seclab">Appartamenti <span class="n">El Born · 2 camere</span></div>
+  <p class="sechint">Il <b style="color:#c6c1b4">2° bagno</b> è raro nei bilocali storici di El Born: dove non confermato è segnato “da verificare”.</p>
+  <div id="apts"></div>
+
+  <div class="disc">
+    <b>Note.</b> Strutture reali, verificate. Nessun prezzo è inventato: i pulsanti aprono le tariffe live (Booking/Airbnb) per 16–18 ott 2026, 3 persone. Su Booking attiva il filtro <b>“Cancellazione gratuita”</b> e, per gli hotel, <b>“Colazione inclusa”</b>: variano per data e tipo di camera. Una camera per 3 adulti non è disponibile ovunque — i link la mostrano già impostata.
+  </div>
+  <div class="foot">
+    Barcellona · I 40 di Ale · <a href="tour.html">il tour →</a>
+  </div>
+</div>
+
+<script>
+  const ENGINES=[
+    {t:'🔎 Hotel a El Born · Booking',s:'Tutti gli hotel della zona, prezzi live',u:'https://www.booking.com/searchresults.it.html?ss=El+Born+Barcelona&checkin=2026-10-16&checkout=2026-10-18&group_adults=3&no_rooms=1&group_children=0'},
+    {t:'🏠 Appartamenti El Born · Airbnb',s:'2+ camere, 3 ospiti, già filtrato',u:'https://www.airbnb.it/s/El-Born--Barcelona/homes?checkin=2026-10-16&checkout=2026-10-18&adults=3&min_bedrooms=2'},
+    {t:'🏠 Appartamenti El Born · Booking',s:'Case e appartamenti, prezzi live',u:'https://www.booking.com/searchresults.it.html?ss=El+Born+Barcelona&checkin=2026-10-16&checkout=2026-10-18&group_adults=3&no_rooms=1&nflt=ht_id%3D201'}
+  ];
+  const HOTELS=[
+    {nm:'Hotel 1898',zona:'La Rambla · Ciutat Vella (vicino El Born)',st:4,pool:'COPERTA + rooftop',note:'Posizione ideale, piscina “grotta” coperta + rooftop, spa Siargao.',near:true,u:'https://www.booking.com/searchresults.it.html?ss=Hotel+1898+Barcelona&checkin=2026-10-16&checkout=2026-10-18&group_adults=3&no_rooms=1&group_children=0'},
+    {nm:'Yurbban Passage Hotel & Spa',zona:'Sant Pere · Ciutat Vella (vicinissimo El Born)',st:4,pool:'COPERTA + rooftop',note:'Spa organico “The Spot”, posizione perfetta per El Born.',near:true,u:'https://www.booking.com/searchresults.it.html?ss=Yurbban+Passage+Barcelona&checkin=2026-10-16&checkout=2026-10-18&group_adults=3&no_rooms=1&group_children=0'},
+    {nm:'Mandarin Oriental Barcelona',zona:'Passeig de Gràcia · Eixample',st:5,pool:'COPERTA (lap pool 12m)',note:'Spa di lusso, massaggi Oriental Essence.',u:'https://www.booking.com/searchresults.it.html?ss=Mandarin+Oriental+Barcelona&checkin=2026-10-16&checkout=2026-10-18&group_adults=3&no_rooms=1&group_children=0'},
+    {nm:'Majestic Hotel & Spa',zona:'Passeig de Gràcia · Eixample',st:5,pool:'COPERTA (12m) + rooftop',note:'Spa all’ultimo piano, 4 cabine massaggi.',u:'https://www.booking.com/searchresults.it.html?ss=Majestic+Hotel+Spa+Barcelona&checkin=2026-10-16&checkout=2026-10-18&group_adults=3&no_rooms=1&group_children=0'},
+    {nm:'The One Barcelona',zona:'Passeig de Gràcia · Eixample',st:5,pool:'COPERTA (sensoriale) + esterna',note:'Despacio Spa, piscina con getti.',u:'https://www.booking.com/searchresults.it.html?ss=The+One+Barcelona&checkin=2026-10-16&checkout=2026-10-18&group_adults=3&no_rooms=1&group_children=0'},
+    {nm:'Meliá Barcelona Sarrià',zona:'Sarrià · Eixample nord',st:5,pool:'COPERTA (YHI Wellness)',note:'Spa YHI, piscina con getti controcorrente.',price:'indicativo ~€730 · 3p / 2 notti',u:'https://www.booking.com/searchresults.it.html?ss=Melia+Barcelona+Sarria&checkin=2026-10-16&checkout=2026-10-18&group_adults=3&no_rooms=1&group_children=0'},
+    {nm:'Hotel SOFIA Barcelona',zona:'Pedralbes · Les Corts',st:5,pool:'COPERTA + esterna',note:'Oasis Spa by Natura Bissé.',u:'https://www.booking.com/searchresults.it.html?ss=Sofia+Barcelona&checkin=2026-10-16&checkout=2026-10-18&group_adults=3&no_rooms=1&group_children=0'},
+    {nm:'ILUNION Les Corts Spa',zona:'Les Corts (vicino Camp Nou)',st:4,pool:'COPERTA (circuito spa) + rooftop',note:'Spa ampio con circuito idrotermale.',price:'indicativo ~€630 · 3p / 2 notti · cancellabile',u:'https://www.booking.com/searchresults.it.html?ss=Ilunion+Les+Corts+Spa+Barcelona&checkin=2026-10-16&checkout=2026-10-18&group_adults=3&no_rooms=1&group_children=0'},
+    {nm:'Hotel SB Diagonal Zero',zona:'Diagonal Mar · vicino spiaggia',st:4,pool:'COPERTA (Spazio Wellness)',note:'Spa urbano 700 m², idromassaggio 38°.',u:'https://www.booking.com/searchresults.it.html?ss=SB+Diagonal+Zero+Barcelona&checkin=2026-10-16&checkout=2026-10-18&group_adults=3&no_rooms=1&group_children=0'},
+    {nm:'Hyatt Regency Barcelona Tower',zona:'L’Hospitalet · fuori centro',st:5,pool:'COPERTA riscaldata',note:'Vera piscina coperta + Metropolitan Spa adiacente.',u:'https://www.booking.com/searchresults.it.html?ss=Hyatt+Regency+Barcelona+Tower&checkin=2026-10-16&checkout=2026-10-18&group_adults=3&no_rooms=1&group_children=0'}
+  ];
+  const APTS=[
+    {nm:'Aparthotel Allada (Barcelona-Apartment)',zona:'El Born · Carrer Allada-Vermell',beds:'2 camere: da verificare',baths:'2 bagni: da verificare',note:'Aparthotel con reception 24h e terrazza comune.',u:'https://www.booking.com/searchresults.it.html?ss=Aparthotel+Allada+Barcelona&checkin=2026-10-16&checkout=2026-10-18&group_adults=3&no_rooms=1&group_children=0'},
+    {nm:'Decô Apartments Barcelona-Born',zona:'El Born · Old Town',beds:'2 camere: sì',baths:'2 bagni: da verificare',note:'Edificio storico, tetto-terrazza, alcuni con terrazza privata.',u:'https://www.booking.com/searchresults.it.html?ss=Deco+Apartments+Barcelona+Born&checkin=2026-10-16&checkout=2026-10-18&group_adults=3&no_rooms=1&group_children=0'},
+    {nm:'Habitat Apartments Born',zona:'El Born · vicino Santa Maria del Mar',beds:'2 camere: sì',baths:'2 bagni: da verificare',note:'Bilocale per 3 con terrazza e balconi.',u:'https://www.booking.com/searchresults.it.html?ss=Habitat+Apartments+Born+Barcelona&checkin=2026-10-16&checkout=2026-10-18&group_adults=3&no_rooms=1&group_children=0'},
+    {nm:'Inside Barcelona Apartments Esparteria',zona:'El Born · vicino Museo Picasso',beds:'2 camere: sì',baths:'2 bagni: da verificare',note:'Bilocale per 3 adulti, pulizia settimanale inclusa.',u:'https://www.booking.com/searchresults.it.html?ss=Inside+Barcelona+Apartments+Esparteria&checkin=2026-10-16&checkout=2026-10-18&group_adults=3&no_rooms=1&group_children=0'},
+    {nm:'Tendency Borne',zona:'El Born · vicino Santa Maria del Mar',beds:'2 camere: sì',baths:'1 bagno',note:'Bilocale 4° piano senza ascensore — occhio alle scale.',u:'https://www.booking.com/searchresults.it.html?ss=Tendency+Apartments+Barcelona&checkin=2026-10-16&checkout=2026-10-18&group_adults=3&no_rooms=1&group_children=0'},
+    {nm:'Stay U-nique Apartments Est',zona:'Ciutat Vella · vicino Museo Picasso',beds:'2 camere: sì',baths:'2 bagni: da verificare',note:'Terrazza solarium, ascensore, balcone.',u:'https://www.booking.com/searchresults.it.html?ss=Stay+U-nique+Apartments+Est+Barcelona&checkin=2026-10-16&checkout=2026-10-18&group_adults=3&no_rooms=1&group_children=0'},
+    {nm:'Sweet Inn Apartments Gothic II',zona:'Barri Gòtic',beds:'2 camere: da verificare',baths:'2 bagni: da verificare',note:'Operatore boutique, dotazioni di alta gamma.',u:'https://www.booking.com/searchresults.it.html?ss=Sweet+Inn+Apartments+Gothic+Barcelona&checkin=2026-10-16&checkout=2026-10-18&group_adults=3&no_rooms=1&group_children=0'},
+    {nm:'BarcelonaForRent Gotic Apartments',zona:'Barri Gòtic',beds:'2 camere: da verificare',baths:'2 bagni: da verificare',note:'Appartamenti turistici in pieno centro storico.',u:'https://www.booking.com/searchresults.it.html?ss=BarcelonaForRent+Gotic+Apartments&checkin=2026-10-16&checkout=2026-10-18&group_adults=3&no_rooms=1&group_children=0'},
+    {nm:'Aspasios Catedral Apartments',zona:'Barri Gòtic · vicino Cattedrale',beds:'2 camere: sì',baths:'1 bagno',note:'Bilocale con balcone, fino a 4 persone.',u:'https://www.booking.com/searchresults.it.html?ss=Aspasios+Catedral+Apartments+Barcelona&checkin=2026-10-16&checkout=2026-10-18&group_adults=3&no_rooms=1&group_children=0'},
+    {nm:'Bonavista Apartments',zona:'El Born · appartamenti centro',beds:'2 camere: da verificare',baths:'2 bagni: da verificare',note:'Appartamenti vacanza con ascensore, A/C, WiFi.',u:'https://www.booking.com/searchresults.it.html?ss=Bonavista+Apartments+Barcelona&checkin=2026-10-16&checkout=2026-10-18&group_adults=3&no_rooms=1&group_children=0'}
+  ];
+  function st(n){return '★'.repeat(n);}
+  document.getElementById('engines').innerHTML=ENGINES.map(e=>
+    '<a class="eng" target="_blank" rel="noopener" href="'+e.u+'"><span>'+e.t+'<small>'+e.s+'</small></span><span class="go">→</span></a>').join('');
+  document.getElementById('hotels').innerHTML=HOTELS.map(h=>{
+    const poolCoperta=/COPERTA/.test(h.pool);
+    return '<a class="card'+(h.near?' near':'')+'" target="_blank" rel="noopener" href="'+h.u+'">'+
+      '<div class="top"><div class="nm">'+h.nm+'</div><div class="stars">'+st(h.st)+'</div></div>'+
+      '<div class="zona">'+h.zona+'</div>'+
+      '<div class="badges">'+
+        (h.near?'<span class="b gold">vicino a El Born</span>':'')+
+        '<span class="b pool">🏊 piscina '+h.pool+'</span>'+
+        '<span class="b spa">💆 spa + massaggi</span>'+
+      '</div>'+
+      '<div class="note">'+h.note+'</div>'+
+      (h.price?'<div class="price">'+h.price+'</div>':'')+
+      '<span class="cta">Vedi prezzi →</span></a>';
+  }).join('');
+  document.getElementById('apts').innerHTML=APTS.map(a=>{
+    const twoBath=/2 bagni: sì/.test(a.baths);
+    return '<a class="card" target="_blank" rel="noopener" href="'+a.u+'">'+
+      '<div class="top"><div class="nm">'+a.nm+'</div></div>'+
+      '<div class="zona">'+a.zona+'</div>'+
+      '<div class="badges">'+
+        '<span class="b ok">🛏️ '+a.beds.replace('2 camere: ','2 camere · ')+'</span>'+
+        '<span class="b'+(twoBath?' spa':'')+'">🚿 '+a.baths+'</span>'+
+      '</div>'+
+      '<div class="note">'+a.note+'</div>'+
+      '<span class="cta">Vedi prezzi →</span></a>';
+  }).join('');
+</script>
+</body>
+</html>
