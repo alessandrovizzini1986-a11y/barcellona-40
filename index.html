@@ -277,7 +277,7 @@
 <!-- STATUS BAR -->
 <div class="topbar">
   <div class="row">
-    <span class="tbrand"><span class="tcrest"></span>40</span>
+    <span class="tbrand" id="brand40" style="cursor:pointer;-webkit-user-select:none;user-select:none"><span class="tcrest"></span>40</span>
     <div class="status"><span class="dot"></span><span id="phase">—</span> · <b id="clock" class="tnum">--:--</b> · <span id="temp" onclick="openWeather()" title="Andamento orario della giornata">🌡️ ~22°</span><span id="offBadge" style="display:none;margin-left:8px;font-size:11px;font-weight:700;color:var(--amber);border:1px solid var(--line-gold);border-radius:6px;padding:1px 6px">offline</span></div>
     <button class="searchbtn" onclick="shareGuide()" aria-label="Condividi la guida">📤</button>
     <button class="searchbtn" onclick="openSearch()" aria-label="Cerca">🔎</button>
@@ -990,6 +990,17 @@ function invCopy(){
           ()=>prompt('Copia il link:',u));
 }
 invUpd();
+
+/* ====== scorciatoia nascosta: tocco lungo (~0.6s) sul "40" → alloggi ====== */
+(function(){
+  const el=document.getElementById('brand40'); if(!el)return;
+  let t,fired=false;
+  const start=()=>{fired=false;t=setTimeout(()=>{fired=true;try{navigator.vibrate&&navigator.vibrate(15)}catch(e){}location.href='alloggi-9f3k2x.html';},600);};
+  const cancel=()=>clearTimeout(t);
+  el.addEventListener('pointerdown',start);
+  ['pointerup','pointerleave','pointercancel'].forEach(ev=>el.addEventListener(ev,cancel));
+  el.addEventListener('contextmenu',e=>{if(fired)e.preventDefault();});
+})();
 
 /* ============ Service Worker ============ */
 if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
