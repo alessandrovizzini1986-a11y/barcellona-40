@@ -82,7 +82,7 @@
   <a class="back" href="index.html">‹ Plancia</a>
   <span class="eyebrow">Pagina riservata · shortlist alloggi</span>
   <h1>Dove <em>dormiamo.</em></h1>
-  <p class="lead">10 hotel con piscina coperta + spa e 10 appartamenti a El Born. Ogni link apre i <b style="color:var(--ink)">prezzi live</b> per le nostre date.</p>
+  <p class="lead">10 hotel con piscina coperta + spa, e appartamenti da 2 camere: <b style="color:var(--ink)">Eixample/Sant Antoni</b> (consigliati — più spazio e 2 bagni) oppure El Born. Ogni link apre i <b style="color:var(--ink)">prezzi live</b>.</p>
   <div class="facts">
     <span class="fact">📅 16–18 ott 2026 · 2 notti</span>
     <span class="fact">👥 3 persone</span>
@@ -95,8 +95,12 @@
   <p class="sechint">Per gli hotel scegli la tariffa con <b style="color:#c6c1b4">colazione inclusa + cancellazione gratuita</b>. I primi due sono i più vicini a El Born.</p>
   <div id="hotels"></div>
 
-  <div class="seclab">Appartamenti <span class="n">El Born/centro · 2 camere</span></div>
-  <p class="sechint">Tutti con <b style="color:#c6c1b4">2 vere camere da letto</b> (niente bilocali). Il <b style="color:#c6c1b4">2° bagno</b> è raro: confermato solo su <b style="color:#c6c1b4">Habitat Carders</b>, <b style="color:#c6c1b4">Habitat Art</b> e alcune unità <b style="color:#c6c1b4">MH Ramblas</b> — sono evidenziati con bordo oro.</p>
+  <div class="seclab">Appartamenti <span class="n">★ Eixample / Sant Antoni · consigliati</span></div>
+  <p class="sechint"><b style="color:#c6c1b4">Il mio consiglio.</b> Flat più grandi e <b style="color:#c6c1b4">2 bagni veri</b> a prezzi migliori, ≤20 min a piedi da tutto (o metro/taxi). <b style="color:#c6c1b4">7 su 10</b> hanno 2 bagni confermati (bordo oro). Tutti con cucina/angolo cottura.</p>
+  <div id="aptsEix"></div>
+
+  <div class="seclab">Appartamenti <span class="n">El Born/centro · alternativa cool</span></div>
+  <p class="sechint">Se vuoi restare nel <b style="color:#c6c1b4">cuore di El Born</b>: tutti 2 vere camere (niente bilocali), ma il <b style="color:#c6c1b4">2° bagno</b> è raro — confermato solo su Habitat Carders, Habitat Art e alcune unità MH Ramblas (bordo oro).</p>
   <div id="apts"></div>
 
   <div class="disc">
@@ -111,7 +115,21 @@
   const ENGINES=[
     {t:'🔎 Hotel a El Born · Booking',s:'Tutti gli hotel della zona, prezzi live',u:'https://www.booking.com/searchresults.it.html?ss=El+Born+Barcelona&checkin=2026-10-16&checkout=2026-10-18&group_adults=3&no_rooms=1&group_children=0'},
     {t:'🏠 Appartamenti El Born · Airbnb',s:'2+ camere, 3 ospiti, già filtrato',u:'https://www.airbnb.it/s/El-Born--Barcelona/homes?checkin=2026-10-16&checkout=2026-10-18&adults=3&min_bedrooms=2'},
-    {t:'🏠 Appartamenti El Born · Booking',s:'Case e appartamenti, prezzi live',u:'https://www.booking.com/searchresults.it.html?ss=El+Born+Barcelona&checkin=2026-10-16&checkout=2026-10-18&group_adults=3&no_rooms=1&nflt=ht_id%3D201'}
+    {t:'🏠 Appartamenti El Born · Booking',s:'Case e appartamenti, prezzi live',u:'https://www.booking.com/searchresults.it.html?ss=El+Born+Barcelona&checkin=2026-10-16&checkout=2026-10-18&group_adults=3&no_rooms=1&nflt=ht_id%3D201'},
+    {t:'🏠 Appartamenti Eixample · Airbnb',s:'2+ camere, 3 ospiti — consigliato',u:'https://www.airbnb.it/s/Eixample--Barcelona/homes?checkin=2026-10-16&checkout=2026-10-18&adults=3&min_bedrooms=2'},
+    {t:'🏠 Appartamenti Eixample · Booking',s:'Case e appartamenti, prezzi live',u:'https://www.booking.com/searchresults.it.html?ss=Eixample+Barcelona&checkin=2026-10-16&checkout=2026-10-18&group_adults=3&no_rooms=1&nflt=ht_id%3D201'}
+  ];
+  const APTS_EIX=[
+    {nm:'Eric Vökel BCN Suites (2-Bedroom)',zona:'Eixample',cam:'2 camere',bagni:'2 bagni',note:'2 camere doppie + soggiorno/cucina attrezzata, balcone.',u:'https://www.booking.com/searchresults.it.html?ss=Eric+V%C3%B6kel+BCN+Suites+Barcelona&checkin=2026-10-16&checkout=2026-10-18&group_adults=3&no_rooms=1&group_children=0'},
+    {nm:'Eric Vökel Sagrada Familia Suites (2-Bedroom)',zona:'Dreta de l’Eixample · lato Sagrada',cam:'2 camere',bagni:'2 bagni',note:'70 m², 2 camere doppie, cucina completa, balcone.',u:'https://www.booking.com/searchresults.it.html?ss=Eric+V%C3%B6kel+Sagrada+Familia+Suites+Barcelona&checkin=2026-10-16&checkout=2026-10-18&group_adults=3&no_rooms=1&group_children=0'},
+    {nm:'Cosmo Apartments Passeig de Gràcia (Duplex)',zona:'Dreta de l’Eixample',cam:'2 camere',bagni:'2 bagni',note:'Duplex, camera master ensuite, cucina open-plan.',u:'https://www.booking.com/searchresults.it.html?ss=Cosmo+Apartments+Passeig+de+Gracia+Barcelona&checkin=2026-10-16&checkout=2026-10-18&group_adults=3&no_rooms=1&group_children=0'},
+    {nm:'Aspasios City Oasis (2-Bedroom)',zona:'Eixample · zona Passeig de Gràcia',cam:'2 camere',bagni:'2 bagni',note:'2 camere doppie, cucina moderna attrezzata.',u:'https://www.booking.com/searchresults.it.html?ss=Aspasios+City+Oasis+Apartments+Barcelona&checkin=2026-10-16&checkout=2026-10-18&group_adults=3&no_rooms=1&group_children=0'},
+    {nm:'MH Apartments S. Familia (2-Bedroom)',zona:'Dreta de l’Eixample · lato Sagrada',cam:'2 camere',bagni:'2 bagni',note:'75–85 m², un bagno ensuite con vasca, cucina.',u:'https://www.booking.com/searchresults.it.html?ss=MH+Apartments+Sagrada+Familia+Barcelona&checkin=2026-10-16&checkout=2026-10-18&group_adults=3&no_rooms=1&group_children=0'},
+    {nm:'Líbere Barcelona Sant Antoni (2-Bedroom)',zona:'Sant Antoni',cam:'2 camere',bagni:'2 bagni',note:'2 camere + soggiorno, cucina attrezzata, rooftop.',u:'https://www.booking.com/searchresults.it.html?ss=Libere+Barcelona+Sant+Antoni&checkin=2026-10-16&checkout=2026-10-18&group_adults=3&no_rooms=1&group_children=0'},
+    {nm:'EnjoyBCN Passeig de Gràcia',zona:'Dreta de l’Eixample',cam:'2 camere',bagni:'2 bagni',note:'80 m², vista Casa Batlló, cucina, bagni doccia+vasca.',u:'https://www.booking.com/searchresults.it.html?ss=EnjoyBCN+Passeig+de+Gracia+Barcelona&checkin=2026-10-16&checkout=2026-10-18&group_adults=3&no_rooms=1&group_children=0'},
+    {nm:'Rent Top Apartments Passeig de Gràcia',zona:'Dreta de l’Eixample · Pg. de Gràcia 56',cam:'2 camere',bagni:'1–2 bagni',note:'Cucina completa, lavatrice; 2° bagno da verificare.',u:'https://www.booking.com/searchresults.it.html?ss=Rent+Top+Apartments+Passeig+de+Gracia+Barcelona&checkin=2026-10-16&checkout=2026-10-18&group_adults=3&no_rooms=1&group_children=0'},
+    {nm:'Suite Home Sagrada Familia (2-Bedroom)',zona:'Dreta de l’Eixample',cam:'2 camere',bagni:'1–2 bagni',note:'Cucina con forno/lavastoviglie; bagni variano per unità.',u:'https://www.booking.com/searchresults.it.html?ss=Suite+Home+Sagrada+Familia+Barcelona&checkin=2026-10-16&checkout=2026-10-18&group_adults=3&no_rooms=1&group_children=0'},
+    {nm:'MH Apartments Urban (2-Bedroom)',zona:'Sant Antoni · Av. Mistral',cam:'2 camere',bagni:'1–2 bagni',note:'Soggiorno + cucina completa, lavatrice, A/C.',u:'https://www.booking.com/searchresults.it.html?ss=MH+Apartments+Urban+Barcelona&checkin=2026-10-16&checkout=2026-10-18&group_adults=3&no_rooms=1&group_children=0'}
   ];
   const HOTELS=[
     {nm:'Hotel 1898',zona:'La Rambla · Ciutat Vella (vicino El Born)',st:4,pool:'COPERTA + rooftop',note:'Posizione ideale, piscina “grotta” coperta + rooftop, spa Siargao.',near:true,u:'https://www.booking.com/searchresults.it.html?ss=Hotel+1898+Barcelona&checkin=2026-10-16&checkout=2026-10-18&group_adults=3&no_rooms=1&group_children=0'},
@@ -154,19 +172,23 @@
       (h.price?'<div class="price">'+h.price+'</div>':'')+
       '<span class="cta">Vedi prezzi →</span></a>';
   }).join('');
-  document.getElementById('apts').innerHTML=APTS.map(a=>{
-    const twoBath=/2 bagni/.test(a.bagni);
-    return '<a class="card'+(twoBath?' near':'')+'" target="_blank" rel="noopener" href="'+a.u+'">'+
-      '<div class="top"><div class="nm">'+a.nm+'</div></div>'+
-      '<div class="zona">'+a.zona+'</div>'+
-      '<div class="badges">'+
-        (twoBath?'<span class="b gold">2 bagni ✓</span>':'')+
-        '<span class="b ok">🛏️ '+a.cam+'</span>'+
-        '<span class="b'+(twoBath?' spa':'')+'">🚿 '+a.bagni+'</span>'+
-      '</div>'+
-      '<div class="note">'+a.note+'</div>'+
-      '<span class="cta">Vedi prezzi →</span></a>';
-  }).join('');
+  function renderApts(arr,id){
+    document.getElementById(id).innerHTML=arr.map(a=>{
+      const twoBath=/^2 bagni/.test(a.bagni);
+      return '<a class="card'+(twoBath?' near':'')+'" target="_blank" rel="noopener" href="'+a.u+'">'+
+        '<div class="top"><div class="nm">'+a.nm+'</div></div>'+
+        '<div class="zona">'+a.zona+'</div>'+
+        '<div class="badges">'+
+          (twoBath?'<span class="b gold">2 bagni ✓</span>':'')+
+          '<span class="b ok">🛏️ '+a.cam+'</span>'+
+          '<span class="b'+(twoBath?' spa':'')+'">🚿 '+a.bagni+'</span>'+
+        '</div>'+
+        '<div class="note">'+a.note+'</div>'+
+        '<span class="cta">Vedi prezzi →</span></a>';
+    }).join('');
+  }
+  renderApts(APTS_EIX,'aptsEix');
+  renderApts(APTS,'apts');
 </script>
 </body>
 </html>
