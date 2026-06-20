@@ -175,21 +175,26 @@ h1 .l2{display:block;font-size:clamp(52px,18vw,90px);background:var(--pill);back
 .intro .skip{position:absolute;top:calc(16px + env(safe-area-inset-top));right:18px;color:var(--smoke-2);font-size:11.5px;letter-spacing:.08em}
 @media (prefers-reduced-motion:reduce){.intro{display:none}}
 .host{margin-top:28px;display:flex;flex-direction:column;align-items:center;gap:11px}
-.hostpic{position:relative;display:inline-block;line-height:0;border-radius:18px}
-.host img{width:230px;height:auto;display:block;
+.hostpic{position:relative;width:230px;aspect-ratio:1;cursor:pointer;
+  -webkit-touch-callout:none;-webkit-user-select:none;user-select:none;touch-action:manipulation;
   filter:drop-shadow(0 16px 38px rgba(0,0,0,.8)) drop-shadow(0 0 26px rgba(255,106,26,.4));
   animation:hostGlow 6.5s ease-in-out infinite}
+.hostpic .lay{position:absolute;inset:0;background-size:contain;background-position:center;background-repeat:no-repeat}
+.hostpic .face{background-image:url("cena-host.png?v=4")}
+.hostpic .snk{background-image:url("cena-snake.png?v=1");opacity:0;animation:hostSwap 6.5s ease-in-out infinite}
+@keyframes hostSwap{0%,58%{opacity:0}66%,90%{opacity:1}98%,100%{opacity:0}}
 @keyframes hostGlow{
   0%,70%,100%{transform:scale(1);filter:drop-shadow(0 16px 38px rgba(0,0,0,.8)) drop-shadow(0 0 26px rgba(255,106,26,.4))}
-  80%{transform:scale(1.035);filter:drop-shadow(0 16px 40px rgba(0,0,0,.85)) drop-shadow(0 0 46px rgba(255,180,90,.9)) drop-shadow(0 0 12px rgba(255,236,190,.7))}}
-.hostpic .shine{position:absolute;inset:3px;border-radius:15px;overflow:hidden;pointer-events:none}
+  80%{transform:scale(1.04);filter:drop-shadow(0 16px 40px rgba(0,0,0,.85)) drop-shadow(0 0 46px rgba(255,180,90,.9)) drop-shadow(0 0 12px rgba(255,236,190,.7))}}
+.hostpic .shine{position:absolute;inset:7%;border-radius:10px;overflow:hidden;pointer-events:none}
 .hostpic .shine::before{content:"";position:absolute;top:-30%;left:-65%;width:48%;height:165%;transform:rotate(9deg);
-  background:linear-gradient(90deg,transparent,rgba(255,238,196,.65),transparent);animation:hostSweep 6.5s ease-in-out infinite}
+  background:linear-gradient(90deg,transparent,rgba(255,238,196,.6),transparent);animation:hostSweep 6.5s ease-in-out infinite}
 @keyframes hostSweep{0%,72%{left:-65%;opacity:0}76%{opacity:1}90%{left:122%;opacity:1}100%{left:122%;opacity:0}}
-.hosttip{margin-top:2px;font-family:"Oswald",sans-serif;font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--smoke-2);
-  opacity:.55;animation:tipPulse 6.5s ease-in-out infinite}
-@keyframes tipPulse{0%,68%,100%{opacity:.4}80%{opacity:.95;color:var(--ember-hot)}}
-@media (prefers-reduced-motion:reduce){.host img,.hostpic .shine::before,.hosttip{animation:none}}
+.hostpic .tip{position:absolute;left:8%;right:8%;bottom:9%;text-align:center;pointer-events:none;
+  font-family:"Oswald",sans-serif;font-weight:700;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#fff;
+  text-shadow:0 1px 3px #000,0 0 10px rgba(0,0,0,.85);animation:tipPulse 6.5s ease-in-out infinite}
+@keyframes tipPulse{0%,64%,100%{opacity:.55}80%{opacity:1;color:#ffd28a}}
+@media (prefers-reduced-motion:reduce){.hostpic,.hostpic .snk,.hostpic .shine::before,.hostpic .tip{animation:none}.hostpic .snk{opacity:0}}
 .host .cap{font-family:"Bodoni Moda",serif;font-style:italic;font-size:19px;color:var(--brass-2)}
 .host .cap small{display:block;font-family:"Oswald",sans-serif;font-style:normal;font-weight:600;font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--smoke-2);margin-top:5px}
 </style>
@@ -228,12 +233,13 @@ h1 .l2{display:block;font-size:clamp(52px,18vw,90px);background:var(--pill);back
   </p>
 
   <div class="host">
-    <span class="hostpic">
-      <img src="cena-host.png?v=4" alt="Il Re della Brace" id="hostImg" style="cursor:pointer;-webkit-user-select:none;user-select:none">
+    <div class="hostpic" id="hostImg" role="button" tabindex="0" aria-label="Il Re della Brace — tieni premuto per una sorpresa">
+      <div class="lay face"></div>
+      <div class="lay snk"></div>
       <i class="shine"></i>
-    </span>
+      <div class="tip">tieni premuto 👀</div>
+    </div>
     <div class="cap">Ale, il Re della Brace 👑<small>niente diete · vi aspetta alle 19.30</small></div>
-    <div class="hosttip">psst… tienimi premuto 👀</div>
   </div>
   <script>
   /* easter egg: 3s di pressione sulla foto → Snake stile Nokia 3310 */
@@ -244,7 +250,7 @@ h1 .l2{display:block;font-size:clamp(52px,18vw,90px);background:var(--pill);back
     var cancel=function(){clearTimeout(t);};
     el.addEventListener('pointerdown',start);
     ['pointerup','pointerleave','pointercancel'].forEach(function(ev){el.addEventListener(ev,cancel);});
-    el.addEventListener('contextmenu',function(e){if(fired)e.preventDefault();});
+    el.addEventListener('contextmenu',function(e){e.preventDefault();});
     el.addEventListener('dragstart',function(e){e.preventDefault();});
   })();
   </script>
