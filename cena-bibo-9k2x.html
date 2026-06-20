@@ -80,6 +80,25 @@
 
   .foot{color:var(--muted);font-size:12px;margin-top:26px;letter-spacing:.04em}
   .foot b{color:#d9cbb3}
+
+  .rsvp{margin:24px auto 0;width:100%;max-width:420px;text-align:left;background:linear-gradient(160deg,#16100b,#0c0805);
+    border:1px solid var(--line-amber);border-radius:20px;padding:18px;box-shadow:0 26px 60px -30px rgba(0,0,0,.9),0 0 44px -18px rgba(255,122,26,.25)}
+  .rlab{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ember-2);font-weight:600;text-align:center}
+  .fld{width:100%;margin-top:14px;padding:15px 16px;border-radius:13px;border:1.5px solid var(--line);background:rgba(255,255,255,.04);
+    color:var(--ink);font-size:17px;font-family:inherit;font-weight:500}
+  .fld:focus{outline:none;border-color:var(--ember)}
+  .fld::placeholder{color:#6e6453}
+  .count{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:14px}
+  .clab{font-size:14px;color:var(--ink);font-weight:500}
+  .clab small{color:var(--muted);font-weight:400}
+  .stepper{display:flex;align-items:center;gap:4px;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:12px;padding:4px;flex:none}
+  .stepper button{width:40px;height:40px;border:none;background:rgba(255,174,66,.12);color:var(--ember-hot);font-size:22px;font-family:inherit;border-radius:9px;cursor:pointer;line-height:1}
+  .stepper button:active{transform:scale(.94)}
+  .qty{min-width:40px;text-align:center;font-family:"Bodoni Moda",serif;font-size:22px;color:var(--ink)}
+  .rsvp .wa{margin-top:16px}
+  .hintline{color:var(--muted);font-size:12px;margin-top:11px;text-align:center;line-height:1.5;min-height:1.2em}
+  .cta2{display:flex;flex-wrap:wrap;gap:9px;margin:14px auto 0;width:100%;max-width:420px}
+  .cta2 .ghost{flex:1;min-width:96px;font-size:14px;padding:13px 8px}
 </style>
 </head>
 <body>
@@ -91,7 +110,7 @@
   <div class="flame">🔥</div>
   <span class="eyebrow">Cena tra maschi</span>
   <h1>Si fa<em>fiorentina.</em></h1>
-  <p class="sub">Solo uomini, una <b>brace come si deve</b> e fiorentine al sangue. Niente diete, niente scuse.</p>
+  <p class="sub">Ci salutiamo <b>prima delle ferie</b>: solo uomini, brace e fiorentine al sangue. <b>Porta chi vuoi</b> — ognuno si organizza come gli pare. Unica regola: <b>confermare prima</b>.</p>
 
   <div class="card">
     <div class="row"><span class="ic">📅</span><span class="tx"><b>Venerdì 26 giugno</b><small>Ore 20.30 — puntuali, la brace aspetta</small></span></div>
@@ -101,19 +120,70 @@
 
   <div class="cd" id="cd"></div>
 
-  <div class="cta">
-    <a class="wa" id="waBtn" target="_blank" rel="noopener"><span class="em">✅</span> Ci sono!</a>
-    <a class="ghost" href="https://maps.app.goo.gl/rXLhC6ivvQr9KTDw9?g_st=aw" target="_blank" rel="noopener">📍 Apri la mappa</a>
+  <div class="rsvp">
+    <div class="rlab">Conferma — mi serve per prenotare 🍽️</div>
+    <input id="nm" class="fld" placeholder="Il tuo nome" autocomplete="off" maxlength="30">
+    <div class="count">
+      <span class="clab">Quanti siete? <small>(tu + amici)</small></span>
+      <div class="stepper">
+        <button type="button" id="minus" aria-label="meno">–</button>
+        <span class="qty" id="qty">1</span>
+        <button type="button" id="plus" aria-label="più">+</button>
+      </div>
+    </div>
+    <a class="wa" id="waBtn" target="_blank" rel="noopener"><span class="em">✅</span> Confermo su WhatsApp</a>
+    <p class="hintline" id="preview"></p>
   </div>
 
-  <p class="menu">Un tap su <b>“Ci sono”</b> e mi arrivi su WhatsApp. Più siamo, più carne. 💪</p>
+  <div class="cta2">
+    <a class="ghost" id="gcal" target="_blank" rel="noopener">📅 Google</a>
+    <a class="ghost" id="ical" download="cena-fiorentina-26giu.ics">🍏 Apple</a>
+    <a class="ghost" href="https://maps.app.goo.gl/rXLhC6ivvQr9KTDw9?g_st=aw" target="_blank" rel="noopener">📍 Mappa</a>
+  </div>
+
+  <p class="menu">Conferma anche <b>per i tuoi amici</b>: scrivi il numero giusto e ci penso io a prenotare. 💪</p>
   <div class="foot">Traversa (FI) · 26 giugno · <b>ore 20.30</b> 🔥</div>
 </div>
 
 <script>
-  /* WhatsApp: messaggio già pronto */
+  /* ===== RSVP: nome + quanti → WhatsApp ===== */
   var WA='https://wa.me/393474227732?text=';
-  document.getElementById('waBtn').href=WA+encodeURIComponent('Ci sono! 🔥🥩💪 Venerdì 26 giugno, ore 20.30 da Bibo — cena tra maschi, fiorentina al sangue.');
+  var nm=document.getElementById('nm'), qtyEl=document.getElementById('qty'),
+      waBtn=document.getElementById('waBtn'), preview=document.getElementById('preview');
+  var q=1;
+  function rsvpMsg(){
+    var nome=(nm.value||'').trim().replace(/[<>]/g,'');
+    var who=q===1?'1 persona':q+' persone';
+    return 'Ci sono! 💪🔥 '+(nome?'Sono '+nome+', confermo':'Confermo')+' per '+who+' alla fiorentina di venerdì 26 (20.30 da Bibo).';
+  }
+  function syncRsvp(){
+    qtyEl.textContent=q;
+    waBtn.href=WA+encodeURIComponent(rsvpMsg());
+    var nome=(nm.value||'').trim();
+    preview.textContent=(nome?'“'+nome+', ':'“')+(q===1?'per me':'in '+q)+'” — ti arriva su WhatsApp pronto da inviare.';
+  }
+  document.getElementById('plus').addEventListener('click',function(){if(q<30)q++;syncRsvp();});
+  document.getElementById('minus').addEventListener('click',function(){if(q>1)q--;syncRsvp();});
+  nm.addEventListener('input',syncRsvp);
+  syncRsvp();
+
+  /* ===== Salva la data: Google Calendar + Apple/.ics ===== */
+  var TITLE='Cena tra maschi · Fiorentina da Bibo';
+  var LOC='Trattoria Bar Bibo, Via Traversa 454, 50033 Traversa FI';
+  var DET='Cena pre-ferie tra maschi 🔥🥩 Fiorentina! Conferma su WhatsApp: '+location.href;
+  document.getElementById('gcal').href='https://calendar.google.com/calendar/render?action=TEMPLATE'+
+    '&text='+encodeURIComponent(TITLE)+
+    '&dates=20260626T203000/20260626T233000&ctz=Europe/Rome'+
+    '&location='+encodeURIComponent(LOC)+
+    '&details='+encodeURIComponent(DET);
+  var ICS=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Cena Fiorentina//IT','CALSCALE:GREGORIAN',
+    'BEGIN:VEVENT','UID:cena-bibo-26giu-2026@local','DTSTAMP:20260613T000000Z',
+    'DTSTART:20260626T183000Z','DTEND:20260626T213000Z',
+    'SUMMARY:'+TITLE,'LOCATION:'+LOC,
+    'DESCRIPTION:Cena pre-ferie tra maschi. Fiorentina! Conferma su WhatsApp.',
+    'END:VEVENT','END:VCALENDAR'].join('\r\n');
+  try{ document.getElementById('ical').href=URL.createObjectURL(new Blob([ICS],{type:'text/calendar'})); }
+  catch(e){ document.getElementById('ical').href='data:text/calendar;charset=utf-8,'+encodeURIComponent(ICS); }
 
   /* countdown alla cena */
   var TARGET=new Date('2026-06-26T20:30:00+02:00').getTime();
