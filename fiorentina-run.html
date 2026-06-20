@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#0c0a08">
+<meta name="robots" content="noindex,nofollow">
+<title>Fiorentina Run</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Oswald:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{background:radial-gradient(120% 60% at 50% 110%,#3a1604,#0c0a08 60%);color:#f1e6cf;
+    font-family:"Oswald",sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    min-height:100svh;overflow:hidden;padding:10px;user-select:none;-webkit-user-select:none}
+  .top{position:fixed;top:calc(8px + env(safe-area-inset-top));left:0;right:0;display:flex;justify-content:space-between;
+    padding:0 14px;font-size:9px;letter-spacing:.06em;z-index:10}
+  .top a{color:#9aa6b4;text-decoration:none;font-family:"Press Start 2P",monospace}
+  .arena{position:relative;width:min(96vw,380px)}
+  .hud{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-family:"Press Start 2P",monospace;font-size:9px;color:#ffb86b}
+  .hud .lives{letter-spacing:2px}
+  .stage{position:relative;border-radius:14px;overflow:hidden;border:1px solid rgba(199,154,71,.35);
+    box-shadow:0 24px 60px -26px #000,inset 0 0 50px rgba(255,106,26,.12)}
+  canvas{display:block;width:100%;height:auto;background:linear-gradient(180deg,#15100b,#0c0a08 70%,#1c0d04)}
+  .ov{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;
+    text-align:center;background:rgba(10,8,6,.82);padding:18px;font-family:"Press Start 2P",monospace}
+  .ov.hide{display:none}
+  .ov .big{font-size:21px;color:#ff8c3a;line-height:1.5;text-shadow:0 2px 0 #5a1c02}
+  .ov .sm{font-size:9px;line-height:2;color:#e7dcc6}
+  .ov .blink{animation:bk 1s steps(1) infinite;color:#ffd28a}
+  @keyframes bk{50%{opacity:0}}
+  .ctrl{display:flex;gap:12px;margin-top:14px;width:min(96vw,380px)}
+  .ctrl button{flex:1;font-family:"Press Start 2P",monospace;font-size:16px;color:#dfe7f0;padding:18px 0;border-radius:14px;
+    border:1px solid rgba(255,255,255,.08);background:linear-gradient(180deg,#21426a,#132a44);cursor:pointer;
+    box-shadow:0 4px 0 rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.14)}
+  .ctrl button:active{transform:translateY(2px);box-shadow:0 2px 0 rgba(0,0,0,.45)}
+  .hint{margin-top:10px;font-family:"Press Start 2P",monospace;font-size:7px;color:#7a705d;text-align:center;line-height:1.9}
+</style>
+</head>
+<body>
+<div class="top"><a href="cena-bibo-9k2x.html">‹ ESCI</a><a href="snake-3310.html">🐍 SNAKE ›</a></div>
+
+<div class="arena">
+  <div class="hud"><span id="scoreLbl">PUNTI 0</span><span class="lives" id="livesLbl">🔥🔥🔥</span><span id="hiLbl">REC 0</span></div>
+  <div class="stage">
+    <canvas id="cv" width="360" height="560"></canvas>
+    <div class="ov" id="splash">
+      <div class="big">FIORENTINA<br>RUN</div>
+      <div class="sm">acchiappa 🥩🍷<br>schiva 🥗🥦<br><br>record: <span id="hiS">0</span></div>
+      <div class="sm blink">▶ PLAY</div>
+    </div>
+    <div class="ov hide" id="over">
+      <div class="big">GAME OVER</div>
+      <div class="sm">punti <span id="finalSc">0</span><br><span id="newrec" style="display:none;color:#ffd28a">NUOVO RECORD!</span></div>
+      <div class="sm blink">▶ ANCORA</div>
+    </div>
+  </div>
+</div>
+
+<div class="ctrl">
+  <button id="leftBtn" aria-label="sinistra">◀</button>
+  <button id="okBtn">PLAY</button>
+  <button id="rightBtn" aria-label="destra">▶</button>
+</div>
+<div class="hint">trascina col dito · ◀ ▶ · frecce · niente diete 🚫🥗</div>
+
+<script>
+(function(){
+  var cv=document.getElementById('cv'), ctx=cv.getContext('2d'), W=cv.width, H=cv.height;
+  var GOOD=[{e:'🥩',p:3},{e:'🥩',p:3},{e:'🍖',p:2},{e:'🍷',p:1},{e:'🍺',p:1},{e:'🔥',p:5}];
+  var BAD=[{e:'🥗'},{e:'🥦'},{e:'🥒'}];
+  var player, items, score, hi, lives, state, spawnT, spawnMs, lvl, combo, flash, last, move;
+  var SND=true, actx=null;
+
+  hi=parseInt(localStorage.getItem('fiorun_hi')||'0',10)||0;
+  document.getElementById('hiS').textContent=hi; setHud();
+
+  function ac(){ if(!actx){try{actx=new(window.AudioContext||window.webkitAudioContext)();}catch(e){}} return actx; }
+  function beep(f,d,t){ if(!SND)return; var a=ac(); if(!a)return; var o=a.createOscillator(),g=a.createGain();
+    o.type=t||'square';o.frequency.value=f;o.connect(g);g.connect(a.destination);
+    g.gain.setValueAtTime(.16,a.currentTime);g.gain.exponentialRampToValueAtTime(.0001,a.currentTime+d);o.start();o.stop(a.currentTime+d); }
+  function buzz(){ if(!SND)return; var a=ac(); if(!a)return; var o=a.createOscillator(),g=a.createGain();
+    o.type='sawtooth';o.frequency.setValueAtTime(220,a.currentTime);o.frequency.exponentialRampToValueAtTime(70,a.currentTime+.25);
+    o.connect(g);g.connect(a.destination);g.gain.setValueAtTime(.2,a.currentTime);g.gain.exponentialRampToValueAtTime(.0001,a.currentTime+.28);o.start();o.stop(a.currentTime+.28); }
+
+  function setHud(){
+    document.getElementById('scoreLbl').textContent='PUNTI '+(score||0);
+    document.getElementById('hiLbl').textContent='REC '+hi;
+    document.getElementById('livesLbl').textContent='🔥🔥🔥'.slice(0,Math.max(0,lives||0)*2);
+  }
+  function reset(){ player={x:W/2,w:96,h:20,y:H-46,tx:W/2}; items=[]; score=0; lives=3; lvl=1; combo=0;
+    spawnMs=900; spawnT=0; flash=0; move=0; setHud(); }
+  function show(id){ ['splash','over'].forEach(function(s){document.getElementById(s).classList.toggle('hide',s!==id);}); }
+  function hideOv(){ ['splash','over'].forEach(function(s){document.getElementById(s).classList.add('hide');}); }
+
+  function start(){ reset(); state='play'; hideOv(); beep(660,.08);setTimeout(function(){beep(990,.1);},90); last=performance.now(); requestAnimationFrame(loop); }
+  function over(){ state='over'; buzz(); var nr=false; if(score>hi){hi=score;try{localStorage.setItem('fiorun_hi',hi);}catch(e){}nr=true;}
+    document.getElementById('finalSc').textContent=score; document.getElementById('newrec').style.display=nr?'inline':'none';
+    document.getElementById('hiS').textContent=hi; setHud(); show('over'); }
+  function action(){ ac(); if(state!=='play') start(); }
+
+  function spawn(){
+    var bad=Math.random()< Math.min(.42,.2+lvl*.02);
+    var it=bad?BAD[(Math.random()*BAD.length)|0]:GOOD[(Math.random()*GOOD.length)|0];
+    items.push({x:24+Math.random()*(W-48),y:-20,vy:120+lvl*26+Math.random()*40,e:it.e,good:!bad,p:it.p||0});
+  }
+
+  function loop(t){
+    if(state!=='play') return;
+    var dt=Math.min(.05,(t-last)/1000); last=t;
+    // player move
+    player.x+=move*330*dt; player.x=Math.max(player.w/2,Math.min(W-player.w/2,player.x));
+    if(player.tx!=null){ player.x+=(player.tx-player.x)*Math.min(1,dt*16); }
+    // spawn
+    spawnT+=dt*1000; spawnMs=Math.max(360,900-score*6);
+    if(spawnT>=spawnMs){ spawnT=0; spawn(); }
+    // items
+    for(var i=items.length-1;i>=0;i--){ var it=items[i]; it.y+=it.vy*dt;
+      var hitY = it.y>player.y-22 && it.y<player.y+player.h;
+      if(hitY && Math.abs(it.x-player.x)<player.w/2+6){
+        items.splice(i,1);
+        if(it.good){ combo++; var add=it.p*(1+Math.floor(combo/5)); score+=add; lvl=1+Math.floor(score/20);
+          beep(it.e==='🔥'?1320:880,.06); }
+        else { lives--; combo=0; flash=1; buzz(); if(lives<=0){ setHud(); over(); return; } }
+        setHud(); continue;
+      }
+      if(it.y>H+24){ items.splice(i,1); if(it.good) combo=0; }
+    }
+    draw();
+    requestAnimationFrame(loop);
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    // embers floor glow
+    var g=ctx.createLinearGradient(0,H-90,0,H); g.addColorStop(0,'rgba(255,106,26,0)'); g.addColorStop(1,'rgba(255,106,26,.22)');
+    ctx.fillStyle=g; ctx.fillRect(0,H-90,W,90);
+    // items
+    ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.font='30px serif';
+    for(var i=0;i<items.length;i++){ ctx.fillText(items[i].e,items[i].x,items[i].y); }
+    // player board (tagliere)
+    var x=player.x-player.w/2, y=player.y;
+    ctx.fillStyle='#5a3a1c'; roundRect(x,y,player.w,player.h,6); ctx.fill();
+    ctx.fillStyle='#7a5128'; roundRect(x+3,y+3,player.w-6,player.h-9,4); ctx.fill();
+    ctx.strokeStyle='#c79a47'; ctx.lineWidth=2; roundRect(x,y,player.w,player.h,6); ctx.stroke();
+    // combo
+    if(combo>=5){ ctx.fillStyle='#ffd28a'; ctx.font='12px "Press Start 2P",monospace'; ctx.fillText('COMBO x'+(1+Math.floor(combo/5)),W/2,30); }
+    // hit flash
+    if(flash>0){ ctx.fillStyle='rgba(200,30,30,'+(flash*.4)+')'; ctx.fillRect(0,0,W,H); flash-=.06; }
+  }
+  function roundRect(x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r);
+    ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+
+  // ---- controls ----
+  function px(clientX){ var r=cv.getBoundingClientRect(); return (clientX-r.left)/r.width*W; }
+  cv.addEventListener('pointerdown',function(e){ if(state==='play'){ player.tx=px(e.clientX);} },{passive:true});
+  cv.addEventListener('pointermove',function(e){ if(state==='play'&&(e.pressure>0||e.buttons||e.pointerType==='touch')){ player.tx=px(e.clientX);} },{passive:true});
+  cv.addEventListener('touchmove',function(e){ e.preventDefault(); },{passive:false});
+  var lb=document.getElementById('leftBtn'), rb=document.getElementById('rightBtn');
+  function hold(btn,v){ var set=function(e){e.preventDefault();player.tx=null;move=v;}; var clr=function(){move=0;};
+    btn.addEventListener('pointerdown',set); ['pointerup','pointerleave','pointercancel'].forEach(function(ev){btn.addEventListener(ev,clr);}); }
+  hold(lb,-1); hold(rb,1);
+  document.getElementById('okBtn').addEventListener('click',action);
+  addEventListener('keydown',function(e){ var k=e.key.toLowerCase();
+    if(['arrowleft','arrowright',' '].indexOf(k)>=0)e.preventDefault();
+    if(k==='arrowleft'||k==='a'){player.tx=null;move=-1;} else if(k==='arrowright'||k==='d'){player.tx=null;move=1;}
+    else if(k===' '||k==='enter') action(); });
+  addEventListener('keyup',function(e){ var k=e.key.toLowerCase(); if(k==='arrowleft'||k==='arrowright'||k==='a'||k==='d') move=0; });
+
+  reset(); state='idle'; draw(); show('splash');
+})();
+</script>
+</body>
+</html>
