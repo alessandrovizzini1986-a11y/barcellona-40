@@ -246,7 +246,7 @@ h1 .l2{display:block;font-size:clamp(52px,18vw,90px);background:var(--pill);back
   (function(){
     var el=document.getElementById('hostImg'); if(!el)return;
     var t,fired=false;
-    var start=function(){fired=false;t=setTimeout(function(){fired=true;try{navigator.vibrate&&navigator.vibrate(25);}catch(e){}location.href='snake-3310.html';},3000);};
+    var start=function(){fired=false;t=setTimeout(function(){fired=true;try{navigator.vibrate&&navigator.vibrate(25);}catch(e){}location.href='sala-giochi.html';},3000);};
     var cancel=function(){clearTimeout(t);};
     el.addEventListener('pointerdown',start);
     ['pointerup','pointerleave','pointercancel'].forEach(function(ev){el.addEventListener(ev,cancel);});
