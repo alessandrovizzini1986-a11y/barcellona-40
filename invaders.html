@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#05070d">
+<meta name="robots" content="noindex,nofollow">
+<title>SPACE INVADERS</title>
+<meta property="og:type" content="website">
+<meta property="og:title" content="👾 SPACE INVADERS">
+<meta property="og:description" content="Difendi la Terra dagli alieni. Insert coin!">
+<meta property="og:image" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/og-invaders.jpg?v=1">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/og-invaders.jpg?v=1">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{background:radial-gradient(120% 80% at 50% 0%,#10103a,#04040a 70%);color:#d8ffe0;
+    font-family:"Press Start 2P",monospace;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    min-height:100svh;overflow:hidden;padding:8px;user-select:none;-webkit-user-select:none}
+  .top{position:fixed;top:calc(8px + env(safe-area-inset-top));left:0;right:0;display:flex;justify-content:space-between;padding:0 14px;font-size:8px;z-index:10}
+  .top a{color:#8b93b0;text-decoration:none}
+  .arena{width:min(96vw,380px)}
+  .hud{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:9px;color:#7CFC9A}
+  .stage{position:relative;border-radius:14px;overflow:hidden;border:1px solid rgba(120,255,160,.25);box-shadow:0 24px 60px -26px #000}
+  canvas{display:block;width:100%;height:auto;background:#05060d}
+  .ov{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:13px;text-align:center;background:rgba(4,5,12,.86);padding:16px}
+  .ov.hide{display:none}
+  .ov .big{font-size:18px;color:#7CFC9A;line-height:1.5}
+  .ov .sm{font-size:8px;line-height:1.9;color:#cfeed6}
+  .ov .blink{animation:bk 1s steps(1) infinite;color:#ffd28a}@keyframes bk{50%{opacity:0}}
+  .softrow{display:flex;gap:8px;margin-top:12px;width:min(96vw,380px)}
+  .soft{flex:1;font-family:inherit;font-size:7px;color:#cdd8e4;padding:11px 0;border-radius:11px;border:1px solid rgba(255,255,255,.08);
+    background:linear-gradient(180deg,#1c3a58,#102a42);cursor:pointer;box-shadow:0 3px 0 rgba(0,0,0,.4)}
+  .soft:active{transform:translateY(2px)}.soft.off{opacity:.55}
+  .pad{display:flex;gap:12px;margin-top:10px;width:min(96vw,380px)}
+  .pad button{flex:1;font-family:inherit;font-size:16px;color:#e7ffe9;padding:18px 0;border-radius:14px;border:1px solid rgba(255,255,255,.08);
+    background:linear-gradient(180deg,#1f5a3a,#0f3322);cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.45)}
+  .pad button.fire{background:linear-gradient(180deg,#b13a2b,#5a160e);color:#ffd9c8}
+  .pad button:active{transform:translateY(2px)}
+  .hint{margin-top:9px;font-size:7px;color:#6f9a78;text-align:center;line-height:1.9}
+</style>
+</head>
+<body>
+<div class="top"><a href="sala-giochi.html">‹ SALA GIOCHI</a><a href="cena-bibo-9k2x.html">ESCI</a></div>
+<div class="arena">
+  <div class="hud"><span id="scoreLbl">PUNTI 0</span><span id="livesLbl">🛡️×3</span><span id="hiLbl">REC 0</span></div>
+  <div class="stage">
+    <canvas id="cv" width="340" height="500"></canvas>
+    <div class="ov" id="splash"><div class="big">SPACE<br>INVADERS</div><div class="sm">difendi la Terra 👾<br>record <span id="hiS">0</span></div><div class="sm blink">★ INSERT COIN ★</div></div>
+    <div class="ov hide" id="over"><div class="big">GAME OVER</div><div class="sm">punti <span id="finalSc">0</span></div><div class="sm blink">★ INSERT COIN ★</div></div>
+    <div class="ov hide" id="pause"><div class="big">PAUSA</div><div class="sm blink">▶ RIPRENDI</div></div>
+  </div>
+</div>
+<div class="softrow">
+  <button class="soft" id="mBtn">MUSICA ON</button><button class="soft" id="sBtn">SUONI ON</button>
+  <button class="soft" id="pauseBtn">PAUSA</button><button class="soft" id="okBtn">PLAY</button>
+</div>
+<div class="pad"><button id="bL">◀</button><button class="fire" id="bF">🔫 FUOCO</button><button id="bR">▶</button></div>
+<div class="hint">◀ ▶ muovi · FUOCO/spazio spara · P pausa</div>
+<script src="arcade.js"></script>
+<script>
+(function(){
+  var KEY='invaders';
+  var cv=document.getElementById('cv'), ctx=cv.getContext('2d'), W=cv.width, H=cv.height;
+  var COLS=8, ROWS=4, AW=26;
+  var aliens, dir, stepT, stepMs, player, pb, eb, score, lives, wave, state, last, move, fireHeld, fireCd, alienFireT;
+  var ROWE=['👾','👾','👽','🛸'], ROWP=[30,30,20,10];
+
+  function setHud(){ document.getElementById('scoreLbl').textContent='PUNTI '+(score||0);
+    document.getElementById('livesLbl').textContent='🛡️×'+Math.max(0,lives||0);
+    var b=Arcade.best(KEY),n=Arcade.bestName(KEY); document.getElementById('hiLbl').textContent='REC '+b+(n?' '+n:''); }
+  function buildWave(){ aliens=[]; for(var r=0;r<ROWS;r++) for(var c=0;c<COLS;c++){ aliens.push({x:34+c*36,y:60+r*32,r:r,alive:true}); }
+    dir=1; stepMs=Math.max(160,560-wave*60); stepT=0; }
+  function reset(){ player={x:W/2,y:H-34,w:34}; pb=[]; eb=[]; score=0; lives=3; wave=1; move=0; fireHeld=false; fireCd=0; alienFireT=0; buildWave(); setHud(); }
+  function show(id){ ['splash','over','pause'].forEach(function(s){document.getElementById(s).classList.toggle('hide',s!==id);}); }
+  function hideOv(){ ['splash','over','pause'].forEach(function(s){document.getElementById(s).classList.add('hide');}); }
+  function start(){ reset(); state='play'; hideOv(); Arcade.musicStart(); Arcade.sfx(880,.06); last=performance.now(); requestAnimationFrame(loop); }
+  function togglePause(){ if(state==='play'){state='pause';show('pause');Arcade.musicStop();} else if(state==='pause'){state='play';hideOv();Arcade.musicStart();last=performance.now();requestAnimationFrame(loop);} }
+  function action(){ Arcade.ctx(); if(state==='play'||state==='pause') togglePause(); else start(); }
+  function over(){ state='over'; Arcade.musicStop(); Arcade.sfx(180,.2);setTimeout(function(){Arcade.sfx(90,.3);},120);
+    document.getElementById('finalSc').textContent=score;
+    if(Arcade.isHigh(KEY,score)) Arcade.nameEntry(score,function(n){Arcade.addScore(KEY,n,score);setHud();});
+    setHud(); show('over'); }
+
+  function fire(){ if(state!=='play')return; if(fireCd>0)return; pb.push({x:player.x,y:player.y-16}); fireCd=.34; Arcade.sfx(880,.05); }
+  function alive(){ var n=0; for(var i=0;i<aliens.length;i++) if(aliens[i].alive)n++; return n; }
+
+  function loop(t){
+    if(state!=='play')return; var dt=Math.min(.05,(t-last)/1000); last=t;
+    player.x+=move*260*dt; if(player.tx!=null) player.x+=(player.tx-player.x)*Math.min(1,dt*16);
+    player.x=Math.max(20,Math.min(W-20,player.x));
+    if(fireCd>0)fireCd-=dt; if(fireHeld)fire();
+    // alien step
+    var n=alive(); stepMs=Math.max(90,(560-wave*60)*(n/(COLS*ROWS))+90); stepT+=dt*1000;
+    if(stepT>=stepMs){ stepT=0; var edge=false;
+      for(var i=0;i<aliens.length;i++){ if(!aliens[i].alive)continue; var nx=aliens[i].x+dir*10; if(nx<18||nx>W-18) edge=true; }
+      if(edge){ dir*=-1; for(i=0;i<aliens.length;i++) aliens[i].y+=16; }
+      else for(i=0;i<aliens.length;i++) aliens[i].x+=dir*10;
+      Arcade.sfx(140+ (n%2?40:0),.03,'triangle');
+      // reached bottom?
+      for(i=0;i<aliens.length;i++){ if(aliens[i].alive && aliens[i].y>player.y-26){ over(); return; } }
+    }
+    // alien fire
+    alienFireT+=dt*1000; if(alienFireT> Math.max(420,1100-wave*80)){ alienFireT=0; var liveA=aliens.filter(function(a){return a.alive;});
+      if(liveA.length){ var a=liveA[(Math.random()*liveA.length)|0]; eb.push({x:a.x,y:a.y+14}); } }
+    // bullets
+    for(var b=pb.length-1;b>=0;b--){ pb[b].y-=420*dt; if(pb[b].y<-10){pb.splice(b,1);continue;}
+      for(i=0;i<aliens.length;i++){ var al=aliens[i]; if(!al.alive)continue;
+        if(Math.abs(pb[b].x-al.x)<AW/2 && Math.abs(pb[b].y-al.y)<AW/2){ al.alive=false; score+=ROWP[al.r]; Arcade.sfx(660,.05); pb.splice(b,1); setHud(); break; } } }
+    for(b=eb.length-1;b>=0;b--){ eb[b].y+=260*dt; if(eb[b].y>H+10){eb.splice(b,1);continue;}
+      if(Math.abs(eb[b].x-player.x)<18 && Math.abs(eb[b].y-player.y)<16){ eb.splice(b,1); lives--; Arcade.sfx(150,.25,'sawtooth'); if(lives<=0){over();return;} setHud(); } }
+    if(alive()===0){ wave++; pb=[]; eb=[]; buildWave(); Arcade.sfx(1320,.12); }
+    draw(); requestAnimationFrame(loop);
+  }
+  function draw(){
+    ctx.fillStyle='#05060d'; ctx.fillRect(0,0,W,H);
+    ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='24px serif';
+    for(var i=0;i<aliens.length;i++){ if(aliens[i].alive) ctx.fillText(ROWE[aliens[i].r],aliens[i].x,aliens[i].y); }
+    // player cannon
+    ctx.fillStyle='#7CFC9A'; ctx.fillRect(player.x-16,player.y-4,32,12); ctx.fillRect(player.x-3,player.y-14,6,12);
+    ctx.fillStyle='#bff7cf'; for(i=0;i<pb.length;i++) ctx.fillRect(pb[i].x-2,pb[i].y-8,4,12);
+    ctx.fillStyle='#ff8a6a'; for(i=0;i<eb.length;i++) ctx.fillRect(eb[i].x-2,eb[i].y-6,4,12);
+  }
+  function px(clientX){ var r=cv.getBoundingClientRect(); return (clientX-r.left)/r.width*W; }
+  cv.addEventListener('pointerdown',function(e){ if(state==='play') player.tx=px(e.clientX); },{passive:true});
+  cv.addEventListener('pointermove',function(e){ if(state==='play'&&(e.buttons||e.pointerType==='touch')) player.tx=px(e.clientX); },{passive:true});
+  cv.addEventListener('touchmove',function(e){e.preventDefault();},{passive:false});
+  function hold(btn,v){ btn.addEventListener('pointerdown',function(e){e.preventDefault();player.tx=null;move=v;}); ['pointerup','pointerleave','pointercancel'].forEach(function(ev){btn.addEventListener(ev,function(){move=0;});}); }
+  hold(document.getElementById('bL'),-1); hold(document.getElementById('bR'),1);
+  var bF=document.getElementById('bF');
+  bF.addEventListener('pointerdown',function(e){e.preventDefault();fireHeld=true;fire();}); ['pointerup','pointerleave','pointercancel'].forEach(function(ev){bF.addEventListener(ev,function(){fireHeld=false;});});
+  document.getElementById('okBtn').addEventListener('click',action);
+  document.getElementById('pauseBtn').addEventListener('click',function(){Arcade.ctx(); if(state==='play'||state==='pause') togglePause();});
+  Arcade.bindAudioButtons('mBtn','sBtn');
+  addEventListener('keydown',function(e){ var k=e.key.toLowerCase(); if(['arrowleft','arrowright',' '].indexOf(k)>=0)e.preventDefault();
+    if(k==='arrowleft'||k==='a'){player.tx=null;move=-1;} else if(k==='arrowright'||k==='d'){player.tx=null;move=1;}
+    else if(k===' '){ if(state==='play')fire(); else action(); } else if(k==='enter'){ action(); } else if(k==='p'){ if(state==='play'||state==='pause') togglePause(); } });
+  addEventListener('keyup',function(e){ var k=e.key.toLowerCase(); if(k==='arrowleft'||k==='arrowright'||k==='a'||k==='d') move=0; });
+  reset(); state='idle'; draw(); document.getElementById('hiS').textContent=Arcade.best(KEY); show('splash');
+})();
+</script>
+</body>
+</html>

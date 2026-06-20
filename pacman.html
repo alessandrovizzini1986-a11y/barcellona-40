@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#05050f">
+<meta name="robots" content="noindex,nofollow">
+<title>PAC-MAN</title>
+<meta property="og:type" content="website">
+<meta property="og:title" content="🟡 PAC-MAN">
+<meta property="og:description" content="Mangia i pallini, schiva i fantasmi. Insert coin!">
+<meta property="og:image" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/og-pacman.jpg?v=1">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/og-pacman.jpg?v=1">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{background:radial-gradient(120% 80% at 50% 0%,#11113a,#04040c 70%);color:#ffe45e;
+    font-family:"Press Start 2P",monospace;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    min-height:100svh;overflow:hidden;padding:8px;user-select:none;-webkit-user-select:none}
+  .top{position:fixed;top:calc(8px + env(safe-area-inset-top));left:0;right:0;display:flex;justify-content:space-between;padding:0 14px;font-size:8px;z-index:10}
+  .top a{color:#8b93b0;text-decoration:none}
+  .arena{width:min(94vw,340px)}
+  .hud{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:9px;color:#ffe45e}
+  .stage{position:relative;border-radius:12px;overflow:hidden;border:1px solid rgba(120,140,255,.3);box-shadow:0 24px 60px -26px #000}
+  canvas{display:block;width:100%;height:auto;background:#05050f}
+  .ov{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;background:rgba(4,4,12,.86);padding:14px}
+  .ov.hide{display:none}
+  .ov .big{font-size:17px;color:#ffe45e;line-height:1.5}
+  .ov .sm{font-size:8px;line-height:1.9;color:#cfd6ee}
+  .ov .blink{animation:bk 1s steps(1) infinite;color:#ffd28a}@keyframes bk{50%{opacity:0}}
+  .softrow{display:flex;gap:8px;margin-top:12px;width:min(94vw,340px)}
+  .soft{flex:1;font-family:inherit;font-size:7px;color:#cdd8e4;padding:11px 0;border-radius:11px;border:1px solid rgba(255,255,255,.08);
+    background:linear-gradient(180deg,#1c3a58,#102a42);cursor:pointer;box-shadow:0 3px 0 rgba(0,0,0,.4)}
+  .soft:active{transform:translateY(2px)}.soft.off{opacity:.55}
+  .pad{margin-top:10px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;width:min(70vw,230px)}
+  .pad button{font-family:inherit;font-size:16px;color:#0a0a18;padding:15px 0;border-radius:12px;border:none;background:#ffe45e;cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.45)}
+  .pad button:active{transform:translateY(2px)}
+  .pad .u{grid-column:2}.pad .l{grid-column:1;grid-row:2}.pad .d{grid-column:2;grid-row:2}.pad .r{grid-column:3;grid-row:2}
+  .hint{margin-top:9px;font-size:7px;color:#9a90c0;text-align:center;line-height:1.9}
+</style>
+</head>
+<body>
+<div class="top"><a href="sala-giochi.html">‹ SALA GIOCHI</a><a href="cena-bibo-9k2x.html">ESCI</a></div>
+<div class="arena">
+  <div class="hud"><span id="scoreLbl">PUNTI 0</span><span id="livesLbl">🟡×3</span><span id="hiLbl">REC 0</span></div>
+  <div class="stage">
+    <canvas id="cv" width="270" height="306"></canvas>
+    <div class="ov" id="splash"><div class="big">PAC-MAN</div><div class="sm">mangia i pallini 🟡<br>schiva i fantasmi 👻<br>record <span id="hiS">0</span></div><div class="sm blink">★ INSERT COIN ★</div></div>
+    <div class="ov hide" id="over"><div class="big">GAME OVER</div><div class="sm">punti <span id="finalSc">0</span></div><div class="sm blink">★ INSERT COIN ★</div></div>
+    <div class="ov hide" id="pause"><div class="big">PAUSA</div><div class="sm blink">▶ RIPRENDI</div></div>
+  </div>
+</div>
+<div class="softrow">
+  <button class="soft" id="mBtn">MUSICA ON</button><button class="soft" id="sBtn">SUONI ON</button>
+  <button class="soft" id="pauseBtn">PAUSA</button><button class="soft" id="okBtn">PLAY</button>
+</div>
+<div class="pad"><button class="u" id="bU">▲</button><button class="l" id="bL">◀</button><button class="d" id="bD">▼</button><button class="r" id="bR">▶</button></div>
+<div class="hint">frecce / D-pad / swipe · P pausa</div>
+<script src="arcade.js"></script>
+<script>
+(function(){
+  var KEY='pacman';
+  var cv=document.getElementById('cv'), ctx=cv.getContext('2d');
+  var TS=18, COLS=15, ROWS=17;
+  var grid, pellets, pelletN, pac, ghosts, score, lives, state, last, fright, mouth;
+  var DIRS=[{x:1,y:0},{x:-1,y:0},{x:0,y:1},{x:0,y:-1}];
+
+  function isWall(r,c){ if(r<0||c<0||r>=ROWS||c>=COLS) return true; return grid[r][c]===1; }
+  function buildMaze(){
+    grid=[]; pellets=[]; pelletN=0;
+    for(var r=0;r<ROWS;r++){ grid.push([]); pellets.push([]);
+      for(var c=0;c<COLS;c++){
+        var wall = (r===0||c===0||r===ROWS-1||c===COLS-1||(r%2===0&&c%2===0));
+        grid[r][c]=wall?1:0; pellets[r][c]=0; } }
+    // ghost home cells & pac start: no pellet
+    var noP={'8,6':1,'8,7':1,'8,8':1,'15,7':1};
+    for(r=0;r<ROWS;r++)for(c=0;c<COLS;c++){ if(grid[r][c]===0 && !noP[r+','+c]){ pellets[r][c]=1; pelletN++; } }
+    [[1,1],[1,13],[15,1],[15,13]].forEach(function(p){ if(grid[p[0]][p[1]]===0){ if(pellets[p[0]][p[1]]===0) pelletN++; pellets[p[0]][p[1]]=2; } });
+  }
+  function ent(r,c,sp){ return {cr:r,cc:c,nr:r,nc:c,t:0,dir:{x:0,y:0},sp:sp}; }
+  function pxOf(e){ return {x:(e.cc+(e.nc-e.cc)*e.t)*TS+TS/2, y:(e.cr+(e.nr-e.cr)*e.t)*TS+TS/2}; }
+  function setHud(){ document.getElementById('scoreLbl').textContent='PUNTI '+(score||0);
+    document.getElementById('livesLbl').textContent='🟡×'+Math.max(0,lives||0);
+    var b=Arcade.best(KEY),n=Arcade.bestName(KEY); document.getElementById('hiLbl').textContent='REC '+b+(n?' '+n:''); }
+  function placeAll(){ pac=ent(15,7,72); pac.want={x:0,y:0};
+    ghosts=[{e:ent(8,6,62),col:'#ff4d4d',home:[8,6]},{e:ent(8,8,62),col:'#52d6ff',home:[8,8]}];
+    ghosts.forEach(function(g){ g.e.dir={x:0,y:-1}; }); fright=0; }
+  function reset(){ buildMaze(); score=0; lives=3; mouth=0; placeAll(); setHud(); }
+  function show(id){ ['splash','over','pause'].forEach(function(s){document.getElementById(s).classList.toggle('hide',s!==id);}); }
+  function hideOv(){ ['splash','over','pause'].forEach(function(s){document.getElementById(s).classList.add('hide');}); }
+  function start(){ reset(); state='play'; hideOv(); Arcade.musicStart(); Arcade.sfx(880,.06); last=performance.now(); requestAnimationFrame(loop); }
+  function togglePause(){ if(state==='play'){state='pause';show('pause');Arcade.musicStop();} else if(state==='pause'){state='play';hideOv();Arcade.musicStart();last=performance.now();requestAnimationFrame(loop);} }
+  function action(){ Arcade.ctx(); if(state==='play'||state==='pause') togglePause(); else start(); }
+  function over(){ state='over'; Arcade.musicStop(); Arcade.sfx(180,.2);setTimeout(function(){Arcade.sfx(90,.3);},120);
+    document.getElementById('finalSc').textContent=score;
+    if(Arcade.isHigh(KEY,score)) Arcade.nameEntry(score,function(n){Arcade.addScore(KEY,n,score);setHud();});
+    setHud(); show('over'); }
+
+  function arrive(e,chooser){
+    e.cr=e.nr; e.cc=e.nc; e.t=0;
+    // eat for pac handled outside
+    var opts=DIRS.filter(function(d){ return !isWall(e.cr+d.y,e.cc+d.x); });
+    var nonrev=opts.filter(function(d){ return !(d.x===-e.dir.x && d.y===-e.dir.y); });
+    var pool=nonrev.length?nonrev:opts;
+    var d=chooser(e,pool);
+    if(d){ e.dir=d; e.nr=e.cr+d.y; e.nc=e.cc+d.x; } else { e.dir={x:0,y:0}; }
+  }
+  function stepEnt(e,dt,chooser){
+    if(e.dir.x===0&&e.dir.y===0){ // try to start
+      var opts=DIRS.filter(function(d){ return !isWall(e.cr+d.y,e.cc+d.x); });
+      var d=chooser(e,opts); if(d){e.dir=d;e.nr=e.cr+d.y;e.nc=e.cc+d.x;} else return;
+    }
+    e.t+=e.sp*dt/TS;
+    while(e.t>=1){ e.t-=1; arrive(e,chooser); if(e.dir.x===0&&e.dir.y===0){ e.t=0; break; } }
+  }
+  function pacChooser(e,pool){
+    // prefer wanted dir
+    for(var i=0;i<pool.length;i++) if(pool[i].x===pac.want.x&&pool[i].y===pac.want.y) return pool[i];
+    for(i=0;i<pool.length;i++) if(pool[i].x===e.dir.x&&pool[i].y===e.dir.y) return pool[i];
+    return null;
+  }
+  function ghChooser(e,pool){
+    if(!pool.length) return null;
+    if(fright>0){ return pool[(Math.random()*pool.length)|0]; }
+    // greedy toward pac
+    var best=pool[0],bd=1e9;
+    for(var i=0;i<pool.length;i++){ var nr=e.cr+pool[i].y,nc=e.cc+pool[i].x;
+      var dd=(nr-pac.cr)*(nr-pac.cr)+(nc-pac.cc)*(nc-pac.cc); if(dd<bd){bd=dd;best=pool[i];} }
+    return best;
+  }
+
+  function loop(t){
+    if(state!=='play')return; var dt=Math.min(.05,(t-last)/1000); last=t; mouth+=dt*8;
+    var pr=pac.cr,pc=pac.cc;
+    stepEnt(pac,dt,pacChooser);
+    // eat when entering new cell
+    if(pac.cr!==pr||pac.cc!==pc){
+      if(pellets[pac.cr][pac.cc]===1){ pellets[pac.cr][pac.cc]=0; pelletN--; score+=10; Arcade.sfx(600,.02); setHud(); }
+      else if(pellets[pac.cr][pac.cc]===2){ pellets[pac.cr][pac.cc]=0; pelletN--; score+=50; fright=7; Arcade.sfx(300,.12); setHud(); }
+    }
+    if(fright>0) fright-=dt;
+    for(var gi=0;gi<ghosts.length;gi++) stepEnt(ghosts[gi].e,dt,ghChooser);
+    // collisions
+    var pp=pxOf(pac);
+    for(gi=0;gi<ghosts.length;gi++){ var gp=pxOf(ghosts[gi].e);
+      if(Math.abs(pp.x-gp.x)<TS*0.6 && Math.abs(pp.y-gp.y)<TS*0.6){
+        if(fright>0){ var h=ghosts[gi].home; ghosts[gi].e=ent(h[0],h[1],62); ghosts[gi].e.dir={x:0,y:-1}; score+=200; Arcade.sfx(1320,.1); setHud(); }
+        else { lives--; Arcade.sfx(160,.3,'sawtooth'); if(lives<=0){over();return;} placeAll(); setHud(); break; }
+      }
+    }
+    if(pelletN<=0){ buildMaze(); placeAll(); Arcade.sfx(1568,.15); } // nuovo livello
+    draw(); requestAnimationFrame(loop);
+  }
+  function draw(){
+    ctx.fillStyle='#05050f'; ctx.fillRect(0,0,cv.width,cv.height);
+    for(var r=0;r<ROWS;r++)for(var c=0;c<COLS;c++){
+      if(grid[r][c]===1){ ctx.fillStyle='#1822c4'; ctx.fillRect(c*TS+2,r*TS+2,TS-4,TS-4); }
+      else if(pellets[r][c]===1){ ctx.fillStyle='#ffd9a0'; ctx.beginPath(); ctx.arc(c*TS+TS/2,r*TS+TS/2,2,0,7); ctx.fill(); }
+      else if(pellets[r][c]===2){ if(((Date.now()/250)|0)%2){ ctx.fillStyle='#ffd9a0'; ctx.beginPath(); ctx.arc(c*TS+TS/2,r*TS+TS/2,5,0,7); ctx.fill(); } }
+    }
+    // pac
+    var p=pxOf(pac); var ang=Math.atan2(pac.dir.y,pac.dir.x); var m=Math.abs(Math.sin(mouth))*0.33+0.05;
+    ctx.fillStyle='#ffe45e'; ctx.beginPath(); ctx.moveTo(p.x,p.y);
+    ctx.arc(p.x,p.y,TS*0.46,ang+m,ang+2*Math.PI-m); ctx.closePath(); ctx.fill();
+    // ghosts
+    for(var gi=0;gi<ghosts.length;gi++){ var gp=pxOf(ghosts[gi].e); var col=fright>0?(fright<2&&((Date.now()/200)|0)%2?'#fff':'#2b44ff'):ghosts[gi].col;
+      ctx.fillStyle=col; var gx=gp.x,gy=gp.y,rr=TS*0.44;
+      ctx.beginPath(); ctx.arc(gx,gy-2,rr,Math.PI,0); ctx.lineTo(gx+rr,gy+rr); ctx.lineTo(gx+rr*0.5,gy+rr*0.6); ctx.lineTo(gx,gy+rr); ctx.lineTo(gx-rr*0.5,gy+rr*0.6); ctx.lineTo(gx-rr,gy+rr); ctx.closePath(); ctx.fill();
+      ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(gx-4,gy-2,3,0,7); ctx.arc(gx+4,gy-2,3,0,7); ctx.fill();
+      ctx.fillStyle='#0a0a30'; ctx.beginPath(); ctx.arc(gx-4+ghosts[gi].e.dir.x*1.5,gy-2+ghosts[gi].e.dir.y*1.5,1.5,0,7); ctx.arc(gx+4+ghosts[gi].e.dir.x*1.5,gy-2+ghosts[gi].e.dir.y*1.5,1.5,0,7); ctx.fill();
+    }
+  }
+  function setWant(x,y){ pac.want={x:x,y:y}; }
+  document.getElementById('bU').addEventListener('click',function(){setWant(0,-1);});
+  document.getElementById('bD').addEventListener('click',function(){setWant(0,1);});
+  document.getElementById('bL').addEventListener('click',function(){setWant(-1,0);});
+  document.getElementById('bR').addEventListener('click',function(){setWant(1,0);});
+  document.getElementById('okBtn').addEventListener('click',action);
+  document.getElementById('pauseBtn').addEventListener('click',function(){Arcade.ctx(); if(state==='play'||state==='pause') togglePause();});
+  Arcade.bindAudioButtons('mBtn','sBtn');
+  addEventListener('keydown',function(e){ var k=e.key.toLowerCase(); if(['arrowup','arrowdown','arrowleft','arrowright',' '].indexOf(k)>=0)e.preventDefault();
+    if(k==='arrowup'||k==='w')setWant(0,-1); else if(k==='arrowdown'||k==='s')setWant(0,1);
+    else if(k==='arrowleft'||k==='a')setWant(-1,0); else if(k==='arrowright'||k==='d')setWant(1,0);
+    else if(k==='p'){ if(state==='play'||state==='pause') togglePause(); } else if(k===' '||k==='enter') action(); });
+  var sx=0,sy=0,lcd=document.querySelector('.stage');
+  lcd.addEventListener('touchstart',function(e){var t=e.touches[0];sx=t.clientX;sy=t.clientY;},{passive:true});
+  lcd.addEventListener('touchend',function(e){var t=e.changedTouches[0],dx=t.clientX-sx,dy=t.clientY-sy;
+    if(Math.abs(dx)<16&&Math.abs(dy)<16){action();return;}
+    if(Math.abs(dx)>Math.abs(dy)) setWant(dx>0?1:-1,0); else setWant(0,dy>0?1:-1);},{passive:true});
+  lcd.addEventListener('touchmove',function(e){e.preventDefault();},{passive:false});
+  reset(); state='idle'; draw(); document.getElementById('hiS').textContent=Arcade.best(KEY); show('splash');
+})();
+</script>
+</body>
+</html>

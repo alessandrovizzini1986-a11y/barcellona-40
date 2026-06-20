@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#0a0820">
+<meta name="robots" content="noindex,nofollow">
+<title>PUZZLE BOBBLE</title>
+<meta property="og:type" content="website">
+<meta property="og:title" content="🫧 PUZZLE BOBBLE">
+<meta property="og:description" content="Spara le bolle, fai gruppi da 3+. Insert coin!">
+<meta property="og:image" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/og-bobble.jpg?v=1">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/og-bobble.jpg?v=1">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{background:radial-gradient(120% 80% at 50% 0%,#241452,#06040f 70%);color:#e9defc;
+    font-family:"Press Start 2P",monospace;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    min-height:100svh;overflow:hidden;padding:8px;user-select:none;-webkit-user-select:none}
+  .top{position:fixed;top:calc(8px + env(safe-area-inset-top));left:0;right:0;display:flex;justify-content:space-between;padding:0 14px;font-size:8px;z-index:10}
+  .top a{color:#9a8cc0;text-decoration:none}
+  .arena{width:min(90vw,320px)}
+  .hud{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:9px;color:#d3a0ff}
+  .stage{position:relative;border-radius:12px;overflow:hidden;border:1px solid rgba(180,140,255,.3);box-shadow:0 24px 60px -26px #000}
+  canvas{display:block;width:100%;height:auto;background:#0a0820}
+  .ov{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;background:rgba(8,5,20,.86);padding:14px}
+  .ov.hide{display:none}
+  .ov .big{font-size:16px;color:#d3a0ff;line-height:1.5}
+  .ov .sm{font-size:8px;line-height:1.9;color:#cfc6ee}
+  .ov .blink{animation:bk 1s steps(1) infinite;color:#ffd28a}@keyframes bk{50%{opacity:0}}
+  .softrow{display:flex;gap:8px;margin-top:12px;width:min(90vw,320px)}
+  .soft{flex:1;font-family:inherit;font-size:7px;color:#cdd8e4;padding:11px 0;border-radius:11px;border:1px solid rgba(255,255,255,.08);
+    background:linear-gradient(180deg,#3a2c66,#1c1240);cursor:pointer;box-shadow:0 3px 0 rgba(0,0,0,.4)}
+  .soft:active{transform:translateY(2px)}.soft.off{opacity:.55}
+  .pad{display:flex;gap:12px;margin-top:10px;width:min(90vw,320px)}
+  .pad button{flex:1;font-family:inherit;font-size:16px;color:#efe7ff;padding:18px 0;border-radius:14px;border:1px solid rgba(255,255,255,.08);
+    background:linear-gradient(180deg,#5a3aa6,#2c1860);cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.45)}
+  .pad button.fire{background:linear-gradient(180deg,#b1359a,#5a1650);color:#ffd9f4}
+  .pad button:active{transform:translateY(2px)}
+  .hint{margin-top:9px;font-size:7px;color:#8c80b8;text-align:center;line-height:1.9}
+</style>
+</head>
+<body>
+<div class="top"><a href="sala-giochi.html">‹ SALA GIOCHI</a><a href="cena-bibo-9k2x.html">ESCI</a></div>
+<div class="arena">
+  <div class="hud"><span id="scoreLbl">PUNTI 0</span><span id="hiLbl">REC 0</span></div>
+  <div class="stage">
+    <canvas id="cv" width="256" height="368"></canvas>
+    <div class="ov" id="splash"><div class="big">PUZZLE<br>BOBBLE</div><div class="sm">gruppi da 3+ 🫧<br>record <span id="hiS">0</span></div><div class="sm blink">★ INSERT COIN ★</div></div>
+    <div class="ov hide" id="over"><div class="big" id="overT">GAME OVER</div><div class="sm">punti <span id="finalSc">0</span></div><div class="sm blink">★ INSERT COIN ★</div></div>
+    <div class="ov hide" id="pause"><div class="big">PAUSA</div><div class="sm blink">▶ RIPRENDI</div></div>
+  </div>
+</div>
+<div class="softrow">
+  <button class="soft" id="mBtn">MUSICA ON</button><button class="soft" id="sBtn">SUONI ON</button>
+  <button class="soft" id="pauseBtn">PAUSA</button><button class="soft" id="okBtn">PLAY</button>
+</div>
+<div class="pad"><button id="bL">◀</button><button class="fire" id="bF">🫧 SPARA</button><button id="bR">▶</button></div>
+<div class="hint">◀ ▶ mira · SPARA/spazio · tocca per mirare</div>
+<script src="arcade.js"></script>
+<script>
+(function(){
+  var KEY='bobble';
+  var cv=document.getElementById('cv'), ctx=cv.getContext('2d'), W=cv.width, H=cv.height;
+  var R=16, ROWH=R*1.7, COLS=8, MAXR=14, DANGER=H-46;
+  var COLP=['#ff5a5a','#ffd23e','#5ad06a','#52b6ff','#c779ff'];
+  var grid, cur, nextc, shoot, angle, score, state, last, aim;
+
+  function colsIn(r){ return (r%2)?COLS-1:COLS; }
+  function cx(r,c){ return R + c*2*R + (r%2?R:0); }
+  function cy(r){ return R + r*ROWH; }
+  function near(r,c){ var res=[],dr,dc; for(dr=-1;dr<=1;dr++)for(dc=-1;dc<=1;dc++){ if(!dr&&!dc)continue;
+    var rr=r+dr,cc=c+dc; if(rr<0||rr>=MAXR||cc<0||cc>=colsIn(rr))continue;
+    var dx=cx(rr,cc)-cx(r,c),dy=cy(rr)-cy(r); if(dx*dx+dy*dy < (2.05*R)*(2.05*R)) res.push([rr,cc]); } return res; }
+
+  function setHud(){ document.getElementById('scoreLbl').textContent='PUNTI '+(score||0);
+    var b=Arcade.best(KEY),n=Arcade.bestName(KEY); document.getElementById('hiLbl').textContent='REC '+b+(n?' '+n:''); }
+  function randColor(){ return (Math.random()*COLP.length)|0; }
+  function build(){ grid=[]; for(var r=0;r<MAXR;r++){ grid.push([]); for(var c=0;c<colsIn(r);c++){ grid[r][c]= (r<5)? randColor() : -1; } } }
+  function reset(){ build(); score=0; angle=0; nextc=randColor(); cur=randColor(); shoot=null; setHud(); }
+  function show(id){ ['splash','over','pause'].forEach(function(s){document.getElementById(s).classList.toggle('hide',s!==id);}); }
+  function hideOv(){ ['splash','over','pause'].forEach(function(s){document.getElementById(s).classList.add('hide');}); }
+  function start(){ reset(); state='play'; hideOv(); Arcade.musicStart(); Arcade.sfx(880,.06); last=performance.now(); requestAnimationFrame(loop); }
+  function togglePause(){ if(state==='play'){state='pause';show('pause');Arcade.musicStop();} else if(state==='pause'){state='play';hideOv();Arcade.musicStart();last=performance.now();requestAnimationFrame(loop);} }
+  function action(){ Arcade.ctx(); if(state==='play'||state==='pause') togglePause(); else start(); }
+  function over(win){ state='over'; Arcade.musicStop(); document.getElementById('overT').textContent=win?'COMPLETO!':'GAME OVER';
+    if(win)Arcade.sfx(1568,.2); else {Arcade.sfx(180,.2);setTimeout(function(){Arcade.sfx(90,.3);},120);}
+    document.getElementById('finalSc').textContent=score;
+    if(Arcade.isHigh(KEY,score)) Arcade.nameEntry(score,function(n){Arcade.addScore(KEY,n,score);setHud();});
+    setHud(); show('over'); }
+
+  function fire(){ if(state!=='play'||shoot)return; var a=angle; var sp=360;
+    shoot={x:W/2,y:H-26,vx:Math.sin(a)*sp,vy:-Math.cos(a)*sp,col:cur}; Arcade.sfx(520,.05); cur=nextc; nextc=randColor(); }
+
+  function snap(x,y){
+    var r=Math.max(0,Math.min(MAXR-1,Math.round((y-R)/ROWH)));
+    var c=Math.max(0,Math.min(colsIn(r)-1,Math.round((x-R-(r%2?R:0))/(2*R))));
+    if(grid[r][c]===-1) return [r,c];
+    var best=null,bd=1e9;
+    for(var dr=-1;dr<=1;dr++)for(var dc=-1;dc<=1;dc++){ var rr=r+dr,cc=c+dc; if(rr<0||rr>=MAXR||cc<0||cc>=colsIn(rr))continue;
+      if(grid[rr][cc]!==-1)continue; var dx=cx(rr,cc)-x,dy=cy(rr)-y,d=dx*dx+dy*dy; if(d<bd){bd=d;best=[rr,cc];} }
+    return best;
+  }
+  function cluster(r,c,sameColorOnly){
+    var col=grid[r][c]; var seen={},st=[[r,c]],out=[];
+    while(st.length){ var p=st.pop(),k=p[0]+','+p[1]; if(seen[k])continue; seen[k]=1;
+      if(grid[p[0]][p[1]]===-1)continue; if(sameColorOnly && grid[p[0]][p[1]]!==col)continue; out.push(p);
+      near(p[0],p[1]).forEach(function(q){ if(!seen[q[0]+','+q[1]] && grid[q[0]][q[1]]!==-1) st.push(q); }); }
+    return out;
+  }
+  function dropFloating(){
+    var conn={}, st=[];
+    for(var c=0;c<colsIn(0);c++) if(grid[0][c]!==-1){ st.push([0,c]); }
+    while(st.length){ var p=st.pop(),k=p[0]+','+p[1]; if(conn[k])continue; conn[k]=1;
+      near(p[0],p[1]).forEach(function(q){ if(grid[q[0]][q[1]]!==-1 && !conn[q[0]+','+q[1]]) st.push(q); }); }
+    var fell=0;
+    for(var r=0;r<MAXR;r++)for(c=0;c<colsIn(r);c++){ if(grid[r][c]!==-1 && !conn[r+','+c]){ grid[r][c]=-1; fell++; } }
+    if(fell){ score+=fell*20; Arcade.sfx(1200,.08); }
+  }
+  function place(r,c,col){
+    grid[r][c]=col;
+    var cl=cluster(r,c,true);
+    if(cl.length>=3){ cl.forEach(function(p){ grid[p[0]][p[1]]=-1; }); score+=cl.length*10; Arcade.sfx(880,.06); dropFloating(); }
+    setHud();
+    // win?
+    var any=false; for(var rr=0;rr<MAXR;rr++)for(var cc=0;cc<colsIn(rr);cc++) if(grid[rr][cc]!==-1) any=true;
+    if(!any){ over(true); return; }
+    // lose?
+    for(rr=0;rr<MAXR;rr++)for(cc=0;cc<colsIn(rr);cc++) if(grid[rr][cc]!==-1 && cy(rr)>DANGER){ over(false); return; }
+  }
+
+  function loop(t){
+    if(state!=='play')return; var dt=Math.min(.04,(t-last)/1000); last=t;
+    if(aim) angle=Math.max(-1.36,Math.min(1.36,angle+aim*2.4*dt));
+    if(shoot){ shoot.x+=shoot.vx*dt; shoot.y+=shoot.vy*dt;
+      if(shoot.x<R){shoot.x=R;shoot.vx=-shoot.vx;} if(shoot.x>W-R){shoot.x=W-R;shoot.vx=-shoot.vx;}
+      var hit=shoot.y<=R+1;
+      if(!hit){ for(var r=0;r<MAXR&&!hit;r++)for(var c=0;c<colsIn(r);c++){ if(grid[r][c]===-1)continue;
+        var dx=shoot.x-cx(r,c),dy=shoot.y-cy(r); if(dx*dx+dy*dy<(1.85*R)*(1.85*R)){hit=true;break;} } }
+      if(hit){ var s=snap(shoot.x,shoot.y); var col=shoot.col; shoot=null; if(s) place(s[0],s[1],col); }
+    }
+    draw(); requestAnimationFrame(loop);
+  }
+  function bubble(x,y,ci){ var col=COLP[ci]; ctx.beginPath(); ctx.arc(x,y,R-1,0,7); ctx.fillStyle=col; ctx.fill();
+    ctx.beginPath(); ctx.arc(x-R*0.3,y-R*0.3,R*0.28,0,7); ctx.fillStyle='rgba(255,255,255,.45)'; ctx.fill(); }
+  function draw(){
+    ctx.fillStyle='#0a0820'; ctx.fillRect(0,0,W,H);
+    ctx.strokeStyle='rgba(255,90,90,.25)'; ctx.beginPath(); ctx.moveTo(0,DANGER); ctx.lineTo(W,DANGER); ctx.stroke();
+    for(var r=0;r<MAXR;r++)for(var c=0;c<colsIn(r);c++){ if(grid[r][c]!==-1) bubble(cx(r,c),cy(r),grid[r][c]); }
+    // aim line
+    var sxp=W/2, syp=H-26;
+    ctx.strokeStyle='rgba(255,255,255,.25)'; ctx.setLineDash([4,6]); ctx.beginPath(); ctx.moveTo(sxp,syp);
+    ctx.lineTo(sxp+Math.sin(angle)*70, syp-Math.cos(angle)*70); ctx.stroke(); ctx.setLineDash([]);
+    if(shoot) bubble(shoot.x,shoot.y,shoot.col);
+    bubble(sxp,syp,cur);            // current
+    bubble(W-R-4,H-R-4,nextc);      // next
+  }
+
+  function px(e){ var r=cv.getBoundingClientRect(); return {x:(e.clientX-r.left)/r.width*W,y:(e.clientY-r.top)/r.height*H}; }
+  cv.addEventListener('pointerdown',function(e){ if(state!=='play')return; var p=px(e); var a=Math.atan2(p.x-W/2,(H-26)-p.y); angle=Math.max(-1.36,Math.min(1.36,a)); fire(); },{passive:true});
+  function hold(btn,v){ btn.addEventListener('pointerdown',function(e){e.preventDefault();aim=v;}); ['pointerup','pointerleave','pointercancel'].forEach(function(ev){btn.addEventListener(ev,function(){aim=0;});}); }
+  hold(document.getElementById('bL'),-1); hold(document.getElementById('bR'),1);
+  document.getElementById('bF').addEventListener('click',fire);
+  document.getElementById('okBtn').addEventListener('click',action);
+  document.getElementById('pauseBtn').addEventListener('click',function(){Arcade.ctx(); if(state==='play'||state==='pause') togglePause();});
+  Arcade.bindAudioButtons('mBtn','sBtn');
+  addEventListener('keydown',function(e){ var k=e.key.toLowerCase(); if(['arrowleft','arrowright','arrowup',' '].indexOf(k)>=0)e.preventDefault();
+    if(k==='arrowleft'||k==='a')aim=-1; else if(k==='arrowright'||k==='d')aim=1;
+    else if(k==='arrowup'||k===' '){ if(state==='play')fire(); else action(); } else if(k==='enter')action(); else if(k==='p'){ if(state==='play'||state==='pause') togglePause(); } });
+  addEventListener('keyup',function(e){ var k=e.key.toLowerCase(); if(k==='arrowleft'||k==='arrowright'||k==='a'||k==='d') aim=0; });
+  reset(); state='idle'; draw(); document.getElementById('hiS').textContent=Arcade.best(KEY); show('splash');
+})();
+</script>
+</body>
+</html>
