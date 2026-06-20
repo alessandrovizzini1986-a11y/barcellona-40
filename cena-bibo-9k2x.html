@@ -142,6 +142,7 @@
         Confermo · ci sono
       </a>
       <p class="prev" id="preview"></p>
+      <div class="cd" id="proof" style="margin-top:8px"></div>
       <div class="cd" id="cd"></div>
     </div>
     <div class="scrolldn">i dettagli sotto ↓</div>
@@ -195,6 +196,16 @@
   document.getElementById('plus').addEventListener('click',function(){if(q<30)q++;sync();});
   document.getElementById('minus').addEventListener('click',function(){if(q>1)q--;sync();});
   nm.addEventListener('input',sync); sync();
+
+  /* social proof: contatore condiviso (Abacus, gratuito) */
+  var CNT='https://abacus.jasoncameron.dev/', NS='cena-uomini-veri-26giu', K='rsvp';
+  var proof=document.getElementById('proof');
+  function showCount(n){ proof.innerHTML = n>0 ? ('🔥 in <b>'+n+'</b> hanno già detto sì') : '🔥 sii il primo a dire sì'; }
+  fetch(CNT+'get/'+NS+'/'+K).then(function(r){return r.json();}).then(function(d){ showCount(d&&d.value!=null?d.value:0); }).catch(function(){});
+  waBtn.addEventListener('click',function(){
+    try{ if(localStorage.getItem('cena_rsvp_done')) return; }catch(e){}
+    fetch(CNT+'hit/'+NS+'/'+K).then(function(r){return r.json();}).then(function(d){ if(d&&d.value!=null){ showCount(d.value); try{localStorage.setItem('cena_rsvp_done','1');}catch(e){} } }).catch(function(){});
+  });
 
   /* countdown al ritrovo */
   var TARGET=new Date('2026-06-26T19:30:00+02:00').getTime();
