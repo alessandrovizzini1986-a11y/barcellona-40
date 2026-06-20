@@ -87,7 +87,8 @@
 </div>
 
 <div class="softrow">
-  <button class="soft" id="sndBtn">AUDIO ON</button>
+  <button class="soft" id="mBtn">MUSICA</button>
+      <button class="soft" id="sBtn">SUONI</button>
   <button class="soft" id="pauseBtn">PAUSA</button>
   <button class="soft" id="okBtn">PLAY</button>
 </div>
@@ -100,6 +101,7 @@
 </div>
 <div class="hint">frecce · ↑ ruota · spazio = giù tutto · P pausa</div>
 
+<script src="arcade.js"></script>
 <script>
 (function(){
   var cv=document.getElementById('cv'), ctx=cv.getContext('2d');
@@ -115,15 +117,13 @@
     L:{c:'#e6913a',m:[[0,0,1],[1,1,1],[0,0,0]]}
   };
   var board, cur, nextType, bag, score, lines, level, hi, state, dropMs, acc, last;
-  var SND=true, actx=null;
+  
 
-  hi=parseInt(localStorage.getItem('tetris_hi')||'0',10)||0;
+  hi=Math.max(Arcade.best('tetris'),parseInt(localStorage.getItem('tetris_hi')||'0',10)||0);
   document.getElementById('hiS').textContent=hi; document.getElementById('hiLbl').textContent=hi;
 
-  function ac(){ if(!actx){try{actx=new(window.AudioContext||window.webkitAudioContext)();}catch(e){}} return actx; }
-  function beep(f,d,t){ if(!SND)return; var a=ac(); if(!a)return; var o=a.createOscillator(),g=a.createGain();
-    o.type=t||'square';o.frequency.value=f;o.connect(g);g.connect(a.destination);
-    g.gain.setValueAtTime(.13,a.currentTime);g.gain.exponentialRampToValueAtTime(.0001,a.currentTime+d);o.start();o.stop(a.currentTime+d); }
+  function ac(){ return Arcade.ctx(); }
+  function beep(f,d,t){ Arcade.sfx(f,d,t); }
   function coin(){ beep(988,.05);setTimeout(function(){beep(1319,.05);},70);setTimeout(function(){beep(1568,.09);},140); }
 
   function newBag(){ var t=['I','O','T','S','Z','J','L']; for(var i=t.length-1;i>0;i--){var j=(Math.random()*(i+1))|0;var x=t[i];t[i]=t[j];t[j]=x;} return t; }
@@ -162,9 +162,9 @@
   function show(id){ ['splash','over','pause'].forEach(function(s){document.getElementById(s).classList.toggle('hide',s!==id);}); }
   function hideOv(){ ['splash','over','pause'].forEach(function(s){document.getElementById(s).classList.add('hide');}); }
 
-  function start(){ reset(); spawn(nextType); nextType=nextPiece(); drawNext(); state='play'; hideOv(); coin(); last=performance.now(); requestAnimationFrame(loop); }
-  function gameOver(){ state='over'; beep(180,.2);setTimeout(function(){beep(110,.3);},120);
-    var nr=false; if(score>hi){hi=score;try{localStorage.setItem('tetris_hi',hi);}catch(e){}nr=true;}
+  function start(){ reset(); spawn(nextType); nextType=nextPiece(); drawNext(); state='play'; hideOv(); Arcade.musicStart(); coin(); last=performance.now(); requestAnimationFrame(loop); }
+  function gameOver(){ state='over'; Arcade.musicStop(); beep(180,.2);setTimeout(function(){beep(110,.3);},120);
+    var nr=Arcade.isHigh('tetris',score); if(nr){ Arcade.nameEntry(score,function(n){ Arcade.addScore('tetris',n,score); hi=Arcade.best('tetris'); setHud(); }); }
     document.getElementById('finalSc').textContent=score; document.getElementById('newrec').style.display=nr?'inline':'none';
     document.getElementById('hiS').textContent=hi; setHud(); show('over'); }
   function togglePause(){ if(state==='play'){state='pause';show('pause');} else if(state==='pause'){state='play';hideOv();last=performance.now();requestAnimationFrame(loop);} }
@@ -218,7 +218,7 @@
   document.getElementById('bDrop').addEventListener('click',hardDrop);
   document.getElementById('okBtn').addEventListener('click',action);
   document.getElementById('pauseBtn').addEventListener('click',function(){ ac(); if(state==='play'||state==='pause') togglePause(); });
-  document.getElementById('sndBtn').addEventListener('click',function(){ SND=!SND; this.textContent=SND?'AUDIO ON':'AUDIO OFF'; this.classList.toggle('off',!SND); if(SND){ac();beep(660,.05);} });
+  Arcade.bindAudioButtons('mBtn','sBtn');
   addEventListener('keydown',function(e){ var k=e.key.toLowerCase();
     if(['arrowleft','arrowright','arrowdown','arrowup',' '].indexOf(k)>=0)e.preventDefault();
     if(state==='play'){
@@ -230,7 +230,7 @@
     }
     if(k==='p'){ if(state==='play'||state==='pause') togglePause(); }
     else if(k==='enter'){ if(state!=='play'&&state!=='pause') action(); }
-    else if(k==='m'){ SND=!SND; var b=document.getElementById('sndBtn'); b.textContent=SND?'AUDIO ON':'AUDIO OFF'; b.classList.toggle('off',!SND); }
+    else if(k==='m'){ Arcade.toggleSfx(); }
   });
 
   reset(); spawn(nextType); nextType=nextPiece(); state='idle'; drawNext(); draw(); show('splash');

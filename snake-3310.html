@@ -118,7 +118,8 @@
 
   <div class="keys">
     <div class="softrow">
-      <button class="soft" id="sndBtn">AUDIO ON</button>
+      <button class="soft" id="mBtn">MUSICA</button>
+      <button class="soft" id="sBtn">SUONI</button>
       <button class="soft" id="startBtn">PLAY</button>
     </div>
     <div class="dpad">
@@ -132,22 +133,20 @@
   </div>
 </div>
 
+<script src="arcade.js"></script>
 <script>
 (function(){
   var cv=document.getElementById('cv'), ctx=cv.getContext('2d');
   var COLS=21, ROWS=14, CELL=12;            // 252 x 168
   var PIX='#10200a', BG='#aec092', DIM='rgba(40,52,20,.10)';
   var snake, dir, nextDir, food, score, hi, state, stepMs, acc, last, foodBlink;
-  var SND=true, actx=null;
+  
 
-  hi=parseInt(localStorage.getItem('snake_hi')||'0',10)||0;
+  hi=Math.max(Arcade.best('snake'),parseInt(localStorage.getItem('snake_hi')||'0',10)||0);
 
-  function ac(){ if(!actx){ try{actx=new (window.AudioContext||window.webkitAudioContext)();}catch(e){} } return actx; }
-  function beep(f,dur,type){ if(!SND)return; var a=ac(); if(!a)return;
-    var o=a.createOscillator(), g=a.createGain(); o.type=type||'square'; o.frequency.value=f;
-    o.connect(g); g.connect(a.destination); g.gain.setValueAtTime(.18,a.currentTime);
-    g.gain.exponentialRampToValueAtTime(.0001,a.currentTime+dur); o.start(); o.stop(a.currentTime+dur); }
-  function jingle(){ if(!SND)return; [660,880,1320].forEach(function(f,i){ setTimeout(function(){beep(f,.09);},i*90); }); }
+  function ac(){ return Arcade.ctx(); }
+  function beep(f,d,t){ Arcade.sfx(f,d,t); }
+  function jingle(){ [660,880,1320].forEach(function(f,i){ setTimeout(function(){beep(f,.09);},i*90); }); }
 
   function setHud(){
     document.getElementById('scoreLbl').textContent='PUNTI '+String(score||0).padStart(3,'0');
@@ -166,9 +165,9 @@
   function show(id){ ['splash','over','pause'].forEach(function(s){ document.getElementById(s).classList.toggle('hide', s!==id); }); }
   function hideOv(){ ['splash','over','pause'].forEach(function(s){ document.getElementById(s).classList.add('hide'); }); }
 
-  function start(){ reset(); state='play'; hideOv(); jingle(); last=performance.now(); requestAnimationFrame(loop); }
+  function start(){ reset(); state='play'; hideOv(); Arcade.musicStart(); jingle(); last=performance.now(); requestAnimationFrame(loop); }
   function gameOver(){
-    state='over'; beep(180,.18); setTimeout(function(){beep(120,.3);},120);
+    state='over'; Arcade.musicStop(); beep(180,.18); setTimeout(function(){beep(120,.3);},120);
     var nr=false; if(score>hi){ hi=score; try{localStorage.setItem('snake_hi',hi);}catch(e){} nr=true; }
     document.getElementById('finalSc').textContent=score;
     document.getElementById('newrec').style.display=nr?'block':'none';
@@ -225,7 +224,7 @@
   function action(){ ac(); if(state==='play'||state==='pause') togglePause(); else start(); }
   document.getElementById('okBtn').addEventListener('click',action);
   document.getElementById('startBtn').addEventListener('click',action);
-  document.getElementById('sndBtn').addEventListener('click',function(){ SND=!SND; this.textContent=SND?'AUDIO ON':'AUDIO OFF'; if(SND){ac();beep(660,.05);} });
+  Arcade.bindAudioButtons('mBtn','sBtn');
 
   addEventListener('keydown',function(e){
     var k=e.key.toLowerCase();

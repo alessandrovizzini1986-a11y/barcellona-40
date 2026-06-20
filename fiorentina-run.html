@@ -82,7 +82,8 @@
 </div>
 
 <div class="softrow">
-  <button class="soft" id="sndBtn">AUDIO ON</button>
+  <button class="soft" id="mBtn">MUSICA</button>
+      <button class="soft" id="sBtn">SUONI</button>
   <button class="soft" id="pauseBtn">PAUSA</button>
 </div>
 <div class="ctrl">
@@ -92,24 +93,21 @@
 </div>
 <div class="hint">trascina col dito · ◀ ▶ · frecce · niente diete 🚫🥗</div>
 
+<script src="arcade.js"></script>
 <script>
 (function(){
   var cv=document.getElementById('cv'), ctx=cv.getContext('2d'), W=cv.width, H=cv.height;
   var GOOD=[{e:'🥩',p:3},{e:'🥩',p:3},{e:'🍖',p:2},{e:'🍷',p:1},{e:'🍺',p:1},{e:'🔥',p:5}];
   var BAD=[{e:'🥗'},{e:'🥦'},{e:'🥒'}];
   var player, items, score, hi, lives, state, spawnT, spawnMs, lvl, combo, flash, last, move;
-  var SND=true, actx=null;
+  
 
-  hi=parseInt(localStorage.getItem('fiorun_hi')||'0',10)||0;
+  hi=Math.max(Arcade.best('fiorun'),parseInt(localStorage.getItem('fiorun_hi')||'0',10)||0);
   document.getElementById('hiS').textContent=hi; setHud();
 
-  function ac(){ if(!actx){try{actx=new(window.AudioContext||window.webkitAudioContext)();}catch(e){}} return actx; }
-  function beep(f,d,t){ if(!SND)return; var a=ac(); if(!a)return; var o=a.createOscillator(),g=a.createGain();
-    o.type=t||'square';o.frequency.value=f;o.connect(g);g.connect(a.destination);
-    g.gain.setValueAtTime(.16,a.currentTime);g.gain.exponentialRampToValueAtTime(.0001,a.currentTime+d);o.start();o.stop(a.currentTime+d); }
-  function buzz(){ if(!SND)return; var a=ac(); if(!a)return; var o=a.createOscillator(),g=a.createGain();
-    o.type='sawtooth';o.frequency.setValueAtTime(220,a.currentTime);o.frequency.exponentialRampToValueAtTime(70,a.currentTime+.25);
-    o.connect(g);g.connect(a.destination);g.gain.setValueAtTime(.2,a.currentTime);g.gain.exponentialRampToValueAtTime(.0001,a.currentTime+.28);o.start();o.stop(a.currentTime+.28); }
+  function ac(){ return Arcade.ctx(); }
+  function beep(f,d,t){ Arcade.sfx(f,d,t); }
+  function buzz(){ Arcade.sfx(150,.28,'sawtooth'); }
 
   function setHud(){
     document.getElementById('scoreLbl').textContent='PUNTI '+(score||0);
@@ -123,12 +121,12 @@
   function hideOv(){ ['splash','over','pause'].forEach(function(s){document.getElementById(s).classList.add('hide');}); }
 
   function coin(){ beep(988,.05); setTimeout(function(){beep(1319,.05);},70); setTimeout(function(){beep(1568,.09);},140); }
-  function start(){ reset(); state='play'; hideOv(); coin(); last=performance.now(); requestAnimationFrame(loop); }
+  function start(){ reset(); state='play'; hideOv(); Arcade.musicStart(); coin(); last=performance.now(); requestAnimationFrame(loop); }
   function togglePause(){
     if(state==='play'){ state='pause'; show('pause'); beep(330,.05); }
     else if(state==='pause'){ state='play'; hideOv(); beep(660,.05); last=performance.now(); requestAnimationFrame(loop); }
   }
-  function over(){ state='over'; buzz(); var nr=false; if(score>hi){hi=score;try{localStorage.setItem('fiorun_hi',hi);}catch(e){}nr=true;}
+  function over(){ state='over'; Arcade.musicStop(); buzz(); var nr=Arcade.isHigh('fiorun',score); if(nr){ Arcade.nameEntry(score,function(n){ Arcade.addScore('fiorun',n,score); hi=Arcade.best('fiorun'); setHud(); }); }
     document.getElementById('finalSc').textContent=score; document.getElementById('newrec').style.display=nr?'inline':'none';
     document.getElementById('hiS').textContent=hi; setHud(); show('over'); }
   function action(){ ac(); if(state==='play'||state==='pause') togglePause(); else start(); }
@@ -196,12 +194,12 @@
   hold(lb,-1); hold(rb,1);
   document.getElementById('okBtn').addEventListener('click',action);
   document.getElementById('pauseBtn').addEventListener('click',function(){ ac(); if(state==='play'||state==='pause') togglePause(); });
-  document.getElementById('sndBtn').addEventListener('click',function(){ SND=!SND; this.textContent=SND?'AUDIO ON':'AUDIO OFF'; this.classList.toggle('off',!SND); if(SND){ac();beep(660,.05);} });
+  Arcade.bindAudioButtons('mBtn','sBtn');
   addEventListener('keydown',function(e){ var k=e.key.toLowerCase();
     if(['arrowleft','arrowright',' '].indexOf(k)>=0)e.preventDefault();
     if(k==='arrowleft'||k==='a'){player.tx=null;move=-1;} else if(k==='arrowright'||k==='d'){player.tx=null;move=1;}
     else if(k==='p'){ if(state==='play'||state==='pause') togglePause(); }
-    else if(k==='m'){ SND=!SND; var b=document.getElementById('sndBtn'); b.textContent=SND?'AUDIO ON':'AUDIO OFF'; b.classList.toggle('off',!SND); }
+    else if(k==='m'){ Arcade.toggleSfx(); }
     else if(k===' '||k==='enter') action(); });
   addEventListener('keyup',function(e){ var k=e.key.toLowerCase(); if(k==='arrowleft'||k==='arrowright'||k==='a'||k==='d') move=0; });
 
