@@ -198,13 +198,16 @@
   nm.addEventListener('input',sync); sync();
 
   /* social proof: contatore condiviso (Abacus, gratuito) */
-  var CNT='https://abacus.jasoncameron.dev/', NS='cena-uomini-veri-26giu', K='rsvp';
+  var CNT='https://abacus.jasoncameron.dev/', NS='cena-uomini-veri-26giu', K='guests';
   var proof=document.getElementById('proof');
-  function showCount(n){ proof.innerHTML = n>0 ? ('🔥 in <b>'+n+'</b> hanno già detto sì') : '🔥 sii il primo a dire sì'; }
-  fetch(CNT+'get/'+NS+'/'+K).then(function(r){return r.json();}).then(function(d){ showCount(d&&d.value!=null?d.value:0); }).catch(function(){});
+  function showCount(n){ proof.innerHTML = n>0 ? ('🔥 siamo già in <b>'+n+'</b> a tavola') : '🔥 sii il primo a dire sì'; }
+  function getCount(){ fetch(CNT+'get/'+NS+'/'+K).then(function(r){return r.json();}).then(function(d){ showCount(d&&d.value!=null?d.value:0); }).catch(function(){}); }
+  getCount();
   waBtn.addEventListener('click',function(){
-    try{ if(localStorage.getItem('cena_rsvp_done')) return; }catch(e){}
-    fetch(CNT+'hit/'+NS+'/'+K).then(function(r){return r.json();}).then(function(d){ if(d&&d.value!=null){ showCount(d.value); try{localStorage.setItem('cena_rsvp_done','1');}catch(e){} } }).catch(function(){});
+    try{ if(localStorage.getItem('cena_rsvp_v2')) return; }catch(e){}      // 1 conferma per dispositivo
+    try{ localStorage.setItem('cena_rsvp_v2','1'); }catch(e){}
+    var reqs=[]; for(var i=0;i<q;i++){ reqs.push(fetch(CNT+'hit/'+NS+'/'+K).catch(function(){})); }  // +1 per ogni ospite
+    Promise.all(reqs).then(getCount);
   });
 
   /* countdown al ritrovo */
