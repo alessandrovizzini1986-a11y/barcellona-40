@@ -215,9 +215,22 @@ h1 .l2{display:block;font-size:clamp(52px,18vw,90px);background:var(--pill);back
   </p>
 
   <div class="host">
-    <img src="cena-host.png?v=4" alt="Il Re della Brace">
+    <img src="cena-host.png?v=4" alt="Il Re della Brace" id="hostImg" style="cursor:pointer;-webkit-user-select:none;user-select:none">
     <div class="cap">Ale, il Re della Brace 👑<small>niente diete · vi aspetta alle 19.30</small></div>
   </div>
+  <script>
+  /* easter egg: 3s di pressione sulla foto → Snake stile Nokia 3310 */
+  (function(){
+    var el=document.getElementById('hostImg'); if(!el)return;
+    var t,fired=false;
+    var start=function(){fired=false;t=setTimeout(function(){fired=true;try{navigator.vibrate&&navigator.vibrate(25);}catch(e){}location.href='snake-3310.html';},3000);};
+    var cancel=function(){clearTimeout(t);};
+    el.addEventListener('pointerdown',start);
+    ['pointerup','pointerleave','pointercancel'].forEach(function(ev){el.addEventListener(ev,cancel);});
+    el.addEventListener('contextmenu',function(e){if(fired)e.preventDefault();});
+    el.addEventListener('dragstart',function(e){e.preventDefault();});
+  })();
+  </script>
 
   <div class="card">
     <div class="ctitle">Il verdetto della serata</div>

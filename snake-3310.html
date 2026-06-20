@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#10243a">
+<meta name="robots" content="noindex,nofollow">
+<title>SNAKE · 3310</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  :root{
+    --lcd:#aec092;--pix:#10200a;--keytxt:#cdd8e4;
+  }
+  html,body{height:100%}
+  body{background:radial-gradient(120% 80% at 50% 0%,#1a2233,#070b12 70%);
+    font-family:"Press Start 2P",monospace;color:#cdd8e4;
+    display:flex;align-items:center;justify-content:center;min-height:100svh;overflow:hidden;
+    padding:14px;user-select:none;-webkit-user-select:none}
+  .back{position:fixed;top:calc(10px + env(safe-area-inset-top));left:12px;z-index:30;
+    font-size:8px;color:#7e8aa0;letter-spacing:.06em;text-decoration:none}
+
+  /* ===== NOKIA BODY ===== */
+  .phone{position:relative;width:min(94vw,360px);
+    background:linear-gradient(165deg,#21426a,#142a44 40%,#0d1c2e);
+    border-radius:46px 46px 60px 60px/40px 40px 90px 90px;
+    padding:52px 26px 30px;border:1px solid rgba(255,255,255,.06);
+    box-shadow:0 30px 70px -20px rgba(0,0,0,.8),inset 0 2px 0 rgba(255,255,255,.12),inset 0 -10px 30px rgba(0,0,0,.5)}
+  .brand{position:absolute;top:20px;left:0;right:0;text-align:center;font-size:13px;letter-spacing:.28em;
+    color:#aeb9c6;text-shadow:0 1px 0 rgba(0,0,0,.5)}
+
+  /* ===== LCD SCREEN ===== */
+  .screen{position:relative;border-radius:10px;padding:12px 12px 10px;
+    background:linear-gradient(180deg,#43607f,#2f4763);box-shadow:inset 0 2px 8px rgba(0,0,0,.6),0 1px 0 rgba(255,255,255,.08)}
+  .lcd{position:relative;border-radius:4px;overflow:hidden;background:var(--lcd);
+    box-shadow:inset 0 0 0 2px #5e6b4a,inset 0 0 18px rgba(40,52,20,.5)}
+  .hud{display:flex;justify-content:space-between;align-items:center;padding:6px 7px 3px;font-size:7px;color:var(--pix);letter-spacing:.04em}
+  canvas{display:block;width:100%;height:auto;image-rendering:pixelated;image-rendering:crisp-edges}
+  .ov{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;
+    text-align:center;color:var(--pix);background:rgba(174,192,146,.86);padding:14px}
+  .ov.hide{display:none}
+  .ov .big{font-size:17px;letter-spacing:.04em;line-height:1.4}
+  .ov .sm{font-size:8px;line-height:1.7}
+  .ov .blink{animation:bk 1s steps(1) infinite}
+  @keyframes bk{50%{opacity:0}}
+  .ov .sc{font-size:10px}
+  .lcd::after{content:"";position:absolute;inset:0;pointer-events:none;
+    background:repeating-linear-gradient(0deg,rgba(40,52,20,.06) 0 2px,transparent 2px 4px);mix-blend-mode:multiply}
+  .glass{position:absolute;inset:0;pointer-events:none;border-radius:4px;
+    background:linear-gradient(135deg,rgba(255,255,255,.18),transparent 40%)}
+
+  /* ===== KEYPAD ===== */
+  .keys{margin-top:18px;display:flex;flex-direction:column;align-items:center;gap:12px}
+  .softrow{display:flex;justify-content:space-between;width:100%;padding:0 6px}
+  .soft{font-family:inherit;font-size:7px;color:var(--keytxt);
+    background:linear-gradient(180deg,#1c3a58,#102a42);border:1px solid rgba(255,255,255,.08);
+    border-radius:14px;padding:9px 14px;cursor:pointer;box-shadow:0 3px 0 rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.12)}
+  .soft:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(0,0,0,.4)}
+  .dpad{position:relative;width:174px;height:174px}
+  .dpad button{position:absolute;font-family:inherit;border:1px solid rgba(255,255,255,.08);color:#dfe7f0;font-size:15px;
+    background:linear-gradient(180deg,#21426a,#132a44);cursor:pointer;
+    box-shadow:0 4px 0 rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center}
+  .dpad button:active{transform:translateY(2px);box-shadow:0 2px 0 rgba(0,0,0,.45)}
+  .dpad .u{top:0;left:57px;width:60px;height:60px;border-radius:14px 14px 6px 6px}
+  .dpad .d{bottom:0;left:57px;width:60px;height:60px;border-radius:6px 6px 14px 14px}
+  .dpad .l{left:0;top:57px;width:60px;height:60px;border-radius:14px 6px 6px 14px}
+  .dpad .r{right:0;top:57px;width:60px;height:60px;border-radius:6px 14px 14px 6px}
+  .dpad .c{left:57px;top:57px;width:60px;height:60px;border-radius:50%;font-size:8px;letter-spacing:.04em;
+    background:radial-gradient(circle at 50% 35%,#2f5a86,#163255);color:#bcd}
+  .hint{margin-top:6px;font-size:6.5px;color:#6f7c90;text-align:center;line-height:1.8;letter-spacing:.04em}
+</style>
+</head>
+<body>
+<a class="back" href="cena-bibo-9k2x.html">‹ ESCI</a>
+
+<div class="phone">
+  <div class="brand">NOKIA</div>
+
+  <div class="screen">
+    <div class="lcd">
+      <div class="hud"><span id="scoreLbl">PUNTI 000</span><span id="hiLbl">REC 000</span></div>
+      <canvas id="cv" width="252" height="168"></canvas>
+      <div class="glass"></div>
+
+      <div class="ov" id="splash">
+        <div class="big">SNAKE II</div>
+        <div class="sm">record: <span id="hiSplash">0</span></div>
+        <div class="sm blink">&#9654; PLAY</div>
+        <div class="sm" style="font-size:6.5px;opacity:.75">frecce &middot; WASD &middot; swipe</div>
+      </div>
+
+      <div class="ov hide" id="over">
+        <div class="big">GAME OVER</div>
+        <div class="sc">punti <span id="finalSc">0</span></div>
+        <div class="sm" id="newrec" style="display:none">NUOVO RECORD!</div>
+        <div class="sm blink">&#9654; ANCORA</div>
+      </div>
+
+      <div class="ov hide" id="pause">
+        <div class="big">PAUSA</div>
+        <div class="sm blink">&#9654; RIPRENDI</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="keys">
+    <div class="softrow">
+      <button class="soft" id="sndBtn">AUDIO ON</button>
+      <button class="soft" id="startBtn">PLAY</button>
+    </div>
+    <div class="dpad">
+      <button class="u" data-dir="up" aria-label="su">&#9650;</button>
+      <button class="l" data-dir="left" aria-label="sinistra">&#9664;</button>
+      <button class="c" id="okBtn">OK</button>
+      <button class="r" data-dir="right" aria-label="destra">&#9654;</button>
+      <button class="d" data-dir="down" aria-label="giu">&#9660;</button>
+    </div>
+    <div class="hint">D-PAD per muovere &middot; OK = play/pausa</div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var cv=document.getElementById('cv'), ctx=cv.getContext('2d');
+  var COLS=21, ROWS=14, CELL=12;            // 252 x 168
+  var PIX='#10200a', BG='#aec092', DIM='rgba(40,52,20,.10)';
+  var snake, dir, nextDir, food, score, hi, state, stepMs, acc, last, foodBlink;
+  var SND=true, actx=null;
+
+  hi=parseInt(localStorage.getItem('snake_hi')||'0',10)||0;
+
+  function ac(){ if(!actx){ try{actx=new (window.AudioContext||window.webkitAudioContext)();}catch(e){} } return actx; }
+  function beep(f,dur,type){ if(!SND)return; var a=ac(); if(!a)return;
+    var o=a.createOscillator(), g=a.createGain(); o.type=type||'square'; o.frequency.value=f;
+    o.connect(g); g.connect(a.destination); g.gain.setValueAtTime(.18,a.currentTime);
+    g.gain.exponentialRampToValueAtTime(.0001,a.currentTime+dur); o.start(); o.stop(a.currentTime+dur); }
+  function jingle(){ if(!SND)return; [660,880,1320].forEach(function(f,i){ setTimeout(function(){beep(f,.09);},i*90); }); }
+
+  function setHud(){
+    document.getElementById('scoreLbl').textContent='PUNTI '+String(score||0).padStart(3,'0');
+    document.getElementById('hiLbl').textContent='REC '+String(hi).padStart(3,'0');
+  }
+  function reset(){
+    snake=[{x:8,y:7},{x:7,y:7},{x:6,y:7}];
+    dir={x:1,y:0}; nextDir={x:1,y:0};
+    score=0; stepMs=170; acc=0; last=0; foodBlink=0; placeFood(); setHud();
+  }
+  function placeFood(){
+    var ok=false;
+    while(!ok){ food={x:(Math.random()*COLS)|0,y:(Math.random()*ROWS)|0}; ok=true;
+      for(var i=0;i<snake.length;i++){ if(snake[i].x===food.x&&snake[i].y===food.y){ok=false;break;} } }
+  }
+  function show(id){ ['splash','over','pause'].forEach(function(s){ document.getElementById(s).classList.toggle('hide', s!==id); }); }
+  function hideOv(){ ['splash','over','pause'].forEach(function(s){ document.getElementById(s).classList.add('hide'); }); }
+
+  function start(){ reset(); state='play'; hideOv(); jingle(); last=performance.now(); requestAnimationFrame(loop); }
+  function gameOver(){
+    state='over'; beep(180,.18); setTimeout(function(){beep(120,.3);},120);
+    var nr=false; if(score>hi){ hi=score; try{localStorage.setItem('snake_hi',hi);}catch(e){} nr=true; }
+    document.getElementById('finalSc').textContent=score;
+    document.getElementById('newrec').style.display=nr?'block':'none';
+    document.getElementById('hiSplash').textContent=hi; setHud(); show('over');
+  }
+  function togglePause(){
+    if(state==='play'){ state='pause'; show('pause'); }
+    else if(state==='pause'){ state='play'; hideOv(); last=performance.now(); requestAnimationFrame(loop); }
+  }
+
+  function step(){
+    dir=nextDir;
+    var head={x:(snake[0].x+dir.x+COLS)%COLS, y:(snake[0].y+dir.y+ROWS)%ROWS};
+    for(var i=0;i<snake.length;i++){ if(snake[i].x===head.x&&snake[i].y===head.y){ gameOver(); return; } }
+    snake.unshift(head);
+    if(head.x===food.x&&head.y===food.y){
+      score++; beep(880,.06); placeFood();
+      if(stepMs>70) stepMs-=4;
+      setHud();
+    } else { snake.pop(); }
+  }
+
+  function blk(cx,cy,isFood){
+    var x=cx*CELL, y=cy*CELL;
+    ctx.fillStyle=PIX; ctx.fillRect(x+1,y+1,CELL-2,CELL-2);
+    ctx.fillStyle=BG;
+    if(isFood){ ctx.fillRect(x+4,y+4,CELL-8,CELL-8); } else { ctx.fillRect(x+4,y+4,CELL-9,CELL-9); }
+  }
+  function draw(){
+    ctx.fillStyle=BG; ctx.fillRect(0,0,cv.width,cv.height);
+    ctx.fillStyle=DIM;
+    for(var gx=0;gx<COLS;gx++){ for(var gy=0;gy<ROWS;gy++){ ctx.fillRect(gx*CELL+1,gy*CELL+1,CELL-2,CELL-2); } }
+    if(((foodBlink/6)|0)%2===0){ blk(food.x,food.y,true); }
+    for(var i=0;i<snake.length;i++){ blk(snake[i].x,snake[i].y,false); }
+  }
+
+  function loop(t){
+    if(state!=='play') return;
+    var dt=t-last; last=t; acc+=dt; foodBlink++;
+    while(acc>=stepMs){ acc-=stepMs; step(); if(state!=='play'){ draw(); return; } }
+    draw();
+    requestAnimationFrame(loop);
+  }
+
+  function setDir(nx,ny){
+    if(state!=='play') return;
+    if(nx===-dir.x && ny===-dir.y) return;
+    nextDir={x:nx,y:ny};
+  }
+  var MAP={up:[0,-1],down:[0,1],left:[-1,0],right:[1,0]};
+  document.querySelectorAll('.dpad [data-dir]').forEach(function(b){
+    b.addEventListener('click',function(){ var m=MAP[b.dataset.dir]; setDir(m[0],m[1]); beep(440,.02); });
+  });
+  function action(){ ac(); if(state==='play'||state==='pause') togglePause(); else start(); }
+  document.getElementById('okBtn').addEventListener('click',action);
+  document.getElementById('startBtn').addEventListener('click',action);
+  document.getElementById('sndBtn').addEventListener('click',function(){ SND=!SND; this.textContent=SND?'AUDIO ON':'AUDIO OFF'; if(SND){ac();beep(660,.05);} });
+
+  addEventListener('keydown',function(e){
+    var k=e.key.toLowerCase();
+    if(['arrowup','arrowdown','arrowleft','arrowright',' '].indexOf(k)>=0) e.preventDefault();
+    if(k==='arrowup'||k==='w') setDir(0,-1);
+    else if(k==='arrowdown'||k==='s') setDir(0,1);
+    else if(k==='arrowleft'||k==='a') setDir(-1,0);
+    else if(k==='arrowright'||k==='d') setDir(1,0);
+    else if(k===' '||k==='enter') action();
+  });
+
+  var sx=0,sy=0,st=0, lcd=document.querySelector('.lcd');
+  lcd.addEventListener('touchstart',function(e){ var t=e.touches[0]; sx=t.clientX; sy=t.clientY; st=Date.now(); },{passive:true});
+  lcd.addEventListener('touchend',function(e){ var t=e.changedTouches[0]; var dx=t.clientX-sx, dy=t.clientY-sy;
+    if(Math.abs(dx)<18&&Math.abs(dy)<18){ if(Date.now()-st<300) action(); return; }
+    if(Math.abs(dx)>Math.abs(dy)) setDir(dx>0?1:-1,0); else setDir(0,dy>0?1:-1);
+  },{passive:true});
+  lcd.addEventListener('touchmove',function(e){ e.preventDefault(); },{passive:false});
+
+  reset(); state='idle'; draw(); document.getElementById('hiSplash').textContent=hi; show('splash');
+})();
+</script>
+</body>
+</html>
