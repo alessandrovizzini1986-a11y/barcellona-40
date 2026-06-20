@@ -6,6 +6,15 @@
 <meta name="theme-color" content="#0c0a08">
 <meta name="robots" content="noindex,nofollow">
 <title>Fiorentina Run</title>
+<meta property="og:type" content="website">
+<meta property="og:title" content="FIORENTINA RUN 🥩🔥">
+<meta property="og:description" content="Acchiappa la carne, schiva l'insalata. Niente diete. Insert coin!">
+<meta property="og:image" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/og-run.jpg?v=1">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/og-run.jpg?v=1">
+<meta property="og:locale" content="it_IT">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Oswald:wght@600;700&display=swap" rel="stylesheet">
@@ -31,7 +40,13 @@
   .ov .sm{font-size:9px;line-height:2;color:#e7dcc6}
   .ov .blink{animation:bk 1s steps(1) infinite;color:#ffd28a}
   @keyframes bk{50%{opacity:0}}
-  .ctrl{display:flex;gap:12px;margin-top:14px;width:min(96vw,380px)}
+  .softrow{display:flex;gap:12px;margin-top:14px;width:min(96vw,380px)}
+  .soft{flex:1;font-family:"Press Start 2P",monospace;font-size:8px;color:#cdd8e4;padding:11px 0;border-radius:12px;
+    border:1px solid rgba(255,255,255,.08);background:linear-gradient(180deg,#1c3a58,#102a42);cursor:pointer;
+    box-shadow:0 3px 0 rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.12)}
+  .soft:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(0,0,0,.4)}
+  .soft.off{opacity:.55}
+  .ctrl{display:flex;gap:12px;margin-top:12px;width:min(96vw,380px)}
   .ctrl button{flex:1;font-family:"Press Start 2P",monospace;font-size:16px;color:#dfe7f0;padding:18px 0;border-radius:14px;
     border:1px solid rgba(255,255,255,.08);background:linear-gradient(180deg,#21426a,#132a44);cursor:pointer;
     box-shadow:0 4px 0 rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.14)}
@@ -48,17 +63,28 @@
     <canvas id="cv" width="360" height="560"></canvas>
     <div class="ov" id="splash">
       <div class="big">FIORENTINA<br>RUN</div>
-      <div class="sm">acchiappa 🥩🍷<br>schiva 🥗🥦<br><br>record: <span id="hiS">0</span></div>
-      <div class="sm blink">▶ PLAY</div>
+      <div class="sm">acchiappa 🥩🍷 · schiva 🥗🥦</div>
+      <div class="sm">vite 🔥🔥🔥 · record <span id="hiS">0</span></div>
+      <div class="sm blink" style="color:#ffd28a">★ INSERT COIN ★</div>
+      <div class="sm" style="font-size:7px;opacity:.7">premi PLAY</div>
     </div>
     <div class="ov hide" id="over">
       <div class="big">GAME OVER</div>
       <div class="sm">punti <span id="finalSc">0</span><br><span id="newrec" style="display:none;color:#ffd28a">NUOVO RECORD!</span></div>
-      <div class="sm blink">▶ ANCORA</div>
+      <div class="sm" style="font-size:7px;opacity:.7">record salvato ✓</div>
+      <div class="sm blink">★ INSERT COIN ★</div>
+    </div>
+    <div class="ov hide" id="pause">
+      <div class="big">PAUSA</div>
+      <div class="sm blink">▶ RIPRENDI</div>
     </div>
   </div>
 </div>
 
+<div class="softrow">
+  <button class="soft" id="sndBtn">AUDIO ON</button>
+  <button class="soft" id="pauseBtn">PAUSA</button>
+</div>
 <div class="ctrl">
   <button id="leftBtn" aria-label="sinistra">◀</button>
   <button id="okBtn">PLAY</button>
@@ -88,18 +114,24 @@
   function setHud(){
     document.getElementById('scoreLbl').textContent='PUNTI '+(score||0);
     document.getElementById('hiLbl').textContent='REC '+hi;
-    document.getElementById('livesLbl').textContent='🔥🔥🔥'.slice(0,Math.max(0,lives||0)*2);
+    var n=Math.max(0,lives||0);
+    document.getElementById('livesLbl').textContent='🔥×'+n;
   }
   function reset(){ player={x:W/2,w:96,h:20,y:H-46,tx:W/2}; items=[]; score=0; lives=3; lvl=1; combo=0;
     spawnMs=900; spawnT=0; flash=0; move=0; setHud(); }
-  function show(id){ ['splash','over'].forEach(function(s){document.getElementById(s).classList.toggle('hide',s!==id);}); }
-  function hideOv(){ ['splash','over'].forEach(function(s){document.getElementById(s).classList.add('hide');}); }
+  function show(id){ ['splash','over','pause'].forEach(function(s){document.getElementById(s).classList.toggle('hide',s!==id);}); }
+  function hideOv(){ ['splash','over','pause'].forEach(function(s){document.getElementById(s).classList.add('hide');}); }
 
-  function start(){ reset(); state='play'; hideOv(); beep(660,.08);setTimeout(function(){beep(990,.1);},90); last=performance.now(); requestAnimationFrame(loop); }
+  function coin(){ beep(988,.05); setTimeout(function(){beep(1319,.05);},70); setTimeout(function(){beep(1568,.09);},140); }
+  function start(){ reset(); state='play'; hideOv(); coin(); last=performance.now(); requestAnimationFrame(loop); }
+  function togglePause(){
+    if(state==='play'){ state='pause'; show('pause'); beep(330,.05); }
+    else if(state==='pause'){ state='play'; hideOv(); beep(660,.05); last=performance.now(); requestAnimationFrame(loop); }
+  }
   function over(){ state='over'; buzz(); var nr=false; if(score>hi){hi=score;try{localStorage.setItem('fiorun_hi',hi);}catch(e){}nr=true;}
     document.getElementById('finalSc').textContent=score; document.getElementById('newrec').style.display=nr?'inline':'none';
     document.getElementById('hiS').textContent=hi; setHud(); show('over'); }
-  function action(){ ac(); if(state!=='play') start(); }
+  function action(){ ac(); if(state==='play'||state==='pause') togglePause(); else start(); }
 
   function spawn(){
     var bad=Math.random()< Math.min(.42,.2+lvl*.02);
@@ -163,9 +195,13 @@
     btn.addEventListener('pointerdown',set); ['pointerup','pointerleave','pointercancel'].forEach(function(ev){btn.addEventListener(ev,clr);}); }
   hold(lb,-1); hold(rb,1);
   document.getElementById('okBtn').addEventListener('click',action);
+  document.getElementById('pauseBtn').addEventListener('click',function(){ ac(); if(state==='play'||state==='pause') togglePause(); });
+  document.getElementById('sndBtn').addEventListener('click',function(){ SND=!SND; this.textContent=SND?'AUDIO ON':'AUDIO OFF'; this.classList.toggle('off',!SND); if(SND){ac();beep(660,.05);} });
   addEventListener('keydown',function(e){ var k=e.key.toLowerCase();
     if(['arrowleft','arrowright',' '].indexOf(k)>=0)e.preventDefault();
     if(k==='arrowleft'||k==='a'){player.tx=null;move=-1;} else if(k==='arrowright'||k==='d'){player.tx=null;move=1;}
+    else if(k==='p'){ if(state==='play'||state==='pause') togglePause(); }
+    else if(k==='m'){ SND=!SND; var b=document.getElementById('sndBtn'); b.textContent=SND?'AUDIO ON':'AUDIO OFF'; b.classList.toggle('off',!SND); }
     else if(k===' '||k==='enter') action(); });
   addEventListener('keyup',function(e){ var k=e.key.toLowerCase(); if(k==='arrowleft'||k==='arrowright'||k==='a'||k==='d') move=0; });
 
