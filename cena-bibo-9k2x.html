@@ -10,6 +10,11 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="Si fa fiorentina 🔥 · Venerdì 26 giugno">
 <meta property="og:description" content="Ore 20.30 da Bibo (Traversa, FI). Fiorentina tra amici. Dimmi se ci sei.">
+<meta property="og:image" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/fiorentina.jpg?v=1">
+<meta property="og:image:width" content="900">
+<meta property="og:image:height" content="900">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/fiorentina.jpg?v=1">
 <meta property="og:locale" content="it_IT">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -115,7 +120,7 @@
   @keyframes reveal{0%{transform:scale(.6) rotate(-5deg);opacity:0}60%{opacity:1}100%{transform:scale(1) rotate(0);opacity:1}}
   .intro .steakwrap::after{content:"";position:absolute;inset:-14% -14% -20%;z-index:-1;
     background:radial-gradient(circle,rgba(255,122,26,.4),transparent 65%);filter:blur(10px)}
-  .intro .steakimg{display:block}
+  .intro .steakimg{display:block;width:100%;border-radius:18px;box-shadow:0 30px 64px -26px rgba(0,0,0,.9),0 0 0 1px rgba(255,174,66,.28)}
   .intro .tagline{position:absolute;bottom:15%;left:0;right:0;text-align:center;font-family:"Bodoni Moda",serif;
     font-style:italic;font-size:26px;color:var(--ember-hot);opacity:0;animation:fadein .6s ease 1.7s forwards}
   @keyframes fadein{to{opacity:1}}
@@ -129,30 +134,7 @@
   <div class="flash"></div>
   <div class="bigflame">🔥</div>
   <div class="steakwrap">
-    <svg class="steakimg" viewBox="0 0 420 360" xmlns="http://www.w3.org/2000/svg" width="100%" aria-label="Fiorentina al sangue">
-      <defs>
-        <radialGradient id="rare" cx="42%" cy="46%" r="58%">
-          <stop offset="0" stop-color="#ef4b4b"/><stop offset="38%" stop-color="#c21f1f"/>
-          <stop offset="70%" stop-color="#7d1812"/><stop offset="100%" stop-color="#3c0e08"/>
-        </radialGradient>
-        <linearGradient id="bone" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#f4ecd8"/><stop offset="1" stop-color="#d2c1a0"/>
-        </linearGradient>
-        <clipPath id="meatclip"><path d="M70,190 C70,100 150,70 210,90 C245,58 315,62 356,118 C394,168 384,250 330,288 C280,322 220,300 200,272 C160,312 92,300 72,232 C60,212 60,206 70,190 Z"/></clipPath>
-      </defs>
-      <path d="M70,190 C70,100 150,70 210,90 C245,58 315,62 356,118 C394,168 384,250 330,288 C280,322 220,300 200,272 C160,312 92,300 72,232 C60,212 60,206 70,190 Z" fill="url(#rare)" stroke="#241006" stroke-width="15" stroke-linejoin="round"/>
-      <path d="M70,190 C70,100 150,70 210,90 C245,58 315,62 356,118 C394,168 384,250 330,288 C280,322 220,300 200,272 C160,312 92,300 72,232 C60,212 60,206 70,190 Z" fill="none" stroke="#7a2e16" stroke-width="6" stroke-linejoin="round" opacity=".55"/>
-      <g clip-path="url(#meatclip)" stroke="rgba(28,10,3,.4)" stroke-width="13" stroke-linecap="round">
-        <line x1="40" y1="150" x2="300" y2="320"/><line x1="110" y1="100" x2="370" y2="270"/><line x1="30" y1="215" x2="250" y2="345"/>
-      </g>
-      <g clip-path="url(#meatclip)"><ellipse cx="160" cy="150" rx="70" ry="34" fill="rgba(255,190,160,.16)"/></g>
-      <g stroke-linecap="round" fill="none">
-        <path d="M250,300 C244,230 252,150 246,104" stroke="#6f5d3c" stroke-width="34"/>
-        <path d="M205,118 C235,96 300,92 320,108" stroke="#6f5d3c" stroke-width="34"/>
-        <path d="M250,300 C244,230 252,150 246,104" stroke="url(#bone)" stroke-width="24"/>
-        <path d="M205,118 C235,96 300,92 320,108" stroke="url(#bone)" stroke-width="24"/>
-      </g>
-    </svg>
+    <img class="steakimg" src="fiorentina.jpg?v=1" alt="Fiorentina al sangue">
   </div>
   <div class="tagline">al sangue.</div>
   <span class="skip">tocca per saltare</span>
