@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#131921">
+<meta name="robots" content="noindex,nofollow">
+<title>amazòn · Un pensierino per te</title>
+<meta name="description" content="Qualcuno ti ha consigliato un prodotto molto particolare. Dai un'occhiata 👀">
+<meta property="og:type" content="website">
+<meta property="og:title" content="🎁 Un pensierino ti aspetta su amazòn">
+<meta property="og:description" content="Qualcuno ti ha taggato un prodotto MOLTO particolare 👀🔞 Aprilo…">
+<meta property="og:image" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/og-regalo.jpg?v=2">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/og-regalo.jpg?v=2">
+<meta property="og:locale" content="it_IT">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{font-family:"Amazon Ember","Helvetica Neue",Arial,sans-serif;color:#0F1111;background:#fff;line-height:1.4}
+  a{color:#007185;text-decoration:none}
+  /* top bar */
+  .nav{background:#131921;color:#fff;padding:8px 12px;display:flex;align-items:center;gap:10px}
+  .brand{display:flex;flex-direction:column;line-height:.8}
+  .brand .w{font-weight:800;font-size:22px;letter-spacing:-.5px}
+  .brand svg{margin-top:1px}
+  .deliver{font-size:11px;color:#ccc;flex:1;min-width:0}
+  .deliver b{color:#fff}
+  .cart{position:relative;font-size:22px}
+  .cart .n{position:absolute;top:-6px;right:-8px;background:#f08804;color:#111;font-size:11px;font-weight:800;border-radius:50%;min-width:17px;height:17px;display:flex;align-items:center;justify-content:center;padding:0 3px}
+  .nav2{background:#232f3e;color:#fff;font-size:12px;padding:7px 12px}
+  .search{background:#fff;display:flex;margin:8px 12px 0;border-radius:8px;overflow:hidden;border:1px solid #ddd}
+  .search input{flex:1;border:none;padding:9px 10px;font-size:14px;outline:none;color:#555}
+  .search .go{background:#febd69;color:#111;border:none;padding:0 14px;font-size:16px}
+  .crumb{font-size:12px;color:#565959;padding:10px 14px 0}
+  .wrap{max-width:760px;margin:0 auto;padding:0 14px 40px}
+  .pimg{margin:10px 0;text-align:center}
+  .pimg img{width:100%;max-width:360px}
+  .thumbs{display:flex;gap:6px;justify-content:center;margin-top:6px}
+  .thumbs i{width:34px;height:34px;border:1px solid #ddd;border-radius:6px;background:#fbe9f2;display:inline-block}
+  .thumbs i.on{border-color:#e77600;box-shadow:0 0 0 1px #e77600}
+  h1{font-size:20px;font-weight:500;margin-top:4px}
+  .by{font-size:13px;margin-top:4px}
+  .rate{display:flex;align-items:center;gap:6px;margin-top:6px;font-size:13px}
+  .stars{color:#de7921;letter-spacing:1px;font-size:15px}
+  .badge{display:inline-block;background:#cc0c39;color:#fff;font-size:11px;font-weight:700;border-radius:3px;padding:2px 6px;margin-top:10px}
+  .price{margin-top:8px}
+  .price .pc{color:#cc0c39;font-size:18px;vertical-align:top}
+  .price .big{font-size:30px;font-weight:500}
+  .price .big sup{font-size:15px}
+  .price .was{color:#565959;font-size:13px;margin-left:8px}
+  .price .was s{}
+  .prime{color:#067d62;font-weight:700;font-size:12px}
+  .prime b{color:#232f3e}
+  .gift{color:#007185;font-size:13px;margin-top:8px}
+  .deal{font-size:12px;color:#565959;margin-top:6px}
+  .deal b{color:#cc0c39}
+  .reco{background:#f7fafc;border:1px solid #e3e6e6;border-radius:8px;padding:10px 12px;margin-top:14px;font-size:13px}
+  .reco b{color:#0F1111}
+  h2{font-size:16px;font-weight:700;margin:18px 0 6px}
+  ul.info{list-style:disc;padding-left:20px;font-size:13.5px;color:#0F1111}
+  ul.info li{padding:3px 0}
+  .buybox{border:1px solid #d5d9d9;border-radius:10px;padding:14px;margin-top:18px}
+  .buybox .bp{font-size:26px;font-weight:500}
+  .buybox .bp sup{font-size:13px}
+  .avail{color:#007600;font-weight:700;font-size:15px;margin-top:6px}
+  .qty{display:inline-flex;align-items:center;gap:8px;background:#f0f2f2;border:1px solid #d5d9d9;border-radius:8px;padding:6px 10px;margin-top:10px;font-size:13px}
+  .qty button{border:none;background:#e7e9ec;width:26px;height:26px;border-radius:50%;font-size:16px;cursor:pointer}
+  .btn{display:block;width:100%;text-align:center;border:none;border-radius:999px;padding:12px;font-size:15px;font-weight:600;margin-top:10px;cursor:pointer}
+  .addcart{background:#ffd814}.addcart:active{background:#f7ca00}
+  .buynow{background:#ffa41c}.buynow:active{background:#fa8900}
+  .secure{font-size:11px;color:#565959;margin-top:8px;text-align:center}
+  .added{display:none;background:#067d62;color:#fff;border-radius:8px;padding:10px 12px;margin-top:12px;font-size:14px;align-items:center;gap:8px}
+  .added.on{display:flex}
+  .added b{font-weight:700}
+  .checkout{display:none;border:1px solid #d5d9d9;border-radius:10px;padding:14px;margin-top:12px}
+  .checkout.on{display:block}
+  .crow{display:flex;justify-content:space-between;font-size:14px;margin:4px 0}
+  .crow.tot{font-size:16px;font-weight:700;border-top:1px solid #eee;padding-top:8px;margin-top:8px}
+  .foot{font-size:11px;color:#565959;text-align:center;margin-top:24px;line-height:1.7}
+
+  /* GOTCHA */
+  .gotcha{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;background:#000;overflow:hidden}
+  .gotcha.on{display:flex}
+  .gotcha .face{position:absolute;inset:0;background:#000 center/cover no-repeat;background-image:url("gotcha.jpg?v=1");
+    animation:zoom .5s ease-out, shake .35s ease-in-out 3}
+  @keyframes zoom{0%{transform:scale(1.6);opacity:0}100%{transform:scale(1);opacity:1}}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+  .gotcha .scrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.5),rgba(0,0,0,.15) 35%,rgba(0,0,0,.55) 70%,rgba(0,0,0,.92))}
+  .gcv{position:absolute;inset:0;pointer-events:none}
+  .gotcha .panel{position:relative;z-index:3;width:100%;max-width:480px;padding:24px;text-align:center;color:#fff;
+    display:flex;flex-direction:column;justify-content:space-between;height:100%}
+  .gotcha h2{font-family:"Arial Black",Arial,sans-serif;font-size:clamp(44px,16vw,78px);font-weight:900;margin:0;
+    color:#ffd814;text-shadow:0 4px 0 #cc0c39,0 8px 24px rgba(0,0,0,.6);transform:rotate(-3deg);animation:pop .4s .2s backwards}
+  @keyframes pop{0%{transform:scale(.3) rotate(-3deg);opacity:0}100%{transform:scale(1) rotate(-3deg);opacity:1}}
+  .gotcha .sub{font-family:Arial,sans-serif;font-size:18px;font-weight:700;margin-top:6px;text-shadow:0 2px 8px #000}
+  .gotcha .sub b{color:#ffd814}
+  .gotcha .bottom{font-family:Arial,sans-serif}
+  .gotcha .note{font-size:12.5px;color:#e8e8e8;margin-bottom:12px;text-shadow:0 1px 4px #000}
+  .gshare{background:rgba(20,25,33,.82);border:1px solid rgba(255,255,255,.18);border-radius:14px;padding:14px;backdrop-filter:blur(6px)}
+  .gshare .lab{font-size:12px;font-weight:700;color:#ffd814;letter-spacing:.04em;text-transform:uppercase}
+  .gshare input{width:100%;margin-top:10px;padding:13px;border-radius:10px;border:1px solid #555;background:#0c0f14;color:#fff;font-size:16px;text-align:center;outline:none}
+  .gshare .wa{display:flex;align-items:center;justify-content:center;gap:9px;margin-top:10px;background:#25d366;color:#06301c;font-weight:800;font-size:16px;border:none;border-radius:12px;padding:14px;width:100%;cursor:pointer}
+  .gshare .small{display:block;margin-top:10px;font-size:11px;color:#aab}
+</style>
+</head>
+<body>
+<div class="nav">
+  <span class="brand"><span class="w">amazòn</span>
+    <svg width="74" height="12" viewBox="0 0 74 12"><path d="M2 4 C20 13,54 13,70 3" fill="none" stroke="#ff9900" stroke-width="3" stroke-linecap="round"/><path d="M70 3 l-2 6 l6 -3 z" fill="#ff9900"/></svg>
+  </span>
+  <span class="deliver">Consegna a <b id="navName">casa tua</b><br>📍 Italia</span>
+  <span class="cart">🛒<span class="n" id="cartN">0</span></span>
+</div>
+<div class="nav2">Tutte le categorie ☰ · Offerte del giorno · Idee regalo 🎁</div>
+<div class="search"><input value="strap on deluxe per adulti" readonly><button class="go">🔍</button></div>
+
+<div class="crumb">Salute e cura della persona › Benessere intimo › <span style="color:#c45500">Per veri intenditori</span></div>
+
+<div class="wrap">
+  <div class="pimg"><img src="prod-strap.png?v=2" alt="prodotto">
+    <div class="thumbs"><i class="on"></i><i></i><i></i><i></i></div>
+  </div>
+
+  <h1 id="ptitle">Strap-On Deluxe 3000™ · Kit Esperienza Premium (silicone, ricaricabile USB, 12 velocità)</h1>
+  <div class="by">Brand: <a href="#">PiacereXtreme</a> · <a href="#">Visita lo Store</a></div>
+  <div class="rate"><span class="stars">★★★★★</span> <a href="#">4,8 · 1.247 voti</a> · <a href="#">+2000 acquistati il mese scorso</a></div>
+
+  <span class="badge">Offerta a tempo · -57%</span>
+  <div class="price">
+    <span class="pc">€</span><span class="big">29<sup>,99</sup></span>
+    <span class="was"><s>69,99 €</s></span>
+  </div>
+  <div class="prime"><b>✓prime</b> · Consegna GRATIS <b id="delDate">domani</b></div>
+  <div class="gift">🎁 Disponibile <b>confezione regalo</b> · spedizione anonima e discreta</div>
+  <div class="deal">Offerta lampo: <b id="dealT">finisce tra 02:14:09</b></div>
+
+  <div class="reco">⭐ <b id="recoName">Consigliato per te</b> — in base alla tua attività recente 👀</div>
+
+  <h2>Informazioni su questo articolo</h2>
+  <ul class="info">
+    <li>Materiale premium <b>body-safe</b>, impermeabile, lavabile (anche in lavastoviglie, dicono i recensori coraggiosi).</li>
+    <li><b>12 modalità</b> + telecomando: per chi guida e per chi si fa guidare.</li>
+    <li>Batteria a lunga durata: dura più di te.</li>
+    <li>Imballo <b>super discreto</b>: nessuno saprà mai… tranne chi ti ha mandato questo link.</li>
+    <li>Compatibile con: serate tra amici, addii al celibato, vendette.</li>
+  </ul>
+
+  <div class="buybox">
+    <div class="bp"><sup>€</sup>29,99</div>
+    <div class="avail">Disponibilità immediata</div>
+    <div class="qty">Qtà: <button id="qm">−</button><span id="qv">1</span><button id="qp">+</button></div>
+    <button class="btn addcart" id="addBtn">Aggiungi al carrello</button>
+    <button class="btn buynow" id="buyBtn">Acquista ora</button>
+    <div class="secure">🔒 Transazione sicura · resi facili</div>
+
+    <div class="added" id="added">✓ <b>Aggiunto al carrello.</b> Ottima scelta 😏</div>
+    <div class="checkout" id="checkout">
+      <div class="crow"><span>Articoli (<span id="ckN">1</span>)</span><span id="ckSub">29,99 €</span></div>
+      <div class="crow"><span>Spedizione</span><span>GRATIS</span></div>
+      <div class="crow tot"><span>Totale</span><span id="ckTot">29,99 €</span></div>
+      <button class="btn buynow" id="placeBtn" style="margin-top:12px">Procedi all'ordine</button>
+    </div>
+  </div>
+
+  <div class="foot">Prezzi e disponibilità aggiornati in tempo reale.<br>amazòn · una <s>seria</s> piattaforma di e-commerce™ · ©2026</div>
+</div>
+
+<!-- GOTCHA -->
+<div class="gotcha" id="gotcha">
+  <div class="face"></div><div class="scrim"></div><canvas class="gcv" id="gcv"></canvas>
+  <div class="panel">
+    <div style="height:8px"></div>
+    <div>
+      <h2>SCHERZO!</h2>
+      <div class="sub">😂 <span id="gname">Ci sei cascato/a</span> alla grande</div>
+      <div class="sub" style="font-weight:400;font-size:14px;margin-top:8px">Nessun ordine è stato effettuato.<br>Era solo Ale 👑</div>
+    </div>
+    <div class="bottom">
+      <div class="note">🍆 Ora però… <b>rigiralo a qualcun altro</b> 😈</div>
+      <div class="gshare">
+        <span class="lab">Manda lo scherzo a…</span>
+        <input id="vname" placeholder="Nome della vittima" autocomplete="off" maxlength="30">
+        <button class="wa" id="waShare">💬 Invia su WhatsApp</button>
+        <a class="small" id="copyLink" href="#">🔗 copia il link</a>
+        <a class="small" href="cena-bibo-9k2x.html">‹ torna alla cena 🥩</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  var params=new URLSearchParams(location.search);
+  var nome=(params.get('nome')||'').trim().replace(/[<>]/g,'').slice(0,30);
+  if(nome){ document.getElementById('navName').textContent=nome;
+    document.getElementById('recoName').textContent=nome+', è perfetto per te';
+    document.getElementById('gname').textContent=nome+', ci sei cascato/a'; }
+
+  // date dinamiche
+  var dd=new Date(Date.now()+864e5); document.getElementById('delDate').textContent='domani '+dd.getDate()+'/'+(dd.getMonth()+1);
+  // countdown offerta lampo
+  var end=Date.now()+ (2*3600+14*60+9)*1000;
+  setInterval(function(){ var s=Math.max(0,(end-Date.now())/1000|0); var h=(s/3600|0),m=(s/60|0)%60,x=s%60;
+    document.getElementById('dealT').textContent='finisce tra '+String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(x).padStart(2,'0'); },1000);
+
+  // qty + cart
+  var q=1, cart=0;
+  document.getElementById('qp').addEventListener('click',function(){ if(q<12)q++; document.getElementById('qv').textContent=q; });
+  document.getElementById('qm').addEventListener('click',function(){ if(q>1)q--; document.getElementById('qv').textContent=q; });
+  function eur(n){ return n.toFixed(2).replace('.',',')+' €'; }
+  function refreshCart(){ document.getElementById('cartN').textContent=cart;
+    document.getElementById('ckN').textContent=cart; var sub=29.99*cart;
+    document.getElementById('ckSub').textContent=eur(sub); document.getElementById('ckTot').textContent=eur(sub); }
+  document.getElementById('addBtn').addEventListener('click',function(){ cart+=q; refreshCart();
+    document.getElementById('added').classList.add('on'); document.getElementById('checkout').classList.add('on');
+    document.getElementById('checkout').scrollIntoView({behavior:'smooth',block:'center'}); });
+  document.getElementById('buyBtn').addEventListener('click',function(){ if(cart===0){cart=q;refreshCart();} showGotcha(); });
+  document.getElementById('placeBtn').addEventListener('click',showGotcha);
+
+  // GOTCHA
+  function showGotcha(){
+    var g=document.getElementById('gotcha'); g.classList.add('on');
+    document.body.style.overflow='hidden';
+    try{navigator.vibrate&&navigator.vibrate([60,40,120]);}catch(e){}
+    sadTrombone(); confetti();
+  }
+  function sadTrombone(){
+    try{ var a=new (window.AudioContext||window.webkitAudioContext)(); var o=a.createOscillator(),g=a.createGain();
+      o.type='sawtooth'; o.connect(g); g.connect(a.destination); var t=a.currentTime;
+      var seq=[[466,0],[440,.32],[392,.64],[294,.98]]; o.frequency.setValueAtTime(466,t);
+      seq.forEach(function(s){ o.frequency.exponentialRampToValueAtTime(s[0],t+s[1]); });
+      g.gain.setValueAtTime(.0001,t); g.gain.exponentialRampToValueAtTime(.22,t+.05);
+      g.gain.setValueAtTime(.22,t+1.4); g.gain.exponentialRampToValueAtTime(.0001,t+2.2);
+      o.start(t); o.stop(t+2.3);
+    }catch(e){}
+  }
+  function confetti(){
+    var cv=document.getElementById('gcv'),ctx=cv.getContext('2d'),W,H,P=[],EM=['🎉','😂','🍆','💀','👑'];
+    function size(){W=cv.width=innerWidth;H=cv.height=innerHeight;} size(); addEventListener('resize',size);
+    var cols=['#ffd814','#cc0c39','#25d366','#ff9900','#46a4ff'];
+    for(var i=0;i<140;i++) P.push({x:Math.random()*W,y:-Math.random()*H,vy:2+Math.random()*4,vx:(Math.random()-.5)*2,
+      s:5+Math.random()*7,c:cols[(Math.random()*cols.length)|0],r:Math.random()*6,em:Math.random()<.18?EM[(Math.random()*EM.length)|0]:null});
+    var t0=Date.now();
+    (function loop(){ ctx.clearRect(0,0,W,H);
+      for(var i=0;i<P.length;i++){ var p=P[i]; p.y+=p.vy; p.x+=p.vx; p.r+=.1;
+        if(p.em){ ctx.font=(p.s*3)+'px serif'; ctx.fillText(p.em,p.x,p.y); }
+        else { ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.r); ctx.fillStyle=p.c; ctx.fillRect(-p.s/2,-p.s/2,p.s,p.s*1.6); ctx.restore(); }
+        if(p.y>H+20){ p.y=-20; p.x=Math.random()*W; } }
+      if(Date.now()-t0<6000) requestAnimationFrame(loop); else ctx.clearRect(0,0,W,H);
+    })();
+  }
+  // share (rigira lo scherzo)
+  function baseUrl(){ return location.href.split('#')[0].split('?')[0]; }
+  function shareMsg(){ var v=(document.getElementById('vname').value||'').trim().replace(/[<>]/g,'');
+    var url=baseUrl()+(v?('?nome='+encodeURIComponent(v)):'');
+    return (v?v+', ':'')+'🎁 ti ho mandato un regalo su amazòn… aprilo 👀🔞\n'+url; }
+  document.getElementById('waShare').addEventListener('click',function(){ window.open('https://wa.me/?text='+encodeURIComponent(shareMsg()),'_blank'); });
+  document.getElementById('copyLink').addEventListener('click',function(e){ e.preventDefault(); var v=(document.getElementById('vname').value||'').trim();
+    var url=baseUrl()+(v?('?nome='+encodeURIComponent(v)):''); if(navigator.clipboard){navigator.clipboard.writeText(url);} this.textContent='✓ link copiato'; });
+</script>
+</body>
+</html>
