@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#182A43">
+<title>Bussola d'assemblea — Della Bosca AP215</title>
+<style>
+  :root{
+    --bg:#E8EBEF; --ink:#182A43; --muted:#5A6B7E; --card:#fff; --line:#DCE2EA;
+    --ochre:#9C6B2E;
+    --green:#15724A; --greenbg:#E3F1E9;
+    --slate:#566273; --slatebg:#EAEEF2;
+    --amber:#965707; --amberbg:#FBEEDA;
+    --navybg:#EAF0F7;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+    --sans:-apple-system,system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --serif:Georgia,"Times New Roman",serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.5;-webkit-text-size-adjust:100%}
+  .wrap{max-width:880px;margin:0 auto;padding:0 14px 60px}
+
+  /* Header */
+  header{padding:18px 0 10px;border-top:3px solid var(--ochre)}
+  .eyebrow{font-family:var(--sans);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ochre);font-weight:700}
+  h1{font-family:var(--serif);font-size:27px;line-height:1.1;margin:4px 0 2px;font-weight:700}
+  .sub{font-size:13px;color:var(--muted)}
+  .tldr{background:var(--ink);color:#fff;border-radius:12px;padding:13px 15px;margin:12px 0;font-size:13.5px}
+  .tldr b{color:#FFE0AE}
+
+  /* Sticky search */
+  .searchbar{position:sticky;top:0;z-index:20;background:var(--bg);padding:10px 0 8px;margin-top:-2px}
+  .searchbox{position:relative}
+  #q{width:100%;font-size:17px;font-family:var(--sans);padding:14px 42px 14px 44px;border:2px solid var(--ink);border-radius:12px;background:#fff;color:var(--ink);outline:none}
+  #q:focus{border-color:var(--ochre);box-shadow:0 0 0 3px rgba(156,107,46,.18)}
+  .mag{position:absolute;left:15px;top:50%;transform:translateY(-50%);font-size:17px;color:var(--muted)}
+  .clear{position:absolute;right:8px;top:50%;transform:translateY(-50%);border:none;background:#eef1f4;color:var(--muted);width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;display:none}
+  .hint{font-size:11.5px;color:var(--muted);margin:6px 2px 0}
+
+  /* Decoder chips */
+  .deck-label{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:14px 2px 6px;font-weight:700}
+  .chips{display:flex;flex-wrap:wrap;gap:7px}
+  .chip{font-family:var(--sans);font-size:13px;padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer}
+  .chip:hover{border-color:var(--ink)}
+  .cat.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .chip.decode{background:var(--navybg);border-color:#cfe;border-color:#cdd9e8}
+
+  .count{font-size:12px;color:var(--muted);margin:14px 2px 8px}
+
+  /* Cards */
+  .grid{display:grid;grid-template-columns:1fr;gap:12px}
+  @media(min-width:720px){.grid{grid-template-columns:1fr 1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--slate);border-radius:12px;padding:14px 15px}
+  .card.mio{border-left-color:var(--green)}
+  .card.no{border-left-color:#aeb8c4}
+  .card.parziale,.card.verify{border-left-color:var(--ochre)}
+  .card.info{border-left-color:var(--ink)}
+  .card h3{font-family:var(--serif);font-size:17px;margin:0 0 8px;line-height:1.2;display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+  .badge{flex:none;font-family:var(--sans);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;font-weight:700;padding:4px 7px;border-radius:6px;white-space:nowrap;margin-top:2px}
+  .b-mio{background:var(--greenbg);color:var(--green)}
+  .b-no{background:var(--slatebg);color:var(--slate)}
+  .b-parziale,.b-verify{background:var(--amberbg);color:var(--amber)}
+  .b-info{background:var(--navybg);color:var(--ink)}
+  .card p{margin:0 0 9px;font-size:13.5px;color:#27374d}
+  .card p b{color:var(--ink)}
+  .figs{margin:9px 0;border-top:1px solid var(--line)}
+  .fig{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:6px 0;border-bottom:1px dotted var(--line)}
+  .fig .lbl{font-size:12px;color:var(--muted)}
+  .fig .val{font-family:var(--mono);font-size:14px;font-weight:700;color:var(--ink);text-align:right;white-space:nowrap}
+  .src{font-size:11px;color:var(--muted);margin-top:8px}
+  .src b{color:var(--ochre);font-weight:700}
+  .mine{display:flex;justify-content:space-between;align-items:center;gap:10px;background:var(--greenbg);border:1px solid #bfe0cd;border-radius:9px;padding:8px 11px;margin:6px 0 2px}
+  .mine span{font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--green);font-weight:700}
+  .mine b{font-family:var(--mono);font-size:16px;color:var(--green);white-space:nowrap}
+  .mine.zero{background:var(--slatebg);border-color:#cfd6de}
+  .mine.zero span,.mine.zero b{color:var(--slate)}
+  .minenote{font-size:11px;color:var(--muted);margin:3px 2px 0;font-style:italic}
+  mark{background:#FFE9A8;color:inherit;border-radius:2px;padding:0 1px}
+
+  .empty{text-align:center;color:var(--muted);padding:40px 10px;font-size:14px}
+  footer{margin-top:26px;padding-top:14px;border-top:1px solid var(--line);font-size:11.5px;color:var(--muted)}
+  footer b{color:var(--ink)}
+  @media (prefers-reduced-motion: no-preference){.card{transition:opacity .12s ease}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Bussola d'assemblea</div>
+    <h1>Capire al volo cosa dicono</h1>
+    <div class="sub">Della Bosca Valentina · unità AP215 · civ. 34 (2° stralcio) · Supercondominio Cilea 18-36 · assemblea 29/06/2026</div>
+    <div class="tldr">In due righe: <b>sei a credito</b> (−475,37). <b>Vele/cantiere facciate</b> e <b>causa 1° stralcio</b> = non ti riguardano. Le tue spese grosse: <b>ascensore</b> e <b>riscaldamento</b>. L'"avanzo da 100k" <b>non è denaro libero</b>.</div>
+  </header>
+
+  <div class="searchbar">
+    <div class="searchbox">
+      <span class="mag">⌕</span>
+      <input id="q" type="text" inputmode="search" autocomplete="off" placeholder="Scrivi cosa stanno dicendo… (vele, avanzo, Pavani…)">
+      <button class="clear" id="clear" aria-label="Cancella">×</button>
+    </div>
+    <div class="hint">Suggerimento: cerca un nome, un numero o una parola. Le schede si filtrano da sole.</div>
+  </div>
+
+  <div class="deck-label">Se senti parlare di…</div>
+  <div class="chips" id="decoder"></div>
+
+  <div class="deck-label">Per argomento</div>
+  <div class="chips" id="cats"></div>
+
+  <div class="count" id="count"></div>
+  <div class="grid" id="grid"></div>
+  <div class="empty" id="empty" style="display:none">Nessuna voce trovata. Prova con un'altra parola — es. <b>vele</b>, <b>Pavani</b>, <b>avanzo</b>, <b>morosi</b>, <b>rate</b>.</div>
+
+  <footer>
+    <b>Come leggere le fonti.</b> Le pagine citate sono quelle <b>stampate sul documento</b> (in alto). Abbreviazioni: <b>Riepilogo</b> = riepilogo finanziario · <b>Relazione</b> = relazione dell'amministratore · <b>Consuntivo</b> = elenco voci di spesa 2025 · <b>Riparto</b> = piano di riparto · <b>Scadenzario</b> = scadenzario rate. Importi in euro (virgola = decimali).<br><br>
+    Le voci segnate <b>da verificare</b> e gli importi letti da scansione vanno confermati con l'amministratore. Strumento personale di sintesi, non documento ufficiale.
+  </footer>
+</div>
+
+<script>
+const norm = s => (s||"").toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+
+const CARDS = [
+ // ---- CASSA / AVANZO ----
+ {cat:"Cassa", st:"info", t:"L'avanzo di cassa NON è libero",
+  body:"In cassa al 31/12/25 ci sono 200.169,40, ma è quasi tutto già impegnato: crediti dei condomini (stornati dalle rate 2026), fondo congelato per finire i lavori, fornitori da pagare, causa. <b>Libero ≈ zero.</b> Non è un tesoretto da spartire.",
+  figs:[["In cassa (c/c)","200.169,40"],["Crediti dei condomini","122.740,57"],["Fondo lavori congelato","74.400,00"],["Fornitori da pagare","23.163,10"],["Causa 1° stralcio","9.737,00"],["Libero netto","≈ 0"]],
+  src:"Riepilogo finanziario p.81-82 · Relazione p.7",
+  kw:"avanzo cassa tesoretto liquidità fondo disponibilità 100000 100mila 200169 respirare utilizzo soldi"},
+
+ {cat:"Cassa", st:"info", t:"Il bilancio quadra (crediti = debiti)",
+  body:"Tutto ciò che c'è è già assegnato: i crediti totali del condominio sono uguali ai debiti totali. Per questo non avanza nulla di libero.",
+  figs:[["Crediti totali","233.120,60"],["Debiti totali","233.120,60"]],
+  src:"Riepilogo finanziario p.82",
+  kw:"pareggio patrimonio crediti debiti 233120 bilancio quadra"},
+
+ {cat:"Cassa", st:"parziale", t:"Discrepanza 'fornitori vari'",
+  body:"Il fondo congelato per i lavori risulta <b>74.400</b> nella Relazione ma <b>77.400</b> nel Riepilogo: <b>3.000 di differenza</b> da farsi spiegare.",
+  figs:[["Relazione p.7","74.400,00"],["Riepilogo p.82","77.400,00"],["Differenza","3.000,00"]],
+  src:"Relazione p.7 vs Riepilogo p.82",
+  kw:"fornitori vari 74400 77400 discrepanza differenza congelato"},
+
+ // ---- VELE / CANTIERE ----
+ {cat:"Vele", st:"no", t:"Vele = balconi/facciate (civ 26-30)",
+  body:"Le \"vele\" sono i balconi e le facciate rifatti nel 2025 sul fabbricato <b>\"Linea\" (civ 26-28-30, 1° stralcio)</b>. <b>La tua quota = 0</b>: sei nel fabbricato 32-36, tabella diversa.",
+  figs:[["Lavori (Seep Bo)","293.258,26"],["Tecnico Contini (14%)","73.186,70"],["Resp. lavori (4%)","11.138,84"],["Pratica fiscale (2%)","5.580,23"],["La TUA quota","0,00"]],
+  src:"Consuntivo p.27 · Relazione p.5",
+  kw:"vele facciate balconi cantiere Seep consolidamento pareti esterne Linea rivestimento"},
+
+ {cat:"Vele", st:"no", t:"Avanzo vele / accordo col costruttore",
+  body:"Sull'opera vele si è speso meno del previsto: differenza <b>a credito di 113.478,47</b> (anche per l'accordo/conciliazione con il costruttore). Parte è congelata in attesa delle \"questioni aperte\" che si discutono in assemblea. È <b>1° stralcio</b>.",
+  figs:[["Previsto","392.458,06"],["Speso","278.979,59"],["A credito","113.478,47"],["Congelato (questioni)","58.190,00"],["Imprevisti non spesi","56.300,00"]],
+  src:"Relazione p.5 e p.7",
+  kw:"conciliazione transazione causa costruttore avanzo vele 113478 congelato questioni aperte imprevisti accordo"},
+
+ {cat:"Vele", st:"no", t:"Ing. Contini — direttore lavori vele",
+  body:"Il tecnico/progettista del cantiere. Competenze <b>73.186,70</b> (il 14% sui lavori), pagati in cassa 64.305,10. La Relazione segnala che ha superato il preventivo di 3.481,70. È <b>1° stralcio</b>: non tuo.",
+  figs:[["Competenza (14%)","73.186,70"],["Pagato in cassa","64.305,10"],["Sopra budget","+3.481,70"]],
+  src:"Consuntivo p.27 · Riepilogo p.81 · Relazione p.5",
+  kw:"contini direzione lavori DL progettista tecnico spese tecniche 14% 64305 73186"},
+
+ // ---- AMMINISTRATORE ----
+ {cat:"Amministratore", st:"parziale", t:"Quanto ha preso Pavani",
+  body:"Il compenso <b>ordinario</b> è 8.393,60 (~81 a unità, in linea). Ma in cassa nel 2025 gli sono andati <b>30.898,08</b> + 7.536,75 ancora dovuti. La parte extra è <b>Responsabile Lavori (4%)</b> + <b>Pratica fiscale (2%)</b>, che la Relazione chiama \"fattura dello studio\". L'ordinario ti riguarda; lo straordinario è sul cantiere 1° stralcio.",
+  figs:[["Compenso ordinario","8.393,60"],["Pagato in cassa 2025","30.898,08"],["Ancora dovuto","7.536,75"],["Resp. lavori (4%)","11.138,84"],["Pratica fiscale (2%)","5.580,23"]],
+  src:"Consuntivo p.1 · Riepilogo p.81-82 · Relazione p.5",
+  kw:"amministratore pavani compenso onorario parcella 30898 8393 responsabile lavori studio fattura"},
+
+ // ---- CAUSA / TONINELLI ----
+ {cat:"Causa", st:"no", t:"Causa 1° stralcio",
+  body:"C'è un contenzioso sul <b>1° stralcio (civ 18-30)</b>: rimborso 9.737,00. <b>Non è tuo</b> (sei 2° stralcio); al massimo una piccola quota a livello supercondominio (~1,2%).",
+  figs:[["Rimborso causa","9.737,00"],["La tua esposizione","~1,2% eventuale"]],
+  src:"Riepilogo p.82 · Relazione p.7",
+  kw:"causa contenzioso lite primo stralcio rimborso 9737 legale avvocato soccombenza"},
+
+ {cat:"Causa", st:"no", t:"Fattura Toninelli — i \"10.000\"",
+  body:"Gira voce di una fattura da 10.000 \"pagata\" a Toninelli. In realtà in cassa risulta pagato <b>0,01</b> nel 2025. I ~10k che si citano sono probabilmente il <b>rimborso causa 9.737</b> (legame probabile, non provato). Chiedere fattura + relazione tecnica.",
+  figs:[["Pagato in cassa 2025","0,01"],["Probabile riferimento","9.737,00 (causa)"]],
+  src:"Riepilogo p.81-82",
+  kw:"toninelli architetto fattura 10000 10mila perizia base lavori"},
+
+ // ---- MOROSI ----
+ {cat:"Morosi", st:"info", t:"Morosità totale",
+  body:"In tutto <b>29 condomini</b> in arretrato, per ~22.289 (dato aggregato 29.658,86). Il <b>70% è nel 1° stralcio</b>; i 3 grandi sono tutti 1° stralcio. Nel tuo 2° stralcio i morosi pesano ~6.446.",
+  figs:[["Totale morosità","22.289,19"],["Mongardi-Brandoli (civ 28)","7.651,30"],["Luschi Kevin (civ 30)","2.636,73"],["Pugliese M.-Lucianetti (civ 28)","2.616,28"]],
+  src:"Scadenzario p.113-114 · Riepilogo p.82",
+  kw:"morosi morosità insoluti crediti verso condomini mongardi luschi pugliese debitori non pagano"},
+
+ {cat:"Morosi", st:"mio", t:"Morosi del 2° stralcio (il tuo)",
+  body:"I morosi del tuo settore (32-36): tot ~6.446. I più grossi: Mangiameli e Scarpulla (civ 34), Cotola (civ 36), Ternavska e Cuppi (civ 32). Due sono box: Gualandi e COSMOS.",
+  figs:[["Mangiameli (civ 34)","1.208,95"],["Scarpulla (civ 34)","1.097,26"],["Cotola (civ 36)","668,51"],["Totale 2° stralcio","≈ 6.446"]],
+  src:"Scadenzario p.113-114 · Riparto",
+  kw:"morosi 2 stralcio 32 34 36 mangiameli scarpulla cotola ternavska cuppi gualandi cosmos box"},
+
+ // ---- LE MIE SPESE ----
+ {cat:"Mie spese", st:"mio", t:"Le mie spese 2025 → 2026",
+  body:"Nel 2025 hai avuto <b>3.156,65</b> di competenza (+617,85 ascensore). Per il 2026 il budget è <b>2.566,84</b>, ma lo scadenzario chiede 2.771,77: <b>204,93 in più</b> da chiarire. Sei comunque <b>a credito di 475,37</b>.",
+  figs:[["Spesa 2025 (ordinaria)","3.156,65"],["+ ascensore straord.","617,85"],["Budget 2026 (riparto)","2.566,84"],["Chiesto a scadenzario","2.771,77"],["Da chiarire","+204,93"],["Tuo saldo","−475,37 (credito)"]],
+  src:"Riparto consuntivo p.7,9 · Riparto preventivo p.7,9 · Scadenzario p.113",
+  kw:"mie spese mia quota 3156 2566 2771 204 credito 475 differenza scadenzario"},
+
+ {cat:"Mie spese", st:"mio", t:"Dove vanno i miei soldi",
+  body:"La voce più pesante è <b>scala + ascensore</b>, seguita dal <b>riscaldamento/acqua calda</b>. Su quest'ultimo puoi incidere col consumo; il resto è collettivo.",
+  figs:[["Scala + ascensore","37,4%"],["Riscaldamento + acqua calda","30,0%"],["Generali supercondominio","20,1%"],["Generali fabbricato 32-36","12,5%"]],
+  src:"Riparto consuntivo p.7,9 (anno 2025)",
+  kw:"dove vanno soldi percentuale ascensore scala riscaldamento acqua calda generali ripartizione"},
+
+ {cat:"Mie spese", st:"mio", t:"Le mie rate 2026",
+  body:"Quattro scadenze. Hai già versato 1.250 sul 2026 e il credito ti azzera la prima rata.",
+  figs:[["30/06/2026","0,00"],["31/08/2026","40,40"],["15/10/2026","503,00"],["30/11/2026","503,00"]],
+  src:"Scadenzario p.113",
+  kw:"rate scadenze quando pago 40,40 503 versato 1250"},
+
+ {cat:"Mie spese", st:"no", t:"Il cantiere vele mi riguarda? NO",
+  body:"La tua quota sul cantiere facciate/vele è <b>0,00</b>: è del fabbricato \"Linea\" (civ 26-30), tu sei 32-36. Se un domani facessero le facciate al tuo fabbricato, allora pagheresti.",
+  figs:[["La TUA quota vele","0,00"]],
+  src:"Consuntivo p.27 · Riparto p.7",
+  kw:"vele mia quota pago facciate balconi mio 0 zero"},
+
+ // ---- SERVIZI ORDINARI ----
+ {cat:"Servizi", st:"mio", t:"Pulizia scale, atri e parti comuni",
+  body:"Quello che paghi per le pulizie nel tuo civico (34) e nelle aree comuni del 32-36. La quota qui sotto è scala + atrio + parti comuni; il corsello/box è in gestione separata.",
+  figs:[["Pulizia scala (civ 34)","1.100,00"],["Pulizia atrio (civ 34)","380,00"],["Pulizia parti comuni esterno 32-36","1.450,00"],["Pulizia corsello/box 32-36","750,00"]],
+  src:"Preventivo p.84 (Tab.C1, I1, H1) e p.83 (Tab.B1)",
+  kw:"pulizia pulizie scala scale atrio androne parti comuni corsello box spazzare impresa pulizie ditta"},
+
+ {cat:"Servizi", st:"mio", t:"Giardinaggio e acqua irrigua",
+  body:"Verde e irrigazione del complesso (Tab.B, supercondominio): spesa divisa tra tutti i condomini.",
+  figs:[["Giardinaggio","7.000,00"],["Interventi straord. giardino","2.000,00"],["Acqua irrigua (2 contatori)","8.500,00"],["Manut. impianto irriguo","600,00"]],
+  src:"Preventivo p.83 (Tab.B)",
+  kw:"giardino giardinaggio giardiniere verde prato siepi taglio erba irriguo irrigazione acqua irrigua villette aree esterne"},
+
+ {cat:"Servizi", st:"mio", t:"Il tuo ascensore (civ 34)",
+  body:"La voce più pesante del tuo civico. Totale tabella C1 (civ 34) = 4.900, diviso tra le unità. La quota qui sotto è il solo ascensore; la pulizia scala (117,18) è nella scheda Pulizia.",
+  figs:[["Canone manutenzione","1.650,00"],["Verifica periodica","350,00"],["F.M. ascensore + luce scala","1.300,00"],["Manutenzione","200,00"],["Manut. straordinaria","300,00"],["Totale C1 civ 34","4.900,00"]],
+  src:"Preventivo p.84 (Tab.C1 civ 34)",
+  kw:"ascensore canone manutenzione verifica periodica otis schindler luce scala fuori manovra 1650 4900"},
+
+ {cat:"Servizi", st:"mio", t:"Disinfestazione e zanzara tigre",
+  body:"Trattamenti del complesso (Tab.B, supercondominio), divisi tra tutti.",
+  figs:[["Disinf./derattizz./antilarvale","2.500,00"],["Zanzara tigre (adulticida)","2.000,00"],["Trattamento straord.","500,00"]],
+  src:"Preventivo p.83 (Tab.B)",
+  kw:"disinfestazione zanzara tigre derattizzazione topi ratti insetti antilarvale adulticida disinfestare"},
+
+ {cat:"Servizi", st:"mio", t:"Energia e luce parti comuni",
+  body:"Elettricità delle parti comuni, interne ed esterne. Fornitore Unoenergy.",
+  figs:[["Luci esterne villette","900,00"],["Energia area esterna Linea + cancello","2.700,00"],["Luce parti comuni esterno 32-36","1.600,00"],["Luce atrio civ 34","250,00"]],
+  src:"Preventivo p.83 (Tab.B) e p.84 (Tab.I1, B1)",
+  kw:"energia luce elettricità corrente unoenergy esterne atrio parti comuni illuminazione lampioni"},
+
+ {cat:"Servizi", st:"mio", t:"Assicurazione",
+  body:"Polizza globale del fabbricato (Tab.A, supercondominio), divisa tra tutti.",
+  figs:[["Assicurazione globale","12.500,00"]],
+  src:"Preventivo p.83 (Tab.A 001.001)",
+  kw:"assicurazione polizza globale fabbricato sinistri danni responsabilità civile"},
+
+ {cat:"Servizi", st:"mio", t:"Cancelli e accessi",
+  body:"Manutenzione e verifica dei cancelli. Da notare una manut. straordinaria cancello autorimesse di 1.000.",
+  figs:[["Manut. cancello (Tab.B)","100,00"],["Verifica cancello (Tab.B)","350,00"],["Cancello box: manut.+straord.+verifica","100 + 1.000 + 250"]],
+  src:"Preventivo p.83 (Tab.B) e p.84 (Tab.H1)",
+  kw:"cancello cancelli automatico portone accesso corsello autorimesse telecomando sbarra"},
+
+ {cat:"Servizi", st:"mio", t:"Spurgo fognature",
+  body:"Spurgo periodico delle fognature del tuo settore (Tab.I1, servizi comuni 32-36).",
+  figs:[["Spurgo fogne 32-36","800,00"]],
+  src:"Preventivo p.84 (Tab.I1)",
+  kw:"spurgo fogne fognature pozzetti scarichi tubazioni autospurgo intasamento"},
+
+ {cat:"Servizi", st:"mio", t:"Analisi acqua e legionella",
+  body:"Controlli su potabilità e legionella del fabbricato 32-36 (Tab.A1).",
+  figs:[["Analisi acqua (potabilità + legionella)","850,00"]],
+  src:"Preventivo p.83 (Tab.A1 006.014)",
+  kw:"analisi acqua legionella potabilità campionamento controlli sanitari laboratorio"},
+
+ {cat:"Servizi", st:"mio", t:"Spese amministrative, banca, fisco",
+  body:"Costi di gestione, distinti dal compenso amministratore (8.500): segreteria, fisco, banca, sala assemblea.",
+  figs:[["Spese amministrative","3.300,00"],["Adempimenti fiscali","3.000,00"],["Banca (gestione + accessorie)","750,00"],["Nolo sala assemblee","150,00"],["Gestione fatture elettroniche","200,00"]],
+  src:"Preventivo p.83 (Tab.A)",
+  kw:"spese amministrative banca bancarie fiscali adempimenti postali fatture elettroniche sala assemblee nolo segreteria gestione"},
+
+ {cat:"Servizi", st:"mio", t:"Sottocentrale termica (MSC)",
+  body:"Manutenzione della centrale termica e dell'addolcitore (sale). Il calore vero e proprio è di Hera (vedi Riscaldamento).",
+  figs:[["Canone manut. sottocentrale","250,00"],["Manut. straordinaria","500,00"],["Sale e prodotti","200,00"]],
+  src:"Preventivo p.84 (Tab.MSC)",
+  kw:"sottocentrale centrale termica caldaia addolcitore sale manutenzione MSC impianto riscaldamento"},
+
+ {cat:"Servizi", st:"mio", t:"Riscaldamento e acqua calda",
+  body:"La 'dispersione ACS civ 34' (rete e perdite di calore) vale 3.800; il tuo consumo va a conguaglio. Il calore lo fornisce Hera. In tutto (dispersione + consumo a conguaglio + sottocentrale) il riscaldamento e l'acqua calda pesano ~974/anno.",
+  figs:[["Dispersione ACS civ 34","3.800,00"],["Fornitore calore","Hera"]],
+  src:"Preventivo p.84 (Tab.DA1 civ 34)",
+  kw:"riscaldamento acqua calda ACS dispersione calore termico hera conguaglio bolletta termosifoni caloriferi"},
+
+ // ---- FORNITORI / FATTURE ----
+ {cat:"Fornitori", st:"no", t:"Seep Bo srl",
+  body:"L'impresa che ha rifatto le facciate/balconi (vele) del fabbricato Linea. La spesa più grande dell'anno. <b>1° stralcio: non tuo.</b>",
+  figs:[["Pagato 2025","236.285,26"]],
+  src:"Riepilogo p.81 (uscite)",
+  kw:"seep bo impresa facciate vele balconi costruttore"},
+
+ {cat:"Fornitori", st:"no", t:"Ing. Claudio Contini",
+  body:"Progettista e direttore lavori del cantiere vele (1° stralcio).",
+  figs:[["Pagato 2025","64.305,10"],["Competenza (14%)","73.186,70"]],
+  src:"Riepilogo p.81 · Consuntivo p.27",
+  kw:"contini ingegnere direzione lavori progettista tecnico"},
+
+ {cat:"Fornitori", st:"parziale", t:"Hera — teleriscaldamento",
+  body:"Fornitore del riscaldamento e acqua calda. Ti riguarda (lo paghi nelle voci ACS/riscaldamento).",
+  figs:[["Pagato 2025","44.180,70"]],
+  src:"Riepilogo p.81",
+  kw:"hera teleriscaldamento riscaldamento calore acqua calda gas energia termica"},
+
+ {cat:"Fornitori", st:"parziale", t:"Geom. Pavani Stefano snc",
+  body:"L'amministratore. Comprende compenso ordinario + ruoli straordinari del cantiere. Vedi la scheda \"Quanto ha preso Pavani\".",
+  figs:[["Pagato 2025","30.898,08"],["Ancora dovuto","7.536,75"]],
+  src:"Riepilogo p.81-82",
+  kw:"pavani amministratore compenso studio geometra"},
+
+ {cat:"Fornitori", st:"parziale", t:"Unoenergy",
+  body:"Energia elettrica delle parti comuni.",
+  figs:[["Pagato 2025","17.772,00"]],
+  src:"Riepilogo p.81",
+  kw:"unoenergy energia elettrica luce parti comuni elettricità"},
+
+ {cat:"Fornitori", st:"no", t:"Gattarello",
+  body:"Rifacimento del vano tecnico contatori gas/acqua del fabbricato Linea (civ 26-30). 1° stralcio.",
+  figs:[["Pagato 2025","16.500,00"]],
+  src:"Consuntivo p.27 · Riepilogo",
+  kw:"gattarello gas contatori vano tecnico manufatto"},
+
+ {cat:"Fornitori", st:"verify", t:"SAPIA MEGAN — da chiarire",
+  body:"Fornitore poco trasparente dall'elenco uscite: chiedere a cosa si riferisce.",
+  figs:[["Importo","12.932,00"]],
+  src:"Riepilogo p.81 (da verificare)",
+  kw:"sapia megan fornitore opaco da chiarire 12932"},
+
+ {cat:"Fornitori", st:"verify", t:"Pavi System srl — da chiarire",
+  body:"Fornitore poco trasparente (opere edili/ponteggi?): chiedere la descrizione esatta.",
+  figs:[["Importo","10.861,73"]],
+  src:"Riepilogo p.81 (da verificare)",
+  kw:"pavi system ponteggi opere edili fornitore da chiarire 10861"},
+
+ // ---- GLOSSARIO ----
+ {cat:"Glossario", st:"info", t:"1° stralcio / 2° stralcio",
+  body:"Due settori del complesso: <b>1° stralcio = civ 18-30</b>; <b>2° stralcio = civ 32-36 (il tuo)</b>. La causa e le vele sono tutte 1° stralcio.",
+  figs:[],
+  src:"Riparto · Relazione",
+  kw:"stralcio primo secondo settore 18 30 32 36 differenza"},
+
+ {cat:"Glossario", st:"info", t:"Millesimi (le tue tabelle)",
+  body:"Sono le tue quote di proprietà. Le tabelle che ti toccano: <b>A1</b> generali 32-36, <b>C1</b> scala/ascensore, <b>DA1</b> dispersione acqua calda, <b>MSC</b> sottocentrale, <b>I1</b> servizi comuni.",
+  figs:[],
+  src:"Riparto p.7-9",
+  kw:"millesimi tabelle quote A1 B1 C1 DA1 MSC I1 proprietà riparto"},
+
+ {cat:"Glossario", st:"info", t:"Storno",
+  body:"Vuol dire <b>restituire/scontare</b> i crediti dei condomini dalle rate del 2026. È così che il tuo credito (475,37) ti viene riconosciuto.",
+  figs:[],
+  src:"Relazione p.7",
+  kw:"storno stornati restituzione sconto credito rate"},
+
+ {cat:"Glossario", st:"info", t:"Conguaglio ACS",
+  body:"La <b>differenza</b> tra gli acconti pagati e il consumo reale di acqua calda/riscaldamento. Può uscire a debito o a credito.",
+  figs:[],
+  src:"Consuntivo (sezioni ACS)",
+  kw:"conguaglio acs acqua calda sanitaria consumo acconto differenza riscaldamento"},
+
+ {cat:"Glossario", st:"info", t:"Responsabile dei lavori",
+  body:"Chi controlla il cantiere e firma i documenti. Qui è lo <b>studio Pavani</b>, e prende il 4% sui lavori vele.",
+  figs:[],
+  src:"Relazione p.5",
+  kw:"responsabile lavori RL 4% pavani cantiere sicurezza"},
+
+ {cat:"Glossario", st:"info", t:"Sottocentrale (MSC)",
+  body:"La <b>centrale termica</b> del complesso. La sua manutenzione è una delle tue voci (tabella MSC).",
+  figs:[],
+  src:"Riparto / Consuntivo",
+  kw:"sottocentrale msc centrale termica caldaia manutenzione riscaldamento"}
+];
+
+const DECODER = ["vele","avanzo","Pavani","morosi","Contini","Toninelli","causa","le mie rate","Seep","riscaldamento"];
+const CATS = ["Tutto","Mie spese","Servizi","Cassa","Vele","Amministratore","Causa","Morosi","Fornitori","Glossario"];
+const BADGE = {mio:["b-mio","Ti riguarda"],no:["b-no","Non ti riguarda"],parziale:["b-parziale","In parte"],verify:["b-verify","Da verificare"],info:["b-info","Info"]};
+// La tua quota annua in euro per servizio (millesimi AP215 x voce di preventivo; riconciliata coi totali di tabella del riparto)
+const MINE = {
+ "Pulizia scale, atri e parti comuni":"215,00",
+ "Giardinaggio e acqua irrigua":"213,76",
+ "Il tuo ascensore (civ 34)":"404,80",
+ "Disinfestazione e zanzara tigre":"59,04",
+ "Energia e luce parti comuni":"128,75",
+ "Assicurazione":"147,62",
+ "Cancelli e accessi":"5,31",
+ "Spurgo fognature":"27,09",
+ "Analisi acqua e legionella":"28,78",
+ "Spese amministrative, banca, fisco":"87,98",
+ "Sottocentrale termica (MSC)":"101,95",
+ "Riscaldamento e acqua calda":"414,97",
+ "Vele = balconi/facciate (civ 26-30)":{v:"0,00",zero:true,note:"Non sei nel fabbricato Linea: le vele non le paghi."},
+ "Avanzo vele / accordo col costruttore":{v:"0,00",zero:true,note:"Materia 1° stralcio."},
+ "Ing. Contini — direttore lavori vele":{v:"0,00",zero:true,note:"Tecnico delle vele (1° stralcio)."},
+ "Quanto ha preso Pavani":{v:"100,38",note:"Solo il compenso ordinario; lo straordinario (4%+2%, vele) è 0 per te."},
+ "Causa 1° stralcio":{v:"0,00",zero:true,note:"Materia 1° stralcio; eventuale quota a livello supercondominio da verificare."},
+ "Fattura Toninelli — i \"10.000\"":{v:"0,00",zero:true,note:"Legata alla causa 1° stralcio."},
+ "Seep Bo srl":{v:"0,00",zero:true,note:"Impresa delle vele (Linea): non ti riguarda."},
+ "Ing. Claudio Contini":{v:"0,00",zero:true,note:"Tecnico delle vele (Linea): non ti riguarda."},
+ "Gattarello":{v:"0,00",zero:true,note:"Lavori gas civ 26-30: non ti riguarda."}
+};
+
+let activeCat="Tutto", query="";
+const grid=document.getElementById('grid'), empty=document.getElementById('empty'), countEl=document.getElementById('count');
+const qIn=document.getElementById('q'), clearBtn=document.getElementById('clear');
+
+function buildChips(){
+  const dc=document.getElementById('decoder');
+  DECODER.forEach(d=>{const b=document.createElement('button');b.className='chip decode';b.textContent=d;
+    b.onclick=()=>{qIn.value=d;query=d;clearBtn.style.display='block';render();qIn.focus();};dc.appendChild(b);});
+  const cc=document.getElementById('cats');
+  CATS.forEach(c=>{const b=document.createElement('button');b.className='chip cat'+(c==='Tutto'?' active':'');b.textContent=c;
+    b.onclick=()=>{activeCat=c;[...cc.children].forEach(x=>x.classList.toggle('active',x.textContent===c));render();};cc.appendChild(b);});
+}
+
+function hl(text,q){ if(!q) return text;
+  try{const re=new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','ig');return text.replace(re,'<mark>$1</mark>');}catch(e){return text;}
+}
+
+function render(){
+  const nq=norm(query);
+  grid.innerHTML="";
+  let n=0;
+  CARDS.forEach(c=>{
+    if(activeCat!=="Tutto" && c.cat!==activeCat) return;
+    const blob=norm(c.t+" "+c.body+" "+c.kw+" "+c.cat+" "+c.figs.map(f=>f[0]+" "+f[1]).join(" "));
+    if(nq && !blob.includes(nq)) return;
+    n++;
+    const el=document.createElement('div');el.className='card '+c.st;
+    const bd=BADGE[c.st];
+    let figs="";
+    if(c.figs.length){figs='<div class="figs">'+c.figs.map(f=>`<div class="fig"><span class="lbl">${f[0]}</span><span class="val">${f[1]}</span></div>`).join("")+'</div>';}
+    const mv=MINE[c.t];
+    let mineHtml="";
+    if(mv){const val=(typeof mv==="string")?mv:mv.v;const z=(typeof mv==="object"&&mv.zero)?" zero":"";const nt=(typeof mv==="object"&&mv.note)?`<div class="minenote">${mv.note}</div>`:"";
+      mineHtml=`<div class="mine${z}"><span>${z?"La tua quota":"La tua quota / anno"}</span><b>${val}</b></div>`+nt;}
+    el.innerHTML=`<h3><span>${hl(c.t,query)}</span><span class="badge ${bd[0]}">${bd[1]}</span></h3>`+
+      `<p>${query?hl(c.body,query):c.body}</p>`+figs+mineHtml+
+      `<div class="src">Fonte: <b>${c.src}</b></div>`;
+    grid.appendChild(el);
+  });
+  empty.style.display=n?"none":"block";
+  countEl.textContent = (nq||activeCat!=="Tutto") ? (n+" "+(n===1?"scheda":"schede")) : (CARDS.length+" schede — scrivi o tocca un filtro");
+}
+
+qIn.addEventListener('input',e=>{query=e.target.value.trim();clearBtn.style.display=query?'block':'none';render();});
+clearBtn.addEventListener('click',()=>{query="";qIn.value="";clearBtn.style.display='none';render();qIn.focus();});
+buildChips();render();
+</script>
+</body>
+</html>
