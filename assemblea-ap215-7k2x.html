@@ -113,6 +113,21 @@
   .calc .out span{font-size:11px;color:var(--green);font-weight:700;text-transform:uppercase;letter-spacing:.06em}
   .calc .out b{font-family:var(--mono);font-size:22px;color:var(--green)}
   .calc .note{font-size:11px;color:var(--muted);margin-top:9px;font-style:italic;line-height:1.5}
+
+  /* === MODALITÀ ASSEMBLEA === */
+  .modebar{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--ink);color:#fff;border-radius:12px;padding:12px 14px;margin:12px 0 2px}
+  .modebar b{font-size:14px}.modebar small{display:block;color:#cdd6e2;font-size:11.5px;margin-top:2px}
+  .switch{flex:none;border:none;cursor:pointer;border-radius:999px;padding:9px 14px;font-family:var(--sans);font-size:12.5px;font-weight:700;white-space:nowrap}
+  .switch.on{background:#FFE0AE;color:#3a2a12}
+  .switch.off{background:#3a4a63;color:#fff}
+  body.mode-assemblea .searchbar,
+  body.mode-assemblea .deck-label,
+  body.mode-assemblea #decoder,
+  body.mode-assemblea #cats,
+  body.mode-assemblea .count,
+  body.mode-assemblea #grid,
+  body.mode-assemblea #empty{display:none!important}
+  body.mode-assemblea .ask li .go{color:var(--ochre)}
 </style>
 </head>
 <body>
@@ -124,6 +139,10 @@
     <div class="tldr">In due righe: <b>sei a credito</b> (−475,37). <b>Vele/cantiere facciate</b> e <b>causa 1° stralcio</b> = non ti riguardano. Le tue spese grosse: <b>ascensore</b> e <b>riscaldamento</b>. L'"avanzo da 100k" <b>non è denaro libero</b>.</div>
   </header>
 
+  <div class="modebar">
+    <div><b>🎯 Modalità Assemblea</b><small>solo l'essenziale: saldo, domande, checklist, calcolatore</small></div>
+    <button id="modeToggle" class="switch on">📚 Mostra tutte le schede</button>
+  </div>
   <div class="tools">
     <div class="tool">
       <h2>🎯 Da chiedere ad alta voce</h2>
@@ -562,6 +581,22 @@ buildChips();render();
     out.textContent=(a*p/100).toLocaleString('it-IT',{minimumFractionDigits:2,maximumFractionDigits:2})+' €'; }
   tbl.addEventListener('change',function(){ pct.style.display=(tbl.value==='custom')?'block':'none'; calc(); });
   amt.addEventListener('input',calc); pct.addEventListener('input',calc);
+})();
+</script>
+<script>
+(function(){
+  var KEY='assemblea_mode', on; try{on=localStorage.getItem(KEY)!=='0';}catch(e){on=true;}
+  var btn=document.getElementById('modeToggle');
+  function apply(){ document.body.classList.toggle('mode-assemblea',on);
+    btn.textContent=on?'📚 Mostra tutte le schede':'🎯 Modalità assemblea';
+    btn.className='switch '+(on?'on':'off'); }
+  function set(v){ on=v; try{localStorage.setItem(KEY,on?'1':'0');}catch(e){} apply(); }
+  btn.addEventListener('click',function(){ set(!on); });
+  apply();
+  document.querySelectorAll('.ask li').forEach(function(li){
+    li.addEventListener('click',function(){ if(on) set(false);
+      setTimeout(function(){ var g=document.getElementById('grid'); if(g) g.scrollIntoView({behavior:'smooth',block:'start'}); },70); });
+  });
 })();
 </script>
 </body>
