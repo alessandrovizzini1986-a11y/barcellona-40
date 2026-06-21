@@ -84,6 +84,35 @@
   footer{margin-top:26px;padding-top:14px;border-top:1px solid var(--line);font-size:11.5px;color:var(--muted)}
   footer b{color:var(--ink)}
   @media (prefers-reduced-motion: no-preference){.card{transition:opacity .12s ease}}
+
+  /* === RIASSUNTO IN CIMA === */
+  .tools{display:flex;flex-direction:column;gap:12px;margin:14px 0 4px}
+  .tool{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 15px}
+  .tool h2{font-family:var(--serif);font-size:18px;margin:0 0 10px;display:flex;align-items:center;gap:8px}
+  .ask{list-style:none;margin:0;padding:0;counter-reset:a}
+  .ask li{position:relative;padding:11px 12px 11px 42px;border:1px solid var(--line);border-radius:10px;margin-bottom:8px;background:#fff;cursor:pointer;font-size:14px}
+  .ask li:hover{border-color:var(--ink)}
+  .ask li::before{counter-increment:a;content:counter(a);position:absolute;left:10px;top:10px;width:24px;height:24px;border-radius:50%;background:var(--ochre);color:#fff;font-family:var(--sans);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
+  .ask li b{color:var(--ink)}
+  .ask .num{font-family:var(--mono);color:var(--amber);font-weight:700;white-space:nowrap}
+  .ask .go{font-size:11px;color:var(--ochre);font-weight:700}
+  .chk{list-style:none;margin:0;padding:0}
+  .chk li{display:flex;gap:11px;align-items:flex-start;padding:10px 0;border-bottom:1px dotted var(--line);font-size:14px}
+  .chk li:last-child{border-bottom:0}
+  .chk input{margin-top:1px;width:22px;height:22px;flex:none;accent-color:var(--green)}
+  .chk label{cursor:pointer}
+  .chk label.done{color:var(--muted);text-decoration:line-through}
+  .chk-actions{margin-top:10px;font-size:12px;display:flex;align-items:center;gap:8px}
+  .chk-actions button{font-family:var(--sans);border:1px solid var(--line);background:#fff;color:var(--muted);border-radius:8px;padding:7px 11px;cursor:pointer}
+  .calc label{display:block;font-size:12px;color:var(--muted);margin:10px 0 4px;font-weight:700}
+  .calc input,.calc select{width:100%;font-family:var(--sans);font-size:16px;padding:12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);outline:none}
+  .calc input:focus{border-color:var(--ochre);box-shadow:0 0 0 3px rgba(156,107,46,.15)}
+  .calc .presets{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .calc .presets button{font-family:var(--sans);font-size:12px;border:1px solid var(--line);background:var(--navybg);border-radius:999px;padding:7px 11px;cursor:pointer;color:var(--ink)}
+  .calc .out{margin-top:14px;background:var(--greenbg);border:1px solid #bfe0cd;border-radius:10px;padding:12px 14px;display:flex;justify-content:space-between;align-items:baseline}
+  .calc .out span{font-size:11px;color:var(--green);font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+  .calc .out b{font-family:var(--mono);font-size:22px;color:var(--green)}
+  .calc .note{font-size:11px;color:var(--muted);margin-top:9px;font-style:italic;line-height:1.5}
 </style>
 </head>
 <body>
@@ -94,6 +123,41 @@
     <div class="sub">Della Bosca Valentina · unità AP215 · civ. 34 (2° stralcio) · Supercondominio Cilea 18-36 · assemblea 29/06/2026</div>
     <div class="tldr">In due righe: <b>sei a credito</b> (−475,37). <b>Vele/cantiere facciate</b> e <b>causa 1° stralcio</b> = non ti riguardano. Le tue spese grosse: <b>ascensore</b> e <b>riscaldamento</b>. L'"avanzo da 100k" <b>non è denaro libero</b>.</div>
   </header>
+
+  <div class="tools">
+    <div class="tool">
+      <h2>🎯 Da chiedere ad alta voce</h2>
+      <ul class="ask">
+        <li data-q="fornitori vari"><b>Fondo lavori: 74.400 o 77.400?</b> Da dove arrivano i <span class="num">+3.000 €</span> di differenza tra Relazione (p.7) e Riepilogo (p.82)? <span class="go">vedi ›</span></li>
+        <li data-q="scadenzario"><b>La mia rata 2026 non torna.</b> Il riparto dà 2.566,84 ma lo scadenzario chiede 2.771,77: perché <span class="num">+204,93 €</span>? <span class="go">vedi ›</span></li>
+        <li data-q="sapia"><b>Voce «SAPIA MEGAN».</b> A cosa si riferiscono i <span class="num">12.932 €</span> nelle uscite? <span class="go">vedi ›</span></li>
+        <li data-q="pavi system"><b>Voce «Pavi System srl».</b> Che lavori sono i <span class="num">10.861,73 €</span>? Descrizione esatta. <span class="go">vedi ›</span></li>
+        <li data-q="toninelli"><b>Fattura Toninelli.</b> In cassa risulta 0,01: i «10.000» citati sono il rimborso causa <span class="num">9.737 €</span>? Mostrare fattura + relazione. <span class="go">vedi ›</span></li>
+        <li data-q="avanzo"><b>L'avanzo da ~200k.</b> Confermare che il <b>libero ≈ 0</b> (tutto già impegnato), non è un tesoretto. <span class="go">vedi ›</span></li>
+      </ul>
+    </div>
+
+    <div class="tool">
+      <h2>✅ Checklist · cosa votare / chiedere</h2>
+      <ul class="chk" id="chk"></ul>
+      <div class="chk-actions"><button id="chkReset">↺ azzera</button><span id="chkCount" style="color:var(--muted)"></span></div>
+    </div>
+
+    <div class="tool calc">
+      <h2>🧮 Se approvano una spesa… quanto pago io?</h2>
+      <label>Importo totale della spesa (€)</label>
+      <input id="calcAmt" type="number" inputmode="decimal" placeholder="es. 20000">
+      <label>La mia quota</label>
+      <div class="presets">
+        <button data-p="1.18">Supercondominio ~1,18%</button>
+        <button data-p="8.26">Ascensore civ34 ~8,26%</button>
+        <button data-p="10.92">Riscald./ACS ~10,92%</button>
+      </div>
+      <input id="calcPct" type="number" inputmode="decimal" placeholder="oppure scrivi % o millesimi (es. 1,18)" style="margin-top:8px">
+      <div class="out"><span>A me costa</span><b id="calcOut">—</b></div>
+      <div class="note">Percentuali stimate dai totali noti (Assicurazione 147,62/12.500 · Ascensore 404,80/4.900 · ACS 414,97/3.800). Per spese nuove chiedi i <b>millesimi esatti</b> della tabella.</div>
+    </div>
+  </div>
 
   <div class="searchbar">
     <div class="searchbox">
@@ -454,6 +518,46 @@ function render(){
 qIn.addEventListener('input',e=>{query=e.target.value.trim();clearBtn.style.display=query?'block':'none';render();});
 clearBtn.addEventListener('click',()=>{query="";qIn.value="";clearBtn.style.display='none';render();qIn.focus();});
 buildChips();render();
+</script>
+<script>
+(function(){
+  var qbox=document.getElementById('q');
+  document.querySelectorAll('.ask li').forEach(function(li){
+    li.addEventListener('click',function(){ qbox.value=li.getAttribute('data-q');
+      qbox.dispatchEvent(new Event('input',{bubbles:true}));
+      var g=document.getElementById('grid'); if(g) g.scrollIntoView({behavior:'smooth',block:'start'}); });
+  });
+  var ITEMS=[
+    'Chiarito la differenza di 3.000 € (fondo lavori 74.400 vs 77.400)',
+    'Chiarito i +204,93 € dello scadenzario sulla mia rata',
+    'Chiarito la voce SAPIA MEGAN (12.932 €)',
+    'Chiarito la voce Pavi System srl (10.861,73 €)',
+    'Vista la fattura Toninelli + relazione tecnica',
+    'Confermato: l’avanzo non è denaro libero (libero ≈ 0)',
+    'Verificato il mio saldo a credito (−475,37 €)',
+    'Messo a verbale risposte / riserve',
+    'Voto consuntivo 2025',
+    'Voto preventivo 2026'
+  ];
+  var KEY='assemblea_chk', state={}; try{state=JSON.parse(localStorage.getItem(KEY)||'{}');}catch(e){}
+  var ul=document.getElementById('chk');
+  function count(){ var n=0; ITEMS.forEach(function(_,i){ if(state[i])n++; }); document.getElementById('chkCount').textContent=n+'/'+ITEMS.length+' fatto'; }
+  function save(){ try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){} count(); }
+  ITEMS.forEach(function(t,i){ var li=document.createElement('li'); var id='ck'+i;
+    li.innerHTML='<input type="checkbox" id="'+id+'"'+(state[i]?' checked':'')+'><label for="'+id+'"'+(state[i]?' class="done"':'')+'>'+t+'</label>';
+    var cb=li.querySelector('input'), lb=li.querySelector('label');
+    cb.addEventListener('change',function(){ state[i]=cb.checked; lb.className=cb.checked?'done':''; save(); });
+    ul.appendChild(li); });
+  count();
+  document.getElementById('chkReset').addEventListener('click',function(){ state={}; try{localStorage.removeItem(KEY);}catch(e){}
+    ul.querySelectorAll('input').forEach(function(c){c.checked=false;}); ul.querySelectorAll('label').forEach(function(l){l.className='';}); count(); });
+  var amt=document.getElementById('calcAmt'), pct=document.getElementById('calcPct'), out=document.getElementById('calcOut');
+  function num(v){ return parseFloat((v||'').toString().replace(',','.'))||0; }
+  function calc(){ var a=num(amt.value), p=num(pct.value); if(!a||!p){ out.textContent='—'; return; }
+    out.textContent=(a*p/100).toLocaleString('it-IT',{minimumFractionDigits:2,maximumFractionDigits:2})+' €'; }
+  amt.addEventListener('input',calc); pct.addEventListener('input',calc);
+  document.querySelectorAll('.calc .presets button').forEach(function(b){ b.addEventListener('click',function(){ pct.value=b.getAttribute('data-p'); calc(); }); });
+})();
 </script>
 </body>
 </html>
