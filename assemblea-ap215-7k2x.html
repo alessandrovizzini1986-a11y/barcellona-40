@@ -147,15 +147,19 @@
       <h2>🧮 Se approvano una spesa… quanto pago io?</h2>
       <label>Importo totale della spesa (€)</label>
       <input id="calcAmt" type="number" inputmode="decimal" placeholder="es. 20000">
-      <label>La mia quota</label>
-      <div class="presets">
-        <button data-p="1.18">Supercondominio ~1,18%</button>
-        <button data-p="8.26">Ascensore civ34 ~8,26%</button>
-        <button data-p="10.92">Riscald./ACS ~10,92%</button>
-      </div>
-      <input id="calcPct" type="number" inputmode="decimal" placeholder="oppure scrivi % o millesimi (es. 1,18)" style="margin-top:8px">
+      <label>Su quale tabella è ripartita?</label>
+      <select id="calcTbl">
+        <option value="">— scegli la tabella —</option>
+        <option value="1.18">Supercondominio · tutti (Tab. A / B) · 1,18%</option>
+        <option value="3.39">Generali fabbricato 32-36 (Tab. A1 / I1) · 3,39%</option>
+        <option value="8.26">Scala + Ascensore civ 34 (Tab. C1) · 8,26%</option>
+        <option value="10.73">Sottocentrale termica (Tab. MSC) · 10,73%</option>
+        <option value="10.92">Riscaldamento / ACS civ 34 (Tab. DA1) · 10,92%</option>
+        <option value="custom">Altro · inserisco io %/millesimi</option>
+      </select>
+      <input id="calcPct" type="number" inputmode="decimal" placeholder="% o millesimi (es. 1,18)" style="display:none;margin-top:8px">
       <div class="out"><span>A me costa</span><b id="calcOut">—</b></div>
-      <div class="note">Percentuali stimate dai totali noti (Assicurazione 147,62/12.500 · Ascensore 404,80/4.900 · ACS 414,97/3.800). Per spese nuove chiedi i <b>millesimi esatti</b> della tabella.</div>
+      <div class="note">La tua quota per ogni tabella è ricavata dai <b>totali ufficiali</b> del documento (es. Assicurazione 147,62/12.500 = 1,18% · Ascensore 404,80/4.900 = 8,26% · ACS 414,97/3.800 = 10,92%). Per una spesa su un’altra tabella scegli «Altro».</div>
     </div>
   </div>
 
@@ -551,12 +555,13 @@ buildChips();render();
   count();
   document.getElementById('chkReset').addEventListener('click',function(){ state={}; try{localStorage.removeItem(KEY);}catch(e){}
     ul.querySelectorAll('input').forEach(function(c){c.checked=false;}); ul.querySelectorAll('label').forEach(function(l){l.className='';}); count(); });
-  var amt=document.getElementById('calcAmt'), pct=document.getElementById('calcPct'), out=document.getElementById('calcOut');
+  var amt=document.getElementById('calcAmt'), pct=document.getElementById('calcPct'), out=document.getElementById('calcOut'), tbl=document.getElementById('calcTbl');
   function num(v){ return parseFloat((v||'').toString().replace(',','.'))||0; }
-  function calc(){ var a=num(amt.value), p=num(pct.value); if(!a||!p){ out.textContent='—'; return; }
+  function effPct(){ var v=tbl.value; if(v&&v!=='custom') return num(v); return num(pct.value); }
+  function calc(){ var a=num(amt.value), p=effPct(); if(!a||!p){ out.textContent='—'; return; }
     out.textContent=(a*p/100).toLocaleString('it-IT',{minimumFractionDigits:2,maximumFractionDigits:2})+' €'; }
+  tbl.addEventListener('change',function(){ pct.style.display=(tbl.value==='custom')?'block':'none'; calc(); });
   amt.addEventListener('input',calc); pct.addEventListener('input',calc);
-  document.querySelectorAll('.calc .presets button').forEach(function(b){ b.addEventListener('click',function(){ pct.value=b.getAttribute('data-p'); calc(); }); });
 })();
 </script>
 </body>
