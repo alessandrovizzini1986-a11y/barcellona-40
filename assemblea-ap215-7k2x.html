@@ -153,6 +153,7 @@
         <li data-q="pavi system"><b>Voce «Pavi System srl».</b> Che lavori sono i <span class="num">10.861,73 €</span>? Descrizione esatta. <span class="go">vedi ›</span></li>
         <li data-q="toninelli"><b>Fattura Toninelli.</b> In cassa risulta 0,01: i «10.000» citati sono il rimborso causa <span class="num">9.737 €</span>? Mostrare fattura + relazione. <span class="go">vedi ›</span></li>
         <li data-q="svincolare"><b>Il fondo congelato da 74.400 si può svincolare?</b> A quali condizioni (collaudo? causa chiusa?) e <b>a chi torna</b>? <span class="num">74.400 €</span> <span class="go">vedi ›</span></li>
+        <li data-q="imprevisti"><b>Gli imprevisti non spesi tornano indietro?</b> I <span class="num">56.300 €</span> si restituiscono o si riusano per altri lavori? <span class="go">vedi ›</span></li>
         <li data-q="avanzo"><b>L'avanzo da ~200k.</b> Confermare che il <b>libero ≈ 0</b> (tutto già impegnato), non è un tesoretto. <span class="go">vedi ›</span></li>
       </ul>
     </div>
@@ -236,6 +237,12 @@ const CARDS = [
   figs:[["Fondo congelato","74.400 → 77.400"],["A chi tornerebbe","1° stralcio (18-30)"],["La TUA quota","0,00"]],
   src:"Relazione p.7 · Riepilogo p.82",
   kw:"svincolare svincolo sbloccare liberare scongelare fondo congelato 74400 77400 lavori delibera collaudo conciliazione garanzia restituzione storno a chi torna"},
+
+ {cat:"Vele", st:"no", t:"Imprevisti non spesi (56.300): a chi tornano?",
+  body:"Sull'opera vele erano accantonati <b>~56.300 di imprevisti mai spesi</b>: fanno parte dell'avanzo a credito (113.478). Di regola, a <b>lavori chiusi</b>, gli imprevisti non usati si <b>restituiscono</b> ai condòmini (stornati dalle rate) — a meno che l'assemblea non li <b>riallochi</b> ad altri lavori con delibera. Anche questi sono <b>1° stralcio</b> (vele, civ 18-30): la tua quota è 0. Da chiedere: si restituiscono o si riusano? con quale voto?",
+  figs:[["Imprevisti non spesi","56.300,00"],["Dentro avanzo vele","113.478,47"],["A chi tornerebbero","1° stralcio (18-30)"],["La TUA quota","0,00"]],
+  src:"Relazione p.5 e p.7",
+  kw:"imprevisti non spesi 56300 avanzo vele riserva contingency restituzione storno riallocazione riuso delibera a chi tornano 1 stralcio"},
 
  // ---- VELE / CANTIERE ----
  {cat:"Vele", st:"no", t:"Vele = balconi/facciate (civ 26-30)",
@@ -500,7 +507,8 @@ const MINE = {
  "Seep Bo srl":{v:"0,00",zero:true,note:"Impresa delle vele (Linea): non ti riguarda."},
  "Ing. Claudio Contini":{v:"0,00",zero:true,note:"Tecnico delle vele (Linea): non ti riguarda."},
  "Gattarello":{v:"0,00",zero:true,note:"Lavori gas civ 26-30: non ti riguarda."},
- "Si può svincolare il fondo da 74.400?":{v:"0,00",zero:true,note:"Fondo del 1° stralcio (vele): non ti riguarda direttamente."}
+ "Si può svincolare il fondo da 74.400?":{v:"0,00",zero:true,note:"Fondo del 1° stralcio (vele): non ti riguarda direttamente."},
+ "Imprevisti non spesi (56.300): a chi tornano?":{v:"0,00",zero:true,note:"Imprevisti delle vele (1° stralcio): non ti riguarda."}
 };
 
 let activeCat="Tutto", query="";
@@ -569,7 +577,8 @@ buildChips();render();
     'Messo a verbale risposte / riserve',
     'Voto consuntivo 2025',
     'Voto preventivo 2026',
-    'Chiesto se/come si svincola il fondo lavori 74.400 (collaudo/causa) e a chi torna'
+    'Chiesto se/come si svincola il fondo lavori 74.400 (collaudo/causa) e a chi torna',
+    'Chiesto se gli imprevisti non spesi (56.300) vengono restituiti o riusati'
   ];
   var KEY='assemblea_chk', state={}; try{state=JSON.parse(localStorage.getItem(KEY)||'{}');}catch(e){}
   var ul=document.getElementById('chk');
