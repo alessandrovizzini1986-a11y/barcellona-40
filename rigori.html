@@ -499,7 +499,7 @@ function loadGLBKeeper(){
       inner.traverse(o=>{ if(o.isMesh){ o.castShadow=true; o.frustumCulled=false;
         if(o.material){ o.material.side=THREE.DoubleSide; o.material.envMapIntensity=0.6; o.material.metalness=0; o.material.roughness=0.8;
           o.material.map=null; if(o.material.color) o.material.color.setHex(0x15633a); } } });   // completo da portiere (verde)
-      inner.rotation.x=-Math.PI/2;                       // raddrizza eventuale Z-up
+      // questo modello è già Y-up: nessun raddrizzamento (evita di stenderlo a terra)
       const pivot=new THREE.Group(); pivot.add(inner); pivot.updateMatrixWorld(true);
       let box=new THREE.Box3().setFromObject(pivot); const size=new THREE.Vector3(); box.getSize(size);
       const H=Math.max(size.x,size.y,size.z)||1; pivot.scale.setScalar(1.9/H);   // scala sull'asse maggiore (altezza)
