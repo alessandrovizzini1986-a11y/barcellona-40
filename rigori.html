@@ -235,8 +235,11 @@ const HALF=GW/2;
 /* =============================== ENGINE =================================== */
 let renderer,scene,camera, ball, keeper, backNet, lights={}, envRT=null;
 let keeperMixer=null, useGLBKeeper=false, keeperInner=null, keeperState=''; // portiere 3D (GLB Mixamo) + fallback procedurale
-const keeperAct={};                                  // azioni: dive, idle, beaten, dive2
+const keeperAct={};                                  // azioni: diveL, diveR, high, ready, beaten
+const keeperBones={};                                // riferimenti ossa per reach procedurale additivo
 const KEEPER_URL='assets/keeper.glb?v=2';
+// stato del tuffo in corso (selezione clip + reach additivo verso l'angolo)
+let keeperDive=null;
 let aimRing, aimDot, trajLine, ballShadow, ballTrail;
 let state=STATE.LOADING, streak=0, stateT=0, lastT=0;
 let shot=null, shakeMag=0, ripple={t:-1,x:0,y:0}, scorePulseT=0, slowmo=0, camPunchT=0;
@@ -519,25 +522,132 @@ function loadGLBKeeper(){
       const wrap=new THREE.Group(); wrap.add(pivot); wrap.position.set(0,0,KEEPER_Z); wrap.rotation.y=Math.PI;
       if(keeper) scene.remove(keeper);
       keeper=wrap; keeperInner=inner; scene.add(keeper);
+      // ----- riferimenti ossa per il reach procedurale additivo (verso l'angolo) -----
+      const B=keeperBones;
+      inner.traverse(o=>{ const nm=o.name||'';
+        if(/:Spine1$/.test(nm)) B.spine1=o;        else if(/:Spine2$/.test(nm)) B.spine2=o;
+        else if(/:LeftArm$/.test(nm)) B.armL=o;     else if(/:RightArm$/.test(nm)) B.armR=o;
+        else if(/:LeftForeArm$/.test(nm)) B.foreL=o;else if(/:RightForeArm$/.test(nm)) B.foreR=o;
+        else if(/:Head$/.test(nm)) B.head=o; });
+      // memorizza i quaternioni di bind così possiamo applicare un delta additivo ogni frame
+      for(const k in B){ if(B[k]) B[k].userData.bindQ=B[k].quaternion.clone(); }
+      // ----- mixer + clip base (body_block = tuffo basso lato SINISTRA portiere) -----
       keeperMixer=new THREE.AnimationMixer(inner);
-      if(gltf.animations.length){ const d=keeperMixer.clipAction(gltf.animations[0]); d.loop=THREE.LoopOnce; d.clampWhenFinished=true; keeperAct.dive=d;
-        d.play(); d.paused=true; d.time=0; }            // mostra il primo frame (posa pronta) finché non carica l'idle
+      const cfg=(a)=>{ if(!a) return a; a.loop=THREE.LoopOnce; a.clampWhenFinished=true; a.enabled=true; return a; };
+      if(gltf.animations.length){ keeperAct.diveL=cfg(keeperMixer.clipAction(gltf.animations[0])); }
       const add=(url,name)=> new GLTFLoader().load(url,(g)=>{ if(!g.animations.length)return;
-        const a=keeperMixer.clipAction(g.animations[0], keeperInner); a.loop=THREE.LoopOnce; a.clampWhenFinished=true; keeperAct[name]=a; }, undefined, ()=>{});
-      add('assets/keeper_beaten.glb?v=1','beaten');
-      useGLBKeeper=true; playKeeper('idle');           // idle = primo frame del tuffo (posa pronta in piedi)
+        keeperAct[name]=cfg(keeperMixer.clipAction(g.animations[0], keeperInner)); }, undefined, ()=>{});
+      add('assets/keeper_block.glb?v=1','diveR');   // tuffo basso lato DESTRA portiere
+      add('assets/keeper_high.glb?v=1','high');     // salto braccia alte (parata alta/centrale)
+      add('assets/keeper_ready.glb?v=1','ready');   // passo laterale (idle pronto)
+      add('assets/keeper_beaten.glb?v=1','beaten'); // battuto
+      useGLBKeeper=true; playKeeper('idle');
     }, undefined, ()=>{ /* errore: resta il portiere procedurale */ });
   }catch(e){ /* GLTFLoader non disponibile: resta il procedurale */ }
 }
+// avvia una clip in crossfade pulito; fadeIn/fadeOut configurabili
+function fadeToAction(a,timeScale,fade){
+  if(!a) return; const f=fade==null?0.18:fade;
+  for(const k in keeperAct){ const o=keeperAct[k]; if(o && o!==a && o.isRunning && o.isRunning()) o.fadeOut(f); }
+  a.stop(); a.reset(); a.enabled=true; a.paused=false; a.timeScale=timeScale||1;
+  a.setEffectiveWeight(1); a.fadeIn(f); a.play();
+}
+// idle = clip "ready" in loop morbido (peso leggero, ritmo lento) -> respiro/peso
 function playKeeper(name,timeScale){
   if(!useGLBKeeper) return; keeperState=name;
-  if(name==='idle'){                                   // idle = tuffo congelato al frame 0 (posa pronta)
-    for(const k in keeperAct){ if(k!=='dive' && keeperAct[k]) keeperAct[k].stop(); }
-    const d=keeperAct.dive; if(d){ d.stop(); d.reset(); d.time=0; d.paused=true; d.play(); } return;
+  if(name==='idle'){
+    keeperDive=null;
+    const r=keeperAct.ready;
+    if(r){ for(const k in keeperAct){ const o=keeperAct[k]; if(o&&o!==r&&o.isRunning&&o.isRunning()) o.fadeOut(0.25); }
+      r.stop(); r.reset(); r.enabled=true; r.paused=false; r.loop=THREE.LoopPingPong; r.timeScale=0.55;
+      r.setEffectiveWeight(1); r.fadeIn(0.3); r.play(); }
+    else { const d=keeperAct.diveL; if(d){ d.stop(); d.reset(); d.time=0; d.paused=true; d.play(); } }
+    return;
   }
-  const a=keeperAct[name]; if(!a) return;
-  for(const k in keeperAct){ if(keeperAct[k]!==a) keeperAct[k].fadeOut(0.1); }
-  a.paused=false; a.reset(); a.timeScale=timeScale||1; a.fadeIn(0.1); a.play();
+  const a=keeperAct[name]; if(!a) return; a.loop=THREE.LoopOnce;
+  fadeToAction(a,timeScale,0.12);
+}
+
+/* ----- Controller del tuffo GLB: anticipo -> scelta clip -> commit verso l'angolo.
+   Il reach in altezza è un'estensione ADDITIVA (braccia+spina) verso shot.target,
+   applicata dopo il mixer in applyKeeperReach(); niente "lift" floato del corpo. ----- */
+// mappa lato->clip. dopo Math.PI sul wrap, il -X locale del modello va a +X mondo:
+// quindi la clip "diveL" (lunge locale -X) copre il lato DESTRO portiere (world +X) e viceversa.
+const CLIP_FOR_SIDE = { '-1':'diveR', '1':'diveL' };   // diveSide(world) -> clip nativa (tuffo basso)
+const HIGH_CUT=0.5;                                     // soglia altezza: sotto=tuffo basso, sopra=salto braccia su
+function updateKeeperDive(dt){
+  if(!shot) return;
+  // avvio del tuffo: dopo metà finestra di reazione (lettura naturale)
+  if(!keeperDive && shot.t>=shot.reaction*0.55){
+    const side=shot.diveSide;
+    const high=clamp(shot.diveHigh||0,0,1);
+    // SCELTA CLIP per copertura porta:
+    //  - angoli BASSI  -> tuffo corpo (body-block) nativo per lato
+    //  - angoli ALTI   -> salto a braccia alte ('high'), poi spostato lateralmente +
+    //    reach additivo verso l'angolo: i guantoni arrivano davvero all'incrocio
+    //  - centro alto   -> salto a braccia alte; centro basso -> raccolta bassa
+    let clipName, mode;
+    if(high>=HIGH_CUT){ clipName='high'; mode='high'; }            // alto (centro o angolo)
+    else if(side===0){ clipName='diveL'; mode='lowc'; }            // centro basso
+    else { clipName=CLIP_FOR_SIDE[String(side)]||'diveL'; mode='low'; }
+    const cd=keeperAct[clipName]? keeperAct[clipName].getClip().duration : shot.dur;
+    // allinea il picco della clip (~45-50% durata) all'arrivo della palla, ma leggibile
+    const peakFrac = mode==='high'? 0.4 : 0.5;
+    const tScale=clamp(cd*peakFrac/Math.max(0.18,shot.dur-shot.reaction*0.55), 0.85, 2.4);
+    playKeeper(clipName, tScale);
+    // commit laterale: porta corpo/guantoni verso l'angolo (più ampio per i salti alti,
+    // che non hanno il lunge orizzontale del body-block)
+    const reach = mode==='high'? 0.82 : 0.6;
+    keeperDive={ clip:clipName, side, high, mode, t0:shot.t, started:true,
+      commitX: clamp(shot.guess*reach, -HALF+0.6, HALF-0.6),
+      reachTarget: shot.target.clone() };
+  }
+  if(!keeperDive) return;
+  // progress dal lancio del tuffo
+  const u=clamp((shot.t-keeperDive.t0)/Math.max(0.16,shot.dur*0.9),0,1);
+  const sm=u*u*(3-2*u);
+  // commit laterale del corpo (group) verso l'angolo; la clip aggiunge il lunge nativo
+  keeper.position.x=lerp(shot.keeperFrom, keeperDive.commitX, sm);
+  // stacco da terra: i salti alti staccano davvero (oltre alla clip), i tuffi bassi no
+  const jump = keeperDive.mode==='high'? 0.45 : 0.0;
+  keeper.position.y = jump*Math.sin(Math.PI*clamp(u,0,1));
+  keeperDive.u=u;
+}
+
+/* ----- Reach ADDITIVO: dopo il mixer, piega spina + alza il braccio del lato del
+   tuffo verso l'angolo bersaglio, così i guantoni arrivano davvero in alto.
+   Asse locale braccio X (neg=alza la mano), Spine1 Z (lean laterale). ----- */
+const _qx=new THREE.Quaternion(), _qz=new THREE.Quaternion(), _ax=new THREE.Vector3(1,0,0), _az=new THREE.Vector3(0,0,1);
+function applyKeeperReach(){
+  const B=keeperBones; if(!B.armL||!B.armR) return;
+  // a riposo: ripristina il bind (il mixer scrive comunque, ma il reach è un extra)
+  if(!useGLBKeeper) return;
+  // reach attivo durante il volo e mantenuto nella parata (così i guantoni restano sull'angolo)
+  if((state!==STATE.BALL_IN_FLIGHT && state!==STATE.SAVE_ANIMATION) || !keeperDive){ return; }
+  const d=keeperDive; const u=d.u||0;
+  // intensità del reach: cresce col progress; in volo sale come sin(), nella parata
+  // resta al picco (guantoni incollati all'angolo).
+  const env=state===STATE.SAVE_ANIMATION? 1 : Math.sin(Math.PI*clamp(u*1.05,0,1));
+  const armUp=(bone, amount)=>{ if(!bone||!bone.userData.bindQ) return;
+    _qx.setFromAxisAngle(_ax, -amount);                 // X locale negativo = mano in alto
+    bone.quaternion.multiply(_qx); };
+  // lean laterale della spina verso l'angolo (per side(world): segno coerente col mondo)
+  const leanZ = -d.side*0.55*env;                       // Spine1 Z<0 => testa verso +X mondo
+  if(B.spine1 && B.spine1.userData.bindQ){ _qz.setFromAxisAngle(_az, leanZ); B.spine1.quaternion.multiply(_qz); }
+  if(d.mode==='high'){
+    // salto braccia alte: le braccia sono già su (clip). Estende ancora un filo verso
+    // l'angolo e allunga il braccio del lato verso l'incrocio.
+    const stretch=0.4*env;
+    if(d.side>0){ armUp(B.armL, stretch); }              // world +X -> braccio SINISTRO modello
+    else if(d.side<0){ armUp(B.armR, stretch); }         // world -X -> braccio DESTRO modello
+    else { armUp(B.armL, stretch*0.6); armUp(B.armR, stretch*0.6); }
+  } else {
+    // tuffo basso: alza un po' il braccio guida verso la palla (resta basso-medio)
+    const lift=(0.2+d.high*0.6)*env;
+    if(d.side>0){ armUp(B.armL, lift); armUp(B.foreL, lift*0.4); }
+    else if(d.side<0){ armUp(B.armR, lift); armUp(B.foreR, lift*0.4); }
+    else { armUp(B.armL, lift*0.8); armUp(B.armR, lift*0.8); }
+  }
 }
 
 // sag della rete: spinge i vertici indietro/in basso in modo morbido, salva base
@@ -708,7 +818,7 @@ function resetForShot(){
   ball.rotation.set(0,0,0);
   keeper.position.set(0,0,KEEPER_Z); keeper.rotation.set(0,0,0);
   setKeeperPose(keeper,POSE_READY,1);
-  if(useGLBKeeper){ keeper.scale.x=1; playKeeper('idle'); }
+  if(useGLBKeeper){ keeper.scale.x=1; keeperDive=null; playKeeper('idle'); }
   aim.active=false; aim.power=0; aim.curl=0; aimRing.visible=aimDot.visible=trajLine.visible=false;
   // reset scia
   ballTrail.userData.hist.length=0; ballTrail.userData.parts.forEach(p=>p.visible=false);
@@ -762,11 +872,22 @@ function shoot(){
   let result = !inGoal ? (hitPost?'POST':'MISS') : (saved?'SAVE':'GOAL');
 
   // animazione tuffo del portiere: lato + altezza
-  const diveSide = guess<-0.2? -1 : (guess>0.2? 1 : 0);
-  const diveHigh = clamp((guessY-0.8)/(GH-0.8),0,1);
+  let diveSide = guess<-0.2? -1 : (guess>0.2? 1 : 0);
+  let diveHigh = clamp((guessY-0.8)/(GH-0.8),0,1);
+  let guessYOut=guessY;
+  // --- HOOK DI TEST (solo con ?kdbg=1): forza il portiere a leggere bene il tiro
+  //     e a pararlo, così si possono rivedere visivamente i tuffi agli angoli.
+  //     Non incluso nel gameplay normale (flag dal query string). ---
+  if(window.__KDBG){
+    guess=clamp(tx,-HALF+0.4,HALF-0.4); guessSide=Math.sign(tx);
+    diveSide = guess<-0.2? -1 : (guess>0.2? 1 : 0);
+    diveHigh = clamp((ty-0.8)/(GH-0.8),0,1);
+    guessYOut = ty;
+    if(inGoal) result='SAVE';
+  }
 
   shot={ t:0, dur, from:ball.position.clone(), target, arcH, curlAcc, speed,
-         guess, guessY, keeperFrom:keeper.position.x, reach, result, resolved:false,
+         guess, guessY:guessYOut, keeperFrom:keeper.position.x, reach, result, resolved:false,
          reaction:reactOf(), power:p, diveSide, diveHigh, curlSign:Math.sign(curl)||1 };
   setState(STATE.BALL_IN_FLIGHT);
   camPunchT=0; slowmo=0;
@@ -829,20 +950,13 @@ function update(dt){
     // portiere: reazione poi tuffo verso guess con posa parametrica
     const rp=clamp((shot.t-shot.reaction)/Math.max(0.06,shot.dur-shot.reaction),0,1);
     const e=easeOutCubic(rp);
-    keeper.position.x=lerp(shot.keeperFrom,shot.guess,e);
-    const targetPose = shot.diveSide===0? POSE_CENTER : divePose(shot.diveSide, shot.diveHigh);
-    if(rp<0.12) setKeeperPose(keeper,POSE_DIP,0.25);      // anticipo/dip
-    else setKeeperPose(keeper, targetPose, clamp(e,0,1)*0.5);
-    if(useGLBKeeper){                                     // tuffo guidato dalla clip Mixamo (specchiata per lato)
-      if(!shot.kStarted && shot.t>=shot.reaction*0.5){ shot.kStarted=true;   // breve attesa = reazione naturale
-        keeper.scale.x = (shot.diveSide<0? -1 : 1);
-        const cd=keeperAct.dive? keeperAct.dive.getClip().duration : shot.dur;
-        playKeeper('dive', clamp(cd/(shot.dur*1.55), 0.95, 2.5));            // timing piu morbido
-      }
-      const u=clamp((shot.t-shot.reaction*0.5)/Math.max(0.15,shot.dur),0,1);
-      const sm=u*u*(3-2*u);                                                   // smoothstep (parte/arriva morbido)
-      keeper.position.x=lerp(shot.keeperFrom, shot.guess*0.82, sm);
-      keeper.position.y=(shot.diveHigh||0)*1.25*Math.sin(Math.PI*clamp(shot.t/shot.dur,0,1)); // si alza per i tiri all'incrocio
+    if(!useGLBKeeper){                                    // ---- fallback procedurale (pose keyframe) ----
+      keeper.position.x=lerp(shot.keeperFrom,shot.guess,e);
+      const targetPose = shot.diveSide===0? POSE_CENTER : divePose(shot.diveSide, shot.diveHigh);
+      if(rp<0.12) setKeeperPose(keeper,POSE_DIP,0.25);    // anticipo/dip
+      else setKeeperPose(keeper, targetPose, clamp(e,0,1)*0.5);
+    } else {                                              // ---- portiere GLB: anticipo -> tuffo clip -> reach additivo ----
+      updateKeeperDive(dt);
     }
     if(!shot.resolved && p>=1){ shot.resolved=true; resolveShot(); }
   }
@@ -1028,13 +1142,15 @@ HUD.snd.addEventListener('click',()=>{ const on=Sound.toggle(); HUD.snd.textCont
 
 /* ------------------------------- LOOP ------------------------------------ */
 function animate(t){ const dt=Math.min(0.05,(t-(lastT||t))/1000); lastT=t;
-  if(state!==STATE.LOADING){ update(dt); if(keeperMixer) keeperMixer.update(dt); renderer.render(scene,camera); }
+  if(state!==STATE.LOADING){ update(dt); if(keeperMixer){ keeperMixer.update(dt); applyKeeperReach(); } renderer.render(scene,camera);
+    if(window.__KDBG){ window.__diveU=keeperDive?keeperDive.u:-1; window.__state=state; window.__res=shot?shot.result:''; } }
   requestAnimationFrame(animate); }
 
 function resize(){ const w=window.innerWidth,h=window.innerHeight;
   renderer.setSize(w,h); camera.aspect=w/h; camera.updateProjectionMatrix(); }
 
 /* ------------------------------- BOOT ------------------------------------ */
+try{ window.__KDBG = new URLSearchParams(location.search).get('kdbg')==='1'; }catch(e){ window.__KDBG=false; }
 function boot(){
   try{
     renderer=new THREE.WebGLRenderer({canvas:cv, antialias:true, powerPreference:'high-performance'});
