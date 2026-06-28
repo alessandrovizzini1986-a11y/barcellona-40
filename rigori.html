@@ -234,8 +234,9 @@ const HALF=GW/2;
 
 /* =============================== ENGINE =================================== */
 let renderer,scene,camera, ball, keeper, backNet, lights={}, envRT=null;
-let keeperMixer=null, useGLBKeeper=false;           // portiere 3D (GLB Mixamo) + fallback procedurale
-const KEEPER_URL='assets/keeper.glb?v=1';
+let keeperMixer=null, useGLBKeeper=false, keeperInner=null, keeperState=''; // portiere 3D (GLB Mixamo) + fallback procedurale
+const keeperAct={};                                  // azioni: dive, idle, beaten, dive2
+const KEEPER_URL='assets/keeper.glb?v=2';
 let aimRing, aimDot, trajLine, ballShadow, ballTrail;
 let state=STATE.LOADING, streak=0, stateT=0, lastT=0;
 let shot=null, shakeMag=0, ripple={t:-1,x:0,y:0}, scorePulseT=0, slowmo=0, camPunchT=0;
@@ -488,31 +489,45 @@ function addLine(x,y,z,w,d){ const m=new THREE.Mesh(new THREE.PlaneGeometry(w,d)
   m.rotation.x=-Math.PI/2; m.position.set(x,y,z); scene.add(m); }
 function addPost(x,y,z,r,h,mat){ const p=new THREE.Mesh(new THREE.CylinderGeometry(r/2,r/2,h,16),mat); p.position.set(x,y,z); p.castShadow=true; scene.add(p); }
 
-/* ---- Portiere 3D da GLB (Mixamo). Scala ~1.9m, piedi a terra, faccia al tiratore.
-   Le animazioni di posa (setKeeperPose) vengono disattivate: il modello suona la sua
-   clip via AnimationMixer e il tuffo è un tilt/translate dell'intero corpo. ---------- */
+/* ---- Portiere 3D da GLB (Mixamo): personaggio + clip TUFFO (base) e clip
+   aggiuntive solo-animazione (idle/battuto) montate sullo stesso scheletro per nome.
+   setKeeperPose è disattivato; il movimento è guidato dall'AnimationMixer. --------- */
 function loadGLBKeeper(){
   try{
     new GLTFLoader().load(KEEPER_URL, (gltf)=>{
       const inner=gltf.scene;
-      inner.traverse(o=>{ if(o.isMesh){ o.castShadow=true; o.frustumCulled=false; if(o.material) o.material.envMapIntensity=0.6; } });
-      // alcuni GLB (wrapper Sketchfab) sono Z-up: raddrizza
-      inner.rotation.x=-Math.PI/2;
+      inner.traverse(o=>{ if(o.isMesh){ o.castShadow=true; o.frustumCulled=false;
+        if(o.material){ o.material.side=THREE.DoubleSide; o.material.envMapIntensity=0.6; o.material.metalness=0; o.material.roughness=0.8;
+          o.material.map=null; if(o.material.color) o.material.color.setHex(0x15633a); } } });   // completo da portiere (verde)
+      inner.rotation.x=-Math.PI/2;                       // raddrizza eventuale Z-up
       const pivot=new THREE.Group(); pivot.add(inner); pivot.updateMatrixWorld(true);
-      // scala sull'asse MAGGIORE (=altezza corpo) per evitare bbox degeneri delle mesh skinnate
       let box=new THREE.Box3().setFromObject(pivot); const size=new THREE.Vector3(); box.getSize(size);
-      const H=Math.max(size.x,size.y,size.z)||1; pivot.scale.setScalar(1.85/H);
+      const H=Math.max(size.x,size.y,size.z)||1; pivot.scale.setScalar(1.9/H);   // scala sull'asse maggiore (altezza)
       pivot.updateMatrixWorld(true);
       box=new THREE.Box3().setFromObject(pivot); const c=new THREE.Vector3(); box.getCenter(c);
-      pivot.position.set(-c.x, -box.min.y, -c.z);       // centra X/Z, piedi a y=0
+      pivot.position.set(-c.x,-box.min.y,-c.z);          // centra X/Z, piedi a y=0
       const wrap=new THREE.Group(); wrap.add(pivot); wrap.position.set(0,0,KEEPER_Z); wrap.rotation.y=Math.PI;
       if(keeper) scene.remove(keeper);
-      keeper=wrap; scene.add(keeper);
+      keeper=wrap; keeperInner=inner; scene.add(keeper);
       keeperMixer=new THREE.AnimationMixer(inner);
-      if(gltf.animations && gltf.animations.length){ keeperMixer.clipAction(gltf.animations[0]).play(); }
-      useGLBKeeper=true;
+      if(gltf.animations.length){ const d=keeperMixer.clipAction(gltf.animations[0]); d.loop=THREE.LoopOnce; d.clampWhenFinished=true; keeperAct.dive=d;
+        d.play(); d.paused=true; d.time=0; }            // mostra il primo frame (posa pronta) finché non carica l'idle
+      const add=(url,name)=> new GLTFLoader().load(url,(g)=>{ if(!g.animations.length)return;
+        const a=keeperMixer.clipAction(g.animations[0], keeperInner); a.loop=THREE.LoopOnce; a.clampWhenFinished=true; keeperAct[name]=a; }, undefined, ()=>{});
+      add('assets/keeper_beaten.glb?v=1','beaten');
+      useGLBKeeper=true; playKeeper('idle');           // idle = primo frame del tuffo (posa pronta in piedi)
     }, undefined, ()=>{ /* errore: resta il portiere procedurale */ });
   }catch(e){ /* GLTFLoader non disponibile: resta il procedurale */ }
+}
+function playKeeper(name,timeScale){
+  if(!useGLBKeeper) return; keeperState=name;
+  if(name==='idle'){                                   // idle = tuffo congelato al frame 0 (posa pronta)
+    for(const k in keeperAct){ if(k!=='dive' && keeperAct[k]) keeperAct[k].stop(); }
+    const d=keeperAct.dive; if(d){ d.stop(); d.reset(); d.time=0; d.paused=true; d.play(); } return;
+  }
+  const a=keeperAct[name]; if(!a) return;
+  for(const k in keeperAct){ if(keeperAct[k]!==a) keeperAct[k].fadeOut(0.1); }
+  a.paused=false; a.reset(); a.timeScale=timeScale||1; a.fadeIn(0.1); a.play();
 }
 
 // sag della rete: spinge i vertici indietro/in basso in modo morbido, salva base
@@ -683,6 +698,7 @@ function resetForShot(){
   ball.rotation.set(0,0,0);
   keeper.position.set(0,0,KEEPER_Z); keeper.rotation.set(0,0,0);
   setKeeperPose(keeper,POSE_READY,1);
+  if(useGLBKeeper){ keeper.scale.x=1; playKeeper('idle'); }
   aim.active=false; aim.power=0; aim.curl=0; aimRing.visible=aimDot.visible=trajLine.visible=false;
   // reset scia
   ballTrail.userData.hist.length=0; ballTrail.userData.parts.forEach(p=>p.visible=false);
@@ -780,7 +796,7 @@ function update(dt){
   if(state===STATE.GAME_PLAYING){
     const b=Math.sin(stateT*3.2)*0.5+0.5;
     setKeeperPose(keeper, b>0.5?POSE_READY:POSE_DIP, 0.06*Math.abs(Math.sin(stateT*3.2)));
-    keeper.position.x=Math.sin(stateT*1.1)*0.18;          // weight shift laterale
+    if(!useGLBKeeper) keeper.position.x=Math.sin(stateT*1.1)*0.18; // weight shift (solo procedurale; il GLB ha l'idle)
     ball.rotation.y+=dt*0.6;
     updateAimVisuals();
   } else { aimRing.visible=aimDot.visible=trajLine.visible=false; }
@@ -807,15 +823,20 @@ function update(dt){
     const targetPose = shot.diveSide===0? POSE_CENTER : divePose(shot.diveSide, shot.diveHigh);
     if(rp<0.12) setKeeperPose(keeper,POSE_DIP,0.25);      // anticipo/dip
     else setKeeperPose(keeper, targetPose, clamp(e,0,1)*0.5);
-    if(useGLBKeeper){                                     // tuffo del modello GLB: tilt + lunge dell'intero corpo
-      keeper.rotation.z = -shot.diveSide*e*1.15;
-      keeper.position.y = (shot.diveSide===0? e*0.30 : e*0.06);
+    if(useGLBKeeper){                                     // tuffo guidato dalla clip Mixamo (specchiata per lato)
+      if(!shot.kStarted){ shot.kStarted=true;
+        keeper.scale.x = (shot.diveSide<0? -1 : 1);
+        const cd=keeperAct.dive? keeperAct.dive.getClip().duration : shot.dur;
+        playKeeper('dive', clamp(cd/Math.max(0.35,shot.dur*1.15),1,3.2));
+      }
+      keeper.position.x=lerp(shot.keeperFrom, shot.guess*0.78, easeOutCubic(clamp(shot.t/shot.dur,0,1)));
     }
     if(!shot.resolved && p>=1){ shot.resolved=true; resolveShot(); }
   }
   else if(state===STATE.GOAL_ANIMATION){
     // portiere battuto / rete che vibra; ball resta in rete
     setKeeperPose(keeper, POSE_BEATEN, 0.08);
+    if(useGLBKeeper && keeperState!=='beaten') playKeeper('beaten');
     if(stateT*1000>=CONFIG.goalCelebrateMs) newAim();
   }
   else if(state===STATE.SAVE_ANIMATION){
