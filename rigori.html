@@ -80,6 +80,21 @@
   /* sound toggle */
   #snd{position:absolute;top:calc(70px + env(safe-area-inset-top));left:16px;font-size:9px;color:#9fb4dd;pointer-events:auto;cursor:pointer;text-shadow:0 1px 3px #000}
   #webglErr{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;text-align:center;padding:24px;font-size:10px;color:#ffd28a;line-height:2}
+  /* scoreboard: faccia del calciatore */
+  #scoreboard .crest.hasface{background:center/cover no-repeat;border:1px solid var(--gold)}
+  /* player select */
+  #playerSelect{position:fixed;inset:0;z-index:48;display:none;flex-direction:column;align-items:center;justify-content:center;gap:18px;
+    background:rgba(2,8,20,.92);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);padding:24px}
+  #playerSelect.show{display:flex}
+  #playerSelect .pstitle{font-size:18px;color:var(--gold)}
+  #playerSelect .pscards{display:flex;gap:16px}
+  #playerSelect .pscard{display:flex;flex-direction:column;align-items:center;gap:7px;background:linear-gradient(160deg,#004D98,#A50044);
+    border:2px solid rgba(255,216,132,.5);border-radius:16px;padding:14px 12px;cursor:pointer;color:#fff;font-family:inherit;width:128px;box-shadow:0 14px 34px -16px #000}
+  #playerSelect .pscard:active{transform:scale(.96)}
+  #playerSelect .pscard img{width:92px;height:92px;border-radius:50%;object-fit:cover;border:2px solid #fff;background:#0a1830}
+  #playerSelect .pscard span{font-size:13px;letter-spacing:.04em}
+  #playerSelect .pscard small{font-size:8px;color:#ffd28a}
+  #playerSelect .pssub{font-size:8px;color:#9fb4dd;letter-spacing:.06em}
 </style>
 <script type="importmap">
 { "imports": { "three": "./assets/three.module.js", "three/addons/": "./assets/jsm/" } }
@@ -124,6 +139,14 @@
   <input id="nameInput" maxlength="10" placeholder="NOME" autocomplete="off">
   <br><button id="nameSave">SALVA ▶</button>
 </div></div>
+
+<div id="playerSelect"><div class="pstitle">CHI TIRA?</div>
+  <div class="pscards">
+    <button class="pscard" data-player="Mario"><img src="assets/face-mario.png" alt="Mario"><span>MARIO</span><small>#104 · 99 OVR</small></button>
+    <button class="pscard" data-player="Giulio"><img src="assets/face-giulio.png" alt="Giulio"><span>GIULIO</span><small>#7 · 99 OVR</small></button>
+  </div>
+  <div class="pssub">…CONTRO ALE 🧤👑 IN PORTA</div>
+</div>
 
 <div id="webglErr">WebGL non disponibile su questo dispositivo.<br>Apri il gioco su un browser aggiornato.</div>
 
@@ -235,6 +258,9 @@ const HALF=GW/2;
 /* =============================== ENGINE =================================== */
 let renderer,scene,camera, ball, keeper, backNet, lights={}, envRT=null;
 let keeperMixer=null, useGLBKeeper=false, keeperInner=null, keeperState=''; // portiere 3D (GLB Mixamo) + fallback procedurale
+let keeperFace=null, keeperHeadBone=null; const _faceV=new THREE.Vector3();   // faccia di Ale (sprite) agganciata alla testa del portiere
+const PLAYERS={ Mario:{name:'MARIO',face:'assets/face-mario.png'}, Giulio:{name:'GIULIO',face:'assets/face-giulio.png'} };
+let PLAYER=null; try{ const p=localStorage.getItem('rig_player'); if(p&&PLAYERS[p]) PLAYER=PLAYERS[p]; }catch(e){}
 const keeperAct={};                                  // azioni: diveL, diveR, high, ready, beaten
 const keeperBones={};                                // riferimenti ossa per reach procedurale additivo
 const KEEPER_URL='assets/keeper.glb?v=2';
@@ -522,6 +548,11 @@ function loadGLBKeeper(){
       const wrap=new THREE.Group(); wrap.add(pivot); wrap.position.set(0,0,KEEPER_Z); wrap.rotation.y=Math.PI;
       if(keeper) scene.remove(keeper);
       keeper=wrap; keeperInner=inner; scene.add(keeper);
+      // ----- faccia di Ale come "testa" del portiere (sprite sempre rivolto alla camera) -----
+      const ftex=new THREE.TextureLoader().load('assets/keeper-face.png?v=1'); ftex.colorSpace=THREE.SRGBColorSpace;
+      keeperFace=new THREE.Sprite(new THREE.SpriteMaterial({map:ftex, transparent:true, depthTest:false, depthWrite:false}));
+      keeperFace.scale.set(0.66,0.66,0.66); keeperFace.renderOrder=999; scene.add(keeperFace);
+      keeperHeadBone=null; inner.traverse(o=>{ if(!keeperHeadBone){ const nm=(o.name||'').toLowerCase(); if(nm.indexOf('head')>=0 && nm.indexOf('top')<0 && nm.indexOf('end')<0) keeperHeadBone=o; } });
       // ----- riferimenti ossa per il reach procedurale additivo (verso l'angolo) -----
       const B=keeperBones;
       inner.traverse(o=>{ const nm=o.name||'';
@@ -1072,7 +1103,21 @@ function drawTrajPreview(){
 }
 
 /* ------------------------------- HUD ------------------------------------- */
+// posiziona la faccia di Ale sulla testa del portiere (segue il tuffo)
+function updateKeeperFace(){
+  if(!keeperFace) return;
+  if(useGLBKeeper && keeperHeadBone){ keeperHeadBone.getWorldPosition(_faceV); keeperFace.position.copy(_faceV); keeperFace.position.y+=0.05; keeperFace.visible=true; }
+  else keeperFace.visible=false;
+}
+// calciatore (Mario/Giulio): scelta, scoreboard, persistenza
+function applyPlayer(){ if(!PLAYER) return; const cr=document.querySelector('#scoreboard .crest');
+  if(cr){ cr.classList.add('hasface'); cr.style.backgroundImage='url('+PLAYER.face+')'; }
+  const tm=document.querySelector('#scoreboard .team'); if(tm) tm.textContent=PLAYER.name;
+  const vs=document.querySelector('#scoreboard .vs'); if(vs) vs.textContent='ALE 🧤'; }
+function pickPlayer(key){ PLAYER=PLAYERS[key]||null; try{ if(key) localStorage.setItem('rig_player',key); }catch(e){}
+  applyPlayer(); document.getElementById('playerSelect').classList.remove('show'); }
 function syncHUD(){
+  document.getElementById('playerSelect').classList.toggle('show', state===STATE.MENU_SCREEN && !PLAYER);
   HUD.score.textContent=streak; HUD.rec.textContent='REC '+Scores.best()+(Scores.bestName()?' '+Scores.bestName():'');
   HUD.menuRec.textContent=Scores.best(); HUD.overRec.textContent=Scores.best()+' '+Scores.bestName();
   HUD.menu.classList.toggle('show',state===STATE.MENU_SCREEN);
@@ -1087,7 +1132,7 @@ function showResult(txt,col){ HUD.result.textContent=txt; HUD.result.style.color
   setTimeout(()=>{ HUD.result.classList.remove('show'); },1300); }
 function askName(){ const i=document.getElementById('nameInput');
   document.getElementById('nameScore').textContent=streak+(streak===1?' rigore di fila':' rigori di fila');
-  i.value=''; HUD.nameOv.classList.add('show'); setTimeout(()=>{try{i.focus();}catch(e){}},60); }
+  i.value=PLAYER?PLAYER.name:''; HUD.nameOv.classList.add('show'); setTimeout(()=>{try{i.focus();i.select&&i.select();}catch(e){}},60); }
 function saveName(){ const i=document.getElementById('nameInput');
   const n=(i.value||'').trim().replace(/[<>]/g,'').toUpperCase()||'???'; Scores.add(n,streak); HUD.nameOv.classList.remove('show'); syncHUD(); }
 
@@ -1137,12 +1182,17 @@ addEventListener('keydown',e=>{ const k=e.key.toLowerCase();
     else if(state===STATE.GAME_PLAYING){ // tiro da tastiera: mira al centro-alto con potenza media
       aim.tx=rand(-2,2); aim.ty=rand(0.6,1.9); aim.power=0.6; aim.curl=rand(-0.4,0.4); shoot(); } } });
 document.getElementById('nameSave').addEventListener('click',saveName);
+// player-select: scelta calciatore + re-scelta toccando la faccia nello scoreboard
+document.querySelectorAll('#playerSelect .pscard').forEach(b=>b.addEventListener('click',()=>pickPlayer(b.dataset.player)));
+(function(){ const cr=document.querySelector('#scoreboard .crest'); if(cr){ cr.style.cursor='pointer'; cr.style.pointerEvents='auto';
+  cr.addEventListener('click',()=>{ if(state===STATE.MENU_SCREEN||state===STATE.GAME_OVER) document.getElementById('playerSelect').classList.add('show'); }); } })();
+if(PLAYER) applyPlayer();
 document.getElementById('nameInput').addEventListener('keydown',e=>{ e.stopPropagation(); if(e.key==='Enter') saveName(); });
 HUD.snd.addEventListener('click',()=>{ const on=Sound.toggle(); HUD.snd.textContent=on?'♪':'✕'; if(on&&state===STATE.GAME_PLAYING)Sound.crowd(0.04); });
 
 /* ------------------------------- LOOP ------------------------------------ */
 function animate(t){ const dt=Math.min(0.05,(t-(lastT||t))/1000); lastT=t;
-  if(state!==STATE.LOADING){ update(dt); if(keeperMixer){ keeperMixer.update(dt); applyKeeperReach(); } renderer.render(scene,camera);
+  if(state!==STATE.LOADING){ update(dt); if(keeperMixer){ keeperMixer.update(dt); applyKeeperReach(); } updateKeeperFace(); renderer.render(scene,camera);
     if(window.__KDBG){ window.__diveU=keeperDive?keeperDive.u:-1; window.__state=state; window.__res=shot?shot.result:''; } }
   requestAnimationFrame(animate); }
 
