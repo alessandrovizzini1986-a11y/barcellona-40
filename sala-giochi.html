@@ -53,7 +53,8 @@
     {f:'invaders.html',k:'invaders',og:'og-invaders.jpg',n:'SPACE INVADERS',t:'difendi la Terra'},
     {f:'corsa.html',k:'corsa',og:'og-corsa.jpg',n:'TURBO CORSA',t:'schiva il traffico'},
     {f:'puzzle-bobble.html',k:'bobble',og:'og-bobble.jpg',n:'PUZZLE BOBBLE',t:'bolle da 3+'},
-    {f:'fiorentina-run.html',k:'fiorun',og:'og-run.jpg',n:'FIORENTINA RUN',t:'carne sì, insalata no'}
+    {f:'fiorentina-run.html',k:'fiorun',og:'og-run.jpg',n:'FIORENTINA RUN',t:'carne sì, insalata no'},
+    {f:'rigori.html',k:'rigori',og:'og-rigori.jpg',n:'RIGORI AL CAMP NOU',t:'segna di fila ⚽'}
   ];
   function legacy(k){ var m={snake:'snake_hi',tetris:'tetris_hi',fiorun:'fiorun_hi'}; if(m[k]){ try{return parseInt(localStorage.getItem(m[k])||'0',10)||0;}catch(e){} } return 0; }
   document.getElementById('grid').innerHTML=GAMES.map(function(g){

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#0a0e16">
+<meta name="robots" content="noindex,nofollow">
+<title>RIGORI AL CAMP NOU</title>
+<meta property="og:type" content="website">
+<meta property="og:title" content="⚽ RIGORI AL CAMP NOU">
+<meta property="og:description" content="Segna di fila. Un errore e sei a casa. Insert coin!">
+<meta property="og:image" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/og-rigori.jpg?v=1">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/og-rigori.jpg?v=1">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{background:radial-gradient(120% 70% at 50% 0%,#13294a,#06080f 70%);color:#e7eaf6;
+    font-family:"Press Start 2P",monospace;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    min-height:100svh;overflow:hidden;padding:8px;user-select:none;-webkit-user-select:none}
+  .top{position:fixed;top:calc(8px + env(safe-area-inset-top));left:0;right:0;display:flex;justify-content:space-between;padding:0 14px;font-size:8px;z-index:10}
+  .top a{color:#8b93b0;text-decoration:none}
+  .arena{width:min(96vw,380px)}
+  .hud{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:9px;color:#ffd28a}
+  .hud .mid{color:#7fd0ff}
+  .stage{position:relative;border-radius:14px;overflow:hidden;border:1px solid rgba(120,160,220,.3);box-shadow:0 24px 60px -26px #000}
+  canvas{display:block;width:100%;height:auto;background:#0c1c12}
+  .ov{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:13px;text-align:center;background:rgba(6,8,15,.84);padding:16px}
+  .ov.hide{display:none}
+  .ov .big{font-size:18px;color:#ffd28a;line-height:1.5}
+  .ov .sm{font-size:8px;line-height:1.9;color:#cfd6ee}
+  .ov .blink{animation:bk 1s steps(1) infinite;color:#7fd0ff}@keyframes bk{50%{opacity:0}}
+  .softrow{display:flex;gap:8px;margin-top:12px;width:min(96vw,380px)}
+  .soft{flex:1;font-family:inherit;font-size:7px;color:#cdd8e4;padding:11px 0;border-radius:11px;border:1px solid rgba(255,255,255,.08);
+    background:linear-gradient(180deg,#1c3a58,#102a42);cursor:pointer;box-shadow:0 3px 0 rgba(0,0,0,.4)}
+  .soft:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(0,0,0,.4)}.soft.off{opacity:.55}
+  .shoot{margin-top:11px;width:min(96vw,380px);font-family:inherit;font-size:15px;color:#10100a;padding:20px 0;border-radius:14px;border:none;
+    background:linear-gradient(180deg,#ffd884,#e9a13b);cursor:pointer;box-shadow:0 5px 0 #8a5d12;letter-spacing:.04em}
+  .shoot:active{transform:translateY(3px);box-shadow:0 2px 0 #8a5d12}
+  .hint{margin-top:9px;font-size:7px;color:#6f76a0;text-align:center;line-height:1.9}
+</style>
+</head>
+<body>
+<div class="top"><a href="sala-giochi.html">‹ SALA GIOCHI</a><a href="index.html">ESCI</a></div>
+<div class="arena">
+  <div class="hud"><span id="scoreLbl">SERIE 0</span><span class="mid" id="msgLbl">PRONTO?</span><span id="hiLbl">REC 0</span></div>
+  <div class="stage">
+    <canvas id="cv" width="320" height="470"></canvas>
+    <div class="ov" id="splash"><div class="big">RIGORI<br>AL CAMP NOU</div><div class="sm">tocca la porta per calciare ⚽<br>mira l'angolo, batti il portiere 🧤<br>record <span id="hiS">0</span></div><div class="sm blink">★ INSERT COIN ★</div></div>
+    <div class="ov hide" id="over"><div class="big" id="overTitle">FINITA!</div><div class="sm">hai segnato <span id="finalSc">0</span> rigori di fila</div><div class="sm blink">★ RIGIOCA ★</div></div>
+  </div>
+</div>
+<div class="softrow">
+  <button class="soft" id="mBtn">MUSICA ON</button><button class="soft" id="sBtn">SUONI ON</button>
+</div>
+<button class="shoot" id="shootBtn">⚽ CALCIA</button>
+<div class="hint">tocca la porta o CALCIA · spazio · ferma il mirino nell'angolo</div>
+<script src="arcade.js"></script>
+<script>
+(function(){
+  var KEY='rigori';
+  var cv=document.getElementById('cv'), ctx=cv.getContext('2d'), W=cv.width, H=cv.height;
+
+  // --- geometria porta ---
+  var POST_L=46, POST_R=274, BAR=66, LINE=196;        // telaio porta
+  var GW=POST_R-POST_L, KCY=150;                       // centro verticale portiere
+  var SPOT={x:160,y:432};                              // dischetto
+
+  var state, streak, msgT;
+  var aim={x:160,y:130,px:0,py:0,spd:2.2};
+  var shot=null;                                       // {t,dur,tx,ty,kx,kStart,res}
+  var keeper={x:160,dir:0,dive:0};
+  var last;
+
+  function setHud(){
+    document.getElementById('scoreLbl').textContent='SERIE '+(streak||0);
+    var b=Arcade.best(KEY), n=Arcade.bestName(KEY);
+    document.getElementById('hiLbl').textContent='REC '+b+(n?' '+n:'');
+  }
+  function msg(t){ document.getElementById('msgLbl').textContent=t; }
+  function show(id){ ['splash','over'].forEach(function(s){document.getElementById(s).classList.toggle('hide',s!==id);}); }
+  function hideOv(){ ['splash','over'].forEach(function(s){document.getElementById(s).classList.add('hide');}); }
+
+  function start(){ streak=0; keeper={x:160,dir:0,dive:0}; shot=null; setHud(); hideOv();
+    Arcade.musicStart(); Arcade.sfx(880,.06); newAim(); last=performance.now(); requestAnimationFrame(loop); }
+
+  function newAim(){
+    state='aim'; shot=null;                             // palla torna sul dischetto
+    aim.spd=2.15+Math.min(2.4,streak*0.16);            // accelera con la serie
+    aim.px=Math.random()*6.28; aim.py=Math.random()*6.28;
+    keeper.x=160; keeper.dive=0; keeper.dir=0;
+    msg('MIRA!');
+  }
+
+  function shoot(){
+    if(state!=='aim') return;
+    Arcade.ctx();
+    var cx=aim.x, cy=aim.y;
+    // il portiere "legge" il tiro con un errore che cala salendo di serie
+    var err=Math.max(24,128-streak*8);
+    var kx=cx+(Math.random()*2-1)*err;
+    kx=Math.max(POST_L+16,Math.min(POST_R-16,kx));
+    var reach=42+Math.min(40,streak*2.3);
+    // esito
+    var inGoal = cx>=POST_L+6 && cx<=POST_R-6 && cy>=BAR+4 && cy<=LINE-2;
+    var dx=(cx-kx)/reach, dy=(cy-KCY)/(reach*0.82);
+    var saved = inGoal && (dx*dx+dy*dy<=1);
+    var res = !inGoal ? 'FUORI' : (saved?'PARATO':'GOAL');
+    shot={t:0,dur:0.46,sx:SPOT.x,sy:SPOT.y,tx:cx,ty:cy,kx:kx,kFrom:keeper.x,res:res,done:false};
+    keeper.dir = kx<160?-1:(kx>160?1:0);
+    state='shoot';
+    Arcade.sfx(520,.07);
+  }
+
+  function resolve(){
+    var r=shot.res;
+    if(r==='GOAL'){ streak++; setHud(); msg('GOOOL!');
+      Arcade.sfx(880,.07); setTimeout(function(){Arcade.sfx(1320,.11);},85); setTimeout(function(){Arcade.sfx(1760,.13);},190);
+      state='result'; msgT=performance.now();
+    } else {
+      msg(r==='PARATO'?'PARATO! 🧤':'FUORI! 😵');
+      if(r==='PARATO'){ Arcade.sfx(200,.16,'sawtooth'); } else { Arcade.sfx(150,.2,'triangle'); }
+      state='result'; msgT=performance.now(); shot.fail=true;
+    }
+  }
+  function gameOver(){
+    state='over'; Arcade.musicStop(); Arcade.sfx(180,.2); setTimeout(function(){Arcade.sfx(90,.3);},130);
+    document.getElementById('finalSc').textContent=streak;
+    document.getElementById('overTitle').textContent = streak>=8?'CAMPIONE!':(streak>=4?'BEL TIRO!':'FINITA!');
+    if(Arcade.isHigh(KEY,streak)){ Arcade.nameEntry(streak,function(n){ Arcade.addScore(KEY,n,streak); setHud(); }); }
+    setHud(); show('over');
+  }
+  function action(){ Arcade.ctx(); if(state==='aim') shoot(); else if(state==='idle'||state==='over') start(); }
+
+  // --- loop ---
+  function loop(t){
+    var dt=Math.min(.05,(t-(last||t))/1000); last=t;
+    if(state==='aim'){
+      aim.px+=aim.spd*dt; aim.py+=aim.spd*0.62*dt;
+      aim.x=160+Math.sin(aim.px)*150;
+      aim.y=138+Math.sin(aim.py)*104;
+    } else if(state==='shoot'){
+      shot.t+=dt; var p=Math.min(1,shot.t/shot.dur);
+      keeper.x=shot.kFrom+(shot.kx-shot.kFrom)*ease(p);
+      keeper.dive=Math.min(1,p*1.25);
+      if(!shot.done && p>=1){ shot.done=true; resolve(); }
+    } else if(state==='result'){
+      // ball resta a destinazione un attimo
+      if(performance.now()-msgT>950){
+        if(shot.fail) { gameOver(); } else { newAim(); }
+      }
+    }
+    draw();
+    if(state!=='over'&&state!=='idle') requestAnimationFrame(loop);
+  }
+  function ease(p){ return p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2; }
+
+  // --- disegno ---
+  function draw(){
+    // stadio
+    var g=ctx.createLinearGradient(0,0,0,H); g.addColorStop(0,'#0e1430'); g.addColorStop(.45,'#11224a'); g.addColorStop(.55,'#1c5a2c'); g.addColorStop(1,'#0f3d1d');
+    ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+    // tribuna stripes (blaugrana) dietro la porta
+    for(var s=0;s<10;s++){ ctx.fillStyle=(s%2)?'rgba(165,4,68,.5)':'rgba(0,77,152,.5)'; ctx.fillRect(s*W/10,0,W/10,BAR-10); }
+    // prato righe
+    ctx.fillStyle='rgba(255,255,255,.04)';
+    for(var ln=0;ln<6;ln++){ var yy=LINE+ln*((H-LINE)/6); ctx.fillRect(0,yy,W,2); }
+    // rete
+    ctx.strokeStyle='rgba(220,230,245,.22)'; ctx.lineWidth=1;
+    for(var x=POST_L;x<=POST_R;x+=16){ ctx.beginPath();ctx.moveTo(x,BAR);ctx.lineTo(x,LINE);ctx.stroke(); }
+    for(var y=BAR;y<=LINE;y+=16){ ctx.beginPath();ctx.moveTo(POST_L,y);ctx.lineTo(POST_R,y);ctx.stroke(); }
+    // portiere
+    drawKeeper();
+    // pali
+    ctx.fillStyle='#f4f7ff'; ctx.fillRect(POST_L-7,BAR-7,7,LINE-BAR+7); ctx.fillRect(POST_R,BAR-7,7,LINE-BAR+7); ctx.fillRect(POST_L-7,BAR-7,GW+14,7);
+    // dischetto
+    ctx.fillStyle='rgba(255,255,255,.7)'; ctx.beginPath();ctx.ellipse(SPOT.x,SPOT.y+8,5,2.5,0,0,6.28);ctx.fill();
+    // palla
+    drawBall();
+    // mirino
+    if(state==='aim') drawAim();
+    // testo esito
+    if(state==='result'||(state==='shoot'&&shot&&shot.done)){
+      ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.font='20px "Press Start 2P",monospace';
+      ctx.fillStyle = shot.res==='GOAL'?'#7CFC9A':(shot.res==='PARATO'?'#ff9d6a':'#ffd28a');
+      ctx.fillText(shot.res, W/2, 36);
+    }
+  }
+  function drawKeeper(){
+    var kx=keeper.x, base=KCY, d=keeper.dive, lean=keeper.dir*d*42;
+    ctx.save(); ctx.translate(kx,base);
+    // ombra/maglia (blaugrana)
+    ctx.fillStyle='#A50044';
+    rr(-15,-8,30,40,7); ctx.fill();
+    ctx.fillStyle='#004D98'; rr(-15,-8,9,40,5); ctx.fill(); rr(6,-8,9,40,5); ctx.fill();
+    // testa
+    ctx.fillStyle='#f0c08a'; ctx.beginPath();ctx.arc(0,-20,11,0,6.28);ctx.fill();
+    // braccia che si allargano nel tuffo
+    ctx.strokeStyle='#A50044'; ctx.lineWidth=8; ctx.lineCap='round';
+    var spread=8+d*46;
+    ctx.beginPath();ctx.moveTo(-8,-2);ctx.lineTo(-8-spread,-2-d*20+lean*0.2);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(8,-2);ctx.lineTo(8+spread,-2-d*20-lean*0.2);ctx.stroke();
+    // guantoni
+    ctx.fillStyle='#eaf2ff';
+    ctx.beginPath();ctx.arc(-8-spread,-2-d*20+lean*0.2,6,0,6.28);ctx.fill();
+    ctx.beginPath();ctx.arc(8+spread,-2-d*20-lean*0.2,6,0,6.28);ctx.fill();
+    // gambe
+    ctx.fillStyle='#222'; rr(-12,30,8,16,3); ctx.fill(); rr(4,30,8,16,3); ctx.fill();
+    ctx.restore();
+  }
+  function drawBall(){
+    var bx=SPOT.x, by=SPOT.y, sc=1;
+    if(shot){ var p=Math.min(1,shot.t/shot.dur); bx=shot.sx+(shot.tx-shot.sx)*p; by=shot.sy+(shot.ty-shot.sy)*p; sc=1-0.45*p; }
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.font=Math.round(34*sc)+'px serif';
+    ctx.fillText('⚽',bx,by);
+  }
+  function drawAim(){
+    var x=aim.x,y=aim.y, pul=0.5+0.5*Math.sin(performance.now()/120);
+    ctx.strokeStyle='rgba(255,210,138,'+(0.6+0.4*pul)+')'; ctx.lineWidth=2.5;
+    ctx.beginPath();ctx.arc(x,y,14,0,6.28);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(x-20,y);ctx.lineTo(x-6,y);ctx.moveTo(x+6,y);ctx.lineTo(x+20,y);
+    ctx.moveTo(x,y-20);ctx.lineTo(x,y-6);ctx.moveTo(x,y+6);ctx.lineTo(x,y+20);ctx.stroke();
+    ctx.fillStyle='rgba(255,210,138,'+(0.7+0.3*pul)+')'; ctx.beginPath();ctx.arc(x,y,2.5,0,6.28);ctx.fill();
+  }
+  function rr(x,y,w,h,r){ ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath(); }
+
+  // --- input ---
+  cv.addEventListener('pointerdown',function(e){ e.preventDefault();
+    if(state==='aim') shoot(); else if(state==='idle'||state==='over') start(); },{passive:false});
+  document.getElementById('shootBtn').addEventListener('click',action);
+  ['splash','over'].forEach(function(id){ document.getElementById(id).addEventListener('pointerdown',function(e){ e.preventDefault(); if(state==='idle'||state==='over') start(); },{passive:false}); });
+  Arcade.bindAudioButtons('mBtn','sBtn');
+  addEventListener('keydown',function(e){ var k=e.key.toLowerCase();
+    if(k===' '||k==='enter'){ e.preventDefault(); action(); } });
+
+  // boot
+  setHud(); document.getElementById('hiS').textContent=Arcade.best(KEY);
+  state='idle'; draw(); show('splash');
+})();
+</script>
+</body>
+</html>
