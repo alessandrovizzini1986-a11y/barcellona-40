@@ -5,596 +5,530 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="theme-color" content="#001F44">
 <meta name="robots" content="noindex,nofollow">
-<title>RIGORI AL CAMP NOU</title>
+<title>RIGORI AL CAMP NOU · 3D</title>
 <meta property="og:type" content="website">
-<meta property="og:title" content="⚽ RIGORI AL CAMP NOU">
-<meta property="og:description" content="Segna di fila. Un errore e sei a casa. Insert coin!">
+<meta property="og:title" content="⚽ RIGORI AL CAMP NOU · 3D">
+<meta property="og:description" content="Penalty 3D al Camp Nou. Segna di fila, un errore e sei a casa.">
 <meta property="og:image" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/og-rigori.jpg?v=1">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/og-rigori.jpg?v=1">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Archivo:wght@600;800&display=swap" rel="stylesheet">
 <style>
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
-  html,body{height:100%;overflow:hidden}
-  :root{--navy:#004D98;--navy-deep:#001F44;--garnet:#A50044;--gold:#FFD884;--ink:#EAF0FF}
-  body{background:radial-gradient(120% 80% at 50% 0%,#0a2a5a,#001226 72%);color:var(--ink);
-    font-family:"Press Start 2P",monospace;min-height:100svh;display:flex;flex-direction:column;align-items:center;
-    justify-content:center;padding:calc(6px + env(safe-area-inset-top)) 6px calc(6px + env(safe-area-inset-bottom))}
-  /* sottile scanline retro */
-  body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:30;
-    background:repeating-linear-gradient(0deg,rgba(0,0,0,.10) 0 2px,transparent 2px 4px)}
-  .topbar{position:fixed;top:calc(7px + env(safe-area-inset-top));left:0;right:0;display:flex;justify-content:space-between;
-    padding:0 14px;font-size:8px;z-index:20}
-  .topbar a{color:#7f97c8;text-decoration:none}
-  .topbar a:active{color:var(--gold)}
-  #wrap{position:relative;line-height:0}
-  canvas{display:block;border-radius:16px;box-shadow:0 26px 70px -28px #000,0 0 0 1px rgba(120,160,230,.25);touch-action:none}
-  /* overlay inserimento nome (unico frammento DOM, costruito inline) */
-  #nameOv{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;
-    background:rgba(0,10,28,.92);padding:18px;text-align:center}
+  html,body{height:100%;overflow:hidden;background:#02060f}
+  :root{--navy:#004D98;--garnet:#A50044;--gold:#FFD884;--green:#39ff7a;--ink:#EAF0FF}
+  body{font-family:"Press Start 2P",monospace;color:var(--ink)}
+  #cv{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none}
+  /* ---------------- HUD overlay (DOM su WebGL) ---------------- */
+  #hud{position:fixed;inset:0;z-index:10;pointer-events:none}
+  .topbar{position:absolute;top:calc(8px + env(safe-area-inset-top));left:0;right:0;display:flex;justify-content:space-between;padding:0 14px;font-size:8px;pointer-events:auto}
+  .topbar a{color:#9fb4dd;text-decoration:none}.topbar a:active{color:var(--gold)}
+  /* scoreboard */
+  #scoreboard{position:absolute;top:calc(30px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);
+    display:flex;align-items:center;gap:10px;background:rgba(2,12,30,.86);border:1px solid rgba(120,160,230,.35);
+    border-radius:9px;padding:7px 12px;white-space:nowrap}
+  #scoreboard .crest{width:18px;height:20px;border-radius:3px;background:
+    linear-gradient(#FFD884 0 35%,transparent 35%),repeating-linear-gradient(90deg,#A50044 0 3.5px,#004D98 3.5px 7px);
+    background-color:#004D98;border:1px solid #00305f}
+  #scoreboard .team{font-size:8px;color:#eaf0ff}
+  #scoreboard .score{font-size:13px;color:var(--gold);background:#000d22;padding:4px 9px;border-radius:5px;min-width:34px;text-align:center;transition:transform .12s}
+  #scoreboard .score.pulse{transform:scale(1.35)}
+  #scoreboard .vs{font-size:8px;color:#9fb4dd}
+  #rec{position:absolute;top:calc(70px + env(safe-area-inset-top));right:16px;font-size:6px;color:#7f97c8}
+  /* power gauge */
+  #power{position:absolute;left:18px;bottom:calc(20px + env(safe-area-inset-bottom));font-size:7px;color:var(--gold);opacity:0;transition:opacity .2s}
+  #power.on{opacity:1}
+  #power .bar{margin-top:6px;width:170px;height:18px;background:rgba(2,12,30,.8);border:1px solid rgba(120,160,230,.4);border-radius:6px;padding:3px;overflow:hidden}
+  #power .fill{height:100%;width:0%;border-radius:3px;background:linear-gradient(90deg,#39ff7a,#bfff3a 40%,#ffd23a 65%,#ff7a2a 82%,#ff2e2e)}
+  #hint{position:absolute;left:0;right:0;bottom:calc(20px + env(safe-area-inset-bottom));text-align:center;font-size:7px;color:#9fb4dd;opacity:0;transition:opacity .2s}
+  #hint.on{opacity:.9}
+  /* result flash text */
+  #result{position:absolute;left:0;right:0;top:34%;text-align:center;font-size:30px;opacity:0;text-shadow:0 3px 18px rgba(0,0,0,.6)}
+  #result.show{animation:pop .5s ease-out}
+  @keyframes pop{0%{opacity:0;transform:scale(.6)}30%{opacity:1;transform:scale(1.1)}100%{opacity:1;transform:scale(1)}}
+  /* center panels */
+  .panel{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;
+    text-align:center;background:rgba(2,8,20,.72);padding:24px}
+  .panel.show{display:flex}
+  .panel h1{font-size:30px;color:#fff;line-height:1.3}
+  .panel .gold{color:var(--gold)}.panel .small{font-size:9px;color:#cdd6ee;line-height:1.9}
+  .panel .grn{color:var(--green)}.panel .org{color:#ff9d6a}
+  .panel .blink{font-size:11px;color:var(--green);animation:bk 1s steps(1) infinite}@keyframes bk{50%{opacity:0}}
+  /* loading */
+  #loading{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:#02060f}
+  #loading h2{font-size:16px;color:var(--gold)}#loading .lab{font-size:8px;color:#cdd6ee}
+  #loading .track{width:220px;height:16px;border:2px solid #39507a;border-radius:7px;padding:2px}
+  #loading .barf{height:100%;width:0%;background:var(--green);border-radius:4px;transition:width .15s}
+  /* name entry */
+  #nameOv{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;background:rgba(0,10,28,.92);padding:18px;text-align:center}
   #nameOv.show{display:flex}
-  #nameOv .box{max-width:300px}
   #nameOv .ttl{font-size:16px;color:var(--gold);line-height:1.6}
   #nameOv .sub{font-size:9px;color:#cdd6ee;margin:14px 0 10px}
-  #nameOv input{width:230px;text-transform:uppercase;text-align:center;font-family:inherit;font-size:13px;padding:13px;
-    border-radius:10px;border:2px solid var(--gold);background:#04101f;color:#fff;outline:none}
-  #nameOv button{margin-top:16px;font-family:inherit;font-size:11px;color:var(--navy-deep);background:var(--gold);
-    border:none;border-radius:10px;padding:13px 26px;cursor:pointer}
+  #nameOv input{width:230px;text-transform:uppercase;text-align:center;font-family:inherit;font-size:13px;padding:13px;border-radius:10px;border:2px solid var(--gold);background:#04101f;color:#fff;outline:none}
+  #nameOv button{margin-top:16px;font-family:inherit;font-size:11px;color:#001F44;background:var(--gold);border:none;border-radius:10px;padding:13px 26px;cursor:pointer}
+  #webglErr{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;text-align:center;padding:24px;font-size:10px;color:#ffd28a;line-height:2}
 </style>
+<script type="importmap">
+{ "imports": { "three": "./assets/three.module.js" } }
+</script>
 </head>
 <body>
-<div class="topbar"><a href="sala-giochi.html">‹ SALA GIOCHI</a><a href="index.html">ESCI ✕</a></div>
-<div id="wrap"><canvas id="cv"></canvas></div>
+<canvas id="cv"></canvas>
 
-<!-- Overlay inserimento nome per il record (inline, stesso file) -->
-<div id="nameOv"><div class="box">
+<div id="hud">
+  <div class="topbar"><a href="sala-giochi.html">‹ SALA GIOCHI</a><a href="index.html">ESCI ✕</a></div>
+  <div id="scoreboard">
+    <span class="crest"></span><span class="team">FC BARCELONA</span>
+    <span class="score" id="score">0</span><span class="vs">PORTIERE</span>
+  </div>
+  <div id="rec">REC 0</div>
+  <div id="result"></div>
+  <div id="power"><span>⚡ POWER</span><div class="bar"><div class="fill" id="powerFill"></div></div></div>
+  <div id="hint" class="on">ferma il mirino · tocca l'angolo</div>
+
+  <div class="panel" id="menu">
+    <h1>RIGORI<br><span class="gold">AL CAMP NOU</span></h1>
+    <div class="small">ferma il mirino e tocca l'angolo<br><span class="grn">la POWER decide la spinta</span><br><span class="org">un errore e sei a casa</span></div>
+    <div class="small">record <span id="menuRec">0</span></div>
+    <div class="blink">★ TOCCA PER GIOCARE ★</div>
+  </div>
+  <div class="panel" id="over">
+    <h1 id="overTitle" class="gold">FINITA!</h1>
+    <div class="small">hai segnato <b id="overScore">0</b> rigori di fila</div>
+    <div class="small">record <span id="overRec">0</span></div>
+    <div class="blink">★ TOCCA PER RIGIOCARE ★</div>
+  </div>
+</div>
+
+<div id="loading"><h2>CAMP NOU</h2><div class="lab">CARICAMENTO ASSET 3D</div><div class="track"><div class="barf" id="barf"></div></div><div class="lab" id="pct">0%</div></div>
+
+<div id="nameOv"><div>
   <div class="ttl">NUOVO<br>RECORD!</div>
   <div class="sub" id="nameScore">0 rigori di fila</div>
   <input id="nameInput" maxlength="10" placeholder="NOME" autocomplete="off">
   <br><button id="nameSave">SALVA ▶</button>
 </div></div>
 
-<script>
-"use strict";
+<div id="webglErr">WebGL non disponibile su questo dispositivo.<br>Apri il gioco su un browser aggiornato.</div>
+
+<script type="module">
+import * as THREE from 'three';
 /* =========================================================================
-   RIGORI AL CAMP NOU — Canvas game (ES6+, single-file, production-ready)
-   Architettura: Canvas2D + requestAnimationFrame, finite state machine,
-   fisica del tiro con gravità, AI portiere con easing e riflessi crescenti.
+   RIGORI AL CAMP NOU — 3D (Three.js / WebGL, single page)
+   - Pipeline asset esterni (Three.LoadingManager + TextureLoader) con barra
+   - Scena 3D: porta, rete (con ripple), portiere (primitive animate), pallone
+     texturizzato, prato a strisce, stadio Camp Nou texturizzato, ILLUMINAZIONE
+     (hemisphere + sole con ombre + riflettori).
+   - Finite state machine, fisica del tiro con gravità + POWER, AI portiere
+     con easing e riflessi crescenti. HUD DOM (scoreboard, power, target zone).
+   SEAM 3D models: vedi CONFIG.MODELS + caricaGLTF() per innestare modelli .glb
+     rigging/animati (GLTFLoader) al posto del portiere procedurale.
    ========================================================================= */
 
-/* ----------------------------- CONFIG ------------------------------------
-   Tutti i parametri regolabili sono qui. Modifica liberamente.            */
+/* ----------------------------- CONFIG ----------------------------------- */
 const CONFIG = {
-  // --- Fisica del tiro ---
-  ballSpeed:        940,   // px/s: velocità di volo della palla (alto = più veloce)
-  gravity:          760,   // px/s^2: curva/parabola del tiro (alto = pallonetto più marcato)
-  ballPerspective:  0.46,  // riduzione di scala palla a fine volo (effetto profondità)
-
-  // --- Mirino (oscillazione orizzontale, timing-based) ---
-  aimSpeedBase:     2.05,  // rad/s velocità iniziale di oscillazione
-  aimSpeedPerLevel: 0.17,  // incremento per ogni gol di fila
-  aimSpeedMax:      4.8,   // tetto
-
-  // --- AI Portiere ---
-  goalieReactionTime: 360, // ms di "ritardo" prima del tuffo (cala salendo di livello)
-  goalieReactionMin:  110, // ms minimo
-  goalieReactionStep: 16,  // ms tolti per livello
-  goalieReachBase:    44,  // raggio di parata iniziale (px)
-  goalieReachPerLevel:2.4, // crescita raggio per livello
-  goalieReachMax:     86,  // tetto raggio
-  goalieErrorBase:    132, // px: errore di lettura iniziale (alto = para poco)
-  goalieErrorMin:     20,  // px: errore minimo (campione)
-  goalieErrorStep:    8.5, // px tolti per livello
-
-  // --- Tempi animazioni (ms) ---
-  goalCelebrateMs:  1150,
-  saveAnimMs:       1250,
-
-  // --- Feedback ---
-  haptics:          true,  // navigator.vibrate dove supportato
+  // Fisica (unità ~metri / m·s)
+  ballSpeed: 23,           // m/s base (modulata dalla potenza)
+  gravity:   16,           // m/s^2: arco del pallone
+  // Mirino
+  aimSpeedBase: 1.7, aimSpeedPerLevel: 0.14, aimSpeedMax: 4.0,
+  // Power gauge
+  powerSpeed: 2.5, powerBeatsReach: 0.34, powerOverRisk: 0.85,
+  // AI portiere (in metri)
+  reachBase: 1.25, reachPerLevel: 0.07, reachMax: 2.25,
+  errorBase: 2.3,  errorPerLevel: 0.16, errorMin: 0.40,
+  reactionMs: 360, reactionMin: 110, reactionStep: 16,
+  // Tempi (ms)
+  goalCelebrateMs: 1500, saveAnimMs: 1500,
+  haptics: true,
+  // Asset texture esterni
+  ASSETS: { stadium:'assets/rig-stadium.png?v=1', ball:'assets/rig-ball.png?v=1' },
+  // Seam per modelli 3D (non caricati di default): es. 'assets/models/keeper.glb'
+  MODELS: { /* keeper:'assets/models/keeper.glb' */ }
 };
 
-/* --------------------------- UTILITIES ----------------------------------- */
-const clamp = (v, a, b) => v < a ? a : (v > b ? b : v);
-const lerp  = (a, b, t) => a + (b - a) * t;
-const rand  = (a, b) => a + Math.random() * (b - a);
-const easeOutCubic = t => 1 - Math.pow(1 - t, 3);
-const easeInOutQuad = t => t < 0.5 ? 2*t*t : 1 - Math.pow(-2*t+2, 2)/2;
+/* --------------------------- UTIL / SCORES / HAPTIC ---------------------- */
+const clamp=(v,a,b)=>v<a?a:(v>b?b:v), lerp=(a,b,t)=>a+(b-a)*t, rand=(a,b)=>a+Math.random()*(b-a);
+const easeOutCubic=t=>1-Math.pow(1-t,3);
+const Scores={ KEY:'hs_rigori', MAX:5,
+  all(){ try{return JSON.parse(localStorage.getItem(this.KEY)||'[]');}catch(e){return[];} },
+  best(){ const s=this.all(); return s.length?s[0].s:0; },
+  bestName(){ const s=this.all(); return s.length?s[0].n:''; },
+  isHigh(x){ const s=this.all(); return x>0&&(s.length<this.MAX||x>s[s.length-1].s); },
+  add(n,x){ const s=this.all(); s.push({n:(n||'???').slice(0,10),s:x}); s.sort((a,b)=>b.s-a.s);
+    const t=s.slice(0,this.MAX); try{localStorage.setItem(this.KEY,JSON.stringify(t));}catch(e){} return t; } };
+const haptic=p=>{ if(CONFIG.haptics&&navigator.vibrate){ try{navigator.vibrate(p);}catch(e){} } };
 
-/* ----------------------- HIGH SCORES (localStorage) ----------------------
-   Formato compatibile con la Sala Giochi (chiave 'hs_rigori', [{n,s}]).   */
-const Scores = {
-  KEY: 'hs_rigori', MAX: 5,
-  all() { try { return JSON.parse(localStorage.getItem(this.KEY) || '[]'); } catch (e) { return []; } },
-  best() { const s = this.all(); return s.length ? s[0].s : 0; },
-  bestName() { const s = this.all(); return s.length ? s[0].n : ''; },
-  isHigh(score) { const s = this.all(); return score > 0 && (s.length < this.MAX || score > s[s.length-1].s); },
-  add(name, score) {
-    const s = this.all();
-    s.push({ n: (name || '???').slice(0, 10), s: score });
-    s.sort((a, b) => b.s - a.s);
-    const top = s.slice(0, this.MAX);
-    try { localStorage.setItem(this.KEY, JSON.stringify(top)); } catch (e) {}
-    return top;
-  }
-};
-
-/* ------------------------------- AUDIO -----------------------------------
-   WebAudio: SFX + loop chiptune. Preferenze condivise con gli altri giochi. */
-const Sound = {
-  ctx: null, musicOn: true, sfxOn: true, _timer: null, _step: 0,
-  MEL: [0,4,7,12, 7,4,0,4, 5,9,12,9, 7,4,2,0], BASS: [0,0,5,5, 7,7,5,5], BASE: 196,
-  init() {
-    this.musicOn = this._pref('arc_music', true);
-    this.sfxOn   = this._pref('arc_sfx', true);
-  },
-  _pref(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : v === '1'; } catch (e) { return d; } },
-  _setPref(k, v) { try { localStorage.setItem(k, v ? '1' : '0'); } catch (e) {} },
-  ac() { if (!this.ctx) { try { this.ctx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} } return this.ctx; },
-  sfx(freq, dur, type = 'square', vol = 0.16) {
-    if (!this.sfxOn) return; const a = this.ac(); if (!a) return;
-    const o = a.createOscillator(), g = a.createGain();
-    o.type = type; o.frequency.value = freq; o.connect(g); g.connect(a.destination);
-    g.gain.setValueAtTime(vol, a.currentTime);
-    g.gain.exponentialRampToValueAtTime(0.0001, a.currentTime + dur);
-    o.start(); o.stop(a.currentTime + dur);
-  },
-  _tone(freq, dur, type, vol) {
-    const a = this.ac(); if (!a) return;
-    const o = a.createOscillator(), g = a.createGain(); o.type = type; o.frequency.value = freq;
-    o.connect(g); g.connect(a.destination); const t = a.currentTime;
-    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol, t + 0.02);
-    g.gain.exponentialRampToValueAtTime(0.0001, t + dur); o.start(t); o.stop(t + dur);
-  },
-  _mtick() {
-    if (!this.musicOn) return;
-    const s = this.MEL[this._step % this.MEL.length];
-    this._tone(this.BASE * Math.pow(2, s/12), 0.18, 'square', 0.04);
-    if (this._step % 2 === 0) { const b = this.BASS[(this._step/2) % this.BASS.length]; this._tone(this.BASE/2 * Math.pow(2, b/12), 0.34, 'triangle', 0.05); }
-    this._step++;
-  },
-  musicStart() { if (!this.musicOn || this._timer) return; this.ac(); this._step = 0; this._timer = setInterval(() => this._mtick(), 210); },
-  musicStop() { if (this._timer) { clearInterval(this._timer); this._timer = null; } },
-  toggleMusic() { this.musicOn = !this.musicOn; this._setPref('arc_music', this.musicOn); if (this.musicOn) { this.ac(); this.musicStart(); } else this.musicStop(); return this.musicOn; },
-  toggleSfx() { this.sfxOn = !this.sfxOn; this._setPref('arc_sfx', this.sfxOn); if (this.sfxOn) this.sfx(660, 0.05); return this.sfxOn; }
-};
-
-/* ------------------------------ HAPTICS ----------------------------------- */
-const haptic = pattern => { if (CONFIG.haptics && navigator.vibrate) { try { navigator.vibrate(pattern); } catch (e) {} } };
+/* ------------------------------- AUDIO ----------------------------------- */
+const Sound={ ctx:null,musicOn:true,sfxOn:true,_t:null,_step:0,
+  MEL:[0,4,7,12,7,4,0,4,5,9,12,9,7,4,2,0],BASS:[0,0,5,5,7,7,5,5],BASE:196,
+  init(){ this.musicOn=this._p('arc_music',true); this.sfxOn=this._p('arc_sfx',true); },
+  _p(k,d){ try{const v=localStorage.getItem(k);return v===null?d:v==='1';}catch(e){return d;} },
+  ac(){ if(!this.ctx){try{this.ctx=new (window.AudioContext||window.webkitAudioContext)();}catch(e){}} return this.ctx; },
+  sfx(f,d,type='square',vol=0.16){ if(!this.sfxOn)return; const a=this.ac(); if(!a)return; const o=a.createOscillator(),g=a.createGain();
+    o.type=type;o.frequency.value=f;o.connect(g);g.connect(a.destination);g.gain.setValueAtTime(vol,a.currentTime);
+    g.gain.exponentialRampToValueAtTime(.0001,a.currentTime+d);o.start();o.stop(a.currentTime+d); },
+  _tone(f,d,type,vol){ const a=this.ac();if(!a)return;const o=a.createOscillator(),g=a.createGain();o.type=type;o.frequency.value=f;
+    o.connect(g);g.connect(a.destination);const t=a.currentTime;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol,t+.02);
+    g.gain.exponentialRampToValueAtTime(.0001,t+d);o.start(t);o.stop(t+d); },
+  _tick(){ if(!this.musicOn)return; const s=this.MEL[this._step%this.MEL.length]; this._tone(this.BASE*Math.pow(2,s/12),.18,'square',.04);
+    if(this._step%2===0){const b=this.BASS[(this._step/2)%this.BASS.length];this._tone(this.BASE/2*Math.pow(2,b/12),.34,'triangle',.05);} this._step++; },
+  musicStart(){ if(!this.musicOn||this._t)return; this.ac(); this._step=0; this._t=setInterval(()=>this._tick(),210); },
+  musicStop(){ if(this._t){clearInterval(this._t);this._t=null;} } };
 
 /* --------------------------- STATE MACHINE -------------------------------- */
-const STATE = {
-  MENU_SCREEN:    'MENU_SCREEN',
-  GAME_PLAYING:   'GAME_PLAYING',
-  BALL_IN_FLIGHT: 'BALL_IN_FLIGHT',
-  GOAL_ANIMATION: 'GOAL_ANIMATION',
-  SAVE_ANIMATION: 'SAVE_ANIMATION',   // copre anche il tiro fuori (esito = miss)
-  GAME_OVER:      'GAME_OVER'
-};
+const STATE={ LOADING:'LOADING',MENU_SCREEN:'MENU_SCREEN',GAME_PLAYING:'GAME_PLAYING',
+  BALL_IN_FLIGHT:'BALL_IN_FLIGHT',GOAL_ANIMATION:'GOAL_ANIMATION',SAVE_ANIMATION:'SAVE_ANIMATION',GAME_OVER:'GAME_OVER' };
 
-/* =============================== GAME ===================================== */
-const Game = (() => {
-  // --- Risoluzione logica (virtuale). Tutto il disegno usa queste coord. ---
-  const VW = 360, VH = 640;
+/* ------------------------- Geometria del campo ---------------------------- */
+const GW=7.32, GH=2.44, GD=2.0, POST=0.08, BALL_R=0.12, SPOT_Z=9.2, KEEPER_Z=-0.15;
 
-  // --- Geometria porta / campo ---
-  const GOAL = { L: 52, R: 308, TOP: 118, LINE: 300 };          // telaio
-  const GOAL_W = GOAL.R - GOAL.L;
-  const KEEPER_REST = { x: VW / 2, y: 232 };                     // posizione a riposo
-  const SPOT = { x: VW / 2, y: 566 };                            // dischetto
-  const AIM = { cx: VW / 2, amp: 150, yBand: { min: 96, max: 360 } };
+/* =============================== ENGINE =================================== */
+let renderer,scene,camera, reticle, ball, keeper, backNet, lights={};
+let state=STATE.LOADING, streak=0, stateT=0, lastT=0;
+let shot=null, shakeMag=0, ripple={t:-1,x:0,y:0}, scorePulseT=0;
+const reticleAnim={x:0,phase:0}, powerAnim={phase:0,value:0.5};
+const camBase=new THREE.Vector3(0,2.05,13.8);
+const camLook=new THREE.Vector3(0,1.35,-1.5);
+const raycaster=new THREE.Raycaster();
+const goalPlane=new THREE.Plane(new THREE.Vector3(0,0,1),0); // z=0
+const tmpV=new THREE.Vector3();
 
-  // --- DOM ---
-  const canvas = document.getElementById('cv');
-  const ctx = canvas.getContext('2d');
-  const wrap = document.getElementById('wrap');
-  const nameOv = document.getElementById('nameOv');
+// DOM
+const cv=document.getElementById('cv');
+const HUD={ score:document.getElementById('score'), rec:document.getElementById('rec'),
+  power:document.getElementById('power'), powerFill:document.getElementById('powerFill'),
+  hint:document.getElementById('hint'), result:document.getElementById('result'),
+  menu:document.getElementById('menu'), over:document.getElementById('over'),
+  overTitle:document.getElementById('overTitle'), overScore:document.getElementById('overScore'),
+  overRec:document.getElementById('overRec'), menuRec:document.getElementById('menuRec'),
+  loading:document.getElementById('loading'), barf:document.getElementById('barf'), pct:document.getElementById('pct'),
+  nameOv:document.getElementById('nameOv') };
 
-  // --- Stato runtime ---
-  let state = STATE.MENU_SCREEN;
-  let streak = 0;            // gol di fila = punteggio (= "livello")
-  let lastTime = 0;
-  let stateT = 0;           // tempo trascorso nello stato corrente (s)
+/* ---------------------- Texture procedurali (canvas) --------------------- */
+function pitchTexture(){
+  const c=document.createElement('canvas'); c.width=c.height=256; const x=c.getContext('2d');
+  x.fillStyle='#1f7a36'; x.fillRect(0,0,256,256);
+  for(let i=0;i<8;i++){ if(i%2){ x.fillStyle='#23843b'; x.fillRect(0,i*32,256,32); } }
+  const t=new THREE.CanvasTexture(c); t.wrapS=t.wrapT=THREE.RepeatWrapping; t.repeat.set(6,18); return t;
+}
+function netTexture(){
+  const c=document.createElement('canvas'); c.width=c.height=128; const x=c.getContext('2d');
+  x.clearRect(0,0,128,128); x.strokeStyle='rgba(255,255,255,.85)'; x.lineWidth=2;
+  for(let i=0;i<=128;i+=12){ x.beginPath();x.moveTo(i,0);x.lineTo(i,128);x.stroke(); x.beginPath();x.moveTo(0,i);x.lineTo(128,i);x.stroke(); }
+  const t=new THREE.CanvasTexture(c); t.wrapS=t.wrapT=THREE.RepeatWrapping; return t;
+}
 
-  // Entità
-  const reticle = { x: VW / 2, phase: 0 };
-  const ball = { x: SPOT.x, y: SPOT.y, scale: 1 };
-  const keeper = { x: KEEPER_REST.x, dir: 0, dive: 0 };
+/* ------------------------------- BUILD ----------------------------------- */
+function buildScene(textures){
+  scene=new THREE.Scene();
+  scene.background=new THREE.Color('#06121f');
+  scene.fog=new THREE.Fog('#08182b', 24, 46);
 
-  // Shot corrente
-  let shot = null;          // { dur, from, target, keeperGuess, reach, result }
-  // Effetti
-  let netShake = 0, scorePulse = 0, shakeMag = 0, flash = 0;
-  let resultText = '', resultColor = '#fff';
+  camera=new THREE.PerspectiveCamera(52, 1, 0.1, 200);
+  camera.position.copy(camBase); camera.lookAt(camLook);
 
-  /* ----------------------- Responsive / DPR ----------------------------- */
-  function resize() {
-    const topH = 30, padding = 14;
-    const availW = Math.min(window.innerWidth - padding, 460);
-    const availH = window.innerHeight - topH - padding;
-    let cssW = availW, cssH = cssW * VH / VW;
-    if (cssH > availH) { cssH = availH; cssW = cssH * VW / VH; }
-    canvas.style.width = cssW + 'px';
-    canvas.style.height = cssH + 'px';
-    const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
-    canvas.width = Math.round(cssW * dpr);
-    canvas.height = Math.round(cssH * dpr);
-    // disegniamo in coordinate logiche VWxVH
-    ctx.setTransform(canvas.width / VW, 0, 0, canvas.height / VH, 0, 0);
-  }
-
-  /* --------------------------- Livello / AI ----------------------------- */
-  const aimSpeed = () => clamp(CONFIG.aimSpeedBase + streak * CONFIG.aimSpeedPerLevel, 0, CONFIG.aimSpeedMax);
-  const goalieReach = () => clamp(CONFIG.goalieReachBase + streak * CONFIG.goalieReachPerLevel, 0, CONFIG.goalieReachMax);
-  const goalieError = () => clamp(CONFIG.goalieErrorBase - streak * CONFIG.goalieErrorStep, CONFIG.goalieErrorMin, CONFIG.goalieErrorBase);
-  const goalieReaction = () => clamp(CONFIG.goalieReactionTime - streak * CONFIG.goalieReactionStep, CONFIG.goalieReactionMin, CONFIG.goalieReactionTime);
-
-  /* ------------------------- Transizioni stato -------------------------- */
-  function setState(s) { state = s; stateT = 0; }
-
-  function startGame() {
-    streak = 0;
-    keeper.x = KEEPER_REST.x; keeper.dive = 0; keeper.dir = 0;
-    shot = null; netShake = scorePulse = shakeMag = flash = 0;
-    Sound.ac(); Sound.musicStart(); Sound.sfx(880, 0.06);
-    newAim();
-  }
-
-  function newAim() {
-    shot = null;
-    ball.x = SPOT.x; ball.y = SPOT.y; ball.scale = 1;
-    keeper.x = KEEPER_REST.x; keeper.dive = 0; keeper.dir = 0;
-    reticle.phase = Math.random() * Math.PI * 2;
-    setState(STATE.GAME_PLAYING);
-  }
-
-  /* ------------------------------ Tiro ---------------------------------- *
-   * Direzione X = posizione del mirino oscillante all'istante del tap
-   *               (skill di TIMING, velocità incrementale).
-   * Direzione Y = altezza del punto toccato sul canvas
-   *               (skill di MIRA: troppo in alto = sopra la traversa).      */
-  function shoot(tapY) {
-    Sound.ac();
-    const tx = reticle.x;
-    const ty = clamp(tapY, AIM.yBand.min, AIM.yBand.max);
-
-    // Distanza -> durata di volo (in base a ballSpeed)
-    const dist = Math.hypot(tx - SPOT.x, ty - SPOT.y);
-    const dur = clamp(dist / CONFIG.ballSpeed, 0.34, 0.72);
-
-    // Il portiere "indovina" con un errore che cala col livello
-    const err = goalieError();
-    let guess = tx + rand(-1, 1) * err;
-    guess = clamp(guess, GOAL.L + 18, GOAL.R - 18);
-
-    // Esito calcolato subito (deterministico), rivelato all'impatto
-    const reach = goalieReach();
-    const inGoal = tx >= GOAL.L + 6 && tx <= GOAL.R - 6 && ty >= GOAL.TOP + 4 && ty <= GOAL.LINE - 2;
-    const dx = (tx - guess) / reach, dy = (ty - KEEPER_REST.y) / (reach * 0.82);
-    const saved = inGoal && (dx*dx + dy*dy <= 1);
-    const result = !inGoal ? 'MISS' : (saved ? 'SAVE' : 'GOAL');
-
-    shot = {
-      dur, from: { x: SPOT.x, y: SPOT.y }, target: { x: tx, y: ty },
-      keeperGuess: guess, keeperFrom: keeper.x, reach, result, resolved: false,
-      reaction: goalieReaction() / 1000
-    };
-    keeper.dir = guess < KEEPER_REST.x ? -1 : (guess > KEEPER_REST.x ? 1 : 0);
-    setState(STATE.BALL_IN_FLIGHT);
-    Sound.sfx(520, 0.07); haptic(12);
-  }
-
-  function resolveShot() {
-    const r = shot.result;
-    if (r === 'GOAL') {
-      streak++;
-      netShake = 1; scorePulse = 1; flash = 0.5;
-      resultText = 'GOOOL!'; resultColor = '#7CFC9A';
-      Sound.sfx(880, 0.07); setTimeout(() => Sound.sfx(1320, 0.11), 85); setTimeout(() => Sound.sfx(1760, 0.13), 190);
-      haptic([0, 40, 30, 70]);
-      setState(STATE.GOAL_ANIMATION);
-    } else {
-      shakeMag = 1;
-      if (r === 'SAVE') { resultText = 'PARATO!'; resultColor = '#ff9d6a'; Sound.sfx(200, 0.16, 'sawtooth'); }
-      else             { resultText = 'FUORI!';  resultColor = '#ffd28a'; Sound.sfx(150, 0.20, 'triangle'); }
-      haptic([0, 130]);
-      setState(STATE.SAVE_ANIMATION);
-    }
-  }
-
-  function gameOver() {
-    Sound.musicStop();
-    Sound.sfx(180, 0.2); setTimeout(() => Sound.sfx(90, 0.3), 130);
-    setState(STATE.GAME_OVER);
-    if (Scores.isHigh(streak)) askName();
-  }
-
-  /* ------------------------ Overlay inserimento nome -------------------- */
-  function askName() {
-    const inp = document.getElementById('nameInput');
-    document.getElementById('nameScore').textContent = streak + (streak === 1 ? ' rigore di fila' : ' rigori di fila');
-    inp.value = '';
-    nameOv.classList.add('show');
-    setTimeout(() => { try { inp.focus(); } catch (e) {} }, 60);
-  }
-  function saveName() {
-    const inp = document.getElementById('nameInput');
-    const n = (inp.value || '').trim().replace(/[<>]/g, '').toUpperCase() || '???';
-    Scores.add(n, streak);
-    nameOv.classList.remove('show');
-  }
-
-  /* ------------------------------ UPDATE -------------------------------- */
-  function update(dt) {
-    stateT += dt;
-    // decadimento effetti
-    netShake   = Math.max(0, netShake   - dt * 1.6);
-    scorePulse = Math.max(0, scorePulse - dt * 2.2);
-    shakeMag   = Math.max(0, shakeMag   - dt * 2.4);
-    flash      = Math.max(0, flash      - dt * 2.0);
-
-    switch (state) {
-      case STATE.GAME_PLAYING:
-        // mirino oscilla (sin -> rallenta naturalmente agli angoli)
-        reticle.phase += aimSpeed() * dt;
-        reticle.x = AIM.cx + Math.sin(reticle.phase) * AIM.amp;
-        break;
-
-      case STATE.BALL_IN_FLIGHT: {
-        const p = clamp(stateT / shot.dur, 0, 1);
-        // Palla: interpolazione + arco di gravità + prospettiva
-        const arcH = CONFIG.gravity * shot.dur * shot.dur / 2; // altezza picco ~ proiettile
-        ball.x = lerp(shot.from.x, shot.target.x, p);
-        ball.y = lerp(shot.from.y, shot.target.y, p) - arcH * Math.sin(Math.PI * p);
-        ball.scale = 1 - CONFIG.ballPerspective * p;
-        // Portiere: parte dopo il "reaction time", poi easing verso il guess
-        const rp = clamp((stateT - shot.reaction) / Math.max(0.05, shot.dur - shot.reaction), 0, 1);
-        keeper.x = lerp(shot.keeperFrom, shot.keeperGuess, easeOutCubic(rp));
-        keeper.dive = easeOutCubic(rp);
-        if (!shot.resolved && p >= 1) { shot.resolved = true; resolveShot(); }
-        break;
-      }
-
-      case STATE.GOAL_ANIMATION:
-        if (stateT * 1000 >= CONFIG.goalCelebrateMs) newAim();
-        break;
-
-      case STATE.SAVE_ANIMATION:
-        if (stateT * 1000 >= CONFIG.saveAnimMs) gameOver();
-        break;
-    }
-  }
-
-  /* ------------------------------ RENDER -------------------------------- */
-  function render() {
-    ctx.clearRect(0, 0, VW, VH);
-    ctx.save();
-    // screen shake (parata/fuori)
-    if (shakeMag > 0) ctx.translate(rand(-1,1) * shakeMag * 7, rand(-1,1) * shakeMag * 7);
-
-    drawPitch();
-    drawGoalAndNet();
-    if (state !== STATE.MENU_SCREEN && state !== STATE.GAME_OVER) drawKeeper();
-    drawSpot();
-    if (state === STATE.BALL_IN_FLIGHT || state === STATE.GOAL_ANIMATION || state === STATE.SAVE_ANIMATION) drawBall();
-    if (state === STATE.GAME_PLAYING) drawReticle();
-
-    // flash gol
-    if (flash > 0) { ctx.fillStyle = `rgba(255,255,255,${flash * 0.35})`; ctx.fillRect(0, 0, VW, VH); }
-
-    // testo esito a centro porta
-    if (state === STATE.GOAL_ANIMATION || state === STATE.SAVE_ANIMATION) {
-      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.font = '22px "Press Start 2P",monospace';
-      ctx.fillStyle = resultColor; ctx.fillText(resultText, VW/2, 70);
-    }
-    ctx.restore();
-
-    // HUD / schermate (fuori dallo shake)
-    drawHUD();
-    if (state === STATE.MENU_SCREEN) drawMenu();
-    if (state === STATE.GAME_OVER) drawGameOver();
-  }
-
-  function drawPitch() {
-    const g = ctx.createLinearGradient(0, 0, 0, VH);
-    g.addColorStop(0, '#06224a'); g.addColorStop(0.42, '#0a2f5e');
-    g.addColorStop(0.52, '#1d6b32'); g.addColorStop(1, '#0c4a20');
-    ctx.fillStyle = g; ctx.fillRect(0, 0, VW, VH);
-    // tribuna blaugrana dietro la porta
-    for (let s = 0; s < 12; s++) {
-      ctx.fillStyle = (s % 2) ? 'rgba(165,4,68,.55)' : 'rgba(0,77,152,.6)';
-      ctx.fillRect(s * VW/12, 0, VW/12, GOAL.TOP - 14);
-    }
-    // righe del prato (prospettiva)
-    ctx.fillStyle = 'rgba(255,255,255,.045)';
-    for (let i = 0; i < 7; i++) { const y = GOAL.LINE + i * (VH - GOAL.LINE) / 7; ctx.fillRect(0, y, VW, 2); }
-    // area di rigore (semicerchio stilizzato)
-    ctx.strokeStyle = 'rgba(255,255,255,.18)'; ctx.lineWidth = 2;
-    ctx.beginPath(); ctx.moveTo(28, GOAL.LINE); ctx.lineTo(VW - 28, GOAL.LINE); ctx.stroke();
-  }
-
-  function drawGoalAndNet() {
-    // tremolio rete in caso di gol
-    const sh = netShake > 0 ? netShake : 0;
-    ctx.strokeStyle = 'rgba(220,230,245,.22)'; ctx.lineWidth = 1;
-    for (let x = GOAL.L; x <= GOAL.R; x += 16) {
-      const off = sh * Math.sin((x + performance.now()/40)) * 6;
-      ctx.beginPath(); ctx.moveTo(x, GOAL.TOP); ctx.lineTo(x + off, GOAL.LINE); ctx.stroke();
-    }
-    for (let y = GOAL.TOP; y <= GOAL.LINE; y += 16) {
-      const off = sh * Math.sin((y + performance.now()/40)) * 5;
-      ctx.beginPath(); ctx.moveTo(GOAL.L, y); ctx.lineTo(GOAL.R, y + off); ctx.stroke();
-    }
-    // pali e traversa
-    ctx.fillStyle = '#f4f7ff';
-    ctx.fillRect(GOAL.L - 7, GOAL.TOP - 7, 7, GOAL.LINE - GOAL.TOP + 7);
-    ctx.fillRect(GOAL.R,     GOAL.TOP - 7, 7, GOAL.LINE - GOAL.TOP + 7);
-    ctx.fillRect(GOAL.L - 7, GOAL.TOP - 7, GOAL_W + 14, 7);
-  }
-
-  function drawSpot() {
-    ctx.fillStyle = 'rgba(255,255,255,.7)';
-    ctx.beginPath(); ctx.ellipse(SPOT.x, SPOT.y + 8, 5, 2.5, 0, 0, Math.PI*2); ctx.fill();
-  }
-
-  function drawKeeper() {
-    const x = keeper.x, base = KEEPER_REST.y, d = keeper.dive, lean = keeper.dir * d * 44;
-    const flashSave = state === STATE.SAVE_ANIMATION && resultText === 'PARATO!' ? (0.5 + 0.5*Math.sin(performance.now()/60)) : 0;
-    ctx.save(); ctx.translate(x, base);
-    // maglia blaugrana
-    ctx.fillStyle = '#A50044'; rr(-15, -8, 30, 40, 7); ctx.fill();
-    ctx.fillStyle = '#004D98'; rr(-15, -8, 9, 40, 5); ctx.fill(); rr(6, -8, 9, 40, 5); ctx.fill();
-    // testa
-    ctx.fillStyle = '#f0c08a'; ctx.beginPath(); ctx.arc(0, -20, 11, 0, Math.PI*2); ctx.fill();
-    // braccia (si allargano nel tuffo)
-    const spread = 8 + d * 48;
-    ctx.strokeStyle = '#A50044'; ctx.lineWidth = 8; ctx.lineCap = 'round';
-    ctx.beginPath(); ctx.moveTo(-8, -2); ctx.lineTo(-8 - spread, -2 - d*22 + lean*0.2); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo( 8, -2); ctx.lineTo( 8 + spread, -2 - d*22 - lean*0.2); ctx.stroke();
-    // guantoni (lampeggiano sulla parata)
-    ctx.fillStyle = flashSave > 0.5 ? '#fff6b0' : '#eaf2ff';
-    ctx.beginPath(); ctx.arc(-8 - spread, -2 - d*22 + lean*0.2, 6, 0, Math.PI*2); ctx.fill();
-    ctx.beginPath(); ctx.arc( 8 + spread, -2 - d*22 - lean*0.2, 6, 0, Math.PI*2); ctx.fill();
-    // gambe
-    ctx.fillStyle = '#1a1a22'; rr(-12, 30, 8, 16, 3); ctx.fill(); rr(4, 30, 8, 16, 3); ctx.fill();
-    ctx.restore();
-  }
-
-  function drawBall() {
-    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.font = Math.round(34 * ball.scale) + 'px serif';
-    ctx.fillText('⚽', ball.x, ball.y);
-  }
-
-  function drawReticle() {
-    const x = reticle.x, pul = 0.5 + 0.5 * Math.sin(performance.now() / 120);
-    // linea verticale che spazza la porta (la X la decidi col timing)
-    ctx.strokeStyle = `rgba(255,210,138,${0.30 + 0.25*pul})`; ctx.lineWidth = 2;
-    ctx.setLineDash([5, 6]); ctx.beginPath(); ctx.moveTo(x, GOAL.TOP - 6); ctx.lineTo(x, GOAL.LINE + 4); ctx.stroke();
-    ctx.setLineDash([]);
-    // mirino
-    ctx.strokeStyle = `rgba(255,210,138,${0.7 + 0.3*pul})`; ctx.lineWidth = 2.5;
-    const y = 150;
-    ctx.beginPath(); ctx.arc(x, y, 13, 0, Math.PI*2); ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(x-19, y); ctx.lineTo(x-6, y); ctx.moveTo(x+6, y); ctx.lineTo(x+19, y);
-    ctx.moveTo(x, y-19); ctx.lineTo(x, y-6); ctx.moveTo(x, y+6); ctx.lineTo(x, y+19);
-    ctx.stroke();
-  }
-
-  function drawHUD() {
-    ctx.textBaseline = 'top';
-    // SERIE (con pulse al gol)
-    const ps = 1 + scorePulse * 0.7;
-    ctx.save(); ctx.translate(16, 14); ctx.scale(ps, ps);
-    ctx.textAlign = 'left'; ctx.font = '12px "Press Start 2P",monospace';
-    ctx.fillStyle = '#ffd884'; ctx.fillText(String(streak), 0, 0);
-    ctx.restore();
-    ctx.textAlign = 'left'; ctx.font = '7px "Press Start 2P",monospace';
-    ctx.fillStyle = '#9fb4dd'; ctx.fillText('SERIE', 16, 34);
-    // RECORD
-    ctx.textAlign = 'right'; ctx.font = '8px "Press Start 2P",monospace';
-    const bn = Scores.bestName();
-    ctx.fillStyle = '#9fb4dd'; ctx.fillText('REC ' + Scores.best() + (bn ? ' ' + bn : ''), VW - 16, 16);
-  }
-
-  function panel(lines) {
-    ctx.fillStyle = 'rgba(2,10,26,.82)'; ctx.fillRect(0, 0, VW, VH);
-    ctx.textAlign = 'center';
-    lines.forEach(l => {
-      ctx.font = l.size + 'px "Press Start 2P",monospace';
-      ctx.fillStyle = l.color || '#fff';
-      ctx.textBaseline = 'middle';
-      if (l.blink && (performance.now() % 1000 < 500)) return;
-      wrapText(l.text, VW/2, l.y, l.size * 1.7);
-    });
-  }
-
-  function drawMenu() {
-    panel([
-      { text: 'RIGORI', y: 150, size: 30, color: '#fff' },
-      { text: 'AL CAMP NOU', y: 196, size: 16, color: '#ffd884' },
-      { text: 'ferma il mirino', y: 290, size: 9, color: '#cdd6ee' },
-      { text: "e tocca l'angolo", y: 314, size: 9, color: '#cdd6ee' },
-      { text: 'tocca in alto = tiro alto', y: 348, size: 7, color: '#9fb4dd' },
-      { text: 'un errore e sei a casa', y: 372, size: 7, color: '#ff9d6a' },
-      { text: 'record ' + Scores.best(), y: 420, size: 9, color: '#cdd6ee' },
-      { text: '★ TOCCA PER GIOCARE ★', y: 470, size: 10, color: '#7fd0ff', blink: true }
-    ]);
-  }
-
-  function drawGameOver() {
-    const title = streak >= 8 ? 'CAMPIONE!' : (streak >= 4 ? 'BEL TIRO!' : 'FINITA!');
-    panel([
-      { text: title, y: 200, size: 22, color: '#ffd884' },
-      { text: 'hai segnato', y: 270, size: 9, color: '#cdd6ee' },
-      { text: streak + (streak === 1 ? ' rigore' : ' rigori') + ' di fila', y: 296, size: 11, color: '#fff' },
-      { text: 'record ' + Scores.best() + ' ' + Scores.bestName(), y: 360, size: 8, color: '#9fb4dd' },
-      { text: '★ TOCCA PER RIGIOCARE ★', y: 450, size: 9, color: '#7fd0ff', blink: true }
-    ]);
-  }
-
-  /* canvas text wrap helper */
-  function wrapText(text, x, y, lh) {
-    const words = String(text).split(' '); let line = '', yy = y; const max = VW - 36; const lines = [];
-    for (const w of words) { const t = line + w + ' '; if (ctx.measureText(t).width > max && line) { lines.push(line.trim()); line = w + ' '; } else line = t; }
-    lines.push(line.trim());
-    const start = yy - (lines.length - 1) * lh / 2;
-    lines.forEach((ln, i) => ctx.fillText(ln, x, start + i * lh));
-  }
-  function rr(x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
-
-  /* ------------------------------- INPUT -------------------------------- */
-  function toLocal(e) {
-    const r = canvas.getBoundingClientRect();
-    return { x: (e.clientX - r.left) / r.width * VW, y: (e.clientY - r.top) / r.height * VH };
-  }
-  function onTap(e) {
-    e.preventDefault();
-    if (nameOv.classList.contains('show')) return;
-    const p = toLocal(e);
-    switch (state) {
-      case STATE.MENU_SCREEN: case STATE.GAME_OVER: startGame(); break;
-      case STATE.GAME_PLAYING: shoot(p.y); break;            // tap: Y = altezza, X = timing del mirino
-      default: break;                                        // ignora durante le animazioni
-    }
-  }
-  canvas.addEventListener('pointerdown', onTap, { passive: false });
-  // tastiera: spazio/enter = azione, M/S = audio
-  addEventListener('keydown', e => {
-    const k = e.key.toLowerCase();
-    if (k === ' ' || k === 'enter') { e.preventDefault();
-      if (state === STATE.MENU_SCREEN || state === STATE.GAME_OVER) startGame();
-      else if (state === STATE.GAME_PLAYING) shoot(150);     // tiro centrale di default
-    } else if (k === 'm') { Sound.toggleMusic(); }
-    else if (k === 's') { Sound.toggleSfx(); }
+  // ---- ILLUMINAZIONE (Modelli 3D & Illuminazione) ----
+  lights.hemi=new THREE.HemisphereLight(0xbcd4ff, 0x335522, 0.9); scene.add(lights.hemi);
+  lights.sun=new THREE.DirectionalLight(0xffffff, 1.15);
+  lights.sun.position.set(-8,16,10); lights.sun.castShadow=true;
+  lights.sun.shadow.mapSize.set(1024,1024);
+  const sc=lights.sun.shadow.camera; sc.near=1; sc.far=60; sc.left=-14; sc.right=14; sc.top=14; sc.bottom=-6;
+  scene.add(lights.sun);
+  // riflettori da stadio (4 fari)
+  [[-12,18,-12],[12,18,-12],[-12,18,14],[12,18,14]].forEach(p=>{
+    const sp=new THREE.SpotLight(0xeaf2ff, 60, 70, Math.PI/5, .4, 1.4);
+    sp.position.set(p[0],p[1],p[2]); sp.target.position.set(0,1,0);
+    scene.add(sp); scene.add(sp.target);
   });
-  document.getElementById('nameSave').addEventListener('click', saveName);
-  document.getElementById('nameInput').addEventListener('keydown', e => { e.stopPropagation(); if (e.key === 'Enter') saveName(); });
 
-  /* ------------------------------- LOOP --------------------------------- */
-  function frame(t) {
-    const dt = Math.min(0.05, (t - (lastTime || t)) / 1000); lastTime = t;
-    update(dt); render();
-    requestAnimationFrame(frame);
+  // ---- PRATO ----
+  const grass=new THREE.Mesh(new THREE.PlaneGeometry(60,80), new THREE.MeshStandardMaterial({map:textures.pitch,roughness:1}));
+  grass.rotation.x=-Math.PI/2; grass.receiveShadow=true; scene.add(grass);
+  // linee campo
+  const lineMat=new THREE.MeshBasicMaterial({color:0xffffff});
+  const penArea=new THREE.Mesh(new THREE.RingGeometry(0,0,4),lineMat); // placeholder (rimosso sotto)
+  scene.remove(penArea);
+  addLine(0,0.01,0, 18,0.12);                    // linea di porta
+  addLine(0,0.01,5.5, 14,0.12);                  // linea area
+  // dischetto
+  const spot=new THREE.Mesh(new THREE.CircleGeometry(0.12,16),lineMat); spot.rotation.x=-Math.PI/2; spot.position.set(0,0.012,SPOT_Z); scene.add(spot);
+
+  // ---- STADIO (texture esterna: backdrop dietro la porta + ali laterali) ----
+  if(textures.stadium){
+    const standMat=new THREE.MeshBasicMaterial({map:textures.stadium, fog:true});
+    const back=new THREE.Mesh(new THREE.PlaneGeometry(64,30), standMat);
+    back.position.set(0,11,-12); scene.add(back);
+    [-1,1].forEach(s=>{ const wing=new THREE.Mesh(new THREE.PlaneGeometry(34,30), standMat);
+      wing.position.set(s*26,11,-2); wing.rotation.y=-s*Math.PI/3.2; scene.add(wing); });
   }
 
-  /* ------------------------------- BOOT --------------------------------- */
-  function init() {
-    Sound.init();
-    resize();
-    addEventListener('resize', resize);
-    addEventListener('orientationchange', () => setTimeout(resize, 200));
-    requestAnimationFrame(frame);
+  // ---- PORTA ----
+  const postMat=new THREE.MeshStandardMaterial({color:0xffffff,roughness:.5,metalness:.1});
+  const halfW=GW/2;
+  addPost(-halfW,GH/2,0, POST,GH,postMat);       // palo sx
+  addPost( halfW,GH/2,0, POST,GH,postMat);       // palo dx
+  const bar=new THREE.Mesh(new THREE.CylinderGeometry(POST/2,POST/2,GW+POST,12),postMat);
+  bar.rotation.z=Math.PI/2; bar.position.set(0,GH,0); bar.castShadow=true; scene.add(bar);
+
+  // ---- RETE (back con ripple + top + lati) ----
+  const netMat=new THREE.MeshBasicMaterial({map:textures.net, transparent:true, opacity:.6, side:THREE.DoubleSide, depthWrite:false});
+  backNet=new THREE.Mesh(new THREE.PlaneGeometry(GW,GH,24,12), netMat);
+  backNet.position.set(0,GH/2,-GD); scene.add(backNet);
+  const topNet=new THREE.Mesh(new THREE.PlaneGeometry(GW,GD,24,6), netMat);
+  topNet.rotation.x=Math.PI/2; topNet.position.set(0,GH,-GD/2); scene.add(topNet);
+  [-1,1].forEach(s=>{ const side=new THREE.Mesh(new THREE.PlaneGeometry(GD,GH,6,12), netMat);
+    side.rotation.y=Math.PI/2; side.position.set(s*halfW,GH/2,-GD/2); scene.add(side); });
+
+  // ---- PALLONE (texture) ----
+  const ballMat=new THREE.MeshStandardMaterial({ map:textures.ball||null, color:textures.ball?0xffffff:0xf2f2f2, roughness:.45, metalness:.05 });
+  ball=new THREE.Mesh(new THREE.SphereGeometry(BALL_R,28,20), ballMat);
+  ball.castShadow=true; ball.position.set(0,BALL_R,SPOT_Z); scene.add(ball);
+
+  // ---- PORTIERE (procedurale, animabile) ----
+  keeper=buildKeeper(); keeper.position.set(0,0,KEEPER_Z); scene.add(keeper);
+
+  // ---- MIRINO (target ring verde sul piano porta) ----
+  const ringGeo=new THREE.TorusGeometry(0.34,0.05,8,28);
+  reticle=new THREE.Mesh(ringGeo, new THREE.MeshBasicMaterial({color:0x39ff7a}));
+  reticle.position.set(0,1.3,0.05); scene.add(reticle);
+
+  // seam: carica modelli 3D esterni se configurati
+  loadModels();
+}
+function addLine(x,y,z,w,d){ const m=new THREE.Mesh(new THREE.PlaneGeometry(w,d),new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:.85}));
+  m.rotation.x=-Math.PI/2; m.position.set(x,y,z); scene.add(m); }
+function addPost(x,y,z,r,h,mat){ const p=new THREE.Mesh(new THREE.CylinderGeometry(r/2,r/2,h,12),mat); p.position.set(x,y,z); p.castShadow=true; scene.add(p); }
+
+function buildKeeper(){
+  const g=new THREE.Group();
+  const shirt=new THREE.MeshStandardMaterial({color:0xA50044,roughness:.7});
+  const blue =new THREE.MeshStandardMaterial({color:0x004D98,roughness:.7});
+  const skin =new THREE.MeshStandardMaterial({color:0xf0c08a,roughness:.8});
+  const dark =new THREE.MeshStandardMaterial({color:0x1a1a22,roughness:.8});
+  const glove=new THREE.MeshStandardMaterial({color:0xeaf2ff,roughness:.5});
+  // busto (strisce: garnet + 2 navy)
+  const torso=new THREE.Mesh(new THREE.BoxGeometry(0.6,0.7,0.3),shirt); torso.position.y=1.15; torso.castShadow=true; g.add(torso);
+  [-0.2,0.2].forEach(x=>{ const st=new THREE.Mesh(new THREE.BoxGeometry(0.12,0.7,0.31),blue); st.position.set(x,1.15,0); g.add(st); });
+  // testa
+  const head=new THREE.Mesh(new THREE.SphereGeometry(0.18,16,12),skin); head.position.y=1.66; head.castShadow=true; g.add(head);
+  // gambe
+  [-0.16,0.16].forEach(x=>{ const leg=new THREE.Mesh(new THREE.CylinderGeometry(0.09,0.09,0.7,10),dark); leg.position.set(x,0.45,0); leg.castShadow=true; g.add(leg); });
+  // braccia (pivot sulle spalle, si allargano nel tuffo)
+  const armL=new THREE.Group(), armR=new THREE.Group();
+  const armGeo=new THREE.CylinderGeometry(0.07,0.07,0.62,8);
+  const aL=new THREE.Mesh(armGeo,shirt); aL.position.y=-0.31; armL.add(aL);
+  const aR=new THREE.Mesh(armGeo,shirt); aR.position.y=-0.31; armR.add(aR);
+  const gL=new THREE.Mesh(new THREE.SphereGeometry(0.1,10,8),glove); gL.position.y=-0.64; armL.add(gL);
+  const gR=new THREE.Mesh(new THREE.SphereGeometry(0.1,10,8),glove); gR.position.y=-0.64; armR.add(gR);
+  armL.position.set(-0.3,1.45,0); armR.position.set(0.3,1.45,0);
+  g.add(armL); g.add(armR); g.userData={armL,armR};
+  return g;
+}
+
+/* --------------- SEAM: modelli 3D esterni (GLTFLoader) -------------------
+   Per usare un portiere 3D rigato: importa GLTFLoader, scommenta CONFIG.MODELS
+   e questa funzione sostituirà il portiere procedurale.                    */
+async function loadModels(){
+  if(!CONFIG.MODELS.keeper) return;
+  try{
+    const { GLTFLoader } = await import('three/addons/loaders/GLTFLoader.js');
+    new GLTFLoader().load(CONFIG.MODELS.keeper, gltf=>{
+      scene.remove(keeper); keeper=gltf.scene; keeper.position.set(0,0,KEEPER_Z); scene.add(keeper);
+    });
+  }catch(e){ /* fallback: portiere procedurale */ }
+}
+
+/* ------------------------------ AI / LIVELLO ----------------------------- */
+const aimSpeed =()=>clamp(CONFIG.aimSpeedBase+streak*CONFIG.aimSpeedPerLevel,0,CONFIG.aimSpeedMax);
+const reachOf  =()=>clamp(CONFIG.reachBase+streak*CONFIG.reachPerLevel,0,CONFIG.reachMax);
+const errorOf  =()=>clamp(CONFIG.errorBase-streak*CONFIG.errorPerLevel,CONFIG.errorMin,CONFIG.errorBase);
+const reactOf  =()=>clamp(CONFIG.reactionMs-streak*CONFIG.reactionStep,CONFIG.reactionMin,CONFIG.reactionMs)/1000;
+
+/* ------------------------------- STATI ----------------------------------- */
+function setState(s){ state=s; stateT=0; syncHUD(); }
+function startGame(){ streak=0; resetForShot(); Sound.ac(); Sound.musicStart(); Sound.sfx(880,.06); setState(STATE.GAME_PLAYING); }
+function resetForShot(){
+  shot=null; ball.position.set(0,BALL_R,SPOT_Z); ball.scale.set(1,1,1);
+  keeper.position.set(0,0,KEEPER_Z); keeper.rotation.z=0;
+  if(keeper.userData.armL){ keeper.userData.armL.rotation.z=0.25; keeper.userData.armR.rotation.z=-0.25; }
+  reticleAnim.phase=Math.random()*6.28; powerAnim.phase=Math.random()*6.28;
+}
+function newAim(){ resetForShot(); setState(STATE.GAME_PLAYING); }
+
+function shoot(screenY){
+  Sound.ac();
+  // X dal mirino oscillante (timing); Y dal punto toccato (raycast sul piano porta)
+  const tx=reticle.position.x;
+  let ty=1.2;
+  if(screenY!=null){ ty=raycastGoalY(screenY); }
+  const p=powerAnim.value;
+  if(p>CONFIG.powerOverRisk) ty += (p-CONFIG.powerOverRisk)*2.4*Math.random(); // rischio "fuori" alta potenza
+  ty=clamp(ty,0.1,GH+0.9);
+
+  const target=new THREE.Vector3(tx,ty,0);
+  const dist=ball.position.distanceTo(target);
+  const dur=clamp(dist/(CONFIG.ballSpeed*(0.7+0.55*p)),0.34,0.75);
+
+  // portiere "indovina" con errore (cala col livello)
+  let guess=tx+rand(-1,1)*errorOf(); guess=clamp(guess,-GW/2+0.45,GW/2-0.45);
+  const reach=reachOf()*(1-CONFIG.powerBeatsReach*p);
+  const inGoal = Math.abs(tx)<GW/2-0.15 && ty>0.12 && ty<GH-0.05;
+  const ky=1.05, dx=(tx-guess)/reach, dy=(ty-ky)/(reach*0.82);
+  const saved=inGoal && (dx*dx+dy*dy<=1);
+  const result=!inGoal?'MISS':(saved?'SAVE':'GOAL');
+
+  shot={ t:0, dur, from:ball.position.clone(), target, guess, keeperFrom:keeper.position.x,
+         reach, result, resolved:false, reaction:reactOf(), power:p };
+  setState(STATE.BALL_IN_FLIGHT);
+  Sound.sfx(420+p*260,.07); haptic(12);
+}
+function raycastGoalY(screenY){
+  // raycast verticale: usa centro X dello schermo, Y del tocco, interseca piano porta
+  const ndc=new THREE.Vector2(0,-(screenY/window.innerHeight)*2+1);
+  raycaster.setFromCamera(ndc,camera);
+  if(raycaster.ray.intersectPlane(goalPlane,tmpV)) return tmpV.y;
+  return 1.2;
+}
+
+function resolveShot(){
+  const r=shot.result;
+  if(r==='GOAL'){ streak++; scorePulseT=0.45; ripple={t:0,x:shot.target.x,y:shot.target.y};
+    showResult('GOAL!','#39ff7a'); Sound.sfx(880,.07); setTimeout(()=>Sound.sfx(1320,.11),85); setTimeout(()=>Sound.sfx(1760,.13),190);
+    haptic([0,40,30,70]); setState(STATE.GOAL_ANIMATION);
+  } else { shakeMag=1;
+    if(r==='SAVE'){ showResult('PARATO!','#ff9d6a'); Sound.sfx(200,.16,'sawtooth'); }
+    else          { showResult('FUORI!','#ffd28a');  Sound.sfx(150,.20,'triangle'); }
+    haptic([0,130]); setState(STATE.SAVE_ANIMATION); }
+  syncHUD();
+}
+function gameOver(){ Sound.musicStop(); Sound.sfx(180,.2); setTimeout(()=>Sound.sfx(90,.3),130);
+  setState(STATE.GAME_OVER); if(Scores.isHigh(streak)) askName(); }
+
+/* ------------------------------- UPDATE ---------------------------------- */
+function update(dt){
+  stateT+=dt; ball.rotation.x-=dt*4; ball.rotation.y+=dt*2;
+  shakeMag=Math.max(0,shakeMag-dt*2.4); scorePulseT=Math.max(0,scorePulseT-dt);
+
+  if(state===STATE.GAME_PLAYING){
+    reticleAnim.phase+=aimSpeed()*dt; reticle.position.x=Math.sin(reticleAnim.phase)*(GW/2-0.5);
+    powerAnim.phase+=CONFIG.powerSpeed*dt; powerAnim.value=0.5-0.5*Math.cos(powerAnim.phase);
+    reticle.visible=true;
+  } else reticle.visible=false;
+
+  if(state===STATE.BALL_IN_FLIGHT){
+    shot.t+=dt; const p=clamp(shot.t/shot.dur,0,1);
+    const arcH=CONFIG.gravity*shot.dur*shot.dur/8;
+    ball.position.x=lerp(shot.from.x,shot.target.x,p);
+    ball.position.y=lerp(shot.from.y,shot.target.y,p)+arcH*Math.sin(Math.PI*p);
+    ball.position.z=lerp(shot.from.z,shot.target.z,p);
+    // portiere: parte dopo reaction, easing verso il guess + tuffo
+    const rp=clamp((shot.t-shot.reaction)/Math.max(0.05,shot.dur-shot.reaction),0,1);
+    const e=easeOutCubic(rp); keeper.position.x=lerp(shot.keeperFrom,shot.guess,e);
+    const dir=Math.sign(shot.guess); keeper.rotation.z=-dir*e*0.9;
+    if(keeper.userData.armL){ keeper.userData.armL.rotation.z=0.25+e*1.0; keeper.userData.armR.rotation.z=-0.25-e*1.0; }
+    if(!shot.resolved && p>=1){ shot.resolved=true; resolveShot(); }
+  } else if(state===STATE.GOAL_ANIMATION){ if(stateT*1000>=CONFIG.goalCelebrateMs) newAim(); }
+  else if(state===STATE.SAVE_ANIMATION){ if(stateT*1000>=CONFIG.saveAnimMs) gameOver(); }
+
+  // ripple rete sul gol
+  if(ripple.t>=0){ ripple.t+=dt; applyNetRipple(ripple.t,ripple.x,ripple.y); if(ripple.t>1.1){ ripple.t=-1; applyNetRipple(0,0,0); } }
+
+  // camera shake
+  camera.position.copy(camBase);
+  if(shakeMag>0){ camera.position.x+=rand(-1,1)*shakeMag*0.25; camera.position.y+=rand(-1,1)*shakeMag*0.18; }
+  camera.lookAt(camLook);
+
+  // power bar HUD
+  if(state===STATE.GAME_PLAYING) HUD.powerFill.style.width=(powerAnim.value*100).toFixed(0)+'%';
+  // score pulse
+  HUD.score.classList.toggle('pulse',scorePulseT>0.2);
+}
+
+const _np=new THREE.Vector3();
+function applyNetRipple(t,ox,oy){
+  const pos=backNet.geometry.attributes.position, n=pos.count, decay=Math.max(0,1-t);
+  for(let i=0;i<n;i++){ const x=pos.getX(i), y=pos.getY(i)+GH/2;
+    const d=Math.hypot(x-ox,y-oy); const z=t<=0?0:Math.sin(d*5-t*16)*0.18*decay*Math.exp(-d*0.6);
+    pos.setZ(i, z); }
+  pos.needsUpdate=true; backNet.geometry.computeVertexNormals();
+}
+
+/* ------------------------------- HUD ------------------------------------- */
+function syncHUD(){
+  HUD.score.textContent=streak; HUD.rec.textContent='REC '+Scores.best()+(Scores.bestName()?' '+Scores.bestName():'');
+  HUD.menuRec.textContent=Scores.best(); HUD.overRec.textContent=Scores.best()+' '+Scores.bestName();
+  HUD.menu.classList.toggle('show',state===STATE.MENU_SCREEN);
+  HUD.over.classList.toggle('show',state===STATE.GAME_OVER);
+  const playing=(state===STATE.GAME_PLAYING);
+  HUD.power.classList.toggle('on',playing||state===STATE.BALL_IN_FLIGHT);
+  HUD.hint.classList.toggle('on',playing);
+  if(state===STATE.GAME_OVER){ HUD.overScore.textContent=streak; HUD.overTitle.textContent=streak>=8?'CAMPIONE!':(streak>=4?'BEL TIRO!':'FINITA!'); }
+}
+function showResult(txt,col){ HUD.result.textContent=txt; HUD.result.style.color=col;
+  HUD.result.classList.remove('show'); void HUD.result.offsetWidth; HUD.result.classList.add('show');
+  setTimeout(()=>{ HUD.result.classList.remove('show'); },1200); }
+function askName(){ const i=document.getElementById('nameInput');
+  document.getElementById('nameScore').textContent=streak+(streak===1?' rigore di fila':' rigori di fila');
+  i.value=''; HUD.nameOv.classList.add('show'); setTimeout(()=>{try{i.focus();}catch(e){}},60); }
+function saveName(){ const i=document.getElementById('nameInput');
+  const n=(i.value||'').trim().replace(/[<>]/g,'').toUpperCase()||'???'; Scores.add(n,streak); HUD.nameOv.classList.remove('show'); syncHUD(); }
+
+/* ------------------------------- INPUT ----------------------------------- */
+function onTap(e){
+  if(HUD.nameOv.classList.contains('show')) return;
+  const y=(e.touches?e.touches[0].clientY:e.clientY);
+  if(state===STATE.MENU_SCREEN||state===STATE.GAME_OVER){ startGame(); }
+  else if(state===STATE.GAME_PLAYING){ shoot(y); }
+}
+cv.addEventListener('pointerdown',onTap);
+addEventListener('keydown',e=>{ const k=e.key.toLowerCase();
+  if(k===' '||k==='enter'){ e.preventDefault();
+    if(state===STATE.MENU_SCREEN||state===STATE.GAME_OVER) startGame();
+    else if(state===STATE.GAME_PLAYING) shoot(window.innerHeight*0.45); } });
+document.getElementById('nameSave').addEventListener('click',saveName);
+document.getElementById('nameInput').addEventListener('keydown',e=>{ e.stopPropagation(); if(e.key==='Enter') saveName(); });
+
+/* ------------------------------- LOOP ------------------------------------ */
+function animate(t){ const dt=Math.min(0.05,(t-(lastT||t))/1000); lastT=t;
+  if(state!==STATE.LOADING){ update(dt); renderer.render(scene,camera); }
+  requestAnimationFrame(animate); }
+
+function resize(){ const w=window.innerWidth,h=window.innerHeight;
+  renderer.setSize(w,h); camera.aspect=w/h; camera.updateProjectionMatrix(); }
+
+/* ------------------------------- BOOT ------------------------------------ */
+function boot(){
+  try{
+    renderer=new THREE.WebGLRenderer({canvas:cv, antialias:true});
+  }catch(e){ document.getElementById('webglErr').style.display='flex'; return; }
+  if(!renderer || !renderer.getContext()){ document.getElementById('webglErr').style.display='flex'; return; }
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+  renderer.shadowMap.enabled=true; renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+  Sound.init();
+
+  // ---- caricamento ASSET ESTERNI con progress ----
+  const manager=new THREE.LoadingManager();
+  manager.onProgress=(url,loaded,total)=>{ const p=total?loaded/total:1; HUD.barf.style.width=(p*100)+'%'; HUD.pct.textContent=Math.round(p*100)+'%'; };
+  const loader=new THREE.TextureLoader(manager);
+  const textures={ pitch:pitchTexture(), net:netTexture(), ball:null, stadium:null };
+  let pending=0, started=false;
+  const tryFinish=()=>{ if(started && pending===0) finish(); };
+  const grab=(key,url)=>{ pending++; loader.load(url, tex=>{ tex.colorSpace=THREE.SRGBColorSpace; textures[key]=tex; pending--; tryFinish(); },
+                                            undefined, ()=>{ pending--; tryFinish(); }); }; // errore -> fallback
+  grab('ball',CONFIG.ASSETS.ball); grab('stadium',CONFIG.ASSETS.stadium); started=true; tryFinish();
+
+  function finish(){
+    buildScene(textures); resize(); addEventListener('resize',resize);
+    HUD.loading.style.display='none'; setState(STATE.MENU_SCREEN);
+    requestAnimationFrame(animate);
   }
-
-  return { init };
-})();
-
-Game.init();
+  // fallback se le texture non rispondono entro 6s (es. offline): parte comunque
+  setTimeout(()=>{ if(state===STATE.LOADING){ pending=0; finish(); } },6000);
+}
+boot();
 </script>
 </body>
 </html>
