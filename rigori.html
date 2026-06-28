@@ -290,9 +290,9 @@ let renderer,scene,camera, ball, keeper, backNet, lights={}, envRT=null;
 let keeperMixer=null, useGLBKeeper=false, keeperInner=null, keeperState=''; // portiere 3D (GLB Mixamo) + fallback procedurale
 let keeperFace=null, keeperHeadBone=null; const _faceV=new THREE.Vector3();   // faccia di Ale (sprite) agganciata alla testa del portiere
 const PLAYERS={
-  Mario:{name:'MARIO',face:'assets/face-mario.png',poster:'mario_poster.jpg',cut:'assets/cut-mario.png'},
-  Giulio:{name:'GIULIO',face:'assets/face-giulio.png',poster:'giulio_poster.jpg',cut:'assets/cut-giulio.png'} };
-let playerStandee=null;                               // cutout del calciatore accanto alla palla (sprite)
+  Mario:{name:'MARIO',num:'104',face:'assets/face-mario.png',poster:'mario_poster.jpg'},
+  Giulio:{name:'GIULIO',num:'7',face:'assets/face-giulio.png',poster:'giulio_poster.jpg'} };
+let kicker=null, kickT=-1;                            // rigorista 3D di spalle (nome+numero sulla schiena)
 let PLAYER=null; try{ const p=localStorage.getItem('rig_player'); if(p&&PLAYERS[p]) PLAYER=PLAYERS[p]; }catch(e){}
 // modalità: 'infinite' (morte improvvisa) | 'five' (5 rigori, conta i gol)
 let MODE='infinite', shotNum=0, goals5=0; try{ const m=localStorage.getItem('rig_mode'); if(m==='five'||m==='infinite') MODE=m; }catch(e){}
@@ -539,9 +539,8 @@ function buildScene(textures){
   keeper=buildKeeper(); keeper.position.set(0,0,KEEPER_Z); scene.add(keeper);
   loadGLBKeeper();                          // prova a sostituirlo col modello 3D Mixamo (async)
   // cutout del calciatore (Mario/Giulio) accanto alla palla, come "compagno" in primo piano
-  playerStandee=new THREE.Sprite(new THREE.SpriteMaterial({transparent:true,depthTest:true}));
-  playerStandee.position.set(1.25,1.0,8.9); playerStandee.visible=false; scene.add(playerStandee);
-  if(PLAYER) setStandee(PLAYER.cut);
+  kicker=buildKicker(); kicker.scale.setScalar(0.62); kicker.position.set(0.18,0,11.2); kicker.visible=false; scene.add(kicker);  // rigorista di spalle, basso in primo piano
+  if(PLAYER) setKicker(PLAYER);
 
   // ---- MIRINO (anello + dot) sul piano porta, visibile durante la mira ----
   aimRing=new THREE.Mesh(new THREE.TorusGeometry(0.30,0.045,10,30), new THREE.MeshBasicMaterial({color:0x39ff7a,transparent:true,opacity:.92,toneMapped:false}));
@@ -889,6 +888,7 @@ function resetForShot(){
   keeper.position.set(0,0,KEEPER_Z); keeper.rotation.set(0,0,0);
   setKeeperPose(keeper,POSE_READY,1);
   if(useGLBKeeper){ keeper.scale.x=1; keeperDive=null; playKeeper('idle'); }
+  if(kicker){ kicker.rotation.set(0,0,0); } kickT=-1;
   aim.active=false; aim.power=0; aim.curl=0; aimRing.visible=aimDot.visible=trajLine.visible=false;
   // reset scia
   ballTrail.userData.hist.length=0; ballTrail.userData.parts.forEach(p=>p.visible=false);
@@ -962,6 +962,7 @@ function shoot(){
          guess, guessY:guessYOut, keeperFrom:keeper.position.x, reach, result, resolved:false,
          reaction:reactOf(), power:p, diveSide, diveHigh, curlSign:Math.sign(curl)||1 };
   setState(STATE.BALL_IN_FLIGHT);
+  kickT=0;                                      // avvia l'animazione di calcio del rigorista
   camPunchT=0; slowmo=0;
   Sound.sfx(360+p*320,.08,'square',0.2); haptic(14);
 }
@@ -1148,21 +1149,58 @@ function drawTrajPreview(){
 
 /* ------------------------------- HUD ------------------------------------- */
 // posiziona la faccia di Ale sulla testa del portiere (segue il tuffo)
+// animazione di calcio del rigorista (lean avanti e ritorno)
+function updateKicker(dt){
+  if(!kicker||!kicker.visible||kickT<0) return;
+  kickT+=dt; const sw=Math.sin(Math.min(1,kickT/0.45)*Math.PI);
+  kicker.rotation.x=-0.34*sw;
+  if(kickT>0.55){ kickT=-1; kicker.rotation.x=0; }
+}
 function updateKeeperFace(){
   if(!keeperFace) return;
   if(useGLBKeeper && keeperHeadBone){ keeperHeadBone.getWorldPosition(_faceV); keeperFace.position.copy(_faceV); keeperFace.position.y+=0.05; keeperFace.visible=true; }
   else keeperFace.visible=false;
 }
 // calciatore (Mario/Giulio): scelta, scoreboard, persistenza
-function setStandee(url){ if(!playerStandee||!url) return;
-  const t=new THREE.TextureLoader().load(url,(tex)=>{ const a=(tex.image.width||1)/(tex.image.height||1); const h=1.95;
-    playerStandee.scale.set(h*a,h,1); playerStandee.position.set(1.25,h/2,8.9); playerStandee.visible=true; });
-  t.colorSpace=THREE.SRGBColorSpace; playerStandee.material.map=t; playerStandee.material.needsUpdate=true; }
+// texture del retro maglia: strisce blaugrana + NOME (alto) + NUMERO (grande)
+function jerseyBackTexture(name,num){
+  const c=document.createElement('canvas'); c.width=256; c.height=320; const x=c.getContext('2d');
+  const n=7,w=c.width/n; for(let i=0;i<n;i++){ x.fillStyle=(i%2)?'#A50044':'#004D98'; x.fillRect(i*w,0,w,c.height); }
+  x.textAlign='center'; x.fillStyle='#FFE9A8'; x.font='bold 38px Arial,sans-serif';
+  x.fillText((name||'').toUpperCase(), c.width/2, 64);
+  x.font='bold 165px Arial,sans-serif'; x.fillText(String(num||''), c.width/2, 250);
+  const t=new THREE.CanvasTexture(c); t.colorSpace=THREE.SRGBColorSpace; return t;
+}
+// rigorista visto DI SPALLE (la schiena/numero verso la camera). Faccia verso la porta (-Z).
+function buildKicker(){
+  const g=new THREE.Group();
+  const shirt=new THREE.MeshStandardMaterial({color:0x5a0c2a,roughness:.8});
+  const blue =new THREE.MeshStandardMaterial({color:0x00264f,roughness:.8});
+  const skin =new THREE.MeshStandardMaterial({color:0xe6b187,roughness:.85});
+  const hair =new THREE.MeshStandardMaterial({color:0x241710,roughness:.95});
+  const sock =new THREE.MeshStandardMaterial({color:0x0e1626,roughness:.85});
+  const mk=(geo,mat,x,y,z)=>{ const m=new THREE.Mesh(geo,mat); m.position.set(x||0,y||0,z||0); m.castShadow=true; return m; };
+  g.add(mk(new THREE.CylinderGeometry(0.1,0.09,0.62,10),blue,-0.15,0.92,0));   // cosce (shorts)
+  g.add(mk(new THREE.CylinderGeometry(0.1,0.09,0.62,10),blue, 0.15,0.92,0));
+  g.add(mk(new THREE.CylinderGeometry(0.085,0.075,0.5,10),sock,-0.15,0.42,0)); // polpacci (calzettoni)
+  g.add(mk(new THREE.CylinderGeometry(0.085,0.075,0.5,10),sock, 0.15,0.42,0));
+  const torso=mk(new THREE.BoxGeometry(0.52,0.66,0.26),shirt,0,1.45,0); g.add(torso);
+  const back=new THREE.Mesh(new THREE.PlaneGeometry(0.5,0.64), new THREE.MeshStandardMaterial({roughness:.8}));
+  back.position.set(0,1.45,0.136); g.add(back); g.userData.back=back;                       // retro maglia verso camera (+Z)
+  g.add(mk(new THREE.CapsuleGeometry(0.065,0.42,4,8),shirt,-0.33,1.5,0.02));
+  g.add(mk(new THREE.CapsuleGeometry(0.065,0.42,4,8),shirt, 0.33,1.5,0.02));
+  g.add(mk(new THREE.SphereGeometry(0.165,16,14),skin,0,1.98,0));
+  g.add(mk(new THREE.SphereGeometry(0.175,16,12),hair,0,2.0,0.03));                          // capelli (di spalle si vedono questi)
+  g.userData.legL=g.children[0];
+  return g;
+}
+function setKicker(p){ if(!kicker||!p) return; const back=kicker.userData.back;
+  back.material.map=jerseyBackTexture(p.name,p.num); back.material.needsUpdate=true; kicker.visible=true; }
 function applyPlayer(){ if(!PLAYER) return; const cr=document.querySelector('#scoreboard .crest');
   if(cr){ cr.classList.add('hasface'); cr.style.backgroundImage='url('+PLAYER.face+')'; }
   const tm=document.querySelector('#scoreboard .team'); if(tm) tm.textContent=PLAYER.name;
   const vs=document.querySelector('#scoreboard .vs'); if(vs) vs.textContent='ALE 🧤';
-  setStandee(PLAYER.cut); }
+  setKicker(PLAYER); }
 function showReveal(poster){ const r=document.getElementById('reveal'), im=document.getElementById('revealImg');
   im.src=poster; r.classList.remove('show'); void r.offsetWidth; r.classList.add('show');
   let done=false; const close=()=>{ if(done)return; done=true; r.classList.remove('show'); r.removeEventListener('pointerdown',close); };
@@ -1270,7 +1308,7 @@ HUD.snd.addEventListener('click',()=>{ const on=Sound.toggle(); HUD.snd.textCont
 
 /* ------------------------------- LOOP ------------------------------------ */
 function animate(t){ const dt=Math.min(0.05,(t-(lastT||t))/1000); lastT=t;
-  if(state!==STATE.LOADING){ update(dt); if(keeperMixer){ keeperMixer.update(dt); applyKeeperReach(); } updateKeeperFace(); renderer.render(scene,camera);
+  if(state!==STATE.LOADING){ update(dt); if(keeperMixer){ keeperMixer.update(dt); applyKeeperReach(); } updateKeeperFace(); updateKicker(dt); renderer.render(scene,camera);
     if(window.__KDBG){ window.__diveU=keeperDive?keeperDive.u:-1; window.__state=state; window.__res=shot?shot.result:''; } }
   requestAnimationFrame(animate); }
 
