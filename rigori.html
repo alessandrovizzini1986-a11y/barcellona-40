@@ -114,6 +114,11 @@
   #repick.show{display:block}
   #shareBtn{margin-top:4px;font-size:11px;color:#06210f;background:linear-gradient(100deg,#1ea54e,#25d366);border:none;padding:12px 22px}
   #shareBtn:active{transform:translateY(2px)}
+  #modeBtn.modesel{margin:4px 0 2px;font-size:11px;color:#ffd884;background:rgba(2,12,30,.7);border:1px solid var(--gold);padding:9px 18px}
+  #modeBtn.modesel:active{transform:translateY(2px)}
+  #shotcount{position:absolute;top:calc(70px + env(safe-area-inset-top));left:16px;z-index:18;display:none;
+    font-size:9px;color:#ffd884;background:rgba(2,12,30,.72);border:1px solid rgba(255,216,132,.4);border-radius:8px;padding:6px 10px}
+  #shotcount.on{display:block}
 </style>
 <script type="importmap">
 { "imports": { "three": "./assets/three.module.js", "three/addons/": "./assets/jsm/" } }
@@ -138,18 +143,20 @@
 
   <div class="panel" id="menu">
     <h1>RIGORI<br><span class="gold">AL CAMP NOU</span></h1>
-    <div class="small">trascina per mirare nell'angolo<br><span class="grn">la distanza decide la POTENZA</span><br><span class="blu">muovi di lato per dare EFFETTO</span><br><span class="org">un errore e sei a casa</span></div>
+    <button id="modeBtn" class="hudbtn modesel">∞ INFINITA</button>
+    <div class="small">trascina per mirare nell'angolo<br><span class="grn">la distanza decide la POTENZA</span><br><span class="blu">muovi di lato per dare EFFETTO</span></div>
     <div class="small">record <span id="menuRec">0</span></div>
     <div class="blink">★ TOCCA PER GIOCARE ★</div>
   </div>
   <div class="panel" id="over">
     <h1 id="overTitle" class="gold">FINITA!</h1>
-    <div class="small">hai segnato <b id="overScore">0</b> rigori di fila</div>
+    <div class="small" id="overLine">hai segnato 0 rigori di fila</div>
     <div class="small">record <span id="overRec">0</span></div>
     <button id="shareBtn" class="hudbtn share">📲 CONDIVIDI</button>
     <div class="blink">★ TOCCA PER RIGIOCARE ★</div>
   </div>
   <button id="repick" class="hudbtn">⇄ CAMBIA TIRATORE</button>
+  <div id="shotcount">RIGORE 1/5</div>
 </div>
 
 <div id="loading"><h2>CAMP NOU</h2><div class="lab">CARICAMENTO ASSET 3D</div><div class="track"><div class="barf" id="barf"></div></div><div class="lab" id="pct">0%</div></div>
@@ -287,6 +294,8 @@ const PLAYERS={
   Giulio:{name:'GIULIO',face:'assets/face-giulio.png',poster:'giulio_poster.jpg',cut:'assets/cut-giulio.png'} };
 let playerStandee=null;                               // cutout del calciatore accanto alla palla (sprite)
 let PLAYER=null; try{ const p=localStorage.getItem('rig_player'); if(p&&PLAYERS[p]) PLAYER=PLAYERS[p]; }catch(e){}
+// modalità: 'infinite' (morte improvvisa) | 'five' (5 rigori, conta i gol)
+let MODE='infinite', shotNum=0, goals5=0; try{ const m=localStorage.getItem('rig_mode'); if(m==='five'||m==='infinite') MODE=m; }catch(e){}
 const keeperAct={};                                  // azioni: diveL, diveR, high, ready, beaten
 const keeperBones={};                                // riferimenti ossa per reach procedurale additivo
 const KEEPER_URL='assets/keeper.glb?v=2';
@@ -873,7 +882,7 @@ const guessBiasOf=()=>clamp(streak*CONFIG.guessBiasGrow,0,0.7); // 0=tira a caso
 
 /* ------------------------------- STATI ----------------------------------- */
 function setState(s){ state=s; stateT=0; syncHUD(); }
-function startGame(){ streak=0; resetForShot(); Sound.ac(); Sound.musicStart(); Sound.crowd(0.04); Sound.sfx(880,.06); setState(STATE.GAME_PLAYING); }
+function startGame(){ streak=0; shotNum=0; goals5=0; resetForShot(); Sound.ac(); Sound.musicStart(); Sound.crowd(0.04); Sound.sfx(880,.06); setState(STATE.GAME_PLAYING); }
 function resetForShot(){
   shot=null; ball.position.set(0,BALL_R,SPOT_Z); ball.scale.set(1,1,1);
   ball.rotation.set(0,0,0);
@@ -886,6 +895,11 @@ function resetForShot(){
   HUD.power.classList.remove('on'); HUD.curl.classList.remove('on');
 }
 function newAim(){ resetForShot(); setState(STATE.GAME_PLAYING); }
+// dopo ogni rigore: infinita = morte improvvisa; 5 rigori = continua fino a 5
+function afterShot(scored){
+  if(MODE==='five'){ if(shotNum>=5) gameOver(); else newAim(); }
+  else { if(scored) newAim(); else gameOver(); }
+}
 
 // risolve target/risultato al rilascio del drag
 function shoot(){
@@ -954,8 +968,9 @@ function shoot(){
 
 function resolveShot(){
   const r=shot.result;
+  shotNum++;                                   // conta il rigore appena calciato (modalità 5 rigori)
   if(r==='GOAL'){
-    streak++; scorePulseT=0.55; ripple={t:0,x:shot.target.x,y:shot.target.y};
+    streak++; goals5++; scorePulseT=0.55; ripple={t:0,x:shot.target.x,y:shot.target.y};
     showResult('GOAL!','#39ff7a'); HUD.flash.classList.remove('on'); void HUD.flash.offsetWidth; HUD.flash.classList.add('on');
     burstConfetti(shot.target.x,Math.max(0.6,shot.target.y));
     Sound.sfx(880,.07); setTimeout(()=>Sound.sfx(1320,.11),85); setTimeout(()=>Sound.sfx(1760,.13),190); Sound.roar();
@@ -970,7 +985,9 @@ function resolveShot(){
   syncHUD();
 }
 function gameOver(){ Sound.musicStop(); Sound.crowd(0); Sound.sfx(180,.2); setTimeout(()=>Sound.sfx(90,.3),130);
-  setState(STATE.GAME_OVER); if(Scores.isHigh(streak)) askName(); }
+  if(MODE==='five'){ try{ const pb=+(localStorage.getItem('rig5_best')||0); if(goals5>pb) localStorage.setItem('rig5_best',goals5); }catch(e){} }
+  setState(STATE.GAME_OVER);
+  if(MODE!=='five' && Scores.isHigh(streak)) askName(); }
 
 /* ------------------------------- UPDATE ---------------------------------- */
 function update(dt){
@@ -1022,12 +1039,12 @@ function update(dt){
     // portiere battuto / rete che vibra; ball resta in rete
     setKeeperPose(keeper, POSE_BEATEN, 0.08);
     if(useGLBKeeper && keeperState!=='beaten') playKeeper('beaten');
-    if(stateT*1000>=CONFIG.goalCelebrateMs) newAim();
+    if(stateT*1000>=CONFIG.goalCelebrateMs) afterShot(true);
   }
   else if(state===STATE.SAVE_ANIMATION){
     // mantiene posa di parata, ball respinta leggermente
     if(stateT<0.4){ ball.position.z += dt*6; ball.position.y+=dt*1.5; }
-    if(stateT*1000>=CONFIG.saveAnimMs) gameOver();
+    if(stateT*1000>=CONFIG.saveAnimMs) afterShot(false);
   }
 
   // ripple/bulge rete sul gol
@@ -1155,14 +1172,30 @@ function pickPlayer(key){ PLAYER=PLAYERS[key]||null; try{ if(key) localStorage.s
 function syncHUD(){
   document.getElementById('playerSelect').classList.toggle('show', state===STATE.MENU_SCREEN && !PLAYER);
   document.getElementById('repick').classList.toggle('show', (state===STATE.MENU_SCREEN||state===STATE.GAME_OVER));
-  HUD.score.textContent=streak; HUD.rec.textContent='REC '+Scores.best()+(Scores.bestName()?' '+Scores.bestName():'');
-  HUD.menuRec.textContent=Scores.best(); HUD.overRec.textContent=Scores.best()+' '+Scores.bestName();
+  const five=(MODE==='five');
+  let best5=0; try{ best5=+(localStorage.getItem('rig5_best')||0); }catch(e){}
+  HUD.score.textContent = five? goals5 : streak;
+  HUD.rec.textContent = five? ('REC '+best5+'/5') : ('REC '+Scores.best()+(Scores.bestName()?' '+Scores.bestName():''));
+  HUD.menuRec.textContent = five? (best5+'/5') : Scores.best();
   HUD.menu.classList.toggle('show',state===STATE.MENU_SCREEN);
   HUD.over.classList.toggle('show',state===STATE.GAME_OVER);
   const playing=(state===STATE.GAME_PLAYING);
-  HUD.hint.classList.toggle('on',playing && streak<2);
+  HUD.hint.classList.toggle('on',playing && streak<2 && !five);
   if(!playing){ HUD.power.classList.remove('on'); HUD.curl.classList.remove('on'); }
-  if(state===STATE.GAME_OVER){ HUD.overScore.textContent=streak; HUD.overTitle.textContent=streak>=8?'CAMPIONE!':(streak>=4?'BEL TIRO!':'FINITA!'); }
+  const mb=document.getElementById('modeBtn'); if(mb) mb.textContent = five?'🎯 5 RIGORI':'∞ INFINITA';
+  const sc=document.getElementById('shotcount');
+  if(sc){ const inGame=(playing||state===STATE.BALL_IN_FLIGHT||state===STATE.GOAL_ANIMATION||state===STATE.SAVE_ANIMATION);
+    sc.classList.toggle('on', five && inGame); sc.textContent='RIGORE '+Math.min(shotNum+(playing?1:0),5)+'/5'; }
+  if(state===STATE.GAME_OVER){
+    const ol=document.getElementById('overLine');
+    if(five){ if(ol) ol.textContent='hai segnato '+goals5+'/5 rigori';
+      HUD.overTitle.textContent=goals5>=5?'CINQUINA! 🏆':(goals5>=4?'GRANDE!':(goals5>=3?'BEN FATTO':'PUOI FARE MEGLIO'));
+      HUD.overRec.textContent=best5+'/5';
+    } else { if(ol) ol.textContent='hai segnato '+streak+(streak===1?' rigore':' rigori')+' di fila';
+      HUD.overTitle.textContent=streak>=8?'CAMPIONE!':(streak>=4?'BEL TIRO!':'FINITA!');
+      HUD.overRec.textContent=Scores.best()+' '+Scores.bestName();
+    }
+  }
 }
 function showResult(txt,col){ HUD.result.textContent=txt; HUD.result.style.color=col;
   HUD.result.classList.remove('show'); void HUD.result.offsetWidth; HUD.result.classList.add('show');
@@ -1222,6 +1255,7 @@ document.getElementById('nameSave').addEventListener('click',saveName);
 // player-select: scelta calciatore + re-scelta toccando la faccia nello scoreboard
 document.querySelectorAll('#playerSelect .pscard').forEach(b=>b.addEventListener('click',()=>pickPlayer(b.dataset.player)));
 document.getElementById('repick').addEventListener('click',(e)=>{ e.stopPropagation(); document.getElementById('playerSelect').classList.add('show'); });
+document.getElementById('modeBtn').addEventListener('click',(e)=>{ e.stopPropagation(); MODE=(MODE==='five')?'infinite':'five'; try{localStorage.setItem('rig_mode',MODE);}catch(e){} syncHUD(); });
 document.getElementById('shareBtn').addEventListener('click',(e)=>{ e.stopPropagation();
   const who=PLAYER?PLAYER.name:'IO', n=streak;
   const txt=who+' ha segnato '+n+(n===1?' rigore':' rigori')+' di fila ad ALE 👑🧤 al Camp Nou! Battimi 👉';
