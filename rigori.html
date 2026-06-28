@@ -8,7 +8,8 @@
 <title>RIGORI AL CAMP NOU · 3D</title>
 <meta property="og:type" content="website">
 <meta property="og:title" content="⚽ RIGORI AL CAMP NOU · 3D">
-<meta property="og:description" content="Penalty 3D al Camp Nou. Trascina per mirare, curva e segna. Un errore e sei a casa.">
+<meta property="og:description" content="Penalty 3D al Camp Nou: Mario e Giulio tirano, Ale 👑🧤 para. Trascina, curva e segna — un errore e sei a casa.">
+<meta name="description" content="Penalty 3D al Camp Nou: Mario e Giulio tirano, Ale para. Trascina per mirare, dai effetto e segna.">
 <meta property="og:image" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/og-rigori.jpg?v=1">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -95,6 +96,24 @@
   #playerSelect .pscard span{font-size:13px;letter-spacing:.04em}
   #playerSelect .pscard small{font-size:8px;color:#ffd28a}
   #playerSelect .pssub{font-size:8px;color:#9fb4dd;letter-spacing:.06em}
+  /* reveal card stile "nuovo acquisto" */
+  #reveal{position:fixed;inset:0;z-index:55;display:none;align-items:center;justify-content:center;background:#02060f;overflow:hidden}
+  #reveal.show{display:flex}
+  #reveal .flash{position:absolute;inset:0;background:radial-gradient(circle at 50% 45%,#fff,#ffd884 38%,transparent 68%);opacity:0}
+  #reveal.show .flash{animation:revflash 1.9s ease-out}
+  #reveal img{max-height:86%;max-width:84%;border-radius:14px;box-shadow:0 0 60px rgba(255,216,132,.55),0 0 0 2px rgba(255,216,132,.5);opacity:0}
+  #reveal.show img{animation:revcard 1.9s cubic-bezier(.18,.9,.24,1) forwards}
+  @keyframes revflash{0%{opacity:0}12%{opacity:1}100%{opacity:0}}
+  @keyframes revcard{0%{opacity:0;transform:scale(.5) rotate(-6deg)}22%{opacity:1}55%{transform:scale(1.02) rotate(0)}100%{opacity:1;transform:scale(1)}}
+  #reveal .rv-go{position:absolute;bottom:6%;font-size:9px;color:#39ff7a;font-family:inherit;animation:bk 1s steps(1) infinite}
+  @keyframes bk{50%{opacity:0}}
+  /* bottoni HUD (cambia tiratore / condividi) */
+  .hudbtn{pointer-events:auto;font-family:inherit;cursor:pointer;border-radius:999px;letter-spacing:.03em}
+  #repick{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(12px + env(safe-area-inset-bottom));z-index:20;display:none;
+    font-size:8px;color:#9fb4dd;background:rgba(2,12,30,.82);border:1px solid rgba(255,255,255,.14);padding:9px 15px}
+  #repick.show{display:block}
+  #shareBtn{margin-top:4px;font-size:11px;color:#06210f;background:linear-gradient(100deg,#1ea54e,#25d366);border:none;padding:12px 22px}
+  #shareBtn:active{transform:translateY(2px)}
 </style>
 <script type="importmap">
 { "imports": { "three": "./assets/three.module.js", "three/addons/": "./assets/jsm/" } }
@@ -127,8 +146,10 @@
     <h1 id="overTitle" class="gold">FINITA!</h1>
     <div class="small">hai segnato <b id="overScore">0</b> rigori di fila</div>
     <div class="small">record <span id="overRec">0</span></div>
+    <button id="shareBtn" class="hudbtn share">📲 CONDIVIDI</button>
     <div class="blink">★ TOCCA PER RIGIOCARE ★</div>
   </div>
+  <button id="repick" class="hudbtn">⇄ CAMBIA TIRATORE</button>
 </div>
 
 <div id="loading"><h2>CAMP NOU</h2><div class="lab">CARICAMENTO ASSET 3D</div><div class="track"><div class="barf" id="barf"></div></div><div class="lab" id="pct">0%</div></div>
@@ -147,6 +168,8 @@
   </div>
   <div class="pssub">…CONTRO ALE 🧤👑 IN PORTA</div>
 </div>
+
+<div id="reveal"><div class="flash"></div><img id="revealImg" alt=""><div class="rv-go">★ TOCCA PER CONTINUARE ★</div></div>
 
 <div id="webglErr">WebGL non disponibile su questo dispositivo.<br>Apri il gioco su un browser aggiornato.</div>
 
@@ -181,10 +204,10 @@ const CONFIG = {
   // --- Power gauge sweet spot (estetico/feedback) ---
   sweetLo: 0.62, sweetHi: 0.78,
   // --- AI portiere (raggio d'azione in metri) ---
-  reachBase: 1.05, reachPerLevel: 0.09, reachMax: 2.4,
-  errorBase: 2.6,  errorPerLevel: 0.17,  errorMin: 0.45,   // ampiezza errore di lettura (m)
+  reachBase: 1.18, reachPerLevel: 0.085, reachMax: 2.5,
+  errorBase: 1.9,  errorPerLevel: 0.14,  errorMin: 0.35,   // ampiezza errore di lettura (m)
   reactionMs: 320, reactionMin: 95, reactionStep: 16,      // finestra di reazione
-  guessBiasGrow: 0.045,    // quanto migliora la "lettura" del lato per livello (0..~0.7)
+  guessBiasGrow: 0.06,     // quanto migliora la "lettura" del lato per livello (0..~0.7)
   // --- Tempi (ms) ---
   goalCelebrateMs: 1900, saveAnimMs: 1700, slowmoMs: 900,
   haptics: true,
@@ -259,7 +282,10 @@ const HALF=GW/2;
 let renderer,scene,camera, ball, keeper, backNet, lights={}, envRT=null;
 let keeperMixer=null, useGLBKeeper=false, keeperInner=null, keeperState=''; // portiere 3D (GLB Mixamo) + fallback procedurale
 let keeperFace=null, keeperHeadBone=null; const _faceV=new THREE.Vector3();   // faccia di Ale (sprite) agganciata alla testa del portiere
-const PLAYERS={ Mario:{name:'MARIO',face:'assets/face-mario.png'}, Giulio:{name:'GIULIO',face:'assets/face-giulio.png'} };
+const PLAYERS={
+  Mario:{name:'MARIO',face:'assets/face-mario.png',poster:'mario_poster.jpg',cut:'assets/cut-mario.png'},
+  Giulio:{name:'GIULIO',face:'assets/face-giulio.png',poster:'giulio_poster.jpg',cut:'assets/cut-giulio.png'} };
+let playerStandee=null;                               // cutout del calciatore accanto alla palla (sprite)
 let PLAYER=null; try{ const p=localStorage.getItem('rig_player'); if(p&&PLAYERS[p]) PLAYER=PLAYERS[p]; }catch(e){}
 const keeperAct={};                                  // azioni: diveL, diveR, high, ready, beaten
 const keeperBones={};                                // riferimenti ossa per reach procedurale additivo
@@ -503,6 +529,10 @@ function buildScene(textures){
   // ---- PORTIERE umanoide articolato ----
   keeper=buildKeeper(); keeper.position.set(0,0,KEEPER_Z); scene.add(keeper);
   loadGLBKeeper();                          // prova a sostituirlo col modello 3D Mixamo (async)
+  // cutout del calciatore (Mario/Giulio) accanto alla palla, come "compagno" in primo piano
+  playerStandee=new THREE.Sprite(new THREE.SpriteMaterial({transparent:true,depthTest:true}));
+  playerStandee.position.set(1.25,1.0,8.9); playerStandee.visible=false; scene.add(playerStandee);
+  if(PLAYER) setStandee(PLAYER.cut);
 
   // ---- MIRINO (anello + dot) sul piano porta, visibile durante la mira ----
   aimRing=new THREE.Mesh(new THREE.TorusGeometry(0.30,0.045,10,30), new THREE.MeshBasicMaterial({color:0x39ff7a,transparent:true,opacity:.92,toneMapped:false}));
@@ -551,7 +581,7 @@ function loadGLBKeeper(){
       // ----- faccia di Ale come "testa" del portiere (sprite sempre rivolto alla camera) -----
       const ftex=new THREE.TextureLoader().load('assets/keeper-face.png?v=1'); ftex.colorSpace=THREE.SRGBColorSpace;
       keeperFace=new THREE.Sprite(new THREE.SpriteMaterial({map:ftex, transparent:true, depthTest:false, depthWrite:false}));
-      keeperFace.scale.set(0.66,0.66,0.66); keeperFace.renderOrder=999; scene.add(keeperFace);
+      keeperFace.scale.set(0.95,0.95,0.95); keeperFace.renderOrder=999; scene.add(keeperFace);   // faccia "meme" piu grande
       keeperHeadBone=null; inner.traverse(o=>{ if(!keeperHeadBone){ const nm=(o.name||'').toLowerCase(); if(nm.indexOf('head')>=0 && nm.indexOf('top')<0 && nm.indexOf('end')<0) keeperHeadBone=o; } });
       // ----- riferimenti ossa per il reach procedurale additivo (verso l'angolo) -----
       const B=keeperBones;
@@ -880,25 +910,22 @@ function shoot(){
   // crescendo, la probabilità di leggere bene sale (guessBias) e il reach aumenta.
   const bias=guessBiasOf();                                  // 0 -> ~0.7
   const endX=tx; const trueSide=Math.sign(endX||0.001);
-  // probabilità di indovinare il lato giusto
-  const pSide=0.34 + bias*0.55;                              // 0.34 a inizio, ~0.72 a regime
+  const central=Math.abs(endX)<0.95;                         // tiro verso il centro
+  // sui tiri centrali il portiere RESTA spesso al centro (così "addosso" lo pari);
+  // sui lati legge meglio salendo di livello.
   let guessSide;
-  if(Math.abs(endX)<0.6){ guessSide = Math.random()<0.4? 0 : (Math.random()<0.5?-1:1); }
-  else guessSide = (Math.random()<pSide)? trueSide : -trueSide;
-  let guess = guessSide*lerp(1.4,2.15,Math.random());
-  guess += rand(-1,1)*errorOf()*0.5;
+  if(central) guessSide=(Math.random()<0.72+bias*0.22)?0:(Math.random()<0.5?-1:1);
+  else        guessSide=(Math.random()<0.46+bias*0.5)?trueSide:-trueSide;
+  let guess=(guessSide===0)? rand(-0.30,0.30)
+                           : guessSide*lerp(1.3,2.05,Math.random())+rand(-1,1)*errorOf()*0.35; // errore ridotto = più preciso
   guess=clamp(guess,-HALF+0.4,HALF-0.4);
-  // lettura altezza: corretta solo con prob crescente, altrimenti tuffa basso/alto a caso
-  const trueHigh = ty>GH*0.55;
-  const readHigh = (Math.random()< (0.4+bias*0.5))? trueHigh : !trueHigh;
-  const guessY = guessSide===0? 1.05 : (readHigh? 1.75 : 0.85);
-  const reach=reachOf()*(1 - 0.22*p);                        // potenza riduce reach efficace
-  // bordi coincidenti coi pali visivi (palo a ±HALF, traversa a GH): un tiro il cui
-  // punto d'arrivo è dentro il telaio = GOL. Coerente col colore del mirino.
+  const trueHigh=ty>GH*0.55;
+  const readHigh=(Math.random()<0.52+bias*0.42)?trueHigh:!trueHigh;
+  const guessY=(guessSide===0)?(readHigh?1.55:0.95):(readHigh?1.75:0.85);
+  const reach=reachOf()*(1-0.18*p);                          // potenza riduce un po' il reach efficace
   const inGoal = Math.abs(endX)<HALF-0.02 && ty>0.06 && ty<GH-0.02;
   const hitPost = !inGoal && Math.abs(Math.abs(endX)-HALF)<0.16 && ty<GH+0.05; // legno
-  // distanza portiere-palla normalizzata sul reach (ellisse: orizzontale più ampio)
-  const dx=(endX-guess)/reach, dy=(ty-guessY)/(reach*0.95);
+  const dx=(endX-guess)/reach, dy=(ty-guessY)/(reach*0.95);  // ellisse di parata
   const saved = inGoal && (dx*dx+dy*dy<=1);
   let result = !inGoal ? (hitPost?'POST':'MISS') : (saved?'SAVE':'GOAL');
 
@@ -1110,14 +1137,24 @@ function updateKeeperFace(){
   else keeperFace.visible=false;
 }
 // calciatore (Mario/Giulio): scelta, scoreboard, persistenza
+function setStandee(url){ if(!playerStandee||!url) return;
+  const t=new THREE.TextureLoader().load(url,(tex)=>{ const a=(tex.image.width||1)/(tex.image.height||1); const h=1.95;
+    playerStandee.scale.set(h*a,h,1); playerStandee.position.set(1.25,h/2,8.9); playerStandee.visible=true; });
+  t.colorSpace=THREE.SRGBColorSpace; playerStandee.material.map=t; playerStandee.material.needsUpdate=true; }
 function applyPlayer(){ if(!PLAYER) return; const cr=document.querySelector('#scoreboard .crest');
   if(cr){ cr.classList.add('hasface'); cr.style.backgroundImage='url('+PLAYER.face+')'; }
   const tm=document.querySelector('#scoreboard .team'); if(tm) tm.textContent=PLAYER.name;
-  const vs=document.querySelector('#scoreboard .vs'); if(vs) vs.textContent='ALE 🧤'; }
+  const vs=document.querySelector('#scoreboard .vs'); if(vs) vs.textContent='ALE 🧤';
+  setStandee(PLAYER.cut); }
+function showReveal(poster){ const r=document.getElementById('reveal'), im=document.getElementById('revealImg');
+  im.src=poster; r.classList.remove('show'); void r.offsetWidth; r.classList.add('show');
+  let done=false; const close=()=>{ if(done)return; done=true; r.classList.remove('show'); r.removeEventListener('pointerdown',close); };
+  setTimeout(close,2100); r.addEventListener('pointerdown',close); }
 function pickPlayer(key){ PLAYER=PLAYERS[key]||null; try{ if(key) localStorage.setItem('rig_player',key); }catch(e){}
-  applyPlayer(); document.getElementById('playerSelect').classList.remove('show'); }
+  applyPlayer(); document.getElementById('playerSelect').classList.remove('show'); if(PLAYER&&PLAYER.poster) showReveal(PLAYER.poster); }
 function syncHUD(){
   document.getElementById('playerSelect').classList.toggle('show', state===STATE.MENU_SCREEN && !PLAYER);
+  document.getElementById('repick').classList.toggle('show', (state===STATE.MENU_SCREEN||state===STATE.GAME_OVER));
   HUD.score.textContent=streak; HUD.rec.textContent='REC '+Scores.best()+(Scores.bestName()?' '+Scores.bestName():'');
   HUD.menuRec.textContent=Scores.best(); HUD.overRec.textContent=Scores.best()+' '+Scores.bestName();
   HUD.menu.classList.toggle('show',state===STATE.MENU_SCREEN);
@@ -1184,6 +1221,13 @@ addEventListener('keydown',e=>{ const k=e.key.toLowerCase();
 document.getElementById('nameSave').addEventListener('click',saveName);
 // player-select: scelta calciatore + re-scelta toccando la faccia nello scoreboard
 document.querySelectorAll('#playerSelect .pscard').forEach(b=>b.addEventListener('click',()=>pickPlayer(b.dataset.player)));
+document.getElementById('repick').addEventListener('click',(e)=>{ e.stopPropagation(); document.getElementById('playerSelect').classList.add('show'); });
+document.getElementById('shareBtn').addEventListener('click',(e)=>{ e.stopPropagation();
+  const who=PLAYER?PLAYER.name:'IO', n=streak;
+  const txt=who+' ha segnato '+n+(n===1?' rigore':' rigori')+' di fila ad ALE 👑🧤 al Camp Nou! Battimi 👉';
+  const url=location.href.split('#')[0];
+  if(navigator.share){ navigator.share({title:'Rigori al Camp Nou',text:txt,url:url}).catch(()=>{}); }
+  else window.open('https://wa.me/?text='+encodeURIComponent(txt+' '+url),'_blank'); });
 (function(){ const cr=document.querySelector('#scoreboard .crest'); if(cr){ cr.style.cursor='pointer'; cr.style.pointerEvents='auto';
   cr.addEventListener('click',()=>{ if(state===STATE.MENU_SCREEN||state===STATE.GAME_OVER) document.getElementById('playerSelect').classList.add('show'); }); } })();
 if(PLAYER) applyPlayer();
