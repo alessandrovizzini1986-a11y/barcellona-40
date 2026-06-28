@@ -129,6 +129,7 @@
 
 <script type="module">
 import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 /* =========================================================================
    RIGORI AL CAMP NOU — 3D  (Three.js r160 / WebGL, single page)
    Look "broadcast notturno": ACESFilmic + sRGB, riflettori da stadio con
@@ -233,6 +234,8 @@ const HALF=GW/2;
 
 /* =============================== ENGINE =================================== */
 let renderer,scene,camera, ball, keeper, backNet, lights={}, envRT=null;
+let keeperMixer=null, useGLBKeeper=false;           // portiere 3D (GLB Mixamo) + fallback procedurale
+const KEEPER_URL='assets/keeper.glb?v=1';
 let aimRing, aimDot, trajLine, ballShadow, ballTrail;
 let state=STATE.LOADING, streak=0, stateT=0, lastT=0;
 let shot=null, shakeMag=0, ripple={t:-1,x:0,y:0}, scorePulseT=0, slowmo=0, camPunchT=0;
@@ -469,6 +472,7 @@ function buildScene(textures){
 
   // ---- PORTIERE umanoide articolato ----
   keeper=buildKeeper(); keeper.position.set(0,0,KEEPER_Z); scene.add(keeper);
+  loadGLBKeeper();                          // prova a sostituirlo col modello 3D Mixamo (async)
 
   // ---- MIRINO (anello + dot) sul piano porta, visibile durante la mira ----
   aimRing=new THREE.Mesh(new THREE.TorusGeometry(0.30,0.045,10,30), new THREE.MeshBasicMaterial({color:0x39ff7a,transparent:true,opacity:.92,toneMapped:false}));
@@ -483,6 +487,33 @@ function buildScene(textures){
 function addLine(x,y,z,w,d){ const m=new THREE.Mesh(new THREE.PlaneGeometry(w,d),new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:.9}));
   m.rotation.x=-Math.PI/2; m.position.set(x,y,z); scene.add(m); }
 function addPost(x,y,z,r,h,mat){ const p=new THREE.Mesh(new THREE.CylinderGeometry(r/2,r/2,h,16),mat); p.position.set(x,y,z); p.castShadow=true; scene.add(p); }
+
+/* ---- Portiere 3D da GLB (Mixamo). Scala ~1.9m, piedi a terra, faccia al tiratore.
+   Le animazioni di posa (setKeeperPose) vengono disattivate: il modello suona la sua
+   clip via AnimationMixer e il tuffo è un tilt/translate dell'intero corpo. ---------- */
+function loadGLBKeeper(){
+  try{
+    new GLTFLoader().load(KEEPER_URL, (gltf)=>{
+      const inner=gltf.scene;
+      inner.traverse(o=>{ if(o.isMesh){ o.castShadow=true; o.frustumCulled=false; if(o.material) o.material.envMapIntensity=0.6; } });
+      // alcuni GLB (wrapper Sketchfab) sono Z-up: raddrizza
+      inner.rotation.x=-Math.PI/2;
+      const pivot=new THREE.Group(); pivot.add(inner); pivot.updateMatrixWorld(true);
+      // scala sull'asse MAGGIORE (=altezza corpo) per evitare bbox degeneri delle mesh skinnate
+      let box=new THREE.Box3().setFromObject(pivot); const size=new THREE.Vector3(); box.getSize(size);
+      const H=Math.max(size.x,size.y,size.z)||1; pivot.scale.setScalar(1.85/H);
+      pivot.updateMatrixWorld(true);
+      box=new THREE.Box3().setFromObject(pivot); const c=new THREE.Vector3(); box.getCenter(c);
+      pivot.position.set(-c.x, -box.min.y, -c.z);       // centra X/Z, piedi a y=0
+      const wrap=new THREE.Group(); wrap.add(pivot); wrap.position.set(0,0,KEEPER_Z); wrap.rotation.y=Math.PI;
+      if(keeper) scene.remove(keeper);
+      keeper=wrap; scene.add(keeper);
+      keeperMixer=new THREE.AnimationMixer(inner);
+      if(gltf.animations && gltf.animations.length){ keeperMixer.clipAction(gltf.animations[0]).play(); }
+      useGLBKeeper=true;
+    }, undefined, ()=>{ /* errore: resta il portiere procedurale */ });
+  }catch(e){ /* GLTFLoader non disponibile: resta il procedurale */ }
+}
 
 // sag della rete: spinge i vertici indietro/in basso in modo morbido, salva base
 function applyNetSag(mesh){
@@ -622,6 +653,7 @@ const POSE_CENTER = { ...POSE_READY, hipsY:0.42, shLz:1.9, shRz:-1.9, shLx:-0.2,
 const POSE_BEATEN = { ...POSE_READY, hipsY:-0.05, leanZ:0.0, headX:0.35, shLz:0.3, shRz:-0.3 }; // battuto
 
 function setKeeperPose(k, P, w){
+  if(useGLBKeeper) return;                 // il portiere GLB è guidato da mixer + tilt, non dalle pose procedurali
   const u=k.userData; w=w==null?1:w;
   const ap=(obj,prop,val)=>{ obj[prop]=lerp(obj[prop],val,w); };
   ap(u.hips.position,'y', 1.02+P.hipsY);
@@ -663,8 +695,9 @@ function shoot(){
   Sound.ac();
   let tx=aim.tx, ty=aim.ty;
   const p=clamp(aim.power,0,1);
-  // rischio alto: troppa potenza alza la mira
-  if(p>CONFIG.overRisk) ty += (p-CONFIG.overRisk)*3.0*rand(0.4,1);
+  // a potenza molto alta, lievissima perdita di precisione in altezza (max ~8cm):
+  // NON deve stravolgere la mira, altrimenti l'esito non combacia col punto mirato/visuale
+  if(p>CONFIG.overRisk) ty += (p-CONFIG.overRisk)*0.8*rand(0,1);
   tx=clamp(tx,-HALF-0.6,HALF+0.6); ty=clamp(ty,0.1,GH+1.0);
   const curl=aim.curl; // -1..1 lateralità voluta
 
@@ -693,8 +726,10 @@ function shoot(){
   const readHigh = (Math.random()< (0.4+bias*0.5))? trueHigh : !trueHigh;
   const guessY = guessSide===0? 1.05 : (readHigh? 1.75 : 0.85);
   const reach=reachOf()*(1 - 0.22*p);                        // potenza riduce reach efficace
-  const inGoal = Math.abs(endX)<HALF-0.10 && ty>0.10 && ty<GH-0.04;
-  const hitPost = !inGoal && Math.abs(Math.abs(endX)-HALF)<0.22 && ty<GH+0.05; // legno
+  // bordi coincidenti coi pali visivi (palo a ±HALF, traversa a GH): un tiro il cui
+  // punto d'arrivo è dentro il telaio = GOL. Coerente col colore del mirino.
+  const inGoal = Math.abs(endX)<HALF-0.02 && ty>0.06 && ty<GH-0.02;
+  const hitPost = !inGoal && Math.abs(Math.abs(endX)-HALF)<0.16 && ty<GH+0.05; // legno
   // distanza portiere-palla normalizzata sul reach (ellisse: orizzontale più ampio)
   const dx=(endX-guess)/reach, dy=(ty-guessY)/(reach*0.95);
   const saved = inGoal && (dx*dx+dy*dy<=1);
@@ -772,6 +807,10 @@ function update(dt){
     const targetPose = shot.diveSide===0? POSE_CENTER : divePose(shot.diveSide, shot.diveHigh);
     if(rp<0.12) setKeeperPose(keeper,POSE_DIP,0.25);      // anticipo/dip
     else setKeeperPose(keeper, targetPose, clamp(e,0,1)*0.5);
+    if(useGLBKeeper){                                     // tuffo del modello GLB: tilt + lunge dell'intero corpo
+      keeper.rotation.z = -shot.diveSide*e*1.15;
+      keeper.position.y = (shot.diveSide===0? e*0.30 : e*0.06);
+    }
     if(!shot.resolved && p>=1){ shot.resolved=true; resolveShot(); }
   }
   else if(state===STATE.GOAL_ANIMATION){
@@ -865,7 +904,7 @@ function updateAimVisuals(){
   aimRing.visible=aimDot.visible=true;
   aimRing.position.set(aim.tx,aim.ty,0.06); aimDot.position.set(aim.tx,aim.ty,0.07);
   // colore mirino in base alla bontà (dentro porta = verde, fuori = rosso)
-  const inGoal=Math.abs(aim.tx)<HALF-0.1 && aim.ty>0.1 && aim.ty<GH-0.04;
+  const inGoal=Math.abs(aim.tx)<HALF-0.02 && aim.ty>0.06 && aim.ty<GH-0.02;
   aimRing.material.color.setHex(inGoal?0x39ff7a:0xff4d5e);
   const sc=1+0.15*Math.sin(stateT*8); aimRing.scale.setScalar(sc);
   // anteprima traiettoria (campiona la stessa fisica)
@@ -955,7 +994,7 @@ HUD.snd.addEventListener('click',()=>{ const on=Sound.toggle(); HUD.snd.textCont
 
 /* ------------------------------- LOOP ------------------------------------ */
 function animate(t){ const dt=Math.min(0.05,(t-(lastT||t))/1000); lastT=t;
-  if(state!==STATE.LOADING){ update(dt); renderer.render(scene,camera); }
+  if(state!==STATE.LOADING){ update(dt); if(keeperMixer) keeperMixer.update(dt); renderer.render(scene,camera); }
   requestAnimationFrame(animate); }
 
 function resize(){ const w=window.innerWidth,h=window.innerHeight;
