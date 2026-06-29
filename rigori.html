@@ -132,6 +132,11 @@
   #shootrack .d{width:15px;height:15px;border-radius:50%;border:2px solid rgba(255,255,255,.35);background:rgba(2,12,30,.6)}
   #shootrack .d.g{background:#39ff7a;border-color:#39ff7a;box-shadow:0 0 8px #39ff7a}
   #shootrack .d.x{background:#ff4d5e;border-color:#ff4d5e}
+  /* grading cinematografico: vignettatura + tono notturno caldo-freddo */
+  #grade{position:fixed;inset:0;z-index:9;pointer-events:none;
+    background:
+      radial-gradient(125% 105% at 50% 40%, transparent 52%, rgba(0,2,12,.5) 100%),
+      linear-gradient(180deg, rgba(255,180,90,.06) 0%, transparent 26%, transparent 72%, rgba(0,10,40,.14) 100%);}
 </style>
 <script type="importmap">
 { "imports": { "three": "./assets/three.module.js", "three/addons/": "./assets/jsm/" } }
@@ -139,6 +144,7 @@
 </head>
 <body>
 <canvas id="cv"></canvas>
+<div id="grade"></div>
 
 <div id="hud">
   <div class="topbar"><a href="sala-giochi.html">‹ SALA GIOCHI</a><a href="index.html">ESCI ✕</a></div>
