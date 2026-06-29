@@ -55,9 +55,13 @@
   #result.show{animation:pop .55s ease-out}
   @keyframes pop{0%{opacity:0;transform:scale(.55)}28%{opacity:1;transform:scale(1.15)}100%{opacity:1;transform:scale(1)}}
   /* goal flash */
-  #flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;mix-blend-mode:screen}
-  #flash.on{animation:fl .5s ease-out}
-  @keyframes fl{0%{opacity:.55}100%{opacity:0}}
+  #flash{position:absolute;inset:0;background:radial-gradient(circle at 50% 42%,#fff,#ffe6a8 45%,#ffcf6e 80%);opacity:0;pointer-events:none;mix-blend-mode:screen}
+  #flash.on{animation:fl .55s ease-out}
+  @keyframes fl{0%{opacity:.62}100%{opacity:0}}
+  /* lampo "parata": freddo, piu breve */
+  #flash.save{background:radial-gradient(circle at 50% 45%,#dff0ff,#9fc4ff 55%,#5b86d6 85%)}
+  #flash.save.on{animation:fls .32s ease-out}
+  @keyframes fls{0%{opacity:.42}100%{opacity:0}}
   /* center panels */
   .panel{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;
     text-align:center;background:radial-gradient(ellipse at 50% 40%,rgba(4,14,32,.55),rgba(1,5,14,.86));padding:24px}
@@ -322,7 +326,7 @@ const kickerAct={};                                  // azioni: idle, run, kick
 let kickPhase='', kickPhaseT=0;                      // sequenza idle -> run -> kick
 const KICKER_URL='assets/kicker.glb?v=1';
 const KICK_CONTACT=0.62;                             // istante di contatto piede-palla nella clip (s, durata ~1.5s)
-const KICK_START_OFFSET=0.40;                        // parte poco prima del contatto: si vede lo swing, il piede tocca ~al lancio palla
+const KICK_START_OFFSET=0.50;                        // parte appena prima del contatto: swing breve, piede tocca ~al lancio palla
 let PLAYER=null; try{ const p=localStorage.getItem('rig_player'); if(p&&PLAYERS[p]) PLAYER=PLAYERS[p]; }catch(e){}
 // modalità: 'infinite' (morte improvvisa) | 'five' (5 rigori, conta i gol)
 let MODE='infinite', shotNum=0, goals5=0; try{ const m=localStorage.getItem('rig_mode'); if(m==='five'||m==='infinite') MODE=m; }catch(e){}
@@ -362,13 +366,17 @@ const HUD={ score:document.getElementById('score'), rec:document.getElementById(
 function pitchTextures(){
   // Color map: verde con strisce di taglio + screziature
   const c=document.createElement('canvas'); c.width=c.height=512; const x=c.getContext('2d');
-  for(let i=0;i<512;i++){ // strisce orizzontali (8 fasce)
-    const band=Math.floor(i/64)%2; const base=band?'#2f8a40':'#287a38';
+  for(let i=0;i<512;i++){ // strisce di taglio (8 fasce) con contrasto piu marcato
+    const band=Math.floor(i/64)%2; const base=band?'#34964a':'#236d34';
     x.fillStyle=base; x.fillRect(0,i,512,1);
   }
-  // screziatura
+  // chiazze di usura (zone calpestate piu chiare/diradate) per credibilita'
+  for(let k=0;k<26;k++){ const cx=Math.random()*512, cy=Math.random()*512, r=20+Math.random()*70;
+    const g2=x.createRadialGradient(cx,cy,0,cx,cy,r); g2.addColorStop(0,'rgba(150,170,120,0.10)'); g2.addColorStop(1,'rgba(150,170,120,0)');
+    x.fillStyle=g2; x.beginPath(); x.arc(cx,cy,r,0,6.28); x.fill(); }
+  // screziatura fine
   const img=x.getImageData(0,0,512,512), d=img.data;
-  for(let i=0;i<d.length;i+=4){ const n=(Math.random()-0.5)*18; d[i]+=n; d[i+1]+=n; d[i+2]+=n*0.6; }
+  for(let i=0;i<d.length;i+=4){ const n=(Math.random()-0.5)*16; d[i]+=n; d[i+1]+=n; d[i+2]+=n*0.6; }
   x.putImageData(img,0,0);
   const map=new THREE.CanvasTexture(c); map.wrapS=map.wrapT=THREE.RepeatWrapping; map.repeat.set(7,9); map.colorSpace=THREE.SRGBColorSpace;
   // Normal map: rumore fine per micro-rilievo erba
@@ -381,10 +389,13 @@ function pitchTextures(){
 }
 function netTexture(){
   const c=document.createElement('canvas'); c.width=c.height=256; const x=c.getContext('2d');
-  x.clearRect(0,0,256,256); x.strokeStyle='rgba(245,250,255,.92)'; x.lineWidth=2.2;
-  const s=16; // maglie a rombo
-  for(let i=-256;i<=256;i+=s){ x.beginPath();x.moveTo(i,0);x.lineTo(i+256,256);x.stroke();
-    x.beginPath();x.moveTo(i,256);x.lineTo(i+256,0);x.stroke(); }
+  x.clearRect(0,0,256,256); x.lineWidth=1.7;
+  const s=12; // maglie a rombo piu fitte
+  // doppia passata: ombra fine + corda chiara -> rete con piu volume
+  for(let pass=0;pass<2;pass++){ x.strokeStyle= pass? 'rgba(248,252,255,.95)':'rgba(20,40,70,.45)';
+    const off=pass?0:1.1;
+    for(let i=-256;i<=256;i+=s){ x.beginPath();x.moveTo(i+off,off);x.lineTo(i+256+off,256+off);x.stroke();
+      x.beginPath();x.moveTo(i+off,256+off);x.lineTo(i+256+off,off);x.stroke(); } }
   const t=new THREE.CanvasTexture(c); t.wrapS=t.wrapT=THREE.RepeatWrapping; return t;
 }
 function ballFallbackTexture(){
@@ -406,27 +417,34 @@ function stadiumTexture(){
   x.fillStyle=g; x.fillRect(0,0,W,H);
   // tiers di folla (3 anelli) con mosaico blaugrana + puntini "teste"
   function tier(y0,y1,seed){
-    // folla distante: pixel fini, tinta di base smorzata blaugrana a fasce verticali ampie
+    // folla distante: campate ampie blaugrana desaturate (mosaico tifoseria) con
+    // luminanza piu morbida -> niente "static". Pochi flash/telefoni sparsi.
     for(let yy=y0;yy<y1;yy+=2){
+      // ombreggiatura verticale: piu scuro in alto (sfuma nella notte/fog)
+      const vf=1-(yy-y0)/(y1-y0)*0.35;
       for(let xx=0;xx<W;xx+=2){
-        // tinta di settore: ampie campate alternate garnet/navy molto desaturate
-        const sector=Math.floor(xx/160 + Math.sin(seed)*2);
-        const tint=(sector%2===0)?[70,18,42]:[20,40,78];
-        // ogni "tifoso" è un pixel con luminosità casuale attorno alla tinta
-        const j=(Math.random()-0.5)*44;
-        const r=clamp(tint[0]+j+Math.random()*30,0,150)|0;
-        const g=clamp(tint[1]+j+Math.random()*30,0,150)|0;
-        const bl=clamp(tint[2]+j+Math.random()*30,0,160)|0;
+        const sector=Math.floor(xx/150 + Math.sin(seed)*2);
+        const tint=(sector%2===0)?[58,20,40]:[24,40,70];
+        // jitter ridotto + correlazione canali = grana piu fine, meno colorata
+        const j=(Math.random()-0.5)*22 + Math.random()*16;
+        const r=clamp((tint[0]+j)*vf,0,135)|0;
+        const g=clamp((tint[1]+j)*vf,0,120)|0;
+        const bl=clamp((tint[2]+j)*vf,0,150)|0;
         x.fillStyle=`rgb(${r},${g},${bl})`; x.fillRect(xx,yy,2,2);
-        if(Math.random()>0.94){ x.fillStyle='rgba(255,240,210,.3)'; x.fillRect(xx,yy,1.5,1.5); } // flash/luci
+        if(Math.random()>0.985){ x.fillStyle='rgba(255,244,214,.5)'; x.fillRect(xx,yy,1.5,1.5); } // telefoni/flash sparsi
       }
     }
+    // velo atmosferico caldo dai fari sopra ogni anello
+    const halo=x.createLinearGradient(0,y0,0,y1); halo.addColorStop(0,'rgba(120,150,210,.10)'); halo.addColorStop(1,'rgba(0,0,0,0)');
+    x.fillStyle=halo; x.fillRect(0,y0,W,y1-y0);
   }
   tier(120,300,0.0);
-  // separatore (gradinata)
+  // separatore (gradinata) con sottile LED
   x.fillStyle='#0a1428'; x.fillRect(0,300,W,16);
+  x.fillStyle='rgba(120,170,255,.25)'; x.fillRect(0,300,W,2);
   tier(316,470,2.1);
   x.fillStyle='#0a1428'; x.fillRect(0,470,W,18);
+  x.fillStyle='rgba(120,170,255,.25)'; x.fillRect(0,470,W,2);
   // LED board luminoso (banda inferiore)
   const led=x.createLinearGradient(0,492,0,560); led.addColorStop(0,'#001a3a'); led.addColorStop(1,'#00264f');
   x.fillStyle=led; x.fillRect(0,492,W,72);
@@ -437,6 +455,12 @@ function stadiumTexture(){
   for(let i=0;i<4;i++){ const cx=W/8+i*(W/4); x.fillStyle= i%2? '#FFD884':'#eef4ff'; x.fillText(msgs[i],cx,528); }
   // bordo campo scuro
   x.fillStyle='#071226'; x.fillRect(0,564,W,H-564);
+  // bagliori dei riflettori in cima alle tribune (4 aloni morbidi)
+  x.globalCompositeOperation='lighter';
+  [W*0.18,W*0.40,W*0.60,W*0.82].forEach(fx=>{ const fr=130; const fg=x.createRadialGradient(fx,90,0,fx,90,fr);
+    fg.addColorStop(0,'rgba(214,232,255,.55)'); fg.addColorStop(.4,'rgba(150,185,255,.18)'); fg.addColorStop(1,'rgba(0,0,0,0)');
+    x.fillStyle=fg; x.beginPath(); x.arc(fx,90,fr,0,6.28); x.fill(); });
+  x.globalCompositeOperation='source-over';
   const t=new THREE.CanvasTexture(c); t.colorSpace=THREE.SRGBColorSpace; t.anisotropy=4; return t;
 }
 function glowSprite(color){ // bagliore additivo per fari
@@ -453,7 +477,7 @@ function buildEnv(){
   // grande sfera interna con gradiente notte->prato per riflessi PBR credibili
   const g=new THREE.SphereGeometry(40,16,12);
   const cnv=document.createElement('canvas'); cnv.width=8; cnv.height=64; const cx=cnv.getContext('2d');
-  const gr=cx.createLinearGradient(0,0,0,64); gr.addColorStop(0,'#1a3360'); gr.addColorStop(.5,'#0a1830'); gr.addColorStop(.7,'#13351f'); gr.addColorStop(1,'#0c2415');
+  const gr=cx.createLinearGradient(0,0,0,64); gr.addColorStop(0,'#244577'); gr.addColorStop(.46,'#0e1f3c'); gr.addColorStop(.66,'#16401f'); gr.addColorStop(1,'#0b2614');
   cx.fillStyle=gr; cx.fillRect(0,0,8,64);
   const tex=new THREE.CanvasTexture(cnv);
   const m=new THREE.Mesh(g,new THREE.MeshBasicMaterial({map:tex,side:THREE.BackSide}));
@@ -475,35 +499,44 @@ function buildScene(textures){
 
   scene.environment=envRT;  // riflessi PBR
 
-  // ---- ILLUMINAZIONE notturna ----
-  lights.hemi=new THREE.HemisphereLight(0x9fc0ff, 0x16331c, 0.45); scene.add(lights.hemi);
-  lights.amb=new THREE.AmbientLight(0x24406e, 0.35); scene.add(lights.amb);
-  lights.key=new THREE.DirectionalLight(0xeaf2ff, 1.55);
+  // ---- ILLUMINAZIONE notturna (broadcast) ----
+  // cielo freddo / rimbalzo prato verde scuro: ambiente notturno saturo ma con neri ricchi
+  lights.hemi=new THREE.HemisphereLight(0xbcd6ff, 0x0e2a18, 0.50); scene.add(lights.hemi);
+  lights.amb=new THREE.AmbientLight(0x1c3b6c, 0.28); scene.add(lights.amb);
+  // KEY: luce principale fredda-bianca (lato) con ombre nette ma morbide
+  lights.key=new THREE.DirectionalLight(0xf2f7ff, 1.85);
   lights.key.position.set(-9,18,9); lights.key.castShadow=true;
   lights.key.shadow.mapSize.set(2048,2048);
   const sc=lights.key.shadow.camera; sc.near=1; sc.far=70; sc.left=-16; sc.right=16; sc.top=16; sc.bottom=-8;
-  lights.key.shadow.bias=-0.0004; lights.key.shadow.normalBias=0.02; lights.key.shadow.radius=3;
+  lights.key.shadow.bias=-0.0004; lights.key.shadow.normalBias=0.02; lights.key.shadow.radius=3.5;
   scene.add(lights.key); scene.add(lights.key.target);
+  // FILL freddo dal lato opposto, senza ombre: ammorbidisce i neri sul portiere/rigorista
+  lights.fill=new THREE.DirectionalLight(0x6f9fff, 0.42); lights.fill.position.set(11,9,8); scene.add(lights.fill);
+  // RIM caldo da dietro la porta: stacca le silhouette dal fondo (effetto controluce stadio)
+  lights.rim=new THREE.DirectionalLight(0xffd29a, 0.55); lights.rim.position.set(3,7,-14); scene.add(lights.rim);
 
-  // riflettori da stadio (4 fari) + pilone + bagliore additivo
+  // riflettori da stadio (4 fari) + pilone + bagliore additivo (flare)
   const floodPos=[[-13,15,-13],[13,15,-13],[-13,15,15],[13,15,15]];
-  const glowMat=glowSprite('rgba(200,225,255,.85)');
+  const glowMat=glowSprite('rgba(206,228,255,.92)');
+  const coreMat=glowSprite('rgba(255,255,255,.95)');
   floodPos.forEach(p=>{
-    const sp=new THREE.SpotLight(0xdfeaff, 130, 80, Math.PI/5.5, .45, 1.3);
+    // cono più stretto e intenso con penombra morbida -> falloff credibile sul prato
+    const sp=new THREE.SpotLight(0xeaf2ff, 170, 90, Math.PI/6.2, .55, 1.5);
     sp.position.set(p[0],p[1],p[2]); sp.target.position.set(0,1,0);
     scene.add(sp); scene.add(sp.target);
     // pilone
     const pole=new THREE.Mesh(new THREE.CylinderGeometry(0.14,0.2,p[1],8), new THREE.MeshStandardMaterial({color:0x223046,roughness:.6,metalness:.4}));
     pole.position.set(p[0],p[1]/2,p[2]); scene.add(pole);
-    // pannello fari + bagliore
-    const head=new THREE.Mesh(new THREE.BoxGeometry(2.2,0.9,0.3), new THREE.MeshStandardMaterial({color:0x0a1424,emissive:0xbcd6ff,emissiveIntensity:1.6,roughness:.4}));
+    // pannello fari + bagliore (alone largo + cuore bianco brillante = flare da broadcast)
+    const head=new THREE.Mesh(new THREE.BoxGeometry(2.4,1.0,0.3), new THREE.MeshStandardMaterial({color:0x0a1424,emissive:0xd2e4ff,emissiveIntensity:2.2,roughness:.4,toneMapped:false}));
     head.position.set(p[0],p[1]+0.6,p[2]); head.lookAt(0,1,0); scene.add(head);
-    const gl=new THREE.Sprite(glowMat); gl.scale.set(7,7,1); gl.position.set(p[0],p[1]+0.6,p[2]); scene.add(gl);
+    const gl=new THREE.Sprite(glowMat); gl.scale.set(9,9,1); gl.position.set(p[0],p[1]+0.6,p[2]); scene.add(gl);
+    const core=new THREE.Sprite(coreMat); core.scale.set(3.4,3.4,1); core.position.set(p[0],p[1]+0.6,p[2]); scene.add(core);
   });
 
   // ---- PRATO PBR ----
   const grassMat=new THREE.MeshStandardMaterial({map:textures.pitch.map, normalMap:textures.pitch.nrm,
-    normalScale:new THREE.Vector2(0.35,0.35), roughness:0.92, metalness:0.0, color:0xbfd6c2, envMapIntensity:0.25});
+    normalScale:new THREE.Vector2(0.42,0.42), roughness:0.88, metalness:0.0, color:0xc7e0c8, envMapIntensity:0.4});
   const grass=new THREE.Mesh(new THREE.PlaneGeometry(80,90), grassMat);
   grass.rotation.x=-Math.PI/2; grass.receiveShadow=true; scene.add(grass);
 
@@ -532,7 +565,7 @@ function buildScene(textures){
   }
 
   // ---- PORTA arrotondata (palo+barra metallo bianco) ----
-  const postMat=new THREE.MeshStandardMaterial({color:0xf2f6ff,roughness:.28,metalness:.35,envMapIntensity:.7});
+  const postMat=new THREE.MeshStandardMaterial({color:0xf4f8ff,roughness:.22,metalness:.45,envMapIntensity:1.1});
   addPost(-HALF,GH/2,0, POST,GH,postMat);
   addPost( HALF,GH/2,0, POST,GH,postMat);
   const bar=new THREE.Mesh(new THREE.CylinderGeometry(POST/2,POST/2,GW+POST,16),postMat);
@@ -545,9 +578,10 @@ function buildScene(textures){
     sup.position.set(sx,GH*0.28,-GD/2); sup.rotation.x=Math.atan2(GD,GH*0.55); sup.castShadow=true; scene.add(sup); });
 
   // ---- RETE realistica (sag) back + top + lati, base salvata per ripple ----
-  const netMat=new THREE.MeshStandardMaterial({map:textures.net, transparent:true, opacity:.78, side:THREE.DoubleSide,
+  if(textures.net){ textures.net.repeat.set(GW*1.6,GH*1.6); }
+  const netMat=new THREE.MeshStandardMaterial({map:textures.net, transparent:true, opacity:.82, side:THREE.DoubleSide,
     depthWrite:false, roughness:1, metalness:0, color:0xeef4ff, envMapIntensity:.2});
-  backNet=new THREE.Mesh(new THREE.PlaneGeometry(GW,GH,28,16), netMat);
+  backNet=new THREE.Mesh(new THREE.PlaneGeometry(GW,GH,36,22), netMat);
   backNet.position.set(0,GH/2,-GD);
   applyNetSag(backNet); // sag iniziale + memorizza base
   scene.add(backNet);
@@ -557,7 +591,7 @@ function buildScene(textures){
     side.rotation.y=Math.PI/2; side.position.set(s*HALF,GH/2,-GD/2); scene.add(side); });
 
   // ---- PALLONE PBR ----
-  const ballMat=new THREE.MeshStandardMaterial({ map:textures.ball, roughness:.38, metalness:.05, envMapIntensity:.8 });
+  const ballMat=new THREE.MeshStandardMaterial({ map:textures.ball, roughness:.32, metalness:.08, envMapIntensity:1.15 });
   ball=new THREE.Mesh(new THREE.SphereGeometry(BALL_R,32,24), ballMat);
   ball.castShadow=true; ball.position.set(0,BALL_R,SPOT_Z); scene.add(ball);
   // ombra di contatto (decal a terra che scala con l'altezza)
@@ -1129,13 +1163,14 @@ function resolveShot(){
   Telecro.say(r);                              // telecronaca dell'esito
   if(r==='GOAL'){
     streak++; goals5++; scorePulseT=0.55; ripple={t:0,x:shot.target.x,y:shot.target.y};
-    showResult('GOAL!','#39ff7a'); HUD.flash.classList.remove('on'); void HUD.flash.offsetWidth; HUD.flash.classList.add('on');
+    showResult('GOAL!','#39ff7a'); HUD.flash.classList.remove('on','save'); void HUD.flash.offsetWidth; HUD.flash.classList.add('on');
     burstConfetti(shot.target.x,Math.max(0.6,shot.target.y));
     Sound.sfx(880,.07); setTimeout(()=>Sound.sfx(1320,.11),85); setTimeout(()=>Sound.sfx(1760,.13),190); Sound.roar();
     haptic([0,40,30,70]); slowmo=1; setState(STATE.GOAL_ANIMATION);
   } else {
     shakeMag=CONFIG.shakeOnSave;
-    if(r==='SAVE'){ aleSaves++; showResult('PARATO!','#ff9d6a'); Sound.sfx(200,.16,'sawtooth'); Sound.groan(); }
+    if(r==='SAVE'){ aleSaves++; showResult('PARATO!','#ff9d6a'); Sound.sfx(200,.16,'sawtooth'); Sound.groan();
+      HUD.flash.classList.remove('on'); HUD.flash.classList.add('save'); void HUD.flash.offsetWidth; HUD.flash.classList.add('on'); }
     else if(r==='POST'){ showResult('PALO!','#ffd884'); Sound.sfx(420,.05,'square',0.25); setTimeout(()=>Sound.sfx(160,.18,'triangle'),60); Sound.groan(); }
     else { showResult('FUORI!','#ffd28a'); Sound.sfx(150,.20,'triangle'); Sound.groan(); }
     haptic([0,130]); slowmo=1; setState(STATE.SAVE_ANIMATION);
@@ -1219,19 +1254,21 @@ function update(dt){
 }
 
 function updateCamera(dt){
-  // base + sway idle + punch-in sullo strike + orbita lenta in slow-mo + shake
-  const sway=Math.sin(stateT*0.6)*0.12;
-  let px=camBase.x+sway, py=camBase.y+Math.sin(stateT*0.4)*0.05, pz=camBase.z;
-  let lx=camLook.x, ly=camLook.y, lz=camLook.z;
-  // punch-in: avvicina la camera quando parte il tiro
-  if(state===STATE.BALL_IN_FLIGHT){ const k=easeOutCubic(clamp(shot.t/0.3,0,1)); pz=lerp(camBase.z,camBase.z-2.4*CONFIG.camPunch,k);
-    lx=lerp(camLook.x,ball.position.x*0.4,0.3); }
-  // slow-mo orbita su gol/parata
+  // base + sway idle handheld (multi-frequenza, ampiezza ridotta) + punch-in snappy +
+  // orbita lenta in slow-mo + shake
+  const sway=Math.sin(stateT*0.6)*0.085 + Math.sin(stateT*1.7+1.3)*0.03;
+  let px=camBase.x+sway, py=camBase.y+Math.sin(stateT*0.43)*0.045+Math.sin(stateT*1.9)*0.012, pz=camBase.z;
+  let lx=camLook.x+Math.sin(stateT*0.5)*0.05, ly=camLook.y, lz=camLook.z;
+  // punch-in: avvicina e abbassa leggermente la camera sullo strike (piu nervoso)
+  if(state===STATE.BALL_IN_FLIGHT){ const k=easeOutCubic(clamp(shot.t/0.26,0,1));
+    pz=lerp(camBase.z,camBase.z-2.7*CONFIG.camPunch,k); py=lerp(py,camBase.y-0.18,k*0.6);
+    lx=lerp(camLook.x,ball.position.x*0.45,0.35); ly=lerp(camLook.y, ball.position.y*0.5+0.7, 0.25); }
+  // slow-mo orbita su gol/parata: piu vicino e con leggera salita
   if(slowmo>0 && (state===STATE.GOAL_ANIMATION||state===STATE.SAVE_ANIMATION)){
-    const a=(1-slowmo)*0.7; px+=Math.sin(a)*2.2; pz=camBase.z-1.5- (1-slowmo)*1.5;
-    lx=lerp(lx, (state===STATE.GOAL_ANIMATION? ripple.x: keeper.position.x), 0.5); ly=1.2;
+    const a=(1-slowmo)*0.8; px+=Math.sin(a)*2.5; pz=camBase.z-1.8- (1-slowmo)*1.7; py+=0.15*(1-slowmo);
+    lx=lerp(lx, (state===STATE.GOAL_ANIMATION? ripple.x: keeper.position.x), 0.5); ly=1.25;
   }
-  if(shakeMag>0){ px+=rand(-1,1)*shakeMag*0.22; py+=rand(-1,1)*shakeMag*0.16; }
+  if(shakeMag>0){ px+=rand(-1,1)*shakeMag*0.24; py+=rand(-1,1)*shakeMag*0.17; lx+=rand(-1,1)*shakeMag*0.06; }
   camPos.set(px,py,pz); camTarget.set(lx,ly,lz);
   camera.position.lerp(camPos,clamp(dt*9,0,1));
   camera.lookAt(camTarget);
@@ -1462,15 +1499,20 @@ function refWhistle(){ Sound.ac(); Sound.sfx(2000,.06,'square',.12); setTimeout(
 
 /* ---- VOCE: telecronaca/sfottò parlati (Web Speech API, nessun file audio) ---- */
 let _ttsVoice=null;
-function initTTS(){ try{ if(!window.speechSynthesis) return;
-  const pick=()=>{ const vs=speechSynthesis.getVoices()||[]; _ttsVoice=vs.find(v=>/it[-_]IT/i.test(v.lang))||vs.find(v=>/^it/i.test(v.lang))||null; };
-  pick(); if('onvoiceschanged' in speechSynthesis) speechSynthesis.onvoiceschanged=pick; }catch(e){} }
+function ttsPick(){ try{ const vs=(window.speechSynthesis&&speechSynthesis.getVoices())||[];
+  _ttsVoice = vs.find(v=>/^it([-_]|$)/i.test(v.lang)) || vs.find(v=>/ital/i.test(v.name||'')) || null; }catch(e){} return _ttsVoice; }
+function initTTS(){ try{ if(!window.speechSynthesis) return; ttsPick();
+  if('onvoiceschanged' in speechSynthesis) speechSynthesis.onvoiceschanged=ttsPick; }catch(e){} }
 function speak(text, ale){ if(!Sound.sfxOn || !window.speechSynthesis) return;
-  try{ const clean=String(text).replace(/[«»"]/g,'')
-      .replace(/([\uD800-\uDBFF][\uDC00-\uDFFF])|[←-➿⬀-⯿️‍]/g,'')
-      .replace(/\s+/g,' ').trim();
-    if(!clean) return; const u=new SpeechSynthesisUtterance(clean); u.lang='it-IT'; if(_ttsVoice)u.voice=_ttsVoice;
-    u.rate= ale?0.98:1.13; u.pitch= ale?0.78:1.12; u.volume=1;   // Ale = voce più bassa/sorniona
+  try{ let s=String(text)
+      .replace(/([\uD800-\uDBFF][\uDC00-\uDFFF])|[←-⯿☀-➿️‍]/g,' ') // togli emoji/frecce/simboli
+      .replace(/[«»"]/g,'')
+      .replace(/([a-zàèéìòù])\1{2,}/gi,'$1')                  // collassa 3+ ripetizioni: GOOOL->GOL, PARATOOO->PARATO
+      .toLowerCase().replace(/\s+/g,' ').trim();              // minuscolo: evita lo "spelling" delle maiuscole
+    if(!s) return;
+    if(!_ttsVoice) ttsPick();                                 // assicura la voce italiana (così "Ale" non è in inglese)
+    const u=new SpeechSynthesisUtterance(s); u.lang='it-IT'; if(_ttsVoice) u.voice=_ttsVoice;
+    u.rate= ale?0.98:1.12; u.pitch= ale?0.8:1.1; u.volume=1;  // Ale = voce più bassa/sorniona
     speechSynthesis.cancel(); speechSynthesis.speak(u); }catch(e){} }
 function askName(){ const i=document.getElementById('nameInput');
   document.getElementById('nameScore').textContent=streak+(streak===1?' rigore di fila':' rigori di fila');
@@ -1565,7 +1607,7 @@ function boot(){
   if(!renderer || !renderer.getContext()){ document.getElementById('webglErr').style.display='flex'; return; }
   renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
   renderer.outputColorSpace=THREE.SRGBColorSpace;
-  renderer.toneMapping=THREE.ACESFilmicToneMapping; renderer.toneMappingExposure=1.12;
+  renderer.toneMapping=THREE.ACESFilmicToneMapping; renderer.toneMappingExposure=1.22;
   renderer.shadowMap.enabled=true; renderer.shadowMap.type=THREE.PCFSoftShadowMap;
   envRT=buildEnv();
   Sound.init(); initTTS(); HUD.snd.textContent=(Sound.musicOn||Sound.sfxOn)?'♪':'✕';
