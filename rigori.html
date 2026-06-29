@@ -320,6 +320,7 @@ const KICK_START_OFFSET=0.40;                        // parte poco prima del con
 let PLAYER=null; try{ const p=localStorage.getItem('rig_player'); if(p&&PLAYERS[p]) PLAYER=PLAYERS[p]; }catch(e){}
 // modalità: 'infinite' (morte improvvisa) | 'five' (5 rigori, conta i gol)
 let MODE='infinite', shotNum=0, goals5=0; try{ const m=localStorage.getItem('rig_mode'); if(m==='five'||m==='infinite') MODE=m; }catch(e){}
+let aleSaves=0, suddenDeath=false, duelResult='';    // duello 5 rigori: tu (gol) vs Ale (parate)
 const keeperAct={};                                  // azioni: diveL, diveR, high, ready, beaten
 const keeperBones={};                                // riferimenti ossa per reach procedurale additivo
 const KEEPER_URL='assets/keeper.glb?v=2';
@@ -1018,7 +1019,7 @@ const guessBiasOf=()=>clamp(streak*CONFIG.guessBiasGrow,0,0.7); // 0=tira a caso
 
 /* ------------------------------- STATI ----------------------------------- */
 function setState(s){ state=s; stateT=0; syncHUD(); }
-function startGame(){ streak=0; shotNum=0; goals5=0; fiveRes=[]; resetForShot(); Sound.ac(); Sound.musicStart(); Sound.crowd(0.04); Sound.sfx(880,.06); setState(STATE.GAME_PLAYING); refWhistle(); }
+function startGame(){ streak=0; shotNum=0; goals5=0; aleSaves=0; suddenDeath=false; duelResult=''; fiveRes=[]; resetForShot(); Sound.ac(); Sound.musicStart(); Sound.crowd(0.04); Sound.sfx(880,.06); setState(STATE.GAME_PLAYING); refWhistle(); }
 function resetForShot(){
   shot=null; ball.position.set(0,BALL_R,SPOT_Z); ball.scale.set(1,1,1);
   ball.rotation.set(0,0,0);
@@ -1032,11 +1033,20 @@ function resetForShot(){
   ballTrail.userData.hist.length=0; ballTrail.userData.parts.forEach(p=>p.visible=false);
   HUD.power.classList.remove('on'); HUD.curl.classList.remove('on');
 }
-function newAim(){ resetForShot(); setState(STATE.GAME_PLAYING); refWhistle(); Telecro.taunt(); }
+function newAim(){ resetForShot(); setState(STATE.GAME_PLAYING); refWhistle(); Telecro.taunt();
+  const tension = MODE==='five' ? (suddenDeath?1:shotNum/5) : Math.min(1,streak/10);
+  Sound.crowd(0.045 + tension*0.09);                 // il coro sale con la tensione
+  if(suddenDeath) showTelecro('SPAREGGIO! Questo tiro decide tutto 😱'); }
 // dopo ogni rigore: infinita = morte improvvisa; 5 rigori = continua fino a 5
 function afterShot(scored){
-  if(MODE==='five'){ if(shotNum>=5) gameOver(); else newAim(); }
-  else { if(scored) newAim(); else gameOver(); }
+  if(MODE==='five'){
+    if(suddenDeath){ duelResult = scored?'win':'lose'; gameOver(); return; }   // spareggio: 1 tiro decide
+    if(shotNum>=5){
+      if(goals5>aleSaves){ duelResult='win'; gameOver(); }
+      else if(aleSaves>goals5){ duelResult='lose'; gameOver(); }
+      else { suddenDeath=true; newAim(); }                                      // pareggio -> spareggio
+    } else newAim();
+  } else { if(scored) newAim(); else gameOver(); }
 }
 
 // risolve target/risultato al rilascio del drag
@@ -1119,7 +1129,7 @@ function resolveShot(){
     haptic([0,40,30,70]); slowmo=1; setState(STATE.GOAL_ANIMATION);
   } else {
     shakeMag=CONFIG.shakeOnSave;
-    if(r==='SAVE'){ showResult('PARATO!','#ff9d6a'); Sound.sfx(200,.16,'sawtooth'); Sound.groan(); }
+    if(r==='SAVE'){ aleSaves++; showResult('PARATO!','#ff9d6a'); Sound.sfx(200,.16,'sawtooth'); Sound.groan(); }
     else if(r==='POST'){ showResult('PALO!','#ffd884'); Sound.sfx(420,.05,'square',0.25); setTimeout(()=>Sound.sfx(160,.18,'triangle'),60); Sound.groan(); }
     else { showResult('FUORI!','#ffd28a'); Sound.sfx(150,.20,'triangle'); Sound.groan(); }
     haptic([0,130]); slowmo=1; setState(STATE.SAVE_ANIMATION);
@@ -1383,7 +1393,7 @@ function syncHUD(){
   document.getElementById('repick').classList.toggle('show', (state===STATE.MENU_SCREEN||state===STATE.GAME_OVER));
   const five=(MODE==='five');
   let best5=0; try{ best5=+(localStorage.getItem('rig5_best')||0); }catch(e){}
-  HUD.score.textContent = five? goals5 : streak;
+  HUD.score.textContent = five? (goals5+'-'+aleSaves) : streak;   // duello TU - ALE
   HUD.rec.textContent = five? ('REC '+best5+'/5') : ('REC '+Scores.best()+(Scores.bestName()?' '+Scores.bestName():''));
   HUD.menuRec.textContent = five? (best5+'/5') : Scores.best();
   HUD.menu.classList.toggle('show',state===STATE.MENU_SCREEN);
@@ -1398,8 +1408,9 @@ function syncHUD(){
   renderShootrack();
   if(state===STATE.GAME_OVER){
     const ol=document.getElementById('overLine');
-    if(five){ if(ol) ol.textContent='hai segnato '+goals5+'/5 rigori';
-      HUD.overTitle.textContent=goals5>=5?'CINQUINA! 🏆':(goals5>=4?'GRANDE!':(goals5>=3?'BEN FATTO':'PUOI FARE MEGLIO'));
+    if(five){ const w=(duelResult==='win');
+      if(ol) ol.textContent = (w?'TU ':'ALE ')+ (w? (goals5+' - '+aleSaves+' ALE 🧤') : (aleSaves+' - '+goals5+' TU')) + (suddenDeath?'  (spareggio)':'');
+      HUD.overTitle.textContent = w ? 'HAI BATTUTO ALE! 🏆' : 'ALE TI HA PARATO 🧤👑';
       HUD.overRec.textContent=best5+'/5';
     } else { if(ol) ol.textContent='hai segnato '+streak+(streak===1?' rigore':' rigori')+' di fila';
       HUD.overTitle.textContent=streak>=8?'CAMPIONE!':(streak>=4?'BEL TIRO!':'FINITA!');
@@ -1426,8 +1437,8 @@ const Telecro={
   TAUNT:["Ale: «tira pure, tanto paro» 😏","Ale si accende il cigarro… 🚬",
     "Ale: «{P}, ti leggo nel pensiero» 🔮","Ale ti fissa da sotto gli occhiali 😎","Ale: «dai, fammi divertire» 👑"],
   pick(a){ return a[(Math.random()*a.length)|0].replace(/\{P\}/g,PNAME()); },
-  say(r){ const k=(r==='GOAL'||r==='SAVE'||r==='POST')?r:'MISS'; showTelecro(this.pick(this[k])); },
-  taunt(){ if(Math.random()<0.5) showTelecro(this.pick(this.TAUNT)); }
+  say(r){ const k=(r==='GOAL'||r==='SAVE'||r==='POST')?r:'MISS'; const l=this.pick(this[k]); showTelecro(l); speak(l,false); },
+  taunt(){ if(Math.random()<0.5){ const l=this.pick(this.TAUNT); showTelecro(l); speak(l,true); } }
 };
 let _telcroT=null;
 function showTelecro(text){ const el=document.getElementById('telecro'); if(!el) return;
@@ -1442,6 +1453,19 @@ function renderShootrack(){ const el=document.getElementById('shootrack'); if(!e
   let h=''; for(let i=0;i<5;i++){ const r=fiveRes[i]; h+='<span class="d'+(r==='g'?' g':(r==='x'?' x':''))+'"></span>'; }
   el.innerHTML=h; }
 function refWhistle(){ Sound.ac(); Sound.sfx(2000,.06,'square',.12); setTimeout(()=>Sound.sfx(2500,.09,'square',.12),55); }
+
+/* ---- VOCE: telecronaca/sfottò parlati (Web Speech API, nessun file audio) ---- */
+let _ttsVoice=null;
+function initTTS(){ try{ if(!window.speechSynthesis) return;
+  const pick=()=>{ const vs=speechSynthesis.getVoices()||[]; _ttsVoice=vs.find(v=>/it[-_]IT/i.test(v.lang))||vs.find(v=>/^it/i.test(v.lang))||null; };
+  pick(); if('onvoiceschanged' in speechSynthesis) speechSynthesis.onvoiceschanged=pick; }catch(e){} }
+function speak(text, ale){ if(!Sound.sfxOn || !window.speechSynthesis) return;
+  try{ const clean=String(text).replace(/[«»"]/g,'')
+      .replace(/([\uD800-\uDBFF][\uDC00-\uDFFF])|[←-➿⬀-⯿️‍]/g,'')
+      .replace(/\s+/g,' ').trim();
+    if(!clean) return; const u=new SpeechSynthesisUtterance(clean); u.lang='it-IT'; if(_ttsVoice)u.voice=_ttsVoice;
+    u.rate= ale?0.98:1.13; u.pitch= ale?0.78:1.12; u.volume=1;   // Ale = voce più bassa/sorniona
+    speechSynthesis.cancel(); speechSynthesis.speak(u); }catch(e){} }
 function askName(){ const i=document.getElementById('nameInput');
   document.getElementById('nameScore').textContent=streak+(streak===1?' rigore di fila':' rigori di fila');
   i.value=PLAYER?PLAYER.name:''; HUD.nameOv.classList.add('show'); setTimeout(()=>{try{i.focus();i.select&&i.select();}catch(e){}},60); }
@@ -1499,8 +1523,15 @@ document.querySelectorAll('#playerSelect .pscard').forEach(b=>b.addEventListener
 document.getElementById('repick').addEventListener('click',(e)=>{ e.stopPropagation(); document.getElementById('playerSelect').classList.add('show'); });
 document.getElementById('modeBtn').addEventListener('click',(e)=>{ e.stopPropagation(); MODE=(MODE==='five')?'infinite':'five'; try{localStorage.setItem('rig_mode',MODE);}catch(e){} syncHUD(); });
 document.getElementById('shareBtn').addEventListener('click',(e)=>{ e.stopPropagation();
-  const who=PLAYER?PLAYER.name:'IO', n=streak;
-  const txt=who+' ha segnato '+n+(n===1?' rigore':' rigori')+' di fila ad ALE 👑🧤 al Camp Nou! Battimi 👉';
+  const who=PLAYER?PLAYER.name:'IO';
+  let txt;
+  if(MODE==='five'){
+    txt = duelResult==='win'
+      ? (who+' ha BATTUTO Ale 👑🧤 nel duello dei rigori al Camp Nou: '+goals5+'-'+aleSaves+'! 🏆 Provaci tu 👉')
+      : ('Ale 👑🧤 ha parato tutto: '+aleSaves+'-'+goals5+' a '+who+' al Camp Nou! Battilo se ci riesci 👉');
+  } else {
+    txt = who+' ha segnato '+streak+(streak===1?' rigore':' rigori')+' di fila ad ALE 👑🧤 al Camp Nou! Battimi 👉';
+  }
   const url=location.href.split('#')[0];
   if(navigator.share){ navigator.share({title:'Rigori al Camp Nou',text:txt,url:url}).catch(()=>{}); }
   else window.open('https://wa.me/?text='+encodeURIComponent(txt+' '+url),'_blank'); });
@@ -1531,7 +1562,7 @@ function boot(){
   renderer.toneMapping=THREE.ACESFilmicToneMapping; renderer.toneMappingExposure=1.12;
   renderer.shadowMap.enabled=true; renderer.shadowMap.type=THREE.PCFSoftShadowMap;
   envRT=buildEnv();
-  Sound.init(); HUD.snd.textContent=(Sound.musicOn||Sound.sfxOn)?'♪':'✕';
+  Sound.init(); initTTS(); HUD.snd.textContent=(Sound.musicOn||Sound.sfxOn)?'♪':'✕';
 
   // ---- caricamento ASSET ESTERNI con progress ----
   const manager=new THREE.LoadingManager();
