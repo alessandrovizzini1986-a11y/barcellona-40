@@ -119,6 +119,19 @@
   #shotcount{position:absolute;top:calc(70px + env(safe-area-inset-top));left:16px;z-index:18;display:none;
     font-size:9px;color:#ffd884;background:rgba(2,12,30,.72);border:1px solid rgba(255,216,132,.4);border-radius:8px;padding:6px 10px}
   #shotcount.on{display:block}
+  /* telecronaca (lower-third broadcast) */
+  #telecro{position:absolute;left:50%;transform:translateX(-50%) translateY(12px);bottom:calc(58px + env(safe-area-inset-bottom));z-index:19;
+    max-width:min(92vw,520px);opacity:0;transition:opacity .25s,transform .25s;pointer-events:none;
+    background:linear-gradient(100deg,rgba(2,12,30,.92),rgba(10,30,60,.88));border:1px solid rgba(255,216,132,.45);
+    border-left:4px solid var(--gold);border-radius:10px;padding:10px 14px;text-align:center}
+  #telecro.on{opacity:1;transform:translateX(-50%) translateY(0)}
+  #telecro span{font-family:"Press Start 2P",monospace;font-size:9px;line-height:1.7;color:#eaf0ff}
+  /* tracker dei 5 rigori */
+  #shootrack{position:absolute;left:50%;transform:translateX(-50%);top:calc(70px + env(safe-area-inset-top));z-index:18;display:none;gap:7px}
+  #shootrack.on{display:flex}
+  #shootrack .d{width:15px;height:15px;border-radius:50%;border:2px solid rgba(255,255,255,.35);background:rgba(2,12,30,.6)}
+  #shootrack .d.g{background:#39ff7a;border-color:#39ff7a;box-shadow:0 0 8px #39ff7a}
+  #shootrack .d.x{background:#ff4d5e;border-color:#ff4d5e}
 </style>
 <script type="importmap">
 { "imports": { "three": "./assets/three.module.js", "three/addons/": "./assets/jsm/" } }
@@ -136,6 +149,8 @@
   <div id="snd">♪</div>
   <div id="rec">REC 0</div>
   <div id="result"></div>
+  <div id="shootrack"></div>
+  <div id="telecro"><span id="telecroTxt"></span></div>
   <div id="flash"></div>
   <div id="power"><span>⚡ POTENZA</span><div class="bar"><div class="fill" id="powerFill"></div><div class="sweet"></div></div></div>
   <div id="curl">↺ EFFETTO</div>
@@ -1003,7 +1018,7 @@ const guessBiasOf=()=>clamp(streak*CONFIG.guessBiasGrow,0,0.7); // 0=tira a caso
 
 /* ------------------------------- STATI ----------------------------------- */
 function setState(s){ state=s; stateT=0; syncHUD(); }
-function startGame(){ streak=0; shotNum=0; goals5=0; resetForShot(); Sound.ac(); Sound.musicStart(); Sound.crowd(0.04); Sound.sfx(880,.06); setState(STATE.GAME_PLAYING); }
+function startGame(){ streak=0; shotNum=0; goals5=0; fiveRes=[]; resetForShot(); Sound.ac(); Sound.musicStart(); Sound.crowd(0.04); Sound.sfx(880,.06); setState(STATE.GAME_PLAYING); refWhistle(); }
 function resetForShot(){
   shot=null; ball.position.set(0,BALL_R,SPOT_Z); ball.scale.set(1,1,1);
   ball.rotation.set(0,0,0);
@@ -1017,7 +1032,7 @@ function resetForShot(){
   ballTrail.userData.hist.length=0; ballTrail.userData.parts.forEach(p=>p.visible=false);
   HUD.power.classList.remove('on'); HUD.curl.classList.remove('on');
 }
-function newAim(){ resetForShot(); setState(STATE.GAME_PLAYING); }
+function newAim(){ resetForShot(); setState(STATE.GAME_PLAYING); refWhistle(); Telecro.taunt(); }
 // dopo ogni rigore: infinita = morte improvvisa; 5 rigori = continua fino a 5
 function afterShot(scored){
   if(MODE==='five'){ if(shotNum>=5) gameOver(); else newAim(); }
@@ -1094,6 +1109,8 @@ function shoot(){
 function resolveShot(){
   const r=shot.result;
   shotNum++;                                   // conta il rigore appena calciato (modalità 5 rigori)
+  if(MODE==='five') fiveRes.push(r==='GOAL'?'g':'x');
+  Telecro.say(r);                              // telecronaca dell'esito
   if(r==='GOAL'){
     streak++; goals5++; scorePulseT=0.55; ripple={t:0,x:shot.target.x,y:shot.target.y};
     showResult('GOAL!','#39ff7a'); HUD.flash.classList.remove('on'); void HUD.flash.offsetWidth; HUD.flash.classList.add('on');
@@ -1378,6 +1395,7 @@ function syncHUD(){
   const sc=document.getElementById('shotcount');
   if(sc){ const inGame=(playing||state===STATE.BALL_IN_FLIGHT||state===STATE.GOAL_ANIMATION||state===STATE.SAVE_ANIMATION);
     sc.classList.toggle('on', five && inGame); sc.textContent='RIGORE '+Math.min(shotNum+(playing?1:0),5)+'/5'; }
+  renderShootrack();
   if(state===STATE.GAME_OVER){
     const ol=document.getElementById('overLine');
     if(five){ if(ol) ol.textContent='hai segnato '+goals5+'/5 rigori';
@@ -1392,6 +1410,38 @@ function syncHUD(){
 function showResult(txt,col){ HUD.result.textContent=txt; HUD.result.style.color=col;
   HUD.result.classList.remove('show'); void HUD.result.offsetWidth; HUD.result.classList.add('show');
   setTimeout(()=>{ HUD.result.classList.remove('show'); },1300); }
+
+/* ===================== TELECRONACA & SFIDA (la mia firma) ===================== */
+const PNAME=()=> PLAYER?PLAYER.name:'IL TIRATORE';
+const Telecro={
+  GOAL:["GOOOL! {P} la mette dove Ale non arriva! 🚀","Nel sette! {P} glaciale, Ale immobile 🧊",
+    "{P} spacca la rete! Camp Nou in delirio 🔥","Eurogol di {P}! Ale guarda e applaude 👏",
+    "Che freddezza, {P}! Ale spiazzato 😵","{P} non perdona! 1-0 e stadio in piedi 🙌"],
+  SAVE:["PARATOOO! Ale vola e ci mette i guantoni! 🧤","Che muro Ale! {P} si dispera 😩",
+    "Ale para pure col cigarro in bocca 🚬👑","Respinto! Ale legge nel pensiero di {P} 🔮",
+    "SUPER ALE! {P} non ci crede 🙅","Niente da fare per {P}: c'è il Re della Brace 🔥🧤"],
+  MISS:["FUORIII! {P} la spedisce in tribuna 🙈","Disastro {P}! Palla sulla luna 🌙",
+    "Clamoroso, {P} svirgola! Ale ringrazia 🙏","Che spreco, {P}! Out di un metro 😬"],
+  POST:["PALOOO! Il Camp Nou trema 😱","Legno! {P} a un soffio dal gol 😤","Traversa! Ale graziato 🍀"],
+  TAUNT:["Ale: «tira pure, tanto paro» 😏","Ale si accende il cigarro… 🚬",
+    "Ale: «{P}, ti leggo nel pensiero» 🔮","Ale ti fissa da sotto gli occhiali 😎","Ale: «dai, fammi divertire» 👑"],
+  pick(a){ return a[(Math.random()*a.length)|0].replace(/\{P\}/g,PNAME()); },
+  say(r){ const k=(r==='GOAL'||r==='SAVE'||r==='POST')?r:'MISS'; showTelecro(this.pick(this[k])); },
+  taunt(){ if(Math.random()<0.5) showTelecro(this.pick(this.TAUNT)); }
+};
+let _telcroT=null;
+function showTelecro(text){ const el=document.getElementById('telecro'); if(!el) return;
+  document.getElementById('telecroTxt').textContent=text; el.classList.add('on');
+  clearTimeout(_telcroT); _telcroT=setTimeout(()=>el.classList.remove('on'),2600); }
+
+/* tracker dei 5 rigori (pallini verdi/rossi) */
+let fiveRes=[];
+function renderShootrack(){ const el=document.getElementById('shootrack'); if(!el) return;
+  const on=(MODE==='five' && state!==STATE.MENU_SCREEN && state!==STATE.LOADING);
+  el.classList.toggle('on',on); if(!on){ el.innerHTML=''; return; }
+  let h=''; for(let i=0;i<5;i++){ const r=fiveRes[i]; h+='<span class="d'+(r==='g'?' g':(r==='x'?' x':''))+'"></span>'; }
+  el.innerHTML=h; }
+function refWhistle(){ Sound.ac(); Sound.sfx(2000,.06,'square',.12); setTimeout(()=>Sound.sfx(2500,.09,'square',.12),55); }
 function askName(){ const i=document.getElementById('nameInput');
   document.getElementById('nameScore').textContent=streak+(streak===1?' rigore di fila':' rigori di fila');
   i.value=PLAYER?PLAYER.name:''; HUD.nameOv.classList.add('show'); setTimeout(()=>{try{i.focus();i.select&&i.select();}catch(e){}},60); }
