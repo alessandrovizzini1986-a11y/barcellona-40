@@ -1160,11 +1160,13 @@ function resolveShot(){
   const r=shot.result;
   shotNum++;                                   // conta il rigore appena calciato (modalità 5 rigori)
   if(MODE==='five') fiveRes.push(r==='GOAL'?'g':'x');
-  Telecro.say(r);                              // telecronaca dell'esito
+  const incrocio = r==='GOAL' && Math.abs(shot.target.x)>GW/2-1.15 && shot.target.y>GH-0.75;  // gol all'angolino
+  Telecro.say(incrocio?'INCROCIO':r);          // telecronaca dell'esito (eurogol se incrocio)
   if(r==='GOAL'){
-    streak++; goals5++; scorePulseT=0.55; ripple={t:0,x:shot.target.x,y:shot.target.y};
-    showResult('GOAL!','#39ff7a'); HUD.flash.classList.remove('on','save'); void HUD.flash.offsetWidth; HUD.flash.classList.add('on');
+    streak++; goals5++; scorePulseT=incrocio?0.85:0.55; ripple={t:0,x:shot.target.x,y:shot.target.y};
+    showResult(incrocio?'INCROCIO! 🎯':'GOAL!','#39ff7a'); HUD.flash.classList.remove('on','save'); void HUD.flash.offsetWidth; HUD.flash.classList.add('on');
     burstConfetti(shot.target.x,Math.max(0.6,shot.target.y));
+    if(incrocio){ burstConfetti(-shot.target.x*0.5,1.5); setTimeout(()=>burstConfetti(shot.target.x*0.7,1.2),120); }  // festa extra all'incrocio
     Sound.sfx(880,.07); setTimeout(()=>Sound.sfx(1320,.11),85); setTimeout(()=>Sound.sfx(1760,.13),190); Sound.roar();
     haptic([0,40,30,70]); slowmo=1; setState(STATE.GOAL_ANIMATION);
   } else {
@@ -1477,10 +1479,12 @@ const Telecro={
   MISS:["FUORIII! {P} la spedisce in tribuna 🙈","Disastro {P}! Palla sulla luna 🌙",
     "Clamoroso, {P} svirgola! Ale ringrazia 🙏","Che spreco, {P}! Out di un metro 😬"],
   POST:["PALOOO! Il Camp Nou trema 😱","Legno! {P} a un soffio dal gol 😤","Traversa! Ale graziato 🍀"],
+  INCROCIO:["EUROGOOOL! {P} la mette all'incrocio! 😱🎯","Nell'angolino! {P} è un cecchino 🎯",
+    "Che traiettoria, {P}! Sette pieno, Ale di sasso 🪨","Capolavoro di {P}! Incrocio dei pali, da impazzire 🔝🔥"],
   TAUNT:["Ale: «tira pure, tanto paro» 😏","Ale si accende il cigarro… 🚬",
     "Ale: «{P}, ti leggo nel pensiero» 🔮","Ale ti fissa da sotto gli occhiali 😎","Ale: «dai, fammi divertire» 👑"],
   pick(a){ return a[(Math.random()*a.length)|0].replace(/\{P\}/g,PNAME()); },
-  say(r){ const k=(r==='GOAL'||r==='SAVE'||r==='POST')?r:'MISS'; const l=this.pick(this[k]); showTelecro(l); speak(l,false); },
+  say(r){ const k=this[r]?r:'MISS'; const l=this.pick(this[k]); showTelecro(l); speak(l,false); },
   taunt(){ if(Math.random()<0.5){ const l=this.pick(this.TAUNT); showTelecro(l); speak(l,true); } }
 };
 let _telcroT=null;
