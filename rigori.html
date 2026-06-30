@@ -163,6 +163,17 @@
   #shootrack .d.g{background:#39ff7a;border-color:#39ff7a;box-shadow:0 0 8px #39ff7a}
   #shootrack .d.x{background:#ff4d5e;border-color:#ff4d5e}
   /* grading cinematografico: vignettatura + tono notturno caldo-freddo */
+  /* overlay 2D: particelle (object-pool) + HUD di gioco disegnato su canvas */
+  #fx2d{position:fixed;inset:0;z-index:8;pointer-events:none}
+  /* screen-shake: trasformazione CSS sul canvas (quasi gratis, non tocca la PerspectiveCamera) */
+  @keyframes shk{0%,100%{transform:translate(0,0) rotate(0) scale(1.025)}
+    15%{transform:translate(-1.3%,0.9%) rotate(-.45deg) scale(1.025)}
+    30%{transform:translate(1.1%,-1%) rotate(.45deg) scale(1.025)}
+    45%{transform:translate(-1%,-0.5%) rotate(-.3deg) scale(1.025)}
+    60%{transform:translate(0.9%,0.8%) rotate(.3deg) scale(1.025)}
+    80%{transform:translate(-0.5%,0.4%) rotate(-.15deg) scale(1.025)}}
+  #cv.shake,#fx2d.shake{animation:shk .42s ease-out}
+  #cv.shake.hard,#fx2d.shake.hard{animation-duration:.52s}
   #grade{position:fixed;inset:0;z-index:9;pointer-events:none;
     background:
       radial-gradient(125% 105% at 50% 40%, transparent 52%, rgba(0,2,12,.5) 100%),
@@ -174,6 +185,7 @@
 </head>
 <body>
 <canvas id="cv"></canvas>
+<canvas id="fx2d"></canvas>
 <div id="grade"></div>
 <div id="animefx"><div id="speedlines"></div><div id="mangaword"></div></div>
 
@@ -1247,7 +1259,7 @@ function shoot(){
 function resolveShot(){
   const r=shot.result;
   shotNum++;                                   // conta il rigore appena calciato (modalità 5 rigori)
-  if(isManga() && r!=='MISS') hitStop=0.10;    // freeze-frame all'impatto (gol/parata/palo)
+  if(r!=='MISS') hitStop = isManga()?0.13:0.06;  // freeze-frame all'impatto (Anime più lungo, PES contenuto)
   capT=0;                                      // avvia la cattura del frame (nel loop, subito dopo il render)
   if(MODE==='five') fiveRes.push(r==='GOAL'?'g':'x');
   const incrocio = r==='GOAL' && Math.abs(shot.target.x)>GW/2-1.15 && shot.target.y>GH-0.75;  // gol all'angolino
@@ -1257,14 +1269,16 @@ function resolveShot(){
     showResult(incrocio?'INCROCIO! 🎯':'GOAL!','#39ff7a'); HUD.flash.classList.remove('on','save'); void HUD.flash.offsetWidth; HUD.flash.classList.add('on');
     burstConfetti(shot.target.x,Math.max(0.6,shot.target.y));
     if(incrocio){ burstConfetti(-shot.target.x*0.5,1.5); setTimeout(()=>burstConfetti(shot.target.x*0.7,1.2),120); }  // festa extra all'incrocio
+    engine.view.burstAt3D(tmpV2.set(shot.target.x,Math.max(0.4,shot.target.y),-GD),'goal');   // scintille sulla rete
     Sound.sfx(880,.07); setTimeout(()=>Sound.sfx(1320,.11),85); setTimeout(()=>Sound.sfx(1760,.13),190); Sound.roar();
     speedLines(); mangaWord(incrocio?'EUROGOOOL!':'GOOOOL!','#39ff7a');
     haptic([0,40,30,70]); slowmo=1; setState(STATE.GOAL_ANIMATION);
   } else {
     shakeMag=CONFIG.shakeOnSave;
     if(r==='SAVE'){ aleSaves++; showResult('PARATO!','#ff9d6a'); mangaWord('PARATAAA!','#ff9d6a'); Sound.sfx(200,.16,'sawtooth'); Sound.groan();
+      engine.view.burstAt3D(tmpV2.set(shot.guess,shot.guessY||1.0,KEEPER_Z),'save');   // polvere/scintille dai guantoni
       HUD.flash.classList.remove('on'); HUD.flash.classList.add('save'); void HUD.flash.offsetWidth; HUD.flash.classList.add('on'); }
-    else if(r==='POST'){ showResult('PALO!','#ffd884'); mangaWord('PALO!','#ffd884'); Sound.sfx(420,.05,'square',0.25); setTimeout(()=>Sound.sfx(160,.18,'triangle'),60); Sound.groan(); }
+    else if(r==='POST'){ showResult('PALO!','#ffd884'); mangaWord('PALO!','#ffd884'); engine.view.burstAt3D(tmpV2.set(Math.sign(shot.target.x)*HALF,shot.target.y,0),'save'); Sound.sfx(420,.05,'square',0.25); setTimeout(()=>Sound.sfx(160,.18,'triangle'),60); Sound.groan(); }
     else { showResult('FUORI!','#ffd28a'); mangaWord('FUORIII!','#ffd28a'); Sound.sfx(150,.20,'triangle'); Sound.groan(); }
     haptic([0,130]); slowmo=1; setState(STATE.SAVE_ANIMATION);
   }
@@ -1792,13 +1806,61 @@ class Physics {                                  // volo palla + AI portiere + e
   shoot(){ return shoot(); }
   resolveShot(){ return resolveShot(); }
 }
-class View {                                     // render Three.js + FX/juice
-  constructor(engine){ this.e=engine; }
+class View {                                     // render Three.js + layer 2D (juice)
+  constructor(engine){ this.e=engine;
+    this.fx=document.getElementById('fx2d'); this.fxc=this.fx.getContext('2d');
+    this.parts=[]; for(let i=0;i<160;i++) this.parts.push({life:0,life0:1,x:0,y:0,vx:0,vy:0,g:700,r:2,c:'#fff'}); // object pool
+    this._sizeFx(); addEventListener('resize',()=>this._sizeFx());
+  }
+  _sizeFx(){ const d=Math.min(window.devicePixelRatio||1,2);
+    this.fx.width=Math.round(innerWidth*d); this.fx.height=Math.round(innerHeight*d);
+    this.fxc.setTransform(d,0,0,d,0,0); }
+  // emette una raffica di particelle dal pool (coordinate schermo)
+  emit(sx,sy,style){ const manga=isManga();
+    const n = style==='goal' ? (manga?48:30) : (manga?34:22);
+    const cols = manga ? ['#A50044','#004D98','#ffd24a','#ffffff'] : ['#d7dce8','#9fb0c8','#ffffff','#A50044'];
+    let used=0;
+    for(const p of this.parts){ if(p.life>0) continue; if(used++>=n) break;
+      const ang=rand(0,6.283), spd=rand(manga?170:120, manga?600:360);
+      p.x=sx; p.y=sy; p.vx=Math.cos(ang)*spd; p.vy=Math.sin(ang)*spd-rand(40,170);
+      p.g = style==='save'?960:720; p.r=rand(2,manga?5:3.6);
+      p.c=cols[(Math.random()*cols.length)|0]; p.life=p.life0=rand(0.4,0.9);
+    }
+  }
+  // proietta un punto 3D sullo schermo e fa partire la raffica lì
+  burstAt3D(v,style){ tmpV.copy(v).project(camera); if(tmpV.z>1) return;
+    this.emit((tmpV.x*0.5+0.5)*innerWidth, (-tmpV.y*0.5+0.5)*innerHeight, style); }
+  // screen-shake: classe CSS su entrambe le canvas (PES contenuto, Anime più forte)
+  shake(level){ if(level<=0) return; const a=cv,b=this.fx;
+    a.classList.remove('shake','hard'); b.classList.remove('shake','hard'); void a.offsetWidth;
+    a.classList.add('shake'); b.classList.add('shake'); if(level>=1){ a.classList.add('hard'); b.classList.add('hard'); }
+    clearTimeout(this._shk); this._shk=setTimeout(()=>{ a.classList.remove('shake','hard'); b.classList.remove('shake','hard'); },560); }
+  // disegna il layer 2D DOPO il render 3D (particelle + HUD di gioco su canvas)
+  draw2D(dt){ const c=this.fxc, W=innerWidth, H=innerHeight; c.clearRect(0,0,W,H);
+    for(const p of this.parts){ if(p.life<=0) continue;
+      p.life-=dt; p.vy+=p.g*dt; p.x+=p.vx*dt; p.y+=p.vy*dt;
+      c.globalAlpha=clamp(p.life/p.life0,0,1); c.fillStyle=p.c;
+      c.beginPath(); c.arc(p.x,p.y,p.r,0,6.283); c.fill();
+    }
+    c.globalAlpha=1; this._drawStreak(c,W);
+  }
+  // HUD di gioco su canvas: contatore streak con bagliore (cresce/pulsa)
+  _drawStreak(c,W){
+    const inGame = state===STATE.GAME_PLAYING||state===STATE.BALL_IN_FLIGHT||state===STATE.GOAL_ANIMATION||state===STATE.SAVE_ANIMATION;
+    if(!inGame || MODE==='five' || streak<2) return;
+    const pulse = scorePulseT>0 ? 1+scorePulseT*0.3 : 1;
+    c.save(); c.textAlign='center'; c.textBaseline='middle';
+    c.shadowColor='rgba(255,150,40,'+(streak>=5?0.95:0.55)+')'; c.shadowBlur=(streak>=5?24:13)*pulse;
+    c.fillStyle='#ffd24a'; c.font='700 '+Math.round(24*pulse)+'px Arial,sans-serif';
+    c.fillText('🔥 '+streak+' DI FILA', W/2, 112);
+    c.restore();
+  }
   render(dt){
     if(keeperMixer){ keeperMixer.update(dt); applyKeeperReach(); }
     if(kickerMixer){ kickerMixer.update(dt); }
     updateKeeperFace(); updateKickerFace(); updateKicker(dt);
     renderer.render(scene,camera);
+    this.draw2D(dt);                              // HUD/particelle 2D dopo il 3D (no DOM nel loop)
     if(capT>=0){ capT+=dt; if(capT>0.45){ try{ lastShotPNG=cv.toDataURL('image/jpeg',0.85); }catch(e){} capT=-1; } }  // cattura frame per la card
   }
   camera(dt){ return updateCamera(dt); }
@@ -1820,6 +1882,10 @@ class GameEngine {                               // orchestratore: loop + FSM
   start(){ this._loop=(t)=>this.loop(t); requestAnimationFrame(this._loop); }
 }
 const engine = new GameEngine();
+// JUICE agganciato alla FSM: screen-shake all'ingresso negli stati d'impatto
+// (PES contenuto, Anime più forte) — l'hit-stop è già nel loop (dt=0).
+engine.on(STATE.GOAL_ANIMATION, ()=> engine.view.shake(isManga()?1:0.55));
+engine.on(STATE.SAVE_ANIMATION, ()=> engine.view.shake(isManga()?1.1:0.7));
 
 function resize(){ const w=window.innerWidth,h=window.innerHeight;
   renderer.setSize(w,h); camera.aspect=w/h; camera.updateProjectionMatrix(); }
