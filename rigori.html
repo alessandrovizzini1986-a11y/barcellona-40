@@ -631,6 +631,14 @@ function keeperKitTexture(){
   for(let i=0;i<n;i++){ x.fillStyle=(i%2)?'#A50044':'#004D98'; x.fillRect(i*w,0,w,c.height); }
   const t=new THREE.CanvasTexture(c); t.colorSpace=THREE.SRGBColorSpace; t.wrapS=t.wrapT=THREE.RepeatWrapping; t.repeat.set(2.2,1); return t;
 }
+// ---- stile CARTOON: cel-shading (toon) sui personaggi ----
+let _toonGrad=null;
+function toonGrad(){ if(_toonGrad) return _toonGrad; const c=document.createElement('canvas'); c.width=4;c.height=1; const x=c.getContext('2d');
+  ['#3a3a3a','#8a8a8a','#cfcfcf','#ffffff'].forEach((col,i)=>{ x.fillStyle=col; x.fillRect(i,0,1,1); });
+  _toonGrad=new THREE.CanvasTexture(c); _toonGrad.minFilter=THREE.NearestFilter; _toonGrad.magFilter=THREE.NearestFilter; _toonGrad.colorSpace=THREE.SRGBColorSpace; return _toonGrad; }
+function toonify(root){ if(!root) return; root.traverse(o=>{ if(o.isMesh && o.material && !o.material.__toon){ const m=o.material;
+  const t=new THREE.MeshToonMaterial({ color: m.color?m.color.clone():new THREE.Color(0xffffff), map:m.map||null, gradientMap:toonGrad() });
+  t.side=m.side||THREE.FrontSide; t.__toon=true; o.material=t; } }); }
 function loadGLBKeeper(){
   try{
     const KIT=keeperKitTexture();
@@ -650,7 +658,7 @@ function loadGLBKeeper(){
       pivot.position.set(-c.x,-box.min.y,-c.z);          // centra X/Z, piedi a y=0
       const wrap=new THREE.Group(); wrap.add(pivot); wrap.position.set(0,0,KEEPER_Z); wrap.rotation.y=Math.PI;
       if(keeper) scene.remove(keeper);
-      keeper=wrap; keeperInner=inner; scene.add(keeper);
+      keeper=wrap; keeperInner=inner; scene.add(keeper); toonify(inner);   // stile cartoon
       // ----- faccia di Ale come "testa" del portiere (sprite sempre rivolto alla camera) -----
       const ftex=new THREE.TextureLoader().load('assets/keeper-face.png?v=1'); ftex.colorSpace=THREE.SRGBColorSpace;
       keeperFace=new THREE.Sprite(new THREE.SpriteMaterial({map:ftex, transparent:true, depthTest:false, depthWrite:false}));
@@ -733,7 +741,7 @@ function loadGLBKicker(){
       const wrap=new THREE.Group(); wrap.add(pivot);
       wrap.position.set(0.0,0,11.7); wrap.scale.setScalar(0.55);
       if(kicker) kicker.visible=false;       // nasconde il rigorista procedurale
-      kickerGLB=wrap; kickerInner=inner; scene.add(kickerGLB); kickerGLB.visible=false;
+      kickerGLB=wrap; kickerInner=inner; scene.add(kickerGLB); kickerGLB.visible=false; toonify(inner);   // stile cartoon
       kickerGLB.userData.bodyMat=null;
       inner.traverse(o=>{ if(o.isMesh && o.material && o.material.map) kickerGLB.userData.bodyMat=o.material; });
       // testa per la faccia (sprite)
@@ -1135,6 +1143,9 @@ function shoot(){
   let diveSide = guess<-0.2? -1 : (guess>0.2? 1 : 0);
   let diveHigh = clamp((guessY-0.8)/(GH-0.8),0,1);
   let guessYOut=guessY;
+  // PARATA = il portiere arriva ESATTAMENTE sulla palla (guantoni sul pallone, niente più "a caso")
+  if(saved){ guess=endX; guessSide=Math.sign(endX)||0; diveSide=guess<-0.2?-1:(guess>0.2?1:0);
+    diveHigh=clamp((ty-0.8)/(GH-0.8),0,1); guessYOut=ty; }
   // --- HOOK DI TEST (solo con ?kdbg=1): forza il portiere a leggere bene il tiro
   //     e a pararlo, così si possono rivedere visivamente i tuffi agli angoli.
   //     Non incluso nel gameplay normale (flag dal query string). ---
@@ -1513,6 +1524,7 @@ function speak(text, ale){ if(!Sound.sfxOn || !window.speechSynthesis) return;
       .replace(/[«»"]/g,'')
       .replace(/([a-zàèéìòù])\1{2,}/gi,'$1')                  // collassa 3+ ripetizioni: GOOOL->GOL, PARATOOO->PARATO
       .toLowerCase().replace(/\s+/g,' ').trim();              // minuscolo: evita lo "spelling" delle maiuscole
+    s=s.replace(/\bale\b/g,'alé').replace(/\bcamp nou\b/g,'camp nòu'); // pronuncia all'italiana (non "eil")
     if(!s) return;
     if(!_ttsVoice) ttsPick();                                 // assicura la voce italiana (così "Ale" non è in inglese)
     const u=new SpeechSynthesisUtterance(s); u.lang='it-IT'; if(_ttsVoice) u.voice=_ttsVoice;
