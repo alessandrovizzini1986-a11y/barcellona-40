@@ -386,6 +386,7 @@ let aimRing, aimDot, trajLine, ballShadow, ballTrail;
 let state=STATE.LOADING, streak=0, stateT=0, lastT=0;
 let shot=null, shakeMag=0, ripple={t:-1,x:0,y:0}, scorePulseT=0, slowmo=0, camPunchT=0;
 let hitStop=0;                     // freeze-frame "anime" (sec) all'impatto
+let capT=-1;                       // timer per catturare il frame del gol (per la Highlight Card)
 let aimHist=[];                    // segni (-1/0/1) dei tiri recenti -> portiere "psicologico"
 let lastShotPNG=null;              // frame del gol/parata catturato per la Highlight Card
 let roundSeed=null, challengeFromURL=false;   // SFIDA: stesso portiere per tutti
@@ -1245,7 +1246,7 @@ function resolveShot(){
   const r=shot.result;
   shotNum++;                                   // conta il rigore appena calciato (modalità 5 rigori)
   if(isManga() && r!=='MISS') hitStop=0.10;    // freeze-frame all'impatto (gol/parata/palo)
-  setTimeout(()=>{ try{ lastShotPNG=cv.toDataURL('image/jpeg',0.85); }catch(e){} }, 560);  // cattura il frame per la Highlight Card
+  capT=0;                                      // avvia la cattura del frame (nel loop, subito dopo il render)
   if(MODE==='five') fiveRes.push(r==='GOAL'?'g':'x');
   const incrocio = r==='GOAL' && Math.abs(shot.target.x)>GW/2-1.15 && shot.target.y>GH-0.75;  // gol all'angolino
   Telecro.say(incrocio?'INCROCIO':r);          // telecronaca dell'esito (eurogol se incrocio)
@@ -1707,29 +1708,55 @@ function cardText(){ const who=PLAYER?PLAYER.name:'IO';
   if(MODE==='five') return duelResult==='win'? (who+' ha BATTUTO Ale 👑🧤 ai rigori al Camp Nou: '+goals5+'-'+aleSaves+'! 🏆') : ('Ale 👑🧤 ha parato: '+aleSaves+'-'+goals5+' a '+who+' al Camp Nou!');
   return who+' ha segnato '+streak+(streak===1?' rigore':' rigori')+' di fila ad ALE 👑🧤 al Camp Nou!'; }
 function loadImg(src){ return new Promise(res=>{ const im=new Image(); im.onload=()=>res(im); im.onerror=()=>res(null); im.src=src; }); }
+// faccia ritagliata in cerchio (cover-crop, no deformazione) con ombra "Panini" + bordo
+function drawAvatar(ctx,img,cx,cy,r,border){
+  if(!img) return;
+  ctx.save(); ctx.shadowColor='rgba(0,0,0,.5)'; ctx.shadowBlur=16; ctx.shadowOffsetX=4; ctx.shadowOffsetY=6;
+  ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.fillStyle='#0a1430'; ctx.fill(); ctx.restore();   // piattino (ombra)
+  const d=r*2, s=Math.max(d/img.width,d/img.height), w=img.width*s, h=img.height*s;                   // cover-crop
+  const sx=cx-r+(d-w)/2, sy=cy-r+(d-h)/2;
+  ctx.save(); ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.clip(); ctx.drawImage(img,sx,sy,w,h); ctx.restore();
+  ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.lineWidth=6; ctx.strokeStyle=border||'#ffd884'; ctx.stroke();
+}
 async function buildCardURL(){
   const W=1080,H=1080, c=document.createElement('canvas'); c.width=W; c.height=H; const x=c.getContext('2d');
   const sw=W/9; for(let i=0;i<9;i++){ x.fillStyle=(i%2)?'#A50044':'#004D98'; x.fillRect(i*sw,0,sw+1,H); }  // strisce blaugrana
-  const frame = lastShotPNG ? await loadImg(lastShotPNG) : null;
-  const fh=Math.round(H*0.66);
+  let src=lastShotPNG; if(!src){ try{ src=cv.toDataURL('image/jpeg',0.85); }catch(e){} }   // fallback: frame attuale
+  const frame = src ? await loadImg(src) : null;
+  const fh=600;
   if(frame){ const ar=frame.width/frame.height, tr=W/fh; let cw,ch,cx,cy;
     if(ar>tr){ ch=frame.height; cw=ch*tr; cx=(frame.width-cw)/2; cy=0; } else { cw=frame.width; ch=cw/tr; cx=0; cy=(frame.height-ch)/2; }
     x.drawImage(frame,cx,cy,cw,ch,0,0,W,fh); }
+  // badge vacanza in alto a sinistra
+  x.save(); x.beginPath();
+  if(x.roundRect) x.roundRect(36,36,338,62,16); else x.rect(36,36,338,62);
+  x.fillStyle='rgba(255,216,132,.92)'; x.fill();
+  x.fillStyle='#004D98'; x.font='700 27px Arial,sans-serif'; x.textAlign='center'; x.fillText('✈️ BARCELLONA 2026',205,77); x.restore();
+  // fade verso il pannello + pannello inferiore
   const g=x.createLinearGradient(0,fh-170,0,fh+40); g.addColorStop(0,'rgba(4,8,20,0)'); g.addColorStop(1,'rgba(4,8,20,.97)');
   x.fillStyle=g; x.fillRect(0,fh-170,W,210);
   x.fillStyle='rgba(4,8,20,.97)'; x.fillRect(0,fh,W,H-fh);
   x.textAlign='center';
-  x.fillStyle='#ffd884'; x.font='700 34px Arial,sans-serif'; x.fillText('RIGORI AL CAMP NOU', W/2, fh+58);
+  x.fillStyle='#ffd884'; x.font='700 32px Arial,sans-serif'; x.fillText('RIGORI AL CAMP NOU', W/2, 648);
+  // punteggione
   let big,sub;
-  if(MODE==='five'){ big=goals5+' - '+aleSaves; sub=(duelResult==='win'?'BATTUTO ALE 🏆':'vs ALE 👑🧤'); }
+  if(MODE==='five'){ big=goals5+' - '+aleSaves; sub=(duelResult==='win'?'HAI BATTUTO ALE! 🏆':'DUELLO vs ALE'); }
   else { big=String(streak); sub='GOL DI FILA'; }
-  x.fillStyle='#fff'; x.font='800 '+(MODE==='five'?120:150)+'px Arial,sans-serif'; x.fillText(big, W/2, fh+(H-fh)*0.60);
-  x.fillStyle='#9fd0ff'; x.font='700 30px Arial,sans-serif'; x.fillText(sub.toUpperCase(), W/2, fh+(H-fh)*0.60+46);
+  x.fillStyle='#fff'; x.font='800 '+(MODE==='five'?88:104)+'px Arial,sans-serif'; x.fillText(big, W/2, 770);
+  x.fillStyle='#9fd0ff'; x.font='700 26px Arial,sans-serif'; x.fillText(sub.toUpperCase(), W/2, 812);
+  // FACCE: tu (tiratore) vs ALE (portiere-re)
   const who=PLAYER?PLAYER.name:'IO';
-  x.fillStyle='#ffd884'; x.font='700 30px Arial,sans-serif'; x.fillText('⚽ '+who+'   vs   ALE 👑🧤', W/2, H-34);
+  const pf = await loadImg(PLAYER?PLAYER.face:'assets/face-mario.png');
+  const af = await loadImg('assets/keeper-face.png?v=1');
+  drawAvatar(x, pf, 360, 912, 80, '#9fd0ff');
+  drawAvatar(x, af, 720, 912, 80, '#ffd884');
+  x.font='34px Arial,sans-serif'; x.fillStyle='#ffd884'; x.fillText('👑', 720, 818);   // corona sul Re della Brace
+  x.fillStyle='#fff'; x.font='800 40px Arial,sans-serif'; x.fillText('VS', W/2, 928);
+  x.fillStyle='#ffd884'; x.font='700 26px Arial,sans-serif';
+  x.fillText(who, 360, 1036); x.fillText('ALE 👑🧤', 720, 1036);
   return c.toDataURL('image/jpeg',0.92);
 }
-async function shareCard(){ let url=null; try{ url=await buildCardURL(); }catch(e){}
+async function shareCard(){ let url=null; try{ url=await buildCardURL(); }catch(e){ console.error('CARD_FAIL', e&&e.message); }
   if(!url) return;
   try{ const blob=await (await fetch(url)).blob(); const file=new File([blob],'rigori-camp-nou.jpg',{type:'image/jpeg'});
     if(navigator.canShare && navigator.canShare({files:[file]})){ await navigator.share({files:[file],text:cardText()}); return; } }catch(e){}
@@ -1751,6 +1778,7 @@ HUD.snd.addEventListener('click',()=>{ const on=Sound.toggle(); HUD.snd.textCont
 function animate(t){ let dt=Math.min(0.05,(t-(lastT||t))/1000); lastT=t;
   if(hitStop>0){ hitStop-=dt; dt=0; }          // congela il movimento ma continua a renderizzare (impatto anime)
   if(state!==STATE.LOADING){ update(dt); if(keeperMixer){ keeperMixer.update(dt); applyKeeperReach(); } if(kickerMixer){ kickerMixer.update(dt); } updateKeeperFace(); updateKickerFace(); updateKicker(dt); renderer.render(scene,camera);
+    if(capT>=0){ capT+=dt; if(capT>0.45){ try{ lastShotPNG=cv.toDataURL('image/jpeg',0.85); }catch(e){} capT=-1; } }  // cattura il frame del gol per la card (subito dopo il render)
     if(window.__KDBG){ window.__diveU=keeperDive?keeperDive.u:-1; window.__state=state; window.__res=shot?shot.result:''; } }
   requestAnimationFrame(animate); }
 
