@@ -1728,10 +1728,11 @@ async function buildCardURL(){
     if(ar>tr){ ch=frame.height; cw=ch*tr; cx=(frame.width-cw)/2; cy=0; } else { cw=frame.width; ch=cw/tr; cx=0; cy=(frame.height-ch)/2; }
     x.drawImage(frame,cx,cy,cw,ch,0,0,W,fh); }
   // badge vacanza in alto a sinistra
-  x.save(); x.beginPath();
-  if(x.roundRect) x.roundRect(36,36,338,62,16); else x.rect(36,36,338,62);
+  x.save(); x.font='700 26px Arial,sans-serif';
+  const bt='✈️ BARCELLONA · OTTOBRE 2026', bw=x.measureText(bt).width+44, bx=36, by=36, bh=60;
+  x.beginPath(); if(x.roundRect) x.roundRect(bx,by,bw,bh,16); else x.rect(bx,by,bw,bh);
   x.fillStyle='rgba(255,216,132,.92)'; x.fill();
-  x.fillStyle='#004D98'; x.font='700 27px Arial,sans-serif'; x.textAlign='center'; x.fillText('✈️ BARCELLONA 2026',205,77); x.restore();
+  x.fillStyle='#004D98'; x.textAlign='center'; x.fillText(bt, bx+bw/2, by+40); x.restore();
   // fade verso il pannello + pannello inferiore
   const g=x.createLinearGradient(0,fh-170,0,fh+40); g.addColorStop(0,'rgba(4,8,20,0)'); g.addColorStop(1,'rgba(4,8,20,.97)');
   x.fillStyle=g; x.fillRect(0,fh-170,W,210);
