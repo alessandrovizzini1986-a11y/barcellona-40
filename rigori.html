@@ -1808,9 +1808,9 @@ HUD.snd.addEventListener('click',()=>{ const on=Sound.toggle(); HUD.snd.textCont
 class Input {
   constructor(engine){ this.e=engine; this.centerTaps=[]; this._bind(); }
   // tap fermo sul punto centrale della traversa? (per l'easter egg, raggio piccolo)
-  _nearGoalCenter(x,y){ if(!camera) return false; tmpV2.set(0,GH,0).project(camera);
+  _nearGoalCenter(x,y){ if(!camera) return false; tmpV2.set(0,GH*0.75,0).project(camera);
     const cx=(tmpV2.x*0.5+0.5)*innerWidth, cy=(-tmpV2.y*0.5+0.5)*innerHeight;
-    return Math.hypot(x-cx,y-cy) < Math.min(innerWidth,innerHeight)*0.07; }
+    return Math.hypot(x-cx,y-cy) < Math.min(innerWidth,innerHeight)*0.20; }   // zona generosa attorno al centro porta
   _bind(){
     cv.addEventListener('pointerdown', e=>this.down(e));
     cv.addEventListener('pointermove', e=>this.move(e));
@@ -1843,11 +1843,15 @@ class Input {
     if(!aim.active||state!==STATE.GAME_PLAYING){ aim.active=false; return; }
     aim.active=false;
     const moved=Math.hypot(aim.cx-aim.sx, aim.cy-aim.sy);
-    // EASTER EGG: 3 tap rapidi e FERMI sul centro della traversa -> tiro speciale (i tap NON tirano)
-    if(moved<14 && this._nearGoalCenter(aim.sx,aim.sy)){
-      const now=performance.now(); this.centerTaps=this.centerTaps.filter(t=>now-t<900); this.centerTaps.push(now);
+    // EASTER EGG: 3 tap rapidi sul CENTRO/TRAVERSA (zona generosa) -> tiro speciale.
+    // Questi tap NON tirano e danno feedback ad ogni tocco (così lo "vedi" caricarsi).
+    if(moved<34 && this._nearGoalCenter(aim.sx,aim.sy)){
+      const now=performance.now(); this.centerTaps=this.centerTaps.filter(t=>now-t<1200); this.centerTaps.push(now);
+      HUD.power.classList.remove('on'); HUD.curl.classList.remove('on');
       if(this.centerTaps.length>=3){ this.centerTaps.length=0; armSpecial(); }
-      HUD.power.classList.remove('on'); HUD.curl.classList.remove('on'); return;
+      else { Sound.sfx(520+this.centerTaps.length*200,.05,'square',0.2); haptic(18);
+        showTelecro('🎯 Centro porta… '+this.centerTaps.length+'/3 (tocca ancora veloce!)'); }
+      return;
     }
     if(aim.power<CONFIG.minPowerShot+0.02) aim.power=0.45;        // tap senza drag = tiro morbido
     this.e.physics.shoot();
@@ -1998,7 +2002,7 @@ class GameEngine {                               // orchestratore: loop + FSM
     if(hitStop>0){ hitStop-=dt; dt=0; }            // hit-stop: congela il movimento ma continua a renderizzare
     if(state!==STATE.LOADING){ this.update(dt); this.view.render(dt);
       if(window.__KDBG){ window.__diveU=keeperDive?keeperDive.u:-1; window.__state=state; window.__res=shot?shot.result:'';
-        tmpV2.set(0,GH,0).project(camera); window.__gc=[(tmpV2.x*0.5+0.5)*innerWidth,(-tmpV2.y*0.5+0.5)*innerHeight]; } }
+        tmpV2.set(0,GH*0.75,0).project(camera); window.__gc=[(tmpV2.x*0.5+0.5)*innerWidth,(-tmpV2.y*0.5+0.5)*innerHeight]; } }
     requestAnimationFrame(this._loop); }
   start(){ this._loop=(t)=>this.loop(t); requestAnimationFrame(this._loop); }
 }
