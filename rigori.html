@@ -120,6 +120,27 @@
   #shareBtn:active{transform:translateY(2px)}
   #modeBtn.modesel{margin:4px 0 2px;font-size:11px;color:#ffd884;background:rgba(2,12,30,.7);border:1px solid var(--gold);padding:9px 18px}
   #modeBtn.modesel:active{transform:translateY(2px)}
+  /* selettore STILE (PES realistico vs Holly & Benji anime) */
+  .styleSel{display:flex;gap:10px;margin:2px 0 2px}
+  .styleSel .stbtn{pointer-events:auto;cursor:pointer;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:4px;
+    font-size:10px;color:#cdd6ee;background:rgba(2,12,30,.7);border:1px solid rgba(255,255,255,.18);border-radius:13px;padding:9px 13px;letter-spacing:.03em;min-width:96px}
+  .styleSel .stbtn small{font-size:7px;color:#8fa6cf;letter-spacing:.05em}
+  .styleSel .stbtn.active{color:#fff;border-color:var(--gold);background:linear-gradient(160deg,#004D98,#A50044);box-shadow:0 0 14px rgba(255,216,132,.4)}
+  .styleSel .stbtn.active small{color:#ffd884}
+  .styleSel .stbtn:active{transform:translateY(2px)}
+  /* overlay ANIME (solo in modalità Holly & Benji) */
+  #animefx{position:fixed;inset:0;z-index:12;pointer-events:none;display:none;overflow:hidden}
+  body.manga #animefx{display:block}
+  #speedlines{position:absolute;inset:-20%;opacity:0;
+    background:repeating-conic-gradient(from 0deg at 50% 50%, rgba(255,255,255,.0) 0deg 2.4deg, rgba(255,255,255,.5) 2.4deg 3.1deg);
+    -webkit-mask-image:radial-gradient(circle at 50% 50%, transparent 30%, #000 62%);mask-image:radial-gradient(circle at 50% 50%, transparent 30%, #000 62%)}
+  #speedlines.go{animation:spd .5s ease-out}
+  @keyframes spd{0%{opacity:0;transform:scale(1.25)}18%{opacity:.85}100%{opacity:0;transform:scale(1)}}
+  #mangaword{position:absolute;left:0;right:0;top:34%;text-align:center;opacity:0;
+    font-family:"Press Start 2P",monospace;font-size:clamp(26px,9vw,52px);color:var(--mc,#ffd24a);
+    -webkit-text-stroke:3px #07101f;paint-order:stroke fill;text-shadow:0 0 18px var(--mc,#ffd24a),0 6px 0 #07101f;letter-spacing:1px}
+  #mangaword.go{animation:mword .9s cubic-bezier(.2,1.4,.3,1)}
+  @keyframes mword{0%{opacity:0;transform:scale(.3) rotate(-9deg)}22%{opacity:1;transform:scale(1.12) rotate(-3deg)}45%{transform:scale(1) rotate(0)}75%{opacity:1}100%{opacity:0;transform:scale(1.04)}}
   #shotcount{position:absolute;top:calc(70px + env(safe-area-inset-top));left:16px;z-index:18;display:none;
     font-size:9px;color:#ffd884;background:rgba(2,12,30,.72);border:1px solid rgba(255,216,132,.4);border-radius:8px;padding:6px 10px}
   #shotcount.on{display:block}
@@ -149,6 +170,7 @@
 <body>
 <canvas id="cv"></canvas>
 <div id="grade"></div>
+<div id="animefx"><div id="speedlines"></div><div id="mangaword"></div></div>
 
 <div id="hud">
   <div class="topbar"><a href="sala-giochi.html">‹ SALA GIOCHI</a><a href="index.html">ESCI ✕</a></div>
@@ -169,6 +191,10 @@
   <div class="panel" id="menu">
     <h1>RIGORI<br><span class="gold">AL CAMP NOU</span></h1>
     <button id="modeBtn" class="hudbtn modesel">∞ INFINITA</button>
+    <div class="styleSel">
+      <button class="stbtn" data-gfx="pes">🎮 PES<small>realistico</small></button>
+      <button class="stbtn" data-gfx="manga">🎬 HOLLY &amp; BENJI<small>anime</small></button>
+    </div>
     <div class="small">trascina per mirare nell'angolo<br><span class="grn">la distanza decide la POTENZA</span><br><span class="blu">muovi di lato per dare EFFETTO</span></div>
     <div class="small">record <span id="menuRec">0</span></div>
     <div class="blink">★ TOCCA PER GIOCARE ★</div>
@@ -177,6 +203,10 @@
     <h1 id="overTitle" class="gold">FINITA!</h1>
     <div class="small" id="overLine">hai segnato 0 rigori di fila</div>
     <div class="small">record <span id="overRec">0</span></div>
+    <div class="styleSel">
+      <button class="stbtn" data-gfx="pes">🎮 PES<small>realistico</small></button>
+      <button class="stbtn" data-gfx="manga">🎬 HOLLY &amp; BENJI<small>anime</small></button>
+    </div>
     <button id="shareBtn" class="hudbtn share">📲 CONDIVIDI</button>
     <div class="blink">★ TOCCA PER RIGIOCARE ★</div>
   </div>
@@ -330,6 +360,9 @@ const KICK_START_OFFSET=0.50;                        // parte appena prima del c
 let PLAYER=null; try{ const p=localStorage.getItem('rig_player'); if(p&&PLAYERS[p]) PLAYER=PLAYERS[p]; }catch(e){}
 // modalità: 'infinite' (morte improvvisa) | 'five' (5 rigori, conta i gol)
 let MODE='infinite', shotNum=0, goals5=0; try{ const m=localStorage.getItem('rig_mode'); if(m==='five'||m==='infinite') MODE=m; }catch(e){}
+// STILE grafico: 'manga' (Holly & Benji: cel-shading + speed-line + slow-mo drammatica) | 'pes' (realistico PBR)
+let GFX='manga'; try{ const g=localStorage.getItem('rig_gfx'); if(g==='pes'||g==='manga') GFX=g; }catch(e){}
+const isManga=()=>GFX==='manga';
 let aleSaves=0, suddenDeath=false, duelResult='';    // duello 5 rigori: tu (gol) vs Ale (parate)
 const keeperAct={};                                  // azioni: diveL, diveR, high, ready, beaten
 const keeperBones={};                                // riferimenti ossa per reach procedurale additivo
@@ -636,9 +669,12 @@ let _toonGrad=null;
 function toonGrad(){ if(_toonGrad) return _toonGrad; const c=document.createElement('canvas'); c.width=4;c.height=1; const x=c.getContext('2d');
   ['#3a3a3a','#8a8a8a','#cfcfcf','#ffffff'].forEach((col,i)=>{ x.fillStyle=col; x.fillRect(i,0,1,1); });
   _toonGrad=new THREE.CanvasTexture(c); _toonGrad.minFilter=THREE.NearestFilter; _toonGrad.magFilter=THREE.NearestFilter; _toonGrad.colorSpace=THREE.SRGBColorSpace; return _toonGrad; }
-function toonify(root){ if(!root) return; root.traverse(o=>{ if(o.isMesh && o.material && !o.material.__toon){ const m=o.material;
-  const t=new THREE.MeshToonMaterial({ color: m.color?m.color.clone():new THREE.Color(0xffffff), map:m.map||null, gradientMap:toonGrad() });
-  t.side=m.side||THREE.FrontSide; t.__toon=true; o.material=t; } }); }
+function toonify(root){ if(!root) return; root.traverse(o=>{ if(o.isMesh && o.material){
+  if(!o.userData.pbrMat) o.userData.pbrMat=o.material;            // conserva il materiale realistico per poter tornare a PES
+  if(!o.material.__toon){ const m=o.userData.pbrMat;
+    const t=new THREE.MeshToonMaterial({ color: m.color?m.color.clone():new THREE.Color(0xffffff), map:m.map||null, gradientMap:toonGrad() });
+    t.side=m.side||THREE.FrontSide; t.__toon=true; o.material=t; } } }); }
+function untoonify(root){ if(!root) return; root.traverse(o=>{ if(o.isMesh && o.userData.pbrMat){ o.material=o.userData.pbrMat; } }); }
 function loadGLBKeeper(){
   try{
     const KIT=keeperKitTexture();
@@ -658,7 +694,7 @@ function loadGLBKeeper(){
       pivot.position.set(-c.x,-box.min.y,-c.z);          // centra X/Z, piedi a y=0
       const wrap=new THREE.Group(); wrap.add(pivot); wrap.position.set(0,0,KEEPER_Z); wrap.rotation.y=Math.PI;
       if(keeper) scene.remove(keeper);
-      keeper=wrap; keeperInner=inner; scene.add(keeper); toonify(inner);   // stile cartoon
+      keeper=wrap; keeperInner=inner; scene.add(keeper); if(isManga()) toonify(inner);   // cel-shading solo in Holly & Benji
       // ----- faccia di Ale come "testa" del portiere (sprite sempre rivolto alla camera) -----
       const ftex=new THREE.TextureLoader().load('assets/keeper-face.png?v=1'); ftex.colorSpace=THREE.SRGBColorSpace;
       keeperFace=new THREE.Sprite(new THREE.SpriteMaterial({map:ftex, transparent:true, depthTest:false, depthWrite:false}));
@@ -745,7 +781,7 @@ function loadGLBKicker(){
       const wrap=new THREE.Group(); wrap.add(pivot);
       wrap.position.set(0.0,0,11.7); wrap.scale.setScalar(0.55);
       if(kicker) kicker.visible=false;       // nasconde il rigorista procedurale
-      kickerGLB=wrap; kickerInner=inner; scene.add(kickerGLB); kickerGLB.visible=false; toonify(inner);   // stile cartoon
+      kickerGLB=wrap; kickerInner=inner; scene.add(kickerGLB); kickerGLB.visible=false; if(isManga()) toonify(inner);   // cel-shading solo in Holly & Benji
       kickerGLB.userData.bodyMat=null;
       inner.traverse(o=>{ if(o.isMesh && o.material && o.material.map) kickerGLB.userData.bodyMat=o.material; });
       // testa per la faccia (sprite)
@@ -1170,6 +1206,7 @@ function shoot(){
   kickT=0;                                      // lean procedurale (fallback)
   startKickerKick();                            // calcio GLB sincronizzato (contatto ~ lancio palla)
   camPunchT=0; slowmo=0;
+  speedLines();                                 // raffica di linee cinetiche anime sul tiro
   Sound.sfx(360+p*320,.08,'square',0.2); haptic(14);
 }
 
@@ -1185,13 +1222,14 @@ function resolveShot(){
     burstConfetti(shot.target.x,Math.max(0.6,shot.target.y));
     if(incrocio){ burstConfetti(-shot.target.x*0.5,1.5); setTimeout(()=>burstConfetti(shot.target.x*0.7,1.2),120); }  // festa extra all'incrocio
     Sound.sfx(880,.07); setTimeout(()=>Sound.sfx(1320,.11),85); setTimeout(()=>Sound.sfx(1760,.13),190); Sound.roar();
+    speedLines(); mangaWord(incrocio?'EUROGOOOL!':'GOOOOL!','#39ff7a');
     haptic([0,40,30,70]); slowmo=1; setState(STATE.GOAL_ANIMATION);
   } else {
     shakeMag=CONFIG.shakeOnSave;
-    if(r==='SAVE'){ aleSaves++; showResult('PARATO!','#ff9d6a'); Sound.sfx(200,.16,'sawtooth'); Sound.groan();
+    if(r==='SAVE'){ aleSaves++; showResult('PARATO!','#ff9d6a'); mangaWord('PARATAAA!','#ff9d6a'); Sound.sfx(200,.16,'sawtooth'); Sound.groan();
       HUD.flash.classList.remove('on'); HUD.flash.classList.add('save'); void HUD.flash.offsetWidth; HUD.flash.classList.add('on'); }
-    else if(r==='POST'){ showResult('PALO!','#ffd884'); Sound.sfx(420,.05,'square',0.25); setTimeout(()=>Sound.sfx(160,.18,'triangle'),60); Sound.groan(); }
-    else { showResult('FUORI!','#ffd28a'); Sound.sfx(150,.20,'triangle'); Sound.groan(); }
+    else if(r==='POST'){ showResult('PALO!','#ffd884'); mangaWord('PALO!','#ffd884'); Sound.sfx(420,.05,'square',0.25); setTimeout(()=>Sound.sfx(160,.18,'triangle'),60); Sound.groan(); }
+    else { showResult('FUORI!','#ffd28a'); mangaWord('FUORIII!','#ffd28a'); Sound.sfx(150,.20,'triangle'); Sound.groan(); }
     haptic([0,130]); slowmo=1; setState(STATE.SAVE_ANIMATION);
   }
   syncHUD();
@@ -1216,7 +1254,7 @@ function update(dt){
   scorePulseT=Math.max(0,scorePulseT-dt);
   shakeMag=Math.max(0,shakeMag-dt*2.2);
   if(camPunchT>0) camPunchT=Math.max(0,camPunchT-dt);
-  if(slowmo>0) slowmo=Math.max(0,slowmo-dt/(CONFIG.slowmoMs/1000));
+  if(slowmo>0) slowmo=Math.max(0,slowmo-dt/(CONFIG.slowmoMs*(isManga()?1.6:1)/1000));   // slow-mo più lunga e drammatica in anime
 
   // idle keeper bounce quando si gioca
   if(state===STATE.GAME_PLAYING){
@@ -1290,7 +1328,7 @@ function updateCamera(dt){
   let lx=camLook.x+Math.sin(stateT*0.5)*0.05, ly=camLook.y, lz=camLook.z;
   // punch-in: avvicina e abbassa leggermente la camera sullo strike (piu nervoso)
   if(state===STATE.BALL_IN_FLIGHT){ const k=easeOutCubic(clamp(shot.t/0.26,0,1));
-    pz=lerp(camBase.z,camBase.z-2.7*CONFIG.camPunch,k); py=lerp(py,camBase.y-0.18,k*0.6);
+    pz=lerp(camBase.z,camBase.z-2.7*CONFIG.camPunch*(isManga()?1.3:1),k); py=lerp(py,camBase.y-0.18,k*0.6);
     lx=lerp(camLook.x,ball.position.x*0.45,0.35); ly=lerp(camLook.y, ball.position.y*0.5+0.7, 0.25); }
   // slow-mo orbita su gol/parata: piu vicino e con leggera salita
   if(slowmo>0 && (state===STATE.GOAL_ANIMATION||state===STATE.SAVE_ANIMATION)){
@@ -1313,7 +1351,7 @@ function pushTrail(){
   const h=ballTrail.userData.hist; h.unshift({x:ball.position.x,y:ball.position.y,z:ball.position.z});
   if(h.length>ballTrail.userData.N) h.pop();
   ballTrail.userData.parts.forEach((m,i)=>{ if(i<h.length){ m.visible=true; m.position.set(h[i].x,h[i].y,h[i].z);
-    const f=1-i/ballTrail.userData.N; m.material.opacity=0.28*f; m.scale.setScalar(f*0.9+0.1); } else m.visible=false; });
+    const f=1-i/ballTrail.userData.N; m.material.opacity=(isManga()?0.5:0.28)*f; m.scale.setScalar(f*(isManga()?1.1:0.9)+0.1); } else m.visible=false; });
 }
 function updateConfetti(dt){
   const p=confetti; if(p.userData.t<0) return; p.userData.t+=dt;
@@ -1494,6 +1532,18 @@ function showResult(txt,col){ HUD.result.textContent=txt; HUD.result.style.color
   HUD.result.classList.remove('show'); void HUD.result.offsetWidth; HUD.result.classList.add('show');
   setTimeout(()=>{ HUD.result.classList.remove('show'); },1300); }
 
+/* ----- STILE: PES (realistico) <-> HOLLY & BENJI (anime) ----- */
+function applyGFX(){
+  if(isManga()){ toonify(keeperInner); toonify(kickerInner); } else { untoonify(keeperInner); untoonify(kickerInner); }
+  document.body.classList.toggle('manga', isManga());
+  document.querySelectorAll('.stbtn').forEach(b=>b.classList.toggle('active', b.dataset.gfx===GFX));
+}
+function setGFX(g){ if(g!=='pes'&&g!=='manga')return; GFX=g; try{localStorage.setItem('rig_gfx',g);}catch(e){} applyGFX(); }
+// effetti anime (attivi solo in Holly & Benji)
+function speedLines(){ if(!isManga())return; const s=document.getElementById('speedlines'); s.classList.remove('go'); void s.offsetWidth; s.classList.add('go'); }
+function mangaWord(txt,col){ if(!isManga())return; const w=document.getElementById('mangaword'); w.textContent=txt;
+  w.style.setProperty('--mc',col||'#ffd24a'); w.classList.remove('go'); void w.offsetWidth; w.classList.add('go'); }
+
 /* ===================== TELECRONACA & SFIDA (la mia firma) ===================== */
 const PNAME=()=> PLAYER?PLAYER.name:'IL TIRATORE';
 const Telecro={
@@ -1602,6 +1652,9 @@ document.getElementById('nameSave').addEventListener('click',saveName);
 document.querySelectorAll('#playerSelect .pscard').forEach(b=>b.addEventListener('click',()=>pickPlayer(b.dataset.player)));
 document.getElementById('repick').addEventListener('click',(e)=>{ e.stopPropagation(); document.getElementById('playerSelect').classList.add('show'); });
 document.getElementById('modeBtn').addEventListener('click',(e)=>{ e.stopPropagation(); MODE=(MODE==='five')?'infinite':'five'; try{localStorage.setItem('rig_mode',MODE);}catch(e){} syncHUD(); });
+// selettore STILE: PES <-> Holly & Benji (cambiabile in qualsiasi momento)
+document.querySelectorAll('.stbtn').forEach(b=>b.addEventListener('click',(e)=>{ e.stopPropagation(); setGFX(b.dataset.gfx); }));
+applyGFX();   // imposta classe body + bottoni attivi all'avvio
 document.getElementById('shareBtn').addEventListener('click',(e)=>{ e.stopPropagation();
   const who=PLAYER?PLAYER.name:'IO';
   let txt;
