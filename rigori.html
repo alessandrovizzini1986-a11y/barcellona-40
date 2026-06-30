@@ -1167,7 +1167,7 @@ function resetForShot(){
   if(useGLBKicker && kickerGLB){ kickPhase=''; kickPhaseT=0; playKicker('idle'); }
   aim.active=false; aim.power=0; aim.curl=0; aim.t0=0; aimRing.visible=aimDot.visible=trajLine.visible=false;
   // reset scia (incluso colore: la scia arcobaleno del tiro speciale torna bianca)
-  ballTrail.userData.hist.length=0; ballTrail.userData.parts.forEach(p=>{ p.visible=false; p.material.color.setRGB(1,1,1); });
+  ballTrail.userData.hist.length=0; ballTrail.userData.parts.forEach(p=>{ p.visible=false; p.material.color.setRGB(1,1,1); p.material.blending=THREE.AdditiveBlending; p.material.needsUpdate=true; });
   if(netShatter){ netShatter.userData.t=-1; netShatter.visible=false; for(const s of netShatter.children) s.visible=false; }  // rete integra
   HUD.power.classList.remove('on'); HUD.curl.classList.remove('on');
 }
@@ -1278,6 +1278,13 @@ function shoot(){
   camPunchT=0; slowmo=0;
   speedLines();                                 // raffica di linee cinetiche anime sul tiro
   Sound.sfx(360+p*320,.08,'square',0.2); haptic(14);
+  if(special){                                  // TIRO SPECIALE: annuncio inconfondibile al momento del tiro
+    ballTrail.userData.parts.forEach(m=>{ m.material.blending=THREE.NormalBlending; m.material.needsUpdate=true; });  // colori arcobaleno NETTI (no wash bianco)
+    engine.view.popWord('⚡ SUPERTIRO! ⚡','#ff3cac',true); engine.view.shake(1.1);
+    Sound.sfx(520,.07); setTimeout(()=>Sound.sfx(780,.07),60); setTimeout(()=>Sound.sfx(1100,.08),120); setTimeout(()=>Sound.sfx(1560,.13),190);  // power-up in crescendo
+    HUD.flash.classList.remove('on','save'); void HUD.flash.offsetWidth; HUD.flash.classList.add('on');
+    haptic([0,40,30,40,30,90]);
+  }
 }
 
 function resolveShot(){
@@ -1296,6 +1303,8 @@ function resolveShot(){
     engine.view.burstAt3D(tmpV2.set(shot.target.x,Math.max(0.4,shot.target.y),-GD),'goal');   // scintille sulla rete
     Sound.sfx(880,.07); setTimeout(()=>Sound.sfx(1320,.11),85); setTimeout(()=>Sound.sfx(1760,.13),190); Sound.roar();
     speedLines(); engine.view.popWord(incrocio?'EUROGOOOL!':'GOOOOL!','#FF0000');   // onomatopea rossa + bordo nero (canvas)
+    if(shot.special){ engine.view.popWord('SUPERGOOOL! 🌈','#ff3cac',true); engine.view.shake(1.2);   // gol da tiro speciale
+      for(let q=0;q<3;q++) setTimeout(()=>burstConfetti(rand(-2.5,2.5),rand(1,2.2)),q*110); }
     haptic([0,40,30,70]); slowmo=1; setState(STATE.GOAL_ANIMATION);
   } else {
     shakeMag=CONFIG.shakeOnSave;
@@ -1351,6 +1360,7 @@ function update(dt){
     ball.position.z=lerp(shot.from.z,shot.target.z,p);
     // spin: rotazione coerente con direzione + curva
     ball.rotation.x-=dt*CONFIG.spinVis; ball.rotation.y+=dt*CONFIG.spinVis*0.4*shot.curlSign;
+    if(shot.special){ ball.scale.setScalar(1.3+0.18*Math.sin(stateT*42)); ball.rotation.x-=dt*CONFIG.spinVis*1.5; }   // palla più grossa e iper-rotante
     // ombra contatto: scala/opacità con altezza
     updateBallShadow();
     pushTrail();
@@ -1429,7 +1439,7 @@ function pushTrail(){
   const N=ballTrail.userData.N;
   ballTrail.userData.parts.forEach((m,i)=>{ if(i<h.length){ m.visible=true; m.position.set(h[i].x,h[i].y,h[i].z);
     const f=1-i/N; m.material.opacity=(isManga()?0.5:0.28)*f; m.scale.setScalar(f*(isManga()?1.1:0.9)+0.1);
-    if(shot&&shot.special){ m.material.color.setHSL(((i/N)+performance.now()/500)%1,1,0.6); m.material.opacity=Math.min(1,m.material.opacity*1.9); m.scale.multiplyScalar(1.25); }   // scia ARCOBALENO
+    if(shot&&shot.special){ m.material.color.setHSL(((i/N)+performance.now()/450)%1,1,0.6); m.material.opacity=clamp(m.material.opacity*2.6+0.35,0,1); m.scale.multiplyScalar(1.9); }   // scia ARCOBALENO grossa
   } else m.visible=false; });
 }
 function updateConfetti(dt){
@@ -1966,7 +1976,7 @@ class View {                                     // render Three.js + layer 2D (
     c.restore(); c.globalAlpha=1;
   }
   // ANIME: onomatopea pop-up (scala 0->1 in ~100ms, sparisce dopo 800ms) disegnata su canvas
-  popWord(text,color){ if(!isManga()) return; this.word={text,color,t:0}; }
+  popWord(text,color,force){ if(!isManga()&&!force) return; this.word={text,color,t:0}; }   // force=true per il tiro speciale (anche in PES)
   _popWord(c,W,H,dt){ const w=this.word; if(!w) return; w.t+=dt;
     if(w.t>=0.8){ this.word=null; return; }
     const sc = w.t<0.1 ? easeOutBack(clamp(w.t/0.1,0,1)) : 1;        // pop in 100ms
