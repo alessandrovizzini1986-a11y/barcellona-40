@@ -1124,7 +1124,9 @@ const reactOf  =()=>clamp(CONFIG.reactionMs-streak*CONFIG.reactionStep,CONFIG.re
 const guessBiasOf=()=>clamp(streak*CONFIG.guessBiasGrow,0,0.7); // 0=tira a caso lato, ~0.7=spesso giusto
 
 /* ------------------------------- STATI ----------------------------------- */
-function setState(s){ state=s; stateT=0; syncHUD(); }
+// La transizione di stato è gestita dalla FSM dentro GameEngine (con hook
+// onEnter/onExit, base per il "juice" di Fase 2). Questo resta il nome pubblico.
+function setState(s){ engine.setState(s); }
 function startGame(){ streak=0; shotNum=0; goals5=0; aleSaves=0; suddenDeath=false; duelResult=''; fiveRes=[]; aimHist=[]; lastShotPNG=null;
   if(!challengeFromURL) roundSeed=Math.floor(Math.random()*2.1e9).toString(36);   // nuovo seed ogni partita (la SFIDA da URL lo fissa)
   resetForShot(); Sound.ac(); Sound.musicStart(); Sound.crowd(0.04); Sound.sfx(880,.06); setState(STATE.GAME_PLAYING); refWhistle(); }
@@ -1637,50 +1639,8 @@ function saveName(){ const i=document.getElementById('nameInput');
   const n=(i.value||'').trim().replace(/[<>]/g,'').toUpperCase()||'???'; Scores.add(n,streak); HUD.nameOv.classList.remove('show'); syncHUD(); }
 
 /* ------------------------------- INPUT ----------------------------------- */
-// Mira libera con drag: down sceglie il punto, drag regola potenza (distanza) +
-// effetto (spostamento orizzontale dopo la pressione), up tira.
-function pdown(e){
-  if(HUD.nameOv.classList.contains('show')) return;
-  const t=e.touches?e.touches[0]:e; const x=t.clientX, y=t.clientY;
-  if(state===STATE.MENU_SCREEN||state===STATE.GAME_OVER){ startGame(); return; }
-  if(state!==STATE.GAME_PLAYING) return;
-  aim.active=true; aim.sx=x; aim.sy=y; aim.cx=x; aim.cy=y;
-  const g=screenToGoal(x,y); aim.tx=g.x; aim.ty=g.y; aim.power=CONFIG.minPowerShot; aim.curl=0;
-  HUD.power.classList.add('on'); HUD.curl.classList.remove('on');
-}
-function pmove(e){
-  if(!aim.active||state!==STATE.GAME_PLAYING) return;
-  const t=e.touches?e.touches[0]:e; const x=t.clientX, y=t.clientY; aim.cx=x; aim.cy=y;
-  // target dal punto corrente
-  const g=screenToGoal(x,y); aim.tx=g.x; aim.ty=g.y;
-  // potenza = distanza dragga dal punto iniziale (verso il basso/qualsiasi)
-  const ref=Math.min(window.innerWidth,window.innerHeight)*0.55;
-  const dist=Math.hypot(x-aim.sx,y-aim.sy);
-  aim.power=clamp(CONFIG.minPowerShot + dist/ref, 0, 1);
-  // effetto = componente orizzontale del drag (flick laterale) normalizzata
-  aim.curl=clamp((x-aim.sx)/(window.innerWidth*0.35),-1,1);
-  if(Math.abs(aim.curl)>0.08){ HUD.curl.classList.add('on');
-    HUD.curl.textContent=(aim.curl<0?'↺':'↻')+' EFFETTO '+Math.round(Math.abs(aim.curl)*100)+'%'; }
-  else HUD.curl.classList.remove('on');
-}
-function pup(e){
-  if(!aim.active||state!==STATE.GAME_PLAYING){ aim.active=false; return; }
-  aim.active=false;
-  if(aim.power<CONFIG.minPowerShot+0.02){ // tap senza drag = tiro morbido centrato sul punto
-    aim.power=0.45; }
-  shoot();
-}
-cv.addEventListener('pointerdown',pdown);
-cv.addEventListener('pointermove',pmove);
-cv.addEventListener('pointerup',pup);
-cv.addEventListener('pointercancel',pup);
-cv.addEventListener('pointerleave',e=>{ if(aim.active) pup(e); });
-
-addEventListener('keydown',e=>{ const k=e.key.toLowerCase();
-  if(k===' '||k==='enter'){ e.preventDefault();
-    if(state===STATE.MENU_SCREEN||state===STATE.GAME_OVER) startGame();
-    else if(state===STATE.GAME_PLAYING){ // tiro da tastiera: mira al centro-alto con potenza media
-      aim.tx=rand(-2,2); aim.ty=rand(0.6,1.9); aim.power=0.6; aim.curl=rand(-0.4,0.4); shoot(); } } });
+// L'input (pointer drag per mira/potenza/effetto + tastiera) è incapsulato
+// nella classe Input (vedi il blocco GAME ENGINE in fondo).
 document.getElementById('nameSave').addEventListener('click',saveName);
 // player-select: scelta calciatore + re-scelta toccando la faccia nello scoreboard
 document.querySelectorAll('#playerSelect .pscard').forEach(b=>b.addEventListener('click',()=>pickPlayer(b.dataset.player)));
@@ -1775,13 +1735,91 @@ if(PLAYER) applyPlayer();
 document.getElementById('nameInput').addEventListener('keydown',e=>{ e.stopPropagation(); if(e.key==='Enter') saveName(); });
 HUD.snd.addEventListener('click',()=>{ const on=Sound.toggle(); HUD.snd.textContent=on?'♪':'✕'; if(on&&state===STATE.GAME_PLAYING)Sound.crowd(0.04); });
 
-/* ------------------------------- LOOP ------------------------------------ */
-function animate(t){ let dt=Math.min(0.05,(t-(lastT||t))/1000); lastT=t;
-  if(hitStop>0){ hitStop-=dt; dt=0; }          // congela il movimento ma continua a renderizzare (impatto anime)
-  if(state!==STATE.LOADING){ update(dt); if(keeperMixer){ keeperMixer.update(dt); applyKeeperReach(); } if(kickerMixer){ kickerMixer.update(dt); } updateKeeperFace(); updateKickerFace(); updateKicker(dt); renderer.render(scene,camera);
-    if(capT>=0){ capT+=dt; if(capT>0.45){ try{ lastShotPNG=cv.toDataURL('image/jpeg',0.85); }catch(e){} capT=-1; } }  // cattura il frame del gol per la card (subito dopo il render)
-    if(window.__KDBG){ window.__diveU=keeperDive?keeperDive.u:-1; window.__state=state; window.__res=shot?shot.result:''; } }
-  requestAnimationFrame(animate); }
+/* ========================== GAME ENGINE (OOP) =============================
+   Architettura a classi nel singolo file. GameEngine possiede il LOOP (rAF) e
+   la FSM (con hook onEnter/onExit, base per il "juice" di Fase 2) e delega a tre
+   sottosistemi a responsabilità separata:
+     · Input   — pointer/tastiera, mira drag, intent (start / shoot)
+     · Physics — volo palla, AI portiere, risoluzione dell'esito
+     · View    — render Three.js per-frame + layer FX/juice
+   Lo stato mutabile del gioco vive nello scope-modulo = stato privato del
+   singleton in un ES module, letto/scritto solo tramite questi metodi.
+=========================================================================== */
+class Input {
+  constructor(engine){ this.e=engine; this._bind(); }
+  _bind(){
+    cv.addEventListener('pointerdown', e=>this.down(e));
+    cv.addEventListener('pointermove', e=>this.move(e));
+    cv.addEventListener('pointerup',   e=>this.up(e));
+    cv.addEventListener('pointercancel',e=>this.up(e));
+    cv.addEventListener('pointerleave', e=>{ if(aim.active) this.up(e); });
+    addEventListener('keydown', e=>this.key(e));
+  }
+  down(e){
+    if(HUD.nameOv.classList.contains('show')) return;
+    const t=e.touches?e.touches[0]:e, x=t.clientX, y=t.clientY;
+    if(state===STATE.MENU_SCREEN||state===STATE.GAME_OVER){ startGame(); return; }
+    if(state!==STATE.GAME_PLAYING) return;
+    aim.active=true; aim.sx=x; aim.sy=y; aim.cx=x; aim.cy=y;
+    const g=screenToGoal(x,y); aim.tx=g.x; aim.ty=g.y; aim.power=CONFIG.minPowerShot; aim.curl=0;
+    HUD.power.classList.add('on'); HUD.curl.classList.remove('on');
+  }
+  move(e){
+    if(!aim.active||state!==STATE.GAME_PLAYING) return;
+    const t=e.touches?e.touches[0]:e, x=t.clientX, y=t.clientY; aim.cx=x; aim.cy=y;
+    const g=screenToGoal(x,y); aim.tx=g.x; aim.ty=g.y;            // target dal punto corrente
+    const ref=Math.min(window.innerWidth,window.innerHeight)*0.55;
+    aim.power=clamp(CONFIG.minPowerShot + Math.hypot(x-aim.sx,y-aim.sy)/ref, 0, 1);   // potenza = distanza drag
+    aim.curl=clamp((x-aim.sx)/(window.innerWidth*0.35),-1,1);     // effetto = flick orizzontale
+    if(Math.abs(aim.curl)>0.08){ HUD.curl.classList.add('on');
+      HUD.curl.textContent=(aim.curl<0?'↺':'↻')+' EFFETTO '+Math.round(Math.abs(aim.curl)*100)+'%'; }
+    else HUD.curl.classList.remove('on');
+  }
+  up(e){
+    if(!aim.active||state!==STATE.GAME_PLAYING){ aim.active=false; return; }
+    aim.active=false;
+    if(aim.power<CONFIG.minPowerShot+0.02) aim.power=0.45;        // tap senza drag = tiro morbido
+    this.e.physics.shoot();
+  }
+  key(e){ const k=e.key.toLowerCase();
+    if(k===' '||k==='enter'){ e.preventDefault();
+      if(state===STATE.MENU_SCREEN||state===STATE.GAME_OVER) startGame();
+      else if(state===STATE.GAME_PLAYING){ aim.tx=rand(-2,2); aim.ty=rand(0.6,1.9); aim.power=0.6; aim.curl=rand(-0.4,0.4); this.e.physics.shoot(); } }
+  }
+}
+class Physics {                                  // volo palla + AI portiere + esito
+  constructor(engine){ this.e=engine; }
+  shoot(){ return shoot(); }
+  resolveShot(){ return resolveShot(); }
+}
+class View {                                     // render Three.js + FX/juice
+  constructor(engine){ this.e=engine; }
+  render(dt){
+    if(keeperMixer){ keeperMixer.update(dt); applyKeeperReach(); }
+    if(kickerMixer){ kickerMixer.update(dt); }
+    updateKeeperFace(); updateKickerFace(); updateKicker(dt);
+    renderer.render(scene,camera);
+    if(capT>=0){ capT+=dt; if(capT>0.45){ try{ lastShotPNG=cv.toDataURL('image/jpeg',0.85); }catch(e){} capT=-1; } }  // cattura frame per la card
+  }
+  camera(dt){ return updateCamera(dt); }
+  speedLines(){ return speedLines(); }
+  mangaWord(t,c){ return mangaWord(t,c); }
+}
+class GameEngine {                               // orchestratore: loop + FSM
+  constructor(){ this.onEnter={}; this.onExit={};
+    this.input=new Input(this); this.physics=new Physics(this); this.view=new View(this); }
+  on(st,enter,exit){ if(enter) this.onEnter[st]=enter; if(exit) this.onExit[st]=exit; return this; }
+  setState(s){ const prev=state; if(this.onExit[prev]) this.onExit[prev](prev,s);
+    state=s; stateT=0; if(this.onEnter[s]) this.onEnter[s](s,prev); syncHUD(); }
+  update(dt){ update(dt); }                       // world update (mondo + camera + HUD)
+  loop(t){ let dt=Math.min(0.05,(t-(lastT||t))/1000); lastT=t;
+    if(hitStop>0){ hitStop-=dt; dt=0; }            // hit-stop: congela il movimento ma continua a renderizzare
+    if(state!==STATE.LOADING){ this.update(dt); this.view.render(dt);
+      if(window.__KDBG){ window.__diveU=keeperDive?keeperDive.u:-1; window.__state=state; window.__res=shot?shot.result:''; } }
+    requestAnimationFrame(this._loop); }
+  start(){ this._loop=(t)=>this.loop(t); requestAnimationFrame(this._loop); }
+}
+const engine = new GameEngine();
 
 function resize(){ const w=window.innerWidth,h=window.innerHeight;
   renderer.setSize(w,h); camera.aspect=w/h; camera.updateProjectionMatrix(); }
@@ -1819,7 +1857,7 @@ function boot(){
     buildScene(textures); resize(); addEventListener('resize',resize);
     HUD.loading.style.display='none'; setState(STATE.MENU_SCREEN);
     if(challengeFromURL){ const n=document.getElementById('challengeNote'); if(n) n.style.display='block'; }
-    requestAnimationFrame(animate);
+    engine.start();
   }
   setTimeout(()=>{ if(!finished){ pending=0; finish(); } },6000);
 }
