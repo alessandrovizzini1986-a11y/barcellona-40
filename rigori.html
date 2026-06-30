@@ -247,7 +247,7 @@ const CONFIG = {
   camPunch: 0.85,          // intensità zoom sullo strike
   shakeOnSave: 1.0, shakeOnGoal: 0.45,
   // --- Asset texture esterni (fallback procedurale se 404/offline) ---
-  ASSETS: { ball:'assets/rig-ball.png?v=1' }
+  ASSETS: { ball:'assets/rig-ball.png?v=1', stadium:'assets/canva-stadium.png?v=1' }
 };
 
 /* --------------------------- UTIL / SCORES / HAPTIC ---------------------- */
@@ -1625,7 +1625,7 @@ function boot(){
   const tryFinish=()=>{ if(started && pending===0) finish(); };
   const grab=(key,url,srgb)=>{ pending++; loader.load(url, tex=>{ if(srgb)tex.colorSpace=THREE.SRGBColorSpace; tex.anisotropy=4; textures[key]=tex; pending--; tryFinish(); },
                                             undefined, ()=>{ pending--; tryFinish(); }); };
-  grab('ball',CONFIG.ASSETS.ball,true); started=true; tryFinish();
+  grab('ball',CONFIG.ASSETS.ball,true); grab('stadium',CONFIG.ASSETS.stadium,true); started=true; tryFinish();   // sfondo stadio Canva (fallback procedurale)
 
   let finished=false;
   function finish(){
