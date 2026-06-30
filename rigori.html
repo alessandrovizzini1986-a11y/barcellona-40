@@ -409,6 +409,7 @@ let aimHist=[];                    // segni (-1/0/1) dei tiri recenti -> portier
 let lastShotPNG=null;              // frame del gol/parata catturato per la Highlight Card
 let roundSeed=null, challengeFromURL=false;   // SFIDA: stesso portiere per tutti
 let confetti=null;
+let netShatter=null;               // ANIME: segmenti 3D dei "fili" della rete sfondata
 const camBase=new THREE.Vector3(0,1.95,14.6);
 const camLook=new THREE.Vector3(0,1.30,-1.0);
 const camPos=camBase.clone(), camTarget=camLook.clone();
@@ -685,6 +686,7 @@ function buildScene(textures){
 
   // ---- CONFETTI (riutilizzati sul gol) ----
   confetti=buildConfetti(); scene.add(confetti);
+  netShatter=buildNetShatter(); scene.add(netShatter);   // rete sfondata (Anime)
 }
 function addLine(x,y,z,w,d){ const m=new THREE.Mesh(new THREE.PlaneGeometry(w,d),new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:.9}));
   m.rotation.x=-Math.PI/2; m.position.set(x,y,z); scene.add(m); }
@@ -1018,6 +1020,13 @@ function buildConfetti(){
   const mat=new THREE.PointsMaterial({size:0.12,vertexColors:true,transparent:true,opacity:0,depthWrite:false});
   const p=new THREE.Points(geo,mat); p.userData={vel:new Float32Array(N*3),N,t:-1}; p.visible=false; return p;
 }
+function buildNetShatter(){           // pool di segmenti = fili spezzati della rete (Anime)
+  const g=new THREE.Group(), N=34;
+  for(let i=0;i<N;i++){ const seg=new THREE.Mesh(new THREE.BoxGeometry(0.035,0.55,0.035),
+      new THREE.MeshBasicMaterial({color:0xf2f6ff,transparent:true,opacity:0.95}));
+    seg.visible=false; seg.userData={v:new THREE.Vector3(),w:new THREE.Vector3()}; g.add(seg); }
+  g.userData={t:-1}; g.visible=false; return g;
+}
 function burstConfetti(x,y){
   const p=confetti, pos=p.geometry.attributes.position.array, vel=p.userData.vel, N=p.userData.N;
   for(let i=0;i<N;i++){ pos[i*3]=x+rand(-0.5,0.5); pos[i*3+1]=y+rand(-0.2,0.4); pos[i*3+2]=-GD+rand(-0.2,0.2);
@@ -1159,6 +1168,7 @@ function resetForShot(){
   aim.active=false; aim.power=0; aim.curl=0; aim.t0=0; aimRing.visible=aimDot.visible=trajLine.visible=false;
   // reset scia
   ballTrail.userData.hist.length=0; ballTrail.userData.parts.forEach(p=>p.visible=false);
+  if(netShatter){ netShatter.userData.t=-1; netShatter.visible=false; for(const s of netShatter.children) s.visible=false; }  // rete integra
   HUD.power.classList.remove('on'); HUD.curl.classList.remove('on');
 }
 function newAim(){ resetForShot(); setState(STATE.GAME_PLAYING); refWhistle(); Telecro.taunt();
@@ -1359,6 +1369,8 @@ function update(dt){
     // portiere battuto / rete che vibra; ball resta in rete
     setKeeperPose(keeper, POSE_BEATEN, 0.08);
     if(useGLBKeeper && keeperState!=='beaten') playKeeper('beaten');
+    // ANIME: il pallone "sfonda" e prosegue oltre la linea con la scia (velocità sovrumana)
+    if(isManga() && ball.position.z>-GD-1.2){ ball.position.z-=dt*7; ball.position.y=Math.max(BALL_R,ball.position.y-dt*0.5); pushTrail(); }
     if(stateT*1000>=CONFIG.goalCelebrateMs) afterShot(true);
   }
   else if(state===STATE.SAVE_ANIMATION){
@@ -1370,8 +1382,8 @@ function update(dt){
 
   // ripple/bulge rete sul gol
   if(ripple.t>=0){ ripple.t+=dt; applyNetRipple(ripple.t,ripple.x,ripple.y); if(ripple.t>1.3){ ripple.t=-1; applyNetRipple(-1,0,0); } }
-  // confetti fisica
-  updateConfetti(dt);
+  // confetti + segmenti rete sfondata (Anime)
+  updateConfetti(dt); engine.view.updateShatter(dt);
 
   // ---- CAMERA cinematografica ----
   updateCamera(dt);
@@ -1428,11 +1440,13 @@ function applyNetRipple(t,ox,oy){
   const pos=backNet.geometry.attributes.position, base=backNet.userData.base, n=pos.count;
   if(t<0){ for(let i=0;i<n;i++){ pos.setZ(i,base[i*3+2]); } pos.needsUpdate=true; backNet.geometry.computeVertexNormals(); return; }
   const decay=Math.max(0,1-t/1.3);
+  // PES: bulge largo ed elastico (pesante/reale). ANIME: strappo profondo e stretto (buco) + violento.
+  const mang=isManga(), bAmp=mang?1.25:0.55, bSharp=mang?1.8:1.1, bDecayT=mang?3.1:2.2;
   for(let i=0;i<n;i++){ const x=base[i*3], y=base[i*3+1]+GH/2;
     const d=Math.hypot(x-ox,y-oy);
     // bulge: spinge la rete all'INDIETRO (z più negativo) all'impatto, poi oscilla
     const wave=Math.sin(d*3.2 - t*13)*Math.exp(-d*0.85);
-    const bulge=-0.55*Math.exp(-d*1.1)*Math.exp(-t*2.2);   // colpo iniziale indietro
+    const bulge=-bAmp*Math.exp(-d*bSharp)*Math.exp(-t*bDecayT);   // colpo iniziale indietro
     pos.setZ(i, base[i*3+2] + (bulge + wave*0.16)*decay );
   }
   pos.needsUpdate=true; backNet.geometry.computeVertexNormals();
@@ -1843,6 +1857,25 @@ class View {                                     // render Three.js + layer 2D (
   // proietta un punto 3D sullo schermo e fa partire la raffica lì
   burstAt3D(v,style){ tmpV.copy(v).project(camera); if(tmpV.z>1) return;
     this.emit((tmpV.x*0.5+0.5)*innerWidth, (-tmpV.y*0.5+0.5)*innerHeight, style); }
+  // ANIME: rete SFONDATA — i fili spezzati volano via dal punto d'impatto, dentro/oltre la porta
+  bustNet(ox,oy){ const g=netShatter; if(!g) return;
+    const cx=ox, cy=clamp(GH/2+oy*0.0+oy,0.2,GH-0.1), cz=-GD+0.06;
+    for(const seg of g.children){ seg.visible=true;
+      seg.position.set(cx+rand(-0.35,0.35), cy+rand(-0.35,0.35), cz);
+      seg.rotation.set(rand(0,6.28),rand(0,6.28),rand(0,6.28));
+      seg.userData.v.set(rand(-3.4,3.4), rand(1,5), rand(-2,6.5));   // esplosione: molti volano VERSO la camera (sfondamento)
+      seg.userData.w.set(rand(-11,11),rand(-11,11),rand(-11,11));
+      seg.material.opacity=0.95; }
+    g.visible=true; g.userData.t=0;
+  }
+  updateShatter(dt){ const g=netShatter; if(!g||g.userData.t<0) return; g.userData.t+=dt;
+    for(const seg of g.children){ if(!seg.visible) continue;
+      seg.userData.v.y-=11*dt;
+      seg.position.x+=seg.userData.v.x*dt; seg.position.y+=seg.userData.v.y*dt; seg.position.z+=seg.userData.v.z*dt;
+      seg.rotation.x+=seg.userData.w.x*dt; seg.rotation.y+=seg.userData.w.y*dt; seg.rotation.z+=seg.userData.w.z*dt;
+      seg.material.opacity=clamp(0.95*(1-g.userData.t/0.95),0,1); }
+    if(g.userData.t>0.95){ g.userData.t=-1; g.visible=false; for(const s of g.children) s.visible=false; }
+  }
   // screen-shake: classe CSS su entrambe le canvas. Anime usa il keyframe "shk-a" (+50% ampiezza)
   shake(level){ if(level<=0) return; const a=cv,b=this.fx, anime=isManga();
     a.classList.remove('shake','anime'); b.classList.remove('shake','anime'); void a.offsetWidth;
@@ -1937,7 +1970,7 @@ class GameEngine {                               // orchestratore: loop + FSM
 const engine = new GameEngine();
 // JUICE agganciato alla FSM: screen-shake all'ingresso negli stati d'impatto
 // (PES contenuto, Anime più forte) — l'hit-stop è già nel loop (dt=0).
-engine.on(STATE.GOAL_ANIMATION, ()=> engine.view.shake(isManga()?1:0.55));
+engine.on(STATE.GOAL_ANIMATION, ()=>{ engine.view.shake(isManga()?1:0.55); if(isManga()) engine.view.bustNet(ripple.x,ripple.y); });  // Anime: rete sfondata
 engine.on(STATE.SAVE_ANIMATION, ()=> engine.view.shake(isManga()?1.1:0.7));
 
 function resize(){ const w=window.innerWidth,h=window.innerHeight;
