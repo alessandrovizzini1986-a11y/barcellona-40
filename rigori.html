@@ -172,8 +172,14 @@
     45%{transform:translate(-1%,-0.5%) rotate(-.3deg) scale(1.025)}
     60%{transform:translate(0.9%,0.8%) rotate(.3deg) scale(1.025)}
     80%{transform:translate(-0.5%,0.4%) rotate(-.15deg) scale(1.025)}}
+  @keyframes shk-a{0%,100%{transform:translate(0,0) rotate(0) scale(1.04)}
+    12%{transform:translate(-2.2%,1.5%) rotate(-.8deg) scale(1.04)}
+    28%{transform:translate(2%,-1.7%) rotate(.8deg) scale(1.04)}
+    44%{transform:translate(-1.7%,-1%) rotate(-.55deg) scale(1.04)}
+    62%{transform:translate(1.5%,1.4%) rotate(.55deg) scale(1.04)}
+    82%{transform:translate(-0.9%,0.7%) rotate(-.3deg) scale(1.04)}}
   #cv.shake,#fx2d.shake{animation:shk .42s ease-out}
-  #cv.shake.hard,#fx2d.shake.hard{animation-duration:.52s}
+  #cv.shake.anime,#fx2d.shake.anime{animation:shk-a .5s ease-out}     /* Anime: +50% ampiezza */
   #grade{position:fixed;inset:0;z-index:9;pointer-events:none;
     background:
       radial-gradient(125% 105% at 50% 40%, transparent 52%, rgba(0,2,12,.5) 100%),
@@ -1264,7 +1270,7 @@ function shoot(){
 function resolveShot(){
   const r=shot.result;
   shotNum++;                                   // conta il rigore appena calciato (modalità 5 rigori)
-  if(r!=='MISS') hitStop = isManga()?0.13:0.06;  // freeze-frame all'impatto (Anime più lungo, PES contenuto)
+  if(r!=='MISS') hitStop = isManga()?0.22:0.06;  // freeze-frame all'impatto (ANIME estremo ~220ms, PES contenuto ~60ms)
   capT=0;                                      // avvia la cattura del frame (nel loop, subito dopo il render)
   if(MODE==='five') fiveRes.push(r==='GOAL'?'g':'x');
   const incrocio = r==='GOAL' && Math.abs(shot.target.x)>GW/2-1.15 && shot.target.y>GH-0.75;  // gol all'angolino
@@ -1276,15 +1282,15 @@ function resolveShot(){
     if(incrocio){ burstConfetti(-shot.target.x*0.5,1.5); setTimeout(()=>burstConfetti(shot.target.x*0.7,1.2),120); }  // festa extra all'incrocio
     engine.view.burstAt3D(tmpV2.set(shot.target.x,Math.max(0.4,shot.target.y),-GD),'goal');   // scintille sulla rete
     Sound.sfx(880,.07); setTimeout(()=>Sound.sfx(1320,.11),85); setTimeout(()=>Sound.sfx(1760,.13),190); Sound.roar();
-    speedLines(); mangaWord(incrocio?'EUROGOOOL!':'GOOOOL!','#39ff7a');
+    speedLines(); engine.view.popWord(incrocio?'EUROGOOOL!':'GOOOOL!','#FF0000');   // onomatopea rossa + bordo nero (canvas)
     haptic([0,40,30,70]); slowmo=1; setState(STATE.GOAL_ANIMATION);
   } else {
     shakeMag=CONFIG.shakeOnSave;
-    if(r==='SAVE'){ aleSaves++; showResult('PARATO!','#ff9d6a'); mangaWord('PARATAAA!','#ff9d6a'); Sound.sfx(200,.16,'sawtooth'); Sound.groan();
+    if(r==='SAVE'){ aleSaves++; showResult('PARATO!','#ff9d6a'); engine.view.popWord('PARATAAA!','#FFFF00'); Sound.sfx(200,.16,'sawtooth'); Sound.groan();   // onomatopea gialla (canvas)
       engine.view.burstAt3D(tmpV2.set(shot.guess,shot.guessY||1.0,KEEPER_Z),'save');   // polvere/scintille dai guantoni
       HUD.flash.classList.remove('on'); HUD.flash.classList.add('save'); void HUD.flash.offsetWidth; HUD.flash.classList.add('on'); }
-    else if(r==='POST'){ showResult('PALO!','#ffd884'); mangaWord('PALO!','#ffd884'); engine.view.burstAt3D(tmpV2.set(Math.sign(shot.target.x)*HALF,shot.target.y,0),'save'); Sound.sfx(420,.05,'square',0.25); setTimeout(()=>Sound.sfx(160,.18,'triangle'),60); Sound.groan(); }
-    else { showResult('FUORI!','#ffd28a'); mangaWord('FUORIII!','#ffd28a'); Sound.sfx(150,.20,'triangle'); Sound.groan(); }
+    else if(r==='POST'){ showResult('PALO!','#ffd884'); engine.view.popWord('PALO!','#ffd24a'); engine.view.burstAt3D(tmpV2.set(Math.sign(shot.target.x)*HALF,shot.target.y,0),'save'); Sound.sfx(420,.05,'square',0.25); setTimeout(()=>Sound.sfx(160,.18,'triangle'),60); Sound.groan(); }
+    else { showResult('FUORI!','#ffd28a'); engine.view.popWord('FUORI!','#ffffff'); Sound.sfx(150,.20,'triangle'); Sound.groan(); }
     haptic([0,130]); slowmo=1; setState(STATE.SAVE_ANIMATION);
   }
   syncHUD();
@@ -1802,6 +1808,7 @@ class Input {
     this.e.physics.shoot();
   }
   key(e){ const k=e.key.toLowerCase();
+    if(k==='g'){ setGFX(isManga()?'pes':'manga'); showTelecro('STILE: '+(isManga()?'HOLLY & BENJI 🎬':'PES 🎮')); return; }   // toggle stile al volo (debug/confronto)
     if(k===' '||k==='enter'){ e.preventDefault();
       if(state===STATE.MENU_SCREEN||state===STATE.GAME_OVER) startGame();
       else if(state===STATE.GAME_PLAYING){ aim.tx=rand(-2,2); aim.ty=rand(0.6,1.9); aim.power=0.6; aim.curl=rand(-0.4,0.4); this.e.physics.shoot(); } }
@@ -1836,19 +1843,22 @@ class View {                                     // render Three.js + layer 2D (
   // proietta un punto 3D sullo schermo e fa partire la raffica lì
   burstAt3D(v,style){ tmpV.copy(v).project(camera); if(tmpV.z>1) return;
     this.emit((tmpV.x*0.5+0.5)*innerWidth, (-tmpV.y*0.5+0.5)*innerHeight, style); }
-  // screen-shake: classe CSS su entrambe le canvas (PES contenuto, Anime più forte)
-  shake(level){ if(level<=0) return; const a=cv,b=this.fx;
-    a.classList.remove('shake','hard'); b.classList.remove('shake','hard'); void a.offsetWidth;
-    a.classList.add('shake'); b.classList.add('shake'); if(level>=1){ a.classList.add('hard'); b.classList.add('hard'); }
-    clearTimeout(this._shk); this._shk=setTimeout(()=>{ a.classList.remove('shake','hard'); b.classList.remove('shake','hard'); },560); }
+  // screen-shake: classe CSS su entrambe le canvas. Anime usa il keyframe "shk-a" (+50% ampiezza)
+  shake(level){ if(level<=0) return; const a=cv,b=this.fx, anime=isManga();
+    a.classList.remove('shake','anime'); b.classList.remove('shake','anime'); void a.offsetWidth;
+    a.classList.add('shake'); b.classList.add('shake');
+    if(anime){ a.classList.add('anime'); b.classList.add('anime'); }   // PES contenuto · Anime brutale
+    clearTimeout(this._shk); this._shk=setTimeout(()=>{ a.classList.remove('shake','anime'); b.classList.remove('shake','anime'); },600); }
   // disegna il layer 2D DOPO il render 3D (particelle + HUD di gioco su canvas)
   draw2D(dt){ const c=this.fxc, W=innerWidth, H=innerHeight; c.clearRect(0,0,W,H);
+    if(isManga() && state===STATE.BALL_IN_FLIGHT) this._speedLines(c,W,H);   // ANIME: scie di velocità verso l'impatto
     for(const p of this.parts){ if(p.life<=0) continue;
       p.life-=dt; p.vy+=p.g*dt; p.x+=p.vx*dt; p.y+=p.vy*dt;
       c.globalAlpha=clamp(p.life/p.life0,0,1); c.fillStyle=p.c;
       c.beginPath(); c.arc(p.x,p.y,p.r,0,6.283); c.fill();
     }
     c.globalAlpha=1; this._drawStreak(c,W);
+    this._popWord(c,W,H,dt);                                                 // ANIME: onomatopea gigante (GOOOOL!/PARATAAA!)
   }
   // HUD di gioco su canvas: contatore streak con bagliore (cresce/pulsa)
   _drawStreak(c,W){
@@ -1871,6 +1881,32 @@ class View {                                     // render Three.js + layer 2D (
     else { sub='QUANTI DI FILA?'; scol='#9fb4dd'; }
     c.fillStyle=scol; c.fillText(sub.toUpperCase(), W/2, 124);
     c.restore();
+  }
+  // ANIME: scie di velocità (linee bianche dai bordi che convergono sul punto d'impatto, solo in volo)
+  _speedLines(c,W,H){
+    if(!shot) return;
+    tmpV2.set(shot.target.x, Math.max(0.4,shot.target.y), -GD*0.5).project(camera);
+    const ix=(tmpV2.x*0.5+0.5)*W, iy=(-tmpV2.y*0.5+0.5)*H;
+    const p=clamp(shot.t/shot.dur,0,1), far=Math.max(W,H)*0.95, near=lerp(far,70,p);
+    c.save(); c.strokeStyle='#ffffff'; c.lineWidth=2; c.globalAlpha=0.55*Math.sin(Math.PI*clamp(p*1.1,0,1));
+    const N=13;
+    for(let i=0;i<N;i++){ const a=i/N*6.283 + i*0.7;
+      c.beginPath(); c.moveTo(ix+Math.cos(a)*far, iy+Math.sin(a)*far); c.lineTo(ix+Math.cos(a)*near, iy+Math.sin(a)*near); c.stroke(); }
+    c.restore(); c.globalAlpha=1;
+  }
+  // ANIME: onomatopea pop-up (scala 0->1 in ~100ms, sparisce dopo 800ms) disegnata su canvas
+  popWord(text,color){ if(!isManga()) return; this.word={text,color,t:0}; }
+  _popWord(c,W,H,dt){ const w=this.word; if(!w) return; w.t+=dt;
+    if(w.t>=0.8){ this.word=null; return; }
+    const sc = w.t<0.1 ? easeOutBack(clamp(w.t/0.1,0,1)) : 1;        // pop in 100ms
+    const al = w.t>0.6 ? 1-(w.t-0.6)/0.2 : 1;                        // fade negli ultimi 200ms
+    const fs = Math.min(W,H)*0.155;
+    c.save(); c.globalAlpha=clamp(al,0,1); c.textAlign='center'; c.textBaseline='middle';
+    c.translate(W/2, H*0.36); c.rotate(-0.04); c.scale(sc,sc);
+    c.font='800 '+fs+'px Arial,sans-serif'; c.lineJoin='round';
+    c.lineWidth=Math.max(7,fs*0.13); c.strokeStyle='#000'; c.strokeText(w.text,0,0);   // bordo nero spesso
+    c.fillStyle=w.color; c.fillText(w.text,0,0);
+    c.restore(); c.globalAlpha=1;
   }
   render(dt){
     if(keeperMixer){ keeperMixer.update(dt); applyKeeperReach(); }
