@@ -236,7 +236,7 @@ const CONFIG = {
   // --- Power gauge sweet spot (estetico/feedback) ---
   sweetLo: 0.62, sweetHi: 0.78,
   // --- AI portiere (raggio d'azione in metri) ---
-  reachBase: 1.18, reachPerLevel: 0.085, reachMax: 2.5,
+  reachBase: 1.32, reachPerLevel: 0.085, reachMax: 2.6,
   errorBase: 1.9,  errorPerLevel: 0.14,  errorMin: 0.35,   // ampiezza errore di lettura (m)
   reactionMs: 320, reactionMin: 95, reactionStep: 16,      // finestra di reazione
   guessBiasGrow: 0.06,     // quanto migliora la "lettura" del lato per livello (0..~0.7)
@@ -313,7 +313,7 @@ const HALF=GW/2;
 /* =============================== ENGINE =================================== */
 let renderer,scene,camera, ball, keeper, backNet, lights={}, envRT=null;
 let keeperMixer=null, useGLBKeeper=false, keeperInner=null, keeperState=''; // portiere 3D (GLB Mixamo) + fallback procedurale
-let keeperFace=null, keeperHeadBone=null; const _faceV=new THREE.Vector3();   // faccia di Ale (sprite) agganciata alla testa del portiere
+let keeperFace=null, keeperHeadBone=null, keeperHandL=null, keeperHandR=null; const _faceV=new THREE.Vector3(); const _glA=new THREE.Vector3(), _glB=new THREE.Vector3();   // faccia + mani (per prendere la palla)
 const PLAYERS={
   Mario:{name:'MARIO',num:'104',face:'assets/face-mario.png',poster:'mario_poster.jpg'},
   Giulio:{name:'GIULIO',num:'7',face:'assets/face-giulio.png',poster:'giulio_poster.jpg'} };
@@ -663,7 +663,11 @@ function loadGLBKeeper(){
       const ftex=new THREE.TextureLoader().load('assets/keeper-face.png?v=1'); ftex.colorSpace=THREE.SRGBColorSpace;
       keeperFace=new THREE.Sprite(new THREE.SpriteMaterial({map:ftex, transparent:true, depthTest:false, depthWrite:false}));
       keeperFace.scale.set(0.95,0.95,0.95); keeperFace.renderOrder=999; scene.add(keeperFace);   // faccia "meme" piu grande
-      keeperHeadBone=null; inner.traverse(o=>{ if(!keeperHeadBone){ const nm=(o.name||'').toLowerCase(); if(nm.indexOf('head')>=0 && nm.indexOf('top')<0 && nm.indexOf('end')<0) keeperHeadBone=o; } });
+      keeperHeadBone=null; keeperHandL=null; keeperHandR=null;
+      inner.traverse(o=>{ const nm=(o.name||'').toLowerCase();
+        if(!keeperHeadBone && nm.indexOf('head')>=0 && nm.indexOf('top')<0 && nm.indexOf('end')<0) keeperHeadBone=o;
+        if(!keeperHandL && nm.endsWith('lefthand')) keeperHandL=o;
+        if(!keeperHandR && nm.endsWith('righthand')) keeperHandR=o; });
       // ----- riferimenti ossa per il reach procedurale additivo (verso l'angolo) -----
       const B=keeperBones;
       inner.traverse(o=>{ const nm=o.name||'';
@@ -1124,10 +1128,12 @@ function shoot(){
   // sui tiri centrali il portiere RESTA spesso al centro (così "addosso" lo pari);
   // sui lati legge meglio salendo di livello.
   let guessSide;
-  if(central) guessSide=(Math.random()<0.72+bias*0.22)?0:(Math.random()<0.5?-1:1);
-  else        guessSide=(Math.random()<0.46+bias*0.5)?trueSide:-trueSide;
-  let guess=(guessSide===0)? rand(-0.30,0.30)
-                           : guessSide*lerp(1.3,2.05,Math.random())+rand(-1,1)*errorOf()*0.35; // errore ridotto = più preciso
+  if(central) guessSide=(Math.random()<0.74+bias*0.2)?0:(Math.random()<0.5?-1:1);
+  else        guessSide=(Math.random()<0.66+bias*0.26)?trueSide:-trueSide;   // legge il LATO molto meglio (66%+)
+  let guess;
+  if(guessSide===0) guess=rand(-0.28,0.28);
+  else if(guessSide===trueSide) guess = endX*0.84 + rand(-1,1)*errorOf()*0.22; // tuffo VERSO la palla -> la prende
+  else guess = guessSide*lerp(1.5,2.2,Math.random());                         // tuffo dal lato sbagliato -> gol
   guess=clamp(guess,-HALF+0.4,HALF-0.4);
   const trueHigh=ty>GH*0.55;
   const readHigh=(Math.random()<0.52+bias*0.42)?trueHigh:!trueHigh;
@@ -1196,6 +1202,14 @@ function gameOver(){ Sound.musicStop(); Sound.crowd(0); Sound.sfx(180,.2); setTi
   if(MODE!=='five' && Scores.isHigh(streak)) askName(); }
 
 /* ------------------------------- UPDATE ---------------------------------- */
+// avvicina la palla al guantone più vicino (la parata "prende" davvero il pallone)
+function gloveCatch(s){
+  let best=null,bd=1e9;
+  if(keeperHandL){ keeperHandL.getWorldPosition(_glA); const d=_glA.distanceTo(ball.position); if(d<bd){bd=d;best=_glA;} }
+  if(keeperHandR){ keeperHandR.getWorldPosition(_glB); const d=_glB.distanceTo(ball.position); if(d<bd){bd=d;best=_glB;} }
+  if(best){ ball.position.lerp(best,s); return true; }
+  return false;
+}
 function update(dt){
   stateT+=dt;
   // spin visiva pallone (anche da fermo lieve)
@@ -1239,6 +1253,7 @@ function update(dt){
     } else {                                              // ---- portiere GLB: anticipo -> tuffo clip -> reach additivo ----
       updateKeeperDive(dt);
     }
+    if(shot.result==='SAVE' && useGLBKeeper && p>0.62){ gloveCatch(clamp((p-0.62)/0.38,0,1)*0.5); }  // in arrivo la palla entra nei guantoni
     if(!shot.resolved && p>=1){ shot.resolved=true; resolveShot(); }
   }
   else if(state===STATE.GOAL_ANIMATION){
@@ -1248,8 +1263,9 @@ function update(dt){
     if(stateT*1000>=CONFIG.goalCelebrateMs) afterShot(true);
   }
   else if(state===STATE.SAVE_ANIMATION){
-    // mantiene posa di parata, ball respinta leggermente
-    if(stateT<0.4){ ball.position.z += dt*6; ball.position.y+=dt*1.5; }
+    // la palla resta nei guantoni del portiere (presa), poi cade
+    if(useGLBKeeper && stateT<0.75 && gloveCatch(0.5)){ /* tenuta nei guantoni */ }
+    else if(stateT<0.4){ ball.position.z += dt*6; ball.position.y+=dt*1.5; }
     if(stateT*1000>=CONFIG.saveAnimMs) afterShot(false);
   }
 
@@ -1524,7 +1540,7 @@ function speak(text, ale){ if(!Sound.sfxOn || !window.speechSynthesis) return;
       .replace(/[«»"]/g,'')
       .replace(/([a-zàèéìòù])\1{2,}/gi,'$1')                  // collassa 3+ ripetizioni: GOOOL->GOL, PARATOOO->PARATO
       .toLowerCase().replace(/\s+/g,' ').trim();              // minuscolo: evita lo "spelling" delle maiuscole
-    s=s.replace(/\bale\b/g,'alé').replace(/\bcamp nou\b/g,'camp nòu'); // pronuncia all'italiana (non "eil")
+    s=s.replace(/\bale\b/g,'alé').replace(/\bil camp n[oò]u\b/g,'lo stadio').replace(/\bcamp n[oò]u\b/g,'lo stadio'); // "Ale"->alé, evita lo spelling di "Camp Nou"
     if(!s) return;
     if(!_ttsVoice) ttsPick();                                 // assicura la voce italiana (così "Ale" non è in inglese)
     const u=new SpeechSynthesisUtterance(s); u.lang='it-IT'; if(_ttsVoice) u.voice=_ttsVoice;
