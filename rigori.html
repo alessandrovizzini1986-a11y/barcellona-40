@@ -411,7 +411,7 @@ const goalPlane=new THREE.Plane(new THREE.Vector3(0,0,1),0); // z=0
 const tmpV=new THREE.Vector3(), tmpV2=new THREE.Vector3();
 
 // Stato input drag (mira libera + potenza + effetto)
-const aim={ active:false, sx:0, sy:0, cx:0, cy:0, tx:0, ty:1.2, power:0, curl:0 };
+const aim={ active:false, sx:0, sy:0, cx:0, cy:0, tx:0, ty:1.2, power:0, curl:0, t0:0 }; // t0 = istante del touch-down (per il "decision timer" dell'AI)
 
 // DOM
 const cv=document.getElementById('cv');
@@ -1150,7 +1150,7 @@ function resetForShot(){
   if(useGLBKeeper){ keeper.scale.x=1; keeperDive=null; playKeeper('idle'); }
   if(kicker){ kicker.rotation.set(0,0,0); } kickT=-1;
   if(useGLBKicker && kickerGLB){ kickPhase=''; kickPhaseT=0; playKicker('idle'); }
-  aim.active=false; aim.power=0; aim.curl=0; aimRing.visible=aimDot.visible=trajLine.visible=false;
+  aim.active=false; aim.power=0; aim.curl=0; aim.t0=0; aimRing.visible=aimDot.visible=trajLine.visible=false;
   // reset scia
   ballTrail.userData.hist.length=0; ballTrail.userData.parts.forEach(p=>p.visible=false);
   HUD.power.classList.remove('on'); HUD.curl.classList.remove('on');
@@ -1202,14 +1202,19 @@ function shoot(){
   const recent=aimHist.slice(-6); let tend=0; recent.forEach(s=>tend+=s);
   tend = recent.length? tend/recent.length : 0;
   const tendSide=Math.sign(tend), tendStr=Math.min(1,Math.abs(tend));
+  // DECISION TIMER: se esiti (tieni premuto a lungo prima di tirare) il portiere
+  // "ti legge la postura" e indovina meglio il lato; chi tira deciso lo sorprende.
+  const hold = aim.t0 ? clamp((performance.now()-aim.t0)/1000, 0, 3) : 0.7;
+  const hesit = clamp((hold-0.55)/1.3, 0, 1);                 // 0 = deciso, 1 = esita molto
   // sui tiri centrali il portiere RESTA spesso al centro (così "addosso" lo pari);
-  // sui lati legge meglio salendo di livello, e ANTICIPA il tuo lato preferito.
+  // sui lati legge meglio salendo di livello, ANTICIPA il tuo lato preferito e la tua esitazione.
   let guessSide;
   if(central) guessSide=(rng()<0.74+bias*0.2)?0:(rng()<0.5?-1:1);
   else {
-    let readProb=0.66+bias*0.26;
-    if(streak>=2 && tendSide!==0 && trueSide===tendSide) readProb+=0.20*tendStr;  // "ti ha letto": spari sempre lì, lui ti aspetta
-    guessSide=(rng()<readProb)?trueSide:-trueSide;
+    let readProb=0.62+bias*0.26;
+    if(streak>=2 && tendSide!==0 && trueSide===tendSide) readProb+=0.18*tendStr;  // "ti ha letto": spari sempre lì, lui ti aspetta
+    readProb += 0.18*hesit;                                   // esiti -> ti anticipa
+    guessSide=(rng()<clamp(readProb,0,0.95))?trueSide:-trueSide;   // mai 100%: il tuffo resta leggibile
   }
   let guess;
   if(guessSide===0) guess=rr(-0.28,0.28);
@@ -1553,7 +1558,8 @@ function syncHUD(){
   document.getElementById('repick').classList.toggle('show', (state===STATE.MENU_SCREEN||state===STATE.GAME_OVER));
   const five=(MODE==='five');
   let best5=0; try{ best5=+(localStorage.getItem('rig5_best')||0); }catch(e){}
-  HUD.score.textContent = five? (goals5+'-'+aleSaves) : streak;   // duello TU - ALE
+  const inGameInf = !five && (state===STATE.GAME_PLAYING||state===STATE.BALL_IN_FLIGHT||state===STATE.GOAL_ANIMATION||state===STATE.SAVE_ANIMATION);
+  HUD.score.textContent = five? (goals5+'-'+aleSaves) : (inGameInf? '' : streak);   // in infinita lo streak vive SOLO sul canvas (single source of truth)
   HUD.rec.textContent = five? ('REC '+best5+'/5') : ('REC '+Scores.best()+(Scores.bestName()?' '+Scores.bestName():''));
   HUD.menuRec.textContent = five? (best5+'/5') : Scores.best();
   HUD.menu.classList.toggle('show',state===STATE.MENU_SCREEN);
@@ -1774,7 +1780,7 @@ class Input {
     const t=e.touches?e.touches[0]:e, x=t.clientX, y=t.clientY;
     if(state===STATE.MENU_SCREEN||state===STATE.GAME_OVER){ startGame(); return; }
     if(state!==STATE.GAME_PLAYING) return;
-    aim.active=true; aim.sx=x; aim.sy=y; aim.cx=x; aim.cy=y;
+    aim.active=true; aim.sx=x; aim.sy=y; aim.cx=x; aim.cy=y; aim.t0=performance.now();   // avvia il decision timer
     const g=screenToGoal(x,y); aim.tx=g.x; aim.ty=g.y; aim.power=CONFIG.minPowerShot; aim.curl=0;
     HUD.power.classList.add('on'); HUD.curl.classList.remove('on');
   }
@@ -1847,12 +1853,23 @@ class View {                                     // render Three.js + layer 2D (
   // HUD di gioco su canvas: contatore streak con bagliore (cresce/pulsa)
   _drawStreak(c,W){
     const inGame = state===STATE.GAME_PLAYING||state===STATE.BALL_IN_FLIGHT||state===STATE.GOAL_ANIMATION||state===STATE.SAVE_ANIMATION;
-    if(!inGame || MODE==='five' || streak<2) return;
-    const pulse = scorePulseT>0 ? 1+scorePulseT*0.3 : 1;
+    if(!inGame || MODE==='five') return;            // 5 rigori usa già il tracker a pallini
+    const best=Scores.best(), record = streak>best && streak>0;   // nuovo record personale in corso
+    const hot = streak>=3, pulse = scorePulseT>0 ? 1+scorePulseT*0.4 : 1;
     c.save(); c.textAlign='center'; c.textBaseline='middle';
-    c.shadowColor='rgba(255,150,40,'+(streak>=5?0.95:0.55)+')'; c.shadowBlur=(streak>=5?24:13)*pulse;
-    c.fillStyle='#ffd24a'; c.font='700 '+Math.round(24*pulse)+'px Arial,sans-serif';
-    c.fillText('🔥 '+streak+' DI FILA', W/2, 112);
+    // numero grande: UNICA fonte di verità per lo streak in gioco
+    c.shadowColor = record?'rgba(255,205,70,0.95)':(hot?'rgba(255,150,40,0.6)':'rgba(0,0,0,0.55)');
+    c.shadowBlur = (record?30:(hot?16:7))*pulse;
+    c.fillStyle = record?'#ffe08a':(hot?'#ffd24a':'#eef4ff');
+    c.font='800 '+Math.round((hot?46:36)*pulse)+'px Arial,sans-serif';
+    c.fillText((streak>0?'🔥 ':'')+streak, W/2, 96);
+    // sottotitolo FOMO: nuovo record oppure obiettivo da battere (social proof dalla classifica)
+    c.shadowBlur=0; c.font='700 13px Arial,sans-serif';
+    let sub, scol;
+    if(record){ sub='NUOVO RECORD! 🏆'; scol='#ffe08a'; }
+    else if(best>0){ const nm=Scores.bestName(); sub='BATTI '+(nm||'IL RECORD')+': '+best; scol='#9fb4dd'; }
+    else { sub='QUANTI DI FILA?'; scol='#9fb4dd'; }
+    c.fillStyle=scol; c.fillText(sub.toUpperCase(), W/2, 124);
     c.restore();
   }
   render(dt){
