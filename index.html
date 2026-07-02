@@ -331,12 +331,12 @@
         <p class="muted" style="font-size:11px;margin-top:7px">Iscriviti col tasto qui sopra (app <b>ntfy</b>): il 16 e 18 ott, <b>se il volo cambia</b>, parte un avviso automatico su <b>gate/ritardi/cancellazioni</b> anche ad app chiusa. In ogni caso i link <b>“in tempo reale”</b> qui sopra restano sempre aggiornati.</p>
       </div>
       <div class="doc">
-        <div class="dt">🏨 Hotel</div>
-        <h4>H10 Marina Barcelona</h4>
-        <p class="kv">Vila Olímpica · check-in dalle 15:00 · 2 notti</p>
+        <div class="dt">🏠 Appartamento</div>
+        <h4>Apartment Auditori · Barcelona</h4>
+        <p class="kv">Carrer de Lepant 137 · Eixample · 2 notti (16–18 ott) · orari check-in/out: vedi email di prenotazione</p>
         <div class="acts">
-          <a class="prim" href="tel:+34933097917">☎ Reception</a>
-          <a href="https://www.google.com/maps/search/?api=1&query=H10+Marina+Barcelona" target="_blank">📍 Mappe</a>
+          <a class="prim" href="https://www.google.com/maps/search/?api=1&query=Carrer+de+Lepant+137+Barcelona" target="_blank">📍 Mappe</a>
+          <a href="https://www.google.com/maps/dir/?api=1&destination=41.3986,2.1852&travelmode=transit" target="_blank">🚇 Come arrivare</a>
         </div>
       </div>
       <div class="doc">
@@ -463,7 +463,7 @@
           <table class="bud"><tbody>
             <tr><td>✈️ Volo A/R</td><td style="text-align:right;font-weight:700">€160</td></tr>
             <tr><td>🅿️ Parcheggio P2</td><td style="text-align:right;font-weight:700">€51</td></tr>
-            <tr><td>🏨 H10 · 2 notti</td><td style="text-align:right;font-weight:700">€640</td></tr>
+            <tr><td>🏠 Appartamento · 2 notti</td><td style="text-align:right;font-weight:700">€640</td></tr>
             <tr><td>🚖 Transfer</td><td style="text-align:right;font-weight:700">€80</td></tr>
             <tr><td>🧖 Spa Aire + massaggio</td><td style="text-align:right;font-weight:700">€110</td></tr>
             <tr><td>🍽️ Cibo & bevande</td><td style="text-align:right;font-weight:700">€300</td></tr>
@@ -586,34 +586,34 @@ const KIND={
 const ITINERARY=[
   // VENERDÌ 16
   {id:'v1',day:'16',start:'2026-10-16T06:20',end:'2026-10-16T08:05',kind:'flight',title:'Volo FR2097 · BLQ → BCN',place:'Aeroporto · partenza',note:'In BLQ entro 04:50 · solo bagaglio a mano',track:'https://www.bologna-airport.it/voli/vola-da-bologna/voli-in-tempo-reale/?idC=62178',flightNo:'FR2097',fdate:'2026-10-16'},
-  {id:'v2',day:'16',start:'2026-10-16T08:30',end:'2026-10-16T09:00',kind:'transfer',title:'Aeroporto → H10 Marina',place:'H10 Marina',lat:41.3928,lng:2.1924,phone:'+34933097917',note:'Taxi ~25 min · ~€35 (o Aerobús+metro ~€10)'},
-  {id:'v3',day:'16',start:'2026-10-16T09:00',end:'2026-10-16T13:00',kind:'work',title:'Smart working · 1ª parte',place:'H10 Marina',lat:41.3928,lng:2.1924,note:'Stesso fuso (CET). WiFi camera/lobby/Privilege'},
-  {id:'v4',day:'16',start:'2026-10-16T13:00',end:'2026-10-16T14:00',kind:'food',title:'Pranzo + spiaggia',place:'Cuadro · Bogatell',lat:41.3936,lng:2.1954,note:'Boccone veloce + 20 min di mare',outdoor:true,planB:'pranzo al chiuso da Cuadro'},
-  {id:'v5',day:'16',start:'2026-10-16T14:00',end:'2026-10-16T18:00',kind:'work',title:'Smart working · 2ª parte',place:'H10 Marina',lat:41.3928,lng:2.1924},
-  {id:'v6',day:'16',start:'2026-10-16T18:30',end:'2026-10-16T20:30',kind:'sight',title:'Gòtic & El Born a piedi',place:'Barri Gòtic',lat:41.3839,lng:2.1765,note:'~15 min a piedi · Cattedrale, Sta. Maria del Mar',outdoor:true,planB:'musei o un caffè coperto nel Born'},
+  {id:'v2',day:'16',start:'2026-10-16T08:30',end:'2026-10-16T09:15',kind:'transfer',title:'Aeroporto → Appartamento (Lepant)',place:'Appartamento Auditori · Lepant 137',lat:41.3986,lng:2.1852,note:'Taxi ~30 min · ~€35 (o Aerobús + metro L5 a Sagrada Família ~€10). Chiavi/check-in: conferma col proprietario'},
+  {id:'v3',day:'16',start:'2026-10-16T09:00',end:'2026-10-16T13:00',kind:'work',title:'Smart working · 1ª parte',place:'Appartamento · Lepant 137',lat:41.3986,lng:2.1852,note:'Stesso fuso (CET). Wi-Fi in casa · se il check-in è al mattino; altrimenti caffè/co-working in Eixample'},
+  {id:'v4',day:'16',start:'2026-10-16T13:00',end:'2026-10-16T14:00',kind:'food',title:'Pranzo veloce in zona',place:'Eixample · Glòries',lat:41.4000,lng:2.1830,note:'Boccone vicino casa (menú del día). Il mare ora è ~10 min di metro: meglio nei momenti liberi',planB:'tapas al chiuso in zona Glòries'},
+  {id:'v5',day:'16',start:'2026-10-16T14:00',end:'2026-10-16T18:00',kind:'work',title:'Smart working · 2ª parte',place:'Appartamento · Lepant 137',lat:41.3986,lng:2.1852},
+  {id:'v6',day:'16',start:'2026-10-16T18:30',end:'2026-10-16T20:30',kind:'sight',title:'Gòtic & El Born',place:'Barri Gòtic',lat:41.3839,lng:2.1765,note:'~10 min metro (L1 da Glòries → Urquinaona) o ~25 min a piedi · Cattedrale, Sta. Maria del Mar',outdoor:true,planB:'musei o un caffè coperto nel Born'},
   {id:'v7',day:'16',start:'2026-10-16T20:30',end:'2026-10-16T22:30',kind:'food',title:'Cena catalana · Barriteca',place:'Barriteca',lat:41.4013,lng:2.2031,phone:'+34934851859',book:'tel:+34934851859',note:'Prenota · chiuso lun-mer'},
   {id:'v8',day:'16',start:'2026-10-16T22:30',end:'2026-10-17T01:00',kind:'night',title:'Cocktail nel Born',place:'No Sé · Born',lat:41.3850,lng:2.1828,note:'Solo-friendly · tutto a piedi'},
   // SABATO 17
-  {id:'s1',day:'17',start:'2026-10-17T09:30',end:'2026-10-17T11:30',kind:'sight',title:'Sagrada Família',place:'Sagrada Família',lat:41.4036,lng:2.1744,book:'https://sagradafamilia.org/',note:'Slot prenotato · salti la fila'},
+  {id:'s1',day:'17',start:'2026-10-17T09:30',end:'2026-10-17T11:30',kind:'sight',title:'Sagrada Família',place:'Sagrada Família',lat:41.4036,lng:2.1744,book:'https://sagradafamilia.org/',note:'Slot prenotato · salti la fila · ~12 min a piedi da casa 🚶'},
   {id:'s2',day:'17',start:'2026-10-17T13:30',end:'2026-10-17T16:30',kind:'sight',title:'MNAC · Montjuïc',place:'MNAC',lat:41.3685,lng:2.1533,note:'Arte catalana + vista. Alt: mare a Barceloneta'},
   {id:'s3',day:'17',start:'2026-10-17T17:30',end:'2026-10-17T19:30',kind:'spa',title:'Aire Ancient Baths',place:'Aire Ancient Baths',lat:41.3870,lng:2.1835,book:'https://relax.beaire.com/es/aire-ancient-baths-barcelona',note:'Il regalo a te stesso · ~15 min a piedi'},
   {id:'s4',day:'17',start:'2026-10-17T19:30',end:'2026-10-17T21:30',kind:'night',title:'Aperitivo rooftop · Sir Victor',place:'Sir Victor rooftop',lat:41.3962,lng:2.1610,phone:'+34681084156',note:'DJ + riscaldatori. Alt: Ohla / Alaire',outdoor:true,planB:'cocktail al chiuso nel Born'},
   {id:'s5',day:'17',start:'2026-10-17T21:30',end:'2026-10-18T02:00',kind:'night',title:'Cena + giro cocktail · festa 40°',place:'El Born',lat:41.3850,lng:2.1828,note:'Mariposa Negra · Aldea · Bestiari · No Sé'},
   // DOMENICA 18
-  {id:'d1',day:'18',start:'2026-10-18T10:00',end:'2026-10-18T13:00',kind:'sea',title:'Spiaggia + brunch (o spa hotel)',place:'Bogatell · Barceloneta',lat:41.3957,lng:2.2002,note:'Mare e brunch',outdoor:true,planB:'spa e piscina dell\'H10'},
+  {id:'d1',day:'18',start:'2026-10-18T10:00',end:'2026-10-18T13:00',kind:'sea',title:'Spiaggia + brunch',place:'Bogatell · Barceloneta',lat:41.3957,lng:2.2002,note:'Mare e brunch · ~10 min metro (L1) o taxi da casa',outdoor:true,planB:'brunch in zona o relax al Parc de la Ciutadella'},
   {id:'d2',day:'18',start:'2026-10-18T13:30',end:'2026-10-18T17:30',kind:'sight',title:'Museo Picasso o Park Güell',place:'Museo Picasso',lat:41.3853,lng:2.1809,note:'Quello che non hai fatto venerdì'},
-  {id:'d3',day:'18',start:'2026-10-18T18:00',end:'2026-10-18T19:50',kind:'admin',title:'Doccia prima del volo',place:'H10 Marina',lat:41.3928,lng:2.1924,phone:'+34933097917',note:'Day-use fino ~20:00 o late check-out + deposito'},
-  {id:'d4',day:'18',start:'2026-10-18T19:50',end:'2026-10-18T20:15',kind:'transfer',title:'H10 → Aeroporto T2',place:'Aeroporto BCN · T2',lat:41.3018,lng:2.0793,note:'Taxi ~25 min · ~€35 · volo Schengen'},
+  {id:'d3',day:'18',start:'2026-10-18T09:00',end:'2026-10-18T09:45',kind:'admin',title:'Check-out + deposito bagagli',place:'Appartamento · Lepant 137',lat:41.3986,lng:2.1852,note:'Check-out di norma entro 10–11 (verifica). Lascia i bagagli in una consigna/locker in zona Sagrada o Glòries e giri leggero fino al volo. Se vuoi rinfrescarti prima del volo: late check-out a pagamento o day-pass spa/palestra'},
+  {id:'d4',day:'18',start:'2026-10-18T19:50',end:'2026-10-18T20:15',kind:'transfer',title:'Verso l\'aeroporto T2',place:'Aeroporto BCN · T2',lat:41.3018,lng:2.0793,note:'Taxi ~30 min · ~€35 · volo Schengen'},
   {id:'d5',day:'18',start:'2026-10-18T20:15',end:'2026-10-18T22:00',kind:'admin',title:'Sala VIP Canudas · T2',place:'Aeroporto BCN · T2',lat:41.3018,lng:2.0793,note:'Entri dalle 19:05, chiude 22:00. Cibo+drink'},
   {id:'d6',day:'18',start:'2026-10-18T22:25',end:'2026-10-18T23:05',kind:'flight',title:'Al gate',place:'Aeroporto BCN · T2',track:'https://www.aena.es/en/flight-info.html',flightNo:'FR5220',fdate:'2026-10-18'},
   {id:'d7',day:'18',start:'2026-10-18T23:05',end:'2026-10-19T00:50',kind:'flight',title:'Volo FR5220 · BCN → BLQ',place:'Rientro a casa',note:'Atterri 00:50 lunedì',track:'https://www.aena.es/en/flight-info.html',flightNo:'FR5220',fdate:'2026-10-18'}
 ];
 
 const CONTACTS=[
-  {n:'H10 Marina · reception',v:'+34 933 097 917',tel:'+34933097917',i:'🏨'},
+  {n:'Appartamento Auditori · Lepant 137',v:'check-in: vedi email di prenotazione',url:'https://www.google.com/maps/search/?api=1&query=Carrer+de+Lepant+137+Barcelona',i:'🏠'},
   {n:'Aire Ancient Baths · spa',v:'prenota online',url:'https://relax.beaire.com/es/aire-ancient-baths-barcelona',i:'🧖'},
   {n:'Barriteca · cena ven',v:'+34 934 851 859',tel:'+34934851859',i:'🍽️'},
-  {n:'Cuadro · sotto casa',v:'+34 640 065 174',tel:'+34640065174',i:'🍷'},
+  {n:'Cuadro · Vila Olímpica',v:'+34 640 065 174',tel:'+34640065174',i:'🍷'},
   {n:'Sir Victor · rooftop',v:'+34 681 084 156',tel:'+34681084156',i:'🌆'},
   {n:'Museo Picasso',v:'+34 932 563 000',tel:'+34932563000',i:'🖼️'},
   {n:'FREE NOW · taxi',v:'app',url:'https://free-now.com/es/',i:'🚖'},
@@ -629,7 +629,7 @@ const DINING={
     {n:'Els Pollos de Llull',a:'C/ de Ramon Turró 13',d:'Pollo arrosto, un classico di Barcellona.',site:'https://elspollos.com/',lat:41.3906,lng:2.1929},
     {n:'Masa Vins',a:'C/ de Pallars 154',d:'Wine bar con cucina, calici e cocktail.',site:'https://www.instagram.com/masa.vins/',lat:41.4007,lng:2.1931},
     {n:'Barriteca',a:'Poblenou',d:'Catalana vera, trattano benissimo chi cena solo.',lat:41.4013,lng:2.2031},
-    {n:'Cuadro',a:'Vila Olímpica',d:'Bistrot sotto casa, comodo e veloce.',lat:41.3936,lng:2.1954}
+    {n:'Cuadro',a:'Vila Olímpica',d:'Bistrot vicino alla spiaggia, comodo e veloce (~10 min metro da casa).',lat:41.3936,lng:2.1954}
   ],
   cocktail:[
     {n:'Balius',a:'C/ de Pujades 196',d:'Cocktail classici in una ex-farmacia · jazz la domenica.',site:'https://baliusbar.com/',lat:41.4011,lng:2.1996},
@@ -740,7 +740,7 @@ function renderNow(){
   if(now<start){
     const days=Math.ceil((start-now)/864e5);
     html+='<hr><div class="nlab">Countdown</div><div class="next">Mancano '+days+' giorni</div>';
-    html+='<div class="meta"><span class="chip big">✈️ Ven 16 · 06:20</span><span class="chip"><span class="c">prima tappa</span> H10 Marina</span></div>';
+    html+='<div class="meta"><span class="chip big">✈️ Ven 16 · 06:20</span><span class="chip"><span class="c">prima tappa</span> Appartamento (Lepant)</span></div>';
   } else if(next){
     html+='<hr><div class="nlab">Prossima · '+humanIn(next._s-now)+'</div><div class="next">'+next.title+'</div>';
     html+='<div class="meta">';
@@ -915,7 +915,7 @@ function searchIndex(){
   const idx=[];
   ITINERARY.forEach(it=>idx.push({i:(KIND[it.kind]||{e:'•'}).e,t:it.title,s:(DAYS[it.day]||'')+(it.note?' · '+it.note:''),href:it.lat?mapsDir(it.lat,it.lng):'#oggi',day:it.day}));
   CONTACTS.forEach(c=>idx.push({i:c.i,t:c.n,s:c.v,href:c.tel?'tel:'+c.tel:c.url}));
-  [['🏨','H10 Marina','Hotel · Vila Olímpica','tel:+34933097917'],
+  [['🏠','Appartamento Auditori','Carrer de Lepant 137 · Eixample','https://www.google.com/maps/search/?api=1&query=Carrer+de+Lepant+137+Barcelona'],
    ['📡','Stato volo andata FR2097','BLQ 06:20 → BCN 08:05','https://www.bologna-airport.it/voli/vola-da-bologna/voli-in-tempo-reale/?idC=62178'],
    ['📡','Stato volo ritorno FR5220','BCN 23:05 → BLQ 00:50 · T2','https://www.aena.es/en/flight-info.html'],
    ['🅿️','Parcheggio P2 Business','Codice P2932537 · €51','#docs'],
