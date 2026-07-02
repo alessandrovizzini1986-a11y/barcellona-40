@@ -310,6 +310,16 @@
     <div class="tl" id="timeline"></div>
   </section>
 
+  <!-- PIANI ARRIVO -->
+  <details id="arrivo">
+    <summary><span class="ic">🛬</span> Piani arrivo · fino al check-in (16:00) <span class="caret">▸</span></summary>
+    <div class="det-body">
+      <p class="muted" style="font-size:12px;margin:0 0 8px">Atterri la mattina presto ma il check-in a <b>Lepant 137</b> è alle <b>16:00</b>: ~10 ore da riempire. Scegli il piano (meteo o lavoro). Bagagli: lasciali in una consigna/locker in zona.</p>
+      <div class="daytabs" id="planTabs"></div>
+      <div id="planDetail"></div>
+    </div>
+  </details>
+
   <!-- DOCUMENTI -->
   <details id="docs">
     <summary><span class="ic">🎫</span> Documenti & prenotazioni <span class="caret">▸</span></summary>
@@ -670,6 +680,42 @@ const TIPS=[
 ];
 const CAMP_NOU={lat:41.3809,lng:2.1228,book:'https://www.fcbarcelona.com/en/tickets/camp-nou-experience'};
 
+// ====== PIANI ARRIVO (06:00 → check-in 16:00): A sole · B pioggia · C smart working ======
+const ARRIVO=[
+  {k:'A',e:'☀️',t:'Sole',sub:'Passeggiata & aria aperta',ps:[
+    {n:'Colazione + passeggiata',d:'Caffè e croissant in Eixample, poi cammini con calma verso il verde.',q:'cafeteria Eixample Barcelona'},
+    {n:'Parc de la Ciutadella',d:'Parco con laghetto, cascata e Arc de Triomf. Perfetto la mattina.',q:'Parc de la Ciutadella Barcelona'},
+    {n:'Recinte Modernista de Sant Pau',d:'Complesso modernista UNESCO (apre ~09:30), ~18 min a piedi. Meno affollato della Sagrada.',q:'Recinte Modernista Sant Pau Barcelona',url:'https://www.santpaubarcelona.org/en'}
+  ]},
+  {k:'B',e:'🌧️',t:'Pioggia',sub:'Al coperto: musei & shopping',ps:[
+    {n:'Museu Picasso',d:'Apre ~10:00 (venerdì aperto). Nel Born, ~10 min di metro.',q:'Museu Picasso Barcelona',url:'https://www.museupicasso.bcn.cat/en'},
+    {n:'Palau de la Música Catalana',d:'Visite guidate dal mattino. Gioiello modernista UNESCO.',q:'Palau de la Música Catalana Barcelona',url:'https://www.palaumusica.cat/en'},
+    {n:'Arenas de Barcelona',d:'Ex arena → centro commerciale con terrazza panoramica. Apre ~10:00, tutto al coperto.',q:'Arenas de Barcelona centre comercial'}
+  ]},
+  {k:'C',e:'💻',t:'Smart working',sub:'09–17 · coworking o mall',ps:[
+    {n:'Aticco Monumental',d:'Coworking con day pass, vicinissimo (zona Monumental).',q:'Aticco Monumental Barcelona',url:'https://aticco.com/'},
+    {n:'Boca11 Coworking',d:'Spazio tranquillo in Eixample, day pass.',q:'Boca11 coworking Barcelona'},
+    {n:'Eixample 46 Coworking',d:'Postazioni e sale riunioni in Eixample.',q:'Eixample 46 coworking Barcelona'},
+    {n:'Westfield Glòries',d:'Mall grande e spazioso (~7 min a piedi): caffè con Wi-Fi, tavoli, food court.',q:'Westfield Glòries Barcelona'},
+    {n:'Diagonal Mar',d:'Mall ampio vicino al mare, tanti spazi comodi per lavorare.',q:'Centre Comercial Diagonal Mar Barcelona'}
+  ]}
+];
+function planCard(p){
+  let acts='<a class="prim" href="'+mapsAt(0,0,p.q)+'" target="_blank" rel="noopener">📍 Mappe</a>';
+  if(p.url)acts+='<a href="'+p.url+'" target="_blank" rel="noopener">🔗 Sito</a>';
+  return '<div class="place-card"><h4>'+p.n+'</h4><div class="pd">'+p.d+'</div><div class="acts">'+acts+'</div></div>';
+}
+function selectPlan(k){
+  const pl=ARRIVO.find(x=>x.k===k)||ARRIVO[0];
+  document.querySelectorAll('#planTabs button').forEach(b=>b.classList.toggle('on',b.dataset.k===pl.k));
+  document.getElementById('planDetail').innerHTML='<div class="subh">Piano '+pl.k+' · '+pl.e+' '+pl.t+' — '+pl.sub+'</div>'+pl.ps.map(planCard).join('');
+}
+function renderArrivo(){
+  const tabs=document.getElementById('planTabs'); if(!tabs) return;
+  tabs.innerHTML=ARRIVO.map(p=>'<button data-k="'+p.k+'" onclick="selectPlan(\''+p.k+'\')"><b>'+p.e+' '+p.k+'</b>'+p.t+'</button>').join('');
+  selectPlan('A');
+}
+
 /* ============ MOTORE ============ */
 const DONE_KEY='bcn40_done_v1';
 function getDone(){try{return new Set(JSON.parse(localStorage.getItem(DONE_KEY)||'[]'))}catch(e){return new Set()}}
@@ -983,6 +1029,7 @@ renderAll();
 renderContacts();
 renderDining();
 renderNearby();
+renderArrivo();
 renderFlightDocs();
 setInterval(renderAll,60000);
 
