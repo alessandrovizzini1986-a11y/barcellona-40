@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#0a0e16">
+<meta name="robots" content="noindex,nofollow">
+<title>SCACCHI</title>
+<meta property="og:type" content="website">
+<meta property="og:title" content="♟️ SCACCHI">
+<meta property="og:description" content="Scacchi contro la CPU o in due. Insert coin!">
+<meta property="og:image" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/og-scacchi.jpg?v=1">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/og-scacchi.jpg?v=1">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
+  html,body{height:100%}
+  body{background:radial-gradient(120% 70% at 50% 0%,#1a2440,#06080f 70%);color:#e7eaf6;
+    font-family:"Press Start 2P",monospace;display:flex;flex-direction:column;align-items:center;
+    min-height:100svh;padding:calc(8px + env(safe-area-inset-top)) 8px calc(14px + env(safe-area-inset-bottom))}
+  .top{width:min(96vw,440px);display:flex;justify-content:space-between;font-size:8px;margin-bottom:8px}
+  .top a{color:#8b93b0;text-decoration:none}
+  h1{font-size:16px;color:#fff;text-shadow:0 0 14px rgba(150,180,255,.5);margin:2px 0 10px}
+  .status{font-size:9px;line-height:1.7;color:#cdd6ee;min-height:30px;text-align:center;width:min(96vw,440px);margin-bottom:8px}
+  .status b{color:#ffd28a}
+  .status .chk{color:#ff6a8a}
+  /* board */
+  .board{width:min(96vw,440px);aspect-ratio:1;display:grid;grid-template-columns:repeat(8,1fr);grid-template-rows:repeat(8,1fr);
+    border:3px solid #10203a;border-radius:8px;overflow:hidden;box-shadow:0 20px 50px -20px #000,0 0 0 1px rgba(255,255,255,.05)}
+  .sq{position:relative;display:flex;align-items:center;justify-content:center;font-family:"Segoe UI Symbol","Noto Sans Symbols2","Apple Symbols",sans-serif;
+    font-size:min(9vw,42px);line-height:1;cursor:pointer}
+  .sq.lt{background:#a7b0c4}.sq.dk{background:#5a6684}
+  .sq.sel{background:#e7c84a!important}
+  .sq.lastf,.sq.lastt{box-shadow:inset 0 0 0 3px rgba(231,200,74,.7)}
+  .sq .pc{position:relative;z-index:2;text-shadow:0 2px 3px rgba(0,0,0,.45)}
+  .sq .pc.w{color:#fbfbfd}
+  .sq .pc.b{color:#12131a}
+  .sq .dot{position:absolute;width:26%;height:26%;border-radius:50%;background:rgba(20,25,40,.45);z-index:1}
+  .sq .ring{position:absolute;inset:8%;border-radius:50%;border:4px solid rgba(20,25,40,.45);z-index:1}
+  .sq.chking{background:#c0405a!important}
+  .coordr{position:absolute;top:1px;left:2px;font-size:6px;color:rgba(0,0,0,.35);z-index:3}
+  .coordc{position:absolute;bottom:1px;right:2px;font-size:6px;color:rgba(0,0,0,.35);z-index:3}
+  /* controls */
+  .row{display:flex;gap:8px;margin-top:12px;width:min(96vw,440px)}
+  .row button{flex:1;font-family:inherit;font-size:8px;color:#e7ebff;padding:12px 4px;border-radius:11px;border:1px solid rgba(255,255,255,.1);
+    background:linear-gradient(180deg,#21426a,#132a44);cursor:pointer;box-shadow:0 3px 0 rgba(0,0,0,.4);line-height:1.5}
+  .row button:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(0,0,0,.4)}
+  .row button.on{background:linear-gradient(180deg,#3a6a2a,#274a1c);border-color:#7ed957}
+  .hint{margin-top:10px;font-size:7px;color:#6f76a0;text-align:center;line-height:1.9;width:min(96vw,440px)}
+  /* overlay promozione / fine */
+  .ov{position:fixed;inset:0;z-index:40;display:none;align-items:center;justify-content:center;background:rgba(4,6,14,.86);padding:18px}
+  .ov.show{display:flex}
+  .ov .card{background:#0e1830;border:1px solid rgba(150,160,230,.35);border-radius:16px;padding:22px 18px;text-align:center;max-width:340px}
+  .ov .big{font-size:15px;color:#ffd28a;line-height:1.6}
+  .ov .sm{font-size:8px;color:#cdd6ee;line-height:1.9;margin-top:10px}
+  .ov .promo{display:flex;gap:10px;justify-content:center;margin-top:16px}
+  .ov .promo button{font-family:inherit;font-size:26px;color:#fff;background:#21426a;border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:8px 12px;cursor:pointer}
+  .ov .go{margin-top:16px;font-family:inherit;font-size:9px;color:#10100a;background:#ffd28a;border:none;border-radius:10px;padding:12px 22px;cursor:pointer}
+</style>
+</head>
+<body>
+  <div class="top"><a href="sala-giochi.html">‹ SALA GIOCHI</a><a href="index.html">ESCI ✕</a></div>
+  <h1>♟️ SCACCHI</h1>
+  <div class="status" id="status">Tocca al <b>Bianco</b></div>
+  <div class="board" id="board"></div>
+  <div class="row">
+    <button id="modeBtn">🤖 vs CPU</button>
+    <button id="diffBtn">LIV: MEDIO</button>
+    <button id="newBtn">↺ NUOVA</button>
+  </div>
+  <div class="row" style="margin-top:8px">
+    <button id="mBtn">MUSICA ON</button><button id="sBtn">SUONI ON</button>
+  </div>
+  <div class="hint">tocca un pezzo, poi la casella · promozione: scegli il pezzo · vittorie: <span id="wins">0</span></div>
+
+  <div class="ov" id="ov"><div class="card">
+    <div class="big" id="ovBig"></div>
+    <div class="sm" id="ovSm"></div>
+    <div class="promo" id="promoRow" style="display:none"></div>
+    <button class="go" id="ovGo" style="display:none">NUOVA PARTITA ▶</button>
+  </div></div>
+
+<script src="arcade.js"></script>
+<script>
+(function(){
+  var KEY='scacchi';
+  var boardEl=document.getElementById('board'), statusEl=document.getElementById('status');
+  var GLYPH={K:'♚',Q:'♛',R:'♜',B:'♝',N:'♞',P:'♟'};
+  var VAL={P:100,N:320,B:330,R:500,Q:900,K:0};
+  // piece-square (per il Bianco, dal basso). Semplici, per dare un senso posizionale.
+  var PST={
+    P:[[0,0,0,0,0,0,0,0],[50,50,50,50,50,50,50,50],[10,10,20,30,30,20,10,10],[5,5,10,25,25,10,5,5],
+       [0,0,0,20,20,0,0,0],[5,-5,-10,0,0,-10,-5,5],[5,10,10,-20,-20,10,10,5],[0,0,0,0,0,0,0,0]],
+    N:[[-50,-40,-30,-30,-30,-30,-40,-50],[-40,-20,0,0,0,0,-20,-40],[-30,0,10,15,15,10,0,-30],[-30,5,15,20,20,15,5,-30],
+       [-30,0,15,20,20,15,0,-30],[-30,5,10,15,15,10,5,-30],[-40,-20,0,5,5,0,-20,-40],[-50,-40,-30,-30,-30,-30,-40,-50]],
+    B:[[-20,-10,-10,-10,-10,-10,-10,-20],[-10,0,0,0,0,0,0,-10],[-10,0,5,10,10,5,0,-10],[-10,5,5,10,10,5,5,-10],
+       [-10,0,10,10,10,10,0,-10],[-10,10,10,10,10,10,10,-10],[-10,5,0,0,0,0,5,-10],[-20,-10,-10,-10,-10,-10,-10,-20]],
+    R:[[0,0,0,0,0,0,0,0],[5,10,10,10,10,10,10,5],[-5,0,0,0,0,0,0,-5],[-5,0,0,0,0,0,0,-5],
+       [-5,0,0,0,0,0,0,-5],[-5,0,0,0,0,0,0,-5],[-5,0,0,0,0,0,0,-5],[0,0,0,5,5,0,0,0]],
+    Q:[[-20,-10,-10,-5,-5,-10,-10,-20],[-10,0,0,0,0,0,0,-10],[-10,0,5,5,5,5,0,-10],[-5,0,5,5,5,5,0,-5],
+       [0,0,5,5,5,5,0,-5],[-10,5,5,5,5,5,0,-10],[-10,0,5,0,0,0,0,-10],[-20,-10,-10,-5,-5,-10,-10,-20]],
+    K:[[-30,-40,-40,-50,-50,-40,-40,-30],[-30,-40,-40,-50,-50,-40,-40,-30],[-30,-40,-40,-50,-50,-40,-40,-30],[-30,-40,-40,-50,-50,-40,-40,-30],
+       [-20,-30,-30,-40,-40,-30,-30,-20],[-10,-20,-20,-20,-20,-20,-20,-10],[20,20,0,0,0,0,20,20],[20,30,10,0,0,10,30,20]]
+  };
+  var KN=[[-2,-1],[-2,1],[-1,-2],[-1,2],[1,-2],[1,2],[2,-1],[2,1]];
+  var KING8=[[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]];
+  var ORTHO=[[-1,0],[1,0],[0,-1],[0,1]], DIAG=[[-1,-1],[-1,1],[1,-1],[1,1]];
+  var FILES='abcdefgh';
+
+  function startBoard(){
+    var b=[];
+    var back=['R','N','B','Q','K','B','N','R'];
+    b.push(back.map(function(t){return 'b'+t;}));
+    b.push('PPPPPPPP'.split('').map(function(){return 'bP';}));
+    for(var i=0;i<4;i++) b.push([null,null,null,null,null,null,null,null]);
+    b.push('PPPPPPPP'.split('').map(function(){return 'wP';}));
+    b.push(back.map(function(t){return 'w'+t;}));
+    return b;
+  }
+  function newState(){ return {b:startBoard(),turn:'w',cr:{wK:true,wQ:true,bK:true,bQ:true},ep:null}; }
+  function inside(r,c){ return r>=0&&r<8&&c>=0&&c<8; }
+  function clone(st){ return {b:st.b.map(function(row){return row.slice();}),turn:st.turn,cr:{wK:st.cr.wK,wQ:st.cr.wQ,bK:st.cr.bK,bQ:st.cr.bQ},ep:st.ep?[st.ep[0],st.ep[1]]:null}; }
+
+  function attacked(b,r,c,by){
+    var pr=r+(by==='w'?1:-1), dc, nr, nc, i, p;
+    for(i=0;i<2;i++){ dc=i?1:-1; if(inside(pr,c+dc)&&b[pr][c+dc]===by+'P') return true; }
+    for(i=0;i<8;i++){ nr=r+KN[i][0];nc=c+KN[i][1]; if(inside(nr,nc)&&b[nr][nc]===by+'N') return true; }
+    for(i=0;i<8;i++){ nr=r+KING8[i][0];nc=c+KING8[i][1]; if(inside(nr,nc)&&b[nr][nc]===by+'K') return true; }
+    for(i=0;i<4;i++){ nr=r+ORTHO[i][0];nc=c+ORTHO[i][1]; while(inside(nr,nc)){ p=b[nr][nc]; if(p){ if(p===by+'R'||p===by+'Q') return true; break;} nr+=ORTHO[i][0];nc+=ORTHO[i][1]; } }
+    for(i=0;i<4;i++){ nr=r+DIAG[i][0];nc=c+DIAG[i][1]; while(inside(nr,nc)){ p=b[nr][nc]; if(p){ if(p===by+'B'||p===by+'Q') return true; break;} nr+=DIAG[i][0];nc+=DIAG[i][1]; } }
+    return false;
+  }
+  function findKing(b,color){ for(var r=0;r<8;r++)for(var c=0;c<8;c++) if(b[r][c]===color+'K') return [r,c]; return null; }
+  function inCheck(st,color){ var k=findKing(st.b,color); return k?attacked(st.b,k[0],k[1],color==='w'?'b':'w'):false; }
+
+  function pseudo(st,color){
+    var b=st.b, moves=[], r,c,p,t,i,dir,nr,nc,startr,lastr;
+    for(r=0;r<8;r++)for(c=0;c<8;c++){ p=b[r][c]; if(!p||p[0]!==color) continue; t=p[1];
+      if(t==='P'){
+        dir=color==='w'?-1:1; startr=color==='w'?6:1; lastr=color==='w'?0:7;
+        if(inside(r+dir,c)&&!b[r+dir][c]){ addP(moves,r,c,r+dir,c,r+dir===lastr);
+          if(r===startr&&!b[r+2*dir][c]) moves.push({fr:r,fc:c,tr:r+2*dir,tc:c,dbl:true}); }
+        for(i=0;i<2;i++){ nc=c+(i?1:-1); nr=r+dir; if(!inside(nr,nc))continue;
+          if(b[nr][nc]&&b[nr][nc][0]!==color) addP(moves,r,c,nr,nc,nr===lastr);
+          else if(st.ep&&st.ep[0]===nr&&st.ep[1]===nc) moves.push({fr:r,fc:c,tr:nr,tc:nc,ep:true}); }
+      } else if(t==='N'){ for(i=0;i<8;i++){ nr=r+KN[i][0];nc=c+KN[i][1]; if(inside(nr,nc)&&(!b[nr][nc]||b[nr][nc][0]!==color)) moves.push({fr:r,fc:c,tr:nr,tc:nc}); } }
+      else if(t==='K'){ for(i=0;i<8;i++){ nr=r+KING8[i][0];nc=c+KING8[i][1]; if(inside(nr,nc)&&(!b[nr][nc]||b[nr][nc][0]!==color)) moves.push({fr:r,fc:c,tr:nr,tc:nc}); }
+        // arrocco
+        var opp=color==='w'?'b':'w', hr=color==='w'?7:0;
+        if(r===hr&&c===4&&!attacked(b,hr,4,opp)){
+          if(st.cr[color+'K']&&!b[hr][5]&&!b[hr][6]&&b[hr][7]===color+'R'&&!attacked(b,hr,5,opp)&&!attacked(b,hr,6,opp)) moves.push({fr:hr,fc:4,tr:hr,tc:6,castle:'K'});
+          if(st.cr[color+'Q']&&!b[hr][3]&&!b[hr][2]&&!b[hr][1]&&b[hr][0]===color+'R'&&!attacked(b,hr,3,opp)&&!attacked(b,hr,2,opp)) moves.push({fr:hr,fc:4,tr:hr,tc:2,castle:'Q'});
+        }
+      } else { // sliding
+        var dirs=(t==='R')?ORTHO:(t==='B')?DIAG:ORTHO.concat(DIAG);
+        for(i=0;i<dirs.length;i++){ nr=r+dirs[i][0];nc=c+dirs[i][1]; while(inside(nr,nc)){ if(!b[nr][nc]){ moves.push({fr:r,fc:c,tr:nr,tc:nc}); } else { if(b[nr][nc][0]!==color) moves.push({fr:r,fc:c,tr:nr,tc:nc}); break; } nr+=dirs[i][0];nc+=dirs[i][1]; } }
+      }
+    }
+    return moves;
+  }
+  function addP(moves,fr,fc,tr,tc,promo){ if(promo) moves.push({fr:fr,fc:fc,tr:tr,tc:tc,promo:'Q'}); else moves.push({fr:fr,fc:fc,tr:tr,tc:tc}); }
+
+  function apply(st,m){
+    var s=clone(st), b=s.b, p=b[m.fr][m.fc], color=p[0];
+    b[m.tr][m.tc]=p; b[m.fr][m.fc]=null;
+    if(m.ep){ b[m.fr][m.tc]=null; } // cattura en passant (pedone sulla stessa riga di partenza)
+    if(m.promo){ b[m.tr][m.tc]=color+m.promo; }
+    if(m.castle){ var hr=m.tr; if(m.castle==='K'){ b[hr][5]=b[hr][7]; b[hr][7]=null; } else { b[hr][3]=b[hr][0]; b[hr][0]=null; } }
+    // diritti di arrocco
+    if(p[1]==='K'){ s.cr[color+'K']=false; s.cr[color+'Q']=false; }
+    if(m.fr===7&&m.fc===0||m.tr===7&&m.tc===0) s.cr.wQ=false;
+    if(m.fr===7&&m.fc===7||m.tr===7&&m.tc===7) s.cr.wK=false;
+    if(m.fr===0&&m.fc===0||m.tr===0&&m.tc===0) s.cr.bQ=false;
+    if(m.fr===0&&m.fc===7||m.tr===0&&m.tc===7) s.cr.bK=false;
+    s.ep = m.dbl ? [(m.fr+m.tr)/2, m.fc] : null;
+    s.turn = color==='w'?'b':'w';
+    return s;
+  }
+  function legal(st){ var color=st.turn, ps=pseudo(st,color), out=[], i, s; for(i=0;i<ps.length;i++){ s=apply(st,ps[i]); if(!inCheck(s,color)) out.push(ps[i]); } return out; }
+
+  function evaluate(st){
+    var b=st.b, sc=0, r,c,p,v;
+    for(r=0;r<8;r++)for(c=0;c<8;c++){ p=b[r][c]; if(!p) continue; v=VAL[p[1]];
+      if(p[0]==='w'){ sc+=v+PST[p[1]][r][c]; } else { sc-=v+PST[p[1]][7-r][c]; } }
+    return sc; // dal punto di vista del Bianco
+  }
+  function orderMoves(st,ms){ return ms.map(function(m){ var cap=st.b[m.tr][m.tc]; m._s=(cap?VAL[cap[1]]:0)+(m.promo?800:0); return m; }).sort(function(a,b){return b._s-a._s;}); }
+
+  function search(st,depth,alpha,beta){
+    var ms=legal(st);
+    if(ms.length===0){ if(inCheck(st,st.turn)) return st.turn==='w'? -100000-depth : 100000+depth; return 0; }
+    if(depth===0) return evaluate(st);
+    ms=orderMoves(st,ms);
+    var i,v;
+    if(st.turn==='w'){ var best=-1e9; for(i=0;i<ms.length;i++){ v=search(apply(st,ms[i]),depth-1,alpha,beta); if(v>best)best=v; if(best>alpha)alpha=best; if(alpha>=beta)break; } return best; }
+    else { var worst=1e9; for(i=0;i<ms.length;i++){ v=search(apply(st,ms[i]),depth-1,alpha,beta); if(v<worst)worst=v; if(worst<beta)beta=worst; if(alpha>=beta)break; } return worst; }
+  }
+  function bestMove(st,depth){
+    var ms=orderMoves(st,legal(st)); if(!ms.length) return null;
+    var i,v,cand=[],score, max=st.turn==='w';
+    var bestVal=max?-1e9:1e9;
+    for(i=0;i<ms.length;i++){ v=search(apply(st,ms[i]),depth-1,-1e9,1e9);
+      if(max? v>bestVal : v<bestVal){ bestVal=v; cand=[ms[i]]; }
+      else if(v===bestVal) cand.push(ms[i]); }
+    return cand[(Math.random()*cand.length)|0];
+  }
+
+  // ---------- stato UI ----------
+  var st=newState(), sel=null, legalCache=[], mode='cpu', DEPTH=3, last=null, busy=false, over=false;
+  var wins=0; try{ wins=parseInt(localStorage.getItem('scacchi_wins')||'0',10)||0; }catch(e){}
+  document.getElementById('wins').textContent=wins;
+
+  function targetsFrom(r,c){ return legalCache.filter(function(m){return m.fr===r&&m.fc===c;}); }
+
+  function draw(){
+    boardEl.innerHTML='';
+    var kingChk=inCheck(st,st.turn)?findKing(st.b,st.turn):null;
+    for(var r=0;r<8;r++)for(var c=0;c<8;c++){
+      var sq=document.createElement('div');
+      sq.className='sq '+(((r+c)%2)?'dk':'lt');
+      sq.dataset.r=r; sq.dataset.c=c;
+      if(last&&((last.fr===r&&last.fc===c)||(last.tr===r&&last.tc===c))) sq.classList.add(last.fr===r&&last.fc===c?'lastf':'lastt');
+      if(kingChk&&kingChk[0]===r&&kingChk[1]===c) sq.classList.add('chking');
+      if(sel&&sel[0]===r&&sel[1]===c) sq.classList.add('sel');
+      var p=st.b[r][c];
+      if(p){ var g=document.createElement('span'); g.className='pc '+p[0]; g.textContent=GLYPH[p[1]]; sq.appendChild(g); }
+      if(sel){ var tg=targetsFrom(sel[0],sel[1]); for(var i=0;i<tg.length;i++){ if(tg[i].tr===r&&tg[i].tc===c){ var d=document.createElement('span'); d.className=p?'ring':'dot'; sq.appendChild(d); break; } } }
+      if(c===0){ var cr=document.createElement('span'); cr.className='coordr'; cr.textContent=(8-r); sq.appendChild(cr); }
+      if(r===7){ var cc=document.createElement('span'); cc.className='coordc'; cc.textContent=FILES[c]; sq.appendChild(cc); }
+      boardEl.appendChild(sq);
+    }
+  }
+
+  function setStatus(){
+    if(over) return;
+    var chk=inCheck(st,st.turn);
+    var side=st.turn==='w'?'Bianco':'Nero';
+    statusEl.innerHTML='Tocca al <b>'+side+'</b>'+(chk?' — <span class="chk">SCACCO!</span>':'')+(mode==='cpu'&&st.turn==='b'?' 🤖…':'');
+  }
+
+  function endCheck(){
+    var ms=legal(st);
+    if(ms.length>0) return false;
+    over=true;
+    var chk=inCheck(st,st.turn);
+    if(chk){ var winner=st.turn==='w'?'Nero':'Bianco';
+      var human = (mode==='cpu' && winner==='Bianco') || mode==='2p';
+      if(mode==='cpu' && winner==='Bianco'){ wins++; try{localStorage.setItem('scacchi_wins',wins);}catch(e){} document.getElementById('wins').textContent=wins; }
+      showOver('SCACCO MATTO','Vince il '+winner+(mode==='cpu'&&winner==='Bianco'?' — battuta la CPU! 🏆':(mode==='cpu'?' — ti ha battuto la CPU 🤖':'')));
+    } else { showOver('STALLO','Patta: nessuna mossa legale, ma niente scacco.'); }
+    return true;
+  }
+
+  function doMove(m){
+    st=apply(st,m); last=m; sel=null; legalCache=legal(st); draw();
+    Sound(st.b, m);
+    if(endCheck()) return;
+    setStatus();
+    if(mode==='cpu' && st.turn==='b'){ busy=true; setTimeout(cpuMove, 260); }
+  }
+  function cpuMove(){
+    var m=bestMove(st,DEPTH); busy=false;
+    if(!m){ endCheck(); return; }
+    st=apply(st,m); last=m; sel=null; legalCache=legal(st); draw(); Sound(st.b,m);
+    if(endCheck()) return; setStatus();
+  }
+
+  function onTap(r,c){
+    if(over||busy) return;
+    if(mode==='cpu' && st.turn==='b') return;
+    var p=st.b[r][c];
+    if(sel){
+      var tg=targetsFrom(sel[0],sel[1]).filter(function(m){return m.tr===r&&m.tc===c;});
+      if(tg.length){
+        var m=tg[0];
+        if(m.promo){ askPromo(st.turn, function(pt){ m=Object.assign({},m,{promo:pt}); doMove(m); }); return; }
+        doMove(m); return;
+      }
+      if(p&&p[0]===st.turn){ sel=[r,c]; draw(); return; }
+      sel=null; draw(); return;
+    }
+    if(p&&p[0]===st.turn){ sel=[r,c]; draw(); }
+  }
+  boardEl.addEventListener('click',function(e){ var s=e.target.closest('.sq'); if(!s)return; onTap(+s.dataset.r,+s.dataset.c); });
+
+  // ---------- promozione ----------
+  var ov=document.getElementById('ov'), promoRow=document.getElementById('promoRow'), ovBig=document.getElementById('ovBig'), ovSm=document.getElementById('ovSm'), ovGo=document.getElementById('ovGo');
+  function askPromo(color, cb){
+    ovBig.textContent='PROMOZIONE'; ovSm.textContent='Scegli il pezzo'; ovGo.style.display='none'; promoRow.style.display='flex'; promoRow.innerHTML='';
+    ['Q','R','B','N'].forEach(function(pt){ var btn=document.createElement('button'); btn.textContent=GLYPH[pt]; btn.style.color=color==='w'?'#fff':'#12131a'; btn.style.textShadow='0 1px 2px rgba(0,0,0,.5)';
+      btn.onclick=function(){ ov.classList.remove('show'); cb(pt); }; promoRow.appendChild(btn); });
+    ov.classList.add('show');
+  }
+  function showOver(big,sm){ ovBig.textContent=big; ovSm.textContent=sm; promoRow.style.display='none'; ovGo.style.display='inline-block'; ov.classList.add('show'); Arcade.sfx(big==='STALLO'?300:660,.14); setTimeout(function(){Arcade.sfx(big==='STALLO'?200:880,.18);},130); }
+  ovGo.onclick=function(){ ov.classList.remove('show'); newGame(); };
+
+  // ---------- suoni ----------
+  function Sound(b,m){ Arcade.ctx(); var cap=m&&m._cap; Arcade.sfx(cap?300:520,.05); if(m&&(m.castle)) setTimeout(function(){Arcade.sfx(700,.05);},70); }
+
+  // ---------- controlli ----------
+  function newGame(){ st=newState(); sel=null; last=null; over=false; busy=false; legalCache=legal(st); draw(); setStatus(); ov.classList.remove('show');
+    if(mode==='cpu' && st.turn==='b'){ busy=true; setTimeout(cpuMove,300); } }
+  document.getElementById('newBtn').addEventListener('click',function(){ Arcade.ctx(); newGame(); });
+  var modeBtn=document.getElementById('modeBtn');
+  modeBtn.addEventListener('click',function(){ mode=(mode==='cpu')?'2p':'cpu'; modeBtn.textContent=(mode==='cpu')?'🤖 vs CPU':'👥 2 GIOC.'; modeBtn.classList.toggle('on',mode==='2p'); newGame(); });
+  var diffBtn=document.getElementById('diffBtn'); var diffs=[{n:'FACILE',d:2},{n:'MEDIO',d:3},{n:'TOSTO',d:4}], di=1;
+  diffBtn.addEventListener('click',function(){ di=(di+1)%diffs.length; DEPTH=diffs[di].d; diffBtn.textContent='LIV: '+diffs[di].n; });
+  Arcade.bindAudioButtons('mBtn','sBtn');
+
+  // avvio
+  legalCache=legal(st); draw(); setStatus();
+
+  // hook di test (solo con ?test): espone il motore per verificare le regole
+  if(location.search.indexOf('test')>=0){ window.__chess={newState:newState,legal:legal,apply:apply,inCheck:inCheck,pseudo:pseudo,bestMove:bestMove,evaluate:evaluate,findKing:findKing}; }
+})();
+</script>
+</body>
+</html>
