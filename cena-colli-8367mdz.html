@@ -97,7 +97,7 @@
 
   <!-- POLL -->
   <div class="card">
-    <div class="lab">📅 Quando ci andiamo? Vota la tua data</div>
+    <div class="lab">📅 Quando puoi venire? Scegli 1 o più date</div>
     <div class="dates" id="dates">
       <button type="button" class="dbtn" data-k="set11" data-iso="2026-09-11"><span class="d">Ven 11</span><span class="m">settembre</span></button>
       <button type="button" class="dbtn" data-k="set18" data-iso="2026-09-18"><span class="d">Ven 18</span><span class="m">settembre</span></button>
@@ -139,45 +139,51 @@
   var LABELS={set11:'VENERDÌ 11 SETTEMBRE',set18:'VENERDÌ 18 SETTEMBRE',set25:'VENERDÌ 25 SETTEMBRE',ott2:'VENERDÌ 2 OTTOBRE'};
   var nm=document.getElementById('nm'), qtyEl=document.getElementById('qty'), goBtn=document.getElementById('goBtn'),
       goTxt=document.getElementById('goTxt'), preview=document.getElementById('preview'), doneMsg=document.getElementById('doneMsg');
-  var q=1, sel=null, selIso=null, voted=false;
+  var ISO={set11:'2026-09-11',set18:'2026-09-18',set25:'2026-09-25',ott2:'2026-10-02'};
+  var q=1, selected=[], voted=false;
   try{ voted=!!localStorage.getItem('cena_colli_voted'); }catch(e){}
 
   function sync(){
     qtyEl.textContent=q;
-    if(voted){ goBtn.disabled=true; goTxt.textContent='Hai già votato ✓'; doneMsg.classList.add('show'); return; }
-    goBtn.disabled=!sel;
-    goTxt.textContent = sel ? 'Invia il mio voto' : 'Scegli una data';
+    if(voted){ goBtn.disabled=true; goTxt.textContent='Hai già risposto ✓'; doneMsg.classList.add('show'); return; }
+    goBtn.disabled=selected.length===0;
+    goTxt.textContent = selected.length ? 'Invia le mie date' : 'Scegli almeno una data';
     var n=(nm.value||'').trim();
-    preview.textContent = sel ? ((n?'“'+n+'”, ':'')+'voti '+LABELS[sel].toLowerCase()+' · '+(q===1?'per te':'in '+q)+'. Le risposte le vede solo l’organizzatore.') : 'Le risposte le vede solo l’organizzatore.';
+    preview.textContent = selected.length
+      ? ((n?'“'+n+'”, ':'')+'disponibile per '+selected.length+' '+(selected.length===1?'data':'date')+' · '+(q===1?'per te':'in '+q)+'. Le risposte le vede solo l’organizzatore.')
+      : 'Seleziona tutte le date in cui puoi. Le risposte le vede solo l’organizzatore.';
   }
   document.getElementById('dates').addEventListener('click',function(e){
     var b=e.target.closest('.dbtn'); if(!b||voted) return;
-    [].forEach.call(document.querySelectorAll('.dbtn'),function(x){x.classList.remove('on');});
-    b.classList.add('on'); sel=b.dataset.k; selIso=b.dataset.iso; updateCal(); sync();
+    var k=b.dataset.k, i=selected.indexOf(k);
+    if(i>=0){ selected.splice(i,1); b.classList.remove('on'); }      // deseleziona
+    else { selected.push(k); b.classList.add('on'); }                 // aggiungi (multi)
+    updateCal(); sync();
   });
   document.getElementById('plus').addEventListener('click',function(){if(q<20)q++;sync();});
   document.getElementById('minus').addEventListener('click',function(){if(q>1)q--;sync();});
   nm.addEventListener('input',sync);
 
   function msg(){ var n=(nm.value||'').trim().replace(/[<>]/g,''); var who=q===1?'solo io':'saremo in '+q;
-    return 'Ciao Ale! 🍝 Per la cena alla Trattoria Monte Donato voto: '+LABELS[sel]+'. '+(n?'Sono '+n+', ':'')+who+'.'; }
+    var ds=selected.map(function(k){return LABELS[k];}).join(' · ');
+    return 'Ciao Ale! 🍝 Per la cena alla Trattoria Monte Donato posso: '+ds+'. '+(n?'Sono '+n+', ':'')+who+'.'; }
 
   goBtn.addEventListener('click',function(){
-    if(!sel||voted) return;
-    voted=true; try{localStorage.setItem('cena_colli_voted',sel);}catch(e){}
-    // salva il voto online (contatore per data) — la pagina risposte lo legge in privato
-    try{ fetch(AB+'hit/'+NS+'/'+sel).catch(function(){}); }catch(e){}
-    // apri WhatsApp all'organizzatore col nome+data (record privato)
+    if(!selected.length||voted) return;
+    voted=true; try{localStorage.setItem('cena_colli_voted',selected.join(','));}catch(e){}
+    // salva online: +1 al contatore di OGNI data scelta — la pagina risposte le legge in privato
+    selected.forEach(function(k){ try{ fetch(AB+'hit/'+NS+'/'+k).catch(function(){}); }catch(e){} });
+    // apri WhatsApp all'organizzatore con nome + date disponibili (record privato)
     window.open(WA+encodeURIComponent(msg()),'_blank','noopener');
     sync();
   });
 
-  /* salva in calendario sulla data scelta (cena ore 20:30) */
+  /* salva in calendario: attivo solo se hai scelto UNA sola data (cena ore 20:30) */
   function updateCal(){
-    if(!selIso) return;
     var g=document.getElementById('gcal'), ic=document.getElementById('ical');
+    if(selected.length!==1){ g.classList.add('off'); ic.classList.add('off'); return; }
     g.classList.remove('off'); ic.classList.remove('off');
-    var ymd=selIso.replace(/-/g,'');
+    var ymd=ISO[selected[0]].replace(/-/g,'');
     var TITLE='Cena sui colli · Trattoria Monte Donato';
     var LOC='Trattoria Monte Donato, Via di Siepelunga 118, Bologna';
     var DET='Cena tipica bolognese sui colli (tagliatelle al ragù). Prenota: 051 472901. '+location.href;

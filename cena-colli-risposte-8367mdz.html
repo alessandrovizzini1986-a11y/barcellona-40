@@ -41,9 +41,9 @@
 <div class="wrap">
   <div class="eyebrow">Cena sui colli · Trattoria Monte Donato</div>
   <h1>Risposte<br>(privato) 🔒</h1>
-  <p class="priv">Solo tu vedi questa pagina. Il conteggio si aggiorna da solo. I <b>nomi</b> ti arrivano su WhatsApp a ogni voto.</p>
+  <p class="priv">Solo tu vedi questa pagina. Si aggiorna da solo. Ognuno può indicare <b>più date</b>: il numero è quante persone possono per quella data. I <b>nomi</b> ti arrivano su WhatsApp a ogni risposta.</p>
 
-  <div class="tot" id="tot">Totale voti: <b id="totN">…</b></div>
+  <div class="tot" id="tot">Disponibilità totali: <b id="totN">…</b></div>
   <div class="rows" id="rows"><div class="state" id="state">Carico i voti… 🍝</div></div>
   <button class="rf" id="rf">↻ Aggiorna ora</button>
 
@@ -74,9 +74,9 @@
     rowsEl.innerHTML=DATES.map(function(d,i){
       var n=nums[i], pct=Math.round(n/max*100), isLead=(i===lead && n>0);
       return '<div class="r'+(isLead?' lead':'')+'">'+
-        '<div class="top"><span class="dt">'+d.label+'</span><span class="n">'+n+' <small>'+(n===1?'voto':'voti')+'</small></span></div>'+
+        '<div class="top"><span class="dt">'+d.label+'</span><span class="n">'+n+' <small>'+(n===1?'può':'possono')+'</small></span></div>'+
         '<div class="bar"><i style="width:'+pct+'%"></i></div>'+
-        '<div class="crown">👑 In testa</div>'+
+        '<div class="crown">👑 Data migliore</div>'+
       '</div>';
     }).join('');
   }
