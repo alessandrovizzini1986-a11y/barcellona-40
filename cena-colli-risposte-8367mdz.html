@@ -35,19 +35,45 @@
   .foot{margin-top:24px;text-align:center;font-size:11px;color:#6a6256;line-height:1.7}
   .rf{display:block;margin:18px auto 0;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.06em;font-size:12px;
     color:var(--gold-2);background:rgba(217,154,61,.14);border:1px solid var(--line);border-radius:999px;padding:11px 20px;cursor:pointer}
+  /* importer nomi & date (dai messaggi WhatsApp) */
+  .sub{margin:24px 2px 8px;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.12em;font-size:12px;color:var(--gold-2)}
+  .sub.secndry{color:var(--green);margin-top:30px}
+  textarea#inbox{width:100%;min-height:96px;resize:vertical;padding:12px 13px;border-radius:12px;border:1px solid var(--line);
+    background:rgba(255,255,255,.04);color:var(--cream);font-family:"Archivo",sans-serif;font-size:13px;outline:none;line-height:1.5}
+  textarea#inbox:focus{border-color:var(--gold)}
+  .hint{font-size:11px;color:#6a6256;margin:6px 2px 2px}
+  .cnt{font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.08em;font-size:13px;color:var(--gold-2);margin:14px 0 2px}
+  .cnt b{color:#fff;font-size:22px}
+  .ppl{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+  .p{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:rgba(255,255,255,.02)}
+  .p .nm{font-family:"Oswald",sans-serif;font-weight:600;font-size:15px;color:#fff}
+  .p .q{font-size:11px;color:var(--mut);margin-left:2px}
+  .p .chips{margin-left:auto;display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}
+  .p .chip{font-size:10.5px;font-weight:700;font-family:"Oswald",sans-serif;letter-spacing:.03em;color:#ffe0a6;
+    background:rgba(217,154,61,.16);border:1px solid rgba(217,154,61,.4);border-radius:999px;padding:3px 8px}
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="eyebrow">Cena sui colli · Trattoria Monte Donato</div>
   <h1>Risposte<br>(privato) 🔒</h1>
-  <p class="priv">Solo tu vedi questa pagina. Si aggiorna da solo. Ognuno può indicare <b>più date</b>: il numero è quante persone possono per quella data. I <b>nomi</b> ti arrivano su WhatsApp a ogni risposta.</p>
+  <p class="priv">Solo tu vedi questa pagina. I <b>nomi</b> ti arrivano su WhatsApp: incollali qui sotto per vedere <b>chi</b> ha risposto e su quali date si posiziona. Tutto resta su questo dispositivo.</p>
 
+  <!-- IMPORTER: nomi & date dai messaggi WhatsApp -->
+  <div class="sub">👥 Chi ha risposto — nomi & date</div>
+  <textarea id="inbox" placeholder="Incolla qui i messaggi WhatsApp ricevuti (anche tutti insieme)…"></textarea>
+  <div class="hint">🔒 I messaggi restano solo su questo browser. Niente viene caricato online.</div>
+  <div class="cnt" id="pcount"></div>
+  <div class="rows" id="ranking"></div>
+  <div class="ppl" id="ppl"></div>
+
+  <!-- SECONDARIO: conteggio automatico live (dai voti sulla pagina, senza nomi) -->
+  <div class="sub secndry">📊 Conteggio automatico live (senza nomi)</div>
   <div class="tot" id="tot">Disponibilità totali: <b id="totN">…</b></div>
   <div class="rows" id="rows"><div class="state" id="state">Carico i voti… 🍝</div></div>
   <button class="rf" id="rf">↻ Aggiorna ora</button>
 
-  <div class="foot">Se il conteggio non arriva: riprova tra poco (rete).<br>Namespace privato · non condividere questo link.</div>
+  <div class="foot">Namespace privato · non condividere questo link.</div>
 </div>
 
 <script>
@@ -84,6 +110,51 @@
   function refresh(){ Promise.all(DATES.map(function(d){return get(d.k);})).then(render); }
   document.getElementById('rf').addEventListener('click',refresh);
   refresh(); setInterval(refresh,20000);
+
+  /* ---- IMPORTER: nomi & date dai messaggi WhatsApp (tutto client-side, niente online) ---- */
+  var DLAB={set11:'VENERDÌ 11 SETTEMBRE',set18:'VENERDÌ 18 SETTEMBRE',set25:'VENERDÌ 25 SETTEMBRE',ott2:'VENERDÌ 2 OTTOBRE'};
+  var DSHORT={set11:'11 SET',set18:'18 SET',set25:'25 SET',ott2:'2 OTT'};
+  var inbox=document.getElementById('inbox'), pcount=document.getElementById('pcount'),
+      ranking=document.getElementById('ranking'), pplEl=document.getElementById('ppl');
+  function parsePeople(text){
+    var out=[], parts=text.split(/posso:/i);
+    for(var i=1;i<parts.length;i++){
+      var seg=parts[i], head=seg.split(/\bSono\b/i)[0], up=head.toUpperCase(), ds=[];
+      for(var k in DLAB){ if(up.indexOf(DLAB[k])>=0) ds.push(k); }
+      if(!ds.length) continue;
+      var nm=seg.match(/Sono\s+([^,.\n\r]+)/i), name=nm?nm[1].trim().replace(/[<>]/g,''):'(senza nome)';
+      var q=seg.match(/saremo in\s+(\d+)/i), qty=q?parseInt(q[1],10):1;
+      out.push({name:name,key:name.toLowerCase(),dates:ds,qty:qty});
+    }
+    var map={}; out.forEach(function(p){ map[p.key]=p; });   // dedup per nome (tiene l'ultima)
+    var keys=[]; for(var kk in map) keys.push(kk); return keys.map(function(kk){return map[kk];});
+  }
+  function labelOf(k){ for(var i=0;i<DATES.length;i++) if(DATES[i].k===k) return DATES[i].label; return k; }
+  function renderPeople(){
+    var text=inbox.value||''; try{localStorage.setItem('cena_colli_inbox',text);}catch(e){}
+    var ppl=parsePeople(text);
+    if(!ppl.length){ pcount.textContent=''; ranking.innerHTML=''; pplEl.innerHTML=''; return; }
+    pcount.innerHTML='<b>'+ppl.length+'</b> '+(ppl.length===1?'persona ha risposto':'persone hanno risposto');
+    var cnt={set11:0,set18:0,set25:0,ott2:0};
+    ppl.forEach(function(p){ p.dates.forEach(function(k){ cnt[k]++; }); });
+    var order=['set11','set18','set25','ott2'];
+    var max=Math.max(1,cnt.set11,cnt.set18,cnt.set25,cnt.ott2);
+    var best=order.reduce(function(a,b){return cnt[b]>cnt[a]?b:a;},order[0]);
+    ranking.innerHTML=order.map(function(k){
+      var n=cnt[k], lead=(k===best && n>0);
+      return '<div class="r'+(lead?' lead':'')+'"><div class="top"><span class="dt">'+labelOf(k)+'</span>'+
+        '<span class="n">'+n+' <small>'+(n===1?'può':'possono')+'</small></span></div>'+
+        '<div class="bar"><i style="width:'+Math.round(n/max*100)+'%"></i></div>'+
+        '<div class="crown">👑 Data migliore</div></div>';
+    }).join('');
+    pplEl.innerHTML=ppl.map(function(p){
+      var chips=p.dates.map(function(k){return '<span class="chip">'+DSHORT[k]+'</span>';}).join('');
+      return '<div class="p"><span class="nm">'+p.name+(p.qty>1?'<span class="q">×'+p.qty+'</span>':'')+'</span><span class="chips">'+chips+'</span></div>';
+    }).join('');
+  }
+  inbox.addEventListener('input',renderPeople);
+  try{ var saved=localStorage.getItem('cena_colli_inbox'); if(saved) inbox.value=saved; }catch(e){}
+  renderPeople();
 </script>
 </body>
 </html>
