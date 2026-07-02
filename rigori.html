@@ -184,6 +184,13 @@
     background:
       radial-gradient(125% 105% at 50% 40%, transparent 52%, rgba(0,2,12,.5) 100%),
       linear-gradient(180deg, rgba(255,180,90,.06) 0%, transparent 26%, transparent 72%, rgba(0,10,40,.14) 100%);}
+  /* PES: resa realistica, colore appena piu ricco */
+  #cv{filter:saturate(1.06) contrast(1.03)}
+  /* Anime (Holly & Benji): colori accesi da cel-shading + grading caldo/fumetto */
+  body.manga #cv{filter:saturate(1.28) contrast(1.09) brightness(1.03)}
+  body.manga #grade{background:
+      radial-gradient(125% 108% at 50% 38%, transparent 46%, rgba(12,0,26,.58) 100%),
+      linear-gradient(180deg, rgba(255,120,60,.10) 0%, transparent 30%, transparent 66%, rgba(30,0,60,.22) 100%);}
 </style>
 <script type="importmap">
 { "imports": { "three": "./assets/three.module.js", "three/addons/": "./assets/jsm/" } }
@@ -438,19 +445,27 @@ const HUD={ score:document.getElementById('score'), rec:document.getElementById(
 
 /* ---------------------- Texture procedurali (canvas) --------------------- */
 function pitchTextures(){
-  // Color map: verde con strisce di taglio + screziature
+  // Color map: erba PES — verde piu naturale, strisce di taglio col "rullo" + taglio incrociato
   const c=document.createElement('canvas'); c.width=c.height=512; const x=c.getContext('2d');
-  for(let i=0;i<512;i++){ // strisce di taglio (8 fasce) con contrasto piu marcato
-    const band=Math.floor(i/64)%2; const base=band?'#34964a':'#236d34';
-    x.fillStyle=base; x.fillRect(0,i,512,1);
-  }
+  // 8 fasce orizzontali con gradiente centrale = riflesso del rullo (aspetto rasato reale)
+  for(let b=0;b<8;b++){ const y0=b*64, light=(b%2===0);
+    const g=x.createLinearGradient(0,y0,0,y0+64);
+    if(light){ g.addColorStop(0,'#2c7a3f'); g.addColorStop(.5,'#3a9350'); g.addColorStop(1,'#2c7a3f'); }
+    else     { g.addColorStop(0,'#1f5c30'); g.addColorStop(.5,'#276d3b'); g.addColorStop(1,'#1f5c30'); }
+    x.fillStyle=g; x.fillRect(0,y0,512,64); }
+  // taglio incrociato leggerissimo (checker da giardiniere): fasce verticali a bassissimo contrasto
+  for(let v=0;v<8;v++){ x.globalAlpha=(v%2)?0.06:0.03; x.fillStyle=(v%2)?'#8fdca0':'#0e3a1e'; x.fillRect(v*64,0,64,512); }
+  x.globalAlpha=1;
+  // riga netta del rullo tra le fasce (bordo del taglio)
+  x.strokeStyle='rgba(12,42,26,.35)'; x.lineWidth=1;
+  for(let b=1;b<8;b++){ x.beginPath(); x.moveTo(0,b*64+0.5); x.lineTo(512,b*64+0.5); x.stroke(); }
   // chiazze di usura (zone calpestate piu chiare/diradate) per credibilita'
-  for(let k=0;k<26;k++){ const cx=Math.random()*512, cy=Math.random()*512, r=20+Math.random()*70;
-    const g2=x.createRadialGradient(cx,cy,0,cx,cy,r); g2.addColorStop(0,'rgba(150,170,120,0.10)'); g2.addColorStop(1,'rgba(150,170,120,0)');
+  for(let k=0;k<30;k++){ const cx=Math.random()*512, cy=Math.random()*512, r=18+Math.random()*74;
+    const g2=x.createRadialGradient(cx,cy,0,cx,cy,r); g2.addColorStop(0,'rgba(158,176,128,0.12)'); g2.addColorStop(1,'rgba(158,176,128,0)');
     x.fillStyle=g2; x.beginPath(); x.arc(cx,cy,r,0,6.28); x.fill(); }
-  // screziatura fine
+  // ciuffi/screziatura fine (rumore erboso)
   const img=x.getImageData(0,0,512,512), d=img.data;
-  for(let i=0;i<d.length;i+=4){ const n=(Math.random()-0.5)*16; d[i]+=n; d[i+1]+=n; d[i+2]+=n*0.6; }
+  for(let i=0;i<d.length;i+=4){ const n=(Math.random()-0.5)*18; d[i]+=n; d[i+1]+=n*1.05; d[i+2]+=n*0.55; }
   x.putImageData(img,0,0);
   const map=new THREE.CanvasTexture(c); map.wrapS=map.wrapT=THREE.RepeatWrapping; map.repeat.set(7,9); map.colorSpace=THREE.SRGBColorSpace;
   // Normal map: rumore fine per micro-rilievo erba
@@ -466,7 +481,7 @@ function netTexture(){
   x.clearRect(0,0,256,256); x.lineWidth=1.7;
   const s=12; // maglie a rombo piu fitte
   // doppia passata: ombra fine + corda chiara -> rete con piu volume
-  for(let pass=0;pass<2;pass++){ x.strokeStyle= pass? 'rgba(248,252,255,.95)':'rgba(20,40,70,.45)';
+  for(let pass=0;pass<2;pass++){ x.strokeStyle= pass? 'rgba(252,255,255,.99)':'rgba(16,34,62,.5)';
     const off=pass?0:1.1;
     for(let i=-256;i<=256;i+=s){ x.beginPath();x.moveTo(i+off,off);x.lineTo(i+256+off,256+off);x.stroke();
       x.beginPath();x.moveTo(i+off,256+off);x.lineTo(i+256+off,off);x.stroke(); } }
@@ -653,8 +668,8 @@ function buildScene(textures){
 
   // ---- RETE realistica (sag) back + top + lati, base salvata per ripple ----
   if(textures.net){ textures.net.repeat.set(GW*1.6,GH*1.6); }
-  const netMat=new THREE.MeshStandardMaterial({map:textures.net, transparent:true, opacity:.82, side:THREE.DoubleSide,
-    depthWrite:false, roughness:1, metalness:0, color:0xeef4ff, envMapIntensity:.2});
+  const netMat=new THREE.MeshStandardMaterial({map:textures.net, transparent:true, opacity:.9, side:THREE.DoubleSide,
+    depthWrite:false, roughness:1, metalness:0, color:0xf4f8ff, envMapIntensity:.25});
   backNet=new THREE.Mesh(new THREE.PlaneGeometry(GW,GH,36,22), netMat);
   backNet.position.set(0,GH/2,-GD);
   applyNetSag(backNet); // sag iniziale + memorizza base
