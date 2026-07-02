@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0d0b08">
+<meta name="robots" content="noindex,nofollow">
+<title>Cena sui colli · Trattoria Monte Donato</title>
+<meta property="og:type" content="website">
+<meta property="og:title" content="🍝 Cena sui colli · Trattoria Monte Donato">
+<meta property="og:description" content="Cena post-ferie sui colli bolognesi. Tagliatelle al ragù e vista su Bologna. Vota la data: 11, 18, 25 settembre o 2 ottobre.">
+<meta property="og:locale" content="it_IT">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Archivo:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  :root{--bg:#0d0b08;--wine:#9a2b2b;--gold:#d99a3d;--gold-2:#f0c27a;--green:#8fae53;--cream:#f4ecdf;--mut:#a2968a;--line:rgba(255,255,255,.1)}
+  html{scroll-behavior:smooth;background:var(--bg)}
+  body{background:
+      radial-gradient(120% 70% at 50% -5%,rgba(143,174,83,.10),transparent 55%),
+      radial-gradient(120% 80% at 50% 100%,rgba(154,43,43,.14),transparent 60%),
+      var(--bg);
+    color:var(--cream);font-family:"Archivo",system-ui,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100svh}
+  h1,h2,.dpx{font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.01em}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:560px;margin:0 auto;padding:calc(34px + env(safe-area-inset-top)) 22px calc(40px + env(safe-area-inset-bottom))}
+
+  .eyebrow{font-family:"Oswald",sans-serif;font-size:11px;letter-spacing:.30em;text-transform:uppercase;color:var(--green)}
+  h1{font-weight:700;font-size:clamp(40px,13vw,72px);line-height:.95;color:#fff;margin-top:10px}
+  h1 .em{color:var(--gold)}
+  .when{font-size:14.5px;color:#e7ddcd;margin-top:14px}
+  .when b{color:#fff;font-weight:600}
+  .hill{font-size:13px;color:var(--mut);margin-top:6px}
+
+  /* POLL card */
+  .card{margin-top:22px;background:rgba(18,14,10,.72);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+    border:1px solid var(--line);border-radius:18px;padding:17px}
+  .card .lab{font-family:"Oswald",sans-serif;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-2);margin-bottom:12px}
+  .dates{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .dbtn{display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:14px 15px;border-radius:14px;cursor:pointer;
+    background:rgba(255,255,255,.04);border:1.5px solid var(--line);color:var(--cream);font-family:inherit;text-align:left;transition:transform .1s}
+  .dbtn .d{font-family:"Oswald",sans-serif;font-weight:700;font-size:22px;color:#fff;line-height:1}
+  .dbtn .m{font-size:12px;color:var(--mut);letter-spacing:.02em}
+  .dbtn:active{transform:scale(.98)}
+  .dbtn.on{border-color:var(--gold);background:linear-gradient(150deg,rgba(217,154,61,.22),rgba(154,43,43,.16));box-shadow:0 0 0 1px var(--gold) inset,0 12px 30px -14px rgba(217,154,61,.5)}
+  .dbtn.on .d{color:var(--gold-2)}
+
+  .fld{width:100%;margin-top:12px;padding:15px 16px;font-size:17px;font-family:"Archivo",sans-serif;color:var(--cream);
+    background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:12px;outline:none}
+  .fld::placeholder{color:#7a7164}.fld:focus{border-color:var(--gold)}
+  .count{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px}
+  .clab{font-size:14px;color:var(--mut)}
+  .stepper{display:flex;align-items:center;gap:4px;background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:999px;padding:4px}
+  .stepper button{width:42px;height:42px;border:none;border-radius:999px;font-size:22px;font-family:"Oswald",sans-serif;color:var(--gold-2);
+    background:rgba(217,154,61,.15);cursor:pointer;line-height:1}
+  .stepper button:active{transform:scale(.92)}
+  .qty{min-width:34px;text-align:center;font-family:"Oswald",sans-serif;font-weight:700;font-size:22px;color:#fff}
+  .go{display:flex;align-items:center;justify-content:center;gap:11px;margin-top:14px;width:100%;padding:18px;border-radius:14px;cursor:pointer;border:none;
+    font-family:"Oswald",sans-serif;font-weight:700;font-size:18px;letter-spacing:.04em;text-transform:uppercase;color:#1a0d04;
+    background:linear-gradient(100deg,#b06a1e,#d99a3d 48%,#f0c27a 62%,#d99a3d);box-shadow:0 16px 44px -14px rgba(217,154,61,.55)}
+  .go:disabled{opacity:.45;cursor:default;box-shadow:none}
+  .go:not(:disabled):active{transform:translateY(2px)}
+  .go .g{width:26px;height:26px;flex:none;display:grid;place-items:center;border-radius:50%;background:rgba(0,0,0,.16)}
+  .go .g svg{width:17px;height:17px}
+  .prev{margin-top:10px;font-size:12px;color:var(--mut);text-align:center;min-height:15px;font-style:italic}
+  .done{margin-top:12px;text-align:center;font-family:"Oswald",sans-serif;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--green);display:none}
+  .done.show{display:block}
+
+  /* VENUE */
+  .sec{font-family:"Oswald",sans-serif;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--green);margin:34px 2px 12px}
+  .venue{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:rgba(255,255,255,.02)}
+  .venue .row{display:flex;align-items:center;gap:14px;padding:16px}
+  .venue .row+.row{border-top:1px solid var(--line)}
+  .venue .t{font-family:"Oswald",sans-serif;font-size:11px;color:var(--gold-2);width:64px;flex:none;letter-spacing:.04em}
+  .venue .b{font-weight:600;font-size:15px}
+  .venue .b small{display:block;color:var(--mut);font-weight:400;font-size:12.5px;margin-top:2px}
+  .venue .b a.inl{color:var(--gold-2)}
+  .venue .cta{margin-left:auto;flex:none;font-family:"Oswald",sans-serif;font-size:11px;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--gold-2);border:1px solid var(--line);border-radius:999px;padding:8px 12px}
+  .save{display:flex;gap:10px;margin-top:14px}
+  .save a{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;padding:13px;border-radius:12px;border:1px solid var(--line);
+    background:rgba(255,255,255,.03);font-family:"Oswald",sans-serif;font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--cream)}
+  .save a.off{opacity:.4;pointer-events:none}
+
+  .creed{margin-top:32px;text-align:center;font-family:"Oswald",sans-serif;font-weight:600;font-size:clamp(18px,6vw,26px);text-transform:uppercase;color:#fff;line-height:1.3}
+  .creed span{color:var(--gold)}
+  .foot{margin-top:26px;text-align:center;font-family:"Oswald",sans-serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#6a6256}
+  .foot a{color:#8a7f6f}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">Cena post-ferie · sui colli bolognesi</div>
+  <h1>Cena<br><span class="em">sui colli.</span></h1>
+  <p class="when">Trattoria tipica bolognese, tagliatelle al <b>ragù</b> e vista su Bologna dalla terrazza. 🍝🍷</p>
+  <p class="hill">Ritrovo la sera · si sceglie il venerdì insieme.</p>
+
+  <!-- POLL -->
+  <div class="card">
+    <div class="lab">📅 Quando ci andiamo? Vota la tua data</div>
+    <div class="dates" id="dates">
+      <button type="button" class="dbtn" data-k="set11" data-iso="2026-09-11"><span class="d">Ven 11</span><span class="m">settembre</span></button>
+      <button type="button" class="dbtn" data-k="set18" data-iso="2026-09-18"><span class="d">Ven 18</span><span class="m">settembre</span></button>
+      <button type="button" class="dbtn" data-k="set25" data-iso="2026-09-25"><span class="d">Ven 25</span><span class="m">settembre</span></button>
+      <button type="button" class="dbtn" data-k="ott2" data-iso="2026-10-02"><span class="d">Ven 2</span><span class="m">ottobre</span></button>
+    </div>
+    <input id="nm" class="fld" placeholder="Il tuo nome" autocomplete="off" maxlength="30">
+    <div class="count">
+      <span class="clab">Quanti siete? <small style="color:#6a6256">(tu + amici)</small></span>
+      <div class="stepper"><button type="button" id="minus" aria-label="meno">–</button><span class="qty" id="qty">1</span><button type="button" id="plus" aria-label="più">+</button></div>
+    </div>
+    <button class="go" id="goBtn" disabled>
+      <span class="g"><svg viewBox="0 0 24 24" fill="#25d366" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.7 4.8-1.3A10 10 0 1 0 12 2zm5.5 14.1c-.2.6-1.3 1.2-1.9 1.2-.5.1-1.1.1-1.8-.1-.4-.1-1-.3-1.7-.6-3-1.3-4.9-4.3-5.1-4.5-.1-.2-1.2-1.5-1.2-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5.2.5.7 1.8.8 1.9.1.1.1.3 0 .5l-.7 1c-.1.1-.3.3-.1.6.1.3.6 1.1 1.4 1.7 1 .9 1.8 1.1 2.1 1.3.3.1.4.1.6-.1.2-.2.7-.8.9-1.1.2-.3.4-.2.6-.1.2.1 1.5.7 1.8.8.3.1.4.2.5.3.1.2.1.7-.1 1.3z"/></svg></span>
+      <span id="goTxt">Scegli una data</span>
+    </button>
+    <p class="prev" id="preview">Le risposte le vede solo l'organizzatore.</p>
+    <div class="done" id="doneMsg">✅ Voto inviato — grazie!</div>
+  </div>
+
+  <!-- VENUE -->
+  <div class="sec">Il posto</div>
+  <div class="venue">
+    <div class="row"><span class="t">Dove</span><span class="b">Trattoria Monte Donato<small>Via di Siepelunga 118 · colli di Bologna</small></span><a class="cta" href="https://www.google.com/maps/search/?api=1&query=Trattoria%20Monte%20Donato%20Via%20di%20Siepelunga%20118%20Bologna" target="_blank" rel="noopener">Mappa</a></div>
+    <div class="row"><span class="t">Cucina</span><span class="b">Tradizione bolognese<small>Tagliatelle al ragù, arrosti, dolci della casa · terrazza panoramica</small></span><a class="cta" href="https://trattoriamontedonato.it/wp/" target="_blank" rel="noopener">Sito</a></div>
+    <div class="row"><span class="t">Info</span><span class="b"><a class="inl" href="tel:+39051472901">051 472901</a><small>~10 min dal centro · conviene prenotare</small></span><a class="cta" href="tel:+39051472901">Chiama</a></div>
+  </div>
+  <div class="save">
+    <a id="gcal" class="off" target="_blank" rel="noopener">📅 Google Cal</a>
+    <a id="ical" class="off" download="cena-colli.ics">🍏 Apple Cal</a>
+  </div>
+
+  <div class="creed">Ferie finite.<br><span>Fame no.</span> 🍝</div>
+  <div class="foot">Trattoria Monte Donato · colli di Bologna · <a href="sala-giochi.html">🕹️</a></div>
+</div>
+
+<script>
+  var AB='https://abacus.jasoncameron.dev/', NS='cena-colli-8367mdz';
+  var WA='https://wa.me/393474227732?text=';
+  var LABELS={set11:'VENERDÌ 11 SETTEMBRE',set18:'VENERDÌ 18 SETTEMBRE',set25:'VENERDÌ 25 SETTEMBRE',ott2:'VENERDÌ 2 OTTOBRE'};
+  var nm=document.getElementById('nm'), qtyEl=document.getElementById('qty'), goBtn=document.getElementById('goBtn'),
+      goTxt=document.getElementById('goTxt'), preview=document.getElementById('preview'), doneMsg=document.getElementById('doneMsg');
+  var q=1, sel=null, selIso=null, voted=false;
+  try{ voted=!!localStorage.getItem('cena_colli_voted'); }catch(e){}
+
+  function sync(){
+    qtyEl.textContent=q;
+    if(voted){ goBtn.disabled=true; goTxt.textContent='Hai già votato ✓'; doneMsg.classList.add('show'); return; }
+    goBtn.disabled=!sel;
+    goTxt.textContent = sel ? 'Invia il mio voto' : 'Scegli una data';
+    var n=(nm.value||'').trim();
+    preview.textContent = sel ? ((n?'“'+n+'”, ':'')+'voti '+LABELS[sel].toLowerCase()+' · '+(q===1?'per te':'in '+q)+'. Le risposte le vede solo l’organizzatore.') : 'Le risposte le vede solo l’organizzatore.';
+  }
+  document.getElementById('dates').addEventListener('click',function(e){
+    var b=e.target.closest('.dbtn'); if(!b||voted) return;
+    [].forEach.call(document.querySelectorAll('.dbtn'),function(x){x.classList.remove('on');});
+    b.classList.add('on'); sel=b.dataset.k; selIso=b.dataset.iso; updateCal(); sync();
+  });
+  document.getElementById('plus').addEventListener('click',function(){if(q<20)q++;sync();});
+  document.getElementById('minus').addEventListener('click',function(){if(q>1)q--;sync();});
+  nm.addEventListener('input',sync);
+
+  function msg(){ var n=(nm.value||'').trim().replace(/[<>]/g,''); var who=q===1?'solo io':'saremo in '+q;
+    return 'Ciao Ale! 🍝 Per la cena alla Trattoria Monte Donato voto: '+LABELS[sel]+'. '+(n?'Sono '+n+', ':'')+who+'.'; }
+
+  goBtn.addEventListener('click',function(){
+    if(!sel||voted) return;
+    voted=true; try{localStorage.setItem('cena_colli_voted',sel);}catch(e){}
+    // salva il voto online (contatore per data) — la pagina risposte lo legge in privato
+    try{ fetch(AB+'hit/'+NS+'/'+sel).catch(function(){}); }catch(e){}
+    // apri WhatsApp all'organizzatore col nome+data (record privato)
+    window.open(WA+encodeURIComponent(msg()),'_blank','noopener');
+    sync();
+  });
+
+  /* salva in calendario sulla data scelta (cena ore 20:30) */
+  function updateCal(){
+    if(!selIso) return;
+    var g=document.getElementById('gcal'), ic=document.getElementById('ical');
+    g.classList.remove('off'); ic.classList.remove('off');
+    var ymd=selIso.replace(/-/g,'');
+    var TITLE='Cena sui colli · Trattoria Monte Donato';
+    var LOC='Trattoria Monte Donato, Via di Siepelunga 118, Bologna';
+    var DET='Cena tipica bolognese sui colli (tagliatelle al ragù). Prenota: 051 472901. '+location.href;
+    g.href='https://calendar.google.com/calendar/render?action=TEMPLATE&text='+encodeURIComponent(TITLE)+'&dates='+ymd+'T203000/'+ymd+'T233000&ctz=Europe/Rome&location='+encodeURIComponent(LOC)+'&details='+encodeURIComponent(DET);
+    var ICS=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Cena Colli//IT','CALSCALE:GREGORIAN','BEGIN:VEVENT','UID:cena-colli-'+ymd+'@local','DTSTAMP:20260701T000000Z','DTSTART:'+ymd+'T183000Z','DTEND:'+ymd+'T213000Z','SUMMARY:'+TITLE,'LOCATION:'+LOC,'DESCRIPTION:Cena tipica bolognese sui colli (tagliatelle al ragù). Prenota 051 472901.','END:VEVENT','END:VCALENDAR'].join('\r\n');
+    try{ ic.href=URL.createObjectURL(new Blob([ICS],{type:'text/calendar'})); }
+    catch(e){ ic.href='data:text/calendar;charset=utf-8,'+encodeURIComponent(ICS); }
+    ic.download='cena-colli-'+ymd+'.ics';
+  }
+  sync();
+</script>
+</body>
+</html>

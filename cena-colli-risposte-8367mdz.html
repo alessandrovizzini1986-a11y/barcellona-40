@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0d0b08">
+<meta name="robots" content="noindex,nofollow">
+<title>Risposte cena · privato</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Archivo:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  :root{--bg:#0d0b08;--gold:#d99a3d;--gold-2:#f0c27a;--green:#8fae53;--cream:#f4ecdf;--mut:#a2968a;--line:rgba(255,255,255,.1)}
+  body{background:radial-gradient(120% 70% at 50% -5%,rgba(143,174,83,.10),transparent 55%),var(--bg);color:var(--cream);
+    font-family:"Archivo",system-ui,sans-serif;-webkit-font-smoothing:antialiased;min-height:100svh}
+  .wrap{max-width:520px;margin:0 auto;padding:calc(30px + env(safe-area-inset-top)) 20px 40px}
+  h1{font-family:"Oswald",sans-serif;font-weight:700;text-transform:uppercase;font-size:30px;color:#fff;line-height:1;letter-spacing:.01em}
+  .eyebrow{font-family:"Oswald",sans-serif;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--green)}
+  .priv{font-size:12px;color:var(--mut);margin-top:6px}
+  .tot{margin:18px 0 6px;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.1em;font-size:13px;color:var(--gold-2)}
+  .tot b{color:#fff;font-size:22px}
+  .rows{display:flex;flex-direction:column;gap:12px;margin-top:12px}
+  .r{border:1px solid var(--line);border-radius:14px;padding:14px;background:rgba(255,255,255,.02)}
+  .r.lead{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold) inset;background:linear-gradient(150deg,rgba(217,154,61,.16),rgba(255,255,255,.02))}
+  .r .top{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+  .r .dt{font-family:"Oswald",sans-serif;font-weight:700;font-size:20px;color:#fff}
+  .r.lead .dt{color:var(--gold-2)}
+  .r .n{font-family:"Oswald",sans-serif;font-weight:700;font-size:26px;color:var(--gold-2)}
+  .r .n small{font-size:12px;color:var(--mut);font-weight:400}
+  .bar{height:10px;border-radius:999px;background:rgba(255,255,255,.06);margin-top:10px;overflow:hidden}
+  .bar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#b06a1e,#f0c27a);transition:width .5s}
+  .crown{font-size:13px;color:var(--gold-2);margin-top:8px;display:none}
+  .r.lead .crown{display:block}
+  .state{text-align:center;color:var(--mut);padding:30px 0;font-size:14px}
+  .foot{margin-top:24px;text-align:center;font-size:11px;color:#6a6256;line-height:1.7}
+  .rf{display:block;margin:18px auto 0;font-family:"Oswald",sans-serif;text-transform:uppercase;letter-spacing:.06em;font-size:12px;
+    color:var(--gold-2);background:rgba(217,154,61,.14);border:1px solid var(--line);border-radius:999px;padding:11px 20px;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">Cena sui colli · Trattoria Monte Donato</div>
+  <h1>Risposte<br>(privato) 🔒</h1>
+  <p class="priv">Solo tu vedi questa pagina. Il conteggio si aggiorna da solo. I <b>nomi</b> ti arrivano su WhatsApp a ogni voto.</p>
+
+  <div class="tot" id="tot">Totale voti: <b id="totN">…</b></div>
+  <div class="rows" id="rows"><div class="state" id="state">Carico i voti… 🍝</div></div>
+  <button class="rf" id="rf">↻ Aggiorna ora</button>
+
+  <div class="foot">Se il conteggio non arriva: riprova tra poco (rete).<br>Namespace privato · non condividere questo link.</div>
+</div>
+
+<script>
+  var AB='https://abacus.jasoncameron.dev/', NS='cena-colli-8367mdz';
+  var DATES=[
+    {k:'set11',label:'Venerdì 11 settembre'},
+    {k:'set18',label:'Venerdì 18 settembre'},
+    {k:'set25',label:'Venerdì 25 settembre'},
+    {k:'ott2', label:'Venerdì 2 ottobre'}
+  ];
+  var rowsEl=document.getElementById('rows'), stateEl=document.getElementById('state'), totN=document.getElementById('totN');
+
+  function get(k){ return fetch(AB+'get/'+NS+'/'+k).then(function(r){return r.json();}).then(function(d){return (d&&d.value!=null)?d.value:0;}).catch(function(){return null;}); }
+
+  function render(vals){
+    if(vals.indexOf(null)>=0 && vals.every(function(v){return v===null;})){
+      rowsEl.innerHTML='<div class="state">Rete non raggiungibile ora — riprova.</div>'; totN.textContent='—'; return;
+    }
+    var nums=vals.map(function(v){return v==null?0:v;});
+    var total=nums.reduce(function(a,b){return a+b;},0);
+    var max=Math.max.apply(null,nums.concat([1]));
+    var lead=total>0?nums.indexOf(Math.max.apply(null,nums)):-1;
+    totN.textContent=total;
+    rowsEl.innerHTML=DATES.map(function(d,i){
+      var n=nums[i], pct=Math.round(n/max*100), isLead=(i===lead && n>0);
+      return '<div class="r'+(isLead?' lead':'')+'">'+
+        '<div class="top"><span class="dt">'+d.label+'</span><span class="n">'+n+' <small>'+(n===1?'voto':'voti')+'</small></span></div>'+
+        '<div class="bar"><i style="width:'+pct+'%"></i></div>'+
+        '<div class="crown">👑 In testa</div>'+
+      '</div>';
+    }).join('');
+  }
+
+  function refresh(){ Promise.all(DATES.map(function(d){return get(d.k);})).then(render); }
+  document.getElementById('rf').addEventListener('click',refresh);
+  refresh(); setInterval(refresh,20000);
+</script>
+</body>
+</html>
