@@ -382,6 +382,23 @@
     </div>
   </details>
 
+  <!-- A PIEDI DALL'APPARTAMENTO -->
+  <details id="vicino">
+    <summary><span class="ic">🚶</span> A piedi dall'appartamento <span class="caret">▸</span></summary>
+    <div class="det-body">
+      <p class="muted" style="font-size:12px;margin:0 0 10px">Base: <b>Carrer de Lepant 137</b> (Eixample, accanto a L'Auditori). Tutto qui sotto è a piedi — il pulsante 🚶 apre il percorso da casa.</p>
+      <div id="nearbyList"></div>
+      <div class="subh">📌 Da sapere sul posto</div>
+      <ul id="tipsList" style="margin:4px 0 2px;padding-left:18px;font-size:12.5px;line-height:1.8"></ul>
+      <div class="subh">⚽ Camp Nou</div>
+      <div class="place-card"><h4>Si può visitare (ma niente partita nel weekend)</h4>
+        <div class="pa">~35 min in metro (L5) · non a piedi</div>
+        <div class="pd"><b>Trasparenza:</b> il 16–18 ottobre il Barça NON gioca in casa — l'11 ha avuto il Getafe, il 18 gioca a Siviglia (Betis) e il Clásico è il 24–25. Però lo stadio è riaperto: potete fare il <b>Barça Immersive Tour</b> (museo + sala 360° + punto panoramico sul cantiere del nuovo stadio), da ~€28–31.</div>
+        <div class="acts"><a class="prim" href="https://www.fcbarcelona.com/en/tickets/camp-nou-experience" target="_blank">🎟️ Tour & Museo</a><a class="tealb" href="https://www.google.com/maps/search/?api=1&query=Spotify%20Camp%20Nou" target="_blank">📍 Mappe</a></div>
+      </div>
+    </div>
+  </details>
+
   <!-- MAPPA -->
   <details id="mappa">
     <summary><span class="ic">📍</span> Mappa <span class="caret">▸</span></summary>
@@ -620,6 +637,36 @@ const DINING={
   ]
 };
 
+// ====== APPARTAMENTO (Auditori · Lepant 137) + cosa c'è A PIEDI ======
+const APT={n:'Appartamento Auditori',a:'Carrer de Lepant 137, Eixample',lat:41.3986,lng:2.1852};
+const NEARBY=[
+  // dietro l'angolo — Glòries / Auditori
+  {n:"L'Auditori & Teatre Nacional",a:'2 min a piedi',d:'Auditorium e TNC: sei nel cuore del quartiere della cultura, proprio sotto casa.',i:'🎭',lat:41.3987,lng:2.1873,mins:2},
+  {n:'Plaça de les Glòries',a:'5 min a piedi',d:'Grande parco urbano rinnovato: verde e spazio aperto per staccare.',i:'🌳',lat:41.4030,lng:2.1885,mins:5},
+  {n:'Torre Glòries + Mirador',a:'6 min a piedi',d:'La torre-proiettile (ex Agbar): salita al Mirador 360° con la nuvola di sfere. Di sera si illumina.',i:'🗼',url:'https://miradortorreglories.com/',lat:41.4033,lng:2.1894,mins:6},
+  {n:'Museu del Disseny (DHUB)',a:'6 min a piedi',d:'Museo del design nell\'edificio "la pinzatrice": terrazza panoramica e mostre spesso gratuite.',i:'🎨',url:'https://ajuntament.barcelona.cat/museudeldisseny/en',lat:41.4028,lng:2.1875,mins:6},
+  {n:'Els Encants Vells',a:'7 min a piedi',d:'Mercatino delle pulci sotto la tettoia dorata a specchi. Lun/Mer/Ven/Sab mattina. Si contratta.',i:'🛍️',url:'https://encantsbarcelona.com/',lat:41.4045,lng:2.1876,mins:7},
+  {n:'Plaça de Braus Monumental',a:'5 min a piedi',d:'L\'ex arena in stile moresco (niente più corride): scenografica da vedere da fuori.',i:'🏟️',lat:41.3999,lng:2.1817,mins:5},
+  // 10–20 min a piedi
+  {n:'Sagrada Família',a:'12 min a piedi',d:'Il capolavoro di Gaudí. Biglietto con orario ONLINE in anticipo: si esaurisce, mai dai bagarini.',i:'⛪',url:'https://sagradafamilia.org/',lat:41.4036,lng:2.1744,mins:12},
+  {n:'Mercat de la Concepció',a:'12 min a piedi',d:'Mercato di quartiere coi banchi di fiori: spuntino tra la gente del posto.',i:'🌸',url:'https://www.laconcepcio.cat/',lat:41.3955,lng:2.1667,mins:12},
+  {n:'Parc de la Ciutadella + Arc de Triomf',a:'15 min a piedi',d:'Parco con laghetto e cascata + l\'Arco di Trionfo in mattoni, verso il Born.',i:'🌿',lat:41.3888,lng:2.1866,mins:15},
+  {n:'Recinte Modernista Sant Pau',a:'18 min a piedi',d:'Complesso modernista UNESCO, splendido e molto meno affollato della Sagrada. Da non perdere.',i:'✨',url:'https://www.santpaubarcelona.org/en',lat:41.4127,lng:2.1745,mins:18},
+  {n:'Passeig de Gràcia · Casa Batlló / La Pedrera',a:'20 min o 1 fermata metro',d:'Le case di Gaudí. Prenota online; a piedi ~20 min o metro L5 da Sagrada Família.',i:'🏠',url:'https://www.casabatllo.es/',lat:41.3916,lng:2.1649,mins:20}
+];
+// Note locali (attenzioni pratiche)
+const TIPS=[
+  '<b>Borseggiatori</b>: metro, Sagrada Família ed Els Encants. Zaino davanti, telefono in tasca chiusa.',
+  '<b>Sagrada Família</b>: biglietto con orario <b>online in anticipo</b>. Mai dai bagarini in strada.',
+  '<b>Orari cucina</b>: pranzo 13:30–16, cena 21–23. A pranzo feriale cerca il <i>menú del día</i>.',
+  '<b>Els Encants</b>: solo <b>lun/mer/ven/sab mattina</b>. Si contratta.',
+  '<b>Domenica</b>: molti negozi chiusi; musei e mercati con orari ridotti.',
+  '<b>Scam</b>: no al "braccialetto/rosmarino gratis" e al gioco delle tre carte.',
+  '<b>Metro vicino</b>: Glòries (L1), Monumental (L2), Sagrada Família (L2/L5). Tram a Glòries.',
+  '<b>Acqua</b>: del rubinetto è potabile; molti locali servono quella in bottiglia.'
+];
+const CAMP_NOU={lat:41.3809,lng:2.1228,book:'https://www.fcbarcelona.com/en/tickets/camp-nou-experience'};
+
 /* ============ MOTORE ============ */
 const DONE_KEY='bcn40_done_v1';
 function getDone(){try{return new Set(JSON.parse(localStorage.getItem(DONE_KEY)||'[]'))}catch(e){return new Set()}}
@@ -800,6 +847,18 @@ function renderDining(){
   document.getElementById('ristList').innerHTML=DINING.rist.map(placeCard).join('');
   document.getElementById('cocktailList').innerHTML=DINING.cocktail.map(placeCard).join('');
 }
+// percorso a piedi DALL'appartamento fino al POI
+function walkFromApt(lat,lng){return 'https://www.google.com/maps/dir/?api=1&origin='+APT.lat+','+APT.lng+'&destination='+lat+','+lng+'&travelmode=walking';}
+function poiCard(it){
+  let acts='<a class="prim" href="'+walkFromApt(it.lat,it.lng)+'" target="_blank">🚶 A piedi</a>';
+  if(it.url)acts+='<a href="'+it.url+'" target="_blank">🔗 Info / biglietti</a>';
+  acts+='<a class="tealb" href="'+mapsAt(it.lat,it.lng,it.n+' Barcelona')+'" target="_blank">📍 Mappe</a>';
+  return '<div class="place-card"><h4>'+(it.i?it.i+' ':'')+it.n+'</h4><div class="pa">'+it.a+'</div><div class="pd">'+it.d+'</div><div class="acts">'+acts+'</div></div>';
+}
+function renderNearby(){
+  const el=document.getElementById('nearbyList'); if(el) el.innerHTML=NEARBY.map(poiCard).join('');
+  const t=document.getElementById('tipsList'); if(t) t.innerHTML=TIPS.map(x=>'<li>'+x+'</li>').join('');
+}
 function nearMe(q){
   const url=myPos?('https://www.google.com/maps/search/'+encodeURIComponent(q)+'/@'+myPos.lat+','+myPos.lng+',16z'):mapsAt(0,0,q+' Poblenou Barcelona');
   window.open(url,'_blank');
@@ -861,6 +920,7 @@ function searchIndex(){
   ].forEach(d=>idx.push({i:d[0],t:d[1],s:d[2],href:d[3]}));
   DINING.rist.forEach(it=>idx.push({i:'🍽️',t:it.n,s:it.a+' · '+it.d,href:it.fork||it.site||mapsAt(0,0,it.n+' Barcelona')}));
   DINING.cocktail.forEach(it=>idx.push({i:'🍸',t:it.n,s:it.a+' · '+it.d,href:it.site||mapsAt(0,0,it.n+' Barcelona')}));
+  NEARBY.forEach(it=>idx.push({i:it.i||'🚶',t:it.n,s:it.a+' · '+it.d,href:walkFromApt(it.lat,it.lng)}));
   return idx;
 }
 const IDX=searchIndex();
@@ -919,6 +979,7 @@ document.addEventListener('click',e=>{
 renderAll();
 renderContacts();
 renderDining();
+renderNearby();
 renderFlightDocs();
 setInterval(renderAll,60000);
 
@@ -939,6 +1000,12 @@ document.getElementById('mappa').addEventListener('toggle',function(){
     var link=it.fork?(' · <a href="'+it.fork+'" target="_blank">TheFork</a>'):(it.site?(' · <a href="'+it.site+'" target="_blank">Sito</a>'):'');
     var pop='<b>'+it.n+'</b><br>'+it.a+'<br><a href="'+mapsAt(0,0,it.n+' Barcelona')+'" target="_blank">📍 Mappe</a>'+link;
     L.circleMarker([it.lat,it.lng],{radius:6,color:'#050507',weight:2,fillColor:'#f4ece0',fillOpacity:.95}).addTo(map).bindPopup(pop);});
+  // appartamento + POI a piedi (Auditori · Lepant 137)
+  L.circleMarker([APT.lat,APT.lng],{radius:9,color:'#050507',weight:3,fillColor:'#E9CE93',fillOpacity:1}).addTo(map)
+    .bindPopup('<b>🏠 '+APT.n+'</b><br>'+APT.a); g.push([APT.lat,APT.lng]);
+  NEARBY.forEach(function(it){
+    L.circleMarker([it.lat,it.lng],{radius:6,color:'#050507',weight:2,fillColor:'#E9CE93',fillOpacity:.95}).addTo(map)
+      .bindPopup('<b>'+(it.i||'')+' '+it.n+'</b><br>'+it.a+'<br><a href="'+walkFromApt(it.lat,it.lng)+'" target="_blank">🚶 A piedi da casa</a>'); g.push([it.lat,it.lng]);});
   map.fitBounds(g,{padding:[30,30]});
 });
 
