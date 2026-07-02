@@ -214,6 +214,7 @@
   <div class="panel" id="menu">
     <h1>RIGORI<br><span class="gold">AL CAMP NOU</span></h1>
     <button id="modeBtn" class="hudbtn modesel">∞ INFINITA</button>
+    <button id="roleBtn" class="hudbtn modesel">⚽ TIRI TU</button>
     <div class="small" id="challengeNote" style="display:none">🎲 SFIDA di un amico — stesso portiere per tutti!</div>
     <div class="styleSel">
       <button class="stbtn" data-gfx="pes">🎮 PES<small>realistico</small></button>
@@ -390,6 +391,9 @@ const KICK_START_OFFSET=0.50;                        // parte appena prima del c
 let PLAYER=null; try{ const p=localStorage.getItem('rig_player'); if(p&&PLAYERS[p]) PLAYER=PLAYERS[p]; }catch(e){}
 // modalità: 'infinite' (morte improvvisa) | 'five' (5 rigori, conta i gol)
 let MODE='infinite', shotNum=0, goals5=0; try{ const m=localStorage.getItem('rig_mode'); if(m==='five'||m==='infinite') MODE=m; }catch(e){}
+// RUOLO: 'shooter' (tiri tu, Ale para) | 'keeper' (la CPU tira, TU ti tuffi e pari)
+let ROLE='shooter'; try{ const r=localStorage.getItem('rig_role'); if(r==='keeper'||r==='shooter') ROLE=r; }catch(e){}
+const isKeeper=()=>ROLE==='keeper';
 // STILE grafico: 'manga' (Holly & Benji: cel-shading + speed-line + slow-mo drammatica) | 'pes' (realistico PBR)
 let GFX='manga'; try{ const g=localStorage.getItem('rig_gfx'); if(g==='pes'||g==='manga') GFX=g; }catch(e){}
 const isManga=()=>GFX==='manga';
@@ -1171,12 +1175,23 @@ function resetForShot(){
   if(netShatter){ netShatter.userData.t=-1; netShatter.visible=false; for(const s of netShatter.children) s.visible=false; }  // rete integra
   HUD.power.classList.remove('on'); HUD.curl.classList.remove('on');
 }
-function newAim(){ resetForShot(); setState(STATE.GAME_PLAYING); refWhistle(); Telecro.taunt();
+function newAim(){ resetForShot(); setState(STATE.GAME_PLAYING); refWhistle(); if(isKeeper()) Telecro.tauntKeeper(); else Telecro.taunt();
   const tension = MODE==='five' ? (suddenDeath?1:shotNum/5) : Math.min(1,streak/10);
   Sound.crowd(0.045 + tension*0.09);                 // il coro sale con la tensione
   if(suddenDeath) showTelecro('SPAREGGIO! Questo tiro decide tutto 😱'); }
 // dopo ogni rigore: infinita = morte improvvisa; 5 rigori = continua fino a 5
 function afterShot(scored){
+  if(isKeeper()){                                   // scored = la CPU ha segnato -> gol subito
+    if(MODE==='five'){
+      if(suddenDeath){ duelResult = scored?'lose':'win'; gameOver(); return; }
+      if(shotNum>=5){
+        if(aleSaves>goals5){ duelResult='win'; gameOver(); }        // più parate che gol subiti
+        else if(goals5>aleSaves){ duelResult='lose'; gameOver(); }
+        else { suddenDeath=true; newAim(); }
+      } else newAim();
+    } else { if(scored) gameOver(); else newAim(); }               // infinita: prendi gol = finita
+    return;
+  }
   if(MODE==='five'){
     if(suddenDeath){ duelResult = scored?'win':'lose'; gameOver(); return; }   // spareggio: 1 tiro decide
     if(shotNum>=5){
@@ -1287,9 +1302,58 @@ function shoot(){
   }
 }
 
+// MODALITÀ PORTIERE: la CPU tira, il giocatore ha già scelto il tuffo (aim.tx/ty).
+// Riusa esattamente la stessa "ellisse di parata" di shoot(): qui però il GUESS è il
+// tuffo UMANO e il TARGET lo decide la CPU (difficoltà crescente con lo streak di parate).
+function saveShot(){
+  Sound.ac();
+  specialArmed=false;                                       // niente easter egg da portiere
+  const rng = roundSeed ? mulberry32((strHash(roundSeed) ^ Math.imul(shotNum+1,2654435761))>>>0) : Math.random;
+  const rr=(a,b)=>a+rng()*(b-a);
+  const lvl=clamp(streak/12,0,1);                           // 0 = facile … 1 = attaccante spietato
+  // --- la CPU sceglie l'angolo: più preciso e più "a giro" salendo di livello ---
+  const side=rng()<0.5?-1:1;
+  const corner=rng()<0.30+lvl*0.55;                         // tira all'angolo?
+  let tx = corner ? side*rr(HALF*0.5, HALF-0.35) : rr(-0.9,0.9);
+  const high=rng()<0.22+lvl*0.45;
+  let ty = high ? rr(GH*0.55, GH-0.35) : rr(0.4, GH*0.52);
+  if(rng()<0.05*(1-lvl)) tx = side*(HALF+rr(0.2,0.6));      // a basso livello ogni tanto la spara fuori (grazia)
+  tx=clamp(tx,-HALF-0.6,HALF+0.6); ty=clamp(ty,0.1,GH+1.0);
+  const p=clamp(0.42+lvl*0.42+rr(-0.1,0.1),0.2,1);
+  const curl=corner ? side*rr(0,0.35+lvl*0.5) : rr(-0.2,0.2);
+
+  const target=new THREE.Vector3(tx,ty,0);
+  const speed=lerp(CONFIG.ballSpeedMin,CONFIG.ballSpeedMax,p);
+  const dz=Math.abs(SPOT_Z); const dur=clamp(dz/speed,0.42,0.95);
+  const arcH=CONFIG.gravity*dur*dur/8;
+  const curlAcc=curl*CONFIG.curlMax;
+
+  // --- il TUFFO UMANO: dove ha trascinato (guess/guessY), con reach generoso ma calante ---
+  const guess=clamp(aim.tx,-HALF-0.4,HALF+0.4);
+  const guessY=clamp(aim.ty,0.1,GH+0.3);
+  const reach=clamp(2.2-lvl*0.6,1.35,2.2);                  // guantoni umani generosi; a livello alto perdona meno
+  const endX=tx;
+  const inGoal = Math.abs(endX)<HALF-0.02 && ty>0.06 && ty<GH-0.02;
+  const hitPost = !inGoal && Math.abs(Math.abs(endX)-HALF)<0.16 && ty<GH+0.05;
+  const dx=(endX-guess)/reach, dy=(ty-guessY)/(reach*0.95);
+  const saved = inGoal && (dx*dx+dy*dy<=1);
+  const result = !inGoal ? (hitPost?'POST':'MISS') : (saved?'SAVE':'GOAL');
+
+  const diveSide = guess<-0.2?-1:(guess>0.2?1:0);
+  const diveHigh = clamp((guessY-0.8)/(GH-0.8),0,1);
+
+  shot={ t:0, dur, from:ball.position.clone(), target, arcH, curlAcc, speed,
+         guess, guessY, keeperFrom:keeper.position.x, reach, result, resolved:false,
+         reaction:0.05, power:p, diveSide, diveHigh, curlSign:Math.sign(curl)||1, special:false };
+  setState(STATE.BALL_IN_FLIGHT);
+  kickT=0; startKickerKick(); camPunchT=0; slowmo=0; speedLines();
+  Sound.sfx(360+p*320,.08,'square',0.2); haptic(14);
+}
+
 function resolveShot(){
   const r=shot.result;
   shotNum++;                                   // conta il rigore appena calciato (modalità 5 rigori)
+  if(isKeeper()){ if(r!=='MISS') hitStop=isManga()?0.22:0.06; capT=0; return resolveKeeper(r); }
   if(r!=='MISS') hitStop = isManga()?0.22:0.06;  // freeze-frame all'impatto (ANIME estremo ~220ms, PES contenuto ~60ms)
   capT=0;                                      // avvia la cattura del frame (nel loop, subito dopo il render)
   if(MODE==='five') fiveRes.push(r==='GOAL'?'g':'x');
@@ -1317,7 +1381,37 @@ function resolveShot(){
   }
   syncHUD();
 }
+// esito dal punto di vista del PORTIERE umano: SAVE/MISS/POST = sopravvivi, GOAL = gol subito
+function resolveKeeper(r){
+  if(MODE==='five') fiveRes.push(r==='GOAL'?'x':'g');       // g = parato/sopravvissuto, x = gol subito
+  Telecro.sayKeeper(r);
+  if(r==='GOAL'){                                            // la CPU segna -> hai preso gol
+    goals5++; shakeMag=CONFIG.shakeOnGoal; ripple={t:0,x:shot.target.x,y:shot.target.y};
+    showResult('GOL SUBITO','#ff6a6a'); engine.view.popWord('GOOOOL!','#FF0000');
+    engine.view.burstAt3D(tmpV2.set(shot.target.x,Math.max(0.4,shot.target.y),-GD),'goal');
+    Sound.sfx(200,.18,'sawtooth'); Sound.groan();
+    HUD.flash.classList.remove('on','save'); void HUD.flash.offsetWidth; HUD.flash.classList.add('on');
+    haptic([0,130]); slowmo=1; setState(STATE.GOAL_ANIMATION);
+  } else {                                                   // parata o tiro sbagliato dalla CPU -> festa del portiere
+    streak++; scorePulseT=0.7;
+    if(r==='SAVE'){ aleSaves++;                              // conteggio parate umane (duello 5 rigori)
+      showResult('PARATA! 🧤','#39ff7a'); engine.view.popWord('PARATAAA!','#FFFF00');
+      engine.view.burstAt3D(tmpV2.set(shot.guess,shot.guessY||1.0,KEEPER_Z),'save');
+      Sound.sfx(880,.07); setTimeout(()=>Sound.sfx(1320,.11),85); Sound.roar();
+      burstConfetti(shot.guess,Math.max(0.6,shot.guessY||1.2));
+      HUD.flash.classList.remove('on'); HUD.flash.classList.add('save'); void HUD.flash.offsetWidth; HUD.flash.classList.add('on');
+      haptic([0,40,30,70]);
+    } else if(r==='POST'){ showResult('PALO! 😅','#ffd884'); engine.view.popWord('PALO!','#ffd24a'); Sound.sfx(420,.05,'square',0.25); setTimeout(()=>Sound.sfx(160,.18,'triangle'),60); }
+    else { showResult('FUORI! 😮‍💨','#ffd28a'); engine.view.popWord('FUORI!','#ffffff'); Sound.sfx(150,.16,'triangle'); }
+    slowmo=1; setState(STATE.SAVE_ANIMATION);
+  }
+  syncHUD();
+}
 function gameOver(){ Sound.musicStop(); Sound.crowd(0); Sound.sfx(180,.2); setTimeout(()=>Sound.sfx(90,.3),130);
+  if(isKeeper()){
+    if(MODE!=='five'){ try{ const pb=+(localStorage.getItem('rigk_best')||0); if(streak>pb) localStorage.setItem('rigk_best',streak); }catch(e){} }
+    setState(STATE.GAME_OVER); return;                       // il portiere ha un suo record separato (no leaderboard nomi)
+  }
   if(MODE==='five'){ try{ const pb=+(localStorage.getItem('rig5_best')||0); if(goals5>pb) localStorage.setItem('rig5_best',goals5); }catch(e){} }
   setState(STATE.GAME_OVER);
   if(MODE!=='five' && Scores.isHigh(streak)) askName(); }
@@ -1593,25 +1687,44 @@ function pickPlayer(key){ PLAYER=PLAYERS[key]||null; try{ if(key) localStorage.s
 function syncHUD(){
   document.getElementById('playerSelect').classList.toggle('show', state===STATE.MENU_SCREEN && !PLAYER);
   document.getElementById('repick').classList.toggle('show', (state===STATE.MENU_SCREEN||state===STATE.GAME_OVER));
-  const five=(MODE==='five');
+  const five=(MODE==='five'), keep=isKeeper();
   let best5=0; try{ best5=+(localStorage.getItem('rig5_best')||0); }catch(e){}
+  let bestK=0; try{ bestK=+(localStorage.getItem('rigk_best')||0); }catch(e){}
   const inGameInf = !five && (state===STATE.GAME_PLAYING||state===STATE.BALL_IN_FLIGHT||state===STATE.GOAL_ANIMATION||state===STATE.SAVE_ANIMATION);
-  HUD.score.textContent = five? (goals5+'-'+aleSaves) : (inGameInf? '' : streak);   // in infinita lo streak vive SOLO sul canvas (single source of truth)
-  HUD.rec.textContent = five? ('REC '+best5+'/5') : ('REC '+Scores.best()+(Scores.bestName()?' '+Scores.bestName():''));
-  HUD.menuRec.textContent = five? (best5+'/5') : Scores.best();
+  if(keep){
+    HUD.score.textContent = five? (aleSaves+'-'+goals5) : (inGameInf? '' : streak);   // parate tue - gol subiti
+    HUD.rec.textContent = five? ('REC '+best5+'/5') : ('REC '+bestK+' 🧤');
+    HUD.menuRec.textContent = five? (best5+'/5') : (bestK+' parate');
+  } else {
+    HUD.score.textContent = five? (goals5+'-'+aleSaves) : (inGameInf? '' : streak);   // in infinita lo streak vive SOLO sul canvas (single source of truth)
+    HUD.rec.textContent = five? ('REC '+best5+'/5') : ('REC '+Scores.best()+(Scores.bestName()?' '+Scores.bestName():''));
+    HUD.menuRec.textContent = five? (best5+'/5') : Scores.best();
+  }
+  const vsEl=document.querySelector('#scoreboard .vs'); if(vsEl) vsEl.textContent = keep?'ATTACCANTE':'PORTIERE';
   HUD.menu.classList.toggle('show',state===STATE.MENU_SCREEN);
   HUD.over.classList.toggle('show',state===STATE.GAME_OVER);
   const playing=(state===STATE.GAME_PLAYING);
+  HUD.hint.textContent = keep? 'tocca dove tuffarti · para il rigore' : 'trascina per mirare · rilascia per tirare';
   HUD.hint.classList.toggle('on',playing && streak<2 && !five);
   if(!playing){ HUD.power.classList.remove('on'); HUD.curl.classList.remove('on'); }
   const mb=document.getElementById('modeBtn'); if(mb) mb.textContent = five?'🎯 5 RIGORI':'∞ INFINITA';
+  const rb=document.getElementById('roleBtn'); if(rb) rb.textContent = keep?'🧤 PARI TU':'⚽ TIRI TU';
   const sc=document.getElementById('shotcount');
   if(sc){ const inGame=(playing||state===STATE.BALL_IN_FLIGHT||state===STATE.GOAL_ANIMATION||state===STATE.SAVE_ANIMATION);
     sc.classList.toggle('on', five && inGame); sc.textContent='RIGORE '+Math.min(shotNum+(playing?1:0),5)+'/5'; }
   renderShootrack();
   if(state===STATE.GAME_OVER){
     const ol=document.getElementById('overLine');
-    if(five){ const w=(duelResult==='win');
+    if(keep){
+      if(five){ const w=(duelResult==='win');
+        if(ol) ol.textContent=(w?'HAI PARATO ':'TI HANNO SEGNATO ')+(w?(aleSaves+' su 5!'):(goals5+' su 5')) + (suddenDeath?'  (spareggio)':'');
+        HUD.overTitle.textContent = w?'PORTIERE TOP! 🧤🏆':'BATTUTO 😵';
+        HUD.overRec.textContent=best5+'/5';
+      } else { if(ol) ol.textContent='hai parato '+streak+(streak===1?' rigore':' rigori')+' di fila';
+        HUD.overTitle.textContent=streak>=8?'SARACINESCA! 🧤👑':(streak>=4?'CHE RIFLESSI! 🧤':'GOL SUBITO 😵');
+        HUD.overRec.textContent=bestK+' 🧤';
+      }
+    } else if(five){ const w=(duelResult==='win');
       if(ol) ol.textContent = (w?'TU ':'ALE ')+ (w? (goals5+' - '+aleSaves+' ALE 🧤') : (aleSaves+' - '+goals5+' TU')) + (suddenDeath?'  (spareggio)':'');
       HUD.overTitle.textContent = w ? 'HAI BATTUTO ALE! 🏆' : 'ALE TI HA PARATO 🧤👑';
       HUD.overRec.textContent=best5+'/5';
@@ -1658,6 +1771,12 @@ const Telecro={
     "Che traiettoria, {P}! Sette pieno, Ale di sasso 🪨","Capolavoro di {P}! Incrocio dei pali, da impazzire 🔝🔥"],
   TAUNT:["Ale: «tira pure, tanto paro» 😏","Ale si accende il cigarro… 🚬",
     "Ale: «{P}, ti leggo nel pensiero» 🔮","Ale ti fissa da sotto gli occhiali 😎","Ale: «dai, fammi divertire» 👑"],
+  // --- MODALITÀ PORTIERE: TU in porta, {P} calcia contro di te ---
+  KGOAL:["Gol di {P}! Ti ha spiazzato 😵","{P} segna, guantoni all'asciutto 🧤❌","Palla in rete: {P} ti ha letto 😤","Niente da fare, {P} la piazza all'angolo 🎯"],
+  KSAVE:["PARATONA! Ti tuffi e la respingi 🧤🔥","CHE MURO! {P} si mangia le mani 😩","Ipnotizzi {P} e voli sul pallone! 🔮🧤","Guantoni di ferro: {P} a secco 💪🧤"],
+  KMISS:["{P} la spara fuori, graziato! 🙈","Fuori! Non serviva nemmeno tuffarsi 😅","{P} in tribuna, tiri un sospiro 😮‍💨"],
+  KPOST:["PALO! Il legno ti salva 🍀","Traversa! Che fortuna 😱","Legno! {P} a un soffio dal gol 😤"],
+  KTAUNT:["{P} sistema il pallone… concentrati 🧤","{P} ti fissa: da che parte andrà? 👀","{P} prende la rincorsa: pronto al tuffo? 🏃","Occhio: {P} sta per calciare ⚡"],
   // battute SPECIFICHE per giocatore (inside joke del gruppo). Fallback: pool generici sopra.
   SPECIAL:{
     MARIO:{
@@ -1680,7 +1799,10 @@ const Telecro={
     const l=this.pick(pool);
     console.log('[Telecro] '+PNAME()+' '+k+': '+l);     // dry-run/debug: l'esito in console
     showTelecro(l); speak(l,false); },
-  taunt(){ if(Math.random()<0.5){ const l=this.pick(this.TAUNT); showTelecro(l); speak(l,true); } }
+  taunt(){ if(Math.random()<0.5){ const l=this.pick(this.TAUNT); showTelecro(l); speak(l,true); } },
+  sayKeeper(r){ const map={GOAL:'KGOAL',SAVE:'KSAVE',MISS:'KMISS',POST:'KPOST'}; const l=this.pick(this[map[r]||'KMISS']);
+    console.log('[Telecro/keeper] '+r+': '+l); showTelecro(l); speak(l,false); },
+  tauntKeeper(){ if(Math.random()<0.6){ const l=this.pick(this.KTAUNT); showTelecro(l); speak(l,true); } }
 };
 let _telcroT=null;
 function showTelecro(text){ const el=document.getElementById('telecro'); if(!el) return;
@@ -1728,6 +1850,7 @@ document.getElementById('nameSave').addEventListener('click',saveName);
 document.querySelectorAll('#playerSelect .pscard').forEach(b=>b.addEventListener('click',()=>pickPlayer(b.dataset.player)));
 document.getElementById('repick').addEventListener('click',(e)=>{ e.stopPropagation(); document.getElementById('playerSelect').classList.add('show'); });
 document.getElementById('modeBtn').addEventListener('click',(e)=>{ e.stopPropagation(); MODE=(MODE==='five')?'infinite':'five'; try{localStorage.setItem('rig_mode',MODE);}catch(e){} syncHUD(); });
+document.getElementById('roleBtn').addEventListener('click',(e)=>{ e.stopPropagation(); ROLE=(ROLE==='keeper')?'shooter':'keeper'; try{localStorage.setItem('rig_role',ROLE);}catch(e){} syncHUD(); });
 // selettore STILE: PES <-> Holly & Benji (cambiabile in qualsiasi momento)
 document.querySelectorAll('.stbtn').forEach(b=>b.addEventListener('click',(e)=>{ e.stopPropagation(); setGFX(b.dataset.gfx); }));
 applyGFX();   // imposta classe body + bottoni attivi all'avvio
@@ -1836,12 +1959,14 @@ class Input {
     if(state!==STATE.GAME_PLAYING) return;
     aim.active=true; aim.sx=x; aim.sy=y; aim.cx=x; aim.cy=y; aim.t0=performance.now();   // avvia il decision timer
     const g=screenToGoal(x,y); aim.tx=g.x; aim.ty=g.y; aim.power=CONFIG.minPowerShot; aim.curl=0;
+    if(isKeeper()){ HUD.power.classList.remove('on'); HUD.curl.classList.remove('on'); return; }   // da portiere: il drag sceglie SOLO dove tuffarsi
     HUD.power.classList.add('on'); HUD.curl.classList.remove('on');
   }
   move(e){
     if(!aim.active||state!==STATE.GAME_PLAYING) return;
     const t=e.touches?e.touches[0]:e, x=t.clientX, y=t.clientY; aim.cx=x; aim.cy=y;
     const g=screenToGoal(x,y); aim.tx=g.x; aim.ty=g.y;            // target dal punto corrente
+    if(isKeeper()) return;                                        // da portiere: nessuna potenza/effetto, solo la posizione del tuffo
     const ref=Math.min(window.innerWidth,window.innerHeight)*0.55;
     aim.power=clamp(CONFIG.minPowerShot + Math.hypot(x-aim.sx,y-aim.sy)/ref, 0, 1);   // potenza = distanza drag
     aim.curl=clamp((x-aim.sx)/(window.innerWidth*0.35),-1,1);     // effetto = flick orizzontale
@@ -1852,6 +1977,7 @@ class Input {
   up(e){
     if(!aim.active||state!==STATE.GAME_PLAYING){ aim.active=false; return; }
     aim.active=false;
+    if(isKeeper()){ this.e.physics.saveShot(); return; }          // da portiere: rilascio = tuffo, la CPU calcia
     const moved=Math.hypot(aim.cx-aim.sx, aim.cy-aim.sy);
     // EASTER EGG: 3 tap rapidi sul CENTRO/TRAVERSA (zona generosa) -> tiro speciale.
     // Questi tap NON tirano e danno feedback ad ogni tocco (così lo "vedi" caricarsi).
@@ -1870,12 +1996,14 @@ class Input {
     if(k==='g'){ setGFX(isManga()?'pes':'manga'); showTelecro('STILE: '+(isManga()?'HOLLY & BENJI 🎬':'PES 🎮')); return; }   // toggle stile al volo (debug/confronto)
     if(k===' '||k==='enter'){ e.preventDefault();
       if(state===STATE.MENU_SCREEN||state===STATE.GAME_OVER) startGame();
-      else if(state===STATE.GAME_PLAYING){ aim.tx=rand(-2,2); aim.ty=rand(0.6,1.9); aim.power=0.6; aim.curl=rand(-0.4,0.4); this.e.physics.shoot(); } }
+      else if(state===STATE.GAME_PLAYING){ aim.tx=rand(-2,2); aim.ty=rand(0.6,1.9); aim.power=0.6; aim.curl=rand(-0.4,0.4);
+        if(isKeeper()) this.e.physics.saveShot(); else this.e.physics.shoot(); } }
   }
 }
 class Physics {                                  // volo palla + AI portiere + esito
   constructor(engine){ this.e=engine; }
   shoot(){ return shoot(); }
+  saveShot(){ return saveShot(); }
   resolveShot(){ return resolveShot(); }
 }
 class View {                                     // render Three.js + layer 2D (juice)
@@ -2017,6 +2145,15 @@ class GameEngine {                               // orchestratore: loop + FSM
   start(){ this._loop=(t)=>this.loop(t); requestAnimationFrame(this._loop); }
 }
 const engine = new GameEngine();
+// HOOK DI TEST (solo con ?kdbg=1): guida deterministica per verifica automatica (portiere)
+try{ if(new URLSearchParams(location.search).get('kdbg')==='1'){
+  window.__rig={ engine, STATE,
+    get state(){return state;}, get shot(){return shot;}, get streak(){return streak;},
+    get goals5(){return goals5;}, get aleSaves(){return aleSaves;}, get role(){return ROLE;},
+    setRole(r){ ROLE=r; }, setMode(m){ MODE=m; }, setAim(x,y){ aim.tx=x; aim.ty=y; },
+    setPlayer(n){ PLAYER=PLAYERS[n]||PLAYER; }, startGame(){ return startGame(); },
+    saveShot(){ return saveShot(); }, shoot(){ return shoot(); } };
+}}catch(e){}
 // JUICE agganciato alla FSM: screen-shake all'ingresso negli stati d'impatto
 // (PES contenuto, Anime più forte) — l'hit-stop è già nel loop (dt=0).
 engine.on(STATE.GOAL_ANIMATION, ()=>{ engine.view.shake(isManga()?1:0.55); if(isManga()) engine.view.bustNet(ripple.x,ripple.y); });  // Anime: rete sfondata
