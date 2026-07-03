@@ -313,7 +313,7 @@ const CONFIG = {
   shakeOnSave: 1.0, shakeOnGoal: 0.45,
   // --- Asset texture esterni (fallback procedurale se 404/offline) ---
   ASSETS: { ball:'assets/rig-ball.png?v=1', stadium:'assets/canva-stadium.png?v=1',
-            stadiumAnime:'assets/canva-stadium-anime.png?v=1' }   // versione ANIME (fallback: stessa PES)
+            stadiumAnime:'assets/stadium-anime.png?v=1' }   // versione ANIME cel-shaded (fallback: stessa PES)
 };
 
 /* --------------------------- UTIL / SCORES / HAPTIC ---------------------- */
@@ -654,6 +654,7 @@ function buildScene(textures){
   if(textures.stadium){
     const standMat=new THREE.MeshBasicMaterial({map:textures.stadium, fog:true, toneMapped:false});
     stadiumMat=standMat; stadiumTexPES=textures.stadium; stadiumTexANIME=textures.stadiumAnime||null;
+    if(isManga()&&stadiumTexANIME) standMat.map=stadiumTexANIME;   // stile gia ANIME all'avvio (applyGFX gira prima delle texture)
     const back=new THREE.Mesh(new THREE.PlaneGeometry(76,22), standMat);
     back.position.set(0,8.2,-17); scene.add(back);
     // ali laterali più indietro e meno ruotate, così incorniciano senza dominare
