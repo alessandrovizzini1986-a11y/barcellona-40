@@ -312,7 +312,8 @@ const CONFIG = {
   camPunch: 0.85,          // intensità zoom sullo strike
   shakeOnSave: 1.0, shakeOnGoal: 0.45,
   // --- Asset texture esterni (fallback procedurale se 404/offline) ---
-  ASSETS: { ball:'assets/rig-ball.png?v=1', stadium:'assets/canva-stadium.png?v=1' }
+  ASSETS: { ball:'assets/rig-ball.png?v=1', stadium:'assets/canva-stadium.png?v=1',
+            stadiumAnime:'assets/canva-stadium-anime.png?v=1' }   // versione ANIME (fallback: stessa PES)
 };
 
 /* --------------------------- UTIL / SCORES / HAPTIC ---------------------- */
@@ -425,6 +426,7 @@ let roundSeed=null, challengeFromURL=false;   // SFIDA: stesso portiere per tutt
 let specialArmed=false;            // EASTER EGG: tiro speciale armato (3 tap al centro porta)
 let confetti=null;
 let netShatter=null;               // ANIME: segmenti 3D dei "fili" della rete sfondata
+let stadiumMat=null, stadiumTexPES=null, stadiumTexANIME=null;   // stadio per stile (PES/ANIME), swap in applyGFX
 const camBase=new THREE.Vector3(0,1.95,14.6);
 const camLook=new THREE.Vector3(0,1.30,-1.0);
 const camPos=camBase.clone(), camTarget=camLook.clone();
@@ -648,8 +650,10 @@ function buildScene(textures){
   arc.rotation.x=-Math.PI/2; arc.position.set(0,0.013,SPOT_Z); scene.add(arc);
 
   // ---- STADIO Camp Nou (backdrop + ali) ----
+  // due texture per stile: PES (realistica) e ANIME (Canva); applyGFX scambia la map a runtime
   if(textures.stadium){
     const standMat=new THREE.MeshBasicMaterial({map:textures.stadium, fog:true, toneMapped:false});
+    stadiumMat=standMat; stadiumTexPES=textures.stadium; stadiumTexANIME=textures.stadiumAnime||null;
     const back=new THREE.Mesh(new THREE.PlaneGeometry(76,22), standMat);
     back.position.set(0,8.2,-17); scene.add(back);
     // ali laterali più indietro e meno ruotate, così incorniciano senza dominare
@@ -1789,6 +1793,9 @@ function showResult(txt,col){ HUD.result.textContent=txt; HUD.result.style.color
 /* ----- STILE: PES (realistico) <-> HOLLY & BENJI (anime) ----- */
 function applyGFX(){
   if(isManga()){ toonify(keeperInner); toonify(kickerInner); } else { untoonify(keeperInner); untoonify(kickerInner); }
+  // stadio per stile: ANIME usa la sua texture (se caricata), altrimenti resta la PES
+  if(stadiumMat){ const t=(isManga()&&stadiumTexANIME)?stadiumTexANIME:stadiumTexPES;
+    if(t && stadiumMat.map!==t){ stadiumMat.map=t; stadiumMat.needsUpdate=true; } }
   document.body.classList.toggle('manga', isManga());
   document.querySelectorAll('.stbtn').forEach(b=>b.classList.toggle('active', b.dataset.gfx===GFX));
 }
@@ -2235,7 +2242,8 @@ function boot(){
   const tryFinish=()=>{ if(started && pending===0) finish(); };
   const grab=(key,url,srgb)=>{ pending++; loader.load(url, tex=>{ if(srgb)tex.colorSpace=THREE.SRGBColorSpace; tex.anisotropy=4; textures[key]=tex; pending--; tryFinish(); },
                                             undefined, ()=>{ pending--; tryFinish(); }); };
-  grab('ball',CONFIG.ASSETS.ball,true); grab('stadium',CONFIG.ASSETS.stadium,true); started=true; tryFinish();   // sfondo stadio Canva (fallback procedurale)
+  grab('ball',CONFIG.ASSETS.ball,true); grab('stadium',CONFIG.ASSETS.stadium,true);
+  grab('stadiumAnime',CONFIG.ASSETS.stadiumAnime,true); started=true; tryFinish();   // sfondi stadio Canva PES+ANIME (fallback procedurale)
 
   let finished=false;
   function finish(){
