@@ -731,10 +731,14 @@ function addPost(x,y,z,r,h,mat){ const p=new THREE.Mesh(new THREE.CylinderGeomet
    setKeeperPose è disattivato; il movimento è guidato dall'AnimationMixer. --------- */
 // texture a strisce verticali blaugrana per la maglia
 function keeperKitTexture(){
-  const c=document.createElement('canvas'); c.width=256; c.height=64; const x=c.getContext('2d');
-  const n=8, w=c.width/n;
-  for(let i=0;i<n;i++){ x.fillStyle=(i%2)?'#A50044':'#004D98'; x.fillRect(i*w,0,w,c.height); }
-  const t=new THREE.CanvasTexture(c); t.colorSpace=THREE.SRGBColorSpace; t.wrapS=t.wrapT=THREE.RepeatWrapping; t.repeat.set(2.2,1); return t;
+  // completo portiere: stesso tessuto jersey blaugrana del rigorista (generato con Canva Pro), tileable.
+  // fallback procedurale (strisce piatte) se l'immagine non carica, cosi' il gioco non si rompe mai.
+  const t=new THREE.TextureLoader().load('assets/kit-outfield.png?v=1', undefined, undefined, ()=>{
+    const c=document.createElement('canvas'); c.width=256; c.height=64; const x=c.getContext('2d');
+    const n=8, w=c.width/n; for(let i=0;i<n;i++){ x.fillStyle=(i%2)?'#A50044':'#004D98'; x.fillRect(i*w,0,w,c.height); }
+    t.image=c; t.needsUpdate=true;
+  });
+  t.colorSpace=THREE.SRGBColorSpace; t.wrapS=t.wrapT=THREE.RepeatWrapping; t.repeat.set(2.2,1); return t;
 }
 // ---- stile CARTOON: cel-shading (toon) sui personaggi ----
 let _toonGrad=null;
@@ -810,11 +814,14 @@ function loadGLBKeeper(){
    Sequenza: idle (offensive idle) -> sul tiro: kick (penalty), col contatto piede-palla
    sincronizzato al lancio della palla. Fallback al rigorista procedurale se il GLB fallisce. -- */
 function jerseyBodyTexture(){
-  // strisce verticali blaugrana che tappezzano il corpo (ripetute): leggibili da ogni UV/angolo
-  const c=document.createElement('canvas'); c.width=128; c.height=128; const x=c.getContext('2d');
-  const n=6,w=c.width/n; for(let i=0;i<n;i++){ x.fillStyle=(i%2)?'#A50044':'#004D98'; x.fillRect(i*w,0,w,c.height); }
-  const t=new THREE.CanvasTexture(c); t.colorSpace=THREE.SRGBColorSpace;
-  t.wrapS=t.wrapT=THREE.RepeatWrapping; t.repeat.set(3,3); return t;
+  // completo blaugrana del rigorista: tessuto jersey generato con Canva Pro (strisce blu/granata, twill),
+  // tileable e leggibile da ogni UV. Fallback procedurale a strisce piatte se l'immagine non carica.
+  const t=new THREE.TextureLoader().load('assets/kit-outfield.png?v=1', undefined, undefined, ()=>{
+    const c=document.createElement('canvas'); c.width=128; c.height=128; const x=c.getContext('2d');
+    const n=6,w=c.width/n; for(let i=0;i<n;i++){ x.fillStyle=(i%2)?'#A50044':'#004D98'; x.fillRect(i*w,0,w,c.height); }
+    t.image=c; t.needsUpdate=true;
+  });
+  t.colorSpace=THREE.SRGBColorSpace; t.wrapS=t.wrapT=THREE.RepeatWrapping; t.repeat.set(3,3); return t;
 }
 // pannello NOME+NUMERO appeso alla schiena del rigorista (tracciato sullo Spine)
 function jerseyBackPanelTexture(name,num){
