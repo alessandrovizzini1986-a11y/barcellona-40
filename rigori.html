@@ -429,8 +429,8 @@ let specialArmed=false;            // EASTER EGG: tiro speciale armato (3 tap al
 let confetti=null;
 let netShatter=null;               // ANIME: segmenti 3D dei "fili" della rete sfondata
 let stadiumMat=null, stadiumTexPES=null, stadiumTexANIME=null;   // stadio per stile (PES/ANIME), swap in applyGFX
-const camBase=new THREE.Vector3(0,1.95,14.6);
-const camLook=new THREE.Vector3(0,1.30,-1.0);
+const camBase=new THREE.Vector3(0,2.75,18.2);   // camera piu' arretrata e alta: si vede il rigorista e la sua rincorsa
+const camLook=new THREE.Vector3(0,1.15,-1.0);
 const camPos=camBase.clone(), camTarget=camLook.clone();
 const raycaster=new THREE.Raycaster();
 const goalPlane=new THREE.Plane(new THREE.Vector3(0,0,1),0); // z=0
