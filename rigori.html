@@ -122,9 +122,9 @@
   .trow>span{margin-left:auto;font-size:11px}
   #setClose{margin-top:8px;font-family:inherit;font-size:10px;color:#001F44;background:var(--gold);border:none;border-radius:10px;padding:12px;cursor:pointer}
   #trofBtn.trofbtn{font-size:10px;color:#ffd884;background:rgba(2,12,30,.7);border:1px solid rgba(255,216,132,.5);padding:9px 18px}
-  /* micro-animazioni menu: titolo che respira, pannelli che entrano morbidi */
-  .panel h1{animation:titleglow 3.2s ease-in-out infinite}
-  @keyframes titleglow{0%,100%{text-shadow:0 4px 20px rgba(0,0,0,.6)}50%{text-shadow:0 4px 20px rgba(0,0,0,.6),0 0 26px rgba(255,216,132,.45)}}
+  /* micro-animazioni menu: titolo che respira (SOLO transform: compositor, zero repaint), pannelli morbidi */
+  .panel h1{text-shadow:0 4px 20px rgba(0,0,0,.6),0 0 22px rgba(255,216,132,.28);animation:titlefloat 3.2s ease-in-out infinite;will-change:transform}
+  @keyframes titlefloat{0%,100%{transform:none}50%{transform:scale(1.022)}}
   .panel.show{animation:panelin .34s ease-out}
   @keyframes panelin{0%{opacity:0;transform:scale(1.02)}100%{opacity:1;transform:none}}
   #webglErr{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;text-align:center;padding:24px;font-size:10px;color:#ffd28a;line-height:2}
@@ -869,14 +869,14 @@ function buildScene(textures){
     const gl=new THREE.Sprite(glowMat.clone()); gl.scale.set(9,9,1); gl.position.set(p[0],p[1]+0.6,p[2]); scene.add(gl);
     const core=new THREE.Sprite(coreMat.clone()); core.scale.set(3.4,3.4,1); core.position.set(p[0],p[1]+0.6,p[2]); scene.add(core);
     // flare ANAMORFICO (striscia orizzontale da regia TV) che "respira" col faro
-    const st=new THREE.Sprite(glowMat.clone()); st.scale.set(13,0.7,1); st.position.set(p[0],p[1]+0.6,p[2]); st.material.opacity=0.35; scene.add(st);
+    const st=new THREE.Sprite(glowMat.clone()); st.scale.set(8,0.5,1); st.position.set(p[0],p[1]+0.6,p[2]); st.material.opacity=0.28; scene.add(st);
     lights.flares.push({gl,core,st,ph:fi*1.7});
   });
   // FLASH dei telefoni in tribuna: sprite additivi che lampeggiano sul gol/parata
   lights.crowdFlashes=[];
   for(let i=0;i<12;i++){ const s=new THREE.Sprite(glowMat.clone()); s.scale.set(0.8,0.8,1);
-    s.position.set(rand(-28,28), rand(4.5,13), -16.6); s.material.opacity=0; scene.add(s);
-    lights.crowdFlashes.push({s,t:-1,d:0}); }
+    s.position.set(rand(-28,28), rand(4.5,13), -16.6); s.material.opacity=0; s.visible=false;   // spenti = zero costo di fill
+    scene.add(s); lights.crowdFlashes.push({s,t:-1,d:0}); }
 
   // ---- PRATO PBR ----
   const grassMat=new THREE.MeshStandardMaterial({map:textures.pitch.map, normalMap:textures.pitch.nrm,
@@ -1793,12 +1793,13 @@ function update(dt){
   // RIFLETTORI VIVI: micro-pulsazione dei flare (respiro elettrico, fase diversa per faro)
   if(lights.flares) for(const f of lights.flares){
     const tw=0.86+0.11*Math.sin(stateT*2.1+f.ph)+0.03*Math.sin(stateT*13+f.ph*3);
-    f.gl.material.opacity=tw; f.core.material.opacity=0.7+0.3*tw; f.st.material.opacity=0.3*tw; }
+    f.gl.material.opacity=tw; f.core.material.opacity=0.7+0.3*tw; f.st.material.opacity=0.25*tw; }
   // FLASH tribuna: lampeggi brevi scaglionati (festa dopo gol/parata)
   if(lights.crowdFlashes) for(const f of lights.crowdFlashes){ if(f.t<0) continue; f.t+=dt;
     const ph=f.t-f.d;
+    f.s.visible = ph>0;                                        // visibile SOLO durante il lampo (fill-rate mobile)
     f.s.material.opacity = ph>0 ? Math.sin(Math.PI*clamp(ph/0.22,0,1))*0.9 : 0;
-    if(ph>0.24){ f.t=-1; f.s.material.opacity=0; } }
+    if(ph>0.24){ f.t=-1; f.s.material.opacity=0; f.s.visible=false; } }
 
   // idle keeper bounce quando si gioca
   if(state===STATE.GAME_PLAYING){
