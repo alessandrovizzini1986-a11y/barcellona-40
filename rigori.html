@@ -82,8 +82,51 @@
   #nameOv .sub{font-size:9px;color:#cdd6ee;margin:14px 0 10px}
   #nameOv input{width:230px;text-transform:uppercase;text-align:center;font-family:inherit;font-size:13px;padding:13px;border-radius:10px;border:2px solid var(--gold);background:#04101f;color:#fff;outline:none}
   #nameOv button{margin-top:16px;font-family:inherit;font-size:11px;color:#001F44;background:var(--gold);border:none;border-radius:10px;padding:13px 26px;cursor:pointer}
-  /* sound toggle */
+  /* sound toggle + ingranaggio impostazioni */
   #snd{position:absolute;top:calc(70px + env(safe-area-inset-top));left:16px;font-size:9px;color:#9fb4dd;pointer-events:auto;cursor:pointer;text-shadow:0 1px 3px #000}
+  #gear{position:absolute;top:calc(94px + env(safe-area-inset-top));left:14px;font-size:13px;color:#9fb4dd;pointer-events:auto;cursor:pointer;
+    text-shadow:0 1px 3px #000;padding:4px;transition:transform .3s}
+  #gear:active{transform:rotate(90deg)}
+  /* ------ pannello IMPOSTAZIONI ------ */
+  #settings{position:fixed;inset:0;z-index:49;display:none;align-items:center;justify-content:center;
+    background:rgba(2,8,20,.9);-webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);padding:18px}
+  #settings.show{display:flex}
+  #settings .sbox{width:min(92vw,420px);max-height:86vh;overflow-y:auto;background:linear-gradient(170deg,#081b3c,#0a1226);
+    border:1px solid rgba(255,216,132,.5);border-radius:18px;padding:20px 18px;display:flex;flex-direction:column;gap:11px;
+    box-shadow:0 24px 60px -20px #000;animation:setin .3s cubic-bezier(.2,1.2,.4,1)}
+  @keyframes setin{0%{opacity:0;transform:translateY(26px) scale(.96)}100%{opacity:1;transform:none}}
+  #settings .stitle{font-size:13px;color:var(--gold);text-align:center;margin-bottom:4px}
+  #settings .stitle2{font-size:9px;color:#9fd0ff;margin-top:8px;letter-spacing:.08em}
+  #settings .srow{display:flex;justify-content:space-between;align-items:center;font-family:inherit;font-size:9px;color:#eaf0ff;
+    background:rgba(2,12,30,.7);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:12px 14px;cursor:pointer;pointer-events:auto}
+  #settings .srow:active{transform:scale(.98)}
+  #settings .srow .sw{font-size:9px;color:#39ff7a;background:rgba(57,255,122,.12);border:1px solid rgba(57,255,122,.5);border-radius:99px;padding:5px 12px;min-width:44px;text-align:center}
+  #settings .srow .sw.off{color:#ff6a6a;background:rgba(255,90,90,.1);border-color:rgba(255,90,90,.5)}
+  /* selettore pallone */
+  .ballrow{display:flex;gap:10px}
+  .ballopt{flex:1;display:flex;flex-direction:column;align-items:center;gap:7px;font-family:inherit;font-size:7px;color:#cdd6ee;
+    background:rgba(2,12,30,.7);border:1px solid rgba(255,255,255,.14);border-radius:12px;padding:11px 6px;cursor:pointer}
+  .ballopt.active{border-color:var(--gold);box-shadow:0 0 12px rgba(255,216,132,.35);color:#fff}
+  .ballopt.locked{opacity:.45}
+  .ballopt i{width:34px;height:34px;border-radius:50%;display:block;border:2px solid rgba(255,255,255,.35)}
+  .bi-classic{background:radial-gradient(circle at 35% 30%,#fff 45%,#111 46% 58%,#fff 59%)}
+  .bi-gold{background:radial-gradient(circle at 35% 30%,#ffe9ad,#f7d372 55%,#a87413)}
+  .bi-fire{background:radial-gradient(circle at 35% 30%,#ffc06a,#ff8a3c 55%,#a32800)}
+  /* lista trofei */
+  #trofList{display:flex;flex-direction:column;gap:7px}
+  .trow{display:flex;gap:10px;align-items:center;background:rgba(2,12,30,.6);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:9px 11px;opacity:.5}
+  .trow.ok{opacity:1;border-color:rgba(255,216,132,.45)}
+  .trow b{font-size:16px}
+  .trow .tt{font-size:8px;color:var(--gold)} .trow.ok .tt{text-shadow:0 0 8px rgba(255,216,132,.4)}
+  .trow .td{font-size:6px;color:#9fb4dd;margin-top:4px;line-height:1.6}
+  .trow>span{margin-left:auto;font-size:11px}
+  #setClose{margin-top:8px;font-family:inherit;font-size:10px;color:#001F44;background:var(--gold);border:none;border-radius:10px;padding:12px;cursor:pointer}
+  #trofBtn.trofbtn{font-size:10px;color:#ffd884;background:rgba(2,12,30,.7);border:1px solid rgba(255,216,132,.5);padding:9px 18px}
+  /* micro-animazioni menu: titolo che respira, pannelli che entrano morbidi */
+  .panel h1{animation:titleglow 3.2s ease-in-out infinite}
+  @keyframes titleglow{0%,100%{text-shadow:0 4px 20px rgba(0,0,0,.6)}50%{text-shadow:0 4px 20px rgba(0,0,0,.6),0 0 26px rgba(255,216,132,.45)}}
+  .panel.show{animation:panelin .34s ease-out}
+  @keyframes panelin{0%{opacity:0;transform:scale(1.02)}100%{opacity:1;transform:none}}
   #webglErr{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;text-align:center;padding:24px;font-size:10px;color:#ffd28a;line-height:2}
   /* scoreboard: faccia del calciatore */
   #scoreboard .crest.hasface{background:center/cover no-repeat;border:1px solid var(--gold)}
@@ -92,14 +135,39 @@
     background:rgba(2,8,20,.92);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);padding:24px}
   #playerSelect.show{display:flex}
   #playerSelect .pstitle{font-size:18px;color:var(--gold)}
-  #playerSelect .pscards{display:flex;gap:16px}
+  #playerSelect .pscards{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;max-width:96vw}
   #playerSelect .pscard{display:flex;flex-direction:column;align-items:center;gap:7px;background:linear-gradient(160deg,#004D98,#A50044);
-    border:2px solid rgba(255,216,132,.5);border-radius:16px;padding:14px 12px;cursor:pointer;color:#fff;font-family:inherit;width:128px;box-shadow:0 14px 34px -16px #000}
+    border:2px solid rgba(255,216,132,.5);border-radius:16px;padding:12px 10px;cursor:pointer;color:#fff;font-family:inherit;width:112px;box-shadow:0 14px 34px -16px #000}
   #playerSelect .pscard:active{transform:scale(.96)}
-  #playerSelect .pscard img{width:92px;height:92px;border-radius:50%;object-fit:cover;border:2px solid #fff;background:#0a1830}
+  #playerSelect .pscard img{width:78px;height:78px;border-radius:50%;object-fit:cover;border:2px solid #fff;background:#0a1830}
   #playerSelect .pscard span{font-size:13px;letter-spacing:.04em}
   #playerSelect .pscard small{font-size:8px;color:#ffd28a}
   #playerSelect .pssub{font-size:8px;color:#9fb4dd;letter-spacing:.06em}
+  #playerSelect .pslegend{font-size:6px;color:#7f97c8;letter-spacing:.2em;margin-top:-8px}
+  /* mini-barre statistiche sulle card (TIR/POT/EFF) */
+  .pscard .pstats{display:flex;gap:4px;width:100%;margin-top:2px}
+  .pscard .pstats i{flex:1;height:5px;border-radius:3px;background:rgba(0,10,30,.55);position:relative;overflow:hidden}
+  .pscard .pstats i::after{content:'';position:absolute;inset:0;width:var(--v,50%);border-radius:3px;background:linear-gradient(90deg,#39ff7a,#ffd24a)}
+  /* card selezionata: pop + anello oro */
+  .pscard.sel{animation:cardpop .4s cubic-bezier(.2,1.5,.4,1);box-shadow:0 0 0 3px var(--gold),0 14px 34px -12px #000}
+  @keyframes cardpop{0%{transform:scale(1)}45%{transform:scale(1.08)}100%{transform:scale(1)}}
+  /* card ALE bloccata */
+  .pscard{position:relative;overflow:hidden}
+  .pscard .lock{position:absolute;inset:0;border-radius:14px;background:rgba(2,8,20,.82);display:flex;flex-direction:column;
+    align-items:center;justify-content:center;gap:8px;font-size:24px;-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
+  .pscard .lock small{font-size:6px;color:#9fb4dd;line-height:1.8;text-align:center}
+  .pscard.unlocked .lock{display:none}
+  .pscard.deny,.ballopt.deny{animation:deny .3s}
+  @keyframes deny{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+  /* toast trofeo */
+  #achToast{position:fixed;top:calc(96px + env(safe-area-inset-top));left:50%;transform:translate(-50%,-260%);z-index:52;
+    display:flex;gap:12px;align-items:center;background:linear-gradient(160deg,#0a1c3a,#16305e);border:1px solid var(--gold);
+    border-radius:12px;padding:11px 16px;box-shadow:0 10px 30px rgba(0,0,0,.55),0 0 22px rgba(255,216,132,.25);
+    transition:transform .38s cubic-bezier(.2,1.3,.4,1),opacity .3s,visibility .3s;pointer-events:none;max-width:88vw;opacity:0;visibility:hidden}
+  #achToast.on{transform:translate(-50%,0);opacity:1;visibility:visible}
+  #achToast b{font-size:22px}
+  #achTitle{font-size:9px;color:var(--gold);letter-spacing:.04em}
+  #achSub{font-size:7px;color:#cdd6ee;margin-top:5px;line-height:1.6}
   /* reveal card stile "nuovo acquisto" */
   #reveal{position:fixed;inset:0;z-index:55;display:none;align-items:center;justify-content:center;background:#02060f;overflow:hidden}
   #reveal.show{display:flex}
@@ -123,8 +191,8 @@
   #cardBtn{color:#10100a;background:linear-gradient(100deg,#ffd884,#ffb24a)}
   #challengeBtn{color:#fff;background:linear-gradient(100deg,#004D98,#A50044)}
   #challengeNote{color:#ffd884;border:1px solid rgba(255,216,132,.5);border-radius:8px;padding:7px 12px;background:rgba(2,12,30,.6)}
-  #modeBtn.modesel{margin:4px 0 2px;font-size:11px;color:#ffd884;background:rgba(2,12,30,.7);border:1px solid var(--gold);padding:9px 18px}
-  #modeBtn.modesel:active{transform:translateY(2px)}
+  .hudbtn.modesel{margin:4px 0 2px;font-size:11px;color:#ffd884;background:rgba(2,12,30,.7);border:1px solid var(--gold);padding:9px 18px}
+  .hudbtn.modesel:active{transform:translateY(2px)}
   /* selettore STILE (PES realistico vs Holly & Benji anime) */
   .styleSel{display:flex;gap:10px;margin:2px 0 2px}
   .styleSel .stbtn{pointer-events:auto;cursor:pointer;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:4px;
@@ -164,7 +232,7 @@
   #shootrack .d.x{background:#ff4d5e;border-color:#ff4d5e}
   /* grading cinematografico: vignettatura + tono notturno caldo-freddo */
   /* overlay 2D: particelle (object-pool) + HUD di gioco disegnato su canvas */
-  #fx2d{position:fixed;inset:0;z-index:8;pointer-events:none}
+  #fx2d{position:fixed;inset:0;width:100%;height:100%;z-index:8;pointer-events:none}   /* width/height espliciti: senza, su dpr>1 il canvas 2D esce 2x (onomatopee tagliate) */
   /* screen-shake: trasformazione CSS sul canvas (quasi gratis, non tocca la PerspectiveCamera) */
   @keyframes shk{0%,100%{transform:translate(0,0) rotate(0) scale(1.025)}
     15%{transform:translate(-1.3%,0.9%) rotate(-.45deg) scale(1.025)}
@@ -209,6 +277,7 @@
     <span class="score" id="score">0</span><span class="vs">PORTIERE</span>
   </div>
   <div id="snd">♪</div>
+  <div id="gear">⚙</div>
   <div id="rec">REC 0</div>
   <div id="result"></div>
   <div id="shootrack"></div>
@@ -227,7 +296,8 @@
       <button class="stbtn" data-gfx="pes">🎮 PES<small>realistico</small></button>
       <button class="stbtn" data-gfx="manga">🎬 HOLLY &amp; BENJI<small>anime</small></button>
     </div>
-    <div class="small">trascina per mirare nell'angolo<br><span class="grn">la distanza decide la POTENZA</span><br><span class="blu">muovi di lato per dare EFFETTO</span></div>
+    <div class="small">trascina per mirare nell'angolo<br><span class="grn">la distanza decide la POTENZA</span><br><span class="blu">muovi di lato per dare EFFETTO</span><br><span style="color:#9fd0ff">morbido e alto = CUCCHIAIO 🥄</span><br><span class="org">forte e basso = RASOIATA ⚡</span></div>
+    <button id="trofBtn" class="hudbtn trofbtn">🏆 TROFEI <span id="menuTrof">0/10</span></button>
     <div class="small">record <span id="menuRec">0</span></div>
     <div class="blink">★ TOCCA PER GIOCARE ★</div>
   </div>
@@ -260,11 +330,35 @@
 
 <div id="playerSelect"><div class="pstitle">CHI TIRA?</div>
   <div class="pscards">
-    <button class="pscard" data-player="Mario"><img src="assets/face-mario.png" alt="Mario"><span>MARIO</span><small>#104 · 99 OVR</small></button>
-    <button class="pscard" data-player="Giulio"><img src="assets/face-giulio.png" alt="Giulio"><span>GIULIO</span><small>#7 · 99 OVR</small></button>
+    <button class="pscard" data-player="Mario"><img src="assets/face-mario.png" alt="Mario"><span>MARIO</span><small>#104 · 99 OVR</small>
+      <div class="pstats"><i style="--v:96%"></i><i style="--v:88%"></i><i style="--v:91%"></i></div></button>
+    <button class="pscard" data-player="Giulio"><img src="assets/face-giulio.png" alt="Giulio"><span>GIULIO</span><small>#7 · 99 OVR</small>
+      <div class="pstats"><i style="--v:90%"></i><i style="--v:95%"></i><i style="--v:93%"></i></div></button>
+    <button class="pscard" data-player="Ale" id="cardAle"><img src="assets/keeper-face.png" alt="Ale"><span>ALE 👑</span><small>#1 · RE DEI RIGORI</small>
+      <div class="pstats"><i style="--v:99%"></i><i style="--v:99%"></i><i style="--v:99%"></i></div>
+      <div class="lock">🔒<small>vinci il DUELLO<br>5 RIGORI per<br>sbloccarlo</small></div></button>
   </div>
+  <div class="pslegend">TIR · POT · EFF</div>
   <div class="pssub">…CONTRO ALE 🧤👑 IN PORTA</div>
 </div>
+
+<div id="achToast"><b id="achIco">🏆</b><div><div id="achTitle"></div><div id="achSub"></div></div></div>
+
+<div id="settings"><div class="sbox">
+  <div class="stitle">⚙ IMPOSTAZIONI</div>
+  <button class="srow" id="setMusic"><span>🎵 MUSICA</span><b class="sw">ON</b></button>
+  <button class="srow" id="setSfx"><span>🔊 EFFETTI</span><b class="sw">ON</b></button>
+  <button class="srow" id="setVoice"><span>🎙 TELECRONACA</span><b class="sw">ON</b></button>
+  <div class="stitle2">PALLONE</div>
+  <div class="ballrow">
+    <button class="ballopt" data-ball="classic"><i class="bi-classic"></i><small>CLASSICO</small></button>
+    <button class="ballopt" data-ball="gold"><i class="bi-gold"></i><small>ORO 🔒</small></button>
+    <button class="ballopt" data-ball="fire"><i class="bi-fire"></i><small>FUOCO 🔒</small></button>
+  </div>
+  <div class="stitle2">TROFEI <span id="trofCount"></span></div>
+  <div id="trofList"></div>
+  <button id="setClose">CHIUDI ✕</button>
+</div></div>
 
 <div id="reveal"><div class="flash"></div><img id="revealImg" alt=""><div class="rv-go">★ TOCCA PER CONTINUARE ★</div></div>
 
@@ -333,32 +427,172 @@ const Scores={ KEY:'hs_rigori', MAX:5,
     const t=s.slice(0,this.MAX); try{localStorage.setItem(this.KEY,JSON.stringify(t));}catch(e){} return t; } };
 const haptic=p=>{ if(CONFIG.haptics&&navigator.vibrate){ try{navigator.vibrate(p);}catch(e){} } };
 
-/* ------------------------------- AUDIO ----------------------------------- */
-const Sound={ ctx:null,musicOn:true,sfxOn:true,_t:null,_step:0,_crowd:null,_crowdG:null,
-  MEL:[0,4,7,12,7,4,0,4,5,9,12,9,7,4,2,0],BASS:[0,0,5,5,7,7,5,5],BASE:196,
-  init(){ this.musicOn=this._p('arc_music',true); this.sfxOn=this._p('arc_sfx',true); },
+/* --------------------- TROFEI / PROGRESSIONE (locale) --------------------
+   Achievement salvati in localStorage 'rig_ach' (chiave NUOVA, additiva: non
+   tocca i salvataggi esistenti). Gli sblocchi cosmetici derivano dai trofei:
+   pallone ORO (streak5), pallone FUOCO (super), ALE giocabile (duello/muro8). */
+const Progress={ KEY:'rig_ach',
+  DEFS:[
+    {id:'gol1',    ic:'⚽', t:'PRIMO SQUILLO',  d:'Segna il tuo primo rigore'},
+    {id:'streak5', ic:'🔥', t:'IN FIDUCIA',     d:'5 gol di fila',            unlock:'PALLONE ORO'},
+    {id:'streak10',ic:'🎯', t:'CECCHINO',       d:'10 gol di fila'},
+    {id:'incrocio',ic:'📐', t:'SETTE PIENO',    d:"Segna all'incrocio dei pali"},
+    {id:'cucchiaio',ic:'🥄',t:'IL CUCCHIAIO',   d:'Segna di cucchiaio'},
+    {id:'rasoiata',ic:'⚡', t:'RASOIATA',       d:'Segna un rasoterra potente'},
+    {id:'super',   ic:'🌈', t:'SUPERTIRO',      d:'Segna col tiro speciale',  unlock:'PALLONE FUOCO'},
+    {id:'parata3', ic:'🧤', t:'GUANTONI CALDI', d:'3 parate di fila'},
+    {id:'muro8',   ic:'🧱', t:'SARACINESCA',    d:'8 parate di fila',         unlock:'ALE GIOCABILE'},
+    {id:'duello',  ic:'🏆', t:'RE DEI RIGORI',  d:'Vinci il duello dei 5 rigori', unlock:'ALE GIOCABILE'} ],
+  data(){ try{return JSON.parse(localStorage.getItem(this.KEY)||'{}');}catch(e){return{};} },
+  has(id){ return !!this.data()[id]; },
+  count(){ const d=this.data(); return this.DEFS.filter(a=>d[a.id]).length; },
+  award(id){ if(this.has(id)) return false;
+    const d=this.data(); d[id]=1; try{localStorage.setItem(this.KEY,JSON.stringify(d));}catch(e){}
+    const a=this.DEFS.find(x=>x.id===id); if(a) showAchToast(a); haptic([0,20,40,20]); return true; },
+  ballUnlocked(k){ return k==='classic' || (k==='gold'&&this.has('streak5')) || (k==='fire'&&this.has('super')); },
+  aleUnlocked(){ return this.has('duello')||this.has('muro8'); } };
+// toast trofeo (coda: piu trofei nello stesso momento si mostrano in fila)
+const _achQ=[]; let _achBusy=false;
+function showAchToast(a){ _achQ.push(a); if(!_achBusy) _achNext(); }
+function _achNext(){ const a=_achQ.shift(); if(!a){ _achBusy=false; return; } _achBusy=true;
+  const el=document.getElementById('achToast'); if(!el){ _achBusy=false; return; }
+  document.getElementById('achIco').textContent=a.ic;
+  document.getElementById('achTitle').textContent='TROFEO · '+a.t;
+  document.getElementById('achSub').textContent=a.d+(a.unlock?(' · SBLOCCA: '+a.unlock):'');
+  el.classList.add('on'); Sound.sfx(980,.09); setTimeout(()=>Sound.sfx(1470,.12,'square',0.14),110);
+  setTimeout(()=>{ el.classList.remove('on'); setTimeout(_achNext,380); },2600); }
+// ----- SKIN PALLONE (cosmetico sbloccabile, chiave nuova 'rig_ball') -----
+let BALLSKIN='classic'; try{ const b=localStorage.getItem('rig_ball'); if(b==='gold'||b==='fire'||b==='classic') BALLSKIN=b; }catch(e){}
+const _skinTex={};
+function ballSkinTexture(kind){
+  const c=document.createElement('canvas'); c.width=c.height=256; const x=c.getContext('2d');
+  const base= kind==='gold'? '#f7d372':'#ff8a3c', deep= kind==='gold'? '#e2a93e':'#e5541e', dark= kind==='gold'? '#6e4a0c':'#801c00';
+  const g=x.createLinearGradient(0,0,256,256); g.addColorStop(0,base); g.addColorStop(1,deep);
+  x.fillStyle=g; x.fillRect(0,0,256,256);
+  x.fillStyle=dark;
+  const pent=(cx,cy,r)=>{ x.beginPath(); for(let i=0;i<5;i++){ const a=-Math.PI/2+i*2*Math.PI/5; const px=cx+Math.cos(a)*r,py=cy+Math.sin(a)*r; i?x.lineTo(px,py):x.moveTo(px,py);} x.closePath(); x.fill(); };
+  pent(128,70,26); pent(54,150,22); pent(202,150,22); pent(96,210,18); pent(170,210,18);
+  x.strokeStyle=dark; x.globalAlpha=.5; x.lineWidth=3;
+  for(let i=0;i<6;i++){ x.beginPath(); x.arc(rand(0,256),rand(0,256),rand(20,40),0,6.28); x.stroke(); }
+  x.globalAlpha=1;
+  const t=new THREE.CanvasTexture(c); t.colorSpace=THREE.SRGBColorSpace; return t;
+}
+function applyBallSkin(){ if(!ball) return; if(!Progress.ballUnlocked(BALLSKIN)) BALLSKIN='classic';
+  const m=ball.material;
+  if(BALLSKIN==='classic'){ if(ball.userData.classicMap) m.map=ball.userData.classicMap; m.metalness=0.08; m.roughness=0.32; }
+  else { if(!_skinTex[BALLSKIN]) _skinTex[BALLSKIN]=ballSkinTexture(BALLSKIN);
+    m.map=_skinTex[BALLSKIN]; m.metalness= BALLSKIN==='gold'?0.5:0.12; m.roughness= BALLSKIN==='gold'?0.24:0.3; }
+  m.needsUpdate=true; }
+function setBallSkin(k){ if(!Progress.ballUnlocked(k)) return; BALLSKIN=k; try{localStorage.setItem('rig_ball',k);}catch(e){} applyBallSkin(); }
+
+/* ------------------------------- AUDIO -----------------------------------
+   Tutto WebAudio procedurale (zero file): bus separati MUSICA / SFX su un
+   master, ECO STADIO (delay+feedback) come mandata degli effetti, musica
+   GENERATIVA a intensità dinamica (piu tensione = tempo su, hi-hat e
+   arpeggio in ottava), SUDDEN DEATH = ostinato minore + battito cardiaco. */
+const Sound={ ctx:null,musicOn:true,sfxOn:true,voiceOn:true,_t:null,_step:0,_crowd:null,_crowdG:null,
+  master:null,musicG:null,sfxG:null,_echoG:null,_hb:null,intensity:0,drama:false,
+  MEL:[0,4,7,12,7,4,0,4,5,9,12,9,7,4,2,0],BASS:[0,0,5,5,7,7,5,5],
+  MEL2:[0,0,3,0,-2,0,3,5,0,0,3,7,5,3,2,0],BASE:196,   // MEL2 = ostinato minore (spareggio)
+  init(){ this.musicOn=this._p('arc_music',true); this.sfxOn=this._p('arc_sfx',true); this.voiceOn=this._p('arc_voice',true); },
   _p(k,d){ try{const v=localStorage.getItem(k);return v===null?d:v==='1';}catch(e){return d;} },
   _set(k,v){ try{localStorage.setItem(k,v?'1':'0');}catch(e){} },
   toggle(){ const on=!(this.musicOn||this.sfxOn); this.musicOn=on; this.sfxOn=on; this._set('arc_music',on); this._set('arc_sfx',on);
     if(!on){ this.musicStop(); this.crowd(0); } return on; },
-  ac(){ if(!this.ctx){try{this.ctx=new (window.AudioContext||window.webkitAudioContext)();}catch(e){}} return this.ctx; },
+  // toggle separati (pannello impostazioni): stesse chiavi storiche arc_music/arc_sfx
+  toggleMusic(){ this.musicOn=!this.musicOn; this._set('arc_music',this.musicOn);
+    if(!this.musicOn) this.musicStop(); else if(state===STATE.GAME_PLAYING||state===STATE.BALL_IN_FLIGHT) this.musicStart();
+    return this.musicOn; },
+  toggleSfx(){ this.sfxOn=!this.sfxOn; this._set('arc_sfx',this.sfxOn); if(!this.sfxOn) this.crowd(0); return this.sfxOn; },
+  toggleVoice(){ this.voiceOn=!this.voiceOn; this._set('arc_voice',this.voiceOn); return this.voiceOn; },
+  ac(){ if(!this.ctx){ try{this.ctx=new (window.AudioContext||window.webkitAudioContext)();}catch(e){} if(this.ctx) this._graph(); } return this.ctx; },
+  _graph(){ const a=this.ctx;
+    this.master=a.createGain(); this.master.gain.value=1; this.master.connect(a.destination);
+    this.musicG=a.createGain(); this.musicG.gain.value=1; this.musicG.connect(this.master);
+    this.sfxG=a.createGain(); this.sfxG.gain.value=1; this.sfxG.connect(this.master);
+    // eco stadio: mandata dal bus sfx -> delay con feedback filtrato -> master (wet basso)
+    const d=a.createDelay(0.7); d.delayTime.value=0.27;
+    const fb=a.createGain(); fb.gain.value=0.26;
+    const lp=a.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=1500;
+    this._echoG=a.createGain(); this._echoG.gain.value=0.15;
+    this.sfxG.connect(d); d.connect(lp); lp.connect(fb); fb.connect(d); lp.connect(this._echoG); this._echoG.connect(this.master); },
+  _busS(){ return this.sfxG||(this.ctx&&this.ctx.destination); },
+  _busM(){ return this.musicG||(this.ctx&&this.ctx.destination); },
   sfx(f,d,type='square',vol=0.16){ if(!this.sfxOn)return; const a=this.ac(); if(!a)return; const o=a.createOscillator(),g=a.createGain();
-    o.type=type;o.frequency.value=f;o.connect(g);g.connect(a.destination);g.gain.setValueAtTime(vol,a.currentTime);
+    o.type=type;o.frequency.value=f;o.connect(g);g.connect(this._busS());g.gain.setValueAtTime(vol,a.currentTime);
     g.gain.exponentialRampToValueAtTime(.0001,a.currentTime+d);o.start();o.stop(a.currentTime+d); },
+  // burst di rumore filtrato riutilizzabile (base per molti SFX "materici")
+  _noise(dur,filtType,freq,vol,q){ if(!this.sfxOn)return; const a=this.ac(); if(!a)return; const t=a.currentTime;
+    const n=a.createBufferSource(), buf=a.createBuffer(1,Math.max(64,a.sampleRate*dur),a.sampleRate), d=buf.getChannelData(0);
+    for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*(1-i/d.length);
+    const f=a.createBiquadFilter(); f.type=filtType; f.frequency.value=freq; if(q)f.Q.value=q;
+    const g=a.createGain(); g.gain.setValueAtTime(vol,t); g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+    n.buffer=buf; n.connect(f); f.connect(g); g.connect(this._busS()); n.start(t); },
+  // CALCIO: thump di corpo (sine grave che scende) + "click" dello scarpino
+  kick(power){ if(!this.sfxOn)return; const a=this.ac(); if(!a)return; const t=a.currentTime, p=clamp(power||0.5,0,1);
+    const o=a.createOscillator(),g=a.createGain(); o.type='sine'; o.frequency.setValueAtTime(120+p*60,t);
+    o.frequency.exponentialRampToValueAtTime(42,t+0.11); o.connect(g); g.connect(this._busS());
+    g.gain.setValueAtTime(0.34+p*0.2,t); g.gain.exponentialRampToValueAtTime(.0001,t+0.13); o.start(t); o.stop(t+0.14);
+    this._noise(0.05,'highpass',2200,0.12+p*0.1); },
+  // RETE che si gonfia sul gol: fruscio di corda (noise bandpass discendente)
+  netSwish(){ if(!this.sfxOn)return; const a=this.ac(); if(!a)return;
+    this._noise(0.16,'bandpass',900,0.22,1.2); this._noise(0.3,'lowpass',500,0.12); },
+  // PALO: clang metallico — due parziali disarmoniche + ring che muore
+  postClang(){ if(!this.sfxOn)return; const a=this.ac(); if(!a)return; const t=a.currentTime;
+    [[872,.5,.26],[1318,.42,.2],[2470,.3,.08]].forEach(([f,dur,v])=>{ const o=a.createOscillator(),g=a.createGain();
+      o.type='triangle'; o.frequency.value=f; o.connect(g); g.connect(this._busS());
+      g.gain.setValueAtTime(v,t); g.gain.exponentialRampToValueAtTime(.0001,t+dur); o.start(t); o.stop(t+dur); });
+    this._noise(0.03,'highpass',3000,0.2); },
+  // GUANTONI: tonfo sordo della presa
+  gloveThud(){ if(!this.sfxOn)return; const a=this.ac(); if(!a)return; const t=a.currentTime;
+    const o=a.createOscillator(),g=a.createGain(); o.type='sine'; o.frequency.setValueAtTime(150,t);
+    o.frequency.exponentialRampToValueAtTime(70,t+0.09); o.connect(g); g.connect(this._busS());
+    g.gain.setValueAtTime(0.3,t); g.gain.exponentialRampToValueAtTime(.0001,t+0.12); o.start(t); o.stop(t+0.13);
+    this._noise(0.09,'lowpass',700,0.2); },
+  // FISCHIO ARBITRO vero: trillo (portante ~2.1kHz modulata in ampiezza a ~38Hz)
+  whistle(long){ if(!this.sfxOn)return; const a=this.ac(); if(!a)return; const t=a.currentTime, dur=long?0.42:0.14;
+    const o=a.createOscillator(); o.type='square'; o.frequency.value=2140;
+    const g=a.createGain(), lfo=a.createOscillator(), lg=a.createGain();
+    lfo.type='sine'; lfo.frequency.value=38; lg.gain.value=0.5; lfo.connect(lg); lg.connect(g.gain);
+    g.gain.setValueAtTime(0.12,t); g.gain.setValueAtTime(0.12,t+dur-0.03); g.gain.linearRampToValueAtTime(0.0001,t+dur);
+    o.connect(g); g.connect(this._busS()); o.start(t); o.stop(t+dur); lfo.start(t); lfo.stop(t+dur); },
   _tone(f,d,type,vol){ const a=this.ac();if(!a)return;const o=a.createOscillator(),g=a.createGain();o.type=type;o.frequency.value=f;
-    o.connect(g);g.connect(a.destination);const t=a.currentTime;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol,t+.02);
+    o.connect(g);g.connect(this._busM());const t=a.currentTime;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol,t+.02);
     g.gain.exponentialRampToValueAtTime(.0001,t+d);o.start(t);o.stop(t+d); },
-  _tick(){ if(!this.musicOn)return; const s=this.MEL[this._step%this.MEL.length]; this._tone(this.BASE*Math.pow(2,s/12),.18,'square',.035);
-    if(this._step%2===0){const b=this.BASS[(this._step/2)%this.BASS.length];this._tone(this.BASE/2*Math.pow(2,b/12),.34,'triangle',.045);} this._step++; },
-  musicStart(){ if(!this.musicOn||this._t)return; this.ac(); this._step=0; this._t=setInterval(()=>this._tick(),210); },
-  musicStop(){ if(this._t){clearInterval(this._t);this._t=null;} },
+  _hat(v){ const a=this.ac(); if(!a)return; const n=a.createBufferSource(), buf=a.createBuffer(1,a.sampleRate*0.03,a.sampleRate), d=buf.getChannelData(0);
+    for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*(1-i/d.length);
+    const f=a.createBiquadFilter(); f.type='highpass'; f.frequency.value=6000;
+    const g=a.createGain(); g.gain.value=v; n.buffer=buf; n.connect(f); f.connect(g); g.connect(this._busM()); n.start(); },
+  // sequencer generativo: la TENSIONE (intensity 0..1) accende hi-hat, arpeggio
+  // in ottava e alza il volume; il DRAMA (spareggio) cambia la melodia in minore
+  _tick(){ if(!this.musicOn)return; const i=this.intensity, MEL=this.drama?this.MEL2:this.MEL;
+    const s=MEL[this._step%MEL.length];
+    this._tone(this.BASE*Math.pow(2,s/12),.18,'square',.035+.015*i);
+    if(this._step%2===0){ const b=this.BASS[(this._step/2)%this.BASS.length];
+      this._tone(this.BASE/2*Math.pow(2,(this.drama?b-2:b)/12),.34,'triangle',.045+.03*i); }
+    if(i>0.3 && this._step%4===2) this._hat(.04+.05*i);
+    if(i>0.55) this._tone(this.BASE*2*Math.pow(2,s/12),.09,'square',.012+.014*i);
+    this._step++; },
+  setIntensity(x){ x=clamp(x,0,1); if(Math.abs(x-this.intensity)<0.01) return; this.intensity=x;
+    if(this._t){ clearInterval(this._t); this._t=setInterval(()=>this._tick(), 210-55*x); } },   // tempo su con la tensione
+  setDrama(on){ on=!!on; if(this.drama===on) return; this.drama=on; this.heartbeat(on); },
+  // BATTITO CARDIACO (sudden death): doppio tonfo sordo ogni ~900ms
+  heartbeat(on){ if(!on){ if(this._hb){clearInterval(this._hb); this._hb=null;} return; }
+    if(this._hb) return; const beat=()=>{ if(!this.sfxOn) return; const a=this.ac(); if(!a)return;
+      const th=(dt,v)=>{ const o=a.createOscillator(),g=a.createGain(); o.type='sine'; o.frequency.value=54;
+        const t=a.currentTime+dt; g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(v,t+.015); g.gain.exponentialRampToValueAtTime(.0001,t+.17);
+        o.connect(g); g.connect(this._busS()); o.start(t); o.stop(t+.19); };
+      th(0,.45); th(.20,.3); };
+    beat(); this._hb=setInterval(beat,900); },
+  musicStart(){ if(!this.musicOn||this._t)return; this.ac(); this._step=0; this._t=setInterval(()=>this._tick(),210-55*this.intensity); },
+  musicStop(){ if(this._t){clearInterval(this._t);this._t=null;} this.heartbeat(false); this.drama=false; },
   // brusio folla a basso volume (noise filtrato), pump su gol/parata
   crowdInit(){ const a=this.ac(); if(!a||this._crowd)return;
     const buf=a.createBuffer(1,a.sampleRate*2,a.sampleRate); const d=buf.getChannelData(0);
     for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*0.5;
     const src=a.createBufferSource(); src.buffer=buf; src.loop=true;
     const f=a.createBiquadFilter(); f.type='bandpass'; f.frequency.value=620; f.Q.value=0.7;
-    const g=a.createGain(); g.gain.value=0.0; src.connect(f); f.connect(g); g.connect(a.destination); src.start();
+    const g=a.createGain(); g.gain.value=0.0; src.connect(f); f.connect(g); g.connect(this._busS()); src.start();
     this._crowd=src; this._crowdG=g; },
   crowd(level){ if(!this.sfxOn){ if(this._crowdG)this._crowdG.gain.value=0; return; } this.crowdInit();
     if(this._crowdG){ const a=this.ac(); this._crowdG.gain.cancelScheduledValues(a.currentTime);
@@ -385,7 +619,9 @@ let keeperMixer=null, useGLBKeeper=false, keeperInner=null, keeperState=''; // p
 let keeperFace=null, keeperHeadBone=null, keeperHandL=null, keeperHandR=null; const _faceV=new THREE.Vector3(); const _glA=new THREE.Vector3(), _glB=new THREE.Vector3();   // faccia + mani (per prendere la palla)
 const PLAYERS={
   Mario:{name:'MARIO',num:'104',face:'assets/face-mario.png',poster:'mario_poster.jpg'},
-  Giulio:{name:'GIULIO',num:'7',face:'assets/face-giulio.png',poster:'giulio_poster.jpg'} };
+  Giulio:{name:'GIULIO',num:'7',face:'assets/face-giulio.png',poster:'giulio_poster.jpg'},
+  // ALE giocabile: si sblocca vincendo il duello dei 5 rigori (Ale vs Ale, il Re contro se stesso)
+  Ale:{name:'ALE',num:'1',face:'assets/keeper-face.png',poster:null} };
 let kicker=null, kickT=-1;                            // rigorista procedurale di spalle (fallback se il GLB non carica)
 // ----- rigorista 3D (GLB Mixamo): personaggio + clip solo-animazione montate per nome -----
 let kickerGLB=null, useGLBKicker=false, kickerInner=null, kickerMixer=null;
@@ -618,7 +854,8 @@ function buildScene(textures){
   const floodPos=[[-13,15,-13],[13,15,-13],[-13,15,15],[13,15,15]];
   const glowMat=glowSprite('rgba(206,228,255,.92)');
   const coreMat=glowSprite('rgba(255,255,255,.95)');
-  floodPos.forEach(p=>{
+  lights.flares=[];
+  floodPos.forEach((p,fi)=>{
     // cono più stretto e intenso con penombra morbida -> falloff credibile sul prato
     const sp=new THREE.SpotLight(0xeaf2ff, 170, 90, Math.PI/6.2, .55, 1.5);
     sp.position.set(p[0],p[1],p[2]); sp.target.position.set(0,1,0);
@@ -629,15 +866,31 @@ function buildScene(textures){
     // pannello fari + bagliore (alone largo + cuore bianco brillante = flare da broadcast)
     const head=new THREE.Mesh(new THREE.BoxGeometry(2.4,1.0,0.3), new THREE.MeshStandardMaterial({color:0x0a1424,emissive:0xd2e4ff,emissiveIntensity:2.2,roughness:.4,toneMapped:false}));
     head.position.set(p[0],p[1]+0.6,p[2]); head.lookAt(0,1,0); scene.add(head);
-    const gl=new THREE.Sprite(glowMat); gl.scale.set(9,9,1); gl.position.set(p[0],p[1]+0.6,p[2]); scene.add(gl);
-    const core=new THREE.Sprite(coreMat); core.scale.set(3.4,3.4,1); core.position.set(p[0],p[1]+0.6,p[2]); scene.add(core);
+    const gl=new THREE.Sprite(glowMat.clone()); gl.scale.set(9,9,1); gl.position.set(p[0],p[1]+0.6,p[2]); scene.add(gl);
+    const core=new THREE.Sprite(coreMat.clone()); core.scale.set(3.4,3.4,1); core.position.set(p[0],p[1]+0.6,p[2]); scene.add(core);
+    // flare ANAMORFICO (striscia orizzontale da regia TV) che "respira" col faro
+    const st=new THREE.Sprite(glowMat.clone()); st.scale.set(13,0.7,1); st.position.set(p[0],p[1]+0.6,p[2]); st.material.opacity=0.35; scene.add(st);
+    lights.flares.push({gl,core,st,ph:fi*1.7});
   });
+  // FLASH dei telefoni in tribuna: sprite additivi che lampeggiano sul gol/parata
+  lights.crowdFlashes=[];
+  for(let i=0;i<12;i++){ const s=new THREE.Sprite(glowMat.clone()); s.scale.set(0.8,0.8,1);
+    s.position.set(rand(-28,28), rand(4.5,13), -16.6); s.material.opacity=0; scene.add(s);
+    lights.crowdFlashes.push({s,t:-1,d:0}); }
 
   // ---- PRATO PBR ----
   const grassMat=new THREE.MeshStandardMaterial({map:textures.pitch.map, normalMap:textures.pitch.nrm,
-    normalScale:new THREE.Vector2(0.42,0.42), roughness:0.88, metalness:0.0, color:0xc7e0c8, envMapIntensity:0.4});
+    normalScale:new THREE.Vector2(0.42,0.42), roughness:0.8, metalness:0.0, color:0xc7e0c8, envMapIntensity:0.55});   // sheen notturno da prato irrigato
   const grass=new THREE.Mesh(new THREE.PlaneGeometry(80,90), grassMat);
   grass.rotation.x=-Math.PI/2; grass.receiveShadow=true; scene.add(grass);
+  // zone CONSUMATE (dischetto + porta): decal radiali di erba diradata, da fine stagione
+  const wear=(x,z,r,op)=>{ const cnv=document.createElement('canvas'); cnv.width=cnv.height=128; const wx=cnv.getContext('2d');
+    const g2=wx.createRadialGradient(64,64,6,64,64,64); g2.addColorStop(0,'rgba(148,158,112,'+op+')'); g2.addColorStop(1,'rgba(148,158,112,0)');
+    wx.fillStyle=g2; wx.fillRect(0,0,128,128);
+    const t=new THREE.CanvasTexture(cnv);
+    const m=new THREE.Mesh(new THREE.CircleGeometry(r,24), new THREE.MeshBasicMaterial({map:t,transparent:true,depthWrite:false}));
+    m.rotation.x=-Math.PI/2; m.position.set(x,0.011,z); scene.add(m); };
+  wear(0,SPOT_Z,1.15,0.34); wear(0,0.8,3.4,0.28);
 
   // linee campo bianche crisp (area, dischetto, arco)
   addLine(0,0.012,0, 20,0.13);                     // linea di porta
@@ -696,6 +949,7 @@ function buildScene(textures){
   const ballMat=new THREE.MeshStandardMaterial({ map:textures.ball, roughness:.32, metalness:.08, envMapIntensity:1.15 });
   ball=new THREE.Mesh(new THREE.SphereGeometry(BALL_R,32,24), ballMat);
   ball.castShadow=true; ball.position.set(0,BALL_R,SPOT_Z); scene.add(ball);
+  ball.userData.classicMap=textures.ball; applyBallSkin();   // skin sbloccabili (oro/fuoco), default classica
   // ombra di contatto (decal a terra che scala con l'altezza)
   ballShadow=new THREE.Mesh(new THREE.CircleGeometry(BALL_R*1.5,24), new THREE.MeshBasicMaterial({color:0x000000,transparent:true,opacity:.4,depthWrite:false}));
   ballShadow.rotation.x=-Math.PI/2; ballShadow.position.set(0,0.014,SPOT_Z); scene.add(ballShadow);
@@ -1087,6 +1341,9 @@ function buildNetShatter(){           // pool di segmenti = fili spezzati della 
     seg.visible=false; seg.userData={v:new THREE.Vector3(),w:new THREE.Vector3()}; g.add(seg); }
   g.userData={t:-1}; g.visible=false; return g;
 }
+// festa in tribuna: n flash telefono con ritardi casuali (0..1.4s)
+function crowdFlashParty(n){ if(!lights.crowdFlashes) return; let k=0;
+  for(const f of lights.crowdFlashes){ if(k++>=n) break; f.t=0; f.d=rand(0,1.4); } }
 function burstConfetti(x,y){
   const p=confetti, pos=p.geometry.attributes.position.array, vel=p.userData.vel, N=p.userData.N;
   for(let i=0;i<N;i++){ pos[i*3]=x+rand(-0.5,0.5); pos[i*3+1]=y+rand(-0.2,0.4); pos[i*3+2]=-GD+rand(-0.2,0.2);
@@ -1216,6 +1473,7 @@ const guessBiasOf=()=>clamp(streak*CONFIG.guessBiasGrow,0,0.7); // 0=tira a caso
 function setState(s){ engine.setState(s); }
 function startGame(){ streak=0; shotNum=0; goals5=0; aleSaves=0; suddenDeath=false; duelResult=''; fiveRes=[]; aimHist=[]; lastShotPNG=null; specialArmed=false;
   if(!challengeFromURL) roundSeed=Math.floor(Math.random()*2.1e9).toString(36);   // nuovo seed ogni partita (la SFIDA da URL lo fissa)
+  Sound.setDrama(false); Sound.intensity=0;
   resetForShot(); Sound.ac(); Sound.musicStart(); Sound.crowd(0.04); Sound.sfx(880,.06); setState(STATE.GAME_PLAYING); refWhistle(); }
 function resetForShot(){
   shot=null; ball.position.set(0,BALL_R,SPOT_Z); ball.scale.set(1,1,1);
@@ -1235,6 +1493,8 @@ function resetForShot(){
 function newAim(){ resetForShot(); setState(STATE.GAME_PLAYING); refWhistle(); if(isKeeper()) Telecro.tauntKeeper(); else Telecro.taunt();
   const tension = MODE==='five' ? (suddenDeath?1:shotNum/5) : Math.min(1,streak/10);
   Sound.crowd(0.045 + tension*0.09);                 // il coro sale con la tensione
+  Sound.setIntensity(tension);                       // la MUSICA accelera e si arricchisce con la posta in gioco
+  Sound.setDrama(suddenDeath);                       // spareggio: ostinato minore + battito cardiaco
   if(suddenDeath) showTelecro('SPAREGGIO! Questo tiro decide tutto 😱'); }
 // dopo ogni rigore: infinita = morte improvvisa; 5 rigori = continua fino a 5
 function afterShot(scored){
@@ -1259,6 +1519,26 @@ function afterShot(scored){
   } else { if(scored) newAim(); else gameOver(); }
 }
 
+/* ----- VARIETÀ DI TIRO: lo stile emerge dal GESTO di mira (niente menu extra)
+   · CUCCHIAIO: tocco morbido (poca potenza) mirato alto -> palla lenta a campana.
+     Beffa il portiere che si tuffa, ma se lui RESTA in piedi la prende quasi sempre.
+   · RASOIATA: botta potente rasoterra -> palla tesa e veloce, difficile da
+     raggiungere in basso (dy penalizzato), ma tempi piu stretti per te.
+   Stessa cinematica usata da tiro E anteprima traiettoria (il giocatore la VEDE). */
+function shotStyleOf(tx,ty,p){
+  if(p<0.34 && ty>GH*0.52) return 'chip';
+  if(p>0.72 && ty<0.62)    return 'low';
+  return 'normal';
+}
+function shotKinematics(style,p){
+  let speed=lerp(CONFIG.ballSpeedMin,CONFIG.ballSpeedMax,p);
+  if(style==='chip') speed*=0.62; else if(style==='low') speed*=1.12;
+  const dz=Math.abs(SPOT_Z);
+  const dur= style==='chip'? clamp(dz/speed,0.72,1.15) : style==='low'? clamp(dz/speed,0.36,0.82) : clamp(dz/speed,0.42,0.95);
+  let arcH=CONFIG.gravity*dur*dur/8;
+  if(style==='chip') arcH=Math.max(arcH*1.9,1.5); else if(style==='low') arcH*=0.22;
+  return {speed,dur,arcH};
+}
 // risolve target/risultato al rilascio del drag
 function shoot(){
   Sound.ac();
@@ -1271,11 +1551,9 @@ function shoot(){
   const curl=aim.curl; // -1..1 lateralità voluta
 
   const target=new THREE.Vector3(tx,ty,0);
-  let speed=lerp(CONFIG.ballSpeedMin,CONFIG.ballSpeedMax,p);
-  if(special) speed*=1.95;                          // tiro speciale: 2x velocità
-  // durata ~ distanza/velocità (z da SPOT a 0)
-  const dz=Math.abs(SPOT_Z); const dur=clamp(dz/speed, special?0.26:0.42, 0.95);
-  const arcH=CONFIG.gravity*dur*dur/8;            // apice arco
+  const style=special?'normal':shotStyleOf(tx,ty,p);   // cucchiaio/rasoterra dal gesto di mira
+  let {speed,dur,arcH}=shotKinematics(style,p);
+  if(special){ speed*=1.95; dur=clamp(Math.abs(SPOT_Z)/speed,0.26,0.95); arcH=CONFIG.gravity*dur*dur/8; }  // tiro speciale: 2x velocità
   const curlAcc=curl*CONFIG.curlMax;              // accel laterale (m/s^2) -> deviazione = .5*a*t^2
 
   // ----- AI portiere: indovina lato+altezza con bias crescente + errore -----
@@ -1305,6 +1583,11 @@ function shoot(){
     readProb += 0.18*hesit;                                   // esiti -> ti anticipa
     guessSide=(rng()<clamp(readProb,0,0.95))?trueSide:-trueSide;   // mai 100%: il tuffo resta leggibile
   }
+  // CUCCHIAIO: salendo di livello il portiere lo "annusa" e resta in piedi (e te lo para)
+  if(style==='chip' && rng()<0.26+bias*0.5) guessSide=0;
+  // GAMBLE umano: a streak alto ogni tanto parte in ANTICIPO sul suo istinto —
+  // reattivo ma impreciso: piu para d'istinto, piu e' beffabile con freddezza
+  const gamble = streak>=6 && rng()<0.16;
   let guess;
   if(guessSide===0) guess=rr(-0.28,0.28);
   else if(guessSide===trueSide) guess = endX*0.84 + (rng()*2-1)*errorOf()*0.22; // tuffo VERSO la palla -> la prende
@@ -1318,8 +1601,13 @@ function shoot(){
   if(special) reach*=0.5;                                     // 2x velocità: i guantoni quasi non arrivano -> forza il GOL se l'AI non para
   const inGoal = Math.abs(endX)<HALF-0.02 && ty>0.06 && ty<GH-0.02;
   const hitPost = !inGoal && Math.abs(Math.abs(endX)-HALF)<0.16 && ty<GH+0.05; // legno
-  const dx=(endX-guess)/reach, dy=(ty-guessY)/(reach*0.95);  // ellisse di parata
-  const saved = inGoal && (dx*dx+dy*dy<=1);
+  if(gamble){ guess=clamp(guess+(rng()*2-1)*0.55,-HALF+0.4,HALF-0.4); }   // il gamble sporca la lettura
+  const dyDen=reach*(style==='low'?0.72:0.95);               // rasoterra: scendere sui piedi e' piu dura
+  const dx=(endX-guess)/reach, dy=(ty-guessY)/dyDen;         // ellisse di parata
+  let saved = inGoal && (dx*dx+dy*dy<=1);
+  if(style==='chip' && inGoal){                              // CUCCHIAIO: o resta e la prende, o e' beffato
+    saved = (guessSide===0) ? (Math.abs(endX)<1.6 && ty<GH-0.12) : false;
+  }
   let result = !inGoal ? (hitPost?'POST':'MISS') : (saved?'SAVE':'GOAL');
 
   // animazione tuffo del portiere: lato + altezza
@@ -1342,7 +1630,7 @@ function shoot(){
 
   shot={ t:0, dur, from:ball.position.clone(), target, arcH, curlAcc, speed,
          guess, guessY:guessYOut, keeperFrom:keeper.position.x, reach, result, resolved:false,
-         reaction: special?CONFIG.reactionMin/1000:reactOf(), power:p, diveSide, diveHigh, curlSign:Math.sign(curl)||1, special,
+         reaction: special?CONFIG.reactionMin/1000:(gamble?reactOf()*0.45:reactOf()), power:p, diveSide, diveHigh, curlSign:Math.sign(curl)||1, special, style,
          windup: useGLBKicker?KICK_WINDUP_GLB:KICK_WINDUP_FALLBACK, launched:false };   // RINCORSA: la palla parte al contatto
   setState(STATE.BALL_IN_FLIGHT);
   kickT=0;                                      // lean procedurale (fallback)
@@ -1378,10 +1666,13 @@ function saveShot(){
   const p=clamp(0.42+lvl*0.42+rr(-0.1,0.1),0.2,1);
   const curl=corner ? side*rr(0,0.35+lvl*0.5) : rr(-0.2,0.2);
 
+  // VARIETÀ CPU: a livello alto ogni tanto prova il CUCCHIAIO (ti punisce se ti tuffi
+  // in anticipo) o la RASOIATA; lo stile cambia arco e velocita' -> tiri mai uguali
+  let style='normal';
+  if(lvl>0.12 && rng()<0.10+lvl*0.14){ style='chip'; tx=rr(-0.9,0.9); ty=rr(GH*0.6,GH-0.28); }
+  else if(ty<0.6 && p>0.7) style='low';
   const target=new THREE.Vector3(tx,ty,0);
-  const speed=lerp(CONFIG.ballSpeedMin,CONFIG.ballSpeedMax,p);
-  const dz=Math.abs(SPOT_Z); const dur=clamp(dz/speed,0.42,0.95);
-  const arcH=CONFIG.gravity*dur*dur/8;
+  const {speed,dur,arcH}=shotKinematics(style, style==='chip'?Math.min(p,0.3):p);
   const curlAcc=curl*CONFIG.curlMax;
 
   // --- il TUFFO UMANO: dove ha trascinato (guess/guessY), con reach generoso ma calante ---
@@ -1391,7 +1682,7 @@ function saveShot(){
   const endX=tx;
   const inGoal = Math.abs(endX)<HALF-0.02 && ty>0.06 && ty<GH-0.02;
   const hitPost = !inGoal && Math.abs(Math.abs(endX)-HALF)<0.16 && ty<GH+0.05;
-  const dx=(endX-guess)/reach, dy=(ty-guessY)/(reach*0.95);
+  const dx=(endX-guess)/reach, dy=(ty-guessY)/(reach*(style==='low'?0.72:0.95));
   const saved = inGoal && (dx*dx+dy*dy<=1);
   const result = !inGoal ? (hitPost?'POST':'MISS') : (saved?'SAVE':'GOAL');
 
@@ -1400,8 +1691,9 @@ function saveShot(){
 
   shot={ t:0, dur, from:ball.position.clone(), target, arcH, curlAcc, speed,
          guess, guessY, keeperFrom:keeper.position.x, reach, result, resolved:false,
-         reaction:0.05, power:p, diveSide, diveHigh, curlSign:Math.sign(curl)||1, special:false,
-         windup: useGLBKicker?KICK_WINDUP_GLB:KICK_WINDUP_FALLBACK, launched:false };   // anche la CPU fa la rincorsa
+         reaction:0.05, power:p, diveSide, diveHigh, curlSign:Math.sign(curl)||1, special:false, style,
+         // FINTA: a livello alto la CPU spezza la rincorsa (windup allungato) -> non ti fidare del ritmo
+         windup:(useGLBKicker?KICK_WINDUP_GLB:KICK_WINDUP_FALLBACK)*(rng()<0.20+lvl*0.28? rr(1.25,1.8):1), launched:false };
   setState(STATE.BALL_IN_FLIGHT);
   kickT=0; startKickerKick(); camPunchT=0; slowmo=0; haptic(14);
 }
@@ -1421,17 +1713,24 @@ function resolveShot(){
     burstConfetti(shot.target.x,Math.max(0.6,shot.target.y));
     if(incrocio){ burstConfetti(-shot.target.x*0.5,1.5); setTimeout(()=>burstConfetti(shot.target.x*0.7,1.2),120); }  // festa extra all'incrocio
     engine.view.burstAt3D(tmpV2.set(shot.target.x,Math.max(0.4,shot.target.y),-GD),'goal');   // scintille sulla rete
-    Sound.sfx(880,.07); setTimeout(()=>Sound.sfx(1320,.11),85); setTimeout(()=>Sound.sfx(1760,.13),190); Sound.roar();
+    Sound.netSwish(); Sound.sfx(880,.07); setTimeout(()=>Sound.sfx(1320,.11),85); setTimeout(()=>Sound.sfx(1760,.13),190); Sound.roar();
     speedLines(); engine.view.popWord(incrocio?'EUROGOOOL!':'GOOOOL!','#FF0000');   // onomatopea rossa + bordo nero (canvas)
     if(shot.special){ engine.view.popWord('SUPERGOOOL! 🌈','#ff3cac',true); engine.view.shake(1.2);   // gol da tiro speciale
       for(let q=0;q<3;q++) setTimeout(()=>burstConfetti(rand(-2.5,2.5),rand(1,2.2)),q*110); }
+    // ---- TROFEI (progressione locale, non blocca mai il flusso) ----
+    try{ Progress.award('gol1');
+      if(incrocio) Progress.award('incrocio');
+      if(shot.special) Progress.award('super');
+      if(shot.style==='chip') Progress.award('cucchiaio');
+      if(shot.style==='low' && shot.power>0.72) Progress.award('rasoiata');
+      if(streak>=5) Progress.award('streak5'); if(streak>=10) Progress.award('streak10'); }catch(e){}
     haptic([0,40,30,70]); slowmo=1; setState(STATE.GOAL_ANIMATION);
   } else {
     shakeMag=CONFIG.shakeOnSave;
-    if(r==='SAVE'){ aleSaves++; showResult('PARATO!','#ff9d6a'); engine.view.popWord('PARATAAA!','#FFFF00'); Sound.sfx(200,.16,'sawtooth'); Sound.groan();   // onomatopea gialla (canvas)
+    if(r==='SAVE'){ aleSaves++; showResult('PARATO!','#ff9d6a'); engine.view.popWord('PARATAAA!','#FFFF00'); Sound.gloveThud(); Sound.sfx(200,.16,'sawtooth'); Sound.groan();   // onomatopea gialla (canvas)
       engine.view.burstAt3D(tmpV2.set(shot.guess,shot.guessY||1.0,KEEPER_Z),'save');   // polvere/scintille dai guantoni
       HUD.flash.classList.remove('on'); HUD.flash.classList.add('save'); void HUD.flash.offsetWidth; HUD.flash.classList.add('on'); }
-    else if(r==='POST'){ showResult('PALO!','#ffd884'); engine.view.popWord('PALO!','#ffd24a'); engine.view.burstAt3D(tmpV2.set(Math.sign(shot.target.x)*HALF,shot.target.y,0),'save'); Sound.sfx(420,.05,'square',0.25); setTimeout(()=>Sound.sfx(160,.18,'triangle'),60); Sound.groan(); }
+    else if(r==='POST'){ showResult('PALO!','#ffd884'); engine.view.popWord('PALO!','#ffd24a'); engine.view.burstAt3D(tmpV2.set(Math.sign(shot.target.x)*HALF,shot.target.y,0),'save'); Sound.postClang(); Sound.groan(); }
     else { showResult('FUORI!','#ffd28a'); engine.view.popWord('FUORI!','#ffffff'); Sound.sfx(150,.20,'triangle'); Sound.groan(); }
     haptic([0,130]); slowmo=1; setState(STATE.SAVE_ANIMATION);
   }
@@ -1457,6 +1756,7 @@ function resolveKeeper(r){
       burstConfetti(shot.guess,Math.max(0.6,shot.guessY||1.2));
       HUD.flash.classList.remove('on'); HUD.flash.classList.add('save'); void HUD.flash.offsetWidth; HUD.flash.classList.add('on');
       haptic([0,40,30,70]);
+      try{ if(streak>=3) Progress.award('parata3'); if(streak>=8) Progress.award('muro8'); }catch(e){}
     } else if(r==='POST'){ showResult('PALO! 😅','#ffd884'); engine.view.popWord('PALO!','#ffd24a'); Sound.sfx(420,.05,'square',0.25); setTimeout(()=>Sound.sfx(160,.18,'triangle'),60); }
     else { showResult('FUORI! 😮‍💨','#ffd28a'); engine.view.popWord('FUORI!','#ffffff'); Sound.sfx(150,.16,'triangle'); }
     slowmo=1; setState(STATE.SAVE_ANIMATION);
@@ -1464,6 +1764,7 @@ function resolveKeeper(r){
   syncHUD();
 }
 function gameOver(){ Sound.musicStop(); Sound.crowd(0); Sound.sfx(180,.2); setTimeout(()=>Sound.sfx(90,.3),130);
+  try{ if(MODE==='five' && duelResult==='win') Progress.award('duello'); }catch(e){}   // vinci il duello -> sblocchi ALE
   if(isKeeper()){
     if(MODE!=='five'){ try{ const pb=+(localStorage.getItem('rigk_best')||0); if(streak>pb) localStorage.setItem('rigk_best',streak); }catch(e){} }
     setState(STATE.GAME_OVER); return;                       // il portiere ha un suo record separato (no leaderboard nomi)
@@ -1489,6 +1790,16 @@ function update(dt){
   if(camPunchT>0) camPunchT=Math.max(0,camPunchT-dt);
   if(slowmo>0) slowmo=Math.max(0,slowmo-dt/(CONFIG.slowmoMs*(isManga()?1.6:1)/1000));   // slow-mo più lunga e drammatica in anime
 
+  // RIFLETTORI VIVI: micro-pulsazione dei flare (respiro elettrico, fase diversa per faro)
+  if(lights.flares) for(const f of lights.flares){
+    const tw=0.86+0.11*Math.sin(stateT*2.1+f.ph)+0.03*Math.sin(stateT*13+f.ph*3);
+    f.gl.material.opacity=tw; f.core.material.opacity=0.7+0.3*tw; f.st.material.opacity=0.3*tw; }
+  // FLASH tribuna: lampeggi brevi scaglionati (festa dopo gol/parata)
+  if(lights.crowdFlashes) for(const f of lights.crowdFlashes){ if(f.t<0) continue; f.t+=dt;
+    const ph=f.t-f.d;
+    f.s.material.opacity = ph>0 ? Math.sin(Math.PI*clamp(ph/0.22,0,1))*0.9 : 0;
+    if(ph>0.24){ f.t=-1; f.s.material.opacity=0; } }
+
   // idle keeper bounce quando si gioca
   if(state===STATE.GAME_PLAYING){
     const b=Math.sin(stateT*3.2)*0.5+0.5;
@@ -1513,7 +1824,9 @@ function update(dt){
       keeper.position.y=-0.05*rp2; keeper.rotation.z*=0.9;
     } else {
     if(!shot.launched){ shot.launched=true;               // CONTATTO: suono del calcio + linee cinetiche
-      Sound.sfx(360+shot.power*320,.08,'square',0.2); speedLines(); haptic(10); }
+      Sound.kick(shot.power); speedLines(); haptic(10);
+      if(shot.style==='chip'){ engine.view.popWord('CUCCHIAIO!','#9fd0ff'); showTelecro(isKeeper()?'🥄 Cucchiaio! NON tuffarti in anticipo…':'🥄 CUCCHIAIO! Che coraggio…'); }
+      else if(shot.style==='low'){ engine.view.popWord('RASOIATA!','#ffd24a'); } }
     const p=clamp(ft/shot.dur,0,1);
     // posizione: lerp z, arco su y, curva su x (Magnus -> dev = .5*a*t^2)
     const tt=p*shot.dur;
@@ -1528,6 +1841,8 @@ function update(dt){
     // ombra contatto: scala/opacità con altezza
     updateBallShadow();
     pushTrail();
+    // rasoterra: la palla "pettina" l'erba e solleva zolle
+    if(shot.style==='low' && ball.position.y<0.35 && Math.random()<0.55) engine.view.burstGrass(ball.position);
     // portiere: reazione poi tuffo verso guess con posa parametrica
     const rp=clamp((ft-shot.reaction)/Math.max(0.06,shot.dur-shot.reaction),0,1);
     const e=easeOutCubic(rp);
@@ -1653,13 +1968,18 @@ function updateAimVisuals(){
   // colore mirino in base alla bontà (dentro porta = verde, fuori = rosso)
   const inGoal=Math.abs(aim.tx)<HALF-0.02 && aim.ty>0.06 && aim.ty<GH-0.02;
   aimRing.material.color.setHex(inGoal?0x39ff7a:0xff4d5e);
+  // il mirino "dice" lo stile del tiro: celeste = cucchiaio, oro = rasoiata
+  if(inGoal && !isKeeper()){ const st=shotStyleOf(aim.tx,aim.ty,clamp(aim.power,0,1));
+    if(st==='chip') aimRing.material.color.setHex(0x9fd0ff);
+    else if(st==='low') aimRing.material.color.setHex(0xffd24a); }
   const sc=1+0.15*Math.sin(stateT*8); aimRing.scale.setScalar(sc);
   // anteprima traiettoria (campiona la stessa fisica)
   drawTrajPreview();
 }
 function drawTrajPreview(){
-  const p=clamp(aim.power,0,1); const speed=lerp(CONFIG.ballSpeedMin,CONFIG.ballSpeedMax,p);
-  const dz=Math.abs(SPOT_Z); const dur=clamp(dz/speed,0.42,0.95); const arcH=CONFIG.gravity*dur*dur/8;
+  const p=clamp(aim.power,0,1);
+  const style=isKeeper()?'normal':shotStyleOf(aim.tx,aim.ty,p);   // l'anteprima MOSTRA il cucchiaio/rasoterra
+  const {dur,arcH}=shotKinematics(style,p);
   const curlAcc=aim.curl*CONFIG.curlMax; const from=new THREE.Vector3(0,BALL_R,SPOT_Z); const tg=new THREE.Vector3(aim.tx,aim.ty,0);
   const arr=trajLine.geometry.attributes.position.array, N=trajLine.userData.N;
   for(let i=0;i<N;i++){ const t=i/(N-1); const tt=t*dur;
@@ -1779,9 +2099,20 @@ function showReveal(poster){ const r=document.getElementById('reveal'), im=docum
   im.src=poster; r.classList.remove('show'); void r.offsetWidth; r.classList.add('show');
   let done=false; const close=()=>{ if(done)return; done=true; r.classList.remove('show'); r.removeEventListener('pointerdown',close); };
   setTimeout(close,2100); r.addEventListener('pointerdown',close); }
-function pickPlayer(key){ PLAYER=PLAYERS[key]||null; try{ if(key) localStorage.setItem('rig_player',key); }catch(e){}
-  applyPlayer(); document.getElementById('playerSelect').classList.remove('show'); if(PLAYER&&PLAYER.poster) showReveal(PLAYER.poster); }
+function pickPlayer(key){
+  if(key==='Ale' && !Progress.aleUnlocked()){                      // ALE e' uno sblocco: niente scorciatoie
+    const c=document.getElementById('cardAle'); if(c){ c.classList.remove('deny'); void c.offsetWidth; c.classList.add('deny'); }
+    showTelecro('🔒 ALE si sblocca vincendo il DUELLO dei 5 RIGORI!'); Sound.sfx(160,.12,'triangle'); haptic(40); return; }
+  PLAYER=PLAYERS[key]||null; try{ if(key) localStorage.setItem('rig_player',key); }catch(e){}
+  const cd=document.querySelector('#playerSelect .pscard[data-player="'+key+'"]');
+  if(cd){ cd.classList.remove('sel'); void cd.offsetWidth; cd.classList.add('sel'); Sound.sfx(760,.06); setTimeout(()=>Sound.sfx(1140,.08),70); }
+  applyPlayer(); setTimeout(()=>document.getElementById('playerSelect').classList.remove('show'), 260);
+  if(PLAYER&&PLAYER.poster) showReveal(PLAYER.poster); }
+// stato lock della card ALE (chiamata da syncHUD: economica, solo classi)
+function updatePlayerCards(){ const c=document.getElementById('cardAle'); if(c) c.classList.toggle('unlocked', Progress.aleUnlocked()); }
 function syncHUD(){
+  updatePlayerCards();
+  const _mt=document.getElementById('menuTrof'); if(_mt) _mt.textContent=Progress.count()+'/'+Progress.DEFS.length;
   document.getElementById('playerSelect').classList.toggle('show', state===STATE.MENU_SCREEN && !PLAYER);
   document.getElementById('repick').classList.toggle('show', (state===STATE.MENU_SCREEN||state===STATE.GAME_OVER));
   const five=(MODE==='five'), keep=isKeeper();
@@ -1890,6 +2221,12 @@ const Telecro={
       GOAL:["GIULIOOO! Il 7 magico colpisce ancora ⚡","Gol del 7! Giulio si traveste da fuoriclasse 🌟"],
       SAVE:["Ale dice no a Giulio! Il 7 resta a secco 🧤","Parata su Giulio: niente magie per il numero 7 ✋"],
       INCROCIO:["GIULIO SETTE PIENO! Il 7 nel sette, poesia ⚡🎯"]
+    },
+    ALE:{
+      GOAL:["ALE segna ad ALE! Il Re batte se stesso 👑🤯","Gol! Ale sapeva dove si sarebbe tuffato… ovvio 🔮👑","Il Re della Brace non sbaglia nemmeno contro il Re della Brace 🔥"],
+      MISS:["Ale sbaglia contro Ale: era tutto calcolato… forse 🤔👑","Fuori! Il Re si e' distratto col cigarro 🚬"],
+      SAVE:["ALE para ALE! Chi vince ha ragione 👑🧤","Paradosso al Camp Nou: il Re ferma il Re 🤯"],
+      INCROCIO:["ALE ALL'INCROCIO contro se stesso! Roba da matti 👑🎯"]
     }
   },
   pick(a){ return a[(Math.random()*a.length)|0].replace(/\{P\}/g,PNAME()); },
@@ -1916,7 +2253,7 @@ function renderShootrack(){ const el=document.getElementById('shootrack'); if(!e
   el.classList.toggle('on',on); if(!on){ el.innerHTML=''; return; }
   let h=''; for(let i=0;i<5;i++){ const r=fiveRes[i]; h+='<span class="d'+(r==='g'?' g':(r==='x'?' x':''))+'"></span>'; }
   el.innerHTML=h; }
-function refWhistle(){ Sound.ac(); Sound.sfx(2000,.06,'square',.12); setTimeout(()=>Sound.sfx(2500,.09,'square',.12),55); }
+function refWhistle(){ Sound.ac(); Sound.whistle(true); }   // trillo vero da arbitro (AM ~38Hz)
 
 /* ---- VOCE: telecronaca/sfottò parlati (Web Speech API, nessun file audio) ---- */
 let _ttsVoice=null;
@@ -1924,7 +2261,7 @@ function ttsPick(){ try{ const vs=(window.speechSynthesis&&speechSynthesis.getVo
   _ttsVoice = vs.find(v=>/^it([-_]|$)/i.test(v.lang)) || vs.find(v=>/ital/i.test(v.name||'')) || null; }catch(e){} return _ttsVoice; }
 function initTTS(){ try{ if(!window.speechSynthesis) return; ttsPick();
   if('onvoiceschanged' in speechSynthesis) speechSynthesis.onvoiceschanged=ttsPick; }catch(e){} }
-function speak(text, ale){ if(!Sound.sfxOn || !window.speechSynthesis) return;
+function speak(text, ale){ if(!Sound.voiceOn || !window.speechSynthesis) return;   // VOCE: toggle dedicato (arc_voice)
   try{ let s=String(text)
       .replace(/([\uD800-\uDBFF][\uDC00-\uDFFF])|[←-⯿☀-➿️‍]/g,' ') // togli emoji/frecce/simboli
       .replace(/[«»"]/g,'')
@@ -2026,7 +2363,38 @@ document.getElementById('challengeBtn').addEventListener('click',e=>{ e.stopProp
   cr.addEventListener('click',()=>{ if(state===STATE.MENU_SCREEN||state===STATE.GAME_OVER) document.getElementById('playerSelect').classList.add('show'); }); } })();
 if(PLAYER) applyPlayer();
 document.getElementById('nameInput').addEventListener('keydown',e=>{ e.stopPropagation(); if(e.key==='Enter') saveName(); });
-HUD.snd.addEventListener('click',()=>{ const on=Sound.toggle(); HUD.snd.textContent=on?'♪':'✕'; if(on&&state===STATE.GAME_PLAYING)Sound.crowd(0.04); });
+HUD.snd.addEventListener('click',()=>{ const on=Sound.toggle(); HUD.snd.textContent=on?'♪':'✕'; if(on&&state===STATE.GAME_PLAYING)Sound.crowd(0.04); renderSettings(); });
+
+/* ------------------------ PANNELLO IMPOSTAZIONI -------------------------- */
+function renderSettings(){
+  const sw=(id,on)=>{ const el=document.querySelector(id+' .sw'); if(el){ el.textContent=on?'ON':'OFF'; el.classList.toggle('off',!on); } };
+  sw('#setMusic',Sound.musicOn); sw('#setSfx',Sound.sfxOn); sw('#setVoice',Sound.voiceOn);
+  document.querySelectorAll('.ballopt').forEach(b=>{ const k=b.dataset.ball, un=Progress.ballUnlocked(k);
+    b.classList.toggle('locked',!un); b.classList.toggle('active',BALLSKIN===k);
+    const lab=b.querySelector('small');
+    if(lab) lab.textContent = k==='classic'?'CLASSICO' : (k==='gold'?(un?'ORO':'ORO 🔒'):(un?'FUOCO':'FUOCO 🔒')); });
+  const total=Progress.DEFS.length, n=Progress.count();
+  const tc=document.getElementById('trofCount'); if(tc) tc.textContent=n+'/'+total;
+  const mt=document.getElementById('menuTrof'); if(mt) mt.textContent=n+'/'+total;
+  const d=Progress.data();
+  const tl=document.getElementById('trofList');
+  if(tl) tl.innerHTML=Progress.DEFS.map(a=>{ const ok=!!d[a.id];
+    return '<div class="trow'+(ok?' ok':'')+'"><b>'+a.ic+'</b><div><div class="tt">'+a.t+'</div><div class="td">'+a.d+(a.unlock?(' · sblocca: '+a.unlock):'')+'</div></div><span>'+(ok?'✔':'🔒')+'</span></div>'; }).join('');
+}
+function openSettings(){ renderSettings(); document.getElementById('settings').classList.add('show'); Sound.sfx(660,.05); }
+function closeSettings(){ document.getElementById('settings').classList.remove('show'); Sound.sfx(440,.05); }
+document.getElementById('gear').addEventListener('click',e=>{ e.stopPropagation(); openSettings(); });
+document.getElementById('trofBtn').addEventListener('click',e=>{ e.stopPropagation(); openSettings(); });
+document.getElementById('setClose').addEventListener('click',e=>{ e.stopPropagation(); closeSettings(); });
+document.getElementById('settings').addEventListener('click',e=>{ if(e.target.id==='settings') closeSettings(); });
+const _sndSync=()=>{ HUD.snd.textContent=(Sound.musicOn||Sound.sfxOn)?'♪':'✕'; };
+document.getElementById('setMusic').addEventListener('click',e=>{ e.stopPropagation(); Sound.toggleMusic(); renderSettings(); _sndSync(); });
+document.getElementById('setSfx').addEventListener('click',e=>{ e.stopPropagation(); Sound.toggleSfx(); renderSettings(); _sndSync(); });
+document.getElementById('setVoice').addEventListener('click',e=>{ e.stopPropagation(); Sound.toggleVoice(); renderSettings(); });
+document.querySelectorAll('.ballopt').forEach(b=>b.addEventListener('click',e=>{ e.stopPropagation(); const k=b.dataset.ball;
+  if(!Progress.ballUnlocked(k)){ b.classList.remove('deny'); void b.offsetWidth; b.classList.add('deny');
+    showTelecro(k==='gold'?'🔒 Pallone ORO: fai 5 gol di fila!':'🔒 Pallone FUOCO: segna col TIRO SPECIALE!'); return; }
+  setBallSkin(k); renderSettings(); Sound.sfx(880,.06); }));
 
 /* ========================== GAME ENGINE (OOP) =============================
    Architettura a classi nel singolo file. GameEngine possiede il LOOP (rAF) e
@@ -2131,6 +2499,12 @@ class View {                                     // render Three.js + layer 2D (
   // proietta un punto 3D sullo schermo e fa partire la raffica lì
   burstAt3D(v,style){ tmpV.copy(v).project(camera); if(tmpV.z>1) return;
     this.emit((tmpV.x*0.5+0.5)*innerWidth, (-tmpV.y*0.5+0.5)*innerHeight, style); }
+  // RASOIATA: zolle d'erba sollevate dalla palla che viaggia rasoterra
+  burstGrass(v){ tmpV.copy(v).project(camera); if(tmpV.z>1) return;
+    const sx=(tmpV.x*0.5+0.5)*innerWidth, sy=(-tmpV.y*0.5+0.5)*innerHeight;
+    let used=0; for(const p of this.parts){ if(p.life>0) continue; if(used++>=4) break;
+      p.x=sx+rand(-4,4); p.y=sy; p.vx=rand(-80,80); p.vy=rand(-190,-50); p.g=860; p.r=rand(1.4,2.6);
+      p.c= isManga()? '#7dff9a':'#7fbf6a'; p.life=p.life0=rand(0.25,0.45); } }
   // ANIME: rete SFONDATA — i fili spezzati volano via dal punto d'impatto, dentro/oltre la porta
   bustNet(ox,oy){ const g=netShatter; if(!g) return;
     const cx=ox, cy=clamp(GH/2+oy,0.2,GH-0.1), cz=-GD+0.06;
@@ -2211,8 +2585,10 @@ class View {                                     // render Three.js + layer 2D (
     const al = w.t>0.6 ? 1-(w.t-0.6)/0.2 : 1;                        // fade negli ultimi 200ms
     const fs = Math.min(W,H)*0.155;
     c.save(); c.globalAlpha=clamp(al,0,1); c.textAlign='center'; c.textBaseline='middle';
-    c.translate(W/2, H*0.36); c.rotate(-0.04); c.scale(sc,sc);
-    c.font='800 '+fs+'px Arial,sans-serif'; c.lineJoin='round';
+    c.font='800 '+fs+'px Arial,sans-serif';
+    const fit=Math.min(1,(W*0.94)/Math.max(1,c.measureText(w.text).width));   // la parola STA nello schermo (portrait)
+    c.translate(W/2, H*0.36); c.rotate(-0.04); c.scale(sc*fit,sc*fit);
+    c.lineJoin='round';
     c.lineWidth=Math.max(7,fs*0.13); c.strokeStyle='#000'; c.strokeText(w.text,0,0);   // bordo nero spesso
     c.fillStyle=w.color; c.fillText(w.text,0,0);
     c.restore(); c.globalAlpha=1;
@@ -2246,7 +2622,8 @@ class GameEngine {                               // orchestratore: loop + FSM
 }
 const engine = new GameEngine();
 // HOOK DI TEST (solo con ?kdbg=1): guida deterministica per verifica automatica (portiere)
-try{ if(new URLSearchParams(location.search).get('kdbg')==='1'){
+// kdbg=1: hook + portiere che para sempre (debug tuffi) · kdbg=2: solo hook (esiti veri)
+try{ const _kd=new URLSearchParams(location.search).get('kdbg'); if(_kd==='1'||_kd==='2'){
   window.__rig={ engine, STATE,
     get state(){return state;}, get shot(){return shot;}, get streak(){return streak;},
     get goals5(){return goals5;}, get aleSaves(){return aleSaves;}, get role(){return ROLE;},
@@ -2254,14 +2631,17 @@ try{ if(new URLSearchParams(location.search).get('kdbg')==='1'){
     get ballZ(){return ball.position.z;},
     get kickerPos(){return kickerGLB?[kickerGLB.position.x,kickerGLB.position.z]:null;},
     get keeperPos(){return [keeper.position.x,keeper.position.y];},
-    setRole(r){ ROLE=r; }, setMode(m){ MODE=m; }, setAim(x,y){ aim.tx=x; aim.ty=y; },
+    setRole(r){ ROLE=r; }, setMode(m){ MODE=m; },
+    setAim(x,y,p,c){ aim.tx=x; aim.ty=y; if(p!=null)aim.power=p; if(c!=null)aim.curl=c; },
+    get shotStyle(){ return shot?shot.style:''; }, get progress(){ return Progress.data(); },
     setPlayer(n){ PLAYER=PLAYERS[n]||PLAYER; }, startGame(){ return startGame(); },
     saveShot(){ return saveShot(); }, shoot(){ return shoot(); } };
 }}catch(e){}
 // JUICE agganciato alla FSM: screen-shake all'ingresso negli stati d'impatto
 // (PES contenuto, Anime più forte) — l'hit-stop è già nel loop (dt=0).
-engine.on(STATE.GOAL_ANIMATION, ()=>{ engine.view.shake(isManga()?1:0.55); if(isManga()) engine.view.bustNet(ripple.x,ripple.y); });  // Anime: rete sfondata
-engine.on(STATE.SAVE_ANIMATION, ()=> engine.view.shake(isManga()?1.1:0.7));
+engine.on(STATE.GOAL_ANIMATION, ()=>{ engine.view.shake(isManga()?1:0.55); if(isManga()) engine.view.bustNet(ripple.x,ripple.y);
+  crowdFlashParty(12); });  // Anime: rete sfondata · tribuna: flash dei telefoni
+engine.on(STATE.SAVE_ANIMATION, ()=>{ engine.view.shake(isManga()?1.1:0.7); crowdFlashParty(6); });
 
 function resize(){ const w=window.innerWidth,h=window.innerHeight;
   renderer.setSize(w,h); camera.aspect=w/h; camera.updateProjectionMatrix(); }
