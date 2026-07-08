@@ -283,7 +283,7 @@
 </script>
 </head>
 <body>
-<canvas id="cv" tabindex="0" role="application" aria-label="Campo di gioco 3D. Trascina col dito o usa le FRECCE per mirare, Q ed E per l'effetto, tieni premuto SPAZIO per caricare la potenza e rilascialo per tirare. Da portiere le frecce scelgono dove tuffarti e SPAZIO para."></canvas>
+<canvas id="cv" tabindex="0" role="application" aria-label="Campo di gioco 3D. Trascina col dito o usa le FRECCE per mirare, Q ed E per l'effetto, tieni premuto SPAZIO per caricare la potenza e rilascialo per tirare. Da portiere aspetta il tiro: durante il volo della palla le frecce scelgono l'angolo e SPAZIO tuffa."></canvas>
 <canvas id="fx2d" aria-hidden="true"></canvas>
 <div id="grade" aria-hidden="true"></div>
 <div id="animefx" aria-hidden="true"><div id="speedlines"></div><div id="mangaword"></div></div>
@@ -885,7 +885,21 @@ const camBase=new THREE.Vector3(0,2.75,18.2);   // camera piu' arretrata e alta:
 const camLook=new THREE.Vector3(0,1.15,-1.0);
 // MODALITÀ PORTIERE: camera DIETRO LA PORTA che guarda il dischetto — sei TU in porta,
 // l'avversario ti corre incontro e la palla arriva verso di te (niente "sembra che tiro io")
-const KCAM={ base:new THREE.Vector3(2.4,3.5,-6.6), look:new THREE.Vector3(-0.2,0.95,10.8) };   // sopra la traversa, in diagonale: vedi TE in basso e ALE che arriva
+// TELECAMERA PORTIERE v2 (stile "behind-goal TV" dei keeper game): CENTRATA dietro
+// la porta, sopra la traversa, così vedi TUTTO lo specchio + ALE che arriva in mezzo.
+// Il FOV è ADATTIVO: in verticale (telefono) si allarga quel tanto che basta per
+// tenere ENTRAMBI i pali dentro lo schermo (prima erano completamente fuori quadro).
+// Alzata e più inclinata verso il basso: ALE e la palla sul dischetto si vedono SOPRA
+// la traversa, il TUO portiere resta più in basso dentro lo specchio (niente sovrapposizioni).
+const KCAM={ base:new THREE.Vector3(0,4.8,-9.6), look:new THREE.Vector3(0,0.2,11.5) };
+const FOV_SHOOTER=50;
+function applyCamFov(){ if(!camera) return;
+  if(isKeeper()){ const dist=Math.abs(KCAM.base.z);
+    const halfW=Math.atan((HALF+0.30)/dist);                       // mezzo-angolo per coprire palo+margine
+    const v=2*Math.atan(Math.tan(halfW)/Math.max(0.2,camera.aspect))*180/Math.PI;
+    camera.fov=clamp(v,55,82);
+  } else camera.fov=FOV_SHOOTER;
+  camera.updateProjectionMatrix(); }
 const camPos=camBase.clone(), camTarget=camLook.clone();
 const raycaster=new THREE.Raycaster();
 const goalPlane=new THREE.Plane(new THREE.Vector3(0,0,1),0); // z=0
@@ -1714,7 +1728,9 @@ function startGame(){ streak=0; shotNum=0; goals5=0; aleSaves=0; suddenDeath=fal
   resetForShot(); Sound.ac();
   // AUDIO: stop tema menu / temi finali -> parte il loop di tensione gameplay
   try{ arcadeAudio._stopTheme(); arcadeAudio.playGameplayTension(); }catch(e){}
-  Sound.crowd(0.04); Sound.sfx(880,.06); setState(STATE.GAME_PLAYING); refWhistle(); }
+  Sound.crowd(0.04); Sound.sfx(880,.06); setState(STATE.GAME_PLAYING); refWhistle();
+  if(isKeeper() && kHint<2){ kHint++; setTimeout(()=>{ if(isKeeper()&&(state===STATE.GAME_PLAYING||state===STATE.BALL_IN_FLIGHT))
+    showTelecro('🧤 ASPETTA il tiro di ALE… poi TOCCA/TRASCINA dove vola la palla per tuffarti!'); },850); } }
 function resetForShot(){
   shot=null; ball.position.set(0,BALL_R,SPOT_Z); ball.scale.set(1,1,1);
   ball.rotation.set(0,0,0);
@@ -1725,12 +1741,17 @@ function resetForShot(){
   if(useGLBKicker && kickerGLB){ kickPhase=''; kickPhaseT=0; playKicker('idle');
     kickerGLB.position.set(KICK_STANCE.x,0,KICK_STANCE.z); kickerGLB.rotation.y=KICK_STANCE.yaw; }  // torna in postura di rincorsa
   aim.active=false; aim.power=0; aim.curl=0; aim.t0=0; aimRing.visible=aimDot.visible=trajLine.visible=false;
+  // PORTIERE: la CPU calcia da sola dopo una pausa di tensione (tu devi solo REAGIRE)
+  kPre=null; kAuto = isKeeper()? {t:0, delay:1.15+Math.random()*1.5} : null;
   // reset scia (incluso colore: la scia arcobaleno del tiro speciale torna bianca)
   ballTrail.userData.hist.length=0; ballTrail.userData.parts.forEach(p=>{ p.visible=false; p.material.color.setRGB(1,1,1); p.material.blending=THREE.AdditiveBlending; p.material.needsUpdate=true; });
   if(netShatter){ netShatter.userData.t=-1; netShatter.visible=false; for(const s of netShatter.children) s.visible=false; }  // rete integra
   HUD.power.classList.remove('on'); HUD.curl.classList.remove('on');
 }
 function newAim(){ resetForShot(); setState(STATE.GAME_PLAYING); refWhistle(); if(isKeeper()) Telecro.tauntKeeper(); else Telecro.taunt();
+  // COACHING (prime 2 occasioni): spiega la meccanica a reazione, poi silenzio
+  if(isKeeper() && kHint<2){ kHint++; setTimeout(()=>{ if(isKeeper()&&(state===STATE.GAME_PLAYING||state===STATE.BALL_IN_FLIGHT))
+    showTelecro('🧤 ASPETTA il tiro di ALE… poi TOCCA/TRASCINA dove vola la palla per tuffarti!'); },850); }
   const tension = MODE==='five' ? (suddenDeath?1:shotNum/5) : Math.min(1,streak/10);
   Sound.crowd(0.045 + tension*0.09);                 // il coro sale con la tensione
   Sound.setIntensity(tension);                       // la MUSICA accelera e si arricchisce con la posta in gioco
@@ -1889,18 +1910,38 @@ function shoot(){
   }
 }
 
-// MODALITÀ PORTIERE: la CPU tira, il giocatore ha già scelto il tuffo (aim.tx/ty).
-// Riusa esattamente la stessa "ellisse di parata" di shoot(): qui però il GUESS è il
-// tuffo UMANO e il TARGET lo decide la CPU (difficoltà crescente con lo streak di parate).
-function saveShot(){
-  Sound.ac();
-  specialArmed=false;                                       // niente easter egg da portiere
+/* ===================== MODALITÀ PORTIERE v2 — REAZIONE =====================
+   Come nei keeper game veri (Penalty Champions, Penalty Kick Online, FIFA):
+   1) la CPU calcia DA SOLA dopo una pausa di tensione (kAuto) — tu non "spari" niente;
+   2) tu REAGISCI durante rincorsa/volo: swipe/tap dove vola la palla = tuffo;
+   3) il TIMING conta: reagisci presto = estensione piena, tardi = braccia corte;
+   4) il volo è leggermente DILATATO (assist) a livello basso, quasi reale a livello alto.
+   Niente più tuffo cieco pre-commit: quello restava un "tiro travestito".            */
+let kAuto=null;    // timer del calcio automatico CPU {t,delay}
+let kPre=null;     // tuffo scelto PRIMA del calcio (stile "vado d'istinto"): applicato al contatto
+let kHint=0;       // quante volte abbiamo mostrato il suggerimento in questa partita
+// esito parata: stessa ellisse di shoot(), con reach scalato dal TIMING della reazione
+function keeperOutcome(guess,guessY,reachMul){
+  const lvl=clamp(streak/12,0,1);
+  const tx=shot.target.x, ty=shot.target.y, style=shot.style;
+  const inGoal = Math.abs(tx)<HALF-0.02 && ty>0.06 && ty<GH-0.02;
+  const hitPost = !inGoal && ((Math.abs(Math.abs(tx)-HALF)<0.16 && ty<GH+0.05)
+                           || (Math.abs(ty-GH)<0.12 && Math.abs(tx)<HALF+0.05));   // palo O traversa
+  const reach=clamp(2.2-lvl*0.6,1.35,2.2)*reachMul;         // guantoni generosi; a livello alto perdonano meno
+  const dx=(tx-guess)/Math.max(0.2,reach), dy=(ty-guessY)/Math.max(0.2,reach*(style==='low'?0.72:0.95));
+  const saved = inGoal && (dx*dx+dy*dy<=1);
+  return !inGoal ? (hitPost?'POST':'MISS') : (saved?'SAVE':'GOAL');
+}
+// la CPU (ALE) calcia: crea il tiro SENZA tuffo umano; l'esito di default e'
+// "portiere fermo" (riflesso corto vicino al corpo) finche' non arriva la reazione
+function cpuKick(){
+  Sound.ac(); specialArmed=false;
   const rng = roundSeed ? mulberry32((strHash(roundSeed) ^ Math.imul(shotNum+1,2654435761))>>>0) : Math.random;
   const rr=(a,b)=>a+rng()*(b-a);
   const lvl=clamp(streak/12,0,1);                           // 0 = facile … 1 = attaccante spietato
   // --- la CPU sceglie l'angolo: più preciso e più "a giro" salendo di livello ---
   const side=rng()<0.5?-1:1;
-  const corner=rng()<0.30+lvl*0.55;                         // tira all'angolo?
+  const corner=rng()<0.30+lvl*0.55;
   let tx = corner ? side*rr(HALF*0.5, HALF-0.35) : rr(-0.9,0.9);
   const high=rng()<0.22+lvl*0.45;
   let ty = high ? rr(GH*0.55, GH-0.35) : rr(0.4, GH*0.52);
@@ -1908,38 +1949,60 @@ function saveShot(){
   tx=clamp(tx,-HALF-0.6,HALF+0.6); ty=clamp(ty,0.1,GH+1.0);
   const p=clamp(0.42+lvl*0.42+rr(-0.1,0.1),0.2,1);
   const curl=corner ? side*rr(0,0.35+lvl*0.5) : rr(-0.2,0.2);
-
-  // VARIETÀ CPU: a livello alto ogni tanto prova il CUCCHIAIO (ti punisce se ti tuffi
-  // in anticipo) o la RASOIATA; lo stile cambia arco e velocita' -> tiri mai uguali
+  // VARIETÀ CPU: cucchiaio (punisce chi si butta in anticipo) o rasoiata
   let style='normal';
   if(lvl>0.12 && rng()<0.10+lvl*0.14){ style='chip'; tx=rr(-0.9,0.9); ty=rr(GH*0.6,GH-0.28); }
   else if(ty<0.6 && p>0.7) style='low';
   const target=new THREE.Vector3(tx,ty,0);
-  const {speed,dur,arcH}=shotKinematics(style, style==='chip'?Math.min(p,0.3):p);
+  const kin=shotKinematics(style, style==='chip'?Math.min(p,0.3):p);
+  // ASSIST DI REAZIONE: nel reale la palla vola ~400ms (imparabile di riflesso);
+  // dilatiamo il volo per lasciare una vera finestra umana, che si stringe col livello
+  const dur=kin.dur*(1.45-lvl*0.35);
   const curlAcc=curl*CONFIG.curlMax;
-
-  // --- il TUFFO UMANO: dove ha trascinato (guess/guessY), con reach generoso ma calante ---
-  const guess=clamp(aim.tx,-HALF-0.4,HALF+0.4);
-  const guessY=clamp(aim.ty,0.1,GH+0.3);
-  const reach=clamp(2.2-lvl*0.6,1.35,2.2);                  // guantoni umani generosi; a livello alto perdona meno
-  const endX=tx;
-  const inGoal = Math.abs(endX)<HALF-0.02 && ty>0.06 && ty<GH-0.02;
-  const hitPost = !inGoal && ((Math.abs(Math.abs(endX)-HALF)<0.16 && ty<GH+0.05)
-                           || (Math.abs(ty-GH)<0.12 && Math.abs(endX)<HALF+0.05));   // palo O traversa
-  const dx=(endX-guess)/reach, dy=(ty-guessY)/(reach*(style==='low'?0.72:0.95));
-  const saved = inGoal && (dx*dx+dy*dy<=1);
-  const result = !inGoal ? (hitPost?'POST':'MISS') : (saved?'SAVE':'GOAL');
-
-  const diveSide = guess<-0.2?-1:(guess>0.2?1:0);
-  const diveHigh = clamp((guessY-0.8)/(GH-0.8),0,1);
-
-  shot={ t:0, dur, from:ball.position.clone(), target, arcH, curlAcc, speed,
-         guess, guessY, keeperFrom:keeper.position.x, reach, result, resolved:false,
-         reaction:0.05, power:p, diveSide, diveHigh, curlSign:Math.sign(curl)||1, special:false, style,
+  shot={ t:0, dur, from:ball.position.clone(), target, arcH:kin.arcH, speed:kin.speed, curlAcc,
+         guess:keeper.position.x, guessY:1.0, keeperFrom:keeper.position.x,
+         reach:0, result:null, resolved:false, humanDive:false,
+         reaction:99, power:p, diveSide:0, diveHigh:0, curlSign:Math.sign(curl)||1, special:false, style,
          // FINTA: a livello alto la CPU spezza la rincorsa (windup allungato) -> non ti fidare del ritmo
          windup:(useGLBKicker?KICK_WINDUP_GLB:KICK_WINDUP_FALLBACK)*(rng()<0.20+lvl*0.28? rr(1.25,1.8):1), launched:false };
+  shot.result=keeperOutcome(shot.guess,1.0,0.30);           // esito "nessun tuffo": blocca SOLO la palla addosso
   setState(STATE.BALL_IN_FLIGHT);
   kickT=0; startKickerKick(); camPunchT=0; slowmo=0; haptic(14);
+  // tuffo D'ISTINTO scelto prima del calcio: si applica ORA (reach pieno, ma il cucchiaio punisce)
+  if(kPre){ const kp=kPre; kPre=null; keeperDiveNow(kp.tx,kp.ty); }
+}
+// LA REAZIONE: swipe/tap durante il volo -> il portiere si tuffa SUBITO verso quel punto.
+// Reagire tardi accorcia il reach (le braccia non arrivano piu' all'angolo).
+function keeperDiveNow(tx,ty){
+  if(!isKeeper()||state!==STATE.BALL_IN_FLIGHT||!shot||shot.humanDive) return false;
+  const ft=shot.t-(shot.windup||0);
+  const q=clamp(ft/shot.dur,0,1);
+  if(q>0.92) return false;                                  // troppo tardi: palla gia' sulla linea
+  const late=clamp((q-0.40)/0.52,0,1);                      // fino al 40% del volo = estensione piena
+  const reachMul=1-late*0.62;
+  const guess=clamp(tx,-HALF-0.4,HALF+0.4), guessY=clamp(ty,0.1,GH+0.3);
+  shot.humanDive=true;
+  shot.guess=guess; shot.guessY=guessY;
+  shot.diveSide = guess<-0.2?-1:(guess>0.2?1:0);
+  shot.diveHigh = clamp((guessY-0.8)/(GH-0.8),0,1);
+  shot.reaction = Math.max(0.02,ft);                        // fa scattare il tuffo IMMEDIATAMENTE (GLB: soglia 0.55*reaction gia' superata; fallback: parte da qui)
+  shot.reach=reachMul;
+  shot.result=keeperOutcome(guess,guessY,reachMul);
+  Sound.sfx(660,.05,'square',0.25); haptic(20);             // feedback istantaneo: hai scelto l'angolo
+  return true;
+}
+// compat (tastiera SPAZIO/INVIO, __rig, vecchi punti di chiamata): in volo = tuffo
+// al punto mirato; prima del calcio = scelta d'istinto memorizzata (e ALE calcia subito)
+function saveShot(){
+  if(!isKeeper()) return false;
+  if(state===STATE.BALL_IN_FLIGHT) return keeperDiveNow(aim.tx,aim.ty);
+  if(state===STATE.GAME_PLAYING){
+    kPre={tx:aim.tx,ty:aim.ty};
+    if(kAuto) kAuto.delay=Math.min(kAuto.delay, kAuto.t+0.35);   // ti sei mosso: ALE non aspetta
+    Sound.sfx(440,.04,'square',0.2); haptic(12);
+    return true;
+  }
+  return false;
 }
 
 function resolveShot(){
@@ -1987,6 +2050,7 @@ function resolveKeeper(r){
   if(r==='GOAL'){                                            // la CPU segna -> hai preso gol
     goals5++; shakeMag=CONFIG.shakeOnGoal; ripple={t:0,x:shot.target.x,y:shot.target.y};
     showResult('GOL SUBITO','#ff6a6a'); engine.view.popWord('GOOOOL!','#FF0000');
+    if(shot && !shot.humanDive) setTimeout(()=>{ if(isKeeper()) showTelecro('👀 Fermo lì non si para: tocca/trascina DURANTE il volo per tuffarti!'); },800);
     engine.view.burstAt3D(tmpV2.set(shot.target.x,Math.max(0.4,shot.target.y),-GD),'goal');
     Sound.sfx(200,.18,'sawtooth'); Sound.groan();
     HUD.flash.classList.remove('on','save'); void HUD.flash.offsetWidth; HUD.flash.classList.add('on');
@@ -2058,6 +2122,8 @@ function update(dt){
            keeper.rotation.z=Math.sin(stateT*0.9)*0.045; }                          // il peso si sposta col corpo
     ball.rotation.y+=dt*0.6;
     updateAimVisuals();
+    // PORTIERE: conto alla rovescia del calcio CPU (ALE parte da solo, tu reagisci)
+    if(isKeeper() && kAuto){ kAuto.t+=dt; if(kAuto.t>=kAuto.delay){ kAuto=null; cpuKick(); } }
   } else { aimRing.visible=aimDot.visible=trajLine.visible=false; }
 
   if(state===STATE.BALL_IN_FLIGHT){
@@ -2104,6 +2170,19 @@ function update(dt){
     }
     if(shot.result==='SAVE' && useGLBKeeper && p>0.62){ gloveCatch(clamp((p-0.62)/0.38,0,1)*0.5); }  // in arrivo la palla entra nei guantoni
     if(!shot.resolved && p>=1){ shot.resolved=true; resolveShot(); }
+    }
+    // PORTIERE in volo: anello ORO mentre trascini (dove ti tufferai), VERDE dopo il commit
+    if(isKeeper()){
+      if(aim.active && !shot.humanDive){
+        aimRing.visible=aimDot.visible=true;
+        aimRing.position.set(aim.tx,aim.ty,0.06); aimDot.position.set(aim.tx,aim.ty,0.07);
+        aimRing.material.color.setHex(0xffd884); aimRing.scale.setScalar(1.5+0.18*Math.sin(stateT*9));
+      } else if(shot.humanDive){
+        aimRing.visible=true; aimDot.visible=false;
+        aimRing.position.set(shot.guess,shot.guessY,0.06);
+        aimRing.material.color.setHex(0x39ff7a); aimRing.scale.setScalar(1.35);
+      } else { aimRing.visible=aimDot.visible=false; }
+      trajLine.visible=false;
     }
   }
   else if(state===STATE.GOAL_ANIMATION){
@@ -2385,8 +2464,9 @@ function applyIdentity(){
   if(shooter) setKicker(shooter);
   if(keeperFace){ const url = isKeeper()? ((PLAYER&&PLAYER.face)||'assets/face-mario.png') : 'assets/keeper-face.png?v=1';
     keeperFace.material.map=_faceTex(url); keeperFace.material.needsUpdate=true; }
-  // dietro la porta si guarda ATTRAVERSO la rete: alleggerila per non impastare la scena
-  if(backNet && backNet.material){ backNet.material.opacity = isKeeper()? 0.38 : 0.9; }
+  // dietro la porta si guarda ATTRAVERSO la rete: quasi invisibile, la scena resta pulita
+  if(backNet && backNet.material){ backNet.material.opacity = isKeeper()? 0.15 : 0.9; }
+  applyCamFov();                                                   // FOV adattivo per ruolo/orientamento
 }
 function showReveal(poster){ const r=document.getElementById('reveal'), im=document.getElementById('revealImg');
   im.src=poster; r.classList.remove('show'); void r.offsetWidth; r.classList.add('show');
@@ -2425,7 +2505,7 @@ function syncHUD(){
   HUD.menu.classList.toggle('show',state===STATE.MENU_SCREEN);
   HUD.over.classList.toggle('show',state===STATE.GAME_OVER);
   const playing=(state===STATE.GAME_PLAYING);
-  HUD.hint.textContent = keep? 'SEI IN PORTA 🧤 trascina dove TUFFARTI · rilascia e para il tiro di ALE' : 'trascina per mirare · rilascia per tirare';
+  HUD.hint.textContent = keep? 'SEI IN PORTA 🧤 ALE tira da solo… REAGISCI: tocca/trascina dove vola la palla!' : 'trascina per mirare · rilascia per tirare';
   HUD.hint.classList.toggle('on',playing && streak<2 && !five);
   if(!playing){ HUD.power.classList.remove('on'); HUD.curl.classList.remove('on'); }
   const mb=document.getElementById('modeBtn'); if(mb) mb.textContent = five?'🎯 5 RIGORI':'∞ INFINITA';
@@ -2745,14 +2825,17 @@ class Input {
     if(HUD.nameOv.classList.contains('show')) return;
     const t=e.touches?e.touches[0]:e, x=t.clientX, y=t.clientY;
     if(state===STATE.MENU_SCREEN||state===STATE.GAME_OVER){ startGame(); return; }
-    if(state!==STATE.GAME_PLAYING) return;
+    // PORTIERE A REAZIONE: il tocco e' valido anche durante rincorsa/volo (e' LI' che si para)
+    const kFlight = isKeeper() && state===STATE.BALL_IN_FLIGHT && shot && !shot.humanDive;
+    if(state!==STATE.GAME_PLAYING && !kFlight) return;
     aim.active=true; aim.sx=x; aim.sy=y; aim.cx=x; aim.cy=y; aim.t0=performance.now();   // avvia il decision timer
     const g=screenToGoal(x,y-AIM_LIFT()); aim.tx=g.x; aim.ty=g.y; aim.power=CONFIG.minPowerShot; aim.curl=0;   // mira SOPRA il dito (il dito non copre il bersaglio)
     if(isKeeper()){ HUD.power.classList.remove('on'); HUD.curl.classList.remove('on'); return; }   // da portiere: il drag sceglie SOLO dove tuffarsi
     HUD.power.classList.add('on'); HUD.curl.classList.remove('on');
   }
   move(e){
-    if(!aim.active||state!==STATE.GAME_PLAYING) return;
+    if(!aim.active) return;
+    if(state!==STATE.GAME_PLAYING && !(isKeeper()&&state===STATE.BALL_IN_FLIGHT)) return;
     const t=e.touches?e.touches[0]:e, x=t.clientX, y=t.clientY; aim.cx=x; aim.cy=y;
     const g=screenToGoal(x,y-AIM_LIFT()); aim.tx=g.x; aim.ty=g.y;  // target dal punto corrente (sopra il dito)
     if(isKeeper()) return;                                        // da portiere: nessuna potenza/effetto, solo la posizione del tuffo
@@ -2764,9 +2847,11 @@ class Input {
     else HUD.curl.classList.remove('on');
   }
   up(e){
+    // PORTIERE in volo: il rilascio (o il tap) e' IL TUFFO verso il punto mirato
+    if(aim.active && isKeeper() && state===STATE.BALL_IN_FLIGHT){ aim.active=false; keeperDiveNow(aim.tx,aim.ty); return; }
     if(!aim.active||state!==STATE.GAME_PLAYING){ aim.active=false; return; }
     aim.active=false;
-    if(isKeeper()){ this.e.physics.saveShot(); return; }          // da portiere: rilascio = tuffo, la CPU calcia
+    if(isKeeper()){ this.e.physics.saveShot(); return; }          // prima del calcio: scelta d'istinto (ALE calcia subito)
     const moved=Math.hypot(aim.cx-aim.sx, aim.cy-aim.sy);
     // EASTER EGG: 3 tap rapidi sul CENTRO/TRAVERSA (zona generosa) -> tiro speciale.
     // Questi tap NON tirano e danno feedback ad ogni tocco (così lo "vedi" caricarsi).
@@ -2789,7 +2874,7 @@ class Input {
     if(k==='g'){ setGFX(isManga()?'pes':'manga'); showTelecro('STILE: '+(isManga()?'HOLLY & BENJI 🎬':'PES 🎮')); return; }   // toggle stile al volo
     if(state===STATE.MENU_SCREEN||state===STATE.GAME_OVER){
       if(k===' '||k==='enter'){ e.preventDefault(); startGame(); } return; }
-    if(state!==STATE.GAME_PLAYING) return;
+    if(state!==STATE.GAME_PLAYING && !(isKeeper()&&state===STATE.BALL_IN_FLIGHT)) return;
     // ---- MIRA DA TASTIERA ----
     const MV={arrowleft:[-0.26,0],arrowright:[0.26,0],arrowup:[0,0.2],arrowdown:[0,-0.2]};
     if(MV[k]){ e.preventDefault(); this._kbMove(MV[k][0],MV[k][1]); return; }
@@ -2974,7 +3059,9 @@ try{ const _kd=new URLSearchParams(location.search).get('kdbg'); if(_kd==='1'||_
       seq:!!Sound._t, mode:Sound._seq?Sound._seq.mode:'', step:Sound._seq?Sound._seq.step:-1,
       drama:Sound.drama, intensity:Sound.intensity, ctx:Sound.ctx?Sound.ctx.state:'none' }; },
     setPlayer(n){ PLAYER=PLAYERS[n]||PLAYER; }, startGame(){ return startGame(); },
-    saveShot(){ return saveShot(); }, shoot(){ return shoot(); } };
+    saveShot(){ return saveShot(); }, shoot(){ return shoot(); },
+    diveNow(x,y){ return keeperDiveNow(x,y); }, get autoKick(){ return !!kAuto; },
+    cpuKick(){ if(isKeeper()&&state===STATE.GAME_PLAYING){ kAuto=null; return cpuKick(); } } };
 }}catch(e){}
 // JUICE agganciato alla FSM: screen-shake all'ingresso negli stati d'impatto
 // (PES contenuto, Anime più forte) — l'hit-stop è già nel loop (dt=0).
@@ -2988,7 +3075,7 @@ engine.on(STATE.MENU_SCREEN, ()=>{ try{ arcadeAudio.playMenuTheme(); }catch(e){}
 engine.on(STATE.GAME_OVER, ()=>{ try{ announce(HUD.overTitle.textContent+'. '+document.getElementById('overLine').textContent+'. Premi INVIO per rigiocare.'); }catch(e){} });
 
 function resize(){ const w=window.innerWidth,h=window.innerHeight;
-  renderer.setSize(w,h); camera.aspect=w/h; camera.updateProjectionMatrix(); }
+  renderer.setSize(w,h); camera.aspect=w/h; applyCamFov(); }
 
 /* ------------------------------- BOOT ------------------------------------ */
 try{ window.__KDBG = new URLSearchParams(location.search).get('kdbg')==='1'; }catch(e){ window.__KDBG=false; }
