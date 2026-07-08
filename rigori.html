@@ -1825,6 +1825,154 @@ function shotKinematics(style,p){
   if(style==='chip') arcH=Math.max(arcH*1.9,1.5); else if(style==='low') arcH*=0.22;
   return {speed,dur,arcH};
 }
+/* ================= BALISTICA v2 — INTEGRAZIONE NUMERICA CON MAGNUS =================
+   La palla non segue piu' una curva parametrica: viene INTEGRATA numericamente
+   (semi-implicito, passo fisso 1/240 s) con l'equazione completa:
+       a = g  +  (-Cd)·|v|·v  +  Cm·(ω × v)
+   dove ω e' il VETTORE DI SPIN generato dal gesto di tiro:
+     · aim.curl (flick laterale)  -> ω.y  = tiro a giro (Magnus laterale)
+     · stile 'chip'               -> ω.x  = backspin (la palla "galleggia")
+     · stile 'low'                -> ω.x  = topspin  (la rasoiata si abbassa)
+   Un SOLVER iterativo (3 passate) corregge v0 perche' il tiro passi ESATTAMENTE
+   dal punto mirato: la curva e' visibile lungo tutto il volo ma converge sul
+   bersaglio (fedelta' del mirino invariata, zero scatter nascosto).
+   La stessa simulazione produce:
+     · path campionato a 60 Hz (playback volo + anteprima traiettoria)
+     · crossing esatto sul piano porta (adjudicazione esiti)
+     · COLLISIONI GEOMETRICHE su pali/traversa (capsule, restituzione metallo)
+       con proseguimento caotico: palo-gol, palo-fuori, palo-campo
+     · tiri FUORI che proseguono nello spazio 3D fino agli SPALTI, con
+       rimbalzi smorzati sui seggiolini (piano inclinato dietro la porta)
+     · frenata progressiva nella RETE (attrito viscoso) fino alla caduta a terra */
+const PHYS={
+  STEP:1/240,          // passo d'integrazione (s)
+  SAMPLE:1/60,         // campionamento path per il playback (s)
+  DRAG:0.0075,         // coeff. resistenza aerodinamica (quadratica)
+  MAGNUS:0.011,        // coeff. Magnus: a = MAGNUS*(ω×v)
+  SPIN_CURL:26,        // ω.y max (rad/s) a curl pieno
+  SPIN_CHIP:9,         // backspin del cucchiaio
+  SPIN_LOW:-7,         // topspin della rasoiata
+  WOOD_R:0.065+BALL_R, // capsula palo/traversa (raggio palo + raggio palla)
+  REST_WOOD:0.72,      // restituzione del legno/metallo (rigido)
+  REST_GROUND:0.44, REST_SEAT:0.36,
+  NET_DRAG:7.5,        // attrito viscoso della rete (1/s)
+  STAND_Z0:7.2, STAND_SLOPE:1.15,  // spalti: piano inclinato z=-(Z0+SLOPE*y)
+  TMAX:4.2             // durata massima simulata (anti-loop)
+};
+// pool dei buffer path (niente allocazioni per-tiro -> zero pressione GC)
+const _simPool=[new Float32Array(3*Math.ceil(PHYS.TMAX/PHYS.SAMPLE)+6), new Float32Array(3*Math.ceil(PHYS.TMAX/PHYS.SAMPLE)+6)];
+let _simPoolIx=0;
+const _sv=new THREE.Vector3(), _sn=new THREE.Vector3();
+/* integra un volo completo. from/v0/spin: THREE.Vector3 (spin in rad/s).
+   opts.wood=false disattiva i legni (usato dal solver). Ritorna:
+   { path, n, crossT, cross:{x,y}, crossVel, wood, outcome, endT }
+   outcome: 'goal-line' (dentro lo specchio) | 'wood-in' | 'wood-out' | 'miss' */
+function integrateFlight(from,v0,spin,opts){
+  const o=opts||{}, wood=o.wood!==false, buf=o.buf||null;
+  let px=from.x, py=from.y, pz=from.z, vx=v0.x, vy=v0.y, vz=v0.z;
+  const path=buf, g=CONFIG.gravity;
+  let n=0, t=0, nextSample=0, crossT=-1, cx=0, cy=0, cvx=0, cvy=0, cvz=0;
+  let woodHit=null, outcome='', inNet=false, bounces=0, done=false;
+  const rec=()=>{ if(path && n*3+2<path.length){ path[n*3]=px; path[n*3+1]=py; path[n*3+2]=pz; n++; } };
+  rec();
+  while(t<PHYS.TMAX && !done){
+    // ---- forze: gravita' + drag quadratico + Magnus (ω × v) ----
+    const sp=Math.sqrt(vx*vx+vy*vy+vz*vz)||1e-6;
+    let ax = -PHYS.DRAG*sp*vx + PHYS.MAGNUS*(spin.y*vz - spin.z*vy);
+    let ay = -PHYS.DRAG*sp*vy + PHYS.MAGNUS*(spin.z*vx - spin.x*vz) - g;
+    let az = -PHYS.DRAG*sp*vz + PHYS.MAGNUS*(spin.x*vy - spin.y*vx);
+    if(inNet){ ax-=PHYS.NET_DRAG*vx; ay-=PHYS.NET_DRAG*vy; az-=PHYS.NET_DRAG*vz; }  // la rete FRENA progressivamente
+    vx+=ax*PHYS.STEP; vy+=ay*PHYS.STEP; vz+=az*PHYS.STEP;
+    const pz0=pz;
+    px+=vx*PHYS.STEP; py+=vy*PHYS.STEP; pz+=vz*PHYS.STEP;
+    // ---- CROSSING del piano porta (z=0), una sola volta ----
+    if(crossT<0 && pz0>0 && pz<=0){
+      const f=pz0/(pz0-pz);                                  // interpolazione esatta al piano
+      cx=lerp(px-vx*PHYS.STEP,px,f); cy=lerp(py-vy*PHYS.STEP,py,f);
+      crossT=t; cvx=vx; cvy=vy; cvz=vz;
+      const inMouth = Math.abs(cx)<HALF-0.01 && cy>BALL_R*0.5 && cy<GH-0.01;
+      if(inMouth){ outcome = woodHit?'wood-in':'goal-line'; inNet=true; }           // dentro: da qui la rete frena
+      else if(!woodHit && !outcome) outcome='miss';
+    }
+    // ---- COLLISIONI LEGNO: capsule pali (x=±HALF) e traversa (y=GH), piano z≈0 ----
+    if(wood && pz>-0.35 && pz<0.6){
+      for(const sx of [-1,1]){                                // pali verticali
+        const dx=px-sx*HALF, dz=pz;
+        const d=Math.sqrt(dx*dx+dz*dz);
+        if(py<GH+0.1 && d<PHYS.WOOD_R && d>1e-6){
+          const nx=dx/d, nz=dz/d, dot=vx*nx+vz*nz;
+          if(dot<0){ const e=PHYS.REST_WOOD;
+            vx-=(1+e)*dot*nx; vz-=(1+e)*dot*nz;
+            vy+=(Math.random()*2-1)*0.6;                      // micro-caos del legno
+            px=sx*HALF+nx*PHYS.WOOD_R; pz=nz*PHYS.WOOD_R;
+            woodHit={kind:'palo',x:sx*HALF,y:Math.min(py,GH),t}; }
+        }
+      }
+      { const dy=py-GH, dz=pz;                                // traversa
+        const d=Math.sqrt(dy*dy+dz*dz);
+        if(Math.abs(px)<HALF+0.08 && d<PHYS.WOOD_R && d>1e-6){
+          const ny=dy/d, nz=dz/d, dot=vy*ny+vz*nz;
+          if(dot<0){ const e=PHYS.REST_WOOD;
+            vy-=(1+e)*dot*ny; vz-=(1+e)*dot*nz;
+            vx+=(Math.random()*2-1)*0.6;
+            py=GH+ny*PHYS.WOOD_R; pz=nz*PHYS.WOOD_R;
+            woodHit={kind:'traversa',x:px,y:GH,t}; }
+        }
+      }
+    }
+    // ---- fondo rete: la palla non sfonda, si adagia ----
+    if(inNet && pz<-GD+BALL_R){ pz=-GD+BALL_R; vz=Math.abs(vz)*0.2; }
+    if(inNet && Math.abs(vx)+Math.abs(vy)+Math.abs(vz)<0.9 && py<=BALL_R+0.02){ done=true; }  // ferma in rete
+    // ---- terreno: PRIMA dell'esito la rasoiata "striscia" (niente rimbalzi che
+    //      sporcherebbero la fedelta' del mirino); DOPO l'esito rimbalza e rotola ----
+    if(py<BALL_R && vy<0){
+      if(crossT<0){ py=BALL_R; vy=0; }                        // radente pre-porta
+      else { py=BALL_R; vy=-vy*PHYS.REST_GROUND; vx*=0.82; vz*=0.82; bounces++;
+             if(vy<0.65){ vy=0; } }                           // passa al rotolamento
+    }
+    if(py<=BALL_R+0.001 && vy===0){                           // attrito di rotolamento
+      const s2=Math.hypot(vx,vz); if(s2>0.05){ const dec=Math.min(s2,2.6*PHYS.STEP); vx-=vx/s2*dec; vz-=vz/s2*dec; }
+      else if(crossT>=0 || woodHit){ done=true; }
+    }
+    // ---- SPALTI dietro la porta: piano inclinato di seggiolini (z=-(Z0+SLOPE*y)) ----
+    if(!inNet && pz < -(PHYS.STAND_Z0+PHYS.STAND_SLOPE*Math.max(0,py))){
+      _sn.set(0,PHYS.STAND_SLOPE,1).normalize();              // normale del piano (verso campo/alto)
+      const dot=vx*0+vy*_sn.y+vz*_sn.z;
+      if(dot<0){ vy-=(1+PHYS.REST_SEAT)*dot*_sn.y; vz-=(1+PHYS.REST_SEAT)*dot*_sn.z; vx*=0.7; bounces++;
+        pz=-(PHYS.STAND_Z0+PHYS.STAND_SLOPE*Math.max(0,py))+0.02;
+        if(!outcome) outcome='miss';
+        if(Math.hypot(vx,vy,vz)<1.4) done=true; }             // si ferma tra i seggiolini
+    }
+    // ---- guardie di stabilita': niente NaN/inf nel ciclo di gioco ----
+    if(!isFinite(px+py+pz+vx+vy+vz)){ px=cx||0; py=Math.max(cy,BALL_R)||BALL_R; pz=0; vx=vy=vz=0; done=true; }
+    t+=PHYS.STEP;
+    if(t>=nextSample){ rec(); nextSample+=PHYS.SAMPLE; }
+    const evT = crossT>=0? crossT : (woodHit? woodHit.t : -1);
+    if(evT>=0 && t-evT>2.6) done=true;                        // esaurita la coda post-esito
+  }
+  rec();
+  if(!outcome) outcome = woodHit? 'wood-out' : 'miss';
+  return { path, n, crossT, cross:{x:cx,y:cy}, crossVel:{x:cvx,y:cvy,z:cvz}, wood:woodHit, outcome, endT:t };
+}
+/* costruisce il VOLO COMPLETO per un tiro mirato a (tx,ty): spin dal gesto,
+   solver iterativo su v0 (3 passate, legni spenti) poi run finale coi legni. */
+function buildFlight(tx,ty,p,curl,style,special,bufOverride){
+  const kin=shotKinematics(style, style==='chip'?Math.min(p,0.3):p);
+  let T=kin.dur; if(special){ T=clamp(Math.abs(SPOT_Z)/(kin.speed*1.95),0.26,0.95); }
+  const from=_sv.set(0,BALL_R,SPOT_Z);
+  const spin=new THREE.Vector3(style==='chip'?PHYS.SPIN_CHIP:(style==='low'?PHYS.SPIN_LOW:0), -curl*PHYS.SPIN_CURL, 0);
+  // v0 balistico ideale (gravita' pura) poi corretto dal solver su drag+Magnus
+  const v0=new THREE.Vector3((tx-from.x)/T, (ty-from.y)/T + 0.5*CONFIG.gravity*T, (0-from.z)/T);
+  for(let it=0; it<3; it++){
+    const r=integrateFlight(from,v0,spin,{wood:false,buf:null});
+    if(r.crossT<0) break;
+    v0.x += (tx-r.cross.x)/T; v0.y += (ty-r.cross.y)/T;       // correzione proporzionale
+  }
+  const buf=bufOverride || _simPool[(_simPoolIx++)%2];       // l'anteprima usa un buffer suo (mai quello del tiro in volo)
+  const sim=integrateFlight(from.set(0,BALL_R,SPOT_Z),v0,spin,{wood:true,buf});
+  sim.v0=v0; sim.spin=spin; sim.T=T; sim.speed=kin.speed; sim.arcH=kin.arcH;
+  return sim;
+}
 // risolve target/risultato al rilascio del drag
 function shoot(){
   Sound.ac();
@@ -1838,9 +1986,9 @@ function shoot(){
 
   const target=new THREE.Vector3(tx,ty,0);
   const style=special?'normal':shotStyleOf(tx,ty,p);   // cucchiaio/rasoterra dal gesto di mira
-  let {speed,dur,arcH}=shotKinematics(style,p);
-  if(special){ speed*=1.95; dur=clamp(Math.abs(SPOT_Z)/speed,0.26,0.95); arcH=CONFIG.gravity*dur*dur/8; }  // tiro speciale: 2x velocità
-  const curlAcc=curl*CONFIG.curlMax;              // accel laterale (m/s^2) -> deviazione = .5*a*t^2
+  // BALISTICA v2: l'intero volo (Magnus, drag, legni, spalti, rete) e' SIMULATO ora
+  const sim=buildFlight(tx,ty,p,curl,style,special);
+  const speed=sim.speed, arcH=sim.arcH, curlAcc=curl*CONFIG.curlMax;
 
   // ----- AI portiere: indovina lato+altezza con bias crescente + errore -----
   // Filosofia: a streak basso spesso sceglie il lato/altezza SBAGLIATI (perdonante);
@@ -1885,10 +2033,10 @@ function shoot(){
   const guessY=(guessSide===0)?(readHigh?1.55:0.95):(readHigh?1.75:0.85);
   let reach=reachOf()*(1-0.18*p);                            // potenza riduce un po' il reach efficace
   if(special) reach*=0.5;                                     // 2x velocità: i guantoni quasi non arrivano -> forza il GOL se l'AI non para
-  const inGoal = Math.abs(endX)<HALF-0.02 && ty>0.06 && ty<GH-0.02;
-  // LEGNO: palo (bordo laterale) O TRAVERSA (bordo alto, prima mancava: era solo "fuori")
-  const hitPost = !inGoal && ((Math.abs(Math.abs(endX)-HALF)<0.16 && ty<GH+0.05)
-                           || (Math.abs(ty-GH)<0.12 && Math.abs(endX)<HALF+0.05));
+  // ESITI DAL MONDO SIMULATO: specchio e legni sono GEOMETRIA (capsule), non bande di probabilita'
+  const inGoal   = sim.outcome==='goal-line';
+  const hitPost  = !!sim.wood;
+  const woodGoal = sim.outcome==='wood-in';                   // palo-gol: il legno la sputa DENTRO (imparabile)
   if(gamble){ guess=clamp(guess+(rng()*2-1)*0.55,-HALF+0.4,HALF-0.4); }   // il gamble sporca la lettura
   const dyDen=reach*(style==='low'?0.72:0.95);               // rasoterra: scendere sui piedi e' piu dura
   const dx=(endX-guess)/reach, dy=(ty-guessY)/dyDen;         // ellisse di parata
@@ -1896,7 +2044,15 @@ function shoot(){
   if(style==='chip' && inGoal){                              // CUCCHIAIO: o resta e la prende, o e' beffato
     saved = (guessSide===0) ? (Math.abs(endX)<1.6 && ty<GH-0.12) : false;
   }
-  let result = !inGoal ? (hitPost?'POST':'MISS') : (saved?'SAVE':'GOAL');
+  let result;
+  if(inGoal)        result = saved? 'SAVE' : 'GOAL';
+  else if(woodGoal) result = 'GOAL';                          // palo-gol: dinamica caotica del legno
+  else if(hitPost)  result = 'POST';
+  else              result = 'MISS';
+  // tempo di risoluzione = istante FISICO dell'evento: crossing per specchio/palo-gol,
+  // impatto sul legno per il palo secco, attraversamento del piano per il fuori
+  const dur = (inGoal||woodGoal)? sim.crossT
+            : (sim.wood? sim.wood.t : (sim.crossT>0? sim.crossT : sim.T));
 
   // animazione tuffo del portiere: lato + altezza
   let diveSide = guess<-0.2? -1 : (guess>0.2? 1 : 0);
@@ -1917,6 +2073,7 @@ function shoot(){
   }
 
   shot={ t:0, dur, from:ball.position.clone(), target, arcH, curlAcc, speed,
+         sim, simRate:1, woodGoal,                            // BALISTICA v2: path integrato + eventi
          guess, guessY:guessYOut, keeperFrom:keeper.position.x, reach, result, resolved:false,
          reaction: special?CONFIG.reactionMin/1000:(gamble?reactOf()*0.45:reactOf()), power:p, diveSide, diveHigh, curlSign:Math.sign(curl)||1, special, style,
          windup: useGLBKicker?KICK_WINDUP_GLB:KICK_WINDUP_FALLBACK, launched:false };   // RINCORSA: la palla parte al contatto
@@ -1978,18 +2135,28 @@ function cpuKick(){
   if(lvl>0.12 && rng()<0.10+lvl*0.14){ style='chip'; tx=rr(-0.9,0.9); ty=rr(GH*0.6,GH-0.28); }
   else if(ty<0.6 && p>0.7) style='low';
   const target=new THREE.Vector3(tx,ty,0);
-  const kin=shotKinematics(style, style==='chip'?Math.min(p,0.3):p);
+  // BALISTICA v2 anche per la CPU: volo integrato (Magnus/drag/legni/spalti)
+  const sim=buildFlight(tx,ty,p,curl,style,false);
   // ASSIST DI REAZIONE: nel reale la palla vola ~400ms (imparabile di riflesso);
-  // dilatiamo il volo per lasciare una vera finestra umana, che si stringe col livello
-  const dur=kin.dur*(1.45-lvl*0.35);
+  // il PLAYBACK del path viene dilatato (slow-mo fisico) per dare una vera finestra
+  // umana, che si stringe col livello. simRate riporta il tempo di gioco al tempo simulato.
+  const assist=1.45-lvl*0.35;
+  const realDur = sim.outcome==='goal-line'||sim.outcome==='wood-in' ? sim.crossT
+                : (sim.wood? sim.wood.t : (sim.crossT>0? sim.crossT : sim.T));
+  const dur=realDur*assist;
   const curlAcc=curl*CONFIG.curlMax;
-  shot={ t:0, dur, from:ball.position.clone(), target, arcH:kin.arcH, speed:kin.speed, curlAcc,
+  shot={ t:0, dur, from:ball.position.clone(), target, arcH:sim.arcH, speed:sim.speed, curlAcc,
+         sim, simRate:1/assist, woodGoal:sim.outcome==='wood-in',
          guess:keeper.position.x, guessY:1.0, keeperFrom:keeper.position.x,
          reach:0, result:null, resolved:false, humanDive:false,
          reaction:99, power:p, diveSide:0, diveHigh:0, curlSign:Math.sign(curl)||1, special:false, style,
          // FINTA: a livello alto la CPU spezza la rincorsa (windup allungato) -> non ti fidare del ritmo
          windup:(useGLBKicker?KICK_WINDUP_GLB:KICK_WINDUP_FALLBACK)*(rng()<0.20+lvl*0.28? rr(1.25,1.8):1), launched:false };
-  shot.result=keeperOutcome(shot.guess,1.0,0.30);           // esito "nessun tuffo": blocca SOLO la palla addosso
+  // esito di default "nessun tuffo": legni e fuori arrivano dalla GEOMETRIA simulata
+  if(shot.woodGoal) shot.result='GOAL';
+  else if(sim.wood) shot.result='POST';
+  else if(sim.outcome==='miss') shot.result='MISS';
+  else shot.result=keeperOutcome(shot.guess,1.0,0.30);      // in porta: blocca SOLO la palla addosso
   setState(STATE.BALL_IN_FLIGHT);
   kickT=0; startKickerKick(); camPunchT=0; slowmo=0; haptic(14);
   // tuffo D'ISTINTO scelto prima del calcio: si applica ORA (reach pieno, ma il cucchiaio punisce)
@@ -2011,7 +2178,10 @@ function keeperDiveNow(tx,ty){
   shot.diveHigh = clamp((guessY-0.8)/(GH-0.8),0,1);
   shot.reaction = Math.max(0.02,ft);                        // fa scattare il tuffo IMMEDIATAMENTE (GLB: soglia 0.55*reaction gia' superata; fallback: parte da qui)
   shot.reach=reachMul;
-  shot.result=keeperOutcome(guess,guessY,reachMul);
+  // il tuffo NON riscrive gli esiti fisici del mondo: legno e fuori restano tali
+  // (l'animazione del tuffo parte comunque — hai reagito, la palla era altrove)
+  if(!(shot.woodGoal || (shot.sim && (shot.sim.wood || shot.sim.outcome==='miss'))))
+    shot.result=keeperOutcome(guess,guessY,reachMul);
   Sound.sfx(660,.05,'square',0.25); haptic(20);             // feedback istantaneo: hai scelto l'angolo
   return true;
 }
@@ -2046,6 +2216,7 @@ function resolveShot(){
     engine.view.burstAt3D(tmpV2.set(shot.target.x,Math.max(0.4,shot.target.y),-GD),'goal');   // scintille sulla rete
     Sound.netSwish(); arcadeAudio.playGoalFanfare(); Sound.roar();   // FANFARA gol (arpeggio DO maggiore) + boato
     speedLines(); engine.view.popWord(incrocio?'EUROGOOOL!':'GOOOOL!','#FF0000');   // onomatopea rossa + bordo nero (canvas)
+    if(shot.woodGoal){ Sound.postClang(); engine.view.popWord('PALO-GOL! 🎯','#ffd24a'); showTelecro('🥶 PALO-GOL! Il legno la sputa DENTRO!'); }
     if(shot.special){ engine.view.popWord('SUPERGOOOL! 🌈','#ff3cac',true); engine.view.shake(1.2);   // gol da tiro speciale
       for(let q=0;q<3;q++) setTimeout(()=>burstConfetti(rand(-2.5,2.5),rand(1,2.2)),q*110); }
     // ---- TROFEI (progressione locale, non blocca mai il flusso) ----
@@ -2077,7 +2248,8 @@ function resolveKeeper(r){
   if(r==='GOAL'){                                            // la CPU segna -> hai preso gol
     goals5++; shakeMag=CONFIG.shakeOnGoal; ripple={t:0,x:shot.target.x,y:shot.target.y};
     showResult('GOL SUBITO','#ff6a6a'); engine.view.popWord('GOOOOL!','#FF0000');
-    if(shot && !shot.humanDive) setTimeout(()=>{ if(isKeeper()) showTelecro('👀 Fermo lì non si para: tocca/trascina DURANTE il volo per tuffarti!'); },800);
+    if(shot && shot.woodGoal){ Sound.postClang(); engine.view.popWord('PALO-GOL!','#ffd24a'); }
+    if(shot && !shot.humanDive && !shot.woodGoal) setTimeout(()=>{ if(isKeeper()) showTelecro('👀 Fermo lì non si para: tocca/trascina DURANTE il volo per tuffarti!'); },800);
     engine.view.burstAt3D(tmpV2.set(shot.target.x,Math.max(0.4,shot.target.y),-GD),'goal');
     Sound.sfx(200,.18,'sawtooth'); Sound.groan();
     HUD.flash.classList.remove('on','save'); void HUD.flash.offsetWidth; HUD.flash.classList.add('on');
@@ -2130,6 +2302,7 @@ function startReplay(){
     commitX: keeperDive? keeperDive.commitX : clamp(shot.guess*0.7,-HALF+0.6,HALF-0.6),
     s:{ from:shot.from.clone(), target:shot.target.clone(), arcH:shot.arcH,
         curlAcc:shot.curlAcc, dur:shot.dur, style:shot.style, result:shot.result,
+        sim:shot.sim||null, simRate:shot.simRate||1,          // il replay rigioca il PATH FISICO integrato
         guess:shot.guess, guessY:shot.guessY, keeperFrom:shot.keeperFrom, reaction:shot.reaction } };
   // scena riportata all'istante del calcio
   ball.position.copy(replay.s.from); ball.scale.set(1,1,1);
@@ -2151,12 +2324,16 @@ function updateReplay(dt){
   R.t += dt*0.5;                                             // SLOW MOTION 2x
   if(R.t>=0 && !R.impact){
     if(!R.kicked){ R.kicked=true; Sound.kick(0.6); }
-    const p=clamp(R.t/s.dur,0,1), tt=p*s.dur;
-    const baseX=lerp(s.from.x,s.target.x,p);
-    const curlDev=0.5*s.curlAcc*tt*tt - 0.5*s.curlAcc*s.dur*s.dur*p;
-    ball.position.x=baseX+curlDev;
-    ball.position.y=lerp(s.from.y,s.target.y,p)+s.arcH*Math.sin(Math.PI*p);
-    ball.position.z=lerp(s.from.z,s.target.z,p);
+    const p=clamp(R.t/s.dur,0,1);
+    if(s.sim && s.sim.n>1){ posFromPath(s.sim, R.t*s.simRate); }   // stesso path fisico del live
+    else {
+      const tt=p*s.dur;
+      const baseX=lerp(s.from.x,s.target.x,p);
+      const curlDev=0.5*s.curlAcc*tt*tt - 0.5*s.curlAcc*s.dur*s.dur*p;
+      ball.position.x=baseX+curlDev;
+      ball.position.y=lerp(s.from.y,s.target.y,p)+s.arcH*Math.sin(Math.PI*p);
+      ball.position.z=lerp(s.from.z,s.target.z,p);
+    }
     ball.rotation.x-=dt*CONFIG.spinVis*0.5;
     updateBallShadow(); pushTrail();
     // il portiere rilegge il tiro come nel live (clip + commit laterale)
@@ -2171,8 +2348,11 @@ function updateReplay(dt){
       else if(s.result==='SAVE'){ Sound.gloveThud(); } }
   } else if(R.impact){
     R.endT+=dt;
-    if(s.result==='GOAL' && ball.position.z>-GD+0.25){ ball.position.z-=dt*1.1; updateBallShadow(); }  // si adagia in rete
-    if(R.endT>1.05){ replay=null; applyCamFov(); gameOverNow(); return; }   // fov di ruolo ripristinato
+    // coda dal path integrato: rete che frena, legno che schizza, spalti coi rimbalzi
+    if(s.sim && s.sim.n>1){ posFromPath(s.sim, s.dur*s.simRate + R.endT); updateBallShadow(); }
+    else if(s.result==='GOAL' && ball.position.z>-GD+0.25){ ball.position.z-=dt*1.1; updateBallShadow(); }
+    const tail=(s.result==='MISS'||s.result==='POST')?1.8:1.05;   // fuori/palo: si vede il rimbalzo
+    if(R.endT>tail){ replay=null; applyCamFov(); gameOverNow(); return; }   // fov di ruolo ripristinato
   }
   if(ripple.t>=0){ ripple.t+=dt; applyNetRipple(ripple.t,ripple.x,ripple.y); if(ripple.t>2.2){ ripple.t=-1; applyNetRipple(-1,0,0); } }
   // CAMERA MOVIOLA: bordo campo dal lato opposto al tiro, e la regia SEGUE LA PALLA
@@ -2186,6 +2366,14 @@ function updateReplay(dt){
 
 /* ------------------------------- UPDATE ---------------------------------- */
 // avvicina la palla al guantone più vicino (la parata "prende" davvero il pallone)
+// posiziona la palla lungo il path simulato (interpolazione fra campioni a 60 Hz)
+function posFromPath(sim,t){
+  const i=Math.min(sim.n-1, Math.max(0, t/PHYS.SAMPLE));
+  const i0=Math.floor(i), i1=Math.min(sim.n-1,i0+1), f=i-i0;
+  const P=sim.path;
+  const x=lerp(P[i0*3],P[i1*3],f), y=lerp(P[i0*3+1],P[i1*3+1],f), z=lerp(P[i0*3+2],P[i1*3+2],f);
+  if(isFinite(x+y+z)) ball.position.set(x,y,z);               // guardia NaN: mai sporcare la scena
+}
 function gloveCatch(s){
   let best=null,bd=1e9;
   if(keeperHandL){ keeperHandL.getWorldPosition(_glA); const d=_glA.distanceTo(ball.position); if(d<bd){bd=d;best=_glA;} }
@@ -2243,13 +2431,17 @@ function update(dt){
       if(shot.style==='chip'){ engine.view.popWord('CUCCHIAIO!','#9fd0ff'); showTelecro(isKeeper()?'🥄 Cucchiaio! NON tuffarti in anticipo…':'🥄 CUCCHIAIO! Che coraggio…'); }
       else if(shot.style==='low'){ engine.view.popWord('RASOIATA!','#ffd24a'); } }
     const p=clamp(ft/shot.dur,0,1);
-    // posizione: lerp z, arco su y, curva su x (Magnus -> dev = .5*a*t^2)
-    const tt=p*shot.dur;
-    const baseX=lerp(shot.from.x,shot.target.x,p);
-    const curlDev=0.5*shot.curlAcc*tt*tt - 0.5*shot.curlAcc*shot.dur*shot.dur*p; // 0 a inizio/fine target
-    ball.position.x=baseX + curlDev;
-    ball.position.y=lerp(shot.from.y,shot.target.y,p)+shot.arcH*Math.sin(Math.PI*p);
-    ball.position.z=lerp(shot.from.z,shot.target.z,p);
+    // posizione dal PATH SIMULATO (Magnus+drag reali gia' integrati); il fallback
+    // parametrico resta per sicurezza se la simulazione non e' disponibile
+    if(shot.sim && shot.sim.n>1){ posFromPath(shot.sim, ft*shot.simRate); }
+    else {
+      const tt=p*shot.dur;
+      const baseX=lerp(shot.from.x,shot.target.x,p);
+      const curlDev=0.5*shot.curlAcc*tt*tt - 0.5*shot.curlAcc*shot.dur*shot.dur*p;
+      ball.position.x=baseX + curlDev;
+      ball.position.y=lerp(shot.from.y,shot.target.y,p)+shot.arcH*Math.sin(Math.PI*p);
+      ball.position.z=lerp(shot.from.z,shot.target.z,p);
+    }
     // spin: rotazione coerente con direzione + curva
     ball.rotation.x-=dt*CONFIG.spinVis; ball.rotation.y+=dt*CONFIG.spinVis*0.4*shot.curlSign;
     if(shot.special){ ball.scale.setScalar(1.3+0.18*Math.sin(stateT*42)); ball.rotation.x-=dt*CONFIG.spinVis*1.5; }   // palla più grossa e iper-rotante
@@ -2304,17 +2496,26 @@ function update(dt){
     keeper.position.y=Math.max(0,keeper.position.y-dt*2.2);   // ATTERRAGGIO: il corpo si posa (gravita'), niente freeze a mezz'aria
     setKeeperPose(keeper, POSE_BEATEN, 0.08);
     if(useGLBKeeper && keeperState!=='beaten') playKeeper('beaten');
+    // PES: la palla prosegue nel path simulato DENTRO LA RETE — l'attrito viscoso la
+    // frena progressivamente finche' cade a terra per gravita' (niente piu' freeze)
+    if(!isManga() && shot && shot.sim){ posFromPath(shot.sim, shot.dur*shot.simRate + stateT); updateBallShadow(); }
     // ANIME: il pallone "sfonda" e prosegue oltre la linea con la scia (velocità sovrumana)
     if(isManga() && ball.position.z>-GD-1.2){ ball.position.z-=dt*7; ball.position.y=Math.max(BALL_R,ball.position.y-dt*0.5); pushTrail(); }
     if(stateT*1000>=CONFIG.goalCelebrateMs+(celeb?800:0)) afterShot(true);   // +tempo per vedere l'esultanza in faccia
   }
   else if(state===STATE.SAVE_ANIMATION){
     keeper.position.y=Math.max(0,keeper.position.y-dt*2.2);   // ATTERRAGGIO dopo il tuffo/salto
-    if(shot && shot.result==='POST'){
-      // RIMBALZO DAL LEGNO: velocita' riflessa via dal palo/traversa + gravita' + quicchi a terra
+    // CODA FISICA VERA: palo/fuori proseguono lungo il path integrato — rimbalzo dal
+    // legno con restituzione reale, oppure volo fino agli SPALTI coi quicchi sui seggiolini
+    if(shot && shot.sim && (shot.result==='POST'||shot.result==='MISS'||shot.parry)){
+      posFromPath(shot.sim, shot.dur*shot.simRate + stateT);
+      updateBallShadow(); pushTrail();
+    }
+    else if(shot && shot.result==='POST'){
+      // fallback senza simulazione: rimbalzo canned dal legno
       if(!shot._pv){ const bar=Math.abs(shot.target.y-GH)<0.14 && Math.abs(shot.target.x)<HALF-0.05;
-        shot._pv= bar? {x:rand(-1.2,1.2), y:rand(-0.5,0.8), z:rand(5.5,7.5)}          // traversa: schizza in campo
-                     : {x:-Math.sign(shot.target.x)*rand(2.5,4.5), y:rand(0.6,2), z:rand(4.5,6.5)}; }  // palo: via dal legno
+        shot._pv= bar? {x:rand(-1.2,1.2), y:rand(-0.5,0.8), z:rand(5.5,7.5)}
+                     : {x:-Math.sign(shot.target.x)*rand(2.5,4.5), y:rand(0.6,2), z:rand(4.5,6.5)}; }
       shot._pv.y-=9.8*dt;
       ball.position.x+=shot._pv.x*dt;
       ball.position.y=Math.max(BALL_R, ball.position.y+shot._pv.y*dt);
@@ -2322,10 +2523,14 @@ function update(dt){
       ball.position.z+=shot._pv.z*dt;
       updateBallShadow(); pushTrail();
     }
-    // la palla resta nei guantoni SOLO su vera parata (prima "calamitava" anche su palo/fuori)
+    // la palla resta nei guantoni SOLO su vera parata pulita (la respinta segue il path)
     else if(shot && shot.result==='SAVE' && useGLBKeeper && stateT<0.75 && gloveCatch(0.5)){ /* tenuta nei guantoni */ }
     else if(stateT<0.4){ ball.position.z += dt*6; ball.position.y+=dt*1.5; }
-    if(stateT*1000>=CONFIG.saveAnimMs) afterShot(false);
+    // il fuori/palo con simulazione ha una coda piu' lunga: si vede il rimbalzo sugli spalti
+    const tailMs = (shot && shot.sim && (shot.result==='MISS'||shot.result==='POST'))
+      ? Math.min(2800, Math.max(CONFIG.saveAnimMs, (shot.sim.endT - shot.dur*shot.simRate)*1000+400))
+      : CONFIG.saveAnimMs;
+    if(stateT*1000>=tailMs) afterShot(false);
   }
 
   // ripple/bulge rete sul gol
@@ -2458,16 +2663,23 @@ function updateAimVisuals(){
   // anteprima traiettoria (campiona la stessa fisica)
   drawTrajPreview();
 }
+// ANTEPRIMA = STESSA FISICA DEL TIRO: campiona la simulazione integrata (Magnus/drag
+// veri), con buffer dedicato (mai quello del tiro in volo) e cache sul gesto quantizzato
+let _tpKey='', _tpSim=null;
+const _tpBuf=new Float32Array(3*Math.ceil(PHYS.TMAX/PHYS.SAMPLE)+6);
 function drawTrajPreview(){
   const p=clamp(aim.power,0,1);
   const style=isKeeper()?'normal':shotStyleOf(aim.tx,aim.ty,p);   // l'anteprima MOSTRA il cucchiaio/rasoterra
-  const {dur,arcH}=shotKinematics(style,p);
-  const curlAcc=aim.curl*CONFIG.curlMax; const from=new THREE.Vector3(0,BALL_R,SPOT_Z); const tg=new THREE.Vector3(aim.tx,aim.ty,0);
-  const arr=trajLine.geometry.attributes.position.array, N=trajLine.userData.N;
-  for(let i=0;i<N;i++){ const t=i/(N-1); const tt=t*dur;
-    const baseX=lerp(from.x,tg.x,t);
-    const curlDev=0.5*curlAcc*tt*tt - 0.5*curlAcc*dur*dur*t;
-    arr[i*3]=baseX+curlDev; arr[i*3+1]=lerp(from.y,tg.y,t)+arcH*Math.sin(Math.PI*t); arr[i*3+2]=lerp(from.z,tg.z,t);
+  const key=(aim.tx*50|0)+'_'+(aim.ty*50|0)+'_'+(p*40|0)+'_'+(aim.curl*40|0)+'_'+style;
+  if(key!==_tpKey){ _tpKey=key; _tpSim=buildFlight(aim.tx,aim.ty,p,aim.curl,style,false,_tpBuf); }
+  const sim=_tpSim, arr=trajLine.geometry.attributes.position.array, N=trajLine.userData.N;
+  const tEnd=sim.crossT>0? sim.crossT : sim.T;                    // anteprima fino al piano porta
+  for(let i=0;i<N;i++){ const t=(i/(N-1))*tEnd;
+    const s=Math.min(sim.n-1, Math.max(0, t/PHYS.SAMPLE));
+    const i0=Math.floor(s), i1=Math.min(sim.n-1,i0+1), f=s-i0;
+    arr[i*3]  =lerp(sim.path[i0*3],  sim.path[i1*3],  f);
+    arr[i*3+1]=lerp(sim.path[i0*3+1],sim.path[i1*3+1],f);
+    arr[i*3+2]=lerp(sim.path[i0*3+2],sim.path[i1*3+2],f);
   }
   trajLine.geometry.attributes.position.needsUpdate=true; trajLine.computeLineDistances(); trajLine.visible=true;
 }
@@ -3197,6 +3409,7 @@ try{ const _kd=new URLSearchParams(location.search).get('kdbg'); if(_kd==='1'||_
     saveShot(){ return saveShot(); }, shoot(){ return shoot(); },
     diveNow(x,y){ return keeperDiveNow(x,y); }, get autoKick(){ return !!kAuto; },
     get replayOn(){ return !!replay; },
+    buildFlight(tx,ty,p,curl,style,special){ return buildFlight(tx,ty,p,curl,style||'normal',!!special); },
     get celeb(){ return celeb? {t:celeb.t, dir:celeb.dir, rotY:kickerGLB&&kickerGLB.rotation.y, kz:kickerGLB&&kickerGLB.position.z,
       camZ:camera&&camera.position.z, face:kickerFace&&kickerFace.visible, back:kickerBack&&kickerBack.visible} : null; },
     cpuKick(){ if(isKeeper()&&state===STATE.GAME_PLAYING){ kAuto=null; return cpuKick(); } } };
