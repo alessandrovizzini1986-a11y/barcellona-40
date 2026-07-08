@@ -1225,16 +1225,55 @@ function addPost(x,y,z,r,h,mat){ const p=new THREE.Mesh(new THREE.CylinderGeomet
 /* ---- Portiere 3D da GLB (Mixamo): personaggio + clip TUFFO (base) e clip
    aggiuntive solo-animazione (idle/battuto) montate sullo stesso scheletro per nome.
    setKeeperPose è disattivato; il movimento è guidato dall'AnimationMixer. --------- */
-// texture a strisce verticali blaugrana per la maglia
-function keeperKitTexture(){
-  // completo portiere: stesso tessuto jersey blaugrana del rigorista (generato con Canva Pro), tileable.
-  // fallback procedurale (strisce piatte) se l'immagine non carica, cosi' il gioco non si rompe mai.
-  const t=new THREE.TextureLoader().load('assets/kit-outfield.png?v=1', undefined, undefined, ()=>{
-    const c=document.createElement('canvas'); c.width=256; c.height=64; const x=c.getContext('2d');
-    const n=8, w=c.width/n; for(let i=0;i<n;i++){ x.fillStyle=(i%2)?'#A50044':'#004D98'; x.fillRect(i*w,0,w,c.height); }
-    t.image=c; t.needsUpdate=true;
+/* ---- VESTIZIONE dei GLB Mixamo (X Bot): il modello e' un manichino SENZA vestiti,
+   percio' la divisa viene "dipinta" per-vertice usando lo scheletro: ogni vertice
+   prende la regione dell'osso che lo pesa di piu' -> MAGLIA (strisce blaugrana sul
+   torso, maniche granata), PANTALONCINI blu, CALZETTONI, PELLE umana su braccia e
+   gambe, capelli, scarpe. Il portiere ha il completo verde da numero 1 + GUANTI.
+   Zero texture: vertex color, identici in PBR (PES) e toon (Holly & Benji). ---- */
+const KITS={
+  outfield:{ solid:null, stripeA:0xA50044, stripeB:0x004D98, sleeve:0xA50044,
+             shorts:0x0a3f80, sock:0x0a3f80, glove:null, skin:0xd7a37d, hair:0x2a1c10, shoe:0x15181e },
+  keeper:  { solid:0x18b06b, stripeA:0, stripeB:0, sleeve:0,
+             shorts:0x101c2c, sock:0x18b06b, glove:0xf2f4f8, skin:0xd7a37d, hair:0x2a1c10, shoe:0x15181e }
+};
+function dressGLB(inner,kind){
+  const K=KITS[kind]||KITS.outfield; const C=new THREE.Color();
+  inner.traverse(o=>{ if(!o.isSkinnedMesh || !o.geometry || !o.skeleton) return;
+    const g=o.geometry, pos=g.attributes.position, si=g.attributes.skinIndex, sw=g.attributes.skinWeight;
+    if(!pos||!si||!sw) return;
+    // regione per osso (nomi mixamorig), memoizzata per indice
+    const reg=o.skeleton.bones.map(b=>{ const n=((b&&b.name)||'').toLowerCase();
+      if(n.indexOf('hand')>=0)    return K.glove!=null?'glove':'skin';
+      if(n.indexOf('forearm')>=0) return kind==='keeper'?'jersey':'skin';   // maniche lunghe solo il portiere
+      if(n.indexOf('toe')>=0||n.indexOf('foot')>=0) return 'shoe';
+      if(n.indexOf('upleg')>=0)   return 'thigh';
+      if(n.indexOf('leg')>=0)     return 'sock';
+      if(n.indexOf('hips')>=0)    return 'waist';
+      if(n.indexOf('head')>=0)    return 'hair';
+      if(n.indexOf('neck')>=0)    return 'skin';
+      return 'jersey'; });                                                   // spine/shoulder/arm
+    const col=new Float32Array(pos.count*3);
+    for(let i=0;i<pos.count;i++){
+      let bi=si.getX(i), w=sw.getX(i);                                       // osso dominante del vertice
+      if(sw.getY(i)>w){ bi=si.getY(i); w=sw.getY(i); }
+      if(sw.getZ(i)>w){ bi=si.getZ(i); w=sw.getZ(i); }
+      if(sw.getW(i)>w){ bi=si.getW(i); }
+      const x=pos.getX(i), y=pos.getY(i);                                    // bind pose (T-pose, metri)
+      let r=reg[bi]||'jersey';
+      if(r==='waist') r = y>1.02?'jersey':'shorts';                          // vita: sopra maglia, sotto pantaloncini
+      if(r==='thigh') r = y>0.70?'shorts':'skin';                            // coscia: pantaloncino a meta', poi pelle
+      let hex;
+      if(r==='jersey') hex = K.solid!=null? K.solid
+        : (Math.abs(x)>0.26? K.sleeve : ((Math.floor((x+2)/0.075)%2)? K.stripeA : K.stripeB)); // strisce solo sul torso
+      else if(r==='shorts') hex=K.shorts; else if(r==='sock') hex=K.sock;
+      else if(r==='shoe') hex=K.shoe;    else if(r==='glove') hex=K.glove;
+      else if(r==='hair') hex=K.hair;    else hex=K.skin;
+      C.setHex(hex);                                                         // r160: converte gia' in working space
+      col[i*3]=C.r; col[i*3+1]=C.g; col[i*3+2]=C.b;
+    }
+    g.setAttribute('color', new THREE.BufferAttribute(col,3));
   });
-  t.colorSpace=THREE.SRGBColorSpace; t.wrapS=t.wrapT=THREE.RepeatWrapping; t.repeat.set(2.2,1); return t;
 }
 // ---- stile CARTOON: cel-shading (toon) sui personaggi ----
 let _toonGrad=null;
@@ -1244,19 +1283,19 @@ function toonGrad(){ if(_toonGrad) return _toonGrad; const c=document.createElem
 function toonify(root){ if(!root) return; root.traverse(o=>{ if(o.isMesh && o.material){
   if(!o.userData.pbrMat) o.userData.pbrMat=o.material;            // conserva il materiale realistico per poter tornare a PES
   if(!o.material.__toon){ const m=o.userData.pbrMat;
-    const t=new THREE.MeshToonMaterial({ color: m.color?m.color.clone():new THREE.Color(0xffffff), map:m.map||null, gradientMap:toonGrad() });
+    const t=new THREE.MeshToonMaterial({ color: m.color?m.color.clone():new THREE.Color(0xffffff), map:m.map||null, gradientMap:toonGrad(),
+      vertexColors:m.vertexColors===true });                       // la DIVISA per-vertice sopravvive al cel-shading
     t.side=m.side||THREE.FrontSide; t.__toon=true; o.material=t; } } }); }
 function untoonify(root){ if(!root) return; root.traverse(o=>{ if(o.isMesh && o.userData.pbrMat){ o.material=o.userData.pbrMat; } }); }
 function loadGLBKeeper(){
   try{
-    const KIT=keeperKitTexture();
     new GLTFLoader().load(KEEPER_URL, (gltf)=>{
       const inner=gltf.scene;
       inner.traverse(o=>{ if(o.isMesh){ o.castShadow=true; o.frustumCulled=false;
-        const body=/surface|highlimbs/i.test((o.name||'')+'|'+((o.material&&o.material.name)||''));
-        o.material=new THREE.MeshStandardMaterial({ map: body?KIT:null, color: body?0xffffff:0xA50044,
-          roughness:0.72, metalness:0.0, side:THREE.DoubleSide, envMapIntensity:0.6 });   // completo blaugrana (corpo a strisce, giunti granata)
+        o.material=new THREE.MeshStandardMaterial({ vertexColors:true,
+          roughness:0.72, metalness:0.0, side:THREE.DoubleSide, envMapIntensity:0.6 });   // divisa dipinta per-vertice (dressGLB)
       } });
+      dressGLB(inner,'keeper');                                     // completo verde da numero 1 + guanti + pelle
       // questo modello è già Y-up: nessun raddrizzamento (evita di stenderlo a terra)
       const pivot=new THREE.Group(); pivot.add(inner); pivot.updateMatrixWorld(true);
       let box=new THREE.Box3().setFromObject(pivot); const size=new THREE.Vector3(); box.getSize(size);
@@ -1270,7 +1309,7 @@ function loadGLBKeeper(){
       // ----- faccia di Ale come "testa" del portiere (sprite sempre rivolto alla camera) -----
       const ftex=new THREE.TextureLoader().load('assets/keeper-face.png?v=1'); ftex.colorSpace=THREE.SRGBColorSpace;
       keeperFace=new THREE.Sprite(new THREE.SpriteMaterial({map:ftex, transparent:true, depthTest:false, depthWrite:false}));
-      keeperFace.scale.set(0.95,0.95,0.95); keeperFace.renderOrder=999; scene.add(keeperFace);   // faccia "meme" piu grande
+      keeperFace.scale.set(0.62,0.62,0.62); keeperFace.renderOrder=999; scene.add(keeperFace);   // faccia che FITTA la testa (meme si', mongolfiera no)
       applyIdentity();                                             // da portiere: in porta c'e' la TUA faccia
       keeperHeadBone=null; keeperHandL=null; keeperHandR=null;
       inner.traverse(o=>{ const nm=(o.name||'').toLowerCase();
@@ -1310,16 +1349,6 @@ function loadGLBKeeper(){
    di spalle: kit blaugrana + NOME/NUMERO sulla schiena + faccia del giocatore (sprite).
    Sequenza: idle (offensive idle) -> sul tiro: kick (penalty), col contatto piede-palla
    sincronizzato al lancio della palla. Fallback al rigorista procedurale se il GLB fallisce. -- */
-function jerseyBodyTexture(){
-  // completo blaugrana del rigorista: tessuto jersey generato con Canva Pro (strisce blu/granata, twill),
-  // tileable e leggibile da ogni UV. Fallback procedurale a strisce piatte se l'immagine non carica.
-  const t=new THREE.TextureLoader().load('assets/kit-outfield.png?v=1', undefined, undefined, ()=>{
-    const c=document.createElement('canvas'); c.width=128; c.height=128; const x=c.getContext('2d');
-    const n=6,w=c.width/n; for(let i=0;i<n;i++){ x.fillStyle=(i%2)?'#A50044':'#004D98'; x.fillRect(i*w,0,w,c.height); }
-    t.image=c; t.needsUpdate=true;
-  });
-  t.colorSpace=THREE.SRGBColorSpace; t.wrapS=t.wrapT=THREE.RepeatWrapping; t.repeat.set(3,3); return t;
-}
 // pannello NOME+NUMERO appeso alla schiena del rigorista (tracciato sullo Spine)
 function jerseyBackPanelTexture(name,num){
   const c=document.createElement('canvas'); c.width=256; c.height=320; const x=c.getContext('2d');
@@ -1341,11 +1370,10 @@ function loadGLBKicker(){
   try{
     new GLTFLoader().load(KICKER_URL,(gltf)=>{
       const inner=gltf.scene;
-      const KIT=jerseyBodyTexture();
       inner.traverse(o=>{ if(o.isMesh){ o.castShadow=true; o.frustumCulled=false;
-        const body=/surface|highlimbs/i.test((o.name||'')+'|'+((o.material&&o.material.name)||''));
-        o.material=new THREE.MeshStandardMaterial({ map: body?KIT:null, color: body?0xffffff:0x10203a,
+        o.material=new THREE.MeshStandardMaterial({ vertexColors:true,
           roughness:0.8, metalness:0.0, side:THREE.DoubleSide, envMapIntensity:0.5 }); } });
+      dressGLB(inner,'outfield');                                   // blaugrana: strisce, pantaloncini blu, pelle
       // normalizza scala/altezza e piedi a terra
       const pivot=new THREE.Group(); pivot.add(inner); pivot.updateMatrixWorld(true);
       let box=new THREE.Box3().setFromObject(pivot); const size=new THREE.Vector3(); box.getSize(size);
@@ -1360,8 +1388,6 @@ function loadGLBKicker(){
       wrap.position.set(KICK_STANCE.x,0,KICK_STANCE.z); wrap.rotation.y=KICK_STANCE.yaw; wrap.scale.setScalar(0.55);
       if(kicker) kicker.visible=false;       // nasconde il rigorista procedurale
       kickerGLB=wrap; kickerInner=inner; scene.add(kickerGLB); kickerGLB.visible=false; if(isManga()) toonify(inner);   // cel-shading solo in Holly & Benji
-      kickerGLB.userData.bodyMat=null;
-      inner.traverse(o=>{ if(o.isMesh && o.material && o.material.map) kickerGLB.userData.bodyMat=o.material; });
       // testa per la faccia (sprite)
       kickerHeadBone=null; inner.traverse(o=>{ if(!kickerHeadBone){ const nm=(o.name||'').toLowerCase();
         if(nm.indexOf('head')>=0 && nm.indexOf('top')<0 && nm.indexOf('end')<0) kickerHeadBone=o; } });
@@ -1375,11 +1401,11 @@ function loadGLBKicker(){
         if(!kickerSpineBone && nm.indexOf('spine')>=0) kickerSpineBone=o; });
       kickerBack=new THREE.Sprite(new THREE.SpriteMaterial({ map:jerseyBackPanelTexture((PLAYER&&PLAYER.name)||'',(PLAYER&&PLAYER.num)||''),
         transparent:true, depthTest:false, depthWrite:false, toneMapped:false }));
-      kickerBack.scale.set(0.40,0.50,0.40); kickerBack.renderOrder=997; scene.add(kickerBack); kickerBack.visible=false;
+      kickerBack.scale.set(0.30,0.375,0.30); kickerBack.renderOrder=997; scene.add(kickerBack); kickerBack.visible=false;   // toppa: la maglia a strisce si vede attorno
       const faceUrl=(PLAYER&&PLAYER.face)||'assets/face-mario.png';
       const ftex=new THREE.TextureLoader().load(faceUrl); ftex.colorSpace=THREE.SRGBColorSpace;
       kickerFace=new THREE.Sprite(new THREE.SpriteMaterial({map:ftex, transparent:true, depthTest:false, depthWrite:false}));
-      kickerFace.scale.set(0.36,0.36,0.36); kickerFace.renderOrder=998; scene.add(kickerFace); kickerFace.visible=false;
+      kickerFace.scale.set(0.26,0.26,0.26); kickerFace.renderOrder=998; scene.add(kickerFace); kickerFace.visible=false;   // proporzionata alla testa
       // mixer + clip: kick dal GLB base, idle/run dai clip solo-animazione
       kickerMixer=new THREE.AnimationMixer(inner);
       const cfg=(a,loop)=>{ if(!a) return a; a.loop=loop||THREE.LoopOnce; if(!loop) a.clampWhenFinished=true; a.enabled=true; return a; };
@@ -2389,7 +2415,7 @@ function updateKickerFace(){
   const showPhase = state===STATE.GAME_PLAYING || (state===STATE.BALL_IN_FLIGHT && shot && shot.t<(shot.windup||0)+0.18);
   if(useGLBKicker && kickerGLB && kickerGLB.visible && kickerHeadBone && showPhase){
     kickerHeadBone.getWorldPosition(_kfaceV); kickerFace.position.copy(_kfaceV);
-    kickerFace.position.y+=0.16; kickerFace.position.z+=0.02; kickerFace.visible=true;
+    kickerFace.position.y+=0.10; kickerFace.position.z+=0.02; kickerFace.visible=true;   // centrata sulla testa (faccia piu' piccola)
   } else kickerFace.visible=false;
   // numero/nome sulla schiena (billboard sullo spine), stessa logica di visibilita'
   if(kickerBack){
