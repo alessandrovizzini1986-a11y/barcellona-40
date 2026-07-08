@@ -33,6 +33,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Archivo:wght@600;800&display=swap" rel="stylesheet">
 <style>
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
+  /* solo screen reader (annunci aria-live) */
+  .vh{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+  #cv:focus-visible{outline:3px solid var(--gold);outline-offset:-3px}
   html,body{height:100%;overflow:hidden;background:#02060f}
   :root{--navy:#004D98;--garnet:#A50044;--gold:#FFD884;--green:#39ff7a;--ink:#EAF0FF}
   body{font-family:"Press Start 2P",monospace;color:var(--ink)}
@@ -280,10 +283,11 @@
 </script>
 </head>
 <body>
-<canvas id="cv"></canvas>
-<canvas id="fx2d"></canvas>
-<div id="grade"></div>
-<div id="animefx"><div id="speedlines"></div><div id="mangaword"></div></div>
+<canvas id="cv" tabindex="0" role="application" aria-label="Campo di gioco 3D. Trascina col dito o usa le FRECCE per mirare, Q ed E per l'effetto, tieni premuto SPAZIO per caricare la potenza e rilascialo per tirare. Da portiere le frecce scelgono dove tuffarti e SPAZIO para."></canvas>
+<canvas id="fx2d" aria-hidden="true"></canvas>
+<div id="grade" aria-hidden="true"></div>
+<div id="animefx" aria-hidden="true"><div id="speedlines"></div><div id="mangaword"></div></div>
+<div id="srlive" class="vh" role="status" aria-live="polite"></div>
 
 <div id="hud">
   <div class="topbar"><a href="sala-giochi.html">‹ SALA GIOCHI</a><a href="index.html">ESCI ✕</a></div>
@@ -311,7 +315,7 @@
       <button class="stbtn" data-gfx="pes">🎮 PES<small>realistico</small></button>
       <button class="stbtn" data-gfx="manga">🎬 HOLLY &amp; BENJI<small>anime</small></button>
     </div>
-    <div class="small">trascina per mirare nell'angolo<br><span class="grn">la distanza decide la POTENZA</span><br><span class="blu">muovi di lato per dare EFFETTO</span><br><span style="color:#9fd0ff">morbido e alto = CUCCHIAIO 🥄</span><br><span class="org">forte e basso = RASOIATA ⚡</span></div>
+    <div class="small">trascina per mirare nell'angolo<br><span class="grn">la distanza decide la POTENZA</span><br><span class="blu">muovi di lato per dare EFFETTO</span><br><span style="color:#9fd0ff">morbido e alto = CUCCHIAIO 🥄</span><br><span class="org">forte e basso = RASOIATA ⚡</span><br><span style="color:#8fa6cf">⌨ FRECCE per mirare · Q/E effetto · SPAZIO carica e tira</span></div>
     <button id="trofBtn" class="hudbtn trofbtn">🏆 TROFEI <span id="menuTrof">0/10</span></button>
     <div class="small">record <span id="menuRec">0</span></div>
     <div class="blink">★ TOCCA PER GIOCARE ★</div>
@@ -1965,7 +1969,7 @@ function resolveShot(){
     else { showResult('FUORI!','#ffd28a'); engine.view.popWord('FUORI!','#ffffff'); arcadeAudio.playPostSting(); Sound.groan(); }
     haptic([0,130]); slowmo=1; setState(STATE.SAVE_ANIMATION);
   }
-  syncHUD();
+  syncHUD(); try{ announceOutcome(r); }catch(e){}
 }
 // esito dal punto di vista del PORTIERE umano: SAVE/MISS/POST = sopravvivi, GOAL = gol subito
 function resolveKeeper(r){
@@ -1992,7 +1996,7 @@ function resolveKeeper(r){
     else { showResult('FUORI! 😮‍💨','#ffd28a'); engine.view.popWord('FUORI!','#ffffff'); arcadeAudio.playPostSting(); }
     slowmo=1; setState(STATE.SAVE_ANIMATION);
   }
-  syncHUD();
+  syncHUD(); try{ announceOutcome(r); }catch(e){}
 }
 function gameOver(){ Sound.musicStop(); Sound.crowd(0); Sound.sfx(180,.2); setTimeout(()=>Sound.sfx(90,.3),130);
   try{ if(MODE==='five' && duelResult==='win') Progress.award('duello'); }catch(e){}   // vinci il duello -> sblocchi ALE
@@ -2118,6 +2122,9 @@ function update(dt){
   // ---- CAMERA cinematografica ----
   updateCamera(dt);
 
+  // POTENZA DA TASTIERA: sale finche' SPAZIO e' premuto, oltre il massimo riparte (rischio/ricompensa)
+  if(engine.input.kbCharge && state===STATE.GAME_PLAYING && !isKeeper()){
+    aim.power+=dt*0.75; if(aim.power>1) aim.power=CONFIG.minPowerShot; }
   // HUD power
   if(state===STATE.GAME_PLAYING && aim.active){ HUD.powerFill.style.width=(aim.power*100).toFixed(0)+'%'; }
   HUD.score.classList.toggle('pulse',scorePulseT>0.25);
@@ -2430,6 +2437,16 @@ function syncHUD(){
 function showResult(txt,col){ HUD.result.textContent=txt; HUD.result.style.color=col;
   HUD.result.classList.remove('show'); void HUD.result.offsetWidth; HUD.result.classList.add('show');
   setTimeout(()=>{ HUD.result.classList.remove('show'); },1300); }
+// ---- ANNUNCI SCREEN READER (aria-live): esito + punteggio dopo ogni rigore ----
+function announce(msg){ const el=document.getElementById('srlive'); if(!el) return;
+  el.textContent=''; setTimeout(()=>{ el.textContent=msg; },40); }
+function announceOutcome(r){
+  const map={GOAL:'Gol!',SAVE:'Parata!',POST:'Palo!',MISS:'Fuori!'};
+  let ctx;
+  if(MODE==='five') ctx=(isKeeper()?'parate ':'gol ')+(isKeeper()?aleSaves:goals5)+', rigore '+Math.min(shotNum,5)+' di 5';
+  else ctx= streak+(streak===1?' di fila':' di fila');
+  announce((map[r]||r)+' '+(isKeeper()?'(sei il portiere) ':'')+ctx);
+}
 
 /* ----- STILE: PES (realistico) <-> HOLLY & BENJI (anime) ----- */
 function applyGFX(){
@@ -2652,6 +2669,16 @@ function renderSettings(){
 function openSettings(){ renderSettings(); document.getElementById('settings').classList.add('show'); Sound.sfx(660,.05); }
 function closeSettings(){ document.getElementById('settings').classList.remove('show'); Sound.sfx(440,.05); }
 document.getElementById('gear').addEventListener('click',e=>{ e.stopPropagation(); openSettings(); });
+// a11y: dopo un TAP/CLICK su un bottone, togli il focus (altrimenti Spazio/Invio
+// restano "intrappolati" sul bottone e la tastiera di gioco non risponde piu').
+// I click da tastiera (detail=0) NON perdono il focus: chi naviga con Tab resta dov'e'.
+document.addEventListener('click',e=>{ if(e.detail>0){ const b=e.target&&e.target.closest&&e.target.closest('button'); if(b) b.blur(); } },true);
+// a11y: i controlli-icona (♪ e ⚙, sono div) diventano bottoni veri per tastiera/screen reader
+[['snd','Attiva o disattiva tutto l\'audio'],['gear','Apri impostazioni']].forEach(([id,lab])=>{
+  const el=document.getElementById(id); if(!el) return;
+  el.setAttribute('role','button'); el.tabIndex=0; el.setAttribute('aria-label',lab);
+  el.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); e.stopPropagation(); el.click(); } });
+});
 document.getElementById('trofBtn').addEventListener('click',e=>{ e.stopPropagation(); openSettings(); });
 document.getElementById('setClose').addEventListener('click',e=>{ e.stopPropagation(); closeSettings(); });
 document.getElementById('settings').addEventListener('click',e=>{ if(e.target.id==='settings') closeSettings(); });
@@ -2687,7 +2714,12 @@ class Input {
     cv.addEventListener('pointercancel',e=>this.up(e));
     cv.addEventListener('pointerleave', e=>{ if(aim.active) this.up(e); });
     addEventListener('keydown', e=>this.key(e));
+    addEventListener('keyup', e=>this.keyUp(e));
   }
+  // ---- TASTIERA (a11y): mira con le frecce, effetto Q/E, potenza con SPAZIO tenuto ----
+  _kbEnsure(){ if(!aim.active){ aim.active=true; aim.tx=0; aim.ty=1.2; aim.power=0.55; aim.curl=0; aim.t0=performance.now(); } }
+  _kbMove(dx,dy){ this._kbEnsure();
+    aim.tx=clamp(aim.tx+dx,-HALF-0.5,HALF+0.5); aim.ty=clamp(aim.ty+dy,0.15,GH+0.6); }
   down(e){
     if(HUD.nameOv.classList.contains('show')) return;
     const t=e.touches?e.touches[0]:e, x=t.clientX, y=t.clientY;
@@ -2728,13 +2760,28 @@ class Input {
     if(aim.power<CONFIG.minPowerShot+0.02) aim.power=0.45;        // tap senza drag = tiro morbido
     this.e.physics.shoot();
   }
-  key(e){ const k=e.key.toLowerCase();
-    if(k==='g'){ setGFX(isManga()?'pes':'manga'); showTelecro('STILE: '+(isManga()?'HOLLY & BENJI 🎬':'PES 🎮')); return; }   // toggle stile al volo (debug/confronto)
-    if(k===' '||k==='enter'){ e.preventDefault();
-      if(state===STATE.MENU_SCREEN||state===STATE.GAME_OVER) startGame();
-      else if(state===STATE.GAME_PLAYING){ aim.tx=rand(-2,2); aim.ty=rand(0.6,1.9); aim.power=0.6; aim.curl=rand(-0.4,0.4);
-        if(isKeeper()) this.e.physics.saveShot(); else this.e.physics.shoot(); } }
+  key(e){
+    // niente scorciatoie se il focus e' su un controllo UI o se un overlay e' aperto
+    const tg=e.target; if(tg && (tg.tagName==='BUTTON'||tg.tagName==='INPUT'||tg.tagName==='A')) return;
+    const set=document.getElementById('settings'); if(set && set.classList.contains('show')) return;
+    const k=e.key.toLowerCase();
+    if(k==='g'){ setGFX(isManga()?'pes':'manga'); showTelecro('STILE: '+(isManga()?'HOLLY & BENJI 🎬':'PES 🎮')); return; }   // toggle stile al volo
+    if(state===STATE.MENU_SCREEN||state===STATE.GAME_OVER){
+      if(k===' '||k==='enter'){ e.preventDefault(); startGame(); } return; }
+    if(state!==STATE.GAME_PLAYING) return;
+    // ---- MIRA DA TASTIERA ----
+    const MV={arrowleft:[-0.26,0],arrowright:[0.26,0],arrowup:[0,0.2],arrowdown:[0,-0.2]};
+    if(MV[k]){ e.preventDefault(); this._kbMove(MV[k][0],MV[k][1]); return; }
+    if(k==='q'||k==='e'){ if(!isKeeper()){ this._kbEnsure(); aim.curl=clamp(aim.curl+(k==='e'?0.12:-0.12),-0.8,0.8);
+      HUD.curl.classList.add('on'); HUD.curl.textContent=(aim.curl<0?'↺':'↻')+' EFFETTO '+Math.round(Math.abs(aim.curl)*100)+'%'; } return; }
+    if(k===' '&&!e.repeat){ e.preventDefault(); this._kbEnsure();
+      if(isKeeper()){ this.e.physics.saveShot(); return; }             // da portiere SPAZIO = tuffo subito
+      this.kbCharge=true; aim.power=CONFIG.minPowerShot; HUD.power.classList.add('on'); return; }   // carica finche' tieni premuto
+    if(k==='enter'){ e.preventDefault(); this._kbEnsure();
+      if(isKeeper()) this.e.physics.saveShot(); else this.e.physics.shoot(); }
   }
+  keyUp(e){ if(e.key===' ' && this.kbCharge){ this.kbCharge=false;      // rilascio SPAZIO = TIRO con la potenza caricata
+      if(state===STATE.GAME_PLAYING && !isKeeper()){ HUD.power.classList.remove('on'); this.e.physics.shoot(); } } }
 }
 class Physics {                                  // volo palla + AI portiere + esito
   constructor(engine){ this.e=engine; }
@@ -2916,6 +2963,8 @@ engine.on(STATE.SAVE_ANIMATION, ()=>{ engine.view.shake(isManga()?1.1:0.7); crow
 // COLONNA SONORA: tema menu quando si entra nel menu (parte davvero al primo gesto,
 // autoplay policy); i loop di gameplay lo fermano in startGame
 engine.on(STATE.MENU_SCREEN, ()=>{ try{ arcadeAudio.playMenuTheme(); }catch(e){} });
+// a11y: annuncio del fine partita allo screen reader (titolo + riga risultato)
+engine.on(STATE.GAME_OVER, ()=>{ try{ announce(HUD.overTitle.textContent+'. '+document.getElementById('overLine').textContent+'. Premi INVIO per rigiocare.'); }catch(e){} });
 
 function resize(){ const w=window.innerWidth,h=window.innerHeight;
   renderer.setSize(w,h); camera.aspect=w/h; camera.updateProjectionMatrix(); }
