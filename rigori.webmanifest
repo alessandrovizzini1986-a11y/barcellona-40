@@ -1,0 +1,16 @@
+{
+  "name": "Rigori al Camp Nou",
+  "short_name": "RIGORI",
+  "description": "Penalty 3D al Camp Nou: sfida Ale ai rigori.",
+  "start_url": "rigori.html",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#02060f",
+  "theme_color": "#001F44",
+  "icons": [
+    { "src": "assets/icon-rigori-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icon-rigori-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icon-rigori-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
