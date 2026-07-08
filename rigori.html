@@ -498,10 +498,14 @@ const Sound={ ctx:null,musicOn:true,sfxOn:true,voiceOn:true,_t:null,_step:0,_cro
   _p(k,d){ try{const v=localStorage.getItem(k);return v===null?d:v==='1';}catch(e){return d;} },
   _set(k,v){ try{localStorage.setItem(k,v?'1':'0');}catch(e){} },
   toggle(){ const on=!(this.musicOn||this.sfxOn); this.musicOn=on; this.sfxOn=on; this._set('arc_music',on); this._set('arc_sfx',on);
-    if(!on){ this.musicStop(); this.crowd(0); } return on; },
+    if(!on){ this.musicStop(); this.crowd(0); try{ window.arcadeAudio&&arcadeAudio.stopAll(); }catch(e){} }
+    else if(state===STATE.MENU_SCREEN){ try{ window.arcadeAudio&&arcadeAudio.playMenuTheme(); }catch(e){} }
+    return on; },
   // toggle separati (pannello impostazioni): stesse chiavi storiche arc_music/arc_sfx
   toggleMusic(){ this.musicOn=!this.musicOn; this._set('arc_music',this.musicOn);
-    if(!this.musicOn) this.musicStop(); else if(state===STATE.GAME_PLAYING||state===STATE.BALL_IN_FLIGHT) this.musicStart();
+    if(!this.musicOn){ this.musicStop(); try{ window.arcadeAudio&&arcadeAudio.stopAll(); }catch(e){} }
+    else if(state===STATE.GAME_PLAYING||state===STATE.BALL_IN_FLIGHT) this.musicStart();
+    else if(state===STATE.MENU_SCREEN){ try{ window.arcadeAudio&&arcadeAudio.playMenuTheme(); }catch(e){} }
     return this.musicOn; },
   toggleSfx(){ this.sfxOn=!this.sfxOn; this._set('arc_sfx',this.sfxOn); if(!this.sfxOn) this.crowd(0); return this.sfxOn; },
   toggleVoice(){ this.voiceOn=!this.voiceOn; this._set('arc_voice',this.voiceOn); return this.voiceOn; },
@@ -563,6 +567,17 @@ const Sound={ ctx:null,musicOn:true,sfxOn:true,voiceOn:true,_t:null,_step:0,_cro
     for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*(1-i/d.length);
     const f=a.createBiquadFilter(); f.type='highpass'; f.frequency.value=6000;
     const g=a.createGain(); g.gain.value=v; n.buffer=buf; n.connect(f); f.connect(g); g.connect(this._busM()); n.start(); },
+  // CASSA da sala giochi (sine pitch-drop 80->30Hz, dal design della colonna sonora)
+  _kick(f0,vol,at){ const a=this.ac(); if(!a)return; const t=at||a.currentTime;
+    const o=a.createOscillator(),g=a.createGain(); o.type='sine';
+    o.frequency.setValueAtTime(f0||80,t); o.frequency.exponentialRampToValueAtTime(30,t+0.13);
+    g.gain.setValueAtTime(vol||0.2,t); g.gain.exponentialRampToValueAtTime(.0001,t+0.16);
+    o.connect(g); g.connect(this._busM()); o.start(t); o.stop(t+0.18); },
+  // PAD caldo da stadio (triangle 110Hz, attack/release lenti)
+  _pad(f,vol){ const a=this.ac(); if(!a)return; const t=a.currentTime;
+    const o=a.createOscillator(),g=a.createGain(); o.type='triangle'; o.frequency.value=f||110;
+    g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(vol,t+0.5); g.gain.linearRampToValueAtTime(0.0001,t+1.7);
+    o.connect(g); g.connect(this._busM()); o.start(t); o.stop(t+1.75); },
   // sequencer generativo: la TENSIONE (intensity 0..1) accende hi-hat, arpeggio
   // in ottava e alza il volume; il DRAMA (spareggio) cambia la melodia in minore
   _tick(){ if(!this.musicOn)return; const i=this.intensity, MEL=this.drama?this.MEL2:this.MEL;
@@ -570,6 +585,11 @@ const Sound={ ctx:null,musicOn:true,sfxOn:true,voiceOn:true,_t:null,_step:0,_cro
     this._tone(this.BASE*Math.pow(2,s/12),.18,'square',.035+.015*i);
     if(this._step%2===0){ const b=this.BASS[(this._step/2)%this.BASS.length];
       this._tone(this.BASE/2*Math.pow(2,(this.drama?b-2:b)/12),.34,'triangle',.045+.03*i); }
+    // CASSA (design colonna sonora): pulsa ~0.8s nei rigori normali, RADDOPPIA in oltranza (~0.4s)
+    if(this._step%4===0) this._kick(this.drama?90:80, .16+.08*i);
+    if(this.drama && this._step%4===2) this._kick(90,.13);
+    // PAD caldo da stadio ogni 8 step (calore, mai cupo)
+    if(this._step%8===0) this._pad(110,.04+.03*i);
     if(i>0.3 && this._step%4===2) this._hat(.04+.05*i);
     if(i>0.55) this._tone(this.BASE*2*Math.pow(2,s/12),.09,'square',.012+.014*i);
     this._step++; },
@@ -604,6 +624,115 @@ const Sound={ ctx:null,musicOn:true,sfxOn:true,voiceOn:true,_t:null,_step:0,_cro
   groan(){ if(!this.sfxOn)return; this.crowdInit(); const a=this.ac(); if(!this._crowdG)return;
     this._crowdG.gain.cancelScheduledValues(a.currentTime); this._crowdG.gain.setValueAtTime(0.05,a.currentTime);
     this._crowdG.gain.linearRampToValueAtTime(0.12,a.currentTime+0.1); this._crowdG.gain.linearRampToValueAtTime(0.04,a.currentTime+1.1); } };
+
+/* ================= RIGORI AUDIO ENGINE — colonna sonora procedurale =================
+   API di progetto (window.arcadeAudio): tema MENU, loop tensione gameplay/oltranza,
+   fanfara GOL, sting PARATA/PALO, temi VITTORIA/SCONFITTA. 100% Web Audio, zero file.
+   Implementata SOPRA i bus di Sound{} (master / musica / sfx+eco stadio) così:
+   - rispetta i toggle del pannello impostazioni (musica: temi/loop · effetti: sting)
+   - niente doppia colonna sonora: i loop di tensione pilotano il sequencer generativo
+     esistente (un solo clock -> kick/pad/melodia sempre a tempo, intensita' dinamica)
+   Rispetto alla bozza di design: ogni nota ha il proprio inviluppo (niente drone
+   continuo), i loop sono riavviabili all'infinito e si fermano davvero. */
+class RigoriAudioEngine {
+  constructor(){ this.activeNodes={}; this.masterVolume=0.25; }
+  get ctx(){ return Sound.ctx; }
+  init(){ const a=Sound.ac(); if(a && a.state==='suspended'){ try{ a.resume(); }catch(e){} } return a; }
+  createSafeGain(){ const a=this.init(); if(!a) return null;
+    const g=a.createGain(); g.gain.setValueAtTime(this.masterVolume,a.currentTime); return g; }
+  // nota con inviluppo (attack 15ms -> decay esponenziale), su bus musica o sfx
+  _note(freq,t,dur,type,vol,sfx){ const a=this.ctx; if(!a)return null;
+    const o=a.createOscillator(),g=a.createGain(); o.type=type; o.frequency.setValueAtTime(freq,t);
+    g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(vol,t+0.015); g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+    o.connect(g); g.connect(sfx?Sound._busS():Sound._busM()); o.start(t); o.stop(t+dur+0.03); return o; }
+
+  // 1. menu_theme — giro epico in La minore (Am/F/C/G) stile arcade sportivo anni '90.
+  //    Sequencer a step (150ms): lead saw + armonia a quinta + basso + cassa. Loop infinito.
+  playMenuTheme(){ if(!Sound.musicOn || this.activeNodes.menu_theme) return;
+    const a=this.init(); if(!a) return;
+    const LEAD=[220.00,261.63,329.63,392.00,174.61,220.00,261.63,349.23];   // A3 C4 E4 G4 F3 A3 C4 F4
+    const BASS=[110,110,87.31,87.31,130.81,130.81,98,98];                    // A2 A2 F2 F2 C3 C3 G2 G2
+    let step=0;
+    const tick=()=>{ if(!Sound.musicOn || a.state!=='running') return;       // muto/suspended: salta, non accumulare
+      const t=a.currentTime+0.02, n=LEAD[step%8];
+      this._note(n,     t,0.14,'sawtooth',0.045);
+      this._note(n*1.5, t,0.12,'triangle',0.028);                            // quinta sopra (come da design)
+      if(step%2===0) this._note(BASS[step%8],t,0.28,'triangle',0.055);
+      if(step%4===2) Sound._kick(75,0.16,t);
+      step++; };
+    tick();
+    this.activeNodes.menu_theme={ t:setInterval(tick,150) };
+  }
+  stopMenuTheme(){ const n=this.activeNodes.menu_theme;
+    if(n){ clearInterval(n.t); delete this.activeNodes.menu_theme; } }
+
+  // 2. gameplay_tension_loop — tensione costante dei rigori normali: avvia il
+  //    sequencer generativo (kick ~0.8s + pad caldo + melodia, intensita' dinamica)
+  playGameplayTension(){ this.init(); this.stopMenuTheme(); Sound.setDrama(false); Sound.musicStart(); }
+  stopGameplayTension(){ Sound.musicStop(); }
+  // 3. suddendeath_tension_loop — variante accelerata per l'oltranza:
+  //    ostinato minore, cassa raddoppiata (~0.45s) e battito cardiaco
+  playSuddenDeathTension(){ this.init(); this.stopMenuTheme(); Sound.setDrama(true); Sound.musicStart(); }
+  stopSuddenDeathTension(){ Sound.musicStop(); }
+
+  // 4. goal_fanfare — esplosione trionfale: arpeggio DO maggiore (E4 G4 C5 E5)
+  //    a scaletta + accordo tenuto in coda naturale (~3.5s)
+  playGoalFanfare(){ if(!Sound.sfxOn) return; const a=this.init(); if(!a) return;
+    const now=a.currentTime, N=[329.63,392.00,523.25,659.25];
+    N.forEach((f,i)=>{ const t=now+i*0.08;
+      this._note(f,t,0.55,'sawtooth',0.11,true);
+      this._note(f,t,0.5,'triangle',0.06,true); });
+    N.forEach((f,i)=>{ this._note(f,now+0.34,3.1,'triangle',0.045-i*0.006,true); });   // accordo in coda
+  }
+  // 5. save_sting — stacco parata eroico (sweep 220->440 + quinta, ~2s)
+  playSaveSting(){ if(!Sound.sfxOn) return; const a=this.init(); if(!a) return;
+    const now=a.currentTime;
+    const o=a.createOscillator(),g=a.createGain(); o.type='triangle';
+    o.frequency.setValueAtTime(220,now); o.frequency.exponentialRampToValueAtTime(440,now+0.3);
+    g.gain.setValueAtTime(0,now); g.gain.linearRampToValueAtTime(0.16,now+0.03);
+    g.gain.exponentialRampToValueAtTime(0.0001,now+2.0);
+    o.connect(g); g.connect(Sound._busS()); o.start(now); o.stop(now+2.05);
+    this._note(659.25,now+0.32,1.2,'triangle',0.07,true);                              // quinta di rinforzo
+  }
+  // 6. post_sting — rammarico rapido su palo/fuori (150->60Hz, ~1.2s)
+  playPostSting(){ if(!Sound.sfxOn) return; const a=this.init(); if(!a) return;
+    const now=a.currentTime;
+    const o=a.createOscillator(),g=a.createGain(); o.type='sine';
+    o.frequency.setValueAtTime(150,now); o.frequency.linearRampToValueAtTime(60,now+0.2);
+    g.gain.setValueAtTime(0,now); g.gain.linearRampToValueAtTime(0.22,now+0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001,now+1.2);
+    o.connect(g); g.connect(Sound._busS()); o.start(now); o.stop(now+1.25);
+  }
+  // 7. victory_theme — scala ascendente in LA maggiore (A B C# E F# A) con coda (~10s)
+  playVictoryTheme(){ if(!Sound.musicOn) return; const a=this.init(); if(!a) return;
+    this._stopTheme(); const now=a.currentTime, M=[440,493.88,554.37,659.25,739.99,880];
+    const nodes=[];
+    M.forEach((f,i)=>{ const t=now+i*0.4;
+      nodes.push(this._note(f,t,0.55,'triangle',0.1));
+      nodes.push(this._note(f/2,t,0.5,'triangle',0.05)); });
+    nodes.push(this._note(880,now+2.4,7.0,'triangle',0.07));                            // nota finale tenuta
+    nodes.push(this._note(659.25,now+2.4,7.0,'triangle',0.045));
+    nodes.push(this._note(440,now+2.4,7.0,'triangle',0.045));
+    this.activeNodes.theme=nodes.filter(Boolean);
+  }
+  // 8. defeat_theme — discesa malinconica ma calda (D4->A3, mai cupa, ~8s)
+  playDefeatTheme(){ if(!Sound.musicOn) return; const a=this.init(); if(!a) return;
+    this._stopTheme(); const now=a.currentTime, nodes=[];
+    const o=a.createOscillator(),g=a.createGain(); o.type='sine';
+    o.frequency.setValueAtTime(293.66,now); o.frequency.linearRampToValueAtTime(220,now+3);
+    g.gain.setValueAtTime(0,now); g.gain.linearRampToValueAtTime(0.11,now+0.05);
+    g.gain.exponentialRampToValueAtTime(0.0001,now+8);
+    o.connect(g); g.connect(Sound._busM()); o.start(now); o.stop(now+8.05); nodes.push(o);
+    [220,174.61].forEach((f,i)=>nodes.push(this._note(f,now+1.2+i*1.4,2.6,'triangle',0.05)));
+    this.activeNodes.theme=nodes;
+  }
+  _stopTheme(){ const n=this.activeNodes.theme;
+    if(n){ n.forEach(o=>{ try{o.stop();}catch(e){} }); delete this.activeNodes.theme; } }
+  stopAll(){ this.stopMenuTheme(); this._stopTheme(); Sound.musicStop(); }
+}
+window.arcadeAudio=new RigoriAudioEngine();
+// sblocco del contesto audio al PRIMO input utente (autoplay policy mobile)
+document.addEventListener('pointerdown',()=>{ try{ window.arcadeAudio.init(); }catch(e){} },{once:true});
 
 /* --------------------------- STATE MACHINE -------------------------------- */
 const STATE={ LOADING:'LOADING',MENU_SCREEN:'MENU_SCREEN',GAME_PLAYING:'GAME_PLAYING',
@@ -1473,8 +1602,11 @@ const guessBiasOf=()=>clamp(streak*CONFIG.guessBiasGrow,0,0.7); // 0=tira a caso
 function setState(s){ engine.setState(s); }
 function startGame(){ streak=0; shotNum=0; goals5=0; aleSaves=0; suddenDeath=false; duelResult=''; fiveRes=[]; aimHist=[]; lastShotPNG=null; specialArmed=false;
   if(!challengeFromURL) roundSeed=Math.floor(Math.random()*2.1e9).toString(36);   // nuovo seed ogni partita (la SFIDA da URL lo fissa)
-  Sound.setDrama(false); Sound.intensity=0;
-  resetForShot(); Sound.ac(); Sound.musicStart(); Sound.crowd(0.04); Sound.sfx(880,.06); setState(STATE.GAME_PLAYING); refWhistle(); }
+  Sound.intensity=0;
+  resetForShot(); Sound.ac();
+  // AUDIO: stop tema menu / temi finali -> parte il loop di tensione gameplay
+  try{ arcadeAudio._stopTheme(); arcadeAudio.playGameplayTension(); }catch(e){}
+  Sound.crowd(0.04); Sound.sfx(880,.06); setState(STATE.GAME_PLAYING); refWhistle(); }
 function resetForShot(){
   shot=null; ball.position.set(0,BALL_R,SPOT_Z); ball.scale.set(1,1,1);
   ball.rotation.set(0,0,0);
@@ -1494,7 +1626,8 @@ function newAim(){ resetForShot(); setState(STATE.GAME_PLAYING); refWhistle(); i
   const tension = MODE==='five' ? (suddenDeath?1:shotNum/5) : Math.min(1,streak/10);
   Sound.crowd(0.045 + tension*0.09);                 // il coro sale con la tensione
   Sound.setIntensity(tension);                       // la MUSICA accelera e si arricchisce con la posta in gioco
-  Sound.setDrama(suddenDeath);                       // spareggio: ostinato minore + battito cardiaco
+  // spareggio -> loop OLTRANZA (ostinato minore, cassa doppia, battito cardiaco)
+  try{ if(suddenDeath) arcadeAudio.playSuddenDeathTension(); else Sound.setDrama(false); }catch(e){ Sound.setDrama(suddenDeath); }
   if(suddenDeath) showTelecro('SPAREGGIO! Questo tiro decide tutto 😱'); }
 // dopo ogni rigore: infinita = morte improvvisa; 5 rigori = continua fino a 5
 function afterShot(scored){
@@ -1713,7 +1846,7 @@ function resolveShot(){
     burstConfetti(shot.target.x,Math.max(0.6,shot.target.y));
     if(incrocio){ burstConfetti(-shot.target.x*0.5,1.5); setTimeout(()=>burstConfetti(shot.target.x*0.7,1.2),120); }  // festa extra all'incrocio
     engine.view.burstAt3D(tmpV2.set(shot.target.x,Math.max(0.4,shot.target.y),-GD),'goal');   // scintille sulla rete
-    Sound.netSwish(); Sound.sfx(880,.07); setTimeout(()=>Sound.sfx(1320,.11),85); setTimeout(()=>Sound.sfx(1760,.13),190); Sound.roar();
+    Sound.netSwish(); arcadeAudio.playGoalFanfare(); Sound.roar();   // FANFARA gol (arpeggio DO maggiore) + boato
     speedLines(); engine.view.popWord(incrocio?'EUROGOOOL!':'GOOOOL!','#FF0000');   // onomatopea rossa + bordo nero (canvas)
     if(shot.special){ engine.view.popWord('SUPERGOOOL! 🌈','#ff3cac',true); engine.view.shake(1.2);   // gol da tiro speciale
       for(let q=0;q<3;q++) setTimeout(()=>burstConfetti(rand(-2.5,2.5),rand(1,2.2)),q*110); }
@@ -1727,11 +1860,11 @@ function resolveShot(){
     haptic([0,40,30,70]); slowmo=1; setState(STATE.GOAL_ANIMATION);
   } else {
     shakeMag=CONFIG.shakeOnSave;
-    if(r==='SAVE'){ aleSaves++; showResult('PARATO!','#ff9d6a'); engine.view.popWord('PARATAAA!','#FFFF00'); Sound.gloveThud(); Sound.sfx(200,.16,'sawtooth'); Sound.groan();   // onomatopea gialla (canvas)
+    if(r==='SAVE'){ aleSaves++; showResult('PARATO!','#ff9d6a'); engine.view.popWord('PARATAAA!','#FFFF00'); Sound.gloveThud(); arcadeAudio.playSaveSting(); Sound.groan();   // sting parata eroica di Ale
       engine.view.burstAt3D(tmpV2.set(shot.guess,shot.guessY||1.0,KEEPER_Z),'save');   // polvere/scintille dai guantoni
       HUD.flash.classList.remove('on'); HUD.flash.classList.add('save'); void HUD.flash.offsetWidth; HUD.flash.classList.add('on'); }
-    else if(r==='POST'){ showResult('PALO!','#ffd884'); engine.view.popWord('PALO!','#ffd24a'); engine.view.burstAt3D(tmpV2.set(Math.sign(shot.target.x)*HALF,shot.target.y,0),'save'); Sound.postClang(); Sound.groan(); }
-    else { showResult('FUORI!','#ffd28a'); engine.view.popWord('FUORI!','#ffffff'); Sound.sfx(150,.20,'triangle'); Sound.groan(); }
+    else if(r==='POST'){ showResult('PALO!','#ffd884'); engine.view.popWord('PALO!','#ffd24a'); engine.view.burstAt3D(tmpV2.set(Math.sign(shot.target.x)*HALF,shot.target.y,0),'save'); Sound.postClang(); arcadeAudio.playPostSting(); Sound.groan(); }
+    else { showResult('FUORI!','#ffd28a'); engine.view.popWord('FUORI!','#ffffff'); arcadeAudio.playPostSting(); Sound.groan(); }
     haptic([0,130]); slowmo=1; setState(STATE.SAVE_ANIMATION);
   }
   syncHUD();
@@ -1752,19 +1885,22 @@ function resolveKeeper(r){
     if(r==='SAVE'){ aleSaves++;                              // conteggio parate umane (duello 5 rigori)
       showResult('PARATA! 🧤','#39ff7a'); engine.view.popWord('PARATAAA!','#FFFF00');
       engine.view.burstAt3D(tmpV2.set(shot.guess,shot.guessY||1.0,KEEPER_Z),'save');
-      Sound.sfx(880,.07); setTimeout(()=>Sound.sfx(1320,.11),85); Sound.roar();
+      Sound.gloveThud(); arcadeAudio.playSaveSting(); Sound.roar();   // sting parata EROICA (sei tu il muro)
       burstConfetti(shot.guess,Math.max(0.6,shot.guessY||1.2));
       HUD.flash.classList.remove('on'); HUD.flash.classList.add('save'); void HUD.flash.offsetWidth; HUD.flash.classList.add('on');
       haptic([0,40,30,70]);
       try{ if(streak>=3) Progress.award('parata3'); if(streak>=8) Progress.award('muro8'); }catch(e){}
-    } else if(r==='POST'){ showResult('PALO! 😅','#ffd884'); engine.view.popWord('PALO!','#ffd24a'); Sound.sfx(420,.05,'square',0.25); setTimeout(()=>Sound.sfx(160,.18,'triangle'),60); }
-    else { showResult('FUORI! 😮‍💨','#ffd28a'); engine.view.popWord('FUORI!','#ffffff'); Sound.sfx(150,.16,'triangle'); }
+    } else if(r==='POST'){ showResult('PALO! 😅','#ffd884'); engine.view.popWord('PALO!','#ffd24a'); Sound.postClang(); arcadeAudio.playPostSting(); }
+    else { showResult('FUORI! 😮‍💨','#ffd28a'); engine.view.popWord('FUORI!','#ffffff'); arcadeAudio.playPostSting(); }
     slowmo=1; setState(STATE.SAVE_ANIMATION);
   }
   syncHUD();
 }
 function gameOver(){ Sound.musicStop(); Sound.crowd(0); Sound.sfx(180,.2); setTimeout(()=>Sound.sfx(90,.3),130);
   try{ if(MODE==='five' && duelResult==='win') Progress.award('duello'); }catch(e){}   // vinci il duello -> sblocchi ALE
+  // TEMA FINALE: vittoria (duello vinto / grande streak / nuovo record) o sconfitta (mai cupa)
+  try{ const won = MODE==='five' ? duelResult==='win' : (streak>=5 || (!isKeeper() && Scores.isHigh(streak)));
+    if(won) arcadeAudio.playVictoryTheme(); else arcadeAudio.playDefeatTheme(); }catch(e){}
   if(isKeeper()){
     if(MODE!=='five'){ try{ const pb=+(localStorage.getItem('rigk_best')||0); if(streak>pb) localStorage.setItem('rigk_best',streak); }catch(e){} }
     setState(STATE.GAME_OVER); return;                       // il portiere ha un suo record separato (no leaderboard nomi)
@@ -2635,6 +2771,8 @@ try{ const _kd=new URLSearchParams(location.search).get('kdbg'); if(_kd==='1'||_
     setRole(r){ ROLE=r; }, setMode(m){ MODE=m; },
     setAim(x,y,p,c){ aim.tx=x; aim.ty=y; if(p!=null)aim.power=p; if(c!=null)aim.curl=c; },
     get shotStyle(){ return shot?shot.style:''; }, get progress(){ return Progress.data(); },
+    get audio(){ return { menu:!!window.arcadeAudio.activeNodes.menu_theme, theme:!!window.arcadeAudio.activeNodes.theme,
+      seq:!!Sound._t, drama:Sound.drama, intensity:Sound.intensity, ctx:Sound.ctx?Sound.ctx.state:'none' }; },
     setPlayer(n){ PLAYER=PLAYERS[n]||PLAYER; }, startGame(){ return startGame(); },
     saveShot(){ return saveShot(); }, shoot(){ return shoot(); } };
 }}catch(e){}
@@ -2643,6 +2781,9 @@ try{ const _kd=new URLSearchParams(location.search).get('kdbg'); if(_kd==='1'||_
 engine.on(STATE.GOAL_ANIMATION, ()=>{ engine.view.shake(isManga()?1:0.55); if(isManga()) engine.view.bustNet(ripple.x,ripple.y);
   crowdFlashParty(12); });  // Anime: rete sfondata · tribuna: flash dei telefoni
 engine.on(STATE.SAVE_ANIMATION, ()=>{ engine.view.shake(isManga()?1.1:0.7); crowdFlashParty(6); });
+// COLONNA SONORA: tema menu quando si entra nel menu (parte davvero al primo gesto,
+// autoplay policy); i loop di gameplay lo fermano in startGame
+engine.on(STATE.MENU_SCREEN, ()=>{ try{ arcadeAudio.playMenuTheme(); }catch(e){} });
 
 function resize(){ const w=window.innerWidth,h=window.innerHeight;
   renderer.setSize(w,h); camera.aspect=w/h; camera.updateProjectionMatrix(); }
