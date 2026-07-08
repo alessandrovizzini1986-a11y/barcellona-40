@@ -844,6 +844,8 @@ let kickerFace=null, kickerHeadBone=null; const _kfaceV=new THREE.Vector3();
 let kickerBack=null, kickerSpineBone=null; const _kbackV=new THREE.Vector3();
 const kickerAct={};                                  // azioni: idle, run, kick
 let kickPhase='', kickPhaseT=0;                      // sequenza idle -> run -> kick
+let celeb=null;                                      // ESULTANZA post-gol (FIFA-style): {t,dir} il marcatore corre verso la camera
+let replay=null;                                     // MOVIOLA del tiro decisivo (slow-mo, camera laterale TV) prima del verdetto
 const KICKER_URL='assets/kicker.glb?v=1';
 const KICK_CONTACT=0.62;                             // istante di contatto piede-palla nella clip (s, durata ~1.5s)
 const KICK_START_OFFSET=0.50;                        // parte appena prima del contatto: swing breve, piede tocca ~al lancio palla
@@ -1762,6 +1764,7 @@ function resetForShot(){
   if(useGLBKicker && kickerGLB){ kickPhase=''; kickPhaseT=0; playKicker('idle');
     kickerGLB.position.set(KICK_STANCE.x,0,KICK_STANCE.z); kickerGLB.rotation.y=KICK_STANCE.yaw; }  // torna in postura di rincorsa
   aim.active=false; aim.power=0; aim.curl=0; aim.t0=0; aimRing.visible=aimDot.visible=trajLine.visible=false;
+  celeb=null; replay=null;                           // fine esultanza/moviola: si torna al live
   // PORTIERE: la CPU calcia da sola dopo una pausa di tensione (tu devi solo REAGIRE)
   kPre=null; kAuto = isKeeper()? {t:0, delay:1.15+Math.random()*1.5} : null;
   // reset scia (incluso colore: la scia arcobaleno del tiro speciale torna bianca)
@@ -2052,6 +2055,9 @@ function resolveShot(){
       if(shot.style==='chip') Progress.award('cucchiaio');
       if(shot.style==='low' && shot.power>0.72) Progress.award('rasoiata');
       if(streak>=5) Progress.award('streak5'); if(streak>=10) Progress.award('streak10'); }catch(e){}
+    // ESULTANZA (come nei giochi di calcio veri): il TUO giocatore si gira e corre
+    // verso la camera con la faccia in primo piano
+    if(useGLBKicker && kickerGLB){ celeb={t:0,dir:1}; playKicker('run',1); }
     haptic([0,40,30,70]); slowmo=1; setState(STATE.GOAL_ANIMATION);
   } else {
     shakeMag=CONFIG.shakeOnSave;
@@ -2075,6 +2081,8 @@ function resolveKeeper(r){
     engine.view.burstAt3D(tmpV2.set(shot.target.x,Math.max(0.4,shot.target.y),-GD),'goal');
     Sound.sfx(200,.18,'sawtooth'); Sound.groan();
     HUD.flash.classList.remove('on','save'); void HUD.flash.offsetWidth; HUD.flash.classList.add('on');
+    // ESULTANZA di ALE: ti ha segnato e viene a dirtelo in faccia (corre verso la camera)
+    if(useGLBKicker && kickerGLB){ celeb={t:0,dir:-1}; playKicker('run',1); }
     haptic([0,130]); slowmo=1; setState(STATE.GOAL_ANIMATION);
   } else {                                                   // parata o tiro sbagliato dalla CPU -> festa del portiere
     streak++; scorePulseT=0.7;
@@ -2092,7 +2100,12 @@ function resolveKeeper(r){
   }
   syncHUD(); try{ announceOutcome(r); }catch(e){}
 }
-function gameOver(){ Sound.musicStop(); Sound.crowd(0); Sound.sfx(180,.2); setTimeout(()=>Sound.sfx(90,.3),130);
+function gameOver(){
+  Sound.musicStop(); Sound.crowd(0);
+  if(startReplay()) return;                          // MOVIOLA: si rivede il rigore decisivo, poi il verdetto
+  gameOverNow();
+}
+function gameOverNow(){ Sound.sfx(180,.2); setTimeout(()=>Sound.sfx(90,.3),130);
   try{ if(MODE==='five' && duelResult==='win') Progress.award('duello'); }catch(e){}   // vinci il duello -> sblocchi ALE
   // TEMA FINALE: vittoria (duello vinto / grande streak / nuovo record) o sconfitta (mai cupa)
   try{ const won = MODE==='five' ? duelResult==='win' : (streak>=5 || (!isKeeper() && Scores.isHigh(streak)));
@@ -2105,6 +2118,72 @@ function gameOver(){ Sound.musicStop(); Sound.crowd(0); Sound.sfx(180,.2); setTi
   setState(STATE.GAME_OVER);
   if(MODE!=='five' && Scores.isHigh(streak)) askName(); }
 
+/* ------------------------- MOVIOLA (replay TV) ----------------------------
+   Il RIGORE DECISIVO si rivede in slow-motion da bordo campo (camera laterale
+   stile regia TV) prima del verdetto: palla, curva, tuffo e impatto identici
+   al live (stessa cinematica), con rete che si gonfia e suoni d'impatto.  */
+const _rpCam=new THREE.Vector3(), _rpLook=new THREE.Vector3();
+function startReplay(){
+  if(!shot || !shot.launched) return false;
+  replay={ t:-0.55, kicked:false, diveStarted:false, impact:false, endT:0,
+    clip: keeperDive? keeperDive.clip : null,
+    commitX: keeperDive? keeperDive.commitX : clamp(shot.guess*0.7,-HALF+0.6,HALF-0.6),
+    s:{ from:shot.from.clone(), target:shot.target.clone(), arcH:shot.arcH,
+        curlAcc:shot.curlAcc, dur:shot.dur, style:shot.style, result:shot.result,
+        guess:shot.guess, guessY:shot.guessY, keeperFrom:shot.keeperFrom, reaction:shot.reaction } };
+  // scena riportata all'istante del calcio
+  ball.position.copy(replay.s.from); ball.scale.set(1,1,1);
+  ballTrail.userData.hist.length=0; ballTrail.userData.parts.forEach(m=>m.visible=false);
+  keeper.position.set(replay.s.keeperFrom,0,KEEPER_Z); keeper.rotation.set(0,0,0);
+  if(useGLBKeeper){ keeperDive=null; playKeeper('idle'); }
+  if(useGLBKicker && kickerGLB){ kickerGLB.position.set(KICK_PLANT.x,0,KICK_FOLLOW_Z);   // il rigorista torna sul punto di calcio
+    kickerGLB.rotation.y=0; playKicker('idle'); }
+  ripple.t=-1; applyNetRipple(-1,0,0); celeb=null;
+  // grandangolo da regia: in verticale il fov 50 non tiene palla+porta nella stessa scena
+  if(camera){ camera.fov = camera.aspect<1? 72 : 58; camera.updateProjectionMatrix(); }
+  showTelecro('🎬 MOVIOLA — rivediamo il rigore decisivo…');
+  engine.view.popWord('REPLAY','#9fd0ff');
+  Sound.sfx(520,.06,'square',0.2);
+  return true;
+}
+function updateReplay(dt){
+  const R=replay, s=R.s;
+  R.t += dt*0.5;                                             // SLOW MOTION 2x
+  if(R.t>=0 && !R.impact){
+    if(!R.kicked){ R.kicked=true; Sound.kick(0.6); }
+    const p=clamp(R.t/s.dur,0,1), tt=p*s.dur;
+    const baseX=lerp(s.from.x,s.target.x,p);
+    const curlDev=0.5*s.curlAcc*tt*tt - 0.5*s.curlAcc*s.dur*s.dur*p;
+    ball.position.x=baseX+curlDev;
+    ball.position.y=lerp(s.from.y,s.target.y,p)+s.arcH*Math.sin(Math.PI*p);
+    ball.position.z=lerp(s.from.z,s.target.z,p);
+    ball.rotation.x-=dt*CONFIG.spinVis*0.5;
+    updateBallShadow(); pushTrail();
+    // il portiere rilegge il tiro come nel live (clip + commit laterale)
+    if(!R.diveStarted && R.clip && useGLBKeeper && R.t>=s.reaction*0.55){ R.diveStarted=true;
+      const cd=keeperAct[R.clip]? keeperAct[R.clip].getClip().duration : s.dur;
+      playKeeper(R.clip, clamp(cd*0.45/Math.max(0.18,(s.dur-s.reaction*0.55)*2),0.35,1.6)); }
+    const rp=clamp((R.t-s.reaction*0.55)/Math.max(0.16,s.dur*0.9),0,1);
+    keeper.position.x=lerp(s.keeperFrom, R.commitX, 1-(1-rp)*(1-rp));
+    if(p>=1){ R.impact=true;
+      if(s.result==='GOAL'){ ripple={t:0,x:s.target.x,y:s.target.y}; Sound.netSwish(); }
+      else if(s.result==='POST'){ Sound.postClang(); }
+      else if(s.result==='SAVE'){ Sound.gloveThud(); } }
+  } else if(R.impact){
+    R.endT+=dt;
+    if(s.result==='GOAL' && ball.position.z>-GD+0.25){ ball.position.z-=dt*1.1; updateBallShadow(); }  // si adagia in rete
+    if(R.endT>1.05){ replay=null; applyCamFov(); gameOverNow(); return; }   // fov di ruolo ripristinato
+  }
+  if(ripple.t>=0){ ripple.t+=dt; applyNetRipple(ripple.t,ripple.x,ripple.y); if(ripple.t>2.2){ ripple.t=-1; applyNetRipple(-1,0,0); } }
+  // CAMERA MOVIOLA: bordo campo dal lato opposto al tiro, e la regia SEGUE LA PALLA
+  // (come nei replay TV veri: palla sempre in quadro, dal dischetto fino alla porta)
+  const side = Math.abs(s.target.x)<0.3? -1 : -Math.sign(s.target.x);
+  _rpCam.set(side*9.0, 2.4, 8.5 - Math.max(0,R.t)*0.3);
+  camera.position.lerp(_rpCam, Math.min(1,dt*3.5));
+  _rpLook.lerp(_rpCam.set(ball.position.x, Math.max(0.8,ball.position.y), ball.position.z), Math.min(1,dt*6));  // segue LA PALLA
+  camera.lookAt(_rpLook);
+}
+
 /* ------------------------------- UPDATE ---------------------------------- */
 // avvicina la palla al guantone più vicino (la parata "prende" davvero il pallone)
 function gloveCatch(s){
@@ -2116,6 +2195,7 @@ function gloveCatch(s){
 }
 function update(dt){
   stateT+=dt;
+  if(replay){ updateReplay(dt); return; }            // MOVIOLA: il mondo live e' in pausa, gira solo il replay
   // spin visiva pallone (anche da fermo lieve)
   scorePulseT=Math.max(0,scorePulseT-dt);
   shakeMag=Math.max(0,shakeMag-dt*2.2);
@@ -2207,13 +2287,26 @@ function update(dt){
     }
   }
   else if(state===STATE.GOAL_ANIMATION){
+    // ---- ESULTANZA FIFA-style: il marcatore si GIRA verso la camera e corre ad
+    //      esultare, faccia in primo piano (da tiratore verso di te; da portiere
+    //      e' ALE che ti corre incontro per prenderti in giro) ----
+    if(celeb && useGLBKicker && kickerGLB){
+      celeb.t+=dt;
+      const targetY = celeb.dir>0? Math.PI : 0;                          // gira le spalle alla porta -> guarda la camera
+      kickerGLB.rotation.y += (targetY-kickerGLB.rotation.y)*Math.min(1,dt*7);
+      // corre verso la camera ma si FERMA in quadro (mai oltre l'obiettivo: la camera
+      // del gol fa punch-in fino a z~14.7, quindi stop a 12.6 = faccia in primo piano)
+      kickerGLB.position.z = celeb.dir>0? Math.min(kickerGLB.position.z+dt*2.6, 12.6)
+                                        : Math.max(kickerGLB.position.z-dt*3.2, 3.2);
+      kickerGLB.position.x += (0-kickerGLB.position.x)*Math.min(1,dt*1.5);
+    }
     // portiere battuto / rete che vibra; ball resta in rete
     keeper.position.y=Math.max(0,keeper.position.y-dt*2.2);   // ATTERRAGGIO: il corpo si posa (gravita'), niente freeze a mezz'aria
     setKeeperPose(keeper, POSE_BEATEN, 0.08);
     if(useGLBKeeper && keeperState!=='beaten') playKeeper('beaten');
     // ANIME: il pallone "sfonda" e prosegue oltre la linea con la scia (velocità sovrumana)
     if(isManga() && ball.position.z>-GD-1.2){ ball.position.z-=dt*7; ball.position.y=Math.max(BALL_R,ball.position.y-dt*0.5); pushTrail(); }
-    if(stateT*1000>=CONFIG.goalCelebrateMs) afterShot(true);
+    if(stateT*1000>=CONFIG.goalCelebrateMs+(celeb?800:0)) afterShot(true);   // +tempo per vedere l'esultanza in faccia
   }
   else if(state===STATE.SAVE_ANIMATION){
     keeper.position.y=Math.max(0,keeper.position.y-dt*2.2);   // ATTERRAGGIO dopo il tuffo/salto
@@ -2276,6 +2369,16 @@ function updateCamera(dt){
       lx=lerp(lx, (state===STATE.GOAL_ANIMATION? ripple.x: keeper.position.x), 0.5); ly=1.15; }
     else { px+=Math.sin(a)*2.5; pz=B.z-1.8- (1-slowmo)*1.7; py+=0.15*(1-slowmo);
       lx=lerp(lx, (state===STATE.GOAL_ANIMATION? ripple.x: keeper.position.x), 0.5); ly=1.25; }
+  }
+  // ESULTANZA: stacco di regia SUL MARCATORE che corre verso di te — la camera guarda
+  // LUI (non piu' la porta alle sue spalle) e resta stretta anche dopo lo slow-mo
+  if(celeb && kickerGLB && state===STATE.GOAL_ANIMATION && celeb.t>0.35){
+    const k=Math.min(1,(celeb.t-0.35)/0.5);
+    lx=lerp(lx, kickerGLB.position.x, k*0.9);
+    ly=lerp(ly, 1.25, k*0.85);
+    lz=lerp(lz, kickerGLB.position.z, k*0.9);
+    py=lerp(py, 2.05, k*0.6);
+    pz=lerp(pz, 16.2, k*0.6);
   }
   if(shakeMag>0){ px+=rand(-1,1)*shakeMag*0.24; py+=rand(-1,1)*shakeMag*0.17; lx+=rand(-1,1)*shakeMag*0.06; }
   camPos.set(px,py,pz); camTarget.set(lx,ly,lz);
@@ -2408,7 +2511,8 @@ function updateKickerFace(){
   if(!kickerFace) return;
   // la faccia segue la testa solo finche' il rigorista e' in primo piano (idle/inizio tiro);
   // appena la palla vola la camera fa punch-in e il rigorista esce dal campo: nascondi lo sprite
-  const showPhase = state===STATE.GAME_PLAYING || (state===STATE.BALL_IN_FLIGHT && shot && shot.t<(shot.windup||0)+0.18);
+  const showPhase = state===STATE.GAME_PLAYING || (state===STATE.BALL_IN_FLIGHT && shot && shot.t<(shot.windup||0)+0.18)
+                 || (state===STATE.GOAL_ANIMATION && !!celeb);        // ESULTANZA: faccia in primo piano
   // COERENZA DI SGUARDO: la faccia si vede SOLO se il rigorista e' rivolto verso la
   // camera (modalita' portiere: ALE ti viene incontro). Visto di spalle (modalita'
   // tiratore) si vedono NUCA + numero sulla schiena, mai la faccia-cartello.
@@ -3092,6 +3196,9 @@ try{ const _kd=new URLSearchParams(location.search).get('kdbg'); if(_kd==='1'||_
     setPlayer(n){ PLAYER=PLAYERS[n]||PLAYER; }, startGame(){ return startGame(); },
     saveShot(){ return saveShot(); }, shoot(){ return shoot(); },
     diveNow(x,y){ return keeperDiveNow(x,y); }, get autoKick(){ return !!kAuto; },
+    get replayOn(){ return !!replay; },
+    get celeb(){ return celeb? {t:celeb.t, dir:celeb.dir, rotY:kickerGLB&&kickerGLB.rotation.y, kz:kickerGLB&&kickerGLB.position.z,
+      camZ:camera&&camera.position.z, face:kickerFace&&kickerFace.visible, back:kickerBack&&kickerBack.visible} : null; },
     cpuKick(){ if(isKeeper()&&state===STATE.GAME_PLAYING){ kAuto=null; return cpuKick(); } } };
 }}catch(e){}
 // JUICE agganciato alla FSM: screen-shake all'ingresso negli stati d'impatto
