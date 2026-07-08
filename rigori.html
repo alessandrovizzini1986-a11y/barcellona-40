@@ -1351,18 +1351,13 @@ function loadGLBKeeper(){
    sincronizzato al lancio della palla. Fallback al rigorista procedurale se il GLB fallisce. -- */
 // pannello NOME+NUMERO appeso alla schiena del rigorista (tracciato sullo Spine)
 function jerseyBackPanelTexture(name,num){
+  // STAMPA da maglia vera (niente piu' "cartoncino" opaco che squadrava il corpo):
+  // sfondo trasparente, nome + numerone gialli con bordo scuro, come sulle maglie blaugrana
   const c=document.createElement('canvas'); c.width=256; c.height=320; const x=c.getContext('2d');
   x.clearRect(0,0,c.width,c.height);
-  // toppa blaugrana a strisce con bordo, cosi' nome+numero risaltano sulla schiena
-  const rr=(X,Y,W,H,r)=>{ x.beginPath(); x.moveTo(X+r,Y); x.arcTo(X+W,Y,X+W,Y+H,r); x.arcTo(X+W,Y+H,X,Y+H,r); x.arcTo(X,Y+H,X,Y,r); x.arcTo(X,Y,X+W,Y,r); x.closePath(); };
-  // toppa opaca blaugrana con bordo, numero giallo grande ben leggibile
-  rr(14,10,228,300,30); x.save(); x.clip();
-  const n=6,w=256/n; for(let i=0;i<n;i++){ x.fillStyle=(i%2)?'#A50044':'#004D98'; x.fillRect(i*w,0,w,320); }
-  x.restore();
-  rr(14,10,228,300,30); x.lineWidth=12; x.strokeStyle='#FFE9A8'; x.stroke();
-  x.textAlign='center'; x.fillStyle='#FFE259'; x.strokeStyle='#1a1206'; x.lineWidth=8; x.lineJoin='round';
-  x.font='bold 56px Arial,sans-serif'; x.strokeText((name||'').toUpperCase(),128,86); x.fillText((name||'').toUpperCase(),128,86);
-  x.font='bold 200px Arial,sans-serif'; x.strokeText(String(num||''),128,290); x.fillText(String(num||''),128,290);
+  x.textAlign='center'; x.fillStyle='#FFE259'; x.strokeStyle='#1a1206'; x.lineWidth=9; x.lineJoin='round';
+  x.font='bold 58px Arial,sans-serif'; x.strokeText((name||'').toUpperCase(),128,78); x.fillText((name||'').toUpperCase(),128,78);
+  x.font='bold 190px Arial,sans-serif'; x.strokeText(String(num||''),128,278); x.fillText(String(num||''),128,278);
   // via TextureLoader (percorso Image, identico alla faccia che funziona) per evitare problemi col CanvasTexture sugli sprite
   const t=new THREE.TextureLoader().load(c.toDataURL()); t.colorSpace=THREE.SRGBColorSpace; return t;
 }
@@ -2408,20 +2403,30 @@ function updateKicker(dt){
   if(kickT>0.55){ kickT=-1; kicker.rotation.x=0; }
 }
 // faccia del giocatore (Mario/Giulio) agganciata alla testa del rigorista GLB
+const _kfwd=new THREE.Vector3(), _ktoCam=new THREE.Vector3();
 function updateKickerFace(){
   if(!kickerFace) return;
   // la faccia segue la testa solo finche' il rigorista e' in primo piano (idle/inizio tiro);
   // appena la palla vola la camera fa punch-in e il rigorista esce dal campo: nascondi lo sprite
   const showPhase = state===STATE.GAME_PLAYING || (state===STATE.BALL_IN_FLIGHT && shot && shot.t<(shot.windup||0)+0.18);
-  if(useGLBKicker && kickerGLB && kickerGLB.visible && kickerHeadBone && showPhase){
+  // COERENZA DI SGUARDO: la faccia si vede SOLO se il rigorista e' rivolto verso la
+  // camera (modalita' portiere: ALE ti viene incontro). Visto di spalle (modalita'
+  // tiratore) si vedono NUCA + numero sulla schiena, mai la faccia-cartello.
+  let facing=false;
+  if(useGLBKicker && kickerGLB && camera){
+    _kfwd.set(0,0,-1).applyQuaternion(kickerGLB.quaternion);        // il modello guarda -Z locale
+    _ktoCam.subVectors(camera.position,kickerGLB.position);
+    facing = _kfwd.dot(_ktoCam) > 0;
+  }
+  if(useGLBKicker && kickerGLB && kickerGLB.visible && kickerHeadBone && showPhase && facing){
     kickerHeadBone.getWorldPosition(_kfaceV); kickerFace.position.copy(_kfaceV);
-    kickerFace.position.y+=0.10; kickerFace.position.z+=0.02; kickerFace.visible=true;   // centrata sulla testa (faccia piu' piccola)
+    kickerFace.position.y+=0.10; kickerFace.position.z+=0.02; kickerFace.visible=true;   // centrata sulla testa
   } else kickerFace.visible=false;
-  // numero/nome sulla schiena (billboard sullo spine), stessa logica di visibilita'
+  // numero/nome sulla schiena: SOLO quando lo vedi di spalle (mai il numero sul petto)
   if(kickerBack){
-    if(useGLBKicker && kickerGLB && kickerGLB.visible && kickerSpineBone && showPhase){
+    if(useGLBKicker && kickerGLB && kickerGLB.visible && kickerSpineBone && showPhase && !facing){
       kickerSpineBone.getWorldPosition(_kbackV); kickerBack.position.copy(_kbackV);
-      kickerBack.position.y+=0.04; kickerBack.visible=true;   // schiena: la faccia e' alzata, qui sotto si legge il numero
+      kickerBack.position.y+=0.04; kickerBack.visible=true;
     } else kickerBack.visible=false;
   }
 }
