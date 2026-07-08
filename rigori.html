@@ -1476,7 +1476,13 @@ function updateKeeperDive(dt){
     // SPLIT-STEP: contro-movimento di caricamento prima del tuffo (come i portieri veri):
     // piccolo affondo sulle gambe che si annulla esattamente quando parte l'esplosione
     const pre=clamp(st/Math.max(0.06,shot.reaction*0.55),0,1);
-    if(st>=0) keeper.position.y=-0.055*Math.sin(Math.PI*pre);
+    if(st>=0){ keeper.position.y=-0.055*Math.sin(Math.PI*pre);
+      // TELEGRAPH: il portiere si SBILANCIA leggermente verso la sua lettura gia'
+      // durante la finestra di reazione (peso che scivola + spalla che si inclina):
+      // non piu' statua-poi-salto, e chi osserva puo' "leggere" il suo istinto
+      const s=Math.sign(shot.guess-shot.keeperFrom)||0;
+      keeper.position.x=lerp(shot.keeperFrom, shot.keeperFrom+s*0.14, pre*pre);
+      keeper.rotation.z=-s*0.07*pre; }
     return;
   }
   // progress dal lancio del tuffo
@@ -1835,7 +1841,9 @@ function shoot(){
   let reach=reachOf()*(1-0.18*p);                            // potenza riduce un po' il reach efficace
   if(special) reach*=0.5;                                     // 2x velocità: i guantoni quasi non arrivano -> forza il GOL se l'AI non para
   const inGoal = Math.abs(endX)<HALF-0.02 && ty>0.06 && ty<GH-0.02;
-  const hitPost = !inGoal && Math.abs(Math.abs(endX)-HALF)<0.16 && ty<GH+0.05; // legno
+  // LEGNO: palo (bordo laterale) O TRAVERSA (bordo alto, prima mancava: era solo "fuori")
+  const hitPost = !inGoal && ((Math.abs(Math.abs(endX)-HALF)<0.16 && ty<GH+0.05)
+                           || (Math.abs(ty-GH)<0.12 && Math.abs(endX)<HALF+0.05));
   if(gamble){ guess=clamp(guess+(rng()*2-1)*0.55,-HALF+0.4,HALF-0.4); }   // il gamble sporca la lettura
   const dyDen=reach*(style==='low'?0.72:0.95);               // rasoterra: scendere sui piedi e' piu dura
   const dx=(endX-guess)/reach, dy=(ty-guessY)/dyDen;         // ellisse di parata
@@ -1916,7 +1924,8 @@ function saveShot(){
   const reach=clamp(2.2-lvl*0.6,1.35,2.2);                  // guantoni umani generosi; a livello alto perdona meno
   const endX=tx;
   const inGoal = Math.abs(endX)<HALF-0.02 && ty>0.06 && ty<GH-0.02;
-  const hitPost = !inGoal && Math.abs(Math.abs(endX)-HALF)<0.16 && ty<GH+0.05;
+  const hitPost = !inGoal && ((Math.abs(Math.abs(endX)-HALF)<0.16 && ty<GH+0.05)
+                           || (Math.abs(ty-GH)<0.12 && Math.abs(endX)<HALF+0.05));   // palo O traversa
   const dx=(endX-guess)/reach, dy=(ty-guessY)/(reach*(style==='low'?0.72:0.95));
   const saved = inGoal && (dx*dx+dy*dy<=1);
   const result = !inGoal ? (hitPost?'POST':'MISS') : (saved?'SAVE':'GOAL');
@@ -2108,8 +2117,20 @@ function update(dt){
   }
   else if(state===STATE.SAVE_ANIMATION){
     keeper.position.y=Math.max(0,keeper.position.y-dt*2.2);   // ATTERRAGGIO dopo il tuffo/salto
-    // la palla resta nei guantoni del portiere (presa), poi cade
-    if(useGLBKeeper && stateT<0.75 && gloveCatch(0.5)){ /* tenuta nei guantoni */ }
+    if(shot && shot.result==='POST'){
+      // RIMBALZO DAL LEGNO: velocita' riflessa via dal palo/traversa + gravita' + quicchi a terra
+      if(!shot._pv){ const bar=Math.abs(shot.target.y-GH)<0.14 && Math.abs(shot.target.x)<HALF-0.05;
+        shot._pv= bar? {x:rand(-1.2,1.2), y:rand(-0.5,0.8), z:rand(5.5,7.5)}          // traversa: schizza in campo
+                     : {x:-Math.sign(shot.target.x)*rand(2.5,4.5), y:rand(0.6,2), z:rand(4.5,6.5)}; }  // palo: via dal legno
+      shot._pv.y-=9.8*dt;
+      ball.position.x+=shot._pv.x*dt;
+      ball.position.y=Math.max(BALL_R, ball.position.y+shot._pv.y*dt);
+      if(ball.position.y<=BALL_R && shot._pv.y<0) shot._pv.y*=-0.45;
+      ball.position.z+=shot._pv.z*dt;
+      updateBallShadow(); pushTrail();
+    }
+    // la palla resta nei guantoni SOLO su vera parata (prima "calamitava" anche su palo/fuori)
+    else if(shot && shot.result==='SAVE' && useGLBKeeper && stateT<0.75 && gloveCatch(0.5)){ /* tenuta nei guantoni */ }
     else if(stateT<0.4){ ball.position.z += dt*6; ball.position.y+=dt*1.5; }
     if(stateT*1000>=CONFIG.saveAnimMs) afterShot(false);
   }
