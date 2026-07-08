@@ -36,7 +36,7 @@
   /* solo screen reader (annunci aria-live) */
   .vh{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
   #cv:focus-visible{outline:3px solid var(--gold);outline-offset:-3px}
-  html,body{height:100%;overflow:hidden;background:#02060f}
+  html,body{height:100%;overflow:hidden;background:#02060f;overscroll-behavior:none}   /* niente pull-to-refresh che uccide lo swipe */
   :root{--navy:#004D98;--garnet:#A50044;--gold:#FFD884;--green:#39ff7a;--ink:#EAF0FF}
   body{font-family:"Press Start 2P",monospace;color:var(--ink)}
   #cv{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none}
@@ -3024,6 +3024,10 @@ function boot(){
   function finish(){
     if(finished) return; finished=true;
     buildScene(textures); resize(); addEventListener('resize',resize);
+    // mobile: la barra indirizzi che appare/scompare cambia il viewport VISIVO senza
+    // sempre emettere window.resize -> aggancia anche visualViewport (no doppio danno: resize e' idempotente)
+    if(window.visualViewport) visualViewport.addEventListener('resize',resize);
+    addEventListener('orientationchange',()=>setTimeout(resize,120));
     HUD.loading.style.display='none'; setState(STATE.MENU_SCREEN);
     if(challengeFromURL){ const n=document.getElementById('challengeNote'); if(n) n.style.display='block'; }
     engine.start();
