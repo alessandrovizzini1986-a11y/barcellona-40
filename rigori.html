@@ -803,6 +803,9 @@ let netShatter=null;               // ANIME: segmenti 3D dei "fili" della rete s
 let stadiumMat=null, stadiumTexPES=null, stadiumTexANIME=null;   // stadio per stile (PES/ANIME), swap in applyGFX
 const camBase=new THREE.Vector3(0,2.75,18.2);   // camera piu' arretrata e alta: si vede il rigorista e la sua rincorsa
 const camLook=new THREE.Vector3(0,1.15,-1.0);
+// MODALITÀ PORTIERE: camera DIETRO LA PORTA che guarda il dischetto — sei TU in porta,
+// l'avversario ti corre incontro e la palla arriva verso di te (niente "sembra che tiro io")
+const KCAM={ base:new THREE.Vector3(2.4,3.5,-6.6), look:new THREE.Vector3(-0.2,0.95,10.8) };   // sopra la traversa, in diagonale: vedi TE in basso e ALE che arriva
 const camPos=camBase.clone(), camTarget=camLook.clone();
 const raycaster=new THREE.Raycaster();
 const goalPlane=new THREE.Plane(new THREE.Vector3(0,0,1),0); // z=0
@@ -1053,6 +1056,12 @@ function buildScene(textures){
     // ali laterali più indietro e meno ruotate, così incorniciano senza dominare
     [-1,1].forEach(s=>{ const wing=new THREE.Mesh(new THREE.PlaneGeometry(40,22), standMat);
       wing.position.set(s*40,8.2,-8); wing.rotation.y=-s*Math.PI/4.6; scene.add(wing); });
+    // TRIBUNA SPECCHIATA dietro al dischetto: serve alla CAMERA PORTIERE (dietro la porta,
+    // guarda verso il dischetto); dalla camera tiratore (z=18.2) sta alle spalle = invisibile
+    const back2=new THREE.Mesh(new THREE.PlaneGeometry(76,22), standMat);
+    back2.position.set(0,8.2,24); back2.rotation.y=Math.PI; scene.add(back2);
+    [-1,1].forEach(s=>{ const wing2=new THREE.Mesh(new THREE.PlaneGeometry(40,22), standMat);
+      wing2.position.set(s*40,8.2,15); wing2.rotation.y=Math.PI+s*Math.PI/4.6; scene.add(wing2); });
   }
 
   // ---- PORTA arrotondata (palo+barra metallo bianco) ----
@@ -1165,6 +1174,7 @@ function loadGLBKeeper(){
       const ftex=new THREE.TextureLoader().load('assets/keeper-face.png?v=1'); ftex.colorSpace=THREE.SRGBColorSpace;
       keeperFace=new THREE.Sprite(new THREE.SpriteMaterial({map:ftex, transparent:true, depthTest:false, depthWrite:false}));
       keeperFace.scale.set(0.95,0.95,0.95); keeperFace.renderOrder=999; scene.add(keeperFace);   // faccia "meme" piu grande
+      applyIdentity();                                             // da portiere: in porta c'e' la TUA faccia
       keeperHeadBone=null; keeperHandL=null; keeperHandR=null;
       inner.traverse(o=>{ const nm=(o.name||'').toLowerCase();
         if(!keeperHeadBone && nm.indexOf('head')>=0 && nm.indexOf('top')<0 && nm.indexOf('end')<0) keeperHeadBone=o;
@@ -1282,6 +1292,7 @@ function loadGLBKicker(){
       add('assets/kicker_idle.glb?v=1','idle',THREE.LoopRepeat);
       add('assets/kicker_run.glb?v=1','run',THREE.LoopRepeat);
       useGLBKicker=true;
+      applyIdentity();                                             // rigorista = TU, o ALE se sei in porta
       if(PLAYER){ kickerGLB.visible=true; playKicker('idle'); }
     }, undefined, ()=>{ /* errore: resta il rigorista procedurale */ });
   }catch(e){}
@@ -1610,6 +1621,7 @@ function setState(s){ engine.setState(s); }
 function startGame(){ streak=0; shotNum=0; goals5=0; aleSaves=0; suddenDeath=false; duelResult=''; fiveRes=[]; aimHist=[]; lastShotPNG=null; specialArmed=false;
   if(!challengeFromURL) roundSeed=Math.floor(Math.random()*2.1e9).toString(36);   // nuovo seed ogni partita (la SFIDA da URL lo fissa)
   Sound.intensity=0;
+  applyIdentity();                                   // identita' coerenti col ruolo scelto
   resetForShot(); Sound.ac();
   // AUDIO: stop tema menu / temi finali -> parte il loop di tensione gameplay
   try{ arcadeAudio._stopTheme(); arcadeAudio.playGameplayTension(); }catch(e){}
@@ -2034,21 +2046,29 @@ function update(dt){
 
 function updateCamera(dt){
   // base + sway idle handheld (multi-frequenza, ampiezza ridotta) + punch-in snappy +
-  // orbita lenta in slow-mo + shake
+  // orbita lenta in slow-mo + shake. DA PORTIERE la base e' KCAM (dietro la porta).
+  const keep=isKeeper();
+  const B=keep?KCAM.base:camBase, L=keep?KCAM.look:camLook;
   const sway=Math.sin(stateT*0.6)*0.085 + Math.sin(stateT*1.7+1.3)*0.03;
-  let px=camBase.x+sway, py=camBase.y+Math.sin(stateT*0.43)*0.045+Math.sin(stateT*1.9)*0.012, pz=camBase.z;
-  let lx=camLook.x+Math.sin(stateT*0.5)*0.05, ly=camLook.y, lz=camLook.z;
-  // rincorsa: lenta avanzata di tensione; strike: punch-in nervoso (dal CONTATTO, non dal rilascio)
+  let px=B.x+sway, py=B.y+Math.sin(stateT*0.43)*0.045+Math.sin(stateT*1.9)*0.012, pz=B.z;
+  let lx=L.x+Math.sin(stateT*0.5)*0.05, ly=L.y, lz=L.z;
+  // rincorsa: tensione; strike: punch (tiratore: avanti sull'azione · portiere: RINCULO indietro,
+  // la palla ti arriva addosso e la camera "incassa")
   if(state===STATE.BALL_IN_FLIGHT){ const wind=shot.windup||0, ft=shot.t-wind;
     if(ft<0){ const rk=clamp(shot.t/Math.max(0.01,wind),0,1);
-      pz=lerp(camBase.z, camBase.z-0.55, rk*rk); }
+      pz=lerp(B.z, B.z+(keep?-0.3:-0.55), rk*rk); }
     else { const k=easeOutCubic(clamp(ft/0.26,0,1));
-      pz=lerp(camBase.z-0.55,camBase.z-2.7*CONFIG.camPunch*(isManga()?1.3:1),k); py=lerp(py,camBase.y-0.18,k*0.6);
-      lx=lerp(camLook.x,ball.position.x*0.45,0.35); ly=lerp(camLook.y, ball.position.y*0.5+0.7, 0.25); } }
-  // slow-mo orbita su gol/parata: piu vicino e con leggera salita
+      if(keep){ pz=lerp(B.z-0.3, B.z-1.1, k); py=lerp(py,B.y+0.1,k*0.5);
+        lx=lerp(L.x, ball.position.x*0.55, 0.5); ly=lerp(L.y, ball.position.y*0.6+0.5, 0.45); }
+      else { pz=lerp(B.z-0.55,B.z-2.7*CONFIG.camPunch*(isManga()?1.3:1),k); py=lerp(py,B.y-0.18,k*0.6);
+        lx=lerp(L.x,ball.position.x*0.45,0.35); ly=lerp(L.y, ball.position.y*0.5+0.7, 0.25); } } }
+  // slow-mo orbita su gol/parata: piu vicino e con leggera salita (portiere: piu contenuta)
   if(slowmo>0 && (state===STATE.GOAL_ANIMATION||state===STATE.SAVE_ANIMATION)){
-    const a=(1-slowmo)*0.8; px+=Math.sin(a)*2.5; pz=camBase.z-1.8- (1-slowmo)*1.7; py+=0.15*(1-slowmo);
-    lx=lerp(lx, (state===STATE.GOAL_ANIMATION? ripple.x: keeper.position.x), 0.5); ly=1.25;
+    const a=(1-slowmo)*0.8;
+    if(keep){ px+=Math.sin(a)*1.1; pz=B.z-0.6-(1-slowmo)*0.8; py+=0.12*(1-slowmo);
+      lx=lerp(lx, (state===STATE.GOAL_ANIMATION? ripple.x: keeper.position.x), 0.5); ly=1.15; }
+    else { px+=Math.sin(a)*2.5; pz=B.z-1.8- (1-slowmo)*1.7; py+=0.15*(1-slowmo);
+      lx=lerp(lx, (state===STATE.GOAL_ANIMATION? ripple.x: keeper.position.x), 0.5); ly=1.25; }
   }
   if(shakeMag>0){ px+=rand(-1,1)*shakeMag*0.24; py+=rand(-1,1)*shakeMag*0.17; lx+=rand(-1,1)*shakeMag*0.06; }
   camPos.set(px,py,pz); camTarget.set(lx,ly,lz);
@@ -2109,11 +2129,19 @@ function updateAimVisuals(){
   if(!aim.active){ aimRing.visible=aimDot.visible=trajLine.visible=false; return; }
   aimRing.visible=aimDot.visible=true;
   aimRing.position.set(aim.tx,aim.ty,0.06); aimDot.position.set(aim.tx,aim.ty,0.07);
+  // DA PORTIERE: il marker e' la ZONA DEL TUFFO (anello oro "guantone", piu largo),
+  // e NIENTE anteprima di traiettoria: quella e' roba da tiratore, qui non tiri tu.
+  if(isKeeper()){
+    aimRing.material.color.setHex(0xffd884);
+    const sk=1.5+0.18*Math.sin(stateT*8); aimRing.scale.setScalar(sk);
+    trajLine.visible=false;
+    return;
+  }
   // colore mirino in base alla bontà (dentro porta = verde, fuori = rosso)
   const inGoal=Math.abs(aim.tx)<HALF-0.02 && aim.ty>0.06 && aim.ty<GH-0.02;
   aimRing.material.color.setHex(inGoal?0x39ff7a:0xff4d5e);
   // il mirino "dice" lo stile del tiro: celeste = cucchiaio, oro = rasoiata
-  if(inGoal && !isKeeper()){ const st=shotStyleOf(aim.tx,aim.ty,clamp(aim.power,0,1));
+  if(inGoal){ const st=shotStyleOf(aim.tx,aim.ty,clamp(aim.power,0,1));
     if(st==='chip') aimRing.material.color.setHex(0x9fd0ff);
     else if(st==='low') aimRing.material.color.setHex(0xffd24a); }
   const sc=1+0.15*Math.sin(stateT*8); aimRing.scale.setScalar(sc);
@@ -2238,7 +2266,21 @@ function applyPlayer(){ if(!PLAYER) return; const cr=document.querySelector('#sc
   if(cr){ cr.classList.add('hasface'); cr.style.backgroundImage='url('+PLAYER.face+')'; }
   const tm=document.querySelector('#scoreboard .team'); if(tm) tm.textContent=PLAYER.name;
   const vs=document.querySelector('#scoreboard .vs'); if(vs) vs.textContent='ALE 🧤';
-  setKicker(PLAYER); }
+  applyIdentity(); }
+/* ----- IDENTITÀ PER RUOLO: da tiratore TU calci e Ale para; da PORTIERE l'avversario
+   che tira e' ALE 👑 e in porta ci sei TU (la tua faccia sul portiere) ----- */
+const ALE_ID={name:'ALE',num:'1',face:'assets/keeper-face.png?v=1'};
+const _faceTexCache={};
+function _faceTex(url){ if(!_faceTexCache[url]){ const t=new THREE.TextureLoader().load(url);
+  t.colorSpace=THREE.SRGBColorSpace; _faceTexCache[url]=t; } return _faceTexCache[url]; }
+function applyIdentity(){
+  const shooter = isKeeper()? ALE_ID : PLAYER;                     // chi prende la rincorsa
+  if(shooter) setKicker(shooter);
+  if(keeperFace){ const url = isKeeper()? ((PLAYER&&PLAYER.face)||'assets/face-mario.png') : 'assets/keeper-face.png?v=1';
+    keeperFace.material.map=_faceTex(url); keeperFace.material.needsUpdate=true; }
+  // dietro la porta si guarda ATTRAVERSO la rete: alleggerila per non impastare la scena
+  if(backNet && backNet.material){ backNet.material.opacity = isKeeper()? 0.38 : 0.9; }
+}
 function showReveal(poster){ const r=document.getElementById('reveal'), im=document.getElementById('revealImg');
   im.src=poster; r.classList.remove('show'); void r.offsetWidth; r.classList.add('show');
   let done=false; const close=()=>{ if(done)return; done=true; r.classList.remove('show'); r.removeEventListener('pointerdown',close); };
@@ -2272,11 +2314,11 @@ function syncHUD(){
     HUD.rec.textContent = five? ('REC '+best5+'/5') : ('REC '+Scores.best()+(Scores.bestName()?' '+Scores.bestName():''));
     HUD.menuRec.textContent = five? (best5+'/5') : Scores.best();
   }
-  const vsEl=document.querySelector('#scoreboard .vs'); if(vsEl) vsEl.textContent = keep?'ATTACCANTE':'PORTIERE';
+  const vsEl=document.querySelector('#scoreboard .vs'); if(vsEl) vsEl.textContent = keep?'ALE ⚽':'PORTIERE';
   HUD.menu.classList.toggle('show',state===STATE.MENU_SCREEN);
   HUD.over.classList.toggle('show',state===STATE.GAME_OVER);
   const playing=(state===STATE.GAME_PLAYING);
-  HUD.hint.textContent = keep? 'tocca dove tuffarti · para il rigore' : 'trascina per mirare · rilascia per tirare';
+  HUD.hint.textContent = keep? 'SEI IN PORTA 🧤 trascina dove TUFFARTI · rilascia e para il tiro di ALE' : 'trascina per mirare · rilascia per tirare';
   HUD.hint.classList.toggle('on',playing && streak<2 && !five);
   if(!playing){ HUD.power.classList.remove('on'); HUD.curl.classList.remove('on'); }
   const mb=document.getElementById('modeBtn'); if(mb) mb.textContent = five?'🎯 5 RIGORI':'∞ INFINITA';
@@ -2374,6 +2416,7 @@ const Telecro={
     }
   },
   pick(a){ return a[(Math.random()*a.length)|0].replace(/\{P\}/g,PNAME()); },
+  pickK(a){ return a[(Math.random()*a.length)|0].replace(/\{P\}/g,'ALE'); },   // da portiere l'avversario e' ALE
   say(r){ const k=this[r]?r:'MISS';
     const sp=this.SPECIAL[PNAME()]; let pool=this[k];
     if(sp && sp[k] && Math.random()<0.7) pool=sp[k];   // ~70% battuta personalizzata (se esiste), altrimenti generica
@@ -2381,9 +2424,9 @@ const Telecro={
     console.log('[Telecro] '+PNAME()+' '+k+': '+l);     // dry-run/debug: l'esito in console
     showTelecro(l); speak(l,false); },
   taunt(){ if(Math.random()<0.5){ const l=this.pick(this.TAUNT); showTelecro(l); speak(l,true); } },
-  sayKeeper(r){ const map={GOAL:'KGOAL',SAVE:'KSAVE',MISS:'KMISS',POST:'KPOST'}; const l=this.pick(this[map[r]||'KMISS']);
+  sayKeeper(r){ const map={GOAL:'KGOAL',SAVE:'KSAVE',MISS:'KMISS',POST:'KPOST'}; const l=this.pickK(this[map[r]||'KMISS']);
     console.log('[Telecro/keeper] '+r+': '+l); showTelecro(l); speak(l,false); },
-  tauntKeeper(){ if(Math.random()<0.6){ const l=this.pick(this.KTAUNT); showTelecro(l); speak(l,true); } }
+  tauntKeeper(){ if(Math.random()<0.6){ const l=this.pickK(this.KTAUNT); showTelecro(l); speak(l,true); } }
 };
 let _telcroT=null;
 function showTelecro(text){ const el=document.getElementById('telecro'); if(!el) return;
@@ -2431,7 +2474,7 @@ document.getElementById('nameSave').addEventListener('click',saveName);
 document.querySelectorAll('#playerSelect .pscard').forEach(b=>b.addEventListener('click',()=>pickPlayer(b.dataset.player)));
 document.getElementById('repick').addEventListener('click',(e)=>{ e.stopPropagation(); document.getElementById('playerSelect').classList.add('show'); });
 document.getElementById('modeBtn').addEventListener('click',(e)=>{ e.stopPropagation(); MODE=(MODE==='five')?'infinite':'five'; try{localStorage.setItem('rig_mode',MODE);}catch(e){} syncHUD(); });
-document.getElementById('roleBtn').addEventListener('click',(e)=>{ e.stopPropagation(); ROLE=(ROLE==='keeper')?'shooter':'keeper'; try{localStorage.setItem('rig_role',ROLE);}catch(e){} syncHUD(); });
+document.getElementById('roleBtn').addEventListener('click',(e)=>{ e.stopPropagation(); ROLE=(ROLE==='keeper')?'shooter':'keeper'; try{localStorage.setItem('rig_role',ROLE);}catch(e){} applyIdentity(); syncHUD(); });
 // selettore STILE: PES <-> Holly & Benji (cambiabile in qualsiasi momento)
 document.querySelectorAll('.stbtn').forEach(b=>b.addEventListener('click',(e)=>{ e.stopPropagation(); setGFX(b.dataset.gfx); }));
 applyGFX();   // imposta classe body + bottoni attivi all'avvio
@@ -2775,7 +2818,7 @@ try{ const _kd=new URLSearchParams(location.search).get('kdbg'); if(_kd==='1'||_
     get ballZ(){return ball.position.z;},
     get kickerPos(){return kickerGLB?[kickerGLB.position.x,kickerGLB.position.z]:null;},
     get keeperPos(){return [keeper.position.x,keeper.position.y];},
-    setRole(r){ ROLE=r; }, setMode(m){ MODE=m; },
+    setRole(r){ ROLE=r; try{applyIdentity();}catch(e){} }, setMode(m){ MODE=m; },
     setAim(x,y,p,c){ aim.tx=x; aim.ty=y; if(p!=null)aim.power=p; if(c!=null)aim.curl=c; },
     get shotStyle(){ return shot?shot.style:''; }, get progress(){ return Progress.data(); },
     get audio(){ return { menu:!!window.arcadeAudio.activeNodes.menu_theme, theme:!!window.arcadeAudio.activeNodes.theme,
