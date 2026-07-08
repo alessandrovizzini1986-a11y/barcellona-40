@@ -1436,6 +1436,7 @@ function playKicker(name,timeScale){
 function startKickerKick(){
   if(!useGLBKicker || !kickerAct.kick){ kickT=0; return; }  // se manca il GLB usa il lean procedurale
   kickPhase='runup'; kickPhaseT=0;
+  CharFSM.set('kicker','rincorsa');                          // FSM: parte la rincorsa
   if(kickerGLB){ kickerGLB.position.set(KICK_STANCE.x,0,KICK_STANCE.z); kickerGLB.rotation.y=KICK_STANCE.yaw; }
   const r=kickerAct.run;
   if(r){ r.loop=THREE.LoopRepeat; fadeKicker(r,1.2,0.08); kickPhase='runup'; kickPhaseT=0; }  // fadeKicker non tocca la fase
@@ -1443,6 +1444,7 @@ function startKickerKick(){
 // lancia la clip di calcio vera e propria (chiamata da updateKicker a fine corsa)
 function fireKickClip(){
   const a=kickerAct.kick; if(!a) return;
+  CharFSM.set('kicker','tiro');                              // FSM: impatto col pallone
   for(const k in kickerAct){ const o=kickerAct[k]; if(o&&o!==a&&o.isRunning&&o.isRunning()) o.fadeOut(0.06); }
   a.stop(); a.reset(); a.enabled=true; a.paused=false; a.timeScale=1; a.loop=THREE.LoopOnce; a.clampWhenFinished=true;
   a.time=KICK_START_OFFSET;                                 // parte gia' in caricamento gamba
@@ -1771,6 +1773,7 @@ function resetForShot(){
   ballTrail.userData.hist.length=0; ballTrail.userData.parts.forEach(p=>{ p.visible=false; p.material.color.setRGB(1,1,1); p.material.blending=THREE.AdditiveBlending; p.material.needsUpdate=true; });
   if(netShatter){ netShatter.userData.t=-1; netShatter.visible=false; for(const s of netShatter.children) s.visible=false; }  // rete integra
   NetSim.reset();                                    // rete massa-molla in quiete per il nuovo rigore
+  CharFSM.set('kicker','idle'); CharFSM.set('keeper','idle');   // FSM: personaggi in attesa
   HUD.power.classList.remove('on'); HUD.curl.classList.remove('on');
 }
 function newAim(){ resetForShot(); setState(STATE.GAME_PLAYING); refWhistle(); if(isKeeper()) Telecro.tauntKeeper(); else Telecro.taunt();
@@ -1974,6 +1977,37 @@ function buildFlight(tx,ty,p,curl,style,special,bufOverride){
   sim.v0=v0; sim.spin=spin; sim.T=T; sim.speed=kin.speed; sim.arcH=kin.arcH;
   return sim;
 }
+/* ----- PARATA CON INERZIA: il portiere NON assorbe automaticamente il pallone.
+   A potenza alta i guantoni RESPINGONO: la deviazione nasce dal vettore d'impatto
+   reale (riflessione sulla normale del guanto + caos controllato) e viene
+   REINTEGRATA nel mondo fisico: respinta in campo/corner, TRAVERSA dopo la
+   parata, oppure — beffa — la palla entra LENTA in porta (autogol).       ----- */
+const _parryBuf=new Float32Array(3*Math.ceil(PHYS.TMAX/PHYS.SAMPLE)+6);
+function tryParry(sim,guess,guessY,power,extra,rng){
+  if(!sim || sim.crossT<0) return null;
+  const prob=clamp((power-0.42)*1.15 + (extra||0), 0, 0.88);  // piu' potenza = piu' respinte
+  if(rng()>=prob) return null;                                // presa PULITA nei guantoni
+  const cv=sim.crossVel;
+  const vin=new THREE.Vector3(cv.x,cv.y,cv.z);
+  // normale del guanto: dal guanto verso il punto d'impatto, aperta verso il campo
+  const n=new THREE.Vector3((sim.cross.x-guess)*0.55+(rng()*2-1)*0.5,
+                            (sim.cross.y-guessY)*0.55+(rng()*2-1)*0.4,
+                            0.8+(rng()*2-1)*0.45).normalize();
+  const e=0.30+rng()*0.22;                                    // restituzione dei guantoni
+  const dot=vin.dot(n);
+  const vout=new THREE.Vector3(vin.x-(1+e)*dot*n.x, vin.y-(1+e)*dot*n.y, vin.z-(1+e)*dot*n.z)
+    .multiplyScalar(0.5+rng()*0.25);                          // le mani assorbono parte dell'energia
+  const from=new THREE.Vector3(sim.cross.x, Math.max(BALL_R,sim.cross.y), 0.02);
+  const spin2=new THREE.Vector3((rng()*2-1)*6,(rng()*2-1)*6,0);
+  const ps=integrateFlight(from,vout,spin2,{wood:true,buf:_parryBuf});
+  return { sim:ps, out: (ps.outcome==='goal-line'||ps.outcome==='wood-in')?'goal'
+                      : (ps.wood?'wood':'field') };
+}
+// posizione palla lungo volo + eventuale RESPINTA (il path del parry parte al crossing)
+function ballPathPos(t){
+  if(shot && shot.parrySim && t>=shot.parryCut) posFromPath(shot.parrySim, t-shot.parryCut);
+  else if(shot && shot.sim) posFromPath(shot.sim, t);
+}
 // risolve target/risultato al rilascio del drag
 function shoot(){
   Sound.ac();
@@ -2050,10 +2084,21 @@ function shoot(){
   else if(woodGoal) result = 'GOAL';                          // palo-gol: dinamica caotica del legno
   else if(hitPost)  result = 'POST';
   else              result = 'MISS';
+  // PARATA SPORCA: sulla parata, la potenza puo' vincere i guantoni (respinta fisica)
+  let parrySim=null, parryCut=0, parryGoal=false, parryWood=false;
+  if(result==='SAVE' && !window.__KDBG){
+    const pr=tryParry(sim, sim.cross.x, sim.cross.y, p, special?0.3:0, rng);   // guanti SUL pallone: normale del palmo
+    if(pr){ parrySim=pr.sim; parryCut=sim.crossT;
+      if(pr.out==='goal'){ result='GOAL'; parryGoal=true; }        // beffa: respinta DENTRO
+      else if(pr.out==='wood'){ result='POST'; parryWood=true; }   // parata-traversa/palo
+      /* 'field': resta SAVE, ma la palla schizza respinta in campo */ }
+  }
   // tempo di risoluzione = istante FISICO dell'evento: crossing per specchio/palo-gol,
   // impatto sul legno per il palo secco, attraversamento del piano per il fuori
-  const dur = (inGoal||woodGoal)? sim.crossT
-            : (sim.wood? sim.wood.t : (sim.crossT>0? sim.crossT : sim.T));
+  let dur = (inGoal||woodGoal)? sim.crossT
+          : (sim.wood? sim.wood.t : (sim.crossT>0? sim.crossT : sim.T));
+  if(parryGoal) dur = parryCut + parrySim.crossT;               // il gol-beffa si consuma DOPO la parata
+  else if(parryWood) dur = parryCut + parrySim.wood.t;
 
   // animazione tuffo del portiere: lato + altezza
   let diveSide = guess<-0.2? -1 : (guess>0.2? 1 : 0);
@@ -2075,6 +2120,7 @@ function shoot(){
 
   shot={ t:0, dur, from:ball.position.clone(), target, arcH, curlAcc, speed,
          sim, simRate:1, woodGoal,                            // BALISTICA v2: path integrato + eventi
+         parry:!!parrySim, parrySim, parryCut, parryGoal, parryWood,   // RESPINTA fisica dei guantoni
          guess, guessY:guessYOut, keeperFrom:keeper.position.x, reach, result, resolved:false,
          reaction: special?CONFIG.reactionMin/1000:(gamble?reactOf()*0.45:reactOf()), power:p, diveSide, diveHigh, curlSign:Math.sign(curl)||1, special, style,
          windup: useGLBKicker?KICK_WINDUP_GLB:KICK_WINDUP_FALLBACK, launched:false };   // RINCORSA: la palla parte al contatto
@@ -2181,8 +2227,19 @@ function keeperDiveNow(tx,ty){
   shot.reach=reachMul;
   // il tuffo NON riscrive gli esiti fisici del mondo: legno e fuori restano tali
   // (l'animazione del tuffo parte comunque — hai reagito, la palla era altrove)
-  if(!(shot.woodGoal || (shot.sim && (shot.sim.wood || shot.sim.outcome==='miss'))))
+  if(!(shot.woodGoal || (shot.sim && (shot.sim.wood || shot.sim.outcome==='miss')))){
     shot.result=keeperOutcome(guess,guessY,reachMul);
+    // INERZIA anche per TE: tuffo tardivo o tiro potente = i TUOI guantoni respingono
+    if(shot.result==='SAVE' && shot.sim){
+      const pr=tryParry(shot.sim, shot.sim.cross.x, shot.sim.cross.y, shot.power, late*0.4, Math.random);
+      if(pr){ shot.parry=true; shot.parrySim=pr.sim; shot.parryCut=shot.sim.crossT;
+        if(pr.out==='goal'){ shot.result='GOAL'; shot.parryGoal=true;
+          shot.dur=(shot.parryCut+pr.sim.crossT)/shot.simRate; }
+        else if(pr.out==='wood'){ shot.result='POST'; shot.parryWood=true;
+          shot.dur=(shot.parryCut+pr.sim.wood.t)/shot.simRate; }
+        /* 'field': respinta in campo -> resta PARATA (sporca ma tua) */ }
+    }
+  }
   Sound.sfx(660,.05,'square',0.25); haptic(20);             // feedback istantaneo: hai scelto l'angolo
   return true;
 }
@@ -2221,6 +2278,7 @@ function resolveShot(){
     Sound.netSwish(); arcadeAudio.playGoalFanfare(); Sound.roar();   // FANFARA gol (arpeggio DO maggiore) + boato
     speedLines(); engine.view.popWord(incrocio?'EUROGOOOL!':'GOOOOL!','#FF0000');   // onomatopea rossa + bordo nero (canvas)
     if(shot.woodGoal){ Sound.postClang(); engine.view.popWord('PALO-GOL! 🎯','#ffd24a'); showTelecro('🥶 PALO-GOL! Il legno la sputa DENTRO!'); }
+    if(shot.parryGoal){ engine.view.popWord('NON BASTA! 🧤','#ffd884'); showTelecro('😱 La tocca… ma NON BASTA: entra lo stesso!'); }
     if(shot.special){ engine.view.popWord('SUPERGOOOL! 🌈','#ff3cac',true); engine.view.shake(1.2);   // gol da tiro speciale
       for(let q=0;q<3;q++) setTimeout(()=>burstConfetti(rand(-2.5,2.5),rand(1,2.2)),q*110); }
     // ---- TROFEI (progressione locale, non blocca mai il flusso) ----
@@ -2233,6 +2291,7 @@ function resolveShot(){
     // ESULTANZA (come nei giochi di calcio veri): il TUO giocatore si gira e corre
     // verso la camera con la faccia in primo piano
     if(useGLBKicker && kickerGLB){ celeb={t:0,dir:1}; playKicker('run',1); }
+    CharFSM.set('kicker','esultanza'); CharFSM.set('keeper','sconfitta');   // FSM + espressioni
     haptic([0,40,30,70]); slowmo=1; setState(STATE.GOAL_ANIMATION);
   } else {
     shakeMag=CONFIG.shakeOnSave;
@@ -2241,6 +2300,8 @@ function resolveShot(){
       HUD.flash.classList.remove('on'); HUD.flash.classList.add('save'); void HUD.flash.offsetWidth; HUD.flash.classList.add('on'); }
     else if(r==='POST'){ showResult('PALO!','#ffd884'); engine.view.popWord('PALO!','#ffd24a'); engine.view.burstAt3D(tmpV2.set(Math.sign(shot.target.x)*HALF,shot.target.y,0),'save'); Sound.postClang(); arcadeAudio.playPostSting(); Sound.groan(); }
     else { showResult('FUORI!','#ffd28a'); engine.view.popWord('FUORI!','#ffffff'); arcadeAudio.playPostSting(); Sound.groan(); }
+    CharFSM.set('kicker','sconfitta');                       // FSM: occasione fallita
+    if(r==='SAVE') CharFSM.set('keeper','esultanza');
     haptic([0,130]); slowmo=1; setState(STATE.SAVE_ANIMATION);
   }
   syncHUD(); try{ announceOutcome(r); }catch(e){}
@@ -2255,12 +2316,14 @@ function resolveKeeper(r){
       NetSim.impulse(shot.sim?shot.sim.cross.x:shot.target.x, Math.max(0.25,shot.sim?shot.sim.cross.y:shot.target.y), clamp(sp*0.13,1.3,3.6)); }
     showResult('GOL SUBITO','#ff6a6a'); engine.view.popWord('GOOOOL!','#FF0000');
     if(shot && shot.woodGoal){ Sound.postClang(); engine.view.popWord('PALO-GOL!','#ffd24a'); }
+    if(shot && shot.parryGoal){ engine.view.popWord('L\'HAI TOCCATA…','#ffd884'); showTelecro('💔 L\'hai toccata ma entra piano piano… beffa atroce!'); }
     if(shot && !shot.humanDive && !shot.woodGoal) setTimeout(()=>{ if(isKeeper()) showTelecro('👀 Fermo lì non si para: tocca/trascina DURANTE il volo per tuffarti!'); },800);
     engine.view.burstAt3D(tmpV2.set(shot.target.x,Math.max(0.4,shot.target.y),-GD),'goal');
     Sound.sfx(200,.18,'sawtooth'); Sound.groan();
     HUD.flash.classList.remove('on','save'); void HUD.flash.offsetWidth; HUD.flash.classList.add('on');
     // ESULTANZA di ALE: ti ha segnato e viene a dirtelo in faccia (corre verso la camera)
     if(useGLBKicker && kickerGLB){ celeb={t:0,dir:-1}; playKicker('run',1); }
+    CharFSM.set('kicker','esultanza'); CharFSM.set('keeper','sconfitta');   // FSM: beffato
     haptic([0,130]); slowmo=1; setState(STATE.GOAL_ANIMATION);
   } else {                                                   // parata o tiro sbagliato dalla CPU -> festa del portiere
     streak++; scorePulseT=0.7;
@@ -2274,6 +2337,7 @@ function resolveKeeper(r){
       try{ if(streak>=3) Progress.award('parata3'); if(streak>=8) Progress.award('muro8'); }catch(e){}
     } else if(r==='POST'){ showResult('PALO! 😅','#ffd884'); engine.view.popWord('PALO!','#ffd24a'); Sound.postClang(); arcadeAudio.playPostSting(); }
     else { showResult('FUORI! 😮‍💨','#ffd28a'); engine.view.popWord('FUORI!','#ffffff'); arcadeAudio.playPostSting(); }
+    CharFSM.set('keeper','esultanza'); CharFSM.set('kicker','sconfitta');   // FSM: sei sopravvissuto
     slowmo=1; setState(STATE.SAVE_ANIMATION);
   }
   syncHUD(); try{ announceOutcome(r); }catch(e){}
@@ -2441,7 +2505,12 @@ function update(dt){
     const p=clamp(ft/shot.dur,0,1);
     // posizione dal PATH SIMULATO (Magnus+drag reali gia' integrati); il fallback
     // parametrico resta per sicurezza se la simulazione non e' disponibile
-    if(shot.sim && shot.sim.n>1){ posFromPath(shot.sim, ft*shot.simRate); }
+    if(shot.sim && shot.sim.n>1){ ballPathPos(ft*shot.simRate);
+      // momento della RESPINTA: tonfo dei guantoni + feedback (la palla riparte deviata)
+      if(shot.parrySim && !shot._parryFx && ft*shot.simRate>=shot.parryCut){ shot._parryFx=true;
+        Sound.gloveThud(); haptic(26); engine.view.popWord('RESPINTA!','#ffd884');
+        engine.view.burstAt3D(tmpV2.set(shot.sim.cross.x,Math.max(0.4,shot.sim.cross.y),0),'save'); }
+    }
     else {
       const tt=p*shot.dur;
       const baseX=lerp(shot.from.x,shot.target.x,p);
@@ -2469,7 +2538,7 @@ function update(dt){
     } else {                                              // ---- portiere GLB: anticipo -> tuffo clip -> reach additivo ----
       updateKeeperDive(dt);
     }
-    if(shot.result==='SAVE' && useGLBKeeper && p>0.62){ gloveCatch(clamp((p-0.62)/0.38,0,1)*0.5); }  // in arrivo la palla entra nei guantoni
+    if(shot.result==='SAVE' && !shot.parry && useGLBKeeper && p>0.62){ gloveCatch(clamp((p-0.62)/0.38,0,1)*0.5); }  // presa PULITA: la palla entra nei guantoni (la respinta segue il path)
     if(!shot.resolved && p>=1){ shot.resolved=true; resolveShot(); }
     }
     // PORTIERE in volo: anello ORO mentre trascini (dove ti tufferai), VERDE dopo il commit
@@ -2506,7 +2575,7 @@ function update(dt){
     if(useGLBKeeper && keeperState!=='beaten') playKeeper('beaten');
     // PES: la palla prosegue nel path simulato DENTRO LA RETE — l'attrito viscoso la
     // frena progressivamente finche' cade a terra per gravita' (niente piu' freeze)
-    if(!isManga() && shot && shot.sim){ posFromPath(shot.sim, shot.dur*shot.simRate + stateT); updateBallShadow();
+    if(!isManga() && shot && shot.sim){ ballPathPos(shot.dur*shot.simRate + stateT); updateBallShadow();
       // trasferimento CONTINUO: mentre la palla avanza nella rete, l'onda la segue
       if(stateT<0.55 && ball.position.z<-0.05) NetSim.impulse(ball.position.x, Math.max(0.2,ball.position.y), dt*10, 0.3); }
     // ANIME: il pallone "sfonda" e prosegue oltre la linea con la scia (velocità sovrumana)
@@ -2518,7 +2587,7 @@ function update(dt){
     // CODA FISICA VERA: palo/fuori proseguono lungo il path integrato — rimbalzo dal
     // legno con restituzione reale, oppure volo fino agli SPALTI coi quicchi sui seggiolini
     if(shot && shot.sim && (shot.result==='POST'||shot.result==='MISS'||shot.parry)){
-      posFromPath(shot.sim, shot.dur*shot.simRate + stateT);
+      ballPathPos(shot.dur*shot.simRate + stateT);
       updateBallShadow(); pushTrail();
     }
     else if(shot && shot.result==='POST'){
@@ -2534,11 +2603,11 @@ function update(dt){
       updateBallShadow(); pushTrail();
     }
     // la palla resta nei guantoni SOLO su vera parata pulita (la respinta segue il path)
-    else if(shot && shot.result==='SAVE' && useGLBKeeper && stateT<0.75 && gloveCatch(0.5)){ /* tenuta nei guantoni */ }
+    else if(shot && shot.result==='SAVE' && !shot.parry && useGLBKeeper && stateT<0.75 && gloveCatch(0.5)){ /* tenuta nei guantoni */ }
     else if(stateT<0.4){ ball.position.z += dt*6; ball.position.y+=dt*1.5; }
     // il fuori/palo con simulazione ha una coda piu' lunga: si vede il rimbalzo sugli spalti
-    const tailMs = (shot && shot.sim && (shot.result==='MISS'||shot.result==='POST'))
-      ? Math.min(2800, Math.max(CONFIG.saveAnimMs, (shot.sim.endT - shot.dur*shot.simRate)*1000+400))
+    const tailMs = (shot && shot.sim && (shot.result==='MISS'||shot.result==='POST'||shot.parry))
+      ? Math.min(2800, Math.max(CONFIG.saveAnimMs, ((shot.parrySim? shot.parryCut+shot.parrySim.endT : shot.sim.endT) - shot.dur*shot.simRate)*1000+400))
       : CONFIG.saveAnimMs;
     if(stateT*1000>=tailMs) afterShot(false);
   }
@@ -2850,6 +2919,39 @@ function applyPlayer(){ if(!PLAYER) return; const cr=document.querySelector('#sc
 /* ----- IDENTITÀ PER RUOLO: da tiratore TU calci e Ale para; da PORTIERE l'avversario
    che tira e' ALE 👑 e in porta ci sei TU (la tua faccia sul portiere) ----- */
 const ALE_ID={name:'ALE',num:'1',face:'assets/keeper-face.png?v=1'};
+/* ============== MACCHINA A STATI DEI PERSONAGGI (pronta per Fable) ==============
+   Stati canonici del TIRATORE e del PORTIERE:
+       'idle' | 'rincorsa' | 'tiro' | 'esultanza' | 'sconfitta'
+   Ogni personaggio espone due variabili di stato leggibili dal rendering:
+     · faceDirection : 'camera' | 'porta'  — dove guarda il volto
+     · expression    : 'neutro' | 'gioia' | 'delusione' — espressione corrente
+   GANCIO GRAFICO (per la prossima sessione con Fable): aggiungi al giocatore
+       PLAYERS['Mario'].faces = { neutro:'url', gioia:'url', delusione:'url' }
+   e lo sprite del volto viene scambiato AUTOMATICAMENTE al cambio di stato
+   (_face() qui sotto). Senza il set, resta la faccia singola di sempre.
+   La visibilita' del volto segue gia' faceDirection: updateKickerFace mostra
+   la faccia SOLO quando il personaggio e' rivolto verso la camera.        */
+const CharFSM={
+  kicker:{state:'idle', faceDirection:'porta',  expression:'neutro'},
+  keeper:{state:'idle', faceDirection:'camera', expression:'neutro'},
+  set(who,st,expr){ const c=this[who]; if(!c || (c.state===st && !expr)) return;
+    c.state=st;
+    c.expression = expr || (st==='esultanza'?'gioia' : st==='sconfitta'?'delusione' : 'neutro');
+    // esultanza/sconfitta = momento "in camera" (come lo switch sprite dei giochi veri)
+    c.faceDirection = (st==='esultanza'||st==='sconfitta') ? 'camera' : (who==='kicker'?'porta':'camera');
+    this._face(who);
+  },
+  // scambia la texture del volto se il personaggio ha il set di espressioni (Fable)
+  _face(who){ try{
+    const c=this[who];
+    const sprite = who==='kicker' ? kickerFace : keeperFace;
+    const id     = who==='kicker' ? (isKeeper()?ALE_ID:PLAYER) : (isKeeper()?PLAYER:ALE_ID);
+    if(!sprite || !id) return;
+    const set=id.faces;                                  // <-- gancio Fable
+    const url=set && set[c.expression];
+    if(url){ sprite.material.map=_faceTex(url); sprite.material.needsUpdate=true; }
+  }catch(e){} }
+};
 const _faceTexCache={};
 function _faceTex(url){ if(!_faceTexCache[url]){ const t=new THREE.TextureLoader().load(url);
   t.colorSpace=THREE.SRGBColorSpace; _faceTexCache[url]=t; } return _faceTexCache[url]; }
@@ -3459,6 +3561,7 @@ try{ const _kd=new URLSearchParams(location.search).get('kdbg'); if(_kd==='1'||_
     buildFlight(tx,ty,p,curl,style,special){ return buildFlight(tx,ty,p,curl,style||'normal',!!special); },
     get net(){ if(!NetSim.u) return null; let m=0; for(let i=0;i<NetSim.n;i++){ const a=Math.abs(NetSim.u[i]); if(a>m)m=a; }
       return {active:NetSim.active, maxU:+m.toFixed(3)}; },
+    get fsm(){ return { kicker:{...CharFSM.kicker}, keeper:{...CharFSM.keeper} }; },
     get celeb(){ return celeb? {t:celeb.t, dir:celeb.dir, rotY:kickerGLB&&kickerGLB.rotation.y, kz:kickerGLB&&kickerGLB.position.z,
       camZ:camera&&camera.position.z, face:kickerFace&&kickerFace.visible, back:kickerBack&&kickerBack.visible} : null; },
     cpuKick(){ if(isKeeper()&&state===STATE.GAME_PLAYING){ kAuto=null; return cpuKick(); } } };
