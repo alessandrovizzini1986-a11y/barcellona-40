@@ -2401,6 +2401,55 @@ function gameOverNow(){ Sound.sfx(180,.2); setTimeout(()=>Sound.sfx(90,.3),130);
    stile regia TV) prima del verdetto: palla, curva, tuffo e impatto identici
    al live (stessa cinematica), con rete che si gonfia e suoni d'impatto.  */
 const _rpCam=new THREE.Vector3(), _rpLook=new THREE.Vector3();
+/* ====== REGIA MOVIOLA — CAMERA RISOLTA, NON STIMATA ======
+   La posizione della camera viene calcolata perche' TUTTI i punti chiave
+   dell'azione stiano dentro il frustum REALE del device (fov verticale +
+   aspect -> fov orizzontale: in verticale e' LUI il vincolo stringente):
+     · testa del rigorista alla stance (inizio rincorsa)
+     · pallone sul dischetto
+     · specchio della porta coi margini (4 angoli)
+     · punto d'arrivo del tiro (anche se alto/fuori)
+   Direzione di regia fissa (dietro-lato-alto, dal lato del tiro), RICERCA
+   BINARIA della distanza minima con 20% di margine. Risolta una volta a
+   inizio moviola; TAGLIO NETTO da regia TV (nessuna transizione: era il
+   lerp a mascherare il fuori-quadro nei test) + lento dolly in avanti. */
+const _rvF=new THREE.Vector3(), _rvR=new THREE.Vector3(), _rvU=new THREE.Vector3(), _rvT=new THREE.Vector3();
+const _RP_C=new THREE.Vector3(0,1.1,5.6);                    // baricentro guardato (dischetto-porta)
+function solveReplayCam(){
+  const s=replay.s;
+  const side = Math.abs(s.target.x)<0.3? 1 : Math.sign(s.target.x);
+  camera.fov = camera.aspect<1? 66 : 56; camera.updateProjectionMatrix();
+  const vh=camera.fov*Math.PI/360, hh=Math.atan(Math.tan(vh)*camera.aspect);
+  const mv=vh*0.80, mh=hh*0.80;                              // 20% margine di sicurezza
+  _rpDirSet(side);
+  const pts=[ [KICK_STANCE.x+side*0.6, 2.3, KICK_STANCE.z+0.7],   // testa rigorista alla stance
+              [0, 0.5, SPOT_Z],                                    // pallone sul dischetto
+              [-4.1,0,0],[4.1,0,0],[-4.1,2.9,0],[4.1,2.9,0],       // specchio + margine
+              [clamp(s.target.x,-4.5,4.5), clamp(s.target.y,0.2,3.6), 0] ];  // arrivo del tiro
+  let lo=6, hi=70;
+  for(let it=0; it<30; it++){
+    const d=(lo+hi)/2;
+    _rvT.copy(_RP_C).addScaledVector(_rpCam,d);              // posizione candidata (usa _rpCam come dir)
+    _rvF.copy(_RP_C).sub(_rvT).normalize();                  // forward
+    _rvR.set(_rvF.z,0,-_rvF.x).normalize();                  // right (orizzontale)
+    _rvU.crossVectors(_rvR,_rvF);                            // up
+    let ok=true;
+    for(const q of pts){
+      const vx=q[0]-_rvT.x, vy=q[1]-_rvT.y, vz=q[2]-_rvT.z;
+      const z=vx*_rvF.x+vy*_rvF.y+vz*_rvF.z;
+      const x=vx*_rvR.x+vy*_rvR.y+vz*_rvR.z;
+      const y=vx*_rvU.x+vy*_rvU.y+vz*_rvU.z;
+      if(z<0.5 || Math.abs(Math.atan2(x,z))>mh || Math.abs(Math.atan2(y,z))>mv){ ok=false; break; }
+    }
+    if(ok) hi=d; else lo=d;
+  }
+  replay.camD=hi*1.02; replay.camSide=side;                  // 2% extra: mai al pelo
+  // TAGLIO NETTO: la camera va SUBITO in posizione (primo frame gia' definitivo)
+  _rpDirSet(side);
+  camera.position.copy(_RP_C).addScaledVector(_rpCam, replay.camD);
+  camera.lookAt(_RP_C);
+}
+function _rpDirSet(side){ _rpCam.set(side*0.30, 0.20, 1).normalize(); }   // direzione di regia
 function startReplay(){
   if(!shot || !shot.launched) return false;
   // il replay parte DALL'INIZIO dell'azione: pausa + RINCORSA (windup originale) + volo
@@ -2420,8 +2469,7 @@ function startReplay(){
   if(useGLBKicker && kickerGLB){ kickerGLB.position.set(KICK_STANCE.x,0,KICK_STANCE.z);  // il rigorista torna in POSTURA DI RINCORSA
     kickerGLB.rotation.y=KICK_STANCE.yaw; playKicker('idle'); }                          // (la rincorsa parte in updateReplay)
   ripple.t=-1; applyNetRipple(-1,0,0); celeb=null;
-  // fov da regia: quel tanto che basta per PORTA INTERA + dischetto nello stesso quadro
-  if(camera){ camera.fov = camera.aspect<1? 64 : 54; camera.updateProjectionMatrix(); }
+  if(camera) solveReplayCam();                     // camera RISOLTA sul frustum reale + taglio netto
   try{ document.getElementById('replayCine').classList.add('show'); }catch(e){}   // bande cinema + badge REPLAY
   showTelecro('🎬 MOVIOLA — rivediamo il rigore decisivo…');
   Sound.sfx(520,.06,'square',0.2);
@@ -2471,15 +2519,14 @@ function updateReplay(dt){
   }
   if(ripple.t>=0){ ripple.t+=dt; if(ripple.t>2.2) ripple.t=-1; }
   NetSim.step(dt);                                            // la rete massa-molla vive anche in moviola
-  // CAMERA MOVIOLA: regia "spalla alta" DIETRO-LATO al tiratore, INQUADRATURA FISSA
-  // che tiene nello stesso quadro porta intera + portiere + dischetto + rincorsa
-  // (niente inseguimento nervoso della palla: e' lei ad attraversare il quadro).
-  // Lato = quello del tiro, cosi' si vede la curva aprirsi verso l'angolo.
-  const side = Math.abs(s.target.x)<0.3? 1 : Math.sign(s.target.x);
-  _rpCam.set(side*5.0, 3.3, 17.2 - Math.max(0,R.t)*0.5);      // lento dolly in avanti
-  camera.position.lerp(_rpCam, Math.min(1,dt*3));
-  _rpLook.set(s.target.x*0.22, 1.0, 4.0);                     // baricentro dischetto-porta: rincorsa E specchio in quadro
-  camera.lookAt(_rpLook);
+  // CAMERA MOVIOLA: posizione risolta da solveReplayCam (tutti i punti chiave nel
+  // frustum, garantito su ogni aspect); qui solo il LENTO DOLLY in avanti (max -6%)
+  if(replay.camD){
+    const prog=clamp((R.t+R.wind)/(s.dur+R.wind+1.2),0,1);
+    _rpDirSet(replay.camSide);
+    camera.position.copy(_RP_C).addScaledVector(_rpCam, replay.camD*(1-0.06*prog));
+    camera.lookAt(_rpLook.copy(_RP_C));
+  }
 }
 
 /* ------------------------------- UPDATE ---------------------------------- */
