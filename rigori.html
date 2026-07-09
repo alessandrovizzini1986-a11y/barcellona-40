@@ -211,10 +211,10 @@
   #challengeNote{color:#ffd884;border:1px solid rgba(255,216,132,.5);border-radius:8px;padding:7px 12px;background:rgba(2,12,30,.6)}
   .hudbtn.modesel{margin:4px 0 2px;font-size:11px;color:#ffd884;background:rgba(2,12,30,.7);border:1px solid var(--gold);padding:9px 18px}
   .hudbtn.modesel:active{transform:translateY(2px)}
-  /* selettore STILE (PES realistico vs Holly & Benji anime) */
-  .styleSel{display:flex;gap:10px;margin:2px 0 2px}
+  /* selettore STILE (PES · Holly & Benji · Peluche · 8-bit): griglia 2x2 compatta */
+  .styleSel{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:2px 0 2px;max-width:280px}
   .styleSel .stbtn{pointer-events:auto;cursor:pointer;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:4px;
-    font-size:10px;color:#cdd6ee;background:rgba(2,12,30,.7);border:1px solid rgba(255,255,255,.18);border-radius:13px;padding:9px 13px;letter-spacing:.03em;min-width:96px}
+    font-size:9px;color:#cdd6ee;background:rgba(2,12,30,.7);border:1px solid rgba(255,255,255,.18);border-radius:13px;padding:8px 10px;letter-spacing:.03em;min-width:118px}
   .styleSel .stbtn small{font-size:7px;color:#8fa6cf;letter-spacing:.05em}
   .styleSel .stbtn.active{color:#fff;border-color:var(--gold);background:linear-gradient(160deg,#004D98,#A50044);box-shadow:0 0 14px rgba(255,216,132,.4)}
   .styleSel .stbtn.active small{color:#ffd884}
@@ -314,6 +314,8 @@
     <div class="styleSel">
       <button class="stbtn" data-gfx="pes">🎮 PES<small>realistico</small></button>
       <button class="stbtn" data-gfx="manga">🎬 HOLLY &amp; BENJI<small>anime</small></button>
+      <button class="stbtn" data-gfx="peluche">🧸 PELUCHE<small>morbidoso</small></button>
+      <button class="stbtn" data-gfx="8bit">👾 8-BIT<small>arcade</small></button>
     </div>
     <div class="small">trascina per mirare nell'angolo<br><span class="grn">la distanza decide la POTENZA</span><br><span class="blu">muovi di lato per dare EFFETTO</span><br><span style="color:#9fd0ff">morbido e alto = CUCCHIAIO 🥄</span><br><span class="org">forte e basso = RASOIATA ⚡</span><br><span style="color:#8fa6cf">⌨ FRECCE per mirare · Q/E effetto · SPAZIO carica e tira</span></div>
     <button id="trofBtn" class="hudbtn trofbtn">🏆 TROFEI <span id="menuTrof">0/10</span></button>
@@ -327,6 +329,8 @@
     <div class="styleSel">
       <button class="stbtn" data-gfx="pes">🎮 PES<small>realistico</small></button>
       <button class="stbtn" data-gfx="manga">🎬 HOLLY &amp; BENJI<small>anime</small></button>
+      <button class="stbtn" data-gfx="peluche">🧸 PELUCHE<small>morbidoso</small></button>
+      <button class="stbtn" data-gfx="8bit">👾 8-BIT<small>arcade</small></button>
     </div>
     <div class="overbtns">
       <button id="shareBtn" class="hudbtn share">📲 CONDIVIDI</button>
@@ -428,7 +432,11 @@ const CONFIG = {
   ASSETS: { ball:'assets/rig-ball.png?v=1', stadium:'assets/canva-stadium.png?v=3',
             stadiumAnime:'assets/stadium-anime.png?v=3',    // stadi generati con Canva Pro: PES fotorealistico + ANIME cel-shaded
             stadiumEnd:'assets/stadium-end.png?v=1',        // CURVA OPPOSTA (vista dalla camera PORTIERE), Canva Pro
-            stadiumEndAnime:'assets/stadium-end-anime.png?v=1' }
+            stadiumEndAnime:'assets/stadium-end-anime.png?v=1',
+            stadiumPeluche:'assets/stadium-peluche.png?v=1',        // stile PELUCHE: diorama in feltro (Canva Pro)
+            stadiumEndPeluche:'assets/stadium-end-peluche.png?v=1',
+            stadium8bit:'assets/stadium-8bit.png?v=1',              // stile 8-BIT: pixel art arcade (Canva Pro)
+            stadiumEnd8bit:'assets/stadium-end-8bit.png?v=1' }
 };
 
 /* --------------------------- UTIL / SCORES / HAPTIC ---------------------- */
@@ -862,8 +870,13 @@ let MODE='infinite', shotNum=0, goals5=0; try{ const m=localStorage.getItem('rig
 let ROLE='shooter'; try{ const r=localStorage.getItem('rig_role'); if(r==='keeper'||r==='shooter') ROLE=r; }catch(e){}
 const isKeeper=()=>ROLE==='keeper';
 // STILE grafico: 'manga' (Holly & Benji: cel-shading + speed-line + slow-mo drammatica) | 'pes' (realistico PBR)
-let GFX='manga'; try{ const g=localStorage.getItem('rig_gfx'); if(g==='pes'||g==='manga') GFX=g; }catch(e){}
+// QUATTRO STILI GRAFICI: PES (realistico) · MANGA (Holly&Benji) · PELUCHE (diorama
+// di stoffa, cel-shading morbido pastello) · 8BIT (pixel art vera: risoluzione bassa)
+const GFX_LIST=['pes','manga','peluche','8bit'];
+let GFX='manga'; try{ const g=localStorage.getItem('rig_gfx'); if(GFX_LIST.includes(g)) GFX=g; }catch(e){}
 const isManga=()=>GFX==='manga';
+const is8bit =()=>GFX==='8bit';
+const isPeluche=()=>GFX==='peluche';
 let aleSaves=0, suddenDeath=false, duelResult='';    // duello 5 rigori: tu (gol) vs Ale (parate)
 const keeperAct={};                                  // azioni: diveL, diveR, high, ready, beaten
 const keeperBones={};                                // riferimenti ossa per reach procedurale additivo
@@ -881,8 +894,8 @@ let roundSeed=null, challengeFromURL=false;   // SFIDA: stesso portiere per tutt
 let specialArmed=false;            // EASTER EGG: tiro speciale armato (3 tap al centro porta)
 let confetti=null;
 let netShatter=null;               // ANIME: segmenti 3D dei "fili" della rete sfondata
-let stadiumMat=null, stadiumTexPES=null, stadiumTexANIME=null;   // stadio per stile (PES/ANIME), swap in applyGFX
-let endMat=null, endTexPES=null, endTexANIME=null;               // CURVA OPPOSTA (vista portiere), Canva, swap in applyGFX
+let stadiumMat=null, stadiumTexPES=null, stadiumTexANIME=null, stadiumTexPEL=null, stadiumTex8BIT=null;   // stadio per stile, swap in applyGFX
+let endMat=null, endTexPES=null, endTexANIME=null, endTexPEL=null, endTex8BIT=null;                       // CURVA OPPOSTA (vista portiere)
 const camBase=new THREE.Vector3(0,2.75,18.2);   // camera piu' arretrata e alta: si vede il rigorista e la sua rincorsa
 const camLook=new THREE.Vector3(0,1.15,-1.0);
 // MODALITÀ PORTIERE: camera DIETRO LA PORTA che guarda il dischetto — sei TU in porta,
@@ -1146,7 +1159,8 @@ function buildScene(textures){
   if(textures.stadium){
     const standMat=new THREE.MeshBasicMaterial({map:textures.stadium, fog:true, toneMapped:false});
     stadiumMat=standMat; stadiumTexPES=textures.stadium; stadiumTexANIME=textures.stadiumAnime||null;
-    if(isManga()&&stadiumTexANIME) standMat.map=stadiumTexANIME;   // stile gia ANIME all'avvio (applyGFX gira prima delle texture)
+    stadiumTexPEL=textures.stadiumPeluche||null; stadiumTex8BIT=textures.stadium8bit||null;
+    { const t0=stadiumTexForGFX(); if(t0) standMat.map=t0; }       // stile gia' attivo all'avvio
     const back=new THREE.Mesh(new THREE.PlaneGeometry(76,22), standMat);
     back.position.set(0,8.2,-17); scene.add(back);
     // ali laterali più indietro e meno ruotate, così incorniciano senza dominare
@@ -1156,7 +1170,8 @@ function buildScene(textures){
     // guarda verso il dischetto); dalla camera tiratore (z=18.2) sta alle spalle = invisibile.
     // Texture DEDICATE Canva (PES/ANIME, swap in applyGFX); fallback: texture stadio classica
     endTexPES=textures.stadiumEnd||textures.stadium; endTexANIME=textures.stadiumEndAnime||textures.stadiumAnime||endTexPES;
-    endMat=new THREE.MeshBasicMaterial({map:(isManga()&&endTexANIME)?endTexANIME:endTexPES, fog:true, toneMapped:false});
+    endTexPEL=textures.stadiumEndPeluche||stadiumTexPEL||endTexPES; endTex8BIT=textures.stadiumEnd8bit||stadiumTex8BIT||endTexPES;
+    endMat=new THREE.MeshBasicMaterial({map:endTexForGFX()||endTexPES, fog:true, toneMapped:false});
     const back2=new THREE.Mesh(new THREE.PlaneGeometry(76,22), endMat);
     back2.position.set(0,8.2,24); back2.rotation.y=Math.PI; scene.add(back2);
     [-1,1].forEach(s=>{ const wing2=new THREE.Mesh(new THREE.PlaneGeometry(40,22), endMat);
@@ -1277,17 +1292,28 @@ function dressGLB(inner,kind){
     g.setAttribute('color', new THREE.BufferAttribute(col,3));
   });
 }
-// ---- stile CARTOON: cel-shading (toon) sui personaggi ----
-let _toonGrad=null;
-function toonGrad(){ if(_toonGrad) return _toonGrad; const c=document.createElement('canvas'); c.width=4;c.height=1; const x=c.getContext('2d');
-  ['#3a3a3a','#8a8a8a','#cfcfcf','#ffffff'].forEach((col,i)=>{ x.fillStyle=col; x.fillRect(i,0,1,1); });
-  _toonGrad=new THREE.CanvasTexture(c); _toonGrad.minFilter=THREE.NearestFilter; _toonGrad.magFilter=THREE.NearestFilter; _toonGrad.colorSpace=THREE.SRGBColorSpace; return _toonGrad; }
-function toonify(root){ if(!root) return; root.traverse(o=>{ if(o.isMesh && o.material){
-  if(!o.userData.pbrMat) o.userData.pbrMat=o.material;            // conserva il materiale realistico per poter tornare a PES
-  if(!o.material.__toon){ const m=o.userData.pbrMat;
-    const t=new THREE.MeshToonMaterial({ color: m.color?m.color.clone():new THREE.Color(0xffffff), map:m.map||null, gradientMap:toonGrad(),
-      vertexColors:m.vertexColors===true });                       // la DIVISA per-vertice sopravvive al cel-shading
-    t.side=m.side||THREE.FrontSide; t.__toon=true; o.material=t; } } }); }
+// ---- stili NON-PES: cel-shading a gradini variabili per personaggio ----
+//   MANGA   = 4 gradini (anime classico)
+//   PELUCHE = 3 gradini morbidi + tinta calda pastello (pupazzo di stoffa)
+//   8BIT    = 2 gradini duri (flat arcade, si sposa con la risoluzione pixelata)
+const _toonGrads={};
+function toonGrad(steps){ steps=steps||4; if(_toonGrads[steps]) return _toonGrads[steps];
+  const cols = steps===2? ['#5a5a5a','#ffffff']
+             : steps===3? ['#585048','#b0a89e','#ffffff']
+             : ['#3a3a3a','#8a8a8a','#cfcfcf','#ffffff'];
+  const c=document.createElement('canvas'); c.width=cols.length; c.height=1; const x=c.getContext('2d');
+  cols.forEach((col,i)=>{ x.fillStyle=col; x.fillRect(i,0,1,1); });
+  const t=new THREE.CanvasTexture(c); t.minFilter=THREE.NearestFilter; t.magFilter=THREE.NearestFilter; t.colorSpace=THREE.SRGBColorSpace;
+  _toonGrads[steps]=t; return t; }
+function toonify(root,mode){ mode=mode||'manga'; if(!root) return;
+  const steps = mode==='8bit'? 2 : mode==='peluche'? 3 : 4;
+  root.traverse(o=>{ if(o.isMesh && o.material){
+    if(!o.userData.pbrMat) o.userData.pbrMat=o.material;          // conserva il materiale realistico per poter tornare a PES
+    if(o.material.__toonMode!==mode){ const m=o.userData.pbrMat;
+      const t=new THREE.MeshToonMaterial({ color: m.color?m.color.clone():new THREE.Color(0xffffff), map:m.map||null, gradientMap:toonGrad(steps),
+        vertexColors:m.vertexColors===true });                     // la DIVISA per-vertice sopravvive al cel-shading
+      if(mode==='peluche') t.color.setHex(0xffeadb);               // tinta calda da diorama in feltro
+      t.side=m.side||THREE.FrontSide; t.__toonMode=mode; o.material=t; } } }); }
 function untoonify(root){ if(!root) return; root.traverse(o=>{ if(o.isMesh && o.userData.pbrMat){ o.material=o.userData.pbrMat; } }); }
 function loadGLBKeeper(){
   try{
@@ -1307,7 +1333,7 @@ function loadGLBKeeper(){
       pivot.position.set(-c.x,-box.min.y,-c.z);          // centra X/Z, piedi a y=0
       const wrap=new THREE.Group(); wrap.add(pivot); wrap.position.set(0,0,KEEPER_Z); wrap.rotation.y=Math.PI;
       if(keeper) scene.remove(keeper);
-      keeper=wrap; keeperInner=inner; scene.add(keeper); if(isManga()) toonify(inner);   // cel-shading solo in Holly & Benji
+      keeper=wrap; keeperInner=inner; scene.add(keeper); if(GFX!=='pes') toonify(inner,GFX);   // cel-shading per stile
       // ----- faccia di Ale come "testa" del portiere (sprite sempre rivolto alla camera) -----
       const ftex=new THREE.TextureLoader().load('assets/keeper-face.png?v=1'); ftex.colorSpace=THREE.SRGBColorSpace;
       keeperFace=new THREE.Sprite(new THREE.SpriteMaterial({map:ftex, transparent:true, depthTest:false, depthWrite:false}));
@@ -1384,7 +1410,7 @@ function loadGLBKicker(){
       // angolato (come un rigorista vero); al tiro fa il passo d'attacco verso la palla
       wrap.position.set(KICK_STANCE.x,0,KICK_STANCE.z); wrap.rotation.y=KICK_STANCE.yaw; wrap.scale.setScalar(0.55);
       if(kicker) kicker.visible=false;       // nasconde il rigorista procedurale
-      kickerGLB=wrap; kickerInner=inner; scene.add(kickerGLB); kickerGLB.visible=false; if(isManga()) toonify(inner);   // cel-shading solo in Holly & Benji
+      kickerGLB=wrap; kickerInner=inner; scene.add(kickerGLB); kickerGLB.visible=false; if(GFX!=='pes') toonify(inner,GFX);   // cel-shading per stile
       // testa per la faccia (sprite)
       kickerHeadBone=null; inner.traverse(o=>{ if(!kickerHeadBone){ const nm=(o.name||'').toLowerCase();
         if(nm.indexOf('head')>=0 && nm.indexOf('top')<0 && nm.indexOf('end')<0) kickerHeadBone=o; } });
@@ -3045,18 +3071,41 @@ function announceOutcome(r){
   announce((map[r]||r)+' '+(isKeeper()?'(sei il portiere) ':'')+ctx);
 }
 
-/* ----- STILE: PES (realistico) <-> HOLLY & BENJI (anime) ----- */
+/* ----- STILE: PES (realistico) · HOLLY & BENJI (anime) · PELUCHE · 8-BIT ----- */
+// texture stadio/curva per lo stile corrente (fallback sempre alla PES)
+function stadiumTexForGFX(){
+  return GFX==='manga'  ? (stadiumTexANIME||stadiumTexPES)
+       : GFX==='peluche'? (stadiumTexPEL ||stadiumTexPES)
+       : GFX==='8bit'   ? (stadiumTex8BIT||stadiumTexPES)
+       : stadiumTexPES;
+}
+function endTexForGFX(){
+  return GFX==='manga'  ? (endTexANIME||endTexPES)
+       : GFX==='peluche'? (endTexPEL  ||endTexPES)
+       : GFX==='8bit'   ? (endTex8BIT ||endTexPES)
+       : endTexPES;
+}
+// DENSITA' DI PIXEL: l'8-BIT renderizza a BASSA risoluzione e il browser ingrandisce
+// i pixel (image-rendering:pixelated) = pixel art VERA su tutta la scena 3D
+function applyPixelDensity(){
+  if(!renderer) return;
+  renderer.setPixelRatio(is8bit()? 0.45 : Math.min(window.devicePixelRatio||1,2));
+  cv.style.imageRendering = is8bit()? 'pixelated' : '';
+  renderer.setSize(window.innerWidth, window.innerHeight);
+}
 function applyGFX(){
-  if(isManga()){ toonify(keeperInner); toonify(kickerInner); } else { untoonify(keeperInner); untoonify(kickerInner); }
-  // stadio per stile: ANIME usa la sua texture (se caricata), altrimenti resta la PES
-  if(stadiumMat){ const t=(isManga()&&stadiumTexANIME)?stadiumTexANIME:stadiumTexPES;
+  // personaggi: PES=PBR realistico · MANGA=toon 4 gradini · PELUCHE=toon 3 pastello · 8BIT=toon 2 flat
+  if(GFX==='pes'){ untoonify(keeperInner); untoonify(kickerInner); }
+  else { toonify(keeperInner,GFX); toonify(kickerInner,GFX); }
+  if(stadiumMat){ const t=stadiumTexForGFX();
     if(t && stadiumMat.map!==t){ stadiumMat.map=t; stadiumMat.needsUpdate=true; } }
-  if(endMat){ const t2=(isManga()&&endTexANIME)?endTexANIME:endTexPES;
+  if(endMat){ const t2=endTexForGFX();
     if(t2 && endMat.map!==t2){ endMat.map=t2; endMat.needsUpdate=true; } }
   document.body.classList.toggle('manga', isManga());
+  try{ applyPixelDensity(); if(engine&&engine.view) engine.view._sizeFx(); }catch(e){}   // risoluzione per stile
   document.querySelectorAll('.stbtn').forEach(b=>b.classList.toggle('active', b.dataset.gfx===GFX));
 }
-function setGFX(g){ if(g!=='pes'&&g!=='manga')return; GFX=g; try{localStorage.setItem('rig_gfx',g);}catch(e){} applyGFX(); }
+function setGFX(g){ if(!GFX_LIST.includes(g))return; GFX=g; try{localStorage.setItem('rig_gfx',g);}catch(e){} applyGFX(); }
 // EASTER EGG: arma il "tiro speciale" (3 tap rapidi sul centro della porta)
 function armSpecial(){ if(specialArmed) return; specialArmed=true;
   showTelecro('🌈 TIRO SPECIALE ARMATO! Tira adesso 💥'); speak('Tiro speciale!',true);
@@ -3367,7 +3416,9 @@ class Input {
     const tg=e.target; if(tg && (tg.tagName==='BUTTON'||tg.tagName==='INPUT'||tg.tagName==='A')) return;
     const set=document.getElementById('settings'); if(set && set.classList.contains('show')) return;
     const k=e.key.toLowerCase();
-    if(k==='g'){ setGFX(isManga()?'pes':'manga'); showTelecro('STILE: '+(isManga()?'HOLLY & BENJI 🎬':'PES 🎮')); return; }   // toggle stile al volo
+    if(k==='g'){ setGFX(GFX_LIST[(GFX_LIST.indexOf(GFX)+1)%GFX_LIST.length]);   // G = ciclo dei 4 stili
+      const names={pes:'PES 🎮',manga:'HOLLY & BENJI 🎬',peluche:'PELUCHE 🧸','8bit':'8-BIT 👾'};
+      showTelecro('STILE: '+names[GFX]); return; }
     if(state===STATE.MENU_SCREEN||state===STATE.GAME_OVER){
       if(k===' '||k==='enter'){ e.preventDefault(); startGame(); } return; }
     if(state!==STATE.GAME_PLAYING && !(isKeeper()&&state===STATE.BALL_IN_FLIGHT)) return;
@@ -3397,8 +3448,9 @@ class View {                                     // render Three.js + layer 2D (
     this.parts=[]; for(let i=0;i<360;i++) this.parts.push({life:0,life0:1,x:0,y:0,vx:0,vy:0,g:700,r:2,c:'#fff'}); // object pool
     this._sizeFx(); addEventListener('resize',()=>this._sizeFx());
   }
-  _sizeFx(){ const d=Math.min(window.devicePixelRatio||1,2);
+  _sizeFx(){ const d=is8bit()? 0.45 : Math.min(window.devicePixelRatio||1,2);   // 8-bit: anche i FX 2D sono pixelati
     this.fx.width=Math.round(innerWidth*d); this.fx.height=Math.round(innerHeight*d);
+    this.fx.style.imageRendering = is8bit()? 'pixelated' : '';
     this.fxc.setTransform(d,0,0,d,0,0); }
   // emette una raffica di particelle dal pool (coordinate schermo)
   emit(sx,sy,style){ const manga=isManga(), fast=(style==='shatter');
@@ -3495,7 +3547,7 @@ class View {                                     // render Three.js + layer 2D (
     c.restore(); c.globalAlpha=1;
   }
   // ANIME: onomatopea pop-up (scala 0->1 in ~100ms, sparisce dopo 800ms) disegnata su canvas
-  popWord(text,color,force){ if(!isManga()&&!force) return; this.word={text,color,t:0}; }   // force=true per il tiro speciale (anche in PES)
+  popWord(text,color,force){ if(GFX==='pes'&&!force) return; this.word={text,color,t:0}; }   // onomatopee in MANGA/PELUCHE/8BIT; PES resta sobrio (force=tiro speciale)
   _popWord(c,W,H,dt){ const w=this.word; if(!w) return; w.t+=dt;
     if(w.t>=0.8){ this.word=null; return; }
     const sc = w.t<0.1 ? easeOutBack(clamp(w.t/0.1,0,1)) : 1;        // pop in 100ms
@@ -3578,7 +3630,8 @@ engine.on(STATE.MENU_SCREEN, ()=>{ try{ arcadeAudio.playMenuTheme(); }catch(e){}
 engine.on(STATE.GAME_OVER, ()=>{ try{ announce(HUD.overTitle.textContent+'. '+document.getElementById('overLine').textContent+'. Premi INVIO per rigiocare.'); }catch(e){} });
 
 function resize(){ const w=window.innerWidth,h=window.innerHeight;
-  renderer.setSize(w,h); camera.aspect=w/h; applyCamFov(); }
+  applyPixelDensity();                              // dimensione + pixel ratio per stile (8-bit = pixelato)
+  camera.aspect=w/h; applyCamFov(); }
 
 /* ------------------------------- BOOT ------------------------------------ */
 try{ window.__KDBG = new URLSearchParams(location.search).get('kdbg')==='1'; }catch(e){ window.__KDBG=false; }
@@ -3589,7 +3642,7 @@ function boot(){
     renderer=new THREE.WebGLRenderer({canvas:cv, antialias:true, powerPreference:'high-performance', preserveDrawingBuffer:true});
   }catch(e){ document.getElementById('webglErr').style.display='flex'; return; }
   if(!renderer || !renderer.getContext()){ document.getElementById('webglErr').style.display='flex'; return; }
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+  applyPixelDensity();                              // pixel ratio per stile (8-bit renderizza pixelato)
   renderer.outputColorSpace=THREE.SRGBColorSpace;
   renderer.toneMapping=THREE.ACESFilmicToneMapping; renderer.toneMappingExposure=1.22;
   renderer.shadowMap.enabled=true; renderer.shadowMap.type=THREE.PCFSoftShadowMap;
@@ -3608,7 +3661,11 @@ function boot(){
   grab('ball',CONFIG.ASSETS.ball,true); grab('stadium',CONFIG.ASSETS.stadium,true);
   grab('stadiumAnime',CONFIG.ASSETS.stadiumAnime,true);
   grab('stadiumEnd',CONFIG.ASSETS.stadiumEnd,true);                 // curva opposta (camera portiere)
-  grab('stadiumEndAnime',CONFIG.ASSETS.stadiumEndAnime,true); started=true; tryFinish();   // sfondi stadio Canva (fallback procedurale)
+  grab('stadiumEndAnime',CONFIG.ASSETS.stadiumEndAnime,true);
+  grab('stadiumPeluche',CONFIG.ASSETS.stadiumPeluche,true);         // stile PELUCHE (Canva)
+  grab('stadiumEndPeluche',CONFIG.ASSETS.stadiumEndPeluche,true);
+  grab('stadium8bit',CONFIG.ASSETS.stadium8bit,true);               // stile 8-BIT (Canva)
+  grab('stadiumEnd8bit',CONFIG.ASSETS.stadiumEnd8bit,true); started=true; tryFinish();   // sfondi stadio Canva (fallback procedurale)
 
   let finished=false;
   function finish(){
