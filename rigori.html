@@ -219,6 +219,15 @@
   .styleSel .stbtn.active{color:#fff;border-color:var(--gold);background:linear-gradient(160deg,#004D98,#A50044);box-shadow:0 0 14px rgba(255,216,132,.4)}
   .styleSel .stbtn.active small{color:#ffd884}
   .styleSel .stbtn:active{transform:translateY(2px)}
+  /* MOVIOLA: bande cinema + badge REPLAY lampeggiante (per tutta la durata) */
+  #replayCine{position:fixed;inset:0;z-index:13;pointer-events:none;display:none}
+  #replayCine.show{display:block}
+  #replayCine::before,#replayCine::after{content:'';position:absolute;left:0;right:0;height:7%;background:#000}
+  #replayCine::before{top:0} #replayCine::after{bottom:0}
+  #replayCine .rbadge{position:absolute;top:8.5%;left:14px;color:#9fd0ff;font-size:13px;letter-spacing:.14em;
+    text-shadow:0 0 8px rgba(159,208,255,.8);animation:rblink 0.9s steps(2,end) infinite}
+  @keyframes rblink{50%{opacity:0}}
+
   /* overlay ANIME (solo in modalità Holly & Benji) */
   #animefx{position:fixed;inset:0;z-index:12;pointer-events:none;display:none;overflow:hidden}
   body.manga #animefx{display:block}
@@ -287,6 +296,7 @@
 <canvas id="fx2d" aria-hidden="true"></canvas>
 <div id="grade" aria-hidden="true"></div>
 <div id="animefx" aria-hidden="true"><div id="speedlines"></div><div id="mangaword"></div></div>
+<div id="replayCine" aria-hidden="true"><div class="rbadge">🎬 REPLAY ●</div></div>
 <div id="srlive" class="vh" role="status" aria-live="polite"></div>
 
 <div id="hud">
@@ -2410,10 +2420,10 @@ function startReplay(){
   if(useGLBKicker && kickerGLB){ kickerGLB.position.set(KICK_STANCE.x,0,KICK_STANCE.z);  // il rigorista torna in POSTURA DI RINCORSA
     kickerGLB.rotation.y=KICK_STANCE.yaw; playKicker('idle'); }                          // (la rincorsa parte in updateReplay)
   ripple.t=-1; applyNetRipple(-1,0,0); celeb=null;
-  // grandangolo da regia: in verticale il fov 50 non tiene palla+porta nella stessa scena
-  if(camera){ camera.fov = camera.aspect<1? 72 : 58; camera.updateProjectionMatrix(); }
+  // fov da regia: quel tanto che basta per PORTA INTERA + dischetto nello stesso quadro
+  if(camera){ camera.fov = camera.aspect<1? 64 : 54; camera.updateProjectionMatrix(); }
+  try{ document.getElementById('replayCine').classList.add('show'); }catch(e){}   // bande cinema + badge REPLAY
   showTelecro('🎬 MOVIOLA — rivediamo il rigore decisivo…');
-  engine.view.popWord('REPLAY','#9fd0ff');
   Sound.sfx(520,.06,'square',0.2);
   return true;
 }
@@ -2455,16 +2465,20 @@ function updateReplay(dt){
     if(s.sim && s.sim.n>1){ posFromPath(s.sim, s.dur*s.simRate + R.endT); updateBallShadow(); }
     else if(s.result==='GOAL' && ball.position.z>-GD+0.25){ ball.position.z-=dt*1.1; updateBallShadow(); }
     const tail=(s.result==='MISS'||s.result==='POST')?1.8:1.05;   // fuori/palo: si vede il rimbalzo
-    if(R.endT>tail){ replay=null; applyCamFov(); gameOverNow(); return; }   // fov di ruolo ripristinato
+    if(R.endT>tail){ replay=null; applyCamFov();
+      try{ document.getElementById('replayCine').classList.remove('show'); }catch(e){}
+      gameOverNow(); return; }                                // fov di ruolo ripristinato, bande via
   }
   if(ripple.t>=0){ ripple.t+=dt; if(ripple.t>2.2) ripple.t=-1; }
   NetSim.step(dt);                                            // la rete massa-molla vive anche in moviola
-  // CAMERA MOVIOLA: bordo campo dal lato opposto al tiro, e la regia SEGUE LA PALLA
-  // (come nei replay TV veri: palla sempre in quadro, dal dischetto fino alla porta)
-  const side = Math.abs(s.target.x)<0.3? -1 : -Math.sign(s.target.x);
-  _rpCam.set(side*9.0, 2.4, 8.5 - Math.max(0,R.t)*0.3);
-  camera.position.lerp(_rpCam, Math.min(1,dt*3.5));
-  _rpLook.lerp(_rpCam.set(ball.position.x, Math.max(0.8,ball.position.y), ball.position.z), Math.min(1,dt*6));  // segue LA PALLA
+  // CAMERA MOVIOLA: regia "spalla alta" DIETRO-LATO al tiratore, INQUADRATURA FISSA
+  // che tiene nello stesso quadro porta intera + portiere + dischetto + rincorsa
+  // (niente inseguimento nervoso della palla: e' lei ad attraversare il quadro).
+  // Lato = quello del tiro, cosi' si vede la curva aprirsi verso l'angolo.
+  const side = Math.abs(s.target.x)<0.3? 1 : Math.sign(s.target.x);
+  _rpCam.set(side*5.0, 3.3, 17.2 - Math.max(0,R.t)*0.5);      // lento dolly in avanti
+  camera.position.lerp(_rpCam, Math.min(1,dt*3));
+  _rpLook.set(s.target.x*0.22, 1.0, 4.0);                     // baricentro dischetto-porta: rincorsa E specchio in quadro
   camera.lookAt(_rpLook);
 }
 
