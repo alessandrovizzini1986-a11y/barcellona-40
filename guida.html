@@ -17,6 +17,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..600;1,6..96,400..600&family=Outfit:wght@300..600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
   :root{
     --night-0:#050507; --night-1:#0C0A11; --night-2:#16131C;
@@ -81,6 +83,16 @@
   .faja b{color:var(--gold-bright);font-size:14px}
   .faja p{font-size:13px;color:var(--muted);margin-top:2px}
   .price{color:var(--gold);font-weight:600;white-space:nowrap;font-size:13px}
+  /* JAMON: sottotitoli numerati + mappa */
+  .jstep{display:flex;align-items:baseline;gap:10px;margin:26px 0 8px}
+  .jstep .n{font-family:"Bodoni Moda",serif;font-size:26px;color:var(--gold-deep);line-height:1}
+  .jstep h3{font-size:14px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-bright);font-weight:600}
+  .es{color:var(--gold);font-style:italic;font-weight:600}
+  #jamonMap{height:340px;border-radius:18px;border:1px solid var(--line-gold);margin-top:12px;z-index:1;display:none}
+  #jamonMap.on{display:block}
+  .maplegend{display:flex;gap:16px;justify-content:center;font-size:12px;color:var(--muted);margin-top:8px}
+  .maplegend span:before{content:'●';margin-right:5px}
+  .lg-merc:before{color:var(--teal)} .lg-jam:before{color:var(--gold)} .lg-hot:before{color:#fff}
   /* LISTE LOCALI */
   .plist{display:grid;gap:8px;margin-top:8px}
   .pl{background:var(--night-2);border:1px solid var(--line);border-radius:12px;padding:11px 14px;font-size:14px}
@@ -192,22 +204,57 @@
     </div>
   </section>
 
-  <!-- JAMON -->
+  <!-- JAMON: GUIDA DEFINITIVA -->
   <section id="jamon">
-    <div class="seclab">Guida al jamón ibérico</div>
-    <h2>Leggila <em>prima</em> del primo acquisto.</h2>
+    <div class="seclab">Guida definitiva al jamón ibérico</div>
+    <h2>Dal banco del mercato <em>alla valigia.</em></h2>
+
+    <div class="jstep"><span class="n">1</span><h3>Le regole d'oro — etichette e quantità</h3></div>
     <p class="muted" style="font-size:14px">Sul garretto c'è una fascetta colorata: è la legge spagnola, e ti dice tutto.</p>
     <div class="fajas">
-      <div class="faja"><span class="dot" style="background:#111"></span><div><b>NERA — 100% ibérico de bellota</b> <span class="price">25–40€/hg</span><p>Il vero <i>pata negra</i>: razza pura, vita libera nella dehesa, solo ghiande. Il grasso si scioglie a temperatura corpo, sapore di nocciola. Il re.</p></div></div>
-      <div class="faja"><span class="dot" style="background:#A50044"></span><div><b>ROSSA — ibérico de bellota (50–75%)</b> <span class="price">15–25€/hg</span><p>Stessa vita a ghiande, razza incrociata. Il miglior rapporto qualità/prezzo: è il regalo giusto da portare a casa.</p></div></div>
-      <div class="faja"><span class="dot" style="background:#2e7d32"></span><div><b>VERDE — cebo de campo</b> <span class="price">8–12€/hg</span><p>Vita all'aperto, dieta mista erba+mangime. Onesto, quotidiano.</p></div></div>
-      <div class="faja"><span class="dot" style="background:#e8e4da"></span><div><b>BIANCA — cebo</b> <span class="price">4–8€/hg</span><p>Allevamento e mangime: l'entry level dei coni da mercato. (Il <i>serrano</i> invece non è nemmeno iberico: altra razza, va bene per i panini.)</p></div></div>
+      <div class="faja"><span class="dot" style="background:#111"></span><div><b>ETIQUETA NEGRA — 100% ibérico de bellota</b><p>Il top assoluto, il vero <i>pata negra</i>: razza pura al 100%, vita libera nella dehesa, alimentato SOLO a ghiande. Grasso che si scioglie a temperatura corpo, sapore di nocciola.</p></div></div>
+      <div class="faja"><span class="dot" style="background:#A50044"></span><div><b>ROSSA — ibérico de bellota (50–75%)</b><p>Stessa vita a ghiande, razza incrociata. Il miglior rapporto qualità/prezzo.</p></div></div>
+      <div class="faja"><span class="dot" style="background:#2e7d32"></span><div><b>VERDE — cebo de campo</b><p>Vita all'aperto, dieta mista erba+mangime. Onesto, quotidiano.</p></div></div>
+      <div class="faja"><span class="dot" style="background:#e8e4da"></span><div><b>BIANCA — cebo</b><p>Allevamento e mangime: l'entry level dei coni da mercato. (Il <i>serrano</i> non è nemmeno iberico.)</p></div></div>
     </div>
-    <div class="card" style="margin-top:14px">
-      <h3>Come si mangia + dove</h3>
-      <p>A temperatura ambiente (mai da frigo), fette sottili quasi trasparenti, con le dita, <b>il grasso NON si scarta</b>: è la parte nobile. Accompagna con pa amb tomàquet e cava. Denominazioni top: <b>Jabugo, Guijuelo, Dehesa de Extremadura, Los Pedroches</b>.</p>
-      <p style="margin-top:8px">Per portarlo a casa: <b>Jamonarium</b> (Passeig de Sant Joan, a 10 min dall'hotel — degustazione e sottovuoto da viaggio) o <b>Enrique Tomás</b> (anche in aeroporto). Sottovuoto in valigia = zero problemi, siamo in UE.</p>
+    <div class="card" style="margin-top:12px">
+      <h3>🧳 Formato da asporto</h3>
+      <p>Il formato ideale per il viaggio sono le <b>buste da 80–100 grammi</b>. Prezzo indicativo per l'<span class="es">etiqueta negra</span>: <b class="gold">8–15€ a busta</b> (varia con stagionatura e produttore). Denominazioni top da cercare sull'etichetta: <b>Jabugo, Guijuelo, Dehesa de Extremadura, Los Pedroches</b>. Sottovuoto in valigia = zero problemi, siamo in UE.</p>
     </div>
+
+    <div class="jstep"><span class="n">2</span><h3>Glossario del mini-esperto</h3></div>
+    <div class="duo">
+      <div class="card" style="margin:0"><h3>🔪 <span class="es">«Cortado a cuchillo»</span></h3><p>Da richiedere <b>sempre</b>: il taglio manuale al coltello asseconda le fibre, non scalda la carne e preserva sapore e consistenza. La macchina è per il salame, non per il bellota.</p></div>
+      <div class="card" style="margin:0"><h3>📦 <span class="es">«Envasado al vacío»</span></h3><p>Sottovuoto. La frase magica al banco: <i>«cortado a cuchillo y envasado al vacío, por favor»</i> — affettato al coltello e sigillato al momento per il viaggio.</p></div>
+    </div>
+
+    <div class="jstep"><span class="n">3</span><h3>I migliori mercati per il jamón</h3></div>
+    <div class="plist">
+      <div class="pl"><b>Mercat de la Boqueria</b><small>Iconico e centrale, perfetto per l'atmosfera e il primo cono — ma occhio ai prezzi turistici sui banchi d'ingresso.</small></div>
+      <div class="pl"><b>Mercat de Santa Caterina</b><small>Alta qualità in un ambiente più curato e tranquillo, sotto il tetto ondulato più bello della città. A 12 min dall'hotel.</small></div>
+      <div class="pl"><b>Mercat de Sant Antoni</b><small>Il preferito dai locali, appena ristrutturato: qualità eccellente a prezzi onesti.</small></div>
+    </div>
+
+    <div class="jstep"><span class="n">4</span><h3>Le migliori jamonerías — degustare e comprare</h3></div>
+    <div class="plist">
+      <div class="pl"><b>Reserva Ibérica</b> · <small style="display:inline">Rambla de Catalunya</small><small>La boutique di lusso del jamón: personale esperto, area degustazione curatissima con abbinamenti di vini, sottovuoto impeccabile.</small></div>
+      <div class="pl"><b>Andreu Gastronomia</b> · <small style="display:inline">L'Illa Diagonal / centro</small><small>Istituzione dal 1930: la selezione di bellota tra le più affidabili in città. Spazi per sedersi, taglieri misti e un calice di Cava.</small></div>
+      <div class="pl"><b>Enrique Tomás</b> · <small style="display:inline">varie sedi + aeroporto</small><small>Perfetto per una <span class="es">«Cata de Jamón»</span>: degustazione didattica in sequenza bianca → verde → rossa → nera, per capire le differenze in tempo reale.</small></div>
+      <div class="pl"><b>Charcutería La Pineda</b> · <small style="display:inline">Carrer del Pi, Gòtic</small><small>Storica e rustica, dal 1930: prosciutti appesi al soffitto, atmosfera d'altri tempi, qualità altissima senza fronzoli.</small></div>
+      <div class="pl"><b>Jamonísimo</b> · <small style="display:inline">Eixample</small><small>Il riferimento dei puristi: solo pezzi straordinari e un servizio di taglio magistrale.</small></div>
+    </div>
+    <p class="muted" style="font-size:12px;margin-top:8px">Bonus vicino casa: <b>Jamonarium</b> (Passeig de Sant Joan, 10 min dall'hotel) — degustazione e sottovuoto da viaggio.</p>
+
+    <div class="jstep"><span class="n">5</span><h3>Il rituale della degustazione a casa</h3></div>
+    <div class="card" style="margin-top:4px">
+      <p>🌡️ <b>Temperatura:</b> mai freddo di frigorifero — tira fuori la busta <b>30–40 minuti prima</b>.</p>
+      <p style="margin-top:8px">✨ <b>Il segreto:</b> servilo a temperatura ambiente (~24°C). È pronto solo quando il grasso inizia a <b class="gold">"sudare"</b>: lucido, quasi trasparente, si scioglie in bocca.</p>
+      <p style="margin-top:8px">🍅 <b>L'abbinamento perfetto:</b> <span class="es">pa amb tomàquet</span> — pane rustico tostato strofinato con pomodoro maturo, filo generoso d'olio extravergine e un pizzico di sale.</p>
+    </div>
+
+    <div class="jstep"><span class="n">📍</span><h3>La mappa del jamón</h3></div>
+    <div id="jamonMap" aria-label="Mappa di mercati e jamonerías consigliate"></div>
+    <div class="maplegend"><span class="lg-merc">Mercati</span><span class="lg-jam">Jamonerías</span><span class="lg-hot">Hotel Abapart</span></div>
   </section>
 
   <!-- MAREMAGNUM -->
@@ -274,5 +321,36 @@
   </footer>
 
 </div>
+
+<script>
+// MAPPA DEL JAMON: pin di mercati (teal), jamonerias (oro) e hotel (bianco).
+// Leaflet e' deferred: inizializza a DOM pronto e solo se la libreria ha caricato.
+window.addEventListener('load', function(){
+  var el=document.getElementById('jamonMap');
+  if(!window.L || !el) return;                 // senza Leaflet la mappa resta nascosta (niente riquadro vuoto)
+  el.classList.add('on');
+  var map=L.map('jamonMap',{scrollWheelZoom:false}).setView([41.386,2.170],14);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,
+    attribution:'&copy; OpenStreetMap'}).addTo(map);
+  function pin(lat,lng,color,label,sub){
+    L.circleMarker([lat,lng],{radius:9,color:'#050507',weight:2,fillColor:color,fillOpacity:0.95})
+      .addTo(map).bindPopup('<b>'+label+'</b><br><small>'+sub+'</small>');
+  }
+  var TEAL='#2EC4B6', GOLD='#E9CE93', WHITE='#ffffff';
+  // mercati
+  pin(41.3817,2.1716,TEAL,'Mercat de la Boqueria','Rambla 91 · lun–sab, dom chiuso');
+  pin(41.3861,2.1782,TEAL,'Mercat de Santa Caterina','Av. Francesc Cambó · 12 min dall\'hotel');
+  pin(41.3789,2.1636,TEAL,'Mercat de Sant Antoni','Comte d\'Urgell 1 · il preferito dai locali');
+  // jamonerias
+  pin(41.3923,2.1637,GOLD,'Reserva Ibérica','Rambla de Catalunya 61 · boutique + degustazione');
+  pin(41.3888,2.1358,GOLD,'Andreu Gastronomia','L\'Illa Diagonal · dal 1930, taglieri + Cava');
+  pin(41.3806,2.1734,GOLD,'Enrique Tomás','La Rambla (varie sedi) · «Cata de Jamón»');
+  pin(41.3830,2.1737,GOLD,'Charcutería La Pineda','Carrer del Pi 16 · storica, dal 1930');
+  pin(41.3852,2.1494,GOLD,'Jamonísimo','Provença 85, Eixample · per puristi');
+  pin(41.3986,2.1650,GOLD,'Jamonarium','Pg. Sant Joan 181 · a 10 min dall\'hotel');
+  // hotel
+  pin(41.3948,2.1818,WHITE,'Aparthotel Nàpols · Abapart','la vostra base');
+});
+</script>
 </body>
 </html>
