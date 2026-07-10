@@ -1913,6 +1913,11 @@ function integrateFlight(from,v0,spin,opts){
   const path=buf, g=CONFIG.gravity;
   let n=0, t=0, nextSample=0, crossT=-1, cx=0, cy=0, cvx=0, cvy=0, cvz=0;
   let woodHit=null, outcome='', inNet=false, bounces=0, done=false;
+  // CAOS DETERMINISTICO del legno (LCG seminato dallo stato iniziale): stesso tiro =
+  // stesso rimbalzo, SEMPRE. Math.random qui dentro rompeva il determinismo della
+  // SFIDA seedata e poteva disallineare l'anteprima dal tiro vero sui tiri a filo palo.
+  let _rs=((Math.abs(v0.x*7919)+Math.abs(v0.y*104729)+Math.abs(v0.z*1299709)+Math.abs(spin.x*31)+Math.abs(spin.y*137)+1)*2654435761)>>>0;
+  const rnd=()=>{ _rs=(_rs*1664525+1013904223)>>>0; return _rs/4294967296; };
   const rec=()=>{ if(path && n*3+2<path.length){ path[n*3]=px; path[n*3+1]=py; path[n*3+2]=pz; n++; } };
   rec();
   while(t<PHYS.TMAX && !done){
@@ -1934,8 +1939,10 @@ function integrateFlight(from,v0,spin,opts){
       if(inMouth){ outcome = woodHit?'wood-in':'goal-line'; inNet=true; }           // dentro: da qui la rete frena
       else if(!woodHit && !outcome) outcome='miss';
     }
-    // ---- COLLISIONI LEGNO: capsule pali (x=±HALF) e traversa (y=GH), piano z≈0 ----
-    if(wood && pz>-0.35 && pz<0.6){
+    // ---- COLLISIONI LEGNO: capsule pali (x=±HALF) e traversa (y=GH), piano z≈0.
+    //      MAI dopo che la palla e' entrata nello specchio (!inNet): prima un tiro a
+    //      filo palo poteva risultare GOL e insieme rimbalzare via dal legno ----
+    if(wood && !inNet && pz>-0.35 && pz<0.6){
       for(const sx of [-1,1]){                                // pali verticali
         const dx=px-sx*HALF, dz=pz;
         const d=Math.sqrt(dx*dx+dz*dz);
@@ -1943,7 +1950,7 @@ function integrateFlight(from,v0,spin,opts){
           const nx=dx/d, nz=dz/d, dot=vx*nx+vz*nz;
           if(dot<0){ const e=PHYS.REST_WOOD;
             vx-=(1+e)*dot*nx; vz-=(1+e)*dot*nz;
-            vy+=(Math.random()*2-1)*0.6;                      // micro-caos del legno
+            vy+=(rnd()*2-1)*0.6;                              // micro-caos del legno (deterministico)
             px=sx*HALF+nx*PHYS.WOOD_R; pz=nz*PHYS.WOOD_R;
             woodHit={kind:'palo',x:sx*HALF,y:Math.min(py,GH),t}; }
         }
@@ -1954,7 +1961,7 @@ function integrateFlight(from,v0,spin,opts){
           const ny=dy/d, nz=dz/d, dot=vy*ny+vz*nz;
           if(dot<0){ const e=PHYS.REST_WOOD;
             vy-=(1+e)*dot*ny; vz-=(1+e)*dot*nz;
-            vx+=(Math.random()*2-1)*0.6;
+            vx+=(rnd()*2-1)*0.6;
             py=GH+ny*PHYS.WOOD_R; pz=nz*PHYS.WOOD_R;
             woodHit={kind:'traversa',x:px,y:GH,t}; }
         }
@@ -2182,6 +2189,7 @@ function shoot(){
    4) il volo è leggermente DILATATO (assist) a livello basso, quasi reale a livello alto.
    Niente più tuffo cieco pre-commit: quello restava un "tiro travestito".            */
 let kAuto=null;    // timer del calcio automatico CPU {t,delay}
+const _settingsOpen=()=>{ const s=document.getElementById('settings'); return !!(s && s.classList.contains('show')); };
 let kPre=null;     // tuffo scelto PRIMA del calcio (stile "vado d'istinto"): applicato al contatto
 let kHint=0;       // quante volte abbiamo mostrato il suggerimento in questa partita
 // esito parata: stessa ellisse di shoot(), con reach scalato dal TIMING della reazione
@@ -2576,8 +2584,10 @@ function update(dt){
            keeper.rotation.z=Math.sin(stateT*0.9)*0.045; }                          // il peso si sposta col corpo
     ball.rotation.y+=dt*0.6;
     updateAimVisuals();
-    // PORTIERE: conto alla rovescia del calcio CPU (ALE parte da solo, tu reagisci)
-    if(isKeeper() && kAuto){ kAuto.t+=dt; if(kAuto.t>=kAuto.delay){ kAuto=null; cpuKick(); } }
+    // PORTIERE: conto alla rovescia del calcio CPU (ALE parte da solo, tu reagisci).
+    // Con le IMPOSTAZIONI aperte il timer si CONGELA: prima ALE calciava mentre eri
+    // nel menu (input bloccato dall'overlay) e prendevi gol senza poterti tuffare.
+    if(isKeeper() && kAuto && !_settingsOpen()){ kAuto.t+=dt; if(kAuto.t>=kAuto.delay){ kAuto=null; cpuKick(); } }
   } else { aimRing.visible=aimDot.visible=trajLine.visible=false; }
 
   if(state===STATE.BALL_IN_FLIGHT){
@@ -3427,11 +3437,17 @@ class Input {
     cv.addEventListener('pointerdown', e=>this.down(e));
     cv.addEventListener('pointermove', e=>this.move(e));
     cv.addEventListener('pointerup',   e=>this.up(e));
-    cv.addEventListener('pointercancel',e=>this.up(e));
+    // CANCEL = il SISTEMA ha interrotto il tocco (notifica, gesture, palmo): la mira
+    // si ANNULLA e basta — prima veniva trattato come rilascio e partiva un tiro
+    // (o un tuffo) fantasma che non avevi deciso tu.
+    cv.addEventListener('pointercancel',()=>this.abort());
     cv.addEventListener('pointerleave', e=>{ if(aim.active) this.up(e); });
     addEventListener('keydown', e=>this.key(e));
     addEventListener('keyup', e=>this.keyUp(e));
   }
+  // annulla la mira senza far partire nulla (tocco interrotto dal sistema)
+  abort(){ if(!aim.active) return; aim.active=false; this.kbCharge=false;
+    HUD.power.classList.remove('on'); HUD.curl.classList.remove('on'); }
   // ---- TASTIERA (a11y): mira con le frecce, effetto Q/E, potenza con SPAZIO tenuto ----
   _kbEnsure(){ if(!aim.active){ aim.active=true; aim.tx=0; aim.ty=1.2; aim.power=0.55; aim.curl=0; aim.t0=performance.now(); } }
   _kbMove(dx,dy){ this._kbEnsure();
