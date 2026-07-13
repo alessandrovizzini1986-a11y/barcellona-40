@@ -2842,7 +2842,7 @@ const _q=new THREE.Vector3();
    AVVOLGE il pallone, lo accompagna e poi lo scarica. La palla non viene mai toccata
    (traiettoria pre-calcolata): la rete la subisce soltanto. Si spegne da sola a quiete. */
 const NetSim={
-  W:0,H:0,n:0,active:false,calm:0,maxD:0,
+  W:0,H:0,n:0,active:false,calm:0,maxD:0,lastD:0,
   p:null,pp:null,pin:null,iv:null,   // posizioni xyz correnti/precedenti (piatte), nodi cuciti, impulsi z pendenti
   cs:null,cr:null,wA:null,wB:null,   // vincoli: offset coppie (a*3,b*3), rest length, pesi (0 sul lato cucito)
   nS:0,nC:0,                         // nS = # vincoli strutturali (i primi), il resto sono shear
@@ -2888,7 +2888,7 @@ const NetSim={
   reset(){ if(!this.p) this.init(); if(!this.p) return;
     const base=backNet.userData.base;
     this.p.set(base); this.pp.set(base); this.iv.fill(0);       // riposo ESATTO = forma sag originale
-    this.active=false; this.calm=0; this.maxD=0; this.apply(); },
+    this.active=false; this.calm=0; this.maxD=0; this.lastD=0; this.apply(); },
   // impulso nel punto d'impatto — x in [-GW/2..GW/2], y in [0..GH] MONDO, J in m/s.
   // Le velocita' si ACCUMULANO in iv e vengono iniettate in step con l'h reale del
   // sottopasso (arretrando pp): cosi' il colpo e' identico a 30 e a 60 fps.
@@ -2907,7 +2907,10 @@ const NetSim={
     if(!this.active) return;
     const P=this.profile(), base=backNet.userData.base;
     const p=this.p,pp=this.pp,pin=this.pin,cs=this.cs,cr=this.cr,wA=this.wA,wB=this.wB,n=this.n;
-    const sub=2, h=Math.min(dt,0.033)/sub, h2=h*h, keep=1-P.damp;
+    // damp NORMALIZZATO sul sottopasso di riferimento (60 fps -> h=8 ms): a bassi fps
+    // h cresce e lo smorzamento per-sottopasso fisso non basta piu' a dissipare il
+    // rumore del solver dei vincoli -> l'onda manga CRESCEVA invece di decadere
+    const sub=2, h=Math.min(dt,0.033)/sub, h2=h*h, keep=Math.pow(1-P.damp, h/0.008);
     const R=BALL_R+0.045, R2=R*R;                  // sfera palla + spessore corda
     let bx=0,by=0,bz=0; if(B){ bx=B.x; by=B.y-GH/2; bz=B.z+GD; }   // centro sfera in LOCALE rete
     // impulsi pendenti: velocita' verso -z iniettata arretrando pp con l'h di QUESTO frame
@@ -2944,12 +2947,24 @@ const NetSim={
       const vx=p[k]-pp[k], vy=p[k+1]-pp[k+1], vz=p[k+2]-pp[k+2]; e+=vx*vx+vy*vy+vz*vz;
       const ux=p[k]-base[k], uy=p[k+1]-base[k+1], uz=p[k+2]-base[k+2];
       const d2=ux*ux+uy*uy+uz*uz; if(d2>md) md=d2; }
-    this.maxD=Math.sqrt(md);
+    this.maxD=Math.sqrt(md); this._e=e; this._n=n;
     if(!isFinite(e+md)){ this.reset(); return; }               // guardia NaN: mai un crash
     // 4) auto-spegnimento: quiete prolungata E palla fuori zona (mai mentre avvolge!)
     //    -> accompagna dolcemente alla base ed esegui il reset esatto sotto i 5 mm
-    if(!inZone && e<n*5e-8) this.calm+=dt; else this.calm=0;
-    if(this.calm>0.5){ const f=Math.min(1,dt*4);
+    // Quiete = energia sotto soglia OPPURE maxD stazionario tra un frame e l'altro:
+    // il criterio energetico da solo fallisce a bassi fps (il jitter gravita'/vincoli
+    // scala con h^2 e a 15-20 fps supera la soglia: la rete non si spegnerebbe MAI).
+    const dD=Math.abs(this.maxD-this.lastD); this.lastD=this.maxD;
+    if(inZone){ this.calm=0; }
+    else {                                          // fase di ascolto: serve quiete persistente
+      const still = e<n*5e-8 || dD<Math.max(0.02*dt,0.0012);
+      this.calm = (this.calm>0.5 || still) ? this.calm+dt : 0; }
+    // homing con LATCH: superata la soglia NON si torna in ascolto (il moto indotto
+    // dal rientro stesso azzererebbe calm a ogni frame -> loop infinito, mai a riposo);
+    // lo interrompono solo la palla in zona o un nuovo impulse (entrambi azzerano calm).
+    // La forza del rientro CRESCE col tempo: a rate fisso gravita'+vincoli la
+    // bilanciano e maxD si pianta a ~1.5 cm senza mai scendere sotto i 5 mm.
+    if(this.calm>0.5){ const f=Math.min(1,dt*4*(1+(this.calm-0.5)*4));
       for(let i=0;i<n*3;i++){ p[i]+=(base[i]-p[i])*f; pp[i]=p[i]; }
       if(this.maxD<0.005){ this.reset(); return; } }
     this.apply(); },
@@ -3821,6 +3836,16 @@ try{ const _kd=new URLSearchParams(location.search).get('kdbg'); if(_kd==='1'||_
       return {active:NetSim.active, maxU:+Math.sqrt(m).toFixed(3), minDist:+Math.sqrt(dm).toFixed(3)}; },
     get fsm(){ return { kicker:{...CharFSM.kicker}, keeper:{...CharFSM.keeper} }; },
     setGFX(g){ return setGFX(g); }, netKick(J){ NetSim.impulse(-2.4,1.2,J||8); },
+    get netDbg(){ if(!NetSim.p) return null;
+      const base=backNet.userData.base; let m=0,mi=0;
+      for(let i=0;i<NetSim.n;i++){ const k=i*3;
+        const ux=NetSim.p[k]-base[k],uy=NetSim.p[k+1]-base[k+1],uz=NetSim.p[k+2]-base[k+2];
+        const d=ux*ux+uy*uy+uz*uz; if(d>m){m=d;mi=i;} }
+      const k=mi*3;
+      return {active:NetSim.active,calm:+NetSim.calm.toFixed(3),maxD:+NetSim.maxD.toFixed(4),
+        lastD:+NetSim.lastD.toFixed(4),e:NetSim._e,n:NetSim._n,
+        argmax:{i:mi,ix:mi%NetSim.W,iy:(mi/NetSim.W)|0,
+          ux:+(NetSim.p[k]-base[k]).toFixed(3),uy:+(NetSim.p[k+1]-base[k+1]).toFixed(3),uz:+(NetSim.p[k+2]-base[k+2]).toFixed(3)}}; },
     get celeb(){ return celeb? {t:celeb.t, dir:celeb.dir, rotY:kickerGLB&&kickerGLB.rotation.y, kz:kickerGLB&&kickerGLB.position.z,
       camZ:camera&&camera.position.z, face:kickerFace&&kickerFace.visible, back:kickerBack&&kickerBack.visible} : null; },
     cpuKick(){ if(isKeeper()&&state===STATE.GAME_PLAYING){ kAuto=null; return cpuKick(); } } };
