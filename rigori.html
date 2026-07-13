@@ -1967,8 +1967,15 @@ function integrateFlight(from,v0,spin,opts){
         }
       }
     }
-    // ---- fondo rete: la palla non sfonda, si adagia ----
-    if(inNet && pz<-GD+BALL_R){ pz=-GD+BALL_R; vz=Math.abs(vz)*0.2; }
+    // ---- la RETE e' una SCATOLA: fondo, fianchi e tetto contengono la palla.
+    //      Prima frenava solo in profondita': un tiro all'incrocio conservava la
+    //      velocita' laterale e USCIVA dal fianco della porta. Ridicolo, appunto. ----
+    if(inNet){
+      if(pz<-GD+BALL_R){ pz=-GD+BALL_R; vz=Math.abs(vz)*0.2; }               // fondo
+      if(px> HALF-BALL_R){ px= HALF-BALL_R; vx=-Math.abs(vx)*0.25; }          // fianco destro
+      if(px<-HALF+BALL_R){ px=-HALF+BALL_R; vx= Math.abs(vx)*0.25; }          // fianco sinistro
+      if(py> GH-BALL_R && pz<0){ py=GH-BALL_R; vy=-Math.abs(vy)*0.2; }        // tetto della rete
+    }
     if(inNet && Math.abs(vx)+Math.abs(vy)+Math.abs(vz)<0.9 && py<=BALL_R+0.02){ done=true; }  // ferma in rete
     // ---- terreno: PRIMA dell'esito la rasoiata "striscia" (niente rimbalzi che
     //      sporcherebbero la fedelta' del mirino); DOPO l'esito rimbalza e rotola ----
@@ -2826,7 +2833,7 @@ const NetSim={
     this.u.fill(0); this.v.fill(0); this.active=false; this.apply(); },
   // impulso nel punto d'impatto — x in [-GW/2..GW/2], y in [0..GH], J in m/s
   impulse(x,y,J,r){ if(!this.u) this.init(); if(!this.u) return;
-    const base=backNet.userData.base; r=r||0.7;
+    const base=backNet.userData.base; r=r||0.9;   // gaussiana larga: risponde anche all'incrocio (vicino ai bordi cuciti)
     const mul=isManga()?1.5:1;                     // anime: strappo piu' violento
     const W=this.W,H=this.H;
     for(let i=0;i<this.n;i++){ const ix=i%W, iy=(i/W)|0;
@@ -2853,7 +2860,13 @@ const NetSim={
     this.apply(); },
   apply(){ if(!backNet||!this.u) return;
     const pos=backNet.geometry.attributes.position, base=backNet.userData.base;
-    for(let i=0;i<this.n;i++) pos.setZ(i, base[i*3+2]+this.u[i]);
+    // Lo spostamento in sola PROFONDITA' (asse verso la camera) da davanti non si
+    // vede quasi: aggiungiamo l'AFFOSSAMENTO verso il basso proporzionale al bulge
+    // (come le reti vere che si tendono e "cadono" nel punto colpito) -> la
+    // silhouette cambia e la deformazione si VEDE anche frontalmente.
+    for(let i=0;i<this.n;i++){ const u=this.u[i];
+      pos.setZ(i, base[i*3+2]+u*1.35);
+      pos.setY(i, base[i*3+1]-Math.abs(u)*0.38); }
     pos.needsUpdate=true; backNet.geometry.computeVertexNormals(); }
 };
 // shim di compatibilita': i vecchi punti di chiamata resettano/curano la rete via NetSim
