@@ -2820,11 +2820,18 @@ const _q=new THREE.Vector3();
    e l'onda elastica si propaga ai nodi vicini; la sim si spegne da sola a quiete. */
 const NetSim={
   W:0,H:0,n:0,u:null,v:null,active:false,
-  // TARATURA "da TV": molle piu' morbide e smorzamento lento, cosi' il gonfiaggio
-  // si VEDE (~0.6-0.9m sul punto d'impatto) e l'onda respira prima di posarsi.
-  // (La prima taratura, irrigidita per fermare l'instabilita' dei bordi, era
-  //  scesa a ~8cm di bulge: rete di marmo, gol senza soddisfazione.)
-  K:60, ANCHOR:9, DAMP:2.6,                        // rigidezza, richiamo alla forma, smorzamento
+  // QUATTRO RETI, QUATTRO PERSONALITA' — profilo fisico per stile grafico:
+  //   PES     = sobria e realistica (bulge contenuto, ritorno composto)
+  //   MANGA   = esagerata: botta enorme, molle lente, onda che sbraccia
+  //   PELUCHE = floscia e cicciosa: molle soffici, si affloscia e torna piano
+  //   8BIT    = arcade: rigida, ritorno rapido e spostamento QUANTIZZATO a
+  //             gradini (la rete si muove a scatti, come uno sprite)
+  profile(){
+    return GFX==='manga'  ? {K:55, ANCHOR:7,  DAMP:1.9, gain:2.0,  sag:0.60, jMul:1.6, quant:0}
+         : GFX==='peluche'? {K:32, ANCHOR:6,  DAMP:3.0, gain:1.65, sag:0.72, jMul:1.2, quant:0}
+         : GFX==='8bit'   ? {K:72, ANCHOR:13, DAMP:3.4, gain:1.5,  sag:0.34, jMul:1.3, quant:0.14}
+         :                  {K:60, ANCHOR:9,  DAMP:2.6, gain:1.25, sag:0.34, jMul:1.0, quant:0};
+  },
   init(){ if(!backNet||!backNet.geometry.parameters) return;
     const par=backNet.geometry.parameters;
     this.W=(par.widthSegments|0)+1; this.H=(par.heightSegments|0)+1; this.n=this.W*this.H;
@@ -2834,7 +2841,7 @@ const NetSim={
   // impulso nel punto d'impatto — x in [-GW/2..GW/2], y in [0..GH], J in m/s
   impulse(x,y,J,r){ if(!this.u) this.init(); if(!this.u) return;
     const base=backNet.userData.base; r=r||0.9;   // gaussiana larga: risponde anche all'incrocio (vicino ai bordi cuciti)
-    const mul=isManga()?1.5:1;                     // anime: strappo piu' violento
+    const mul=this.profile().jMul;                 // intensita' del colpo secondo lo stile
     const W=this.W,H=this.H;
     for(let i=0;i<this.n;i++){ const ix=i%W, iy=(i/W)|0;
       if(ix===0||ix===W-1||iy===0||iy===H-1) continue;        // i bordi sono CUCITI: mai spinti
@@ -2843,13 +2850,13 @@ const NetSim={
       if(d2<r*r*9) this.v[i]-=J*mul*Math.exp(-d2/(r*r)); }   // verso -z: la rete si GONFIA all'indietro
     this.active=true; },
   step(dt){ if(!this.active||!this.u) return;
-    const W=this.W,H=this.H,u=this.u,v=this.v;
+    const W=this.W,H=this.H,u=this.u,v=this.v,P=this.profile();
     const sub=2, h=Math.min(dt,0.033)/sub;         // 2 sottopassi: stabile anche a 30 fps
     for(let s=0;s<sub;s++){
       for(let iy=1;iy<H-1;iy++){ const row=iy*W;
         for(let ix=1;ix<W-1;ix++){ const i=row+ix;
           const lap=u[i-1]+u[i+1]+u[i-W]+u[i+W]-4*u[i];
-          v[i]+=(this.K*lap - this.ANCHOR*u[i] - this.DAMP*v[i])*h; } }
+          v[i]+=(P.K*lap - P.ANCHOR*u[i] - P.DAMP*v[i])*h; } }
       let energy=0;
       for(let i=0;i<this.n;i++){ u[i]+=v[i]*h; energy+=v[i]*v[i]+u[i]*u[i]; }
       // bordi CUCITI a pali/traversa/suolo: spostamento e velocita' sempre nulli
@@ -2859,14 +2866,17 @@ const NetSim={
     }
     this.apply(); },
   apply(){ if(!backNet||!this.u) return;
-    const pos=backNet.geometry.attributes.position, base=backNet.userData.base;
+    const pos=backNet.geometry.attributes.position, base=backNet.userData.base, P=this.profile();
     // Lo spostamento in sola PROFONDITA' (asse verso la camera) da davanti non si
     // vede quasi: aggiungiamo l'AFFOSSAMENTO verso il basso proporzionale al bulge
     // (come le reti vere che si tendono e "cadono" nel punto colpito) -> la
     // silhouette cambia e la deformazione si VEDE anche frontalmente.
-    for(let i=0;i<this.n;i++){ const u=this.u[i];
-      pos.setZ(i, base[i*3+2]+u*1.35);
-      pos.setY(i, base[i*3+1]-Math.abs(u)*0.38); }
+    // In 8-BIT lo spostamento visivo e' QUANTIZZATO a gradini: rete a scatti.
+    for(let i=0;i<this.n;i++){ let u=this.u[i];
+      if(P.quant) u=Math.round(u/P.quant)*P.quant;
+      let z=u*P.gain; if(z>2.8)z=2.8; else if(z<-2.8)z=-2.8;          // tetto anti-assurdo (anche in anime)
+      pos.setZ(i, base[i*3+2]+z);
+      pos.setY(i, base[i*3+1]-Math.min(Math.abs(u)*P.sag,1.1)); }
     pos.needsUpdate=true; backNet.geometry.computeVertexNormals(); }
 };
 // shim di compatibilita': i vecchi punti di chiamata resettano/curano la rete via NetSim
@@ -3718,6 +3728,7 @@ try{ const _kd=new URLSearchParams(location.search).get('kdbg'); if(_kd==='1'||_
     get net(){ if(!NetSim.u) return null; let m=0; for(let i=0;i<NetSim.n;i++){ const a=Math.abs(NetSim.u[i]); if(a>m)m=a; }
       return {active:NetSim.active, maxU:+m.toFixed(3)}; },
     get fsm(){ return { kicker:{...CharFSM.kicker}, keeper:{...CharFSM.keeper} }; },
+    setGFX(g){ return setGFX(g); }, netKick(J){ NetSim.impulse(-2.4,1.2,J||8); },
     get celeb(){ return celeb? {t:celeb.t, dir:celeb.dir, rotY:kickerGLB&&kickerGLB.rotation.y, kz:kickerGLB&&kickerGLB.position.z,
       camZ:camera&&camera.position.z, face:kickerFace&&kickerFace.visible, back:kickerBack&&kickerBack.visible} : null; },
     cpuKick(){ if(isKeeper()&&state===STATE.GAME_PLAYING){ kAuto=null; return cpuKick(); } } };
