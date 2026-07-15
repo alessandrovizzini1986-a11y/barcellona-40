@@ -67,6 +67,15 @@
   #curl{position:absolute;left:18px;bottom:calc(48px + env(safe-area-inset-bottom));font-size:7px;color:#9fd0ff;opacity:0;transition:opacity .2s}
   #curl.on{opacity:1}
   #hint{position:absolute;left:0;right:0;bottom:calc(20px + env(safe-area-inset-bottom));text-align:center;font-size:7px;color:#cdd9f4;opacity:0;transition:opacity .25s;text-shadow:0 1px 4px #000;padding:0 12px;line-height:1.7}
+  /* TIRO SPECIALE a risorsa: chip visibile quando hai una carica pronta */
+  #specBtn{position:absolute;right:14px;bottom:calc(78px + env(safe-area-inset-bottom));font:inherit;font-size:7px;
+    color:#ffe9ff;background:linear-gradient(120deg,#7a1fa2,#ff3cac);border:1px solid #ff9bd8;border-radius:999px;
+    padding:8px 12px;pointer-events:auto;animation:specPulse 1.1s infinite;box-shadow:0 0 14px rgba(255,60,172,.55)}
+  @keyframes specPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+  /* Banner del BLOCCO di difficoltà (Amatori/Professionisti/…) */
+  #diffBanner{position:absolute;left:0;right:0;top:26%;text-align:center;font-size:11px;color:#ffd884;
+    text-shadow:0 2px 8px #000;letter-spacing:.18em;opacity:0;transition:opacity .3s;pointer-events:none}
+  #diffBanner.on{opacity:1}
   #hint.on{opacity:.92}
   /* result flash text */
   #result{position:absolute;left:0;right:0;top:30%;text-align:center;font-size:34px;opacity:0;text-shadow:0 3px 22px rgba(0,0,0,.7);letter-spacing:1px}
@@ -314,13 +323,17 @@
   <div id="flash"></div>
   <div id="power"><span>⚡ POTENZA</span><div class="bar"><div class="fill" id="powerFill"></div><div class="sweet"></div></div></div>
   <div id="curl">↺ EFFETTO</div>
+  <button id="specBtn" style="display:none">🌈 SPECIALE PRONTO</button>
+  <div id="diffBanner"></div>
   <div id="hint" class="on">trascina per mirare · rilascia per tirare</div>
 
   <div class="panel" id="menu">
     <h1>RIGORI<br><span class="gold">AL CAMP NOU</span></h1>
     <button id="modeBtn" class="hudbtn modesel">∞ INFINITA</button>
     <button id="roleBtn" class="hudbtn modesel">⚽ TIRI TU</button>
+    <button id="varBtn" class="hudbtn modesel" style="display:none">🎬 CLASSICO</button>
     <div class="small" id="challengeNote" style="display:none">🎲 SFIDA di un amico — stesso portiere per tutti!</div>
+    <div class="small" id="missionLine" style="display:none"></div>
     <div class="styleSel">
       <button class="stbtn" data-gfx="pes">🎮 PES<small>realistico</small></button>
       <button class="stbtn" data-gfx="manga">🎬 HOLLY &amp; BENJI<small>anime</small></button>
@@ -342,6 +355,7 @@
       <button class="stbtn" data-gfx="peluche">🧸 PELUCHE<small>morbidoso</small></button>
       <button class="stbtn" data-gfx="8bit">👾 8-BIT<small>arcade</small></button>
     </div>
+    <div class="small" id="seedLine" style="display:none"></div>
     <div class="overbtns">
       <button id="shareBtn" class="hudbtn share">📲 CONDIVIDI</button>
       <button id="challengeBtn" class="hudbtn share">🎲 SFIDA</button>
@@ -382,6 +396,7 @@
   <button class="srow" id="setMusic"><span>🎵 MUSICA</span><b class="sw">ON</b></button>
   <button class="srow" id="setSfx"><span>🔊 EFFETTI</span><b class="sw">ON</b></button>
   <button class="srow" id="setVoice"><span>🎙 TELECRONACA</span><b class="sw">ON</b></button>
+  <button class="srow" id="setSens"><span>🎯 SENSIBILITÀ</span><b class="sw" id="sensVal">MEDIO</b></button>
   <div class="stitle2">PALLONE</div>
   <div class="ballrow">
     <button class="ballopt" data-ball="classic"><i class="bi-classic"></i><small>CLASSICO</small></button>
@@ -523,6 +538,79 @@ function applyBallSkin(){ if(!ball) return; if(!Progress.ballUnlocked(BALLSKIN))
     m.map=_skinTex[BALLSKIN]; m.metalness= BALLSKIN==='gold'?0.5:0.12; m.roughness= BALLSKIN==='gold'?0.24:0.3; }
   m.needsUpdate=true; }
 function setBallSkin(k){ if(!Progress.ballUnlocked(k)) return; BALLSKIN=k; try{localStorage.setItem('rig_ball',k);}catch(e){} applyBallSkin(); }
+
+/* ------------- META: XP "Pass Leggenda" (chiave NUOVA rig_xp) ------------- */
+// XP offline: gol/parate/pali/missioni danno punti; 100 XP a livello, cap 20.
+// Retrocompatibile: se la chiave manca si parte da 0, nessun'altra chiave toccata.
+const Meta={
+  xp(){ try{ return Math.max(0, +localStorage.getItem('rig_xp')||0); }catch(e){ return 0; } },
+  level(){ return Math.min(20, 1+Math.floor(this.xp()/100)); },
+  intoLevel(){ return Math.min(100, this.xp()-(Math.min(19,Math.floor(this.xp()/100)))*100); },
+  add(n){ if(!(n>0)) return; const before=this.level();
+    try{ localStorage.setItem('rig_xp', String(this.xp()+Math.round(n))); }catch(e){}
+    if(this.level()>before) showAchToast({ic:'⭐', t:'PASS LEGGENDA · LIV. '+this.level(), d:'Sei salito di grado!'});
+    try{ syncHUD(); }catch(e){} }
+};
+
+/* --------------- MINI-MISSIONI (chiave NUOVA rig_miss) ------------------- */
+// Una missione ATTIVA per volta (la prima non completata); i progressi vivono
+// nella run corrente (contatori azzerati a startGame), il completamento persiste.
+const Missions={ KEY:'rig_miss',
+  DEFS:[
+    {id:'alto3',  t:'Segna 3 rigori DI FILA in alto',        xp:40},
+    {id:'wood2',  t:'Colpisci 2 legni nella stessa run',     xp:40},
+    {id:'curva3', t:'Segna 3 gol con effetto ≥ 40%',         xp:45},
+    {id:'cucch1', t:'Segna un CUCCHIAIO',                    xp:30},
+    {id:'inc2',   t:"Segna 2 volte all'incrocio",            xp:50},
+    {id:'par4',   t:'Para 4 rigori nella stessa run',        xp:50} ],
+  data(){ try{ return JSON.parse(localStorage.getItem(this.KEY)||'{}'); }catch(e){ return {}; } },
+  done(id){ return !!this.data()[id]; },
+  current(){ return this.DEFS.find(m=>!this.done(m.id))||null; },
+  complete(id){ if(this.done(id)) return; const m=this.DEFS.find(x=>x.id===id); if(!m) return;
+    const d=this.data(); d[id]=1; try{ localStorage.setItem(this.KEY,JSON.stringify(d)); }catch(e){}
+    showAchToast({ic:'🎯', t:'MISSIONE COMPIUTA', d:m.t+' · +'+m.xp+' XP'}); Meta.add(m.xp); }
+};
+let missRun={topRow:0, wood:0, curva:0, incro:0, saves:0};   // contatori della run corrente
+
+/* -------- SENSIBILITÀ del gesto (3 profili, chiave NUOVA rig_sens) -------- */
+// ref = frazione del lato corto per potenza piena (più alto = gesto più ampio,
+// più controllo); smooth = quanto la mira segue il dito (1 = istantanea);
+// curl = frazione di larghezza per effetto pieno.
+let SENS='medio'; try{ const s=localStorage.getItem('rig_sens'); if(s==='lento'||s==='medio'||s==='reattivo') SENS=s; }catch(e){}
+const SENS_P={ lento:{ref:0.72, smooth:0.45, curl:0.68},
+               medio:{ref:0.55, smooth:0.72, curl:0.55},
+               reattivo:{ref:0.44, smooth:1.0, curl:0.46} };
+function cycleSens(){ const L=['lento','medio','reattivo']; SENS=L[(L.indexOf(SENS)+1)%3];
+  try{ localStorage.setItem('rig_sens',SENS); }catch(e){} }
+
+/* ------- VARIANTE della Sfida 5 rigori (chiave NUOVA rig5_var) ------------ */
+let FIVE_VAR='classic'; try{ const v=localStorage.getItem('rig5_var'); if(v==='classic'||v==='drama'||v==='crazy') FIVE_VAR=v; }catch(e){}
+const FIVE_VAR_LAB={classic:'🎬 CLASSICO', drama:'🎥 DRAMMA', crazy:'🎲 TIRO PAZZO'};
+function cycleFiveVar(){ const L=['classic','drama','crazy']; FIVE_VAR=L[(L.indexOf(FIVE_VAR)+1)%3];
+  try{ localStorage.setItem('rig5_var',FIVE_VAR); }catch(e){} }
+
+/* --------- CURVA DI DIFFICOLTÀ A BLOCCHI (gradini netti ogni 5) ----------- */
+// Il livello effettivo sale a SCALINI ogni 5 rigori: dentro il blocco la
+// difficoltà è costante e ANNUNCIATA, così il giocatore sa dove si trova.
+const diffBlk=()=>Math.min(6, Math.floor(streak/5));
+const effStreak=()=>diffBlk()*5;                       // streak "quantizzata" per l'AI
+const DIFF_NAMES_SH=['AMATORI','PROFESSIONISTI','CAMPIONI','LEGGENDE'];
+const DIFF_NAMES_KP=['ESORDIENTE','TITOLARE','NAZIONALE','MOSTRO SACRO'];
+let _lastBlk=0;
+function announceBlockIfChanged(){
+  const b=diffBlk(); if(b===_lastBlk) return; _lastBlk=b;
+  const names=isKeeper()?DIFF_NAMES_KP:DIFF_NAMES_SH, nm=names[Math.min(3,b)]+(b>3?' +'+(b-3):'');
+  const el=document.getElementById('diffBanner');
+  if(el){ el.textContent='— '+nm+' —'; el.classList.add('on'); setTimeout(()=>el.classList.remove('on'),2400); }
+  showTelecro(isKeeper()? ('🧤 BLOCCO '+nm+': attaccanti più cattivi, finestra più stretta')
+                        : ('🏟️ BLOCCO '+nm+': portiere più reattivo'+(b>=2?' e tiro meno docile':'')));
+  Sound.sfx(660+b*120,.08,'square',0.18);
+}
+
+/* ---- TIRO SPECIALE a risorsa: si carica con 3 gol di fila, max 2 a run ---- */
+let specCharges=0, specUsed=0, specGoalRun=0;
+function specHUD(){ const b=document.getElementById('specBtn'); if(!b) return;
+  b.style.display = (state===STATE.GAME_PLAYING && !isKeeper() && specCharges>0 && !specialArmed) ? '' : 'none'; }
 
 /* ------------------------------- AUDIO -----------------------------------
    Tutto WebAudio procedurale (zero file): bus separati MUSICA / SFX su un
@@ -1796,16 +1884,21 @@ function setKeeperPose(k, P, w){
 }
 
 /* ------------------------------ AI / LIVELLO ----------------------------- */
-const reachOf  =()=>clamp(CONFIG.reachBase+streak*CONFIG.reachPerLevel,0,CONFIG.reachMax);
-const errorOf  =()=>clamp(CONFIG.errorBase-streak*CONFIG.errorPerLevel,CONFIG.errorMin,CONFIG.errorBase);
-const reactOf  =()=>clamp(CONFIG.reactionMs-streak*CONFIG.reactionStep,CONFIG.reactionMin,CONFIG.reactionMs)/1000;
-const guessBiasOf=()=>clamp(streak*CONFIG.guessBiasGrow,0,0.7); // 0=tira a caso lato, ~0.7=spesso giusto
+// L'AI del portiere scala su effStreak() (gradini da 5) e NON sulla streak grezza:
+// dentro un blocco la difficoltà è costante, il salto arriva annunciato dal banner.
+const reachOf  =()=>clamp(CONFIG.reachBase+effStreak()*CONFIG.reachPerLevel,0,CONFIG.reachMax);
+const errorOf  =()=>clamp(CONFIG.errorBase-effStreak()*CONFIG.errorPerLevel,CONFIG.errorMin,CONFIG.errorBase);
+const reactOf  =()=>clamp(CONFIG.reactionMs-effStreak()*CONFIG.reactionStep,CONFIG.reactionMin,CONFIG.reactionMs)/1000;
+const guessBiasOf=()=>clamp(effStreak()*CONFIG.guessBiasGrow,0,0.7); // 0=tira a caso lato, ~0.7=spesso giusto
 
 /* ------------------------------- STATI ----------------------------------- */
 // La transizione di stato è gestita dalla FSM dentro GameEngine (con hook
 // onEnter/onExit, base per il "juice" di Fase 2). Questo resta il nome pubblico.
 function setState(s){ engine.setState(s); }
 function startGame(){ streak=0; shotNum=0; goals5=0; aleSaves=0; suddenDeath=false; duelResult=''; fiveRes=[]; aimHist=[]; lastShotPNG=null; specialArmed=false;
+  // reset dei sistemi di run: missioni, cariche del tiro speciale, blocco difficoltà
+  missRun={topRow:0, wood:0, curva:0, incro:0, saves:0};
+  specCharges=0; specUsed=0; specGoalRun=0; _lastBlk=0;
   if(!challengeFromURL) roundSeed=Math.floor(Math.random()*2.1e9).toString(36);   // nuovo seed ogni partita (la SFIDA da URL lo fissa)
   Sound.intensity=0;
   applyIdentity();                                   // identita' coerenti col ruolo scelto
@@ -2084,11 +2177,21 @@ function ballPathPos(t){
 // risolve target/risultato al rilascio del drag
 function shoot(){
   Sound.ac();
-  const special=specialArmed; specialArmed=false;   // EASTER EGG: consuma il tiro speciale
+  // VARIANTE "TIRO PAZZO": il 5° rigore della sfida è SEMPRE un tiro speciale
+  if(MODE==='five' && FIVE_VAR==='crazy' && shotNum===4 && !specialArmed){
+    specialArmed=true; showTelecro('🎲 TIRO PAZZO: l\'ultimo è SPECIALE! 💥'); }
+  const special=specialArmed; specialArmed=false;   // consuma il tiro speciale (easter egg o carica HUD)
   let tx=aim.tx, ty=aim.ty;
   const p=clamp(aim.power,0,1);
   // FEDELTA' TOTALE: la palla va ESATTAMENTE dove mostra il mirino (zero scatter nascosto).
   // Il rischio della potenza alta sta nel reach del portiere e nel tempo di volo, non nella mira.
+  // ECCEZIONE dichiarata: dai blocchi CAMPIONI in su la palla "vive" un filo
+  // (micro-variazione DETERMINISTICA di mira, annunciata dal banner di blocco).
+  if(!special && diffBlk()>=2){
+    const nr = roundSeed ? mulberry32((strHash(roundSeed) ^ Math.imul(shotNum+7,374761393))>>>0) : Math.random;
+    const amp=0.05*(diffBlk()-1);
+    tx+=(nr()*2-1)*amp; ty+=(nr()*2-1)*amp*0.7;
+  }
   tx=clamp(tx,-HALF-0.6,HALF+0.6); ty=clamp(ty,0.1,GH+1.0);
   const curl=aim.curl; // -1..1 lateralità voluta
 
@@ -2200,6 +2303,8 @@ function shoot(){
          // attraversa il pallone nella direzione del tiro, live e moviola)
          kickYaw: Math.atan2(ball.position.x-target.x, ball.position.z-target.z),
          windup: useGLBKicker?KICK_WINDUP_GLB:KICK_WINDUP_FALLBACK, launched:false };   // RINCORSA: la palla parte al contatto
+  // VARIANTE "DRAMMA": il 5° rigore della sfida vola in slow-motion cinematografico
+  if(MODE==='five' && FIVE_VAR==='drama' && shotNum===4){ shot.drama=true; showTelecro('🎥 DRAMMA: l\'ultimo rigore, al rallentatore…'); }
   setState(STATE.BALL_IN_FLIGHT);
   kickT=0;                                      // lean procedurale (fallback)
   startKickerKick();                            // rincorsa GLB (run -> kick, contatto = lancio palla)
@@ -2227,7 +2332,7 @@ let kPre=null;     // tuffo scelto PRIMA del calcio (stile "vado d'istinto"): ap
 let kHint=0;       // quante volte abbiamo mostrato il suggerimento in questa partita
 // esito parata: stessa ellisse di shoot(), con reach scalato dal TIMING della reazione
 function keeperOutcome(guess,guessY,reachMul){
-  const lvl=clamp(streak/12,0,1);
+  const lvl=clamp(effStreak()/12,0,1);                      // gradini netti anche per i guantoni
   const tx=shot.target.x, ty=shot.target.y, style=shot.style;
   const inGoal = Math.abs(tx)<HALF-0.02 && ty>0.06 && ty<GH-0.02;
   const hitPost = !inGoal && ((Math.abs(Math.abs(tx)-HALF)<0.16 && ty<GH+0.05)
@@ -2243,7 +2348,7 @@ function cpuKick(){
   Sound.ac(); specialArmed=false;
   const rng = roundSeed ? mulberry32((strHash(roundSeed) ^ Math.imul(shotNum+1,2654435761))>>>0) : Math.random;
   const rr=(a,b)=>a+rng()*(b-a);
-  const lvl=clamp(streak/12,0,1);                           // 0 = facile … 1 = attaccante spietato
+  const lvl=clamp(effStreak()/12,0,1);                      // 0 = facile … 1 = attaccante spietato (a GRADINI da 5)
   // --- la CPU sceglie l'angolo: più preciso e più "a giro" salendo di livello ---
   const side=rng()<0.5?-1:1;
   const corner=rng()<0.30+lvl*0.55;
@@ -2264,7 +2369,8 @@ function cpuKick(){
   // ASSIST DI REAZIONE: nel reale la palla vola ~400ms (imparabile di riflesso);
   // il PLAYBACK del path viene dilatato (slow-mo fisico) per dare una vera finestra
   // umana, che si stringe col livello. simRate riporta il tempo di gioco al tempo simulato.
-  const assist=1.45-lvl*0.35;
+  // finestra di reazione a GRADINI NETTI per blocco: L1 generosissima, poi giù deciso
+  const assist=Math.max(0.68, 1.5-0.25*diffBlk());
   const realDur = sim.outcome==='goal-line'||sim.outcome==='wood-in' ? sim.crossT
                 : (sim.wood? sim.wood.t : (sim.crossT>0? sim.crossT : sim.T));
   const dur=realDur*assist;
@@ -2282,6 +2388,10 @@ function cpuKick(){
   else if(sim.wood) shot.result='POST';
   else if(sim.outcome==='miss') shot.result='MISS';
   else shot.result=keeperOutcome(shot.guess,1.0,0.30);      // in porta: blocca SOLO la palla addosso
+  // TELEGRAPH LEGGIBILE: ai blocchi bassi un "fantasmino" suggerisce la zona del
+  // tiro durante la rincorsa (impreciso quanto piu' sali di livello; poi sparisce)
+  shot.hint = (lvl<0.55) ? { x: clamp(tx+(rng()*2-1)*(0.35+lvl*1.5), -HALF+0.2, HALF-0.2),
+                             y: clamp(ty+(rng()*2-1)*(0.25+lvl*1.0), 0.3, GH-0.15) } : null;
   setState(STATE.BALL_IN_FLIGHT);
   kickT=0; startKickerKick(); camPunchT=0; slowmo=0; haptic(14);
   // tuffo D'ISTINTO scelto prima del calcio: si applica ORA (reach pieno, ma il cucchiaio punisce)
@@ -2366,6 +2476,21 @@ function resolveShot(){
       if(shot.style==='chip') Progress.award('cucchiaio');
       if(shot.style==='low' && shot.power>0.72) Progress.award('rasoiata');
       if(streak>=5) Progress.award('streak5'); if(streak>=10) Progress.award('streak10'); }catch(e){}
+    // ---- MISSIONI + XP + CARICA TIRO SPECIALE + banner blocco difficoltà ----
+    try{
+      missRun.topRow = (shot.target.y>GH*0.62)? missRun.topRow+1 : 0;
+      if(missRun.topRow>=3) Missions.complete('alto3');
+      if(shot.woodGoal){ missRun.wood++; if(missRun.wood>=2) Missions.complete('wood2'); }
+      if(Math.abs(shot.curlAcc)/CONFIG.curlMax>=0.4){ missRun.curva++; if(missRun.curva>=3) Missions.complete('curva3'); }
+      if(shot.style==='chip') Missions.complete('cucch1');
+      if(incrocio){ missRun.incro++; if(missRun.incro>=2) Missions.complete('inc2'); }
+      specGoalRun++;
+      if(specGoalRun>=3){ specGoalRun=0;
+        if(specUsed+specCharges<2){ specCharges++;
+          showAchToast({ic:'🌈', t:'TIRO SPECIALE PRONTO', d:'Tocca il pulsante viola per armarlo'}); } }
+      Meta.add((incrocio?12:8)+(shot.special?4:0));
+      announceBlockIfChanged();
+    }catch(e){}
     // ESULTANZA (come nei giochi di calcio veri): il TUO giocatore si gira e corre
     // verso la camera con la faccia in primo piano
     if(useGLBKicker && kickerGLB){ celeb={t:0,dir:1}; playKicker('run',1); }
@@ -2378,8 +2503,12 @@ function resolveShot(){
       HUD.flash.classList.remove('on'); HUD.flash.classList.add('save'); void HUD.flash.offsetWidth; HUD.flash.classList.add('on'); }
     else if(r==='POST'){ showResult('PALO!','#ffd884'); engine.view.popWord('PALO!','#ffd24a'); engine.view.burstAt3D(tmpV2.set(Math.sign(shot.target.x)*HALF,shot.target.y,0),'save'); Sound.postClang(); arcadeAudio.playPostSting(); Sound.groan(); }
     else { showResult('FUORI!','#ffd28a'); engine.view.popWord('FUORI!','#ffffff'); arcadeAudio.playPostSting(); Sound.groan(); }
-    CharFSM.set('kicker','sconfitta');                       // FSM: occasione fallita
+    CharFSM.set('kicker','sconfitta');
     if(r==='SAVE') CharFSM.set('keeper','esultanza');
+    // niente gol: la serie per la carica speciale e la missione "in alto" ripartono;
+    // il PALO però conta per la missione dei legni e dà comunque un filo di XP
+    try{ specGoalRun=0; missRun.topRow=0;
+      if(r==='POST'){ missRun.wood++; if(missRun.wood>=2) Missions.complete('wood2'); Meta.add(3); } }catch(e){}
     haptic([0,130]); slowmo=1; setState(STATE.SAVE_ANIMATION);
   }
   syncHUD(); try{ announceOutcome(r); }catch(e){}
@@ -2413,6 +2542,8 @@ function resolveKeeper(r){
       HUD.flash.classList.remove('on'); HUD.flash.classList.add('save'); void HUD.flash.offsetWidth; HUD.flash.classList.add('on');
       haptic([0,40,30,70]);
       try{ if(streak>=3) Progress.award('parata3'); if(streak>=8) Progress.award('muro8'); }catch(e){}
+      // missione "para 4 in una run" + XP parata + banner blocco portiere
+      try{ missRun.saves++; if(missRun.saves>=4) Missions.complete('par4'); Meta.add(10); announceBlockIfChanged(); }catch(e){}
     } else if(r==='POST'){ showResult('PALO! 😅','#ffd884'); engine.view.popWord('PALO!','#ffd24a'); Sound.postClang(); arcadeAudio.playPostSting(); }
     else { showResult('FUORI! 😮‍💨','#ffd28a'); engine.view.popWord('FUORI!','#ffffff'); arcadeAudio.playPostSting(); }
     CharFSM.set('keeper','esultanza'); CharFSM.set('kicker','sconfitta');   // FSM: sei sopravvissuto
@@ -2629,7 +2760,9 @@ function update(dt){
 
   if(state===STATE.BALL_IN_FLIGHT){
     const tscale = slowmo>0? 0.32 : 1;                    // slow-mo leggera già in volo? no: solo dopo. mantieni 1
-    shot.t+=dt;
+    // DRAMMA (sfida 5): dopo il contatto il VOLO scorre a metà velocità (la
+    // rincorsa resta reale, così il timing del calcio non si sfasa)
+    shot.t += dt*((shot.drama && shot.launched)? 0.55 : 1);
     const wind=shot.windup||0, ft=shot.t-wind;            // ft = tempo di VOLO (negativo durante la rincorsa)
     if(ft<0){                                             // ---- RINCORSA: il rigorista corre, la palla aspetta sul dischetto ----
       const rp2=clamp(shot.t/Math.max(0.01,wind),0,1);
@@ -2685,12 +2818,20 @@ function update(dt){
     if(isKeeper()){
       if(aim.active && !shot.humanDive){
         aimRing.visible=aimDot.visible=true;
+        aimDot.material.color.setHex(0xffffff); aimDot.scale.setScalar(1);
         aimRing.position.set(aim.tx,aim.ty,0.06); aimDot.position.set(aim.tx,aim.ty,0.07);
         aimRing.material.color.setHex(0xffd884); aimRing.scale.setScalar(1.5+0.18*Math.sin(stateT*9));
       } else if(shot.humanDive){
         aimRing.visible=true; aimDot.visible=false;
         aimRing.position.set(shot.guess,shot.guessY,0.06);
         aimRing.material.color.setHex(0x39ff7a); aimRing.scale.setScalar(1.35);
+      } else if(shot.hint && !shot.launched){
+        // TELEGRAPH: fantasmino viola dove "l'istinto" legge il tiro (solo blocchi bassi,
+        // solo durante la RINCORSA: al contatto sparisce e conta la tua reazione)
+        aimDot.visible=true; aimRing.visible=false;
+        aimDot.position.set(shot.hint.x,shot.hint.y,0.07);
+        aimDot.material.color.setHex(0xb987ff);
+        aimDot.scale.setScalar(1.6+0.5*Math.sin(stateT*6));
       } else { aimRing.visible=aimDot.visible=false; }
       trajLine.visible=false;
     }
@@ -3005,6 +3146,7 @@ function screenToGoal(clientX,clientY){
 function updateAimVisuals(){
   if(!aim.active){ aimRing.visible=aimDot.visible=trajLine.visible=false; return; }
   aimRing.visible=aimDot.visible=true;
+  aimDot.material.color.setHex(0xffffff); aimDot.scale.setScalar(1);   // reset dopo il "fantasmino" viola del portiere
   aimRing.position.set(aim.tx,aim.ty,0.06); aimDot.position.set(aim.tx,aim.ty,0.07);
   // DA PORTIERE: il marker e' la ZONA DEL TUFFO (anello oro "guantone", piu largo),
   // e NIENTE anteprima di traiettoria: quella e' roba da tiratore, qui non tiri tu.
@@ -3035,7 +3177,9 @@ function drawTrajPreview(){
   const key=(aim.tx*50|0)+'_'+(aim.ty*50|0)+'_'+(p*40|0)+'_'+(aim.curl*40|0)+'_'+style;
   if(key!==_tpKey){ _tpKey=key; _tpSim=buildFlight(aim.tx,aim.ty,p,aim.curl,style,false,_tpBuf); }
   const sim=_tpSim, arr=trajLine.geometry.attributes.position.array, N=trajLine.userData.N;
-  const tEnd=sim.crossT>0? sim.crossT : sim.T;                    // anteprima fino al piano porta
+  // ANTEPRIMA DISCRETA: mostra solo il primo 70% del volo — la direzione si legge,
+  // ma il punto d'arrivo esatto lo dice il mirino, non una linea-mirino perfetta
+  const tEnd=(sim.crossT>0? sim.crossT : sim.T)*0.70;
   for(let i=0;i<N;i++){ const t=(i/(N-1))*tEnd;
     const s=Math.min(sim.n-1, Math.max(0, t/PHYS.SAMPLE));
     const i0=Math.floor(s), i1=Math.min(sim.n-1,i0+1), f=s-i0;
@@ -3257,6 +3401,18 @@ function syncHUD(){
   if(sc){ const inGame=(playing||state===STATE.BALL_IN_FLIGHT||state===STATE.GOAL_ANIMATION||state===STATE.SAVE_ANIMATION);
     sc.classList.toggle('on', five && inGame); sc.textContent='RIGORE '+Math.min(shotNum+(playing?1:0),5)+'/5'; }
   renderShootrack();
+  // ---- Fase A: missione attiva nel menu, variante sfida, seed condivisibile, chip speciale ----
+  { const ml=document.getElementById('missionLine');
+    if(ml){ const m=Missions.current();
+      ml.style.display=(state===STATE.MENU_SCREEN && m)? '' : 'none';
+      if(m) ml.textContent='🎯 MISSIONE: '+m.t+' (+'+m.xp+' XP) · ⭐ PASS LIV.'+Meta.level(); }
+    const vb=document.getElementById('varBtn');
+    if(vb){ vb.style.display=(state===STATE.MENU_SCREEN && five)? '' : 'none'; vb.textContent=FIVE_VAR_LAB[FIVE_VAR]; }
+    const sl=document.getElementById('seedLine');
+    if(sl){ const showSeed=(state===STATE.GAME_OVER && five && roundSeed);
+      sl.style.display=showSeed? '' : 'none';
+      if(showSeed) sl.innerHTML='🎲 Seed: <b>'+roundSeed+'</b> — tocca QUI per copiare il link e far battere il tuo '+(keep?aleSaves:goals5)+'/5'; }
+    specHUD(); }
   if(state===STATE.GAME_OVER){
     const ol=document.getElementById('overLine');
     if(keep){
@@ -3553,6 +3709,17 @@ const _sndSync=()=>{ HUD.snd.textContent=(Sound.musicOn||Sound.sfxOn)?'♪':'✕
 document.getElementById('setMusic').addEventListener('click',e=>{ e.stopPropagation(); Sound.toggleMusic(); renderSettings(); _sndSync(); });
 document.getElementById('setSfx').addEventListener('click',e=>{ e.stopPropagation(); Sound.toggleSfx(); renderSettings(); _sndSync(); });
 document.getElementById('setVoice').addEventListener('click',e=>{ e.stopPropagation(); Sound.toggleVoice(); renderSettings(); });
+// ---- Fase A: sensibilità gesto, variante sfida 5, tiro speciale a carica, copia seed ----
+{ const sv=document.getElementById('sensVal'); if(sv) sv.textContent=SENS.toUpperCase();
+  document.getElementById('setSens').addEventListener('click',e=>{ e.stopPropagation(); cycleSens();
+    if(sv) sv.textContent=SENS.toUpperCase(); Sound.sfx(700,.05); });
+  document.getElementById('varBtn').addEventListener('click',e=>{ e.stopPropagation(); cycleFiveVar(); syncHUD(); Sound.sfx(760,.05); });
+  document.getElementById('specBtn').addEventListener('click',e=>{ e.stopPropagation();
+    if(specCharges>0){ specCharges--; specUsed++; armSpecial(); specHUD(); } });
+  document.getElementById('seedLine').addEventListener('click',e=>{ e.stopPropagation();
+    const link=location.href.split('#')[0]+'#s='+(roundSeed||'');
+    try{ navigator.clipboard.writeText(link).then(()=>showTelecro('📋 Link della sfida copiato!')); }
+    catch(err){ try{ prompt('Copia il link:',link); }catch(e2){} } }); }
 document.querySelectorAll('.ballopt').forEach(b=>b.addEventListener('click',e=>{ e.stopPropagation(); const k=b.dataset.ball;
   if(!Progress.ballUnlocked(k)){ b.classList.remove('deny'); void b.offsetWidth; b.classList.add('deny');
     showTelecro(k==='gold'?'🔒 Pallone ORO: fai 5 gol di fila!':'🔒 Pallone FUOCO: segna col TIRO SPECIALE!'); return; }
@@ -3609,11 +3776,14 @@ class Input {
     if(!aim.active) return;
     if(state!==STATE.GAME_PLAYING && !(isKeeper()&&state===STATE.BALL_IN_FLIGHT)) return;
     const t=e.touches?e.touches[0]:e, x=t.clientX, y=t.clientY; aim.cx=x; aim.cy=y;
-    const g=screenToGoal(x,y-AIM_LIFT()); aim.tx=g.x; aim.ty=g.y;  // target dal punto corrente (sopra il dito)
+    const g=screenToGoal(x,y-AIM_LIFT()); const SP=SENS_P[SENS];
+    // SMOOTHING del profilo: la mira insegue il dito (Lento=morbida, Reattivo=1:1)
+    // -> gesto più COERENTE con l'intenzione, meno jitter da micro-tremolii
+    aim.tx=lerp(aim.tx,g.x,SP.smooth); aim.ty=lerp(aim.ty,g.y,SP.smooth);
     if(isKeeper()) return;                                        // da portiere: nessuna potenza/effetto, solo la posizione del tuffo
-    const ref=Math.min(window.innerWidth,window.innerHeight)*0.55;
-    aim.power=clamp(CONFIG.minPowerShot + Math.hypot(x-aim.sx,y-aim.sy)/ref, 0, 1);   // potenza = distanza drag
-    aim.curl=clamp((x-aim.sx)/(window.innerWidth*0.55),-0.8,0.8); // effetto = flick orizzontale AMPIO (niente curve accidentali)
+    const ref=Math.min(window.innerWidth,window.innerHeight)*SP.ref;
+    aim.power=clamp(CONFIG.minPowerShot + Math.hypot(x-aim.sx,y-aim.sy)/ref, 0, 1);   // potenza = distanza drag (scala col profilo)
+    aim.curl=clamp((x-aim.sx)/(window.innerWidth*SP.curl),-0.8,0.8); // effetto = flick orizzontale AMPIO (niente curve accidentali)
     if(Math.abs(aim.curl)>0.08){ HUD.curl.classList.add('on');
       HUD.curl.textContent=(aim.curl<0?'↺':'↻')+' EFFETTO '+Math.round(Math.abs(aim.curl)*100)+'%'; }
     else HUD.curl.classList.remove('on');
