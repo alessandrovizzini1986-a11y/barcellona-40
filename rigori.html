@@ -870,8 +870,8 @@ const KICK_START_OFFSET=0.50;                        // parte appena prima del c
 // RINCORSA VERA: attesa angolata dietro/di lato -> corsa di ~mezzo secondo -> calcio.
 // La palla parte SOLO al contatto del piede (shot.windup), come un rigore reale.
 const KICK_STANCE={x:0.55,z:12.7,yaw:-0.26};         // dove aspetta e da dove parte la corsa (diagonale)
-const KICK_PLANT ={x:0.0, z:11.7 };                  // punto d'appoggio al momento del calcio
-const KICK_FOLLOW_Z=11.32;                           // lo slancio porta il corpo oltre il punto di calcio
+const KICK_PLANT ={x:0.0, z:10.78 };                 // appoggio ACCANTO alla palla (spot 10.2): il piede arriva DAVVERO sul pallone
+const KICK_FOLLOW_Z=10.42;                           // lo slancio porta il corpo appena oltre il dischetto (la regia laterale della moviola non perdona)
 const KICK_WINDUP_GLB=0.55, KICK_WINDUP_FALLBACK=0.30; // durata rincorsa (s) prima del lancio palla
 let PLAYER=null; try{ const p=localStorage.getItem('rig_player'); if(p&&PLAYERS[p]) PLAYER=PLAYERS[p]; }catch(e){}
 // modalità: 'infinite' (morte improvvisa) | 'five' (5 rigori, conta i gol)
