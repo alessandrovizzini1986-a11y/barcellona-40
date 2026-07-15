@@ -320,7 +320,7 @@
   <details id="arrivo">
     <summary><span class="ic">🛬</span> Piani arrivo · fino al check-in (16:00) <span class="caret">▸</span></summary>
     <div class="det-body">
-      <p class="muted" style="font-size:12px;margin:0 0 8px">Atterri la mattina presto ma il check-in a <b>Lepant 137</b> è alle <b>16:00</b>: ~10 ore da riempire. Scegli il piano (meteo o lavoro). Bagagli: lasciali in una consigna/locker in zona.</p>
+      <p class="muted" style="font-size:12px;margin:0 0 8px">Atterri la mattina presto ma il check-in all'<b>Abapart (Nàpols 116)</b> è alle <b>15:00</b>: ~7 ore da riempire. Scegli il piano (meteo o lavoro). Bagagli: li custodiscono alla reception.</p>
       <div class="daytabs" id="planTabs"></div>
       <div id="planDetail"></div>
     </div>
@@ -347,12 +347,12 @@
         <p class="muted" style="font-size:11px;margin-top:7px">Iscriviti col tasto qui sopra (app <b>ntfy</b>): il 16 e 18 ott, <b>se il volo cambia</b>, parte un avviso automatico su <b>gate/ritardi/cancellazioni</b> anche ad app chiusa. In ogni caso i link <b>“in tempo reale”</b> qui sopra restano sempre aggiornati.</p>
       </div>
       <div class="doc">
-        <div class="dt">🏠 Appartamento</div>
-        <h4>Apartment Auditori · Barcelona</h4>
-        <p class="kv">Carrer de Lepant 137 · Eixample · 2 notti (16–18 ott) · orari check-in/out: vedi email di prenotazione</p>
+        <div class="dt">🏠 Alloggio · UFFICIALE</div>
+        <h4>Aparthotel Nàpols – Abapart</h4>
+        <p class="kv">Carrer de Nàpols 116 · Eixample (Fort Pienc) · 08013 · 2 notti (16–18 ott) · check-in 15:00, valigie custodite prima</p>
         <div class="acts">
-          <a class="prim" href="https://www.google.com/maps/search/?api=1&query=Carrer+de+Lepant+137+Barcelona" target="_blank">📍 Mappe</a>
-          <a href="https://www.google.com/maps/dir/?api=1&destination=41.3986,2.1852&travelmode=transit" target="_blank">🚇 Come arrivare</a>
+          <a class="prim" href="https://www.google.com/maps/search/?api=1&query=Aparthotel+Napols+Abapart+Carrer+de+N%C3%A0pols+116+Barcelona" target="_blank">📍 Mappe</a>
+          <a href="https://www.google.com/maps/dir/?api=1&destination=41.39539,2.17955&travelmode=transit" target="_blank">🚇 Come arrivare</a>
         </div>
       </div>
       <div class="doc">
@@ -402,7 +402,7 @@
   <details id="vicino">
     <summary><span class="ic">🚶</span> A piedi dall'appartamento <span class="caret">▸</span></summary>
     <div class="det-body">
-      <p class="muted" style="font-size:12px;margin:0 0 8px">Base: <b>Carrer de Lepant 137</b> (Eixample, accanto a L'Auditori). Tutto qui sotto è a piedi — il pulsante 🚶 apre il percorso da casa.</p>
+      <p class="muted" style="font-size:12px;margin:0 0 8px">Base: <b>Aparthotel Nàpols – Abapart, Carrer de Nàpols 116</b> (Eixample · Fort Pienc, a due passi da Arc de Triomf ed Estació del Nord). Tutto qui sotto è a piedi — il pulsante 🚶 apre il percorso da casa.</p>
       <div class="qrow">
         <a href="https://www.getyourguide.com/s?q=Barcellona&languages=it" target="_blank">🎧 Guida in italiano · GetYourGuide</a>
       </div>
@@ -603,23 +603,23 @@ const KIND={
 const ITINERARY=[
   // VENERDÌ 16
   {id:'v1',day:'16',start:'2026-10-16T06:20',end:'2026-10-16T08:05',kind:'flight',title:'Volo FR2097 · BLQ → BCN',place:'Aeroporto · partenza',note:'In BLQ entro 04:50 · solo bagaglio a mano',track:'https://www.bologna-airport.it/voli/vola-da-bologna/voli-in-tempo-reale/?idC=62178',flightNo:'FR2097',fdate:'2026-10-16'},
-  {id:'v2',day:'16',start:'2026-10-16T08:30',end:'2026-10-16T09:15',kind:'transfer',title:'Aeroporto → Appartamento (Lepant)',place:'Appartamento Auditori · Lepant 137',lat:41.3986,lng:2.1852,note:'Taxi ~30 min · ~€35 (o Aerobús + metro L5 a Sagrada Família ~€10). Chiavi/check-in: conferma col proprietario'},
-  {id:'v3',day:'16',start:'2026-10-16T09:00',end:'2026-10-16T13:00',kind:'work',title:'Smart working · 1ª parte',place:'Appartamento · Lepant 137',lat:41.3986,lng:2.1852,note:'Stesso fuso (CET). Wi-Fi in casa · se il check-in è al mattino; altrimenti caffè/co-working in Eixample'},
-  {id:'v4',day:'16',start:'2026-10-16T13:00',end:'2026-10-16T14:00',kind:'food',title:'Pranzo veloce in zona',place:'Eixample · Glòries',lat:41.4000,lng:2.1830,note:'Boccone vicino casa (menú del día). Il mare ora è ~10 min di metro: meglio nei momenti liberi',planB:'tapas al chiuso in zona Glòries'},
-  {id:'v5',day:'16',start:'2026-10-16T14:00',end:'2026-10-16T18:00',kind:'work',title:'Smart working · 2ª parte',place:'Appartamento · Lepant 137',lat:41.3986,lng:2.1852},
-  {id:'v6',day:'16',start:'2026-10-16T18:30',end:'2026-10-16T20:30',kind:'sight',title:'Gòtic & El Born',place:'Barri Gòtic',lat:41.3839,lng:2.1765,note:'~10 min metro (L1 da Glòries → Urquinaona) o ~25 min a piedi · Cattedrale, Sta. Maria del Mar',outdoor:true,planB:'musei o un caffè coperto nel Born'},
+  {id:'v2',day:'16',start:'2026-10-16T08:30',end:'2026-10-16T09:15',kind:'transfer',title:'Aeroporto → Abapart (Nàpols 116)',place:'Aparthotel Nàpols – Abapart · Nàpols 116',lat:41.39539,lng:2.17955,note:'Taxi ~30 min · ~€35 (o Aerobús A1/A2 → Pl. Catalunya + L1 fino ad Arc de Triomf ~€10). Check-in dalle 15: le valigie le custodiscono loro'},
+  {id:'v3',day:'16',start:'2026-10-16T09:00',end:'2026-10-16T13:00',kind:'work',title:'Smart working · 1ª parte',place:'Abapart · Nàpols 116',lat:41.39539,lng:2.17955,note:'Stesso fuso (CET). Wi-Fi in aparthotel · se la camera non è pronta: caffè/co-working in zona Fort Pienc'},
+  {id:'v4',day:'16',start:'2026-10-16T13:00',end:'2026-10-16T14:00',kind:'food',title:'Pranzo veloce in zona',place:'Eixample · Fort Pienc',lat:41.3950,lng:2.1800,note:'Boccone vicino casa (menú del día). Il mare è a ~15 min: meglio nei momenti liberi',planB:'tapas al chiuso in zona Fort Pienc/Estació del Nord'},
+  {id:'v5',day:'16',start:'2026-10-16T14:00',end:'2026-10-16T18:00',kind:'work',title:'Smart working · 2ª parte',place:'Abapart · Nàpols 116',lat:41.39539,lng:2.17955},
+  {id:'v6',day:'16',start:'2026-10-16T18:30',end:'2026-10-16T20:30',kind:'sight',title:'Gòtic & El Born',place:'Barri Gòtic',lat:41.3839,lng:2.1765,note:'L1 da Arc de Triomf → Urquinaona (~8 min) o ~20 min a piedi · Cattedrale, Sta. Maria del Mar',outdoor:true,planB:'musei o un caffè coperto nel Born'},
   {id:'v7',day:'16',start:'2026-10-16T20:30',end:'2026-10-16T22:30',kind:'food',title:'Cena catalana · Barriteca',place:'Barriteca',lat:41.4013,lng:2.2031,phone:'+34934851859',book:'tel:+34934851859',note:'Prenota · chiuso lun-mer'},
   {id:'v8',day:'16',start:'2026-10-16T22:30',end:'2026-10-17T01:00',kind:'night',title:'Cocktail nel Born',place:'No Sé · Born',lat:41.3850,lng:2.1828,note:'Solo-friendly · tutto a piedi'},
   // SABATO 17
-  {id:'s1',day:'17',start:'2026-10-17T09:30',end:'2026-10-17T11:30',kind:'sight',title:'Sagrada Família',place:'Sagrada Família',lat:41.4036,lng:2.1744,book:'https://sagradafamilia.org/',note:'Slot prenotato · salti la fila · ~12 min a piedi da casa 🚶'},
+  {id:'s1',day:'17',start:'2026-10-17T09:30',end:'2026-10-17T11:30',kind:'sight',title:'Sagrada Família',place:'Sagrada Família',lat:41.4036,lng:2.1744,book:'https://sagradafamilia.org/',note:'Slot prenotato · salti la fila · ~13 min a piedi da casa 🚶'},
   {id:'s2',day:'17',start:'2026-10-17T13:30',end:'2026-10-17T16:30',kind:'sight',title:'MNAC · Montjuïc',place:'MNAC',lat:41.3685,lng:2.1533,note:'Arte catalana + vista. Alt: mare a Barceloneta'},
   {id:'s3',day:'17',start:'2026-10-17T17:30',end:'2026-10-17T19:30',kind:'spa',title:'Aire Ancient Baths',place:'Aire Ancient Baths',lat:41.3870,lng:2.1835,book:'https://relax.beaire.com/es/aire-ancient-baths-barcelona',note:'Il regalo a te stesso · ~15 min a piedi'},
   {id:'s4',day:'17',start:'2026-10-17T19:30',end:'2026-10-17T21:30',kind:'night',title:'Aperitivo rooftop · Sir Victor',place:'Sir Victor rooftop',lat:41.3962,lng:2.1610,phone:'+34681084156',note:'DJ + riscaldatori. Alt: Ohla / Alaire',outdoor:true,planB:'cocktail al chiuso nel Born'},
   {id:'s5',day:'17',start:'2026-10-17T21:30',end:'2026-10-18T02:00',kind:'night',title:'Cena + giro cocktail · festa 40°',place:'El Born',lat:41.3850,lng:2.1828,note:'Mariposa Negra · Aldea · Bestiari · No Sé'},
   // DOMENICA 18
-  {id:'d1',day:'18',start:'2026-10-18T10:00',end:'2026-10-18T13:00',kind:'sea',title:'Spiaggia + brunch',place:'Bogatell · Barceloneta',lat:41.3957,lng:2.2002,note:'Mare e brunch · ~10 min metro (L1) o taxi da casa',outdoor:true,planB:'brunch in zona o relax al Parc de la Ciutadella'},
+  {id:'d1',day:'18',start:'2026-10-18T10:00',end:'2026-10-18T13:00',kind:'sea',title:'Spiaggia + brunch',place:'Bogatell · Barceloneta',lat:41.3957,lng:2.2002,note:'Mare e brunch · taxi ~8 min, o a piedi via Ciutadella (~30 min)',outdoor:true,planB:'brunch in zona o relax al Parc de la Ciutadella'},
   {id:'d2',day:'18',start:'2026-10-18T13:30',end:'2026-10-18T17:30',kind:'sight',title:'Museo Picasso o Park Güell',place:'Museo Picasso',lat:41.3853,lng:2.1809,note:'Quello che non hai fatto venerdì'},
-  {id:'d3',day:'18',start:'2026-10-18T09:00',end:'2026-10-18T09:45',kind:'admin',title:'Check-out + deposito bagagli',place:'Appartamento · Lepant 137',lat:41.3986,lng:2.1852,note:'Check-out di norma entro 10–11 (verifica). Lascia i bagagli in una consigna/locker in zona Sagrada o Glòries e giri leggero fino al volo. Se vuoi rinfrescarti prima del volo: late check-out a pagamento o day-pass spa/palestra'},
+  {id:'d3',day:'18',start:'2026-10-18T09:00',end:'2026-10-18T09:45',kind:'admin',title:'Check-out + deposito bagagli',place:'Abapart · Nàpols 116',lat:41.39539,lng:2.17955,note:'Check-out entro le 11. I bagagli li lasci alla reception dell\'Abapart e giri leggero fino al volo. Se vuoi rinfrescarti prima del volo: late check-out a pagamento o day-pass spa/palestra'},
   {id:'d4',day:'18',start:'2026-10-18T19:50',end:'2026-10-18T20:15',kind:'transfer',title:'Verso l\'aeroporto T2',place:'Aeroporto BCN · T2',lat:41.3018,lng:2.0793,note:'Taxi ~30 min · ~€35 · volo Schengen'},
   {id:'d5',day:'18',start:'2026-10-18T20:15',end:'2026-10-18T22:00',kind:'admin',title:'Sala VIP Canudas · T2',place:'Aeroporto BCN · T2',lat:41.3018,lng:2.0793,note:'Entri dalle 19:05, chiude 22:00. Cibo+drink'},
   {id:'d6',day:'18',start:'2026-10-18T22:25',end:'2026-10-18T23:05',kind:'flight',title:'Al gate',place:'Aeroporto BCN · T2',track:'https://www.aena.es/en/flight-info.html',flightNo:'FR5220',fdate:'2026-10-18'},
@@ -627,7 +627,7 @@ const ITINERARY=[
 ];
 
 const CONTACTS=[
-  {n:'Appartamento Auditori · Lepant 137',v:'check-in: vedi email di prenotazione',url:'https://www.google.com/maps/search/?api=1&query=Carrer+de+Lepant+137+Barcelona',i:'🏠'},
+  {n:'Aparthotel Nàpols – Abapart',v:'Nàpols 116 · check-in 15:00 · vedi email di prenotazione',url:'https://www.google.com/maps/search/?api=1&query=Aparthotel+Napols+Abapart+Carrer+de+N%C3%A0pols+116+Barcelona',i:'🏠'},
   {n:'Aire Ancient Baths · spa',v:'prenota online',url:'https://relax.beaire.com/es/aire-ancient-baths-barcelona',i:'🧖'},
   {n:'Barriteca · cena ven',v:'+34 934 851 859',tel:'+34934851859',i:'🍽️'},
   {n:'Cuadro · Vila Olímpica',v:'+34 640 065 174',tel:'+34640065174',i:'🍷'},
@@ -646,7 +646,7 @@ const DINING={
     {n:'Els Pollos de Llull',a:'C/ de Ramon Turró 13',d:'Pollo arrosto, un classico di Barcellona.',site:'https://elspollos.com/',lat:41.3906,lng:2.1929},
     {n:'Masa Vins',a:'C/ de Pallars 154',d:'Wine bar con cucina, calici e cocktail.',site:'https://www.instagram.com/masa.vins/',lat:41.4007,lng:2.1931},
     {n:'Barriteca',a:'Poblenou',d:'Catalana vera, trattano benissimo chi cena solo.',lat:41.4013,lng:2.2031},
-    {n:'Cuadro',a:'Vila Olímpica',d:'Bistrot vicino alla spiaggia, comodo e veloce (~10 min metro da casa).',lat:41.3936,lng:2.1954}
+    {n:'Cuadro',a:'Vila Olímpica',d:'Bistrot vicino alla spiaggia, comodo e veloce.',lat:41.3936,lng:2.1954}
   ],
   cocktail:[
     {n:'Balius',a:'C/ de Pujades 196',d:'Cocktail classici in una ex-farmacia · jazz la domenica.',site:'https://baliusbar.com/',lat:41.4011,lng:2.1996},
@@ -657,22 +657,23 @@ const DINING={
   ]
 };
 
-// ====== APPARTAMENTO (Auditori · Lepant 137) + cosa c'è A PIEDI ======
-const APT={n:'Appartamento Auditori',a:'Carrer de Lepant 137, Eixample',lat:41.3986,lng:2.1852};
+// ====== ALLOGGIO UFFICIALE (Aparthotel Nàpols – Abapart) + cosa c'è A PIEDI ======
+const APT={n:'Aparthotel Nàpols – Abapart',a:'Carrer de Nàpols 116, Eixample (Fort Pienc)',lat:41.39539,lng:2.17955};
 const NEARBY=[
-  // dietro l'angolo — Glòries / Auditori
-  {n:"L'Auditori & Teatre Nacional",a:'2 min a piedi',d:'Auditorium e TNC: sei nel cuore del quartiere della cultura, proprio sotto casa.',i:'🎭',lat:41.3987,lng:2.1873,mins:2},
-  {n:'Plaça de les Glòries',a:'5 min a piedi',d:'Grande parco urbano rinnovato: verde e spazio aperto per staccare.',i:'🌳',lat:41.4030,lng:2.1885,mins:5},
-  {n:'Torre Glòries + Mirador',a:'6 min a piedi',d:'La torre-proiettile (ex Agbar): salita al Mirador 360° con la nuvola di sfere. Di sera si illumina.',i:'🗼',url:'https://miradortorreglories.com/',lat:41.4033,lng:2.1894,mins:6},
-  {n:'Museu del Disseny (DHUB)',a:'6 min a piedi',d:'Museo del design nell\'edificio "la pinzatrice": terrazza panoramica e mostre spesso gratuite.',i:'🎨',url:'https://ajuntament.barcelona.cat/museudeldisseny/en',lat:41.4028,lng:2.1875,mins:6},
-  {n:'Els Encants Vells',a:'7 min a piedi',d:'Mercatino delle pulci sotto la tettoia dorata a specchi. Lun/Mer/Ven/Sab mattina. Si contratta.',i:'🛍️',url:'https://encantsbarcelona.com/',lat:41.4045,lng:2.1876,mins:7},
-  {n:'Plaça de Braus Monumental',a:'5 min a piedi',d:'L\'ex arena in stile moresco (niente più corride): scenografica da vedere da fuori.',i:'🏟️',lat:41.3999,lng:2.1817,mins:5},
+  // dietro l'angolo — Fort Pienc / Arc de Triomf (base: Nàpols 116)
+  {n:"Parc de l'Estació del Nord",a:'4 min a piedi',d:'Il giardino con le dune di ceramica blu di Beverly Pepper: il tuo angolo verde sotto casa.',i:'🌳',lat:41.3933,lng:2.1818,mins:4},
+  {n:'Plaça de Braus Monumental',a:'7 min a piedi',d:'L\'ex arena in stile moresco (niente più corride): scenografica da vedere da fuori.',i:'🏟️',lat:41.3999,lng:2.1817,mins:7},
+  {n:'Arc de Triomf + Parc de la Ciutadella',a:'8 min a piedi',d:'L\'Arco di Trionfo in mattoni e il parco con laghetto e cascata, verso il Born. Birra al tramonto sul passeig.',i:'🌿',lat:41.3888,lng:2.1866,mins:8},
+  {n:"L'Auditori & Teatre Nacional",a:'9 min a piedi',d:'Auditorium e TNC: il quartiere della cultura a due passi.',i:'🎭',lat:41.3987,lng:2.1873,mins:9},
   // 10–20 min a piedi
-  {n:'Sagrada Família',a:'12 min a piedi',d:'Il capolavoro di Gaudí. Biglietto con orario ONLINE in anticipo: si esaurisce, mai dai bagarini.',i:'⛪',url:'https://sagradafamilia.org/',lat:41.4036,lng:2.1744,mins:12},
-  {n:'Mercat de la Concepció',a:'12 min a piedi',d:'Mercato di quartiere coi banchi di fiori: spuntino tra la gente del posto.',i:'🌸',url:'https://www.laconcepcio.cat/',lat:41.3955,lng:2.1667,mins:12},
-  {n:'Parc de la Ciutadella + Arc de Triomf',a:'15 min a piedi',d:'Parco con laghetto e cascata + l\'Arco di Trionfo in mattoni, verso il Born.',i:'🌿',lat:41.3888,lng:2.1866,mins:15},
-  {n:'Recinte Modernista Sant Pau',a:'18 min a piedi',d:'Complesso modernista UNESCO, splendido e molto meno affollato della Sagrada. Da non perdere.',i:'✨',url:'https://www.santpaubarcelona.org/en',lat:41.4127,lng:2.1745,mins:18},
-  {n:'Passeig de Gràcia · Casa Batlló / La Pedrera',a:'20 min o 1 fermata metro',d:'Le case di Gaudí. Prenota online; a piedi ~20 min o metro L5 da Sagrada Família.',i:'🏠',url:'https://www.casabatllo.es/',lat:41.3916,lng:2.1649,mins:20}
+  {n:'Sagrada Família',a:'13 min a piedi',d:'Il capolavoro di Gaudí. Biglietto con orario ONLINE in anticipo: si esaurisce, mai dai bagarini.',i:'⛪',url:'https://sagradafamilia.org/',lat:41.4036,lng:2.1744,mins:13},
+  {n:'Mercat de la Concepció',a:'13 min a piedi',d:'Mercato di quartiere coi banchi di fiori: spuntino tra la gente del posto.',i:'🌸',url:'https://www.laconcepcio.cat/',lat:41.3955,lng:2.1667,mins:13},
+  {n:'Plaça de les Glòries',a:'14 min a piedi',d:'Grande parco urbano rinnovato: verde e spazio aperto per staccare.',i:'🌳',lat:41.4030,lng:2.1885,mins:14},
+  {n:'Museu del Disseny (DHUB)',a:'14 min a piedi',d:'Museo del design nell\'edificio "la pinzatrice": terrazza panoramica e mostre spesso gratuite.',i:'🎨',url:'https://ajuntament.barcelona.cat/museudeldisseny/en',lat:41.4028,lng:2.1875,mins:14},
+  {n:'Torre Glòries + Mirador',a:'15 min a piedi',d:'La torre-proiettile (ex Agbar): salita al Mirador 360° con la nuvola di sfere. Di sera si illumina.',i:'🗼',url:'https://miradortorreglories.com/',lat:41.4033,lng:2.1894,mins:15},
+  {n:'Els Encants Vells',a:'15 min a piedi',d:'Mercatino delle pulci sotto la tettoia dorata a specchi. Lun/Mer/Ven/Sab mattina. Si contratta.',i:'🛍️',url:'https://encantsbarcelona.com/',lat:41.4045,lng:2.1876,mins:15},
+  {n:'Passeig de Gràcia · Casa Batlló / La Pedrera',a:'16 min a piedi',d:'Le case di Gaudí. Prenota online; a piedi ~16 min o L2 da Monumental.',i:'🏠',url:'https://www.casabatllo.es/',lat:41.3916,lng:2.1649,mins:16},
+  {n:'Recinte Modernista Sant Pau',a:'25 min a piedi',d:'Complesso modernista UNESCO, splendido e molto meno affollato della Sagrada. Da non perdere.',i:'✨',url:'https://www.santpaubarcelona.org/en',lat:41.4127,lng:2.1745,mins:25}
 ];
 // Note locali (attenzioni pratiche)
 const TIPS=[
@@ -682,7 +683,7 @@ const TIPS=[
   '<b>Els Encants</b>: solo <b>lun/mer/ven/sab mattina</b>. Si contratta.',
   '<b>Domenica</b>: molti negozi chiusi; musei e mercati con orari ridotti.',
   '<b>Scam</b>: no al "braccialetto/rosmarino gratis" e al gioco delle tre carte.',
-  '<b>Metro vicino</b>: Glòries (L1), Monumental (L2), Sagrada Família (L2/L5). Tram a Glòries.',
+  '<b>Metro vicino</b>: Tetuan (L2) a 4 min, Arc de Triomf (L1) a 7 min, Monumental (L2) a 7 min. Rodalies e bus a Estació del Nord.',
   '<b>Acqua</b>: del rubinetto è potabile; molti locali servono quella in bottiglia.'
 ];
 const CAMP_NOU={lat:41.3809,lng:2.1228,book:'https://www.fcbarcelona.com/en/tickets/camp-nou-experience'};
@@ -793,7 +794,7 @@ function renderNow(){
   if(now<start){
     const days=Math.ceil((start-now)/864e5);
     html+='<hr><div class="nlab">Countdown</div><div class="next">Mancano '+days+' giorni</div>';
-    html+='<div class="meta"><span class="chip big">✈️ Ven 16 · 06:20</span><span class="chip"><span class="c">prima tappa</span> Appartamento (Lepant)</span></div>';
+    html+='<div class="meta"><span class="chip big">✈️ Ven 16 · 06:20</span><span class="chip"><span class="c">prima tappa</span> Abapart (Nàpols 116)</span></div>';
   } else if(next){
     html+='<hr><div class="nlab">Prossima · '+humanIn(next._s-now)+'</div><div class="next">'+next.title+'</div>';
     html+='<div class="meta">';
@@ -968,7 +969,7 @@ function searchIndex(){
   const idx=[];
   ITINERARY.forEach(it=>idx.push({i:(KIND[it.kind]||{e:'•'}).e,t:it.title,s:(DAYS[it.day]||'')+(it.note?' · '+it.note:''),href:it.lat?mapsDir(it.lat,it.lng):'#oggi',day:it.day}));
   CONTACTS.forEach(c=>idx.push({i:c.i,t:c.n,s:c.v,href:c.tel?'tel:'+c.tel:c.url}));
-  [['🏠','Appartamento Auditori','Carrer de Lepant 137 · Eixample','https://www.google.com/maps/search/?api=1&query=Carrer+de+Lepant+137+Barcelona'],
+  [['🏠','Aparthotel Nàpols – Abapart','Carrer de Nàpols 116 · Eixample','https://www.google.com/maps/search/?api=1&query=Aparthotel+Napols+Abapart+Carrer+de+N%C3%A0pols+116+Barcelona'],
    ['📡','Stato volo andata FR2097','BLQ 06:20 → BCN 08:05','https://www.bologna-airport.it/voli/vola-da-bologna/voli-in-tempo-reale/?idC=62178'],
    ['📡','Stato volo ritorno FR5220','BCN 23:05 → BLQ 00:50 · T2','https://www.aena.es/en/flight-info.html'],
    ['🅿️','Parcheggio P2 Business','Codice P2932537 · €51','#docs'],
@@ -1057,7 +1058,7 @@ document.getElementById('mappa').addEventListener('toggle',function(){
     var link=it.fork?(' · <a href="'+it.fork+'" target="_blank">TheFork</a>'):(it.site?(' · <a href="'+it.site+'" target="_blank">Sito</a>'):'');
     var pop='<b>'+it.n+'</b><br>'+it.a+'<br><a href="'+mapsAt(0,0,it.n+' Barcelona')+'" target="_blank">📍 Mappe</a>'+link;
     L.circleMarker([it.lat,it.lng],{radius:6,color:'#050507',weight:2,fillColor:'#f4ece0',fillOpacity:.95}).addTo(map).bindPopup(pop);});
-  // appartamento + POI a piedi (Auditori · Lepant 137)
+  // alloggio ufficiale (Abapart · Nàpols 116) + POI a piedi
   L.circleMarker([APT.lat,APT.lng],{radius:9,color:'#050507',weight:3,fillColor:'#E9CE93',fillOpacity:1}).addTo(map)
     .bindPopup('<b>🏠 '+APT.n+'</b><br>'+APT.a); g.push([APT.lat,APT.lng]);
   NEARBY.forEach(function(it){
