@@ -76,6 +76,17 @@
   #diffBanner{position:absolute;left:0;right:0;top:26%;text-align:center;font-size:11px;color:#ffd884;
     text-shadow:0 2px 8px #000;letter-spacing:.18em;opacity:0;transition:opacity .3s;pointer-events:none}
   #diffBanner.on{opacity:1}
+  /* SCHEDA DEL TIRO: potenza/effetto/distanza dal legno, 1.4s dopo l'esito */
+  #shotCard{position:absolute;left:50%;transform:translateX(-50%);top:47%;font-size:7.5px;color:#e8eefc;
+    background:rgba(6,10,24,.78);border:1px solid rgba(159,176,200,.4);border-radius:999px;padding:7px 13px;
+    opacity:0;transition:opacity .25s;pointer-events:none;white-space:nowrap}
+  #shotCard.on{opacity:1}
+  /* NAME TAG sopra il giocatore durante l'esultanza */
+  #nameTag{position:absolute;font-size:8px;color:#0a0f1e;background:linear-gradient(120deg,#ffd884,#f7d372);
+    border-radius:999px;padding:4px 10px;font-weight:700;letter-spacing:.08em;opacity:0;transition:opacity .2s;
+    pointer-events:none;transform:translate(-50%,-100%);box-shadow:0 2px 10px rgba(0,0,0,.5)}
+  #nameTag.on{opacity:1}
+  #flash.wood{background:radial-gradient(circle at 50% 42%, rgba(255,150,60,.5), rgba(255,80,40,.14) 60%, transparent 75%)}
   #hint.on{opacity:.92}
   /* result flash text */
   #result{position:absolute;left:0;right:0;top:30%;text-align:center;font-size:34px;opacity:0;text-shadow:0 3px 22px rgba(0,0,0,.7);letter-spacing:1px}
@@ -325,6 +336,8 @@
   <div id="curl">↺ EFFETTO</div>
   <button id="specBtn" style="display:none">🌈 SPECIALE PRONTO</button>
   <div id="diffBanner"></div>
+  <div id="shotCard"></div>
+  <div id="nameTag"></div>
   <div id="hint" class="on">trascina per mirare · rilascia per tirare</div>
 
   <div class="panel" id="menu">
@@ -1933,12 +1946,23 @@ function newAim(){ resetForShot(); setState(STATE.GAME_PLAYING); refWhistle(); i
   if(isKeeper() && kHint<2){ kHint++; setTimeout(()=>{ if(isKeeper()&&(state===STATE.GAME_PLAYING||state===STATE.BALL_IN_FLIGHT))
     showTelecro('🧤 ASPETTA il tiro di ALE… poi TOCCA/TRASCINA dove vola la palla per tuffarti!'); },850); }
   const tension = MODE==='five' ? (suddenDeath?1:shotNum/5) : Math.min(1,streak/10);
-  Sound.crowd(0.045 + tension*0.09);                 // il coro sale con la tensione
+  Sound.crowd(0.028 + tension*0.135);                // CRESCENDO: quasi muta ai primi tiri, poi sale con la serie
   Sound.setIntensity(tension);                       // la MUSICA accelera e si arricchisce con la posta in gioco
   // spareggio -> loop OLTRANZA (ostinato minore, cassa doppia, battito cardiaco)
   try{ if(suddenDeath) arcadeAudio.playSuddenDeathTension(); else Sound.setDrama(false); }catch(e){ Sound.setDrama(suddenDeath); }
   if(suddenDeath) showTelecro('SPAREGGIO! Questo tiro decide tutto 😱'); }
 // dopo ogni rigore: infinita = morte improvvisa; 5 rigori = continua fino a 5
+// MOVIOLA ESTESA: oltre al rigore decisivo, si rivedono i momenti EPICI a metà
+// partita (streak tonda ogni 5, palo-gol, beffa dei guanti) e poi si CONTINUA.
+function midReplayWorthy(scored){
+  if(!shot || !shot.launched) return false;
+  if(shot.woodGoal || shot.parryGoal) return true;                         // epico sempre
+  return scored && !isKeeper() && MODE!=='five' && streak>0 && streak%5===0; // streak tonda
+}
+function nextRound(scored){
+  if(midReplayWorthy(scored) && startReplay(true)) return;   // moviola mid-run -> poi newAim
+  newAim();
+}
 function afterShot(scored){
   if(isKeeper()){                                   // scored = la CPU ha segnato -> gol subito
     if(MODE==='five'){
@@ -1946,9 +1970,9 @@ function afterShot(scored){
       if(shotNum>=5){
         if(aleSaves>goals5){ duelResult='win'; gameOver(); }        // più parate che gol subiti
         else if(goals5>aleSaves){ duelResult='lose'; gameOver(); }
-        else { suddenDeath=true; newAim(); }
-      } else newAim();
-    } else { if(scored) gameOver(); else newAim(); }               // infinita: prendi gol = finita
+        else { suddenDeath=true; nextRound(scored); }
+      } else nextRound(scored);
+    } else { if(scored) gameOver(); else newAim(); }               // infinita: prendi gol = finita (moviola già lì)
     return;
   }
   if(MODE==='five'){
@@ -1956,9 +1980,9 @@ function afterShot(scored){
     if(shotNum>=5){
       if(goals5>aleSaves){ duelResult='win'; gameOver(); }
       else if(aleSaves>goals5){ duelResult='lose'; gameOver(); }
-      else { suddenDeath=true; newAim(); }                                      // pareggio -> spareggio
-    } else newAim();
-  } else { if(scored) newAim(); else gameOver(); }
+      else { suddenDeath=true; nextRound(scored); }                             // pareggio -> spareggio
+    } else nextRound(scored);
+  } else { if(scored) nextRound(scored); else gameOver(); }
 }
 
 /* ----- VARIETÀ DI TIRO: lo stile emerge dal GESTO di mira (niente menu extra)
@@ -2453,6 +2477,7 @@ function resolveShot(){
   capT=0;                                      // avvia la cattura del frame (nel loop, subito dopo il render)
   if(MODE==='five') fiveRes.push(r==='GOAL'?'g':'x');
   const incrocio = r==='GOAL' && Math.abs(shot.target.x)>GW/2-1.15 && shot.target.y>GH-0.75;  // gol all'angolino
+  if(incrocio) hitStop=Math.max(hitStop,0.14);   // GOL PERFETTO: micro slow-mo extra + flare (feedback dedicato)
   Telecro.say(incrocio?'INCROCIO':r);          // telecronaca dell'esito (eurogol se incrocio)
   if(r==='GOAL'){
     streak++; goals5++; scorePulseT=incrocio?0.85:0.55; ripple={t:0,x:shot.target.x,y:shot.target.y};
@@ -2464,7 +2489,8 @@ function resolveShot(){
     if(incrocio){ burstConfetti(-shot.target.x*0.5,1.5); setTimeout(()=>burstConfetti(shot.target.x*0.7,1.2),120); }  // festa extra all'incrocio
     engine.view.burstAt3D(tmpV2.set(shot.target.x,Math.max(0.4,shot.target.y),-GD),'goal');   // scintille sulla rete
     Sound.netSwish(); arcadeAudio.playGoalFanfare(); Sound.roar();   // FANFARA gol (arpeggio DO maggiore) + boato
-    speedLines(); engine.view.popWord(incrocio?'EUROGOOOL!':'GOOOOL!','#FF0000');   // onomatopea rossa + bordo nero (canvas)
+    speedLines(); engine.view.popWord(incrocio?'EUROGOOOL!':'GOOOOL!','#FF0000',incrocio);   // flare: all'incrocio esplode anche in PES
+    showShotCard();                                            // scheda del tiro: potenza/effetto/distanza dal legno
     if(shot.woodGoal){ Sound.postClang(); engine.view.popWord('PALO-GOL! 🎯','#ffd24a'); showTelecro('🥶 PALO-GOL! Il legno la sputa DENTRO!'); }
     if(shot.parryGoal){ engine.view.popWord('NON BASTA! 🧤','#ffd884'); showTelecro('😱 La tocca… ma NON BASTA: entra lo stesso!'); }
     if(shot.special){ engine.view.popWord('SUPERGOOOL! 🌈','#ff3cac',true); engine.view.shake(1.2);   // gol da tiro speciale
@@ -2493,7 +2519,8 @@ function resolveShot(){
     }catch(e){}
     // ESULTANZA (come nei giochi di calcio veri): il TUO giocatore si gira e corre
     // verso la camera con la faccia in primo piano
-    if(useGLBKicker && kickerGLB){ celeb={t:0,dir:1}; playKicker('run',1); }
+    if(useGLBKicker && kickerGLB){ celeb={t:0,dir:1,big:(streak%5===0)||!!shot.special}; playKicker('run',1);
+      if(celeb.big){ for(let q=0;q<2;q++) setTimeout(()=>burstConfetti(rand(-2.5,2.5),rand(1,2.2)),300+q*180); } }  // streak tonda: festa GRANDE
     CharFSM.set('kicker','esultanza'); CharFSM.set('keeper','sconfitta');   // FSM + espressioni
     haptic([0,40,30,70]); slowmo=1; setState(STATE.GOAL_ANIMATION);
   } else {
@@ -2501,9 +2528,15 @@ function resolveShot(){
     if(r==='SAVE'){ aleSaves++; showResult('PARATO!','#ff9d6a'); engine.view.popWord('PARATAAA!','#FFFF00'); Sound.gloveThud(); arcadeAudio.playSaveSting(); Sound.groan();   // sting parata eroica di Ale
       engine.view.burstAt3D(tmpV2.set(shot.guess,shot.guessY||1.0,KEEPER_Z),'save');   // polvere/scintille dai guantoni
       HUD.flash.classList.remove('on'); HUD.flash.classList.add('save'); void HUD.flash.offsetWidth; HUD.flash.classList.add('on'); }
-    else if(r==='POST'){ showResult('PALO!','#ffd884'); engine.view.popWord('PALO!','#ffd24a'); engine.view.burstAt3D(tmpV2.set(Math.sign(shot.target.x)*HALF,shot.target.y,0),'save'); Sound.postClang(); arcadeAudio.playPostSting(); Sound.groan(); }
+    else if(r==='POST'){ showResult('PALO!','#ffd884'); engine.view.popWord('PALO!','#ffd24a'); engine.view.burstAt3D(tmpV2.set(Math.sign(shot.target.x)*HALF,shot.target.y,0),'save'); Sound.postClang(); arcadeAudio.playPostSting(); Sound.groan();
+      // FEEDBACK LEGNO: vibrazione dedicata + overlay ambrato sull'area colpita
+      haptic([0,80,40,80]);
+      HUD.flash.classList.remove('on','save'); HUD.flash.classList.add('wood'); void HUD.flash.offsetWidth; HUD.flash.classList.add('on');
+      setTimeout(()=>HUD.flash.classList.remove('wood'),650); }
     else { showResult('FUORI!','#ffd28a'); engine.view.popWord('FUORI!','#ffffff'); arcadeAudio.playPostSting(); Sound.groan(); }
-    CharFSM.set('kicker','sconfitta');
+    showShotCard();                                            // la scheda spiega anche l'errore
+    // ESPRESSIONE per tipo d'errore (hook facce Fable: chiave assente = nessun cambio)
+    CharFSM.set('kicker','sconfitta', r==='POST'?'rabbia':(r==='MISS'?'imbarazzo':'shock'));
     if(r==='SAVE') CharFSM.set('keeper','esultanza');
     // niente gol: la serie per la carica speciale e la missione "in alto" ripartono;
     // il PALO però conta per la missione dei legni e dà comunque un filo di XP
@@ -2623,11 +2656,11 @@ function solveReplayCam(){
   camera.lookAt(_RP_C);
 }
 function _rpDirSet(side){ _rpCam.set(side*0.30, 0.20, 1).normalize(); }   // direzione di regia
-function startReplay(){
+function startReplay(mid){
   if(!shot || !shot.launched) return false;
   // il replay parte DALL'INIZIO dell'azione: pausa + RINCORSA (windup originale) + volo
   const wind=(shot.windup||0.8);
-  replay={ t:-(wind+0.5), wind, kickStarted:false, kicked:false, diveStarted:false, impact:false, endT:0,
+  replay={ mid:!!mid, t:-(wind+0.5), wind, kickStarted:false, kicked:false, diveStarted:false, impact:false, endT:0,
     clip: keeperDive? keeperDive.clip : null,
     commitX: keeperDive? keeperDive.commitX : clamp(shot.guess*0.7,-HALF+0.6,HALF-0.6),
     s:{ from:shot.from.clone(), target:shot.target.clone(), arcH:shot.arcH,
@@ -2689,9 +2722,9 @@ function updateReplay(dt){
     if(s.sim && s.sim.n>1){ posFromPath(s.sim, s.dur*s.simRate + R.endT); updateBallShadow(); }
     else if(s.result==='GOAL' && ball.position.z>-GD+0.25){ ball.position.z-=dt*0.55; updateBallShadow(); }
     const tail=(s.result==='MISS'||s.result==='POST')?1.8:1.05;   // fuori/palo: si vede il rimbalzo
-    if(R.endT>tail){ replay=null; applyCamFov();
+    if(R.endT>tail){ const wasMid=R.mid; replay=null; applyCamFov();
       try{ document.getElementById('replayCine').classList.remove('show'); }catch(e){}
-      gameOverNow(); return; }                                // fov di ruolo ripristinato, bande via
+      if(wasMid){ newAim(); } else gameOverNow(); return; }   // mid-run: si CONTINUA a giocare
   }
   if(ripple.t>=0){ ripple.t+=dt; if(ripple.t>2.2) ripple.t=-1; }
   NetSim.step(dt*0.5);                                        // la rete vive in moviola ALLA STESSA velocita' della palla (slow-mo coerente)
@@ -2864,7 +2897,7 @@ function update(dt){
       if(stateT<0.55 && ball.position.z<-0.05) NetSim.impulse(ball.position.x, Math.max(0.2,ball.position.y), dt*10, 0.3); }
     // ANIME: il pallone "sfonda" e prosegue oltre la linea con la scia (velocità sovrumana)
     if(isManga() && ball.position.z>-GD-1.2){ ball.position.z-=dt*7; ball.position.y=Math.max(BALL_R,ball.position.y-dt*0.5); pushTrail(); }
-    if(stateT*1000>=CONFIG.goalCelebrateMs+(celeb?800:0)) afterShot(true);   // +tempo per vedere l'esultanza in faccia
+    if(stateT*1000>=CONFIG.goalCelebrateMs+(celeb?(celeb.big?1500:800):0)) afterShot(true);   // festa GRANDE su streak tonda
   }
   else if(state===STATE.SAVE_ANIMATION){
     keeper.position.y=Math.max(0,keeper.position.y-dt*2.2);   // ATTERRAGGIO dopo il tuffo/salto
@@ -2905,6 +2938,7 @@ function update(dt){
 
   // ---- CAMERA cinematografica ----
   updateCamera(dt);
+  updateNameTag();                                  // targhetta nome durante l'esultanza
 
   // POTENZA DA TASTIERA: sale finche' SPAZIO e' premuto, oltre il massimo riparte (rischio/ricompensa)
   if(engine.input.kbCharge && state===STATE.GAME_PLAYING && !isKeeper()){
@@ -3437,6 +3471,33 @@ function syncHUD(){
 function showResult(txt,col){ HUD.result.textContent=txt; HUD.result.style.color=col;
   HUD.result.classList.remove('show'); void HUD.result.offsetWidth; HUD.result.classList.add('show');
   setTimeout(()=>{ HUD.result.classList.remove('show'); },1300); }
+// SCHEDA DEL TIRO: perché è entrata (o no) — potenza, effetto, distanza dal legno
+function showShotCard(){
+  const el=document.getElementById('shotCard'); if(!el||!shot||isKeeper()) return;
+  const pw=Math.round((shot.power||0)*100);
+  const cu=Math.round(Math.abs(shot.curlAcc||0)/CONFIG.curlMax*100);
+  const cx=shot.sim?shot.sim.cross.x:shot.target.x, cy=shot.sim?shot.sim.cross.y:shot.target.y;
+  const dP=Math.abs(HALF-Math.abs(cx)), dT=Math.abs(GH-cy);
+  const dMin=Math.min(dP,dT);
+  let txt='⚡ '+pw+'%'+(cu>5? (' · '+((shot.curlAcc<0)?'↺':'↻')+' '+cu+'%') : '');
+  if(dMin<=0.60) txt+=' · 📏 '+Math.round(dMin*100)+' cm dal '+(dP<dT?'palo':'la traversa');
+  if(shot.style==='chip') txt+=' · 🥄'; else if(shot.style==='low') txt+=' · ⚡rasoterra';
+  el.textContent=txt; el.classList.add('on');
+  clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove('on'),1500);
+}
+// NAME TAG sopra la testa durante l'esultanza (gli amici si riconoscono)
+const _tagV=new THREE.Vector3();
+function updateNameTag(){
+  const el=document.getElementById('nameTag'); if(!el) return;
+  if(!celeb || !kickerGLB || !camera){ el.classList.remove('on'); return; }
+  const who = (celeb.dir===-1) ? 'ALE 👑' : ((PLAYER&&PLAYER.name)||'TU');
+  _tagV.set(kickerGLB.position.x, 1.85, kickerGLB.position.z).project(camera);
+  if(_tagV.z>1){ el.classList.remove('on'); return; }
+  el.textContent=who;
+  el.style.left=((_tagV.x*0.5+0.5)*innerWidth)+'px';
+  el.style.top =((-_tagV.y*0.5+0.5)*innerHeight)+'px';
+  el.classList.add('on');
+}
 // ---- ANNUNCI SCREEN READER (aria-live): esito + punteggio dopo ogni rigore ----
 function announce(msg){ const el=document.getElementById('srlive'); if(!el) return;
   el.textContent=''; setTimeout(()=>{ el.textContent=msg; },40); }
