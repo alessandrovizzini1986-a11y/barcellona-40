@@ -246,6 +246,9 @@
   .styleSel .stbtn.active{color:#fff;border-color:var(--gold);background:linear-gradient(160deg,#004D98,#A50044);box-shadow:0 0 14px rgba(255,216,132,.4)}
   .styleSel .stbtn.active small{color:#ffd884}
   .styleSel .stbtn:active{transform:translateY(2px)}
+  /* HALLOWEEN: quinto bottone a tutta riga sotto la griglia 2x2 */
+  .styleSel .stbtn[data-gfx="halloween"]{flex-basis:100%;grid-column:1/-1}
+  .styleSel .stbtn[data-gfx="halloween"].active{background:linear-gradient(160deg,#3a1147,#7a2d00);border-color:#ff7518;box-shadow:0 0 16px rgba(255,117,24,.5)}
   /* MOVIOLA: bande cinema + badge REPLAY lampeggiante (per tutta la durata) */
   #replayCine{position:fixed;inset:0;z-index:13;pointer-events:none;display:none}
   #replayCine.show{display:block}
@@ -254,6 +257,27 @@
   #replayCine .rbadge{position:absolute;top:8.5%;left:14px;color:#9fd0ff;font-size:13px;letter-spacing:.14em;
     text-shadow:0 0 8px rgba(159,208,255,.8);animation:rblink 0.9s steps(2,end) infinite}
   @keyframes rblink{50%{opacity:0}}
+  /* HALLOWEEN: badge moviola "dall'oltretomba" + bande che GOCCIOLANO (solo CSS) */
+  #replayCine.hallow .rbadge{color:#ff9b3d;text-shadow:0 0 10px rgba(255,117,24,.9)}
+  #replayCine.hallow::before,#replayCine.hallow::after{background:linear-gradient(180deg,#0c0312,#1c0620)}
+  #replayCine.hallow::after{top:auto;bottom:0}
+  #replayCine .drip{display:none}
+  #replayCine.hallow .drip{display:block;position:absolute;left:0;right:0;top:7%;height:26px;pointer-events:none}
+  #replayCine.hallow .drip::before{content:'';position:absolute;inset:0;
+    background:radial-gradient(14px 26px at 6% 0,#1c0620 96%,transparent), radial-gradient(10px 18px at 19% 0,#1c0620 96%,transparent),
+      radial-gradient(16px 30px at 33% 0,#1c0620 96%,transparent), radial-gradient(9px 15px at 47% 0,#1c0620 96%,transparent),
+      radial-gradient(15px 27px at 61% 0,#1c0620 96%,transparent), radial-gradient(11px 20px at 76% 0,#1c0620 96%,transparent),
+      radial-gradient(17px 32px at 90% 0,#1c0620 96%,transparent);
+    background-repeat:no-repeat;border-radius:0 0 45% 55%/0 0 100% 100%;animation:hwdrip 2.6s ease-in-out infinite}
+  @keyframes hwdrip{0%,100%{transform:scaleY(.72)}50%{transform:scaleY(1.06)}}
+  /* HALLOWEEN: grading violaceo da notte stregata + flash del fulmine */
+  body.hallow #cv{filter:saturate(1.12) contrast(1.08) brightness(.96) hue-rotate(-6deg)}
+  body.hallow #grade{background:
+      radial-gradient(125% 108% at 50% 38%, transparent 42%, rgba(16,2,30,.66) 100%),
+      linear-gradient(180deg, rgba(255,117,24,.10) 0%, transparent 30%, transparent 64%, rgba(40,6,66,.30) 100%);}
+  #hwFlash{position:fixed;inset:0;z-index:11;pointer-events:none;background:#eaf2ff;opacity:0}
+  #hwFlash.on{animation:hwbolt .22s steps(2,end)}
+  @keyframes hwbolt{0%{opacity:.85}55%{opacity:.12}100%{opacity:0}}
 
   /* overlay ANIME (solo in modalità Holly & Benji) */
   #animefx{position:fixed;inset:0;z-index:12;pointer-events:none;display:none;overflow:hidden}
@@ -323,7 +347,8 @@
 <canvas id="fx2d" aria-hidden="true"></canvas>
 <div id="grade" aria-hidden="true"></div>
 <div id="animefx" aria-hidden="true"><div id="speedlines"></div><div id="mangaword"></div></div>
-<div id="replayCine" aria-hidden="true"><div class="rbadge">🎬 REPLAY ●</div></div>
+<div id="replayCine" aria-hidden="true"><div class="rbadge">🎬 REPLAY ●</div><div class="drip"></div></div>
+<div id="hwFlash" aria-hidden="true"></div>
 <div id="srlive" class="vh" role="status" aria-live="polite"></div>
 
 <div id="hud">
@@ -367,6 +392,7 @@
       <button class="stbtn" data-gfx="manga">🎬 HOLLY &amp; BENJI<small>anime</small></button>
       <button class="stbtn" data-gfx="peluche">🧸 PELUCHE<small>morbidoso</small></button>
       <button class="stbtn" data-gfx="8bit">👾 8-BIT<small>arcade</small></button>
+      <button class="stbtn" data-gfx="halloween">🎃 HALLOWEEN<small>mostruoso</small></button>
     </div>
     <div class="small">trascina per mirare nell'angolo<br><span class="grn">la distanza decide la POTENZA</span><br><span class="blu">muovi di lato per dare EFFETTO</span><br><span style="color:#9fd0ff">morbido e alto = CUCCHIAIO 🥄</span><br><span class="org">forte e basso = RASOIATA ⚡</span><br><span style="color:#8fa6cf">⌨ FRECCE per mirare · Q/E effetto · SPAZIO carica e tira</span></div>
     <button id="trofBtn" class="hudbtn trofbtn">🏆 TROFEI <span id="menuTrof">0/10</span></button>
@@ -382,6 +408,7 @@
       <button class="stbtn" data-gfx="manga">🎬 HOLLY &amp; BENJI<small>anime</small></button>
       <button class="stbtn" data-gfx="peluche">🧸 PELUCHE<small>morbidoso</small></button>
       <button class="stbtn" data-gfx="8bit">👾 8-BIT<small>arcade</small></button>
+      <button class="stbtn" data-gfx="halloween">🎃 HALLOWEEN<small>mostruoso</small></button>
     </div>
     <div class="small" id="seedLine" style="display:none"></div>
     <div class="overbtns">
@@ -429,6 +456,7 @@
   <button class="srow" id="setSlow"><span>🐌 SLOW-MOTION</span><b class="sw">ON</b></button>
   <button class="srow" id="setVolM"><span>🎚 VOLUME MUSICA</span><b class="sw" id="volMVal">100%</b></button>
   <button class="srow" id="setVolS"><span>🎚 VOLUME EFFETTI/FOLLA</span><b class="sw" id="volSVal">100%</b></button>
+  <button class="srow" id="setHFace"><span>🎃 TESTE HALLOWEEN</span><b class="sw" id="hfaceVal">ZUCCA</b></button>
   <div class="stitle2">PALLONE</div>
   <div class="ballrow">
     <button class="ballopt" data-ball="classic"><i class="bi-classic"></i><small>CLASSICO</small></button>
@@ -495,7 +523,9 @@ const CONFIG = {
             stadiumPeluche:'assets/stadium-peluche.png?v=1',        // stile PELUCHE: diorama in feltro (Canva Pro)
             stadiumEndPeluche:'assets/stadium-end-peluche.png?v=1',
             stadium8bit:'assets/stadium-8bit.png?v=1',              // stile 8-BIT: pixel art arcade (Canva Pro)
-            stadiumEnd8bit:'assets/stadium-end-8bit.png?v=1' }
+            stadiumEnd8bit:'assets/stadium-end-8bit.png?v=1',
+            stadiumHalloween:'assets/stadium-halloween.png?v=1',    // stile HALLOWEEN: cimitero (fallback procedurale se 404)
+            stadiumEndHalloween:'assets/stadium-end-halloween.png?v=1' }
 };
 
 /* --------------------------- UTIL / SCORES / HAPTIC ---------------------- */
@@ -534,7 +564,8 @@ const Progress={ KEY:'rig_ach',
     // trofei degli EVENTI stagionali (si vincono solo nel periodo giusto)
     {id:'evestate',ic:'🏖', t:'ESTATE BLAUGRANA', d:'10 gol in un giorno d\'estate'},
     {id:'evnatale',ic:'🎄', t:'NATALE AL CAMP NOU', d:'5 di fila sotto le feste'},
-    {id:'evhallow',ic:'🎃', t:'NOTTE DELLE STREGHE', d:'Segna in stile Halloween nel periodo giusto'} ],
+    {id:'evhallow',ic:'🎃', t:'NOTTE DELLE STREGHE', d:'Segna in stile Halloween nel periodo giusto'},
+    {id:'hallow13',ic:'🧟', t:'NOTTE DEI MORTI VIVENTI', d:'13 gol in stile Halloween'} ],
   data(){ try{return JSON.parse(localStorage.getItem(this.KEY)||'{}');}catch(e){return{};} },
   has(id){ return !!this.data()[id]; },
   count(){ const d=this.data(); return this.DEFS.filter(a=>d[a.id]).length; },
@@ -573,6 +604,9 @@ function ballSkinTexture(kind){
 }
 function applyBallSkin(){ if(!ball) return; if(!Progress.ballUnlocked(BALLSKIN)) BALLSKIN='classic';
   const m=ball.material;
+  // HALLOWEEN: palla MALEDETTA sempre (zucca-pentacolo), ignora la skin scelta;
+  // uscendo dallo stile, applyGFX richiama questa funzione e ripristina la skin.
+  if(isHallow()){ m.map=hallowBallTexture(); m.metalness=0.05; m.roughness=0.5; m.needsUpdate=true; return; }
   if(BALLSKIN==='classic'){ if(ball.userData.classicMap) m.map=ball.userData.classicMap; m.metalness=0.08; m.roughness=0.32; }
   else { if(!_skinTex[BALLSKIN]) _skinTex[BALLSKIN]=ballSkinTexture(BALLSKIN);
     m.map=_skinTex[BALLSKIN]; m.metalness= BALLSKIN==='gold'?0.5:0.12; m.roughness= BALLSKIN==='gold'?0.24:0.3; }
@@ -871,6 +905,8 @@ const Sound={ ctx:null,musicOn:true,sfxOn:true,voiceOn:true,_t:null,_step:0,_cro
   _playStep(gs,t){
     const st=gs%16, bar=(gs>>4)%4, i=this.intensity;
     const E=82.41,F=87.31,G=98.0,A=110.0,B=123.47,D=146.83;
+    // HALLOWEEN: il gameplay suona la variante MINORE alla Carpenter (early-out, il menu resta rock)
+    if(this._seq.mode!=='menu' && typeof isHallow==='function' && isHallow()){ this._stepHallow(st,bar,gs,t,i); return; }
     if(this._seq.mode==='menu'){
       // TEMA MENU: cassa big-beat sincopata, backbeat, riff che canta e risponde
       if(st===0||st===3||st===6||st===10) this._kick(84,0.3,t);
@@ -899,6 +935,30 @@ const Sound={ ctx:null,musicOn:true,sfxOn:true,voiceOn:true,_t:null,_step:0,_cro
       if(gs%64===0&&(i>0.6||this.drama)) this.crash(t,0.08);
     }
   },
+  // ====== HALLOWEEN: colonna sonora MINORE alla Carpenter ======
+  // basso OSTINATO insistente sul semitono E-F, organo "da cattedrale maledetta"
+  // (sawtooth detunate ± cents dentro un lowpass) e campana a morto sul giro.
+  _organAt(t,f,dur,vol){ const a=this.ac(); if(!a)return;
+    const lp=a.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=2100; lp.Q.value=0.6;
+    const g=a.createGain(); g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(vol,t+0.03);
+    g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+    lp.connect(g); g.connect(this._busM());
+    [[1,-7,0.5],[1,7,0.5],[1.5,0,0.3],[2,4,0.2]].forEach(([m,det,w])=>{     // fondamentale doppia detunata + quinta + ottava
+      const o=a.createOscillator(); o.type='sawtooth'; o.frequency.setValueAtTime(f*m,t); o.detune.value=det;
+      const og=a.createGain(); og.gain.value=w; o.connect(og); og.connect(lp); o.start(t); o.stop(t+dur+0.03); }); },
+  _stepHallow(st,bar,gs,t,i){
+    const E2=82.41, F2=87.31, Eb3=155.56, E3=164.81, Bb2=116.54;
+    const root=(this.drama||bar===3)? (st<8? E2 : F2) : E2;                 // il semitono E->F sale d'ansia sul 4° giro
+    if(st%2===0) this._bassAt(t,root,0.07+0.045*i);                         // OSTINATO alla Carpenter (ottavi, mai fermo)
+    if(st===0||st===8) this._kick(74,0.26+0.05*i,t);
+    if(this.drama&&(st===4||st===12)) this._kick(74,0.2,t);                 // oltranza: doppia cassa anche qui
+    if(st===4||st===12) this.snare(t,0.13);
+    if(st%4===2&&(i>0.2||this.drama)) this._hatAt(t,0.028,false);
+    if(st===0) this._organAt(t,E3,0.7,0.05+0.03*i);                         // organo: Mi minore sul battere
+    if(st===8) this._organAt(t,(bar%2)? Eb3:E3,0.5,0.045);                  // risposta col brivido di semitono
+    if(bar===3&&st===12) this._organAt(t,Bb2,0.6,0.05);                     // tritono: diabolus in musica
+    if(gs%64===0) this.bell(t);                                             // campana a morto a ogni giro
+  },
   setIntensity(x){ this.intensity=clamp(x,0,1); },   // letta LIVE dal sequencer (tempo + layer)
   setDrama(on){ on=!!on; if(this.drama===on) return; this.drama=on; this.heartbeat(on); },
   // BATTITO CARDIACO (sudden death): doppio tonfo sordo ogni ~900ms
@@ -909,6 +969,57 @@ const Sound={ ctx:null,musicOn:true,sfxOn:true,voiceOn:true,_t:null,_step:0,_cro
         o.connect(g); g.connect(this._busS()); o.start(t); o.stop(t+.19); };
       th(0,.45); th(.20,.3); };
     beat(); this._hb=setInterval(beat,900); },
+  // ====== HALLOWEEN: effetti horror (tutto WebAudio, zero file) ======
+  // ULULATO del lupo: sine in glide 300->180Hz con vibrato lento, ~0.9s
+  howl(){ if(!this.sfxOn)return; const a=this.ac(); if(!a)return; const t=a.currentTime;
+    const o=a.createOscillator(),g=a.createGain(); o.type='sine';
+    o.frequency.setValueAtTime(300,t); o.frequency.linearRampToValueAtTime(340,t+0.18);
+    o.frequency.exponentialRampToValueAtTime(180,t+0.9);
+    const lfo=a.createOscillator(),lg=a.createGain(); lfo.type='sine'; lfo.frequency.value=5.5; lg.gain.value=9;
+    lfo.connect(lg); lg.connect(o.frequency);
+    g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(0.16,t+0.12);
+    g.gain.setValueAtTime(0.16,t+0.55); g.gain.exponentialRampToValueAtTime(0.0001,t+0.95);
+    o.connect(g); g.connect(this._busS()); o.start(t); o.stop(t+1); lfo.start(t); lfo.stop(t+1); },
+  // CAMPANA A MORTO: 220Hz con decay lungo + armonica disarmonica (at opzionale: dal sequencer va sul bus musica)
+  bell(at){ const music=(at!=null); if(music? !this.musicOn : !this.sfxOn) return; const a=this.ac(); if(!a)return;
+    const t=at!=null? at : a.currentTime, bus=music? this._busM() : this._busS();
+    [[220,2.2,0.16],[554,1.3,0.05],[880,0.6,0.03]].forEach(([f,dur,v])=>{   // fondamentale + parziali da campana
+      const o=a.createOscillator(),g=a.createGain(); o.type='sine'; o.frequency.value=f;
+      g.gain.setValueAtTime(v,t); g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+      o.connect(g); g.connect(bus); o.start(t); o.stop(t+dur+0.03); }); },
+  // RISATA DELLA STREGA: 6 chirp square discendenti velocissimi
+  witch(){ if(!this.sfxOn)return; const a=this.ac(); if(!a)return; const t0=a.currentTime;
+    for(let k=0;k<6;k++){ const t=t0+k*0.085, f0=1350-k*130;
+      const o=a.createOscillator(),g=a.createGain(); o.type='square';
+      o.frequency.setValueAtTime(f0,t); o.frequency.exponentialRampToValueAtTime(f0*0.62,t+0.07);
+      g.gain.setValueAtTime(0.07,t); g.gain.exponentialRampToValueAtTime(0.0001,t+0.075);
+      o.connect(g); g.connect(this._busS()); o.start(t); o.stop(t+0.08); } },
+  // SCRICCHIOLIO D'OSSA: 3 burst di rumore highpass brevissimi in fila
+  bones(){ if(!this.sfxOn)return; const a=this.ac(); if(!a)return; const t0=a.currentTime;
+    [0,0.09,0.2].forEach((d,k)=>{ const t=t0+d, dur=0.045+k*0.01;
+      const n=a.createBufferSource(), buf=a.createBuffer(1,Math.max(64,a.sampleRate*dur),a.sampleRate), dd=buf.getChannelData(0);
+      for(let i=0;i<dd.length;i++) dd[i]=(Math.random()*2-1)*(1-i/dd.length);
+      const f=a.createBiquadFilter(); f.type='highpass'; f.frequency.value=2400+k*600;
+      const g=a.createGain(); g.gain.setValueAtTime(0.2,t); g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+      n.buffer=buf; n.connect(f); f.connect(g); g.connect(this._busS()); n.start(t); }); },
+  // TUONO del fulmine: rombo lowpass lungo + sub-botta iniziale
+  thunder(){ if(!this.sfxOn)return; const a=this.ac(); if(!a)return; const t=a.currentTime;
+    this._noise(0.9,'lowpass',240,0.34);
+    this._noise(0.25,'bandpass',900,0.12,0.8);
+    const o=a.createOscillator(),g=a.createGain(); o.type='sine';
+    o.frequency.setValueAtTime(70,t); o.frequency.exponentialRampToValueAtTime(32,t+0.5);
+    g.gain.setValueAtTime(0.3,t); g.gain.exponentialRampToValueAtTime(0.0001,t+0.6);
+    o.connect(g); g.connect(this._busS()); o.start(t); o.stop(t+0.65); },
+  // BATTITO che ACCELERA (rincorsa CPU da portiere): impulsi schedulati senza interval,
+  // NON tocca il timer _hb del sudden death. k=0..1 comprime il periodo 0.85s -> 0.35s.
+  _hbN:0,
+  hbPulse(k){ if(!this.sfxOn) return; const a=this.ac(); if(!a) return;
+    if(a.currentTime<this._hbN) return;
+    this._hbN=a.currentTime+0.85-0.5*clamp(k||0,0,1);
+    const th=(dt,v)=>{ const o=a.createOscillator(),g=a.createGain(); o.type='sine'; o.frequency.value=54;
+      const t=a.currentTime+dt; g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(v,t+.015); g.gain.exponentialRampToValueAtTime(.0001,t+.17);
+      o.connect(g); g.connect(this._busS()); o.start(t); o.stop(t+.19); };
+    th(0,.4); th(.18,.26); },
   musicStart(){ if(!this.musicOn||this._t)return; this._startSeq('game'); },
   musicStop(){ if(this._t){clearInterval(this._t);this._t=null;} this._seq=null; this.heartbeat(false); this.drama=false; },
   // brusio folla a basso volume (noise filtrato), pump su gol/parata
@@ -1078,11 +1189,12 @@ const isKeeper=()=>ROLE==='keeper';
 // STILE grafico: 'manga' (Holly & Benji: cel-shading + speed-line + slow-mo drammatica) | 'pes' (realistico PBR)
 // QUATTRO STILI GRAFICI: PES (realistico) · MANGA (Holly&Benji) · PELUCHE (diorama
 // di stoffa, cel-shading morbido pastello) · 8BIT (pixel art vera: risoluzione bassa)
-const GFX_LIST=['pes','manga','peluche','8bit'];
+const GFX_LIST=['pes','manga','peluche','8bit','halloween'];
 let GFX='manga'; try{ const g=localStorage.getItem('rig_gfx'); if(GFX_LIST.includes(g)) GFX=g; }catch(e){}
 const isManga=()=>GFX==='manga';
 const is8bit =()=>GFX==='8bit';
 const isPeluche=()=>GFX==='peluche';
+const isHallow=()=>GFX==='halloween';   // QUINTO STILE: HALLOWEEN mostruoso (cimitero, zombie, ragnatele)
 let aleSaves=0, suddenDeath=false, duelResult='';    // duello 5 rigori: tu (gol) vs Ale (parate)
 const keeperAct={};                                  // azioni: diveL, diveR, high, ready, beaten
 const keeperBones={};                                // riferimenti ossa per reach procedurale additivo
@@ -1100,8 +1212,9 @@ let roundSeed=null, challengeFromURL=false;   // SFIDA: stesso portiere per tutt
 let specialArmed=false;            // EASTER EGG: tiro speciale armato (3 tap al centro porta)
 let confetti=null;
 let netShatter=null;               // ANIME: segmenti 3D dei "fili" della rete sfondata
-let stadiumMat=null, stadiumTexPES=null, stadiumTexANIME=null, stadiumTexPEL=null, stadiumTex8BIT=null;   // stadio per stile, swap in applyGFX
-let endMat=null, endTexPES=null, endTexANIME=null, endTexPEL=null, endTex8BIT=null;                       // CURVA OPPOSTA (vista portiere)
+let stadiumMat=null, stadiumTexPES=null, stadiumTexANIME=null, stadiumTexPEL=null, stadiumTex8BIT=null, stadiumTexHALLOW=null;   // stadio per stile, swap in applyGFX
+let endMat=null, endTexPES=null, endTexANIME=null, endTexPEL=null, endTex8BIT=null, endTexHALLOW=null;                           // CURVA OPPOSTA (vista portiere)
+let netMat=null;                                     // materiale rete condiviso (halloween: ragnatela, swap in applyGFX)
 const camBase=new THREE.Vector3(0,2.75,18.2);   // camera piu' arretrata e alta: si vede il rigorista e la sua rincorsa
 const camLook=new THREE.Vector3(0,1.15,-1.0);
 // MODALITÀ PORTIERE: camera DIETRO LA PORTA che guarda il dischetto — sei TU in porta,
@@ -1271,6 +1384,74 @@ function stadiumTexture(){
   x.globalCompositeOperation='source-over';
   const t=new THREE.CanvasTexture(c); t.colorSpace=THREE.SRGBColorSpace; t.anisotropy=4; return t;
 }
+// CIMITERO HALLOWEEN procedurale 2048x640: cielo viola-nero, LUNA arancione gigante,
+// croci/lapidi in controluce, alberi secchi, zucche luminose con gli occhi tra le tribune.
+// E' il FALLBACK quando assets/stadium-halloween.png manca (404): il gioco regge sempre.
+let _hwStadiumTex=null;
+function hallowStadiumTexture(){
+  if(_hwStadiumTex) return _hwStadiumTex;
+  const W=2048,H=640; const c=document.createElement('canvas'); c.width=W; c.height=H; const x=c.getContext('2d');
+  // cielo notte stregata: viola-nero che scende verso un orizzonte color prugna
+  let g=x.createLinearGradient(0,0,0,H); g.addColorStop(0,'#0a0316'); g.addColorStop(.5,'#1c0b33'); g.addColorStop(1,'#2a1240');
+  x.fillStyle=g; x.fillRect(0,0,W,H);
+  // stelle fredde sparse
+  for(let i=0;i<160;i++){ x.globalAlpha=0.25+Math.random()*0.6; x.fillStyle='#cfd6ff';
+    x.fillRect(Math.random()*W, Math.random()*H*0.55, 1.6, 1.6); }
+  x.globalAlpha=1;
+  // LUNA PIENA ARANCIONE GIGANTE con alone
+  const mx=W*0.30,my=170,mr=130;
+  const halo=x.createRadialGradient(mx,my,mr*0.4,mx,my,mr*2.4);
+  halo.addColorStop(0,'rgba(255,140,40,.5)'); halo.addColorStop(1,'rgba(255,140,40,0)');
+  x.fillStyle=halo; x.beginPath(); x.arc(mx,my,mr*2.4,0,6.283); x.fill();
+  const mg=x.createRadialGradient(mx-30,my-30,10,mx,my,mr);
+  mg.addColorStop(0,'#ffd9a0'); mg.addColorStop(.55,'#ff9b3d'); mg.addColorStop(1,'#d96a14');
+  x.fillStyle=mg; x.beginPath(); x.arc(mx,my,mr,0,6.283); x.fill();
+  x.fillStyle='rgba(160,70,10,.35)';                                            // crateri
+  [[-40,-20,22],[35,10,16],[-5,45,12],[50,-45,10]].forEach(([dx,dy,r])=>{ x.beginPath(); x.arc(mx+dx,my+dy,r,0,6.283); x.fill(); });
+  // nuvolaccia che taglia la luna
+  x.fillStyle='rgba(16,6,30,.55)';
+  x.beginPath(); x.ellipse(mx+40,my+20,mr*1.5,26,0,0,6.283); x.fill();
+  // collina/tribuna scura del cimitero
+  x.fillStyle='#120722'; x.beginPath(); x.moveTo(0,H);
+  for(let px=0;px<=W;px+=64) x.lineTo(px, 330+34*Math.sin(px*0.004)+18*Math.sin(px*0.013+2));
+  x.lineTo(W,H); x.closePath(); x.fill();
+  // ALBERI SECCHI in controluce (tronco + rami ricorsivi storti)
+  const branch=(bx,by,ang,len,w)=>{ if(len<8||w<0.6) return;
+    const ex=bx+Math.cos(ang)*len, ey=by+Math.sin(ang)*len;
+    x.strokeStyle='#050208'; x.lineWidth=w; x.beginPath(); x.moveTo(bx,by); x.lineTo(ex,ey); x.stroke();
+    branch(ex,ey,ang-0.5-Math.random()*0.3,len*0.66,w*0.62);
+    branch(ex,ey,ang+0.4+Math.random()*0.4,len*0.7,w*0.62); };
+  [W*0.08,W*0.52,W*0.78,W*0.94].forEach(tx0=>{ const base=350+20*Math.sin(tx0*0.004);
+    branch(tx0,base,-Math.PI/2+(Math.random()-0.5)*0.3,70+Math.random()*30,9); });
+  // CROCI e LAPIDI sulla collina
+  for(let i=0;i<26;i++){ const gx=40+i*(W-80)/26+(Math.random()-0.5)*30, gy=356+26*Math.sin(gx*0.004)+Math.random()*70;
+    x.fillStyle= (i%3===0)?'#231536':'#2e1d44';
+    if(i%2===0){ const h=26+Math.random()*20;                                   // croce
+      x.fillRect(gx-3,gy-h,6,h); x.fillRect(gx-11,gy-h*0.72,22,6); }
+    else { const w2=18+Math.random()*8, h=20+Math.random()*14;                  // lapide tondeggiante
+      x.beginPath(); x.moveTo(gx-w2/2,gy); x.lineTo(gx-w2/2,gy-h*0.6);
+      x.arc(gx,gy-h*0.6,w2/2,Math.PI,0); x.lineTo(gx+w2/2,gy); x.closePath(); x.fill(); } }
+  // fila di ZUCCHE LUMINOSE con occhi/bocca triangolari tra le "tribune"
+  for(let i=0;i<14;i++){ const px=70+i*(W-140)/13, py=500+14*Math.sin(i*1.7), r=22+(i%3)*5;
+    const pg=x.createRadialGradient(px,py,2,px,py,r*1.9);
+    pg.addColorStop(0,'rgba(255,150,40,.55)'); pg.addColorStop(1,'rgba(255,150,40,0)');
+    x.fillStyle=pg; x.beginPath(); x.arc(px,py,r*1.9,0,6.283); x.fill();        // alone caldo
+    x.fillStyle='#e2670f'; x.beginPath(); x.ellipse(px,py,r,r*0.82,0,0,6.283); x.fill();
+    x.strokeStyle='rgba(120,40,0,.6)'; x.lineWidth=2;                           // venature
+    for(let v=-2;v<=2;v++){ x.beginPath(); x.ellipse(px+v*r*0.3,py,r*0.28,r*0.8,0,0,6.283); x.stroke(); }
+    x.fillStyle='#2f5b1e'; x.fillRect(px-3,py-r*0.95-8,6,10);                   // picciolo
+    x.fillStyle='#ffe45e';                                                      // occhi+bocca intagliati gialli
+    x.beginPath(); x.moveTo(px-r*0.45,py-r*0.1); x.lineTo(px-r*0.15,py-r*0.1); x.lineTo(px-r*0.3,py-r*0.42); x.closePath(); x.fill();
+    x.beginPath(); x.moveTo(px+r*0.45,py-r*0.1); x.lineTo(px+r*0.15,py-r*0.1); x.lineTo(px+r*0.3,py-r*0.42); x.closePath(); x.fill();
+    x.beginPath(); x.moveTo(px-r*0.5,py+r*0.25); x.lineTo(px+r*0.5,py+r*0.25);
+    for(let d=4;d>=-4;d--) x.lineTo(px+d*r*0.115, py+r*0.25+((d%2)?0:r*0.18)); x.closePath(); x.fill(); }
+  // nebbiolina bassa sul bordo campo
+  const fg=x.createLinearGradient(0,560,0,H); fg.addColorStop(0,'rgba(120,100,170,0)'); fg.addColorStop(1,'rgba(120,100,170,.28)');
+  x.fillStyle=fg; x.fillRect(0,560,W,H-560);
+  x.fillStyle='#0b0517'; x.fillRect(0,614,W,H-614);                             // bordo campo scurissimo
+  const t=new THREE.CanvasTexture(c); t.colorSpace=THREE.SRGBColorSpace; t.anisotropy=4;
+  _hwStadiumTex=t; return t;
+}
 function glowSprite(color){ // bagliore additivo per fari
   const s=128; const c=document.createElement('canvas'); c.width=c.height=s; const x=c.getContext('2d');
   const g=x.createRadialGradient(s/2,s/2,0,s/2,s/2,s/2); g.addColorStop(0,'rgba(255,255,255,1)');
@@ -1385,6 +1566,7 @@ function buildScene(textures){
     const standMat=new THREE.MeshBasicMaterial({map:textures.stadium, fog:true, toneMapped:false});
     stadiumMat=standMat; stadiumTexPES=textures.stadium; stadiumTexANIME=textures.stadiumAnime||null;
     stadiumTexPEL=textures.stadiumPeluche||null; stadiumTex8BIT=textures.stadium8bit||null;
+    stadiumTexHALLOW=textures.stadiumHalloween||hallowStadiumTexture();   // asset Canva o CIMITERO procedurale (regge il 404)
     { const t0=stadiumTexForGFX(); if(t0) standMat.map=t0; }       // stile gia' attivo all'avvio
     const back=new THREE.Mesh(new THREE.PlaneGeometry(76,22), standMat);
     back.position.set(0,8.2,-17); scene.add(back);
@@ -1396,6 +1578,7 @@ function buildScene(textures){
     // Texture DEDICATE Canva (PES/ANIME, swap in applyGFX); fallback: texture stadio classica
     endTexPES=textures.stadiumEnd||textures.stadium; endTexANIME=textures.stadiumEndAnime||textures.stadiumAnime||endTexPES;
     endTexPEL=textures.stadiumEndPeluche||stadiumTexPEL||endTexPES; endTex8BIT=textures.stadiumEnd8bit||stadiumTex8BIT||endTexPES;
+    endTexHALLOW=textures.stadiumEndHalloween||stadiumTexHALLOW||endTexPES;   // curva opposta halloween (fallback: stesso cimitero)
     endMat=new THREE.MeshBasicMaterial({map:endTexForGFX()||endTexPES, fog:true, toneMapped:false});
     const back2=new THREE.Mesh(new THREE.PlaneGeometry(76,22), endMat);
     back2.position.set(0,8.2,24); back2.rotation.y=Math.PI; scene.add(back2);
@@ -1418,8 +1601,9 @@ function buildScene(textures){
 
   // ---- RETE realistica (sag) back + top + lati, base salvata per ripple ----
   if(textures.net){ textures.net.repeat.set(GW*1.6,GH*1.6); }
-  const netMat=new THREE.MeshStandardMaterial({map:textures.net, transparent:true, opacity:.9, side:THREE.DoubleSide,
+  netMat=new THREE.MeshStandardMaterial({map:textures.net, transparent:true, opacity:.9, side:THREE.DoubleSide,
     depthWrite:false, roughness:1, metalness:0, color:0xf4f8ff, envMapIntensity:.25});
+  netMat.userData.origMap=textures.net;              // per il ripristino uscendo da halloween (ragnatela)
   backNet=new THREE.Mesh(new THREE.PlaneGeometry(GW,GH,36,22), netMat);
   backNet.position.set(0,GH/2,-GD);
   applyNetSag(backNet); // sag iniziale + memorizza base
@@ -1477,7 +1661,13 @@ const KITS={
   outfield:{ solid:null, stripeA:0xA50044, stripeB:0x004D98, sleeve:0xA50044,
              shorts:0x0a3f80, sock:0x0a3f80, glove:null, skin:0xd7a37d, hair:0x2a1c10, shoe:0x15181e },
   keeper:  { solid:0x18b06b, stripeA:0, stripeB:0, sleeve:0,
-             shorts:0x101c2c, sock:0x18b06b, glove:0xf2f4f8, skin:0xd7a37d, hair:0x2a1c10, shoe:0x15181e }
+             shorts:0x101c2c, sock:0x18b06b, glove:0xf2f4f8, skin:0xd7a37d, hair:0x2a1c10, shoe:0x15181e },
+  // ---- HALLOWEEN: il rigorista e' uno ZOMBIE (pelle marcia, strisce nero/arancio),
+  //      il portiere un VAMPIRO (nero-rosso, pelle cadaverica, guanti-artiglio) ----
+  zombie:  { solid:null, stripeA:0x0c0c10, stripeB:0xff7518, sleeve:0x0c0c10,
+             shorts:0x0c0c10, sock:0xff7518, glove:null, skin:0x7ca24d, hair:0x1c2412, shoe:0x241a10 },
+  vampire: { solid:null, stripeA:0x7a0e18, stripeB:0x1a0508, sleeve:0x1a0508,
+             shorts:0x1a0508, sock:0x7a0e18, glove:0x2a2a33, skin:0xdfe3ea, hair:0x0a0a12, shoe:0x100a14 }
 };
 function dressGLB(inner,kind){
   const K=KITS[kind]||KITS.outfield; const C=new THREE.Color();
@@ -1487,7 +1677,7 @@ function dressGLB(inner,kind){
     // regione per osso (nomi mixamorig), memoizzata per indice
     const reg=o.skeleton.bones.map(b=>{ const n=((b&&b.name)||'').toLowerCase();
       if(n.indexOf('hand')>=0)    return K.glove!=null?'glove':'skin';
-      if(n.indexOf('forearm')>=0) return kind==='keeper'?'jersey':'skin';   // maniche lunghe solo il portiere
+      if(n.indexOf('forearm')>=0) return (kind==='keeper'||kind==='vampire')?'jersey':'skin';   // maniche lunghe: portiere e vampiro
       if(n.indexOf('toe')>=0||n.indexOf('foot')>=0) return 'shoe';
       if(n.indexOf('upleg')>=0)   return 'thigh';
       if(n.indexOf('leg')>=0)     return 'sock';
@@ -1548,7 +1738,7 @@ function loadGLBKeeper(){
         o.material=new THREE.MeshStandardMaterial({ vertexColors:true,
           roughness:0.72, metalness:0.0, side:THREE.DoubleSide, envMapIntensity:0.6 });   // divisa dipinta per-vertice (dressGLB)
       } });
-      dressGLB(inner,'keeper');                                     // completo verde da numero 1 + guanti + pelle
+      dressGLB(inner, isHallow()? 'vampire':'keeper');              // completo n.1 (o VAMPIRO in halloween)
       // questo modello è già Y-up: nessun raddrizzamento (evita di stenderlo a terra)
       const pivot=new THREE.Group(); pivot.add(inner); pivot.updateMatrixWorld(true);
       let box=new THREE.Box3().setFromObject(pivot); const size=new THREE.Vector3(); box.getSize(size);
@@ -1621,7 +1811,7 @@ function loadGLBKicker(){
       inner.traverse(o=>{ if(o.isMesh){ o.castShadow=true; o.frustumCulled=false;
         o.material=new THREE.MeshStandardMaterial({ vertexColors:true,
           roughness:0.8, metalness:0.0, side:THREE.DoubleSide, envMapIntensity:0.5 }); } });
-      dressGLB(inner,'outfield');                                   // blaugrana: strisce, pantaloncini blu, pelle
+      dressGLB(inner, isHallow()? 'zombie':'outfield');             // blaugrana (o ZOMBIE in halloween)
       // normalizza scala/altezza e piedi a terra
       const pivot=new THREE.Group(); pivot.add(inner); pivot.updateMatrixWorld(true);
       let box=new THREE.Box3().setFromObject(pivot); const size=new THREE.Vector3(); box.getSize(size);
@@ -2025,7 +2215,9 @@ function resetForShot(){
   if(useGLBKeeper){ keeper.scale.x=1; keeperDive=null; playKeeper('idle'); }
   if(kicker){ kicker.rotation.set(0,0,0); } kickT=-1;
   if(useGLBKicker && kickerGLB){ kickPhase=''; kickPhaseT=0; playKicker('idle');
-    kickerGLB.position.set(KICK_STANCE.x,0,KICK_STANCE.z); kickerGLB.rotation.y=KICK_STANCE.yaw; }  // torna in postura di rincorsa
+    kickerGLB.position.set(KICK_STANCE.x,0,KICK_STANCE.z); kickerGLB.rotation.y=KICK_STANCE.yaw;    // torna in postura di rincorsa
+    kickerGLB.rotation.z=0; kickerGLB.scale.y=kickerGLB.scale.x; }                                  // fine THRILLER/afflosciamento halloween
+  ghostRestore();                                    // palla fantasma: opacita'/transparent tornano normali
   aim.active=false; aim.power=0; aim.curl=0; aim.t0=0; aimRing.visible=aimDot.visible=trajLine.visible=false;
   celeb=null; replay=null;                           // fine esultanza/moviola: si torna al live
   // PORTIERE: la CPU calcia da sola dopo una pausa di tensione (tu devi solo REAGIRE)
@@ -2426,6 +2618,8 @@ function shoot(){
          windup: useGLBKicker?KICK_WINDUP_GLB:KICK_WINDUP_FALLBACK, launched:false };   // RINCORSA: la palla parte al contatto
   // VARIANTE "DRAMMA": il 5° rigore della sfida vola in slow-motion cinematografico
   if(MODE==='five' && FIVE_VAR==='drama' && shotNum===4){ shot.drama=true; showTelecro('🎥 DRAMMA: l\'ultimo rigore, al rallentatore…'); }
+  // HALLOWEEN: il tiro speciale diventa un TIRO MALEDETTO (solo effetti visivi/audio, esito intatto)
+  if(special && isHallow()) shot.hType=['ghost','fire','curse'][(Math.random()*3)|0];
   setState(STATE.BALL_IN_FLIGHT);
   kickT=0;                                      // lean procedurale (fallback)
   startKickerKick();                            // rincorsa GLB (run -> kick, contatto = lancio palla)
@@ -2433,7 +2627,11 @@ function shoot(){
   haptic(14);                                   // suono del calcio + speed-lines al CONTATTO (nel loop)
   if(special){                                  // TIRO SPECIALE: annuncio inconfondibile al momento del tiro
     ballTrail.userData.parts.forEach(m=>{ m.material.blending=THREE.NormalBlending; m.material.needsUpdate=true; });  // colori arcobaleno NETTI (no wash bianco)
-    engine.view.popWord('⚡ SUPERTIRO! ⚡','#ff3cac',true); engine.view.shake(1.1);
+    if(shot.hType==='ghost'){ engine.view.popWord('👻 TIRO FANTASMA','#cfd6ff',true); showTelecro('👻 TIRO FANTASMA: la palla appare e SCOMPARE!'); }
+    else if(shot.hType==='fire'){ engine.view.popWord('🔥 PALLA INFERNALE','#39ff7a',true); showTelecro('🔥 PALLA INFERNALE: scia di fuoco fatuo!'); }
+    else if(shot.hType==='curse'){ engine.view.popWord('☠️ MALEDIZIONE','#b987ff',true); showTelecro('☠️ MALEDIZIONE: traiettoria stregata, guardala ballare!'); }
+    else engine.view.popWord('⚡ SUPERTIRO! ⚡','#ff3cac',true);
+    engine.view.shake(1.1);
     Sound.sfx(520,.07); setTimeout(()=>Sound.sfx(780,.07),60); setTimeout(()=>Sound.sfx(1100,.08),120); setTimeout(()=>Sound.sfx(1560,.13),190);  // power-up in crescendo
     HUD.flash.classList.remove('on','save'); void HUD.flash.offsetWidth; HUD.flash.classList.add('on');
     haptic([0,40,30,40,30,90]);
@@ -2513,6 +2711,9 @@ function cpuKick(){
   // tiro durante la rincorsa (impreciso quanto piu' sali di livello; poi sparisce)
   shot.hint = (lvl<0.55) ? { x: clamp(tx+(rng()*2-1)*(0.35+lvl*1.5), -HALF+0.2, HALF-0.2),
                              y: clamp(ty+(rng()*2-1)*(0.25+lvl*1.0), 0.3, GH-0.15) } : null;
+  // HALLOWEEN: anche la CPU ti fa il TIRO FANTASMA — la palla lampeggia mentre ti vola addosso
+  if(isHallow() && lvl>0.4 && rng()<0.18){ shot.hType='ghost';
+    engine.view.popWord('👻 TIRO FANTASMA','#cfd6ff'); showTelecro('👻 Occhio: palla FANTASMA in arrivo!'); }
   setState(STATE.BALL_IN_FLIGHT);
   kickT=0; startKickerKick(); camPunchT=0; slowmo=0; haptic(14);
   // tuffo D'ISTINTO scelto prima del calcio: si applica ORA (reach pieno, ma il cucchiaio punisce)
@@ -2568,6 +2769,7 @@ function saveShot(){
 
 function resolveShot(){
   const r=shot.result;
+  if(shot.hType==='ghost') ghostRestore();     // fine volo: la palla fantasma torna solida SUBITO
   shotNum++;                                   // conta il rigore appena calciato (modalità 5 rigori)
   if(isKeeper()){ if(r!=='MISS') hitStop=isManga()?0.22:0.06; capT=0; return resolveKeeper(r); }
   if(r!=='MISS') hitStop = isManga()?0.22:0.06;  // freeze-frame all'impatto (ANIME estremo ~220ms, PES contenuto ~60ms)
@@ -2586,12 +2788,15 @@ function resolveShot(){
     if(incrocio){ burstConfetti(-shot.target.x*0.5,1.5); setTimeout(()=>burstConfetti(shot.target.x*0.7,1.2),120); }  // festa extra all'incrocio
     engine.view.burstAt3D(tmpV2.set(shot.target.x,Math.max(0.4,shot.target.y),-GD),'goal');   // scintille sulla rete
     Sound.netSwish(); arcadeAudio.playGoalFanfare(); Sound.roar();   // FANFARA gol (arpeggio DO maggiore) + boato
+    if(isHallow()){ Sound.howl(); Sound.bell(); }                    // HALLOWEEN: ululato + campana a morto
     speedLines(); engine.view.popWord(incrocio?'EUROGOOOL!':'GOOOOL!','#FF0000',incrocio);   // flare: all'incrocio esplode anche in PES
     showShotCard();                                            // scheda del tiro: potenza/effetto/distanza dal legno
     if(shot.woodGoal){ Sound.postClang(); engine.view.popWord('PALO-GOL! 🎯','#ffd24a'); showTelecro('🥶 PALO-GOL! Il legno la sputa DENTRO!'); }
     if(shot.parryGoal){ engine.view.popWord('NON BASTA! 🧤','#ffd884'); showTelecro('😱 La tocca… ma NON BASTA: entra lo stesso!'); }
     if(shot.special){ engine.view.popWord('SUPERGOOOL! 🌈','#ff3cac',true); engine.view.shake(1.2);   // gol da tiro speciale
       for(let q=0;q<3;q++) setTimeout(()=>burstConfetti(rand(-2.5,2.5),rand(1,2.2)),q*110); }
+    if(shot.hType==='fire'){ engine.view.popWord('🔥 INFERNALE!','#39ff7a',true);                    // palla infernale: burst verde extra
+      engine.view.burstAt3D(tmpV2.set(shot.target.x,Math.max(0.6,shot.target.y),-GD*0.5),'goal'); }
     // ---- TROFEI (progressione locale, non blocca mai il flusso) ----
     try{ Progress.award('gol1');
       if(incrocio) Progress.award('incrocio');
@@ -2615,6 +2820,8 @@ function resolveShot(){
       announceBlockIfChanged();
       // CARRIERA + EVENTI stagionali
       Stats.bump('goals'); if(incrocio) Stats.bump('incroci');
+      if(isHallow()){ Stats.bump('hgoals');                          // gol in stile halloween (trofeo NOTTE DEI MORTI VIVENTI)
+        if((Stats.data().hgoals|0)>=13) Progress.award('hallow13'); }
       const ev=seasonEvent();
       if(ev){ if(ev.id==='evnatale' && streak>=5) Progress.award('evnatale');
         if(ev.id==='evestate' && (++_sessGoals)>=10) Progress.award('evestate');
@@ -2629,9 +2836,11 @@ function resolveShot(){
   } else {
     shakeMag=CONFIG.shakeOnSave;
     if(r==='SAVE'){ aleSaves++; showResult('PARATO!','#ff9d6a'); engine.view.popWord('PARATAAA!','#FFFF00'); Sound.gloveThud(); arcadeAudio.playSaveSting(); Sound.groan();   // sting parata eroica di Ale
+      if(isHallow()) Sound.witch();                                  // risata della strega: il vampiro te l'ha parata
       engine.view.burstAt3D(tmpV2.set(shot.guess,shot.guessY||1.0,KEEPER_Z),'save');   // polvere/scintille dai guantoni
       HUD.flash.classList.remove('on'); HUD.flash.classList.add('save'); void HUD.flash.offsetWidth; HUD.flash.classList.add('on'); }
     else if(r==='POST'){ showResult('PALO!','#ffd884'); engine.view.popWord('PALO!','#ffd24a'); engine.view.burstAt3D(tmpV2.set(Math.sign(shot.target.x)*HALF,shot.target.y,0),'save'); Sound.postClang(); arcadeAudio.playPostSting(); Sound.groan();
+      if(isHallow()) Sound.bones();                                  // scricchiolio d'ossa sul legno
       // FEEDBACK LEGNO: vibrazione dedicata + overlay ambrato sull'area colpita
       haptic([0,80,40,80]);
       HUD.flash.classList.remove('on','save'); HUD.flash.classList.add('wood'); void HUD.flash.offsetWidth; HUD.flash.classList.add('on');
@@ -2665,6 +2874,7 @@ function resolveKeeper(r){
     if(shot && !shot.humanDive && !shot.woodGoal) setTimeout(()=>{ if(isKeeper()) showTelecro('👀 Fermo lì non si para: tocca/trascina DURANTE il volo per tuffarti!'); },800);
     engine.view.burstAt3D(tmpV2.set(shot.target.x,Math.max(0.4,shot.target.y),-GD),'goal');
     Sound.sfx(200,.18,'sawtooth'); Sound.groan();
+    if(isHallow()){ Sound.howl(); Sound.bell(); }                    // HALLOWEEN: gol subito = campana a morto per TE
     HUD.flash.classList.remove('on','save'); void HUD.flash.offsetWidth; HUD.flash.classList.add('on');
     // ESULTANZA di ALE: ti ha segnato e viene a dirtelo in faccia (corre verso la camera)
     if(useGLBKicker && kickerGLB){ celeb={t:0,dir:-1}; playKicker('run',1); }
@@ -2677,13 +2887,15 @@ function resolveKeeper(r){
       showResult('PARATA! 🧤','#39ff7a'); engine.view.popWord('PARATAAA!','#FFFF00');
       engine.view.burstAt3D(tmpV2.set(shot.guess,shot.guessY||1.0,KEEPER_Z),'save');
       Sound.gloveThud(); arcadeAudio.playSaveSting(); Sound.roar();   // sting parata EROICA (sei tu il muro)
+      if(isHallow()) Sound.witch();                                   // la TUA risata da strega: parata mostruosa
       burstConfetti(shot.guess,Math.max(0.6,shot.guessY||1.2));
       HUD.flash.classList.remove('on'); HUD.flash.classList.add('save'); void HUD.flash.offsetWidth; HUD.flash.classList.add('on');
       haptic([0,40,30,70]);
       try{ if(streak>=3) Progress.award('parata3'); if(streak>=8) Progress.award('muro8'); }catch(e){}
       // missione "para 4 in una run" + XP parata + banner blocco portiere + carriera
       try{ missRun.saves++; if(missRun.saves>=4) Missions.complete('par4'); Meta.add(10); announceBlockIfChanged(); Stats.bump('saves'); }catch(e){}
-    } else if(r==='POST'){ showResult('PALO! 😅','#ffd884'); engine.view.popWord('PALO!','#ffd24a'); Sound.postClang(); arcadeAudio.playPostSting(); }
+    } else if(r==='POST'){ showResult('PALO! 😅','#ffd884'); engine.view.popWord('PALO!','#ffd24a'); Sound.postClang(); arcadeAudio.playPostSting();
+      if(isHallow()) Sound.bones(); }
     else { showResult('FUORI! 😮‍💨','#ffd28a'); engine.view.popWord('FUORI!','#ffffff'); arcadeAudio.playPostSting(); }
     CharFSM.set('keeper','esultanza'); CharFSM.set('kicker','sconfitta');   // FSM: sei sopravvissuto
     slowmo=1; setState(STATE.SAVE_ANIMATION);
@@ -2784,8 +2996,10 @@ function startReplay(mid){
     kickerGLB.rotation.y=KICK_STANCE.yaw; playKicker('idle'); }                          // (la rincorsa parte in updateReplay)
   ripple.t=-1; applyNetRipple(-1,0,0); celeb=null;
   if(camera) solveReplayCam();                     // camera RISOLTA sul frustum reale + taglio netto
-  try{ document.getElementById('replayCine').classList.add('show'); }catch(e){}   // bande cinema + badge REPLAY
-  showTelecro('🎬 MOVIOLA — rivediamo il rigore decisivo…');
+  try{ const rc=document.getElementById('replayCine'); rc.classList.add('show');   // bande cinema + badge REPLAY
+    rc.classList.toggle('hallow', isHallow());                                     // HALLOWEEN: bande che gocciolano
+    const rb=rc.querySelector('.rbadge'); if(rb) rb.textContent = isHallow()? '🎃 REPLAY DALL\'OLTRETOMBA ●' : '🎬 REPLAY ●'; }catch(e){}
+  showTelecro(isHallow()? '🎃 MOVIOLA DALL\'OLTRETOMBA — rivediamo il rigore…' : '🎬 MOVIOLA — rivediamo il rigore decisivo…');
   Sound.sfx(520,.06,'square',0.2);
   return true;
 }
@@ -2941,6 +3155,7 @@ function update(dt){
       // portiere in TENSIONE: shuffle nervoso sulla linea + si carica scendendo sulle gambe
       keeper.position.x=shot.keeperFrom + Math.sin(stateT*7)*0.04*(1-rp2*0.5);
       keeper.position.y=-0.05*rp2; keeper.rotation.z*=0.9;
+      if(isHallow() && isKeeper()) Sound.hbPulse(rp2);   // HALLOWEEN da portiere: il cuore ACCELERA con la rincorsa
     } else {
     if(!shot.launched){ shot.launched=true;               // CONTATTO: suono del calcio + linee cinetiche
       Sound.kick(shot.power); speedLines(); haptic(10);
@@ -2966,6 +3181,12 @@ function update(dt){
     // spin: rotazione coerente con direzione + curva
     ball.rotation.x-=dt*CONFIG.spinVis; ball.rotation.y+=dt*CONFIG.spinVis*0.4*shot.curlSign;
     if(shot.special){ ball.scale.setScalar(1.3+0.18*Math.sin(stateT*42)); ball.rotation.x-=dt*CONFIG.spinVis*1.5; }   // palla più grossa e iper-rotante
+    // ---- HALLOWEEN: effetti dei tiri MALEDETTI in volo (solo visivi, fisica/esito intatti) ----
+    if(shot.hType==='ghost'){ const m=ball.material;                                   // palla che appare e scompare
+      if(!shot._ghostOn){ shot._ghostOn=true; m.userData.wasTransp=m.transparent; m.transparent=true; }
+      m.opacity=0.575+0.425*Math.sin(shot.t*18); }                                     // lampeggia 0.15..1
+    else if(shot.hType==='curse'){ const w=0.09*Math.sin(p*Math.PI)*Math.sin(shot.t*22);
+      if(isFinite(w)) ball.position.x+=w; }                                            // wobble DOPO ballPathPos (NaN-guard)
     // ombra contatto: scala/opacità con altezza
     updateBallShadow();
     pushTrail();
@@ -3023,6 +3244,7 @@ function update(dt){
                                           : Math.max(kickerGLB.position.z-dt*3.2, 3.2);
         kickerGLB.position.x += (0-kickerGLB.position.x)*Math.min(1,dt*1.5);
       }
+      if(isHallow()) kickerGLB.rotation.z=0.12*Math.sin(celeb.t*9);   // esultanza THRILLER: ondeggia da zombie
     }
     // portiere battuto / rete che vibra; ball resta in rete
     keeper.position.y=Math.max(0,keeper.position.y-dt*2.2);   // ATTERRAGGIO: il corpo si posa (gravita'), niente freeze a mezz'aria
@@ -3030,7 +3252,13 @@ function update(dt){
     if(useGLBKeeper && keeperState!=='beaten') playKeeper('beaten');
     // PES: la palla prosegue nel path simulato DENTRO LA RETE — l'attrito viscoso la
     // frena progressivamente finche' cade a terra per gravita' (niente piu' freeze)
-    if(!isManga() && shot && shot.sim){ ballPathPos(shot.dur*shot.simRate + stateT); updateBallShadow();
+    if(!isManga() && shot && shot.sim){
+      // HALLOWEEN: PALLA INCOLLATA alla RAGNATELA — resta ferma il primo mezzo secondo,
+      // poi si stacca con easing quadratico (C1-continuo) e scivola giu' lungo il path
+      const _d=Math.max(0,stateT-0.5);
+      const tt=isHallow()? (_d<0.4? _d*_d*1.25 : _d-0.2) : stateT;
+      ballPathPos(shot.dur*shot.simRate + tt); updateBallShadow();
+      if(isHallow()) ball.rotation.x += (Math.sin(stateT*37)>0.92? 0.12:0);   // micro-scatti da palla stregata
       // trasferimento CONTINUO: mentre la palla avanza nella rete, l'onda la segue
       if(stateT<0.55 && ball.position.z<-0.05) NetSim.impulse(ball.position.x, Math.max(0.2,ball.position.y), dt*10, 0.3); }
     // ANIME: il pallone "sfonda" e prosegue oltre la linea con la scia (velocità sovrumana)
@@ -3039,10 +3267,15 @@ function update(dt){
   }
   else if(state===STATE.SAVE_ANIMATION){
     keeper.position.y=Math.max(0,keeper.position.y-dt*2.2);   // ATTERRAGGIO dopo il tuffo/salto
+    // HALLOWEEN: il mostro deluso si AFFLOSCIA (scale.y scende verso l'85%), risorge a newAim
+    if(isHallow() && useGLBKicker && kickerGLB && CharFSM.kicker.state==='sconfitta'){
+      const _ty=kickerGLB.scale.x*0.85;
+      if(kickerGLB.scale.y>_ty) kickerGLB.scale.y=Math.max(_ty, kickerGLB.scale.y-dt*0.12); }
     // CODA FISICA VERA: palo/fuori proseguono lungo il path integrato — rimbalzo dal
     // legno con restituzione reale, oppure volo fino agli SPALTI coi quicchi sui seggiolini
     if(shot && shot.sim && (shot.result==='POST'||shot.result==='MISS'||shot.parry)){
       ballPathPos(shot.dur*shot.simRate + stateT);
+      if(isHallow()) ball.rotation.x += (Math.sin(stateT*37)>0.92? 0.12:0);   // micro-scatti nel rotolamento (solo visivi)
       updateBallShadow(); pushTrail();
     }
     else if(shot && shot.result==='POST'){
@@ -3073,6 +3306,7 @@ function update(dt){
   NetSim.step(dt);
   // confetti + segmenti rete sfondata (Anime)
   updateConfetti(dt); engine.view.updateShatter(dt);
+  updateHallow(dt);                                 // ambiente HALLOWEEN (early-out negli altri stili)
 
   // ---- CAMERA cinematografica ----
   updateCamera(dt);
@@ -3140,7 +3374,10 @@ function pushTrail(){
   const N=ballTrail.userData.N;
   ballTrail.userData.parts.forEach((m,i)=>{ if(i<h.length){ m.visible=true; m.position.set(h[i].x,h[i].y,h[i].z);
     const f=1-i/N; m.material.opacity=(isManga()?0.5:0.28)*f; m.scale.setScalar(f*(isManga()?1.1:0.9)+0.1);
-    if(shot&&shot.special){ m.material.color.setHSL(((i/N)+performance.now()/450)%1,1,0.6); m.material.opacity=clamp(m.material.opacity*2.6+0.35,0,1); m.scale.multiplyScalar(1.9); }   // scia ARCOBALENO grossa
+    if(shot&&shot.special){
+      if(shot.hType==='fire'){ m.material.color.setHex(0x39ff7a); }                    // HALLOWEEN: scia di FUOCO FATUO verde
+      else m.material.color.setHSL(((i/N)+performance.now()/450)%1,1,0.6);             // scia ARCOBALENO
+      m.material.opacity=clamp(m.material.opacity*2.6+0.35,0,1); m.scale.multiplyScalar(1.9); }
   } else m.visible=false; });
 }
 function updateConfetti(dt){
@@ -3181,6 +3418,7 @@ const NetSim={
     return GFX==='manga'  ? {iter:2, kS:0.85, kD:0.30, grav:4.5, damp:0.012, anch:26,  jMul:1.8, quant:0}
          : GFX==='peluche'? {iter:2, kS:0.50, kD:0.16, grav:5.5, damp:0.055, anch:11,  jMul:1.35,quant:0}
          : GFX==='8bit'   ? {iter:3, kS:1.0,  kD:0.85, grav:2.0, damp:0.10,  anch:95,  jMul:1.2, quant:0.14}
+         : GFX==='halloween'? {iter:2, kS:0.5, kD:0.18, grav:6.5, damp:0.09, anch:12,  jMul:1.45,quant:0}   // RAGNATELA: molle e appiccicosa
          :                  {iter:3, kS:1.0,  kD:0.50, grav:3.5, damp:0.035, anch:45,  jMul:1.0, quant:0};
   },
   init(){ if(this.p||!backNet||!backNet.geometry.parameters||!backNet.userData.base) return;
@@ -3530,6 +3768,7 @@ function applyIdentity(){
     keeperFace.material.map=_faceTex(url); keeperFace.material.needsUpdate=true; }
   // dietro la porta si guarda ATTRAVERSO la rete: quasi invisibile, la scena resta pulita
   if(backNet && backNet.material){ backNet.material.opacity = isKeeper()? 0.15 : 0.9; }
+  try{ hallowHeads(); }catch(e){}                                  // in halloween le identita' restano mostruose
   applyCamFov();                                                   // FOV adattivo per ruolo/orientamento
 }
 function showReveal(poster){ const r=document.getElementById('reveal'), im=document.getElementById('revealImg');
@@ -3661,18 +3900,287 @@ function announceOutcome(r){
   announce((map[r]||r)+' '+(isKeeper()?'(sei il portiere) ':'')+ctx);
 }
 
+/* ================== HALLOWEEN: mostruoso all'ennesima potenza ==================
+   Tutto quel che segue vive SOLO quando GFX==='halloween': ogni hook fa early-out
+   su isHallow(), gli oggetti 3D sono creati UNA volta e accesi/spenti con .visible,
+   zero allocazioni per frame nei loop. Fallback e ripristini sempre garantiti. */
+let HFACE='zucca'; try{ const h=localStorage.getItem('rig_hface'); if(h==='zucca'||h==='faces') HFACE=h; }catch(e){}   // chiave NUOVA rig_hface
+// ---- RAGNATELA sulla rete: anelli concentrici + raggi + qualche ragno nero ----
+let _hwWebTex=null;
+function spiderWebTexture(){
+  if(_hwWebTex) return _hwWebTex;
+  const S=512; const c=document.createElement('canvas'); c.width=c.height=S; const x=c.getContext('2d');
+  x.clearRect(0,0,S,S); x.lineCap='round';
+  const cx=S/2, cy=S/2, R=8;                                      // 8 raggi + anelli "cascanti"
+  x.strokeStyle='rgba(230,236,248,.92)'; x.lineWidth=2.4;
+  for(let i=0;i<R;i++){ const a=i/R*6.283+0.12;
+    x.beginPath(); x.moveTo(cx,cy); x.lineTo(cx+Math.cos(a)*S*0.75, cy+Math.sin(a)*S*0.75); x.stroke(); }
+  x.lineWidth=1.7;
+  for(let ring=1; ring<=6; ring++){ const rr=ring*S*0.075+8;
+    x.beginPath();
+    for(let i=0;i<=R;i++){ const a0=(i%R)/R*6.283+0.12, a1=((i+1)%R===0? R : (i+1)%R)/R*6.283+0.12;
+      const px=cx+Math.cos(a0)*rr, py=cy+Math.sin(a0)*rr;
+      if(i===0) x.moveTo(px,py);
+      else { const pa=(i-1)/R*6.283+0.12;                          // arco che "pende" tra due raggi (quadratica verso l'esterno)
+        const mx=cx+Math.cos((pa+a0)/2)*rr*1.12, my=cy+Math.sin((pa+a0)/2)*rr*1.12;
+        x.quadraticCurveTo(mx,my,px,py); } }
+    x.stroke(); }
+  // fili di luce sottili + polvere
+  x.strokeStyle='rgba(255,255,255,.5)'; x.lineWidth=0.7;
+  for(let i=0;i<R;i++){ const a=i/R*6.283+0.12;
+    x.beginPath(); x.moveTo(cx,cy); x.lineTo(cx+Math.cos(a)*S*0.75,cy+Math.sin(a)*S*0.75); x.stroke(); }
+  // qualche RAGNO nero appeso
+  const spider=(sx,sy,r)=>{ x.fillStyle='#0a0a10';
+    x.beginPath(); x.arc(sx,sy,r,0,6.283); x.fill();
+    x.beginPath(); x.arc(sx,sy-r*1.1,r*0.6,0,6.283); x.fill();
+    x.strokeStyle='#0a0a10'; x.lineWidth=1.4;
+    for(let l=0;l<8;l++){ const a=-0.5+ (l<4? l*0.36 : Math.PI-((l-4)*0.36));
+      x.beginPath(); x.moveTo(sx,sy); x.lineTo(sx+Math.cos(a)*r*2.6, sy+Math.sin(a)*r*2.6+r); x.stroke(); }
+    x.strokeStyle='rgba(230,236,248,.6)'; x.lineWidth=1;           // filo da cui pende
+    x.beginPath(); x.moveTo(sx,sy-r*8); x.lineTo(sx,sy-r*1.6); x.stroke(); };
+  spider(S*0.2,S*0.28,7); spider(S*0.76,S*0.62,9); spider(S*0.6,S*0.16,5);
+  const t=new THREE.CanvasTexture(c); t.wrapS=t.wrapT=THREE.RepeatWrapping; t.repeat.set(3,1.6);
+  _hwWebTex=t; return t;
+}
+// ---- TESTA DI ZUCCA intagliata (sprite-faccia in halloween) ----
+let _hwPumpkinTex=null;
+function pumpkinFaceTexture(){
+  if(_hwPumpkinTex) return _hwPumpkinTex;
+  const S=256; const c=document.createElement('canvas'); c.width=c.height=S; const x=c.getContext('2d');
+  x.clearRect(0,0,S,S);
+  const g=x.createRadialGradient(S*0.42,S*0.4,20,S/2,S/2,S*0.48);
+  g.addColorStop(0,'#ff9b3d'); g.addColorStop(.7,'#e2670f'); g.addColorStop(1,'#8a3a04');
+  x.fillStyle=g; x.beginPath(); x.ellipse(S/2,S*0.55,S*0.44,S*0.4,0,0,6.283); x.fill();
+  x.strokeStyle='rgba(120,40,0,.55)'; x.lineWidth=4;                       // venature
+  for(let v=-2;v<=2;v++){ x.beginPath(); x.ellipse(S/2+v*S*0.13,S*0.55,S*0.12,S*0.38,0,0,6.283); x.stroke(); }
+  x.fillStyle='#2f5b1e'; x.fillRect(S/2-8,S*0.08,16,26);                   // picciolo
+  x.shadowColor='#ffe45e'; x.shadowBlur=16; x.fillStyle='#ffe45e';         // intagli LUMINOSI
+  const tri=(ax,ay,bx,by,cx2,cy2)=>{ x.beginPath(); x.moveTo(ax,ay); x.lineTo(bx,by); x.lineTo(cx2,cy2); x.closePath(); x.fill(); };
+  tri(S*0.28,S*0.52,S*0.44,S*0.52,S*0.36,S*0.36);                          // occhio sx
+  tri(S*0.56,S*0.52,S*0.72,S*0.52,S*0.64,S*0.36);                          // occhio dx
+  x.beginPath(); x.moveTo(S*0.24,S*0.68);                                  // bocca dentata
+  for(let i=0;i<=8;i++){ const px=S*0.24+i*S*0.065, py=S*0.68+((i%2)?S*0.075:0)+Math.sin(i)*2; x.lineTo(px,py); }
+  x.lineTo(S*0.76,S*0.82); x.lineTo(S*0.24,S*0.82); x.closePath(); x.fill();
+  x.shadowBlur=0;
+  const t=new THREE.CanvasTexture(c); t.colorSpace=THREE.SRGBColorSpace;
+  _hwPumpkinTex=t; return t;
+}
+// ---- faccia originale TINTA di verde cadaverico (opzione rig_hface='faces') ----
+const _hwGreenCache={};
+function greenFaceTexture(origTex){
+  const img=origTex && origTex.image;
+  const key=(img && (img.src||img.currentSrc)) || 'anon';
+  if(_hwGreenCache[key]) return _hwGreenCache[key];
+  const S=256; const c=document.createElement('canvas'); c.width=c.height=S; const x=c.getContext('2d');
+  const t=new THREE.CanvasTexture(c); t.colorSpace=THREE.SRGBColorSpace;
+  const paint=(im)=>{ try{ x.clearRect(0,0,S,S); x.drawImage(im,0,0,S,S);
+    x.globalCompositeOperation='multiply'; x.fillStyle='#8fbf6a'; x.fillRect(0,0,S,S);   // verde cadaverico
+    x.globalCompositeOperation='destination-in'; x.drawImage(im,0,0,S,S);                // conserva la trasparenza originale
+    x.globalCompositeOperation='source-over'; t.needsUpdate=true; }catch(e){} };
+  if(img && img.complete!==false && img.width){ paint(img); }
+  else if(img && img.src){ const im2=new Image(); im2.onload=()=>paint(im2); im2.src=img.src; }
+  else return pumpkinFaceTexture();                                       // texture non pronta: zucca di riserva
+  _hwGreenCache[key]=t; return t;
+}
+// ---- teste halloween su kicker/keeper: zucca o faccia verde, con ripristino ----
+function hallowHeads(){
+  [kickerFace,keeperFace].forEach(sp=>{ if(!sp||!sp.material) return;
+    if(isHallow()){
+      if(!sp.userData.hwSaved){ sp.userData.origMap=sp.material.map; sp.userData.hwSaved=true; }
+      sp.material.map = (HFACE==='faces')? greenFaceTexture(sp.userData.origMap) : pumpkinFaceTexture();
+      sp.material.needsUpdate=true;
+    } else if(sp.userData.hwSaved){
+      sp.material.map=sp.userData.origMap; sp.userData.hwSaved=false; sp.material.needsUpdate=true;
+    } });
+}
+// ---- ri-vestizione per stile: halloween = zombie/vampiro (dressGLB e' ri-eseguibile) ----
+function redressForGFX(){
+  if(kickerInner) dressGLB(kickerInner, isHallow()? 'zombie' :'outfield');
+  if(keeperInner) dressGLB(keeperInner, isHallow()? 'vampire':'keeper');
+}
+// ---- PALLA MALEDETTA: zucca scura col pentacolo verde acido e occhi luminosi ----
+let _hwBallTex=null;
+function hallowBallTexture(){
+  if(_hwBallTex) return _hwBallTex;
+  const S=256; const c=document.createElement('canvas'); c.width=c.height=S; const x=c.getContext('2d');
+  const g=x.createLinearGradient(0,0,S,S); g.addColorStop(0,'#b34a08'); g.addColorStop(1,'#5e2202');
+  x.fillStyle=g; x.fillRect(0,0,S,S);
+  x.strokeStyle='rgba(60,18,0,.7)'; x.lineWidth=5;                          // venature della zucca
+  for(let v=0;v<5;v++){ x.beginPath(); x.ellipse(S/2,S/2,S*0.12+v*S*0.09,S*0.46,0,0,6.283); x.stroke(); }
+  x.strokeStyle='#7dff2e'; x.lineWidth=4; x.shadowColor='#7dff2e'; x.shadowBlur=9;   // PENTACOLO verde acido
+  x.beginPath(); x.arc(S/2,S/2,58,0,6.283); x.stroke();
+  x.beginPath();
+  for(let i=0;i<=5;i++){ const a=-Math.PI/2 + i*4*Math.PI/5;                 // stella a 5 punte (salto di 2 vertici)
+    const px=S/2+Math.cos(a)*54, py=S/2+Math.sin(a)*54; i? x.lineTo(px,py):x.moveTo(px,py); }
+  x.stroke();
+  x.fillStyle='#ffe45e';                                                     // 2 occhi luminosi che ti fissano
+  x.beginPath(); x.arc(S*0.30,S*0.22,9,0,6.283); x.fill();
+  x.beginPath(); x.arc(S*0.70,S*0.22,9,0,6.283); x.fill();
+  x.shadowBlur=0; x.fillStyle='#1a0a00';
+  x.beginPath(); x.arc(S*0.30,S*0.22,3.5,0,6.283); x.fill();
+  x.beginPath(); x.arc(S*0.70,S*0.22,3.5,0,6.283); x.fill();
+  const t=new THREE.CanvasTexture(c); t.colorSpace=THREE.SRGBColorSpace;
+  _hwBallTex=t; return t;
+}
+// ---- palla fantasma: ripristino di opacita'/transparent a fine volo ----
+function ghostRestore(){ if(!ball) return; const m=ball.material;
+  if(m.userData.wasTransp!==undefined){ m.transparent=m.userData.wasTransp; delete m.userData.wasTransp; }
+  if(m.opacity!==1){ m.opacity=1; m.needsUpdate=true; } }
+// ---- FOG/LUCI: notte stregata con salvataggio e RIPRISTINO dei valori originali ----
+let _hwMood=null;
+function hallowMood(on){
+  if(!scene || !scene.fog || !lights.key) return;
+  if(!_hwMood){ _hwMood={ fog:{c:scene.fog.color.getHex(), n:scene.fog.near, f:scene.fog.far},
+    bg:(scene.background&&scene.background.getHex)? scene.background.getHex():0x040c1c,
+    key:{c:lights.key.color.getHex(), i:lights.key.intensity},
+    rim:{c:lights.rim.color.getHex(), i:lights.rim.intensity},
+    fill:{c:lights.fill.color.getHex(), i:lights.fill.intensity},
+    hemi:{s:lights.hemi.color.getHex(), g:lights.hemi.groundColor.getHex(), i:lights.hemi.intensity},
+    amb:{c:lights.amb.color.getHex(), i:lights.amb.intensity} }; }
+  const M=_hwMood;
+  if(on){ scene.fog.color.setHex(0x180a2c); scene.fog.near=16; scene.fog.far=46;   // fog denso violaceo
+    if(scene.background&&scene.background.setHex) scene.background.setHex(0x0a0416);
+    lights.key.color.setHex(0xffc08a); lights.key.intensity=M.key.i*0.9;           // riflettori arancio-caldi
+    lights.rim.color.setHex(0xff7518); lights.rim.intensity=M.rim.i*1.5;
+    lights.fill.color.setHex(0x8a6bff); lights.fill.intensity=M.fill.i*0.8;
+    lights.hemi.color.setHex(0x7a5bcf); lights.hemi.groundColor.setHex(0x1c0a26); lights.hemi.intensity=M.hemi.i*0.85;
+    lights.amb.color.setHex(0x35205a);
+  } else { scene.fog.color.setHex(M.fog.c); scene.fog.near=M.fog.n; scene.fog.far=M.fog.f;
+    if(scene.background&&scene.background.setHex) scene.background.setHex(M.bg);
+    lights.key.color.setHex(M.key.c); lights.key.intensity=M.key.i;
+    lights.rim.color.setHex(M.rim.c); lights.rim.intensity=M.rim.i;
+    lights.fill.color.setHex(M.fill.c); lights.fill.intensity=M.fill.i;
+    lights.hemi.color.setHex(M.hemi.s); lights.hemi.groundColor.setHex(M.hemi.g); lights.hemi.intensity=M.hemi.i;
+    lights.amb.color.setHex(M.amb.c); lights.amb.intensity=M.amb.i; }
+}
+// ---- AMBIENTE: luna, lapidi, nebbia, pipistrelli, ragni — creati UNA volta ----
+// budget sprite extra: 24 pipistrelli + 4 ragni + 3 piani nebbia + luna = 32 (<=40)
+let HW=null;
+function _hwSmokeTex(){
+  const S=256; const c=document.createElement('canvas'); c.width=c.height=S; const x=c.getContext('2d');
+  x.clearRect(0,0,S,S);
+  for(let i=0;i<26;i++){ const px=Math.random()*S, py=Math.random()*S, r=30+Math.random()*60;
+    const g=x.createRadialGradient(px,py,0,px,py,r);
+    g.addColorStop(0,'rgba(190,180,220,.14)'); g.addColorStop(1,'rgba(190,180,220,0)');
+    x.fillStyle=g; x.beginPath(); x.arc(px,py,r,0,6.283); x.fill();
+    // tile seamless: replica i blob oltre i bordi
+    x.beginPath(); x.arc(px-S,py,r,0,6.283); x.fill(); x.beginPath(); x.arc(px+S,py,r,0,6.283); x.fill(); }
+  const t=new THREE.CanvasTexture(c); t.wrapS=t.wrapT=THREE.RepeatWrapping; return t;
+}
+function _hwBatTex(){
+  const c=document.createElement('canvas'); c.width=64; c.height=32; const x=c.getContext('2d');
+  x.fillStyle='#08060c';
+  x.beginPath(); x.ellipse(32,18,5,7,0,0,6.283); x.fill();                   // corpo
+  x.beginPath(); x.moveTo(32,16);                                            // ala sx a festoni
+  x.quadraticCurveTo(14,2,2,10); x.quadraticCurveTo(10,14,8,20); x.quadraticCurveTo(18,16,22,22); x.quadraticCurveTo(27,18,32,22); x.fill();
+  x.beginPath(); x.moveTo(32,16);                                            // ala dx
+  x.quadraticCurveTo(50,2,62,10); x.quadraticCurveTo(54,14,56,20); x.quadraticCurveTo(46,16,42,22); x.quadraticCurveTo(37,18,32,22); x.fill();
+  x.beginPath(); x.moveTo(28,12); x.lineTo(30,7); x.lineTo(31,12); x.fill(); // orecchie
+  x.beginPath(); x.moveTo(36,12); x.lineTo(34,7); x.lineTo(33,12); x.fill();
+  return new THREE.CanvasTexture(c);
+}
+function _hwSpiderTex(){
+  const S=48; const c=document.createElement('canvas'); c.width=c.height=S; const x=c.getContext('2d');
+  x.strokeStyle='#0a0a10'; x.lineWidth=2.4; x.fillStyle='#0a0a10';
+  for(let l=0;l<8;l++){ const a=l/8*6.283+0.35;
+    x.beginPath(); x.moveTo(S/2,S/2); x.lineTo(S/2+Math.cos(a)*19, S/2+Math.sin(a)*19); x.stroke(); }
+  x.beginPath(); x.arc(S/2,S/2+3,8,0,6.283); x.fill();
+  x.beginPath(); x.arc(S/2,S/2-7,5,0,6.283); x.fill();
+  x.fillStyle='#ff3b3b'; x.fillRect(S/2-1.5,S/2+1,3,3);                     // marchio rosso
+  return new THREE.CanvasTexture(c);
+}
+function hallowEnv(on){
+  if(!scene) return;
+  if(!HW && !on) return;                                    // mai creato e non richiesto: zero lavoro
+  if(!HW){
+    HW={grp:new THREE.Group(), fogs:[], bats:[], spiders:[], t:0, boltT:9+Math.random()*7, on:false};
+    // LUNA arancione gigante dietro la porta, davanti al backdrop (z=-16.4)
+    const moonC=document.createElement('canvas'); moonC.width=moonC.height=256; const mx2=moonC.getContext('2d');
+    const mg=mx2.createRadialGradient(108,108,18,128,128,126);
+    mg.addColorStop(0,'#ffd9a0'); mg.addColorStop(.5,'#ff9b3d'); mg.addColorStop(.82,'#e57616'); mg.addColorStop(1,'rgba(217,106,20,0)');
+    mx2.fillStyle=mg; mx2.beginPath(); mx2.arc(128,128,126,0,6.283); mx2.fill();
+    mx2.fillStyle='rgba(160,70,10,.3)';
+    [[-34,-20,20],[30,14,15],[-6,44,11]].forEach(([dx,dy,r])=>{ mx2.beginPath(); mx2.arc(128+dx,128+dy,r,0,6.283); mx2.fill(); });
+    const moonT=new THREE.CanvasTexture(moonC); moonT.colorSpace=THREE.SRGBColorSpace;
+    const moon=new THREE.Mesh(new THREE.CircleGeometry(3.9,40),
+      new THREE.MeshBasicMaterial({map:moonT, transparent:true, fog:false, toneMapped:false, depthWrite:false}));
+    moon.position.set(5.6,11.6,-16.4); HW.grp.add(moon); HW.moon=moon;
+    // 6 LAPIDI grigie ai bordi del campo
+    const gGeo=new THREE.BoxGeometry(0.62,0.95,0.14);
+    const gMat=new THREE.MeshStandardMaterial({color:0x8a8f99, roughness:0.92, metalness:0.05});
+    [[-9.5,-2.6,0.10],[10.2,-1.2,-0.14],[-11.2,1.4,0.07],[11.6,2.8,0.12],[-12.2,-0.4,-0.09],[9.2,2.2,0.05]].forEach(([gx,gz,tilt])=>{
+      const grave=new THREE.Mesh(gGeo,gMat); grave.position.set(gx,0.44,gz);
+      grave.rotation.y=(gx>0?-1:1)*0.5+tilt*3; grave.rotation.z=tilt; HW.grp.add(grave);
+      const cap=new THREE.Mesh(new THREE.CylinderGeometry(0.31,0.31,0.14,10,1,false,0,Math.PI), gMat);   // testa smussata
+      cap.rotation.set(0,grave.rotation.y,Math.PI/2); cap.position.set(gx,0.92,gz); cap.rotation.x=tilt; HW.grp.add(cap); });
+    // NEBBIA bassa: 3 piani orizzontali con fumo che scorre lentissimo
+    const smokeT=_hwSmokeTex();
+    [[0.28,3,0.010,0.20],[0.6,7,-0.007,0.15],[0.95,11,0.005,0.11]].forEach(([fy,fz,v,op])=>{
+      const tx=smokeT.clone(); tx.needsUpdate=true; tx.wrapS=tx.wrapT=THREE.RepeatWrapping; tx.repeat.set(3,1);
+      const f=new THREE.Mesh(new THREE.PlaneGeometry(46,12),
+        new THREE.MeshBasicMaterial({map:tx, transparent:true, opacity:op, depthWrite:false}));
+      f.rotation.x=-Math.PI/2; f.position.set(0,fy,fz); f.userData.v=v; HW.grp.add(f); HW.fogs.push(f); });
+    // PIPISTRELLI: pool di 24 sprite che attraversano il cielo (a qualita' bassa se ne vedono 12)
+    const batT=_hwBatTex(); const batM=new THREE.SpriteMaterial({map:batT, transparent:true, depthWrite:false});
+    for(let i=0;i<24;i++){ const b=new THREE.Sprite(batM.clone());
+      b.scale.set(1.1,0.55,1);
+      b.position.set(rand(-26,26), rand(7,12.5), rand(-15.5,-12.5));
+      b.userData={sp:rand(1.6,4.2), dir:Math.random()<0.5?-1:1, y0:0, fq:rand(1.5,3.4), ph:rand(0,6.283)};
+      b.userData.y0=b.position.y;
+      HW.grp.add(b); HW.bats.push(b); }
+    // 4 RAGNI sulla rete: scattano quando la rete e' viva (NetSim.active)
+    const spT=_hwSpiderTex(); const spM=new THREE.SpriteMaterial({map:spT, transparent:true, depthWrite:false});
+    [[-2.4,1.9],[1.7,0.8],[-0.6,1.3],[2.8,2.0]].forEach(([sx,sy])=>{
+      const s=new THREE.Sprite(spM.clone()); s.scale.set(0.26,0.26,1);
+      s.position.set(sx,sy,-GD-0.03);
+      s.userData={x0:sx,y0:sy,tx:sx,ty:sy,jt:0};
+      HW.grp.add(s); HW.spiders.push(s); });
+    scene.add(HW.grp);
+  }
+  HW.on=!!on; HW.grp.visible=!!on;
+}
+// ---- update per-frame dell'ambiente (early-out fuori da halloween: costo zero) ----
+function updateHallow(dt){
+  if(!HW || !HW.on) return;
+  HW.t+=dt;
+  for(let i=0;i<HW.fogs.length;i++){ const f=HW.fogs[i]; f.material.map.offset.x+=f.userData.v*dt; }   // nebbia che scivola
+  const nB = highDetailMode()? HW.bats.length : (HW.bats.length>>1);       // adaptive: dimezza i pipistrelli
+  for(let i=0;i<HW.bats.length;i++){ const b=HW.bats[i];
+    if(i>=nB){ if(b.visible) b.visible=false; continue; }
+    if(!b.visible) b.visible=true;
+    const u=b.userData;
+    b.position.x+=u.sp*u.dir*dt;
+    b.position.y=u.y0+Math.sin(HW.t*u.fq+u.ph)*1.35;
+    b.material.rotation=Math.sin(HW.t*u.fq*2.2+u.ph)*0.28;                 // battito d'ali
+    if(u.dir>0 && b.position.x>27) b.position.x=-27;
+    else if(u.dir<0 && b.position.x<-27) b.position.x=27; }
+  if(NetSim.active){ for(let i=0;i<HW.spiders.length;i++){ const s=HW.spiders[i]; const u=s.userData;
+      u.jt-=dt;
+      if(u.jt<=0){ u.jt=0.09+Math.random()*0.16; u.tx=clamp(u.x0+rand(-0.7,0.7),-HALF+0.3,HALF-0.3); u.ty=clamp(u.y0+rand(-0.5,0.5),0.3,GH-0.15); }
+      s.position.x+=(u.tx-s.position.x)*Math.min(1,dt*14);
+      s.position.y+=(u.ty-s.position.y)*Math.min(1,dt*14); } }
+  // FULMINI: ogni 9-16 secondi flash bianco + tuono + shake
+  HW.boltT-=dt;
+  if(HW.boltT<=0){ HW.boltT=9+Math.random()*7;
+    const el=document.getElementById('hwFlash');
+    if(el){ el.classList.remove('on'); void el.offsetWidth; el.classList.add('on'); }
+    try{ Sound.thunder(); engine.view.shake(0.5); }catch(e){} }
+}
+
 /* ----- STILE: PES (realistico) · HOLLY & BENJI (anime) · PELUCHE · 8-BIT ----- */
 // texture stadio/curva per lo stile corrente (fallback sempre alla PES)
 function stadiumTexForGFX(){
   return GFX==='manga'  ? (stadiumTexANIME||stadiumTexPES)
        : GFX==='peluche'? (stadiumTexPEL ||stadiumTexPES)
        : GFX==='8bit'   ? (stadiumTex8BIT||stadiumTexPES)
+       : GFX==='halloween'? (stadiumTexHALLOW||stadiumTexPES)
        : stadiumTexPES;
 }
 function endTexForGFX(){
   return GFX==='manga'  ? (endTexANIME||endTexPES)
        : GFX==='peluche'? (endTexPEL  ||endTexPES)
        : GFX==='8bit'   ? (endTex8BIT ||endTexPES)
+       : GFX==='halloween'? (endTexHALLOW||endTexPES)
        : endTexPES;
 }
 // DENSITA' DI PIXEL: l'8-BIT renderizza a BASSA risoluzione e il browser ingrandisce
@@ -3684,7 +4192,7 @@ function applyPixelDensity(){
   renderer.setSize(window.innerWidth, window.innerHeight);
 }
 function applyGFX(){
-  // personaggi: PES=PBR realistico · MANGA=toon 4 gradini · PELUCHE=toon 3 pastello · 8BIT=toon 2 flat
+  // personaggi: PES=PBR realistico · MANGA=toon 4 gradini · PELUCHE=toon 3 pastello · 8BIT=toon 2 flat · HALLOWEEN=toon 4 mostruoso
   if(GFX==='pes'){ untoonify(keeperInner); untoonify(kickerInner); }
   else { toonify(keeperInner,GFX); toonify(kickerInner,GFX); }
   if(stadiumMat){ const t=stadiumTexForGFX();
@@ -3692,6 +4200,17 @@ function applyGFX(){
   if(endMat){ const t2=endTexForGFX();
     if(t2 && endMat.map!==t2){ endMat.map=t2; endMat.needsUpdate=true; } }
   document.body.classList.toggle('manga', isManga());
+  document.body.classList.toggle('hallow', isHallow());
+  // ---- HALLOWEEN: rete-ragnatela, divise mostro, teste, palla maledetta, fog/luci, ambiente ----
+  try{
+    if(netMat){ const want = isHallow()? spiderWebTexture() : netMat.userData.origMap;
+      if(want && netMat.map!==want){ netMat.map=want; netMat.needsUpdate=true; } }
+    redressForGFX();                       // zombie/vampire in halloween, divise normali altrove
+    hallowHeads();                         // teste zucca (o facce verdi) e ripristino
+    applyBallSkin();                       // palla-zucca maledetta in halloween, skin scelta altrove
+    hallowMood(isHallow());                // fog denso violaceo + riflettori arancio (con ripristino)
+    hallowEnv(isHallow());                 // luna/lapidi/nebbia/pipistrelli/ragni (creati una volta, toggle visible)
+  }catch(e){}
   try{ applyPixelDensity(); if(engine&&engine.view) engine.view._sizeFx(); }catch(e){}   // risoluzione per stile
   document.querySelectorAll('.stbtn').forEach(b=>b.classList.toggle('active', b.dataset.gfx===GFX));
 }
@@ -3893,6 +4412,7 @@ function renderSettings(){
   sw('#setShake',ACCESS.shake); sw('#setSlow',ACCESS.slowmo);
   const vm=document.getElementById('volMVal'); if(vm) vm.textContent=Math.round(VOLS.music*100)+'%';
   const vs=document.getElementById('volSVal'); if(vs) vs.textContent=Math.round(VOLS.sfx*100)+'%';
+  const hf=document.getElementById('hfaceVal'); if(hf) hf.textContent=(HFACE==='faces')?'FACCE':'ZUCCA';
   applyVols();
   document.querySelectorAll('.ballopt').forEach(b=>{ const k=b.dataset.ball, un=Progress.ballUnlocked(k);
     b.classList.toggle('locked',!un); b.classList.toggle('active',BALLSKIN===k);
@@ -3961,6 +4481,10 @@ document.getElementById('setVoice').addEventListener('click',e=>{ e.stopPropagat
   document.getElementById('setSlow').addEventListener('click',e=>{ e.stopPropagation(); ACCESS.slowmo=!ACCESS.slowmo; saveAccess(); renderSettings(); });
   document.getElementById('setVolM').addEventListener('click',e=>{ e.stopPropagation(); VOLS.music=cycleVol(VOLS.music); applyVols(); renderSettings(); Sound.sfx(700,.05); });
   document.getElementById('setVolS').addEventListener('click',e=>{ e.stopPropagation(); VOLS.sfx=cycleVol(VOLS.sfx); applyVols(); renderSettings(); Sound.sfx(700,.05); });
+  // 🎃 TESTE HALLOWEEN: ZUCCA intagliata oppure FACCE originali tinte di verde (chiave nuova rig_hface)
+  document.getElementById('setHFace').addEventListener('click',e=>{ e.stopPropagation();
+    HFACE=(HFACE==='zucca')?'faces':'zucca'; try{ localStorage.setItem('rig_hface',HFACE); }catch(err){}
+    renderSettings(); try{ hallowHeads(); }catch(err){} Sound.sfx(700,.05); });
   document.getElementById('specBtn').addEventListener('click',e=>{ e.stopPropagation();
     if(specCharges>0){ specCharges--; specUsed++; armSpecial(); specHUD(); } });
   document.getElementById('seedLine').addEventListener('click',e=>{ e.stopPropagation();
@@ -4060,8 +4584,8 @@ class Input {
     const tg=e.target; if(tg && (tg.tagName==='BUTTON'||tg.tagName==='INPUT'||tg.tagName==='A')) return;
     const set=document.getElementById('settings'); if(set && set.classList.contains('show')) return;
     const k=e.key.toLowerCase();
-    if(k==='g'){ setGFX(GFX_LIST[(GFX_LIST.indexOf(GFX)+1)%GFX_LIST.length]);   // G = ciclo dei 4 stili
-      const names={pes:'PES 🎮',manga:'HOLLY & BENJI 🎬',peluche:'PELUCHE 🧸','8bit':'8-BIT 👾'};
+    if(k==='g'){ setGFX(GFX_LIST[(GFX_LIST.indexOf(GFX)+1)%GFX_LIST.length]);   // G = ciclo dei 5 stili
+      const names={pes:'PES 🎮',manga:'HOLLY & BENJI 🎬',peluche:'PELUCHE 🧸','8bit':'8-BIT 👾',halloween:'HALLOWEEN 🎃'};
       showTelecro('STILE: '+names[GFX]); return; }
     if(state===STATE.MENU_SCREEN||state===STATE.GAME_OVER){
       if(k===' '||k==='enter'){ e.preventDefault(); startGame(); } return; }
@@ -4279,6 +4803,14 @@ try{ const _kd=new URLSearchParams(location.search).get('kdbg'); if(_kd==='1'||_
       return {active:NetSim.active, maxU:+Math.sqrt(m).toFixed(3), minDist:+Math.sqrt(dm).toFixed(3)}; },
     get fsm(){ return { kicker:{...CharFSM.kicker}, keeper:{...CharFSM.keeper} }; },
     setGFX(g){ return setGFX(g); }, netKick(J){ NetSim.impulse(-2.4,1.2,J||8); },
+    // ---- hook di test HALLOWEEN: arma lo speciale + telemetria di ripristino ----
+    armSpec(){ return armSpecial(); }, get gfx(){ return GFX; },
+    get ballFx(){ return { op:+ball.material.opacity.toFixed(3), tr:!!ball.material.transparent,
+      hType:(shot&&shot.hType)||'', hallowBall:!!(_hwBallTex && ball.material.map===_hwBallTex) }; },
+    get hallowDbg(){ return { netWeb:!!(netMat && netMat.userData.origMap && netMat.map!==netMat.userData.origMap),
+      envOn:!!(HW&&HW.on), bats:HW?HW.bats.filter(b=>b.visible).length:0,
+      faceHW:!!(kickerFace&&kickerFace.userData.hwSaved), keeperFaceHW:!!(keeperFace&&keeperFace.userData.hwSaved),
+      fog:scene&&scene.fog? scene.fog.color.getHexString():'', hface:HFACE }; },
     get netDbg(){ if(!NetSim.p) return null;
       const base=backNet.userData.base; let m=0,mi=0;
       for(let i=0;i<NetSim.n;i++){ const k=i*3;
@@ -4340,12 +4872,14 @@ function boot(){
   grab('stadiumPeluche',CONFIG.ASSETS.stadiumPeluche,true);         // stile PELUCHE (Canva)
   grab('stadiumEndPeluche',CONFIG.ASSETS.stadiumEndPeluche,true);
   grab('stadium8bit',CONFIG.ASSETS.stadium8bit,true);               // stile 8-BIT (Canva)
-  grab('stadiumEnd8bit',CONFIG.ASSETS.stadiumEnd8bit,true); started=true; tryFinish();   // sfondi stadio Canva (fallback procedurale)
+  grab('stadiumEnd8bit',CONFIG.ASSETS.stadiumEnd8bit,true);
+  grab('stadiumHalloween',CONFIG.ASSETS.stadiumHalloween,true);     // stile HALLOWEEN (asset non ancora presenti:
+  grab('stadiumEndHalloween',CONFIG.ASSETS.stadiumEndHalloween,true); started=true; tryFinish();   // il 404 cade sul cimitero procedurale)
 
   let finished=false;
   function finish(){
     if(finished) return; finished=true;
-    buildScene(textures); resize(); addEventListener('resize',resize);
+    buildScene(textures); applyGFX(); resize(); addEventListener('resize',resize);   // ri-applica lo stile ORA che la scena esiste (rete/fog/ambiente halloween al boot)
     // mobile: la barra indirizzi che appare/scompare cambia il viewport VISIVO senza
     // sempre emettere window.resize -> aggancia anche visualViewport (no doppio danno: resize e' idempotente)
     if(window.visualViewport) visualViewport.addEventListener('resize',resize);
