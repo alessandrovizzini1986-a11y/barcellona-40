@@ -1496,12 +1496,16 @@ function startKickerKick(){
   const r=kickerAct.run;
   if(r){ r.loop=THREE.LoopRepeat; fadeKicker(r,1.2,0.08); kickPhase='runup'; kickPhaseT=0; }  // fadeKicker non tocca la fase
 }
+// velocita' dello SWING legata alla potenza del tiro: un tiro forte e' un colpo
+// rapido, un cucchiaio e' un tocco morbido (vale anche in moviola: il mixer
+// avanza gia' a meta' velocita', il rapporto resta identico al live)
+function kickSwingTS(){ return 0.85+0.5*clamp((shot&&shot.power!=null)?shot.power:0.7,0,1); }
 // lancia la clip di calcio vera e propria (chiamata da updateKicker a fine corsa)
 function fireKickClip(){
   const a=kickerAct.kick; if(!a) return;
   CharFSM.set('kicker','tiro');                              // FSM: impatto col pallone
   for(const k in kickerAct){ const o=kickerAct[k]; if(o&&o!==a&&o.isRunning&&o.isRunning()) o.fadeOut(0.06); }
-  a.stop(); a.reset(); a.enabled=true; a.paused=false; a.timeScale=1; a.loop=THREE.LoopOnce; a.clampWhenFinished=true;
+  a.stop(); a.reset(); a.enabled=true; a.paused=false; a.timeScale=kickSwingTS(); a.loop=THREE.LoopOnce; a.clampWhenFinished=true;
   a.time=KICK_START_OFFSET;                                 // parte gia' in caricamento gamba
   a.setEffectiveWeight(1); a.play();
   kickPhase='kick'; kickPhaseT=0;
@@ -2192,6 +2196,9 @@ function shoot(){
          parry:!!parrySim, parrySim, parryCut, parryGoal, parryWood,   // RESPINTA fisica dei guantoni
          guess, guessY:guessYOut, keeperFrom:keeper.position.x, reach, result, resolved:false,
          reaction: special?CONFIG.reactionMin/1000:(gamble?reactOf()*0.45:reactOf()), power:p, diveSide, diveHigh, curlSign:Math.sign(curl)||1, special, style,
+         // IL COLPO GUIDA LA PALLA: il corpo ruota verso il bersaglio (la gamba
+         // attraversa il pallone nella direzione del tiro, live e moviola)
+         kickYaw: Math.atan2(ball.position.x-target.x, ball.position.z-target.z),
          windup: useGLBKicker?KICK_WINDUP_GLB:KICK_WINDUP_FALLBACK, launched:false };   // RINCORSA: la palla parte al contatto
   setState(STATE.BALL_IN_FLIGHT);
   kickT=0;                                      // lean procedurale (fallback)
@@ -2267,6 +2274,7 @@ function cpuKick(){
          guess:keeper.position.x, guessY:1.0, keeperFrom:keeper.position.x,
          reach:0, result:null, resolved:false, humanDive:false,
          reaction:99, power:p, diveSide:0, diveHigh:0, curlSign:Math.sign(curl)||1, special:false, style,
+         kickYaw: Math.atan2(ball.position.x-target.x, ball.position.z-target.z),   // anche la CPU colpisce NELLA direzione del tiro
          // FINTA: a livello alto la CPU spezza la rincorsa (windup allungato) -> non ti fidare del ritmo
          windup:(useGLBKicker?KICK_WINDUP_GLB:KICK_WINDUP_FALLBACK)*(rng()<0.20+lvl*0.28? rr(1.25,1.8):1), launched:false };
   // esito di default "nessun tuffo": legni e fuori arrivano dalla GEOMETRIA simulata
@@ -3048,21 +3056,22 @@ function updateKicker(dt){
     // poi clip kick col contatto sincronizzato al lancio, e SLANCIO d'inerzia dopo.
     if(kickerGLB && kickPhase==='runup'){
       const wind=(shot&&shot.windup)||KICK_WINDUP_GLB;
-      const lead=Math.max(0.06,KICK_CONTACT-KICK_START_OFFSET);       // ultimo passo = clip kick
+      const ts=kickSwingTS(), lead=Math.max(0.05,(KICK_CONTACT-KICK_START_OFFSET)/ts);  // ultimo passo = clip kick (swing scalato con la potenza)
       const tRun=Math.max(0.05,wind-lead);
       const p=clamp(kickPhaseT/tRun,0,1), e=p*p*(3-2*p);              // accelera, arriva lanciato
+      const yawT=(shot&&shot.kickYaw)||0;                             // il corpo si apre VERSO il bersaglio del tiro
       kickerGLB.position.x=lerp(KICK_STANCE.x,KICK_PLANT.x,e);
       kickerGLB.position.z=lerp(KICK_STANCE.z,KICK_PLANT.z,e);
-      kickerGLB.rotation.y=lerp(KICK_STANCE.yaw,0,e);
+      kickerGLB.rotation.y=lerp(KICK_STANCE.yaw,yawT,e);
       if(kickPhaseT>=tRun) fireKickClip();                            // contatto = lancio palla
       return;
     }
     if(kickerGLB && kickPhase==='kick'){
-      const lead=Math.max(0.06,KICK_CONTACT-KICK_START_OFFSET);
+      const ts=kickSwingTS(), lead=Math.max(0.05,(KICK_CONTACT-KICK_START_OFFSET)/ts);
       if(kickPhaseT>lead){ const q=clamp((kickPhaseT-lead)/0.45,0,1), e=1-(1-q)*(1-q); // slancio che decelera
         kickerGLB.position.x=KICK_PLANT.x;
         kickerGLB.position.z=lerp(KICK_PLANT.z,KICK_FOLLOW_Z,e);
-        kickerGLB.rotation.y=0; }
+        kickerGLB.rotation.y=(shot&&shot.kickYaw)||0; }               // il follow-through resta aperto sul tiro
     }
     return; }
   // fallback procedurale: lean avanti e ritorno
@@ -3818,6 +3827,14 @@ try{ const _kd=new URLSearchParams(location.search).get('kdbg'); if(_kd==='1'||_
     get glb(){return {kicker:useGLBKicker,keeper:useGLBKeeper};},
     get ballZ(){return ball.position.z;},
     get kickerPos(){return kickerGLB?[kickerGLB.position.x,kickerGLB.position.z]:null;},
+    // debug contatto: punte dei piedi (mondo) + palla + clock del tiro
+    get feet(){ if(!kickerGLB||!ball) return null;
+      const L=kickerGLB.getObjectByName('mixamorig:LeftToeBase'), R=kickerGLB.getObjectByName('mixamorig:RightToeBase');
+      if(!L||!R) return null; const a=new THREE.Vector3(), b=new THREE.Vector3();
+      L.getWorldPosition(a); R.getWorldPosition(b);
+      const f3=v=>[+v.x.toFixed(3),+v.y.toFixed(3),+v.z.toFixed(3)];
+      return {L:f3(a), R:f3(b), ball:f3(ball.position), t:shot?+(shot.t||0).toFixed(3):null,
+        wind:shot?shot.windup:null, launched:shot?!!shot.launched:null}; },
     get keeperPos(){return [keeper.position.x,keeper.position.y];},
     setRole(r){ ROLE=r; try{applyIdentity();}catch(e){} }, setMode(m){ MODE=m; },
     setAim(x,y,p,c){ aim.tx=x; aim.ty=y; if(p!=null)aim.power=p; if(c!=null)aim.curl=c; },
