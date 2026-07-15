@@ -76,13 +76,17 @@
   #diffBanner{position:absolute;left:0;right:0;top:26%;text-align:center;font-size:11px;color:#ffd884;
     text-shadow:0 2px 8px #000;letter-spacing:.18em;opacity:0;transition:opacity .3s;pointer-events:none}
   #diffBanner.on{opacity:1}
-  /* MENU A CARD: tre modalità, una frase ciascuna */
-  .modeCards{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:10px 0 4px}
-  .mcard{font:inherit;font-size:13px;color:#e8eefc;background:linear-gradient(160deg,#101a33,#0a1226);
-    border:1px solid rgba(159,176,200,.35);border-radius:12px;padding:10px 6px;cursor:pointer;line-height:1.5}
-  .mcard b{display:block;font-size:7.5px;color:#ffd884;letter-spacing:.08em;margin-top:3px}
-  .mcard small{display:block;font-size:5.8px;color:#9fb0c8;margin-top:3px;line-height:1.6}
+  /* MENU A CARD: quattro modalità in griglia 2x2, una frase ciascuna */
+  .modeCards{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin:8px 0 2px}
+  .mcard{font:inherit;font-size:12px;color:#e8eefc;background:linear-gradient(160deg,#101a33,#0a1226);
+    border:1px solid rgba(159,176,200,.35);border-radius:12px;padding:8px 6px;cursor:pointer;line-height:1.4}
+  .mcard b{display:block;font-size:7.5px;color:#ffd884;letter-spacing:.08em;margin-top:2px}
+  .mcard small{display:block;font-size:5.8px;color:#9fb0c8;margin-top:2px;line-height:1.55}
   .mcard:active{transform:scale(.97)}
+  .mrow{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+  /* righe missione/evento: UNA riga compatta con ellissi, mai a capo sopra la scena */
+  .mline{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:min(92vw,420px);
+    margin-left:auto;margin-right:auto;font-size:6.4px !important}
   /* SCHEDA DEL TIRO: potenza/effetto/distanza dal legno, 1.4s dopo l'esito */
   #shotCard{position:absolute;left:50%;transform:translateX(-50%);top:47%;font-size:7.5px;color:#e8eefc;
     background:rgba(6,10,24,.78);border:1px solid rgba(159,176,200,.4);border-radius:999px;padding:7px 13px;
@@ -108,8 +112,11 @@
   #flash.save.on{animation:fls .32s ease-out}
   @keyframes fls{0%{opacity:.42}100%{opacity:0}}
   /* center panels */
-  .panel{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;
-    text-align:center;background:radial-gradient(ellipse at 50% 40%,rgba(4,14,32,.55),rgba(1,5,14,.86));padding:24px}
+  .panel{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:11px;
+    text-align:center;background:radial-gradient(ellipse at 50% 40%,rgba(4,14,32,.55),rgba(1,5,14,.86));padding:24px;
+    overflow:hidden}   /* il pannello NON deve mai sbordare: se lo spazio manca, si stringe il gap */
+  /* su schermi bassi il menu si compatta invece di uscire dallo schermo */
+  @media (max-height:760px){ .panel{gap:7px} .panel h1{font-size:24px} .panel .small{line-height:1.6} }
   .panel.show{display:flex}
   .panel h1{font-size:30px;color:#fff;line-height:1.3;text-shadow:0 4px 20px rgba(0,0,0,.6)}
   .panel .gold{color:var(--gold)}.panel .small{font-size:9px;color:#cdd6ee;line-height:1.9}
@@ -374,19 +381,23 @@
 
   <div class="panel" id="menu">
     <h1>RIGORI<br><span class="gold">AL CAMP NOU</span></h1>
-    <!-- MENU A CARD: le tre modalità in una frase, un tocco e giochi -->
+    <!-- MENU A CARD: quattro modalità in una frase, un tocco e giochi.
+         I vecchi selettori restano nel DOM (nascosti) per compatibilità JS. -->
     <div class="modeCards">
       <button class="mcard" data-mc="rig">⚽<b>RIGORISTA</b><small>Serie infinita: segna finché non sbagli</small></button>
-      <button class="mcard" data-mc="five">🎯<b>SFIDA 5</b><small>5 rigori contro Ale, sfida gli amici col seed</small></button>
+      <button class="mcard" data-mc="five">🎯<b>SFIDA 5</b><small>5 rigori, sfida gli amici col seed</small></button>
       <button class="mcard" data-mc="keeper">🧤<b>PORTIERE</b><small>Reagisci d'istinto e para tutto</small></button>
+      <button class="mcard" data-mc="duel">👑<b>DUELLO</b><small>Para i 5 rigori di Ale e sbloccalo</small></button>
     </div>
-    <button id="modeBtn" class="hudbtn modesel">∞ INFINITA</button>
-    <button id="roleBtn" class="hudbtn modesel">⚽ TIRI TU</button>
-    <button id="varBtn" class="hudbtn modesel" style="display:none">🎬 CLASSICO</button>
-    <button id="dailyBtn" class="hudbtn modesel">📅 SFIDA DEL GIORNO</button>
+    <button id="modeBtn" class="hudbtn modesel" style="display:none">∞ INFINITA</button>
+    <button id="roleBtn" class="hudbtn modesel" style="display:none">⚽ TIRI TU</button>
+    <div class="mrow">
+      <button id="dailyBtn" class="hudbtn modesel">📅 SFIDA DEL GIORNO</button>
+      <button id="varBtn" class="hudbtn modesel" style="display:none">🎬 CLASSICO</button>
+    </div>
     <div class="small" id="challengeNote" style="display:none">🎲 SFIDA di un amico — stesso portiere per tutti!</div>
-    <div class="small" id="missionLine" style="display:none"></div>
-    <div class="small" id="eventLine" style="display:none"></div>
+    <div class="small mline" id="missionLine" style="display:none"></div>
+    <div class="small mline" id="eventLine" style="display:none"></div>
     <div class="styleSel">
       <button class="stbtn" data-gfx="pes">🎮 PES<small>realistico</small></button>
       <button class="stbtn" data-gfx="manga">🎬 HOLLY &amp; BENJI<small>anime</small></button>
@@ -394,7 +405,7 @@
       <button class="stbtn" data-gfx="8bit">👾 8-BIT<small>arcade</small></button>
       <button class="stbtn" data-gfx="halloween">🎃 HALLOWEEN<small>mostruoso</small></button>
     </div>
-    <div class="small">trascina per mirare nell'angolo<br><span class="grn">la distanza decide la POTENZA</span><br><span class="blu">muovi di lato per dare EFFETTO</span><br><span style="color:#9fd0ff">morbido e alto = CUCCHIAIO 🥄</span><br><span class="org">forte e basso = RASOIATA ⚡</span><br><span style="color:#8fa6cf">⌨ FRECCE per mirare · Q/E effetto · SPAZIO carica e tira</span></div>
+    <div class="small">trascina per mirare · <span class="blu">piega di lato = EFFETTO</span> · <span style="color:#9fd0ff">morbido alto = 🥄</span> · <span class="org">forte basso = ⚡</span><br><span style="color:#8fa6cf">⌨ frecce · Q/E effetto · SPAZIO carica</span></div>
     <button id="trofBtn" class="hudbtn trofbtn">🏆 TROFEI <span id="menuTrof">0/10</span></button>
     <div class="small">record <span id="menuRec">0</span></div>
     <div class="blink">★ TOCCA PER GIOCARE ★</div>
@@ -4471,9 +4482,9 @@ document.getElementById('setVoice').addEventListener('click',e=>{ e.stopPropagat
   // MENU A CARD: un tocco imposta modalità+ruolo e si GIOCA subito
   document.querySelectorAll('.mcard').forEach(c=>c.addEventListener('click',e=>{ e.stopPropagation();
     const k=c.dataset.mc;
-    ROLE = (k==='keeper')?'keeper':'shooter';
-    MODE = (k==='five')?'five':'infinite';
-    if(k!=='five') DAILY=false;
+    ROLE = (k==='keeper'||k==='duel')?'keeper':'shooter';
+    MODE = (k==='five'||k==='duel')?'five':'infinite';
+    if(MODE!=='five') DAILY=false;
     try{ localStorage.setItem('rig_role',ROLE); localStorage.setItem('rig_mode',MODE); }catch(err){}
     applyIdentity(); startGame(); }));
   // ACCESSIBILITÀ: shake e slow-mo on/off, volumi separati musica/effetti
