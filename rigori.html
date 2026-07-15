@@ -3829,7 +3829,12 @@ try{ const _kd=new URLSearchParams(location.search).get('kdbg'); if(_kd==='1'||_
     get kickerPos(){return kickerGLB?[kickerGLB.position.x,kickerGLB.position.z]:null;},
     // debug contatto: punte dei piedi (mondo) + palla + clock del tiro
     get feet(){ if(!kickerGLB||!ball) return null;
-      const L=kickerGLB.getObjectByName('mixamorig:LeftToeBase'), R=kickerGLB.getObjectByName('mixamorig:RightToeBase');
+      if(!this._ftL||!this._ftR){ let L=null,R=null,Lf=null,Rf=null;
+        kickerGLB.traverse(o=>{ if(!o.isBone) return; const n=(o.name||'').toLowerCase();
+          if(n.indexOf('left')>=0){ if(n.indexOf('toe')>=0&&!L)L=o; else if(n.indexOf('foot')>=0&&!Lf)Lf=o; }
+          if(n.indexOf('right')>=0){ if(n.indexOf('toe')>=0&&!R)R=o; else if(n.indexOf('foot')>=0&&!Rf)Rf=o; } });
+        this._ftL=L||Lf; this._ftR=R||Rf; }
+      const L=this._ftL, R=this._ftR;
       if(!L||!R) return null; const a=new THREE.Vector3(), b=new THREE.Vector3();
       L.getWorldPosition(a); R.getWorldPosition(b);
       const f3=v=>[+v.x.toFixed(3),+v.y.toFixed(3),+v.z.toFixed(3)];
