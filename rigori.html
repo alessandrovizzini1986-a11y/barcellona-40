@@ -2863,8 +2863,37 @@ function gloveCatch(s){
   if(best){ ball.position.lerp(best,s); return true; }
   return false;
 }
+/* ================= ADAPTIVE QUALITY (Fase E) =================
+   Monitor fps a finestra di 1s: sotto i ~42fps per 3 finestre il gioco si
+   ALLEGGERISCE di un gradino (2->1->0), sopra i 55 per 10 finestre risale.
+   Gradini: 2 = tutto; 1 = ombre solo palla + rete a 1 substep + meno particelle;
+   0 = niente ombre dinamiche + pixel ratio 1 + vincoli rete ridotti.
+   PROFILING (DevTools remoto chrome://inspect): i costi principali sono
+   NetSim.step (851 nodi x vincoli), computeVertexNormals della rete,
+   il crowd-canvas dello stadio e i particellari 2D — tutti scalati qui. */
+let QUALITY=2, _fpsAcc=0, _fpsN=0, _fpsBad=0, _fpsGood=0;
+const highDetailMode=()=>QUALITY>=2;
+function applyQuality(){
+  const shBall=QUALITY>0, shChar=QUALITY>1;
+  try{
+    if(ball) ball.castShadow=shBall;
+    if(kickerGLB) kickerGLB.traverse(o=>{ if(o.isMesh) o.castShadow=shChar; });
+    if(keeper) keeper.traverse(o=>{ if(o.isMesh) o.castShadow=shChar; });
+    if(renderer && !is8bit()) renderer.setPixelRatio(Math.min(window.devicePixelRatio||1, QUALITY===0?1:2));
+  }catch(e){}
+  showTelecro(QUALITY===2?'⚙ Qualità: ALTA':(QUALITY===1?'⚙ Qualità adattiva: MEDIA (fps)':'⚙ Qualità adattiva: LITE (fps)'));
+}
+function adaptQuality(dt){
+  _fpsAcc+=dt; _fpsN++;
+  if(_fpsAcc<1) return;
+  const fps=_fpsN/_fpsAcc; _fpsAcc=0; _fpsN=0;
+  if(fps<42){ _fpsGood=0; if(++_fpsBad>=3 && QUALITY>0){ QUALITY--; _fpsBad=0; applyQuality(); } }
+  else if(fps>55){ _fpsBad=0; if(++_fpsGood>=10 && QUALITY<2){ QUALITY++; _fpsGood=0; applyQuality(); } }
+  else { _fpsBad=0; _fpsGood=0; }
+}
 function update(dt){
   stateT+=dt;
+  adaptQuality(dt);                                  // il monitor fps gira SEMPRE (anche in moviola no: il replay e' gia' leggero)
   if(replay){ updateReplay(dt); return; }            // MOVIOLA: il mondo live e' in pausa, gira solo il replay
   // spin visiva pallone (anche da fermo lieve)
   scorePulseT=Math.max(0,scorePulseT-dt);
@@ -3205,7 +3234,9 @@ const NetSim={
     // damp NORMALIZZATO sul sottopasso di riferimento (60 fps -> h=8 ms): a bassi fps
     // h cresce e lo smorzamento per-sottopasso fisso non basta piu' a dissipare il
     // rumore del solver dei vincoli -> l'onda manga CRESCEVA invece di decadere
-    const sub=2, h=Math.min(dt,0.033)/sub, h2=h*h, keep=Math.pow(1-P.damp, h/0.008);
+    // LOD ADATTIVO: su device in affanno la rete gira a 1 substep e meno rilassamenti
+    const sub=(typeof QUALITY!=='undefined'&&QUALITY<2)?1:2, h=Math.min(dt,0.033)/sub, h2=h*h, keep=Math.pow(1-P.damp, h/0.008);
+    const iterQ=(typeof QUALITY!=='undefined'&&QUALITY===0)?1:P.iter;
     const R=BALL_R+0.045, R2=R*R;                  // sfera palla + spessore corda
     let bx=0,by=0,bz=0; if(B){ bx=B.x; by=B.y-GH/2; bz=B.z+GD; }   // centro sfera in LOCALE rete
     // impulsi pendenti: velocita' verso -z iniettata arretrando pp con l'h di QUESTO frame
@@ -3221,7 +3252,7 @@ const NetSim={
         pp[k]=x; pp[k+1]=y; pp[k+2]=z; }
       // 2) rilassamento vincoli + collisione sfera DOPO ogni passata (l'ultima parola
       //    e' della palla: a fine sottopasso nessun nodo resta dentro la sfera)
-      for(let it=0;it<P.iter;it++){
+      for(let it=0;it<iterQ;it++){
         for(let c=0;c<this.nC;c++){
           const a=cs[c*2], b=cs[c*2+1];
           const dx=p[b]-p[a], dy=p[b+1]-p[a+1], dz=p[b+2]-p[a+2];
@@ -3274,7 +3305,10 @@ const NetSim={
       if(dy>1.2)dy=1.2; else if(dy<-1.2)dy=-1.2;
       if(dz>0.6)dz=0.6; else if(dz<-2.8)dz=-2.8;
       pos.setXYZ(i, base[k]+dx, base[k+1]+dy, base[k+2]+dz); }
-    pos.needsUpdate=true; backNet.geometry.computeVertexNormals(); }
+    pos.needsUpdate=true;
+    // le normali costano: sotto sforzo si ricalcolano un frame sì e uno no
+    this._nrmSkip=!this._nrmSkip;
+    if(!(typeof QUALITY!=='undefined' && QUALITY<2 && this._nrmSkip)) backNet.geometry.computeVertexNormals(); }
 };
 // shim di compatibilita': i vecchi punti di chiamata resettano/curano la rete via NetSim
 function applyNetRipple(t){ if(t<0) NetSim.reset(); }
@@ -4064,7 +4098,8 @@ class View {                                     // render Three.js + layer 2D (
     this.fxc.setTransform(d,0,0,d,0,0); }
   // emette una raffica di particelle dal pool (coordinate schermo)
   emit(sx,sy,style){ const manga=isManga(), fast=(style==='shatter');
-    const n = fast ? 200 : (style==='goal' ? (manga?60:30) : (manga?34:22));
+    let n = fast ? 200 : (style==='goal' ? (manga?60:30) : (manga?34:22));
+    if(!highDetailMode()) n=Math.ceil(n*0.5);        // adaptive quality: metà particelle sotto sforzo
     const cols = manga ? ['#A50044','#004D98','#ffd24a','#ffffff'] : ['#d7dce8','#9fb0c8','#ffffff','#A50044'];
     let used=0;
     for(const p of this.parts){ if(p.life>0) continue; if(used++>=n) break;
