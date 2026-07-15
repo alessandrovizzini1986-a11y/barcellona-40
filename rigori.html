@@ -112,11 +112,15 @@
   #flash.save.on{animation:fls .32s ease-out}
   @keyframes fls{0%{opacity:.42}100%{opacity:0}}
   /* center panels */
-  .panel{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:11px;
-    text-align:center;background:radial-gradient(ellipse at 50% 40%,rgba(4,14,32,.55),rgba(1,5,14,.86));padding:24px;
+  .panel{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:10px;
+    text-align:center;background:radial-gradient(ellipse at 50% 40%,rgba(4,14,32,.55),rgba(1,5,14,.86));
+    padding:56px 24px calc(56px + env(safe-area-inset-bottom));   /* aria sopra (scoreboard) e sotto (CAMBIA TIRATORE) */
     overflow:hidden}   /* il pannello NON deve mai sbordare: se lo spazio manca, si stringe il gap */
   /* su schermi bassi il menu si compatta invece di uscire dallo schermo */
-  @media (max-height:760px){ .panel{gap:7px} .panel h1{font-size:24px} .panel .small{line-height:1.6} }
+  @media (max-height:820px){ .panel{gap:6px} .panel h1{font-size:22px;line-height:1.15} .panel .small{line-height:1.55} .mcard small{font-size:5.4px} }
+  /* schermi molto bassi: via la riga "come si tira" (c'è il tutorial), card più snelle */
+  @media (max-height:680px){ .panel{gap:5px} .panel h1{font-size:19px} .howto{display:none}
+    .mcard{padding:6px 5px} #trofBtn.trofbtn{padding:6px 14px} .hudbtn.modesel{padding:7px 13px;font-size:10px} }
   .panel.show{display:flex}
   .panel h1{font-size:30px;color:#fff;line-height:1.3;text-shadow:0 4px 20px rgba(0,0,0,.6)}
   .panel .gold{color:var(--gold)}.panel .small{font-size:9px;color:#cdd6ee;line-height:1.9}
@@ -246,15 +250,14 @@
   .hudbtn.modesel{margin:4px 0 2px;font-size:11px;color:#ffd884;background:rgba(2,12,30,.7);border:1px solid var(--gold);padding:9px 18px}
   .hudbtn.modesel:active{transform:translateY(2px)}
   /* selettore STILE (PES · Holly & Benji · Peluche · 8-bit): griglia 2x2 compatta */
-  .styleSel{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:2px 0 2px;max-width:280px}
-  .styleSel .stbtn{pointer-events:auto;cursor:pointer;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:4px;
-    font-size:9px;color:#cdd6ee;background:rgba(2,12,30,.7);border:1px solid rgba(255,255,255,.18);border-radius:13px;padding:8px 10px;letter-spacing:.03em;min-width:118px}
-  .styleSel .stbtn small{font-size:7px;color:#8fa6cf;letter-spacing:.05em}
+  /* SELETTORE STILI COMPATTO: cinque chip su UNA riga (icona + nome corto),
+     niente sottotitoli: il menu deve respirare, lo stile si capisce dall'icona */
+  .styleSel{display:flex;flex-wrap:nowrap;justify-content:center;gap:5px;margin:2px 0 2px;max-width:min(94vw,430px)}
+  .styleSel .stbtn{pointer-events:auto;cursor:pointer;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:2px;
+    font-size:8px;color:#cdd6ee;background:rgba(2,12,30,.7);border:1px solid rgba(255,255,255,.18);border-radius:11px;padding:7px 6px;letter-spacing:.02em;flex:1 1 0;min-width:0}
+  .styleSel .stbtn small{display:none}
   .styleSel .stbtn.active{color:#fff;border-color:var(--gold);background:linear-gradient(160deg,#004D98,#A50044);box-shadow:0 0 14px rgba(255,216,132,.4)}
-  .styleSel .stbtn.active small{color:#ffd884}
   .styleSel .stbtn:active{transform:translateY(2px)}
-  /* HALLOWEEN: quinto bottone a tutta riga sotto la griglia 2x2 */
-  .styleSel .stbtn[data-gfx="halloween"]{flex-basis:100%;grid-column:1/-1}
   .styleSel .stbtn[data-gfx="halloween"].active{background:linear-gradient(160deg,#3a1147,#7a2d00);border-color:#ff7518;box-shadow:0 0 16px rgba(255,117,24,.5)}
   /* MOVIOLA: bande cinema + badge REPLAY lampeggiante (per tutta la durata) */
   #replayCine{position:fixed;inset:0;z-index:13;pointer-events:none;display:none}
@@ -399,13 +402,13 @@
     <div class="small mline" id="missionLine" style="display:none"></div>
     <div class="small mline" id="eventLine" style="display:none"></div>
     <div class="styleSel">
-      <button class="stbtn" data-gfx="pes">🎮 PES<small>realistico</small></button>
-      <button class="stbtn" data-gfx="manga">🎬 HOLLY &amp; BENJI<small>anime</small></button>
-      <button class="stbtn" data-gfx="peluche">🧸 PELUCHE<small>morbidoso</small></button>
-      <button class="stbtn" data-gfx="8bit">👾 8-BIT<small>arcade</small></button>
-      <button class="stbtn" data-gfx="halloween">🎃 HALLOWEEN<small>mostruoso</small></button>
+      <button class="stbtn" data-gfx="pes">🎮<br>PES</button>
+      <button class="stbtn" data-gfx="manga">🎬<br>ANIME</button>
+      <button class="stbtn" data-gfx="peluche">🧸<br>PELUCHE</button>
+      <button class="stbtn" data-gfx="8bit">👾<br>8-BIT</button>
+      <button class="stbtn" data-gfx="halloween">🎃<br>HALLOW</button>
     </div>
-    <div class="small">trascina per mirare · <span class="blu">piega di lato = EFFETTO</span> · <span style="color:#9fd0ff">morbido alto = 🥄</span> · <span class="org">forte basso = ⚡</span><br><span style="color:#8fa6cf">⌨ frecce · Q/E effetto · SPAZIO carica</span></div>
+    <div class="small howto" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:92vw">trascina per mirare · <span class="blu">piega di lato = EFFETTO</span> · <span style="color:#8fa6cf">⌨ frecce+SPAZIO</span></div>
     <button id="trofBtn" class="hudbtn trofbtn">🏆 TROFEI <span id="menuTrof">0/10</span></button>
     <div class="small">record <span id="menuRec">0</span></div>
     <div class="blink">★ TOCCA PER GIOCARE ★</div>
@@ -415,11 +418,11 @@
     <div class="small" id="overLine">hai segnato 0 rigori di fila</div>
     <div class="small">record <span id="overRec">0</span></div>
     <div class="styleSel">
-      <button class="stbtn" data-gfx="pes">🎮 PES<small>realistico</small></button>
-      <button class="stbtn" data-gfx="manga">🎬 HOLLY &amp; BENJI<small>anime</small></button>
-      <button class="stbtn" data-gfx="peluche">🧸 PELUCHE<small>morbidoso</small></button>
-      <button class="stbtn" data-gfx="8bit">👾 8-BIT<small>arcade</small></button>
-      <button class="stbtn" data-gfx="halloween">🎃 HALLOWEEN<small>mostruoso</small></button>
+      <button class="stbtn" data-gfx="pes">🎮<br>PES</button>
+      <button class="stbtn" data-gfx="manga">🎬<br>ANIME</button>
+      <button class="stbtn" data-gfx="peluche">🧸<br>PELUCHE</button>
+      <button class="stbtn" data-gfx="8bit">👾<br>8-BIT</button>
+      <button class="stbtn" data-gfx="halloween">🎃<br>HALLOW</button>
     </div>
     <div class="small" id="seedLine" style="display:none"></div>
     <div class="overbtns">
@@ -3818,6 +3821,9 @@ function syncHUD(){
   const vsEl=document.querySelector('#scoreboard .vs'); if(vsEl) vsEl.textContent = keep?'ALE ⚽':'PORTIERE';
   HUD.menu.classList.toggle('show',state===STATE.MENU_SCREEN);
   HUD.over.classList.toggle('show',state===STATE.GAME_OVER);
+  // nel MENU lo scoreboard e il REC sono rumore (e il titolo ci finiva sopra): spenti
+  { const sb=document.getElementById('scoreboard'), menuOn=(state===STATE.MENU_SCREEN);
+    if(sb) sb.style.opacity=menuOn?'0':''; if(HUD.rec) HUD.rec.style.opacity=menuOn?'0':''; }
   const playing=(state===STATE.GAME_PLAYING);
   HUD.hint.textContent = keep? 'SEI IN PORTA 🧤 ALE tira da solo… REAGISCI: tocca/trascina dove vola la palla!'
     : (TUT>=0 && TUT<3 ? '🎓 '+TUT_MSG[TUT] : 'trascina per mirare · rilascia per tirare');
