@@ -345,8 +345,10 @@
     <button id="modeBtn" class="hudbtn modesel">∞ INFINITA</button>
     <button id="roleBtn" class="hudbtn modesel">⚽ TIRI TU</button>
     <button id="varBtn" class="hudbtn modesel" style="display:none">🎬 CLASSICO</button>
+    <button id="dailyBtn" class="hudbtn modesel">📅 SFIDA DEL GIORNO</button>
     <div class="small" id="challengeNote" style="display:none">🎲 SFIDA di un amico — stesso portiere per tutti!</div>
     <div class="small" id="missionLine" style="display:none"></div>
+    <div class="small" id="eventLine" style="display:none"></div>
     <div class="styleSel">
       <button class="stbtn" data-gfx="pes">🎮 PES<small>realistico</small></button>
       <button class="stbtn" data-gfx="manga">🎬 HOLLY &amp; BENJI<small>anime</small></button>
@@ -418,6 +420,8 @@
   </div>
   <div class="stitle2">TROFEI <span id="trofCount"></span></div>
   <div id="trofList"></div>
+  <div class="stitle2">📊 CARRIERA</div>
+  <div id="careerBox" style="font-size:8px;line-height:1.9;color:#cdd9f4"></div>
   <button id="setClose">CHIUDI ✕</button>
 </div></div>
 
@@ -509,15 +513,21 @@ const Progress={ KEY:'rig_ach',
     {id:'super',   ic:'🌈', t:'SUPERTIRO',      d:'Segna col tiro speciale',  unlock:'PALLONE FUOCO'},
     {id:'parata3', ic:'🧤', t:'GUANTONI CALDI', d:'3 parate di fila'},
     {id:'muro8',   ic:'🧱', t:'SARACINESCA',    d:'8 parate di fila',         unlock:'ALE GIOCABILE'},
-    {id:'duello',  ic:'🏆', t:'RE DEI RIGORI',  d:'Vinci il duello dei 5 rigori', unlock:'ALE GIOCABILE'} ],
+    {id:'duello',  ic:'🏆', t:'RE DEI RIGORI',  d:'Vinci il duello dei 5 rigori', unlock:'ALE GIOCABILE'},
+    // trofei degli EVENTI stagionali (si vincono solo nel periodo giusto)
+    {id:'evestate',ic:'🏖', t:'ESTATE BLAUGRANA', d:'10 gol in un giorno d\'estate'},
+    {id:'evnatale',ic:'🎄', t:'NATALE AL CAMP NOU', d:'5 di fila sotto le feste'},
+    {id:'evhallow',ic:'🎃', t:'NOTTE DELLE STREGHE', d:'Segna in stile Halloween nel periodo giusto'} ],
   data(){ try{return JSON.parse(localStorage.getItem(this.KEY)||'{}');}catch(e){return{};} },
   has(id){ return !!this.data()[id]; },
   count(){ const d=this.data(); return this.DEFS.filter(a=>d[a.id]).length; },
   award(id){ if(this.has(id)) return false;
     const d=this.data(); d[id]=1; try{localStorage.setItem(this.KEY,JSON.stringify(d));}catch(e){}
     const a=this.DEFS.find(x=>x.id===id); if(a) showAchToast(a); haptic([0,20,40,20]); return true; },
-  ballUnlocked(k){ return k==='classic' || (k==='gold'&&this.has('streak5')) || (k==='fire'&&this.has('super')); },
-  aleUnlocked(){ return this.has('duello')||this.has('muro8'); } };
+  // gli sblocchi arrivano dai trofei O dal livello del Pass Leggenda (doppio binario)
+  ballUnlocked(k){ const L=(typeof Meta!=='undefined')?Meta.level():1;
+    return k==='classic' || (k==='gold'&&(this.has('streak5')||L>=4)) || (k==='fire'&&(this.has('super')||L>=8)); },
+  aleUnlocked(){ return this.has('duello')||this.has('muro8')||((typeof Meta!=='undefined')&&Meta.level()>=12); } };
 // toast trofeo (coda: piu trofei nello stesso momento si mostrano in fila)
 const _achQ=[]; let _achBusy=false;
 function showAchToast(a){ _achQ.push(a); if(!_achBusy) _achNext(); }
@@ -621,9 +631,54 @@ function announceBlockIfChanged(){
 }
 
 /* ---- TIRO SPECIALE a risorsa: si carica con 3 gol di fila, max 2 a run ---- */
-let specCharges=0, specUsed=0, specGoalRun=0;
+let specCharges=0, specUsed=0, specGoalRun=0, _sessGoals=0;   // _sessGoals = gol di questa sessione (evento estate)
 function specHUD(){ const b=document.getElementById('specBtn'); if(!b) return;
   b.style.display = (state===STATE.GAME_PLAYING && !isKeeper() && specCharges>0 && !specialArmed) ? '' : 'none'; }
+
+/* -------- SFIDA DEL GIORNO: seed deterministico dalla data (rig_daily) ----- */
+// Stesso giorno = stesso portiere per TUTTI: leaderboard personale separata.
+let DAILY=false;
+const todayKey=()=>{ const d=new Date(); return d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate(); };
+const dailySeed=()=>'giorno'+todayKey();
+const Daily={
+  KEY:'rig_daily',
+  data(){ try{ return JSON.parse(localStorage.getItem(this.KEY)||'{}'); }catch(e){ return {}; } },
+  best(){ const d=this.data(); return (d.day===todayKey())? (d.best|0) : null; },
+  save(score){ const d=this.data(); const cur=(d.day===todayKey())? (d.best|0) : -1;
+    if(score>cur){ try{ localStorage.setItem(this.KEY,JSON.stringify({day:todayKey(),best:score})); }catch(e){} return true; }
+    return false; }
+};
+
+/* ------------- CARRIERA: statistiche cumulative (rig_stats) --------------- */
+const Stats={
+  KEY:'rig_stats',
+  data(){ try{ return JSON.parse(localStorage.getItem(this.KEY)||'{}'); }catch(e){ return {}; } },
+  bump(k,n){ const d=this.data(); d[k]=(d[k]|0)+(n==null?1:n); try{ localStorage.setItem(this.KEY,JSON.stringify(d)); }catch(e){} },
+  // "peggior errore": distanza massima (cm) del tiro FUORI dal centro porta
+  worstMiss(tx,ty){ const d=this.data();
+    const dist=Math.round(Math.hypot(Math.max(0,Math.abs(tx)-HALF), Math.max(0,ty-GH))*100);
+    if(dist>(d.worst|0)){ d.worst=dist; try{ localStorage.setItem(this.KEY,JSON.stringify(d)); }catch(e){} } },
+  badges(){ const d=this.data(), out=[];
+    if((d.goals|0)>=100) out.push('🥇 BOMBER DA 100');
+    if((d.posts|0)>=10)  out.push('🪵 RE DEI PALI');
+    if((d.saves|0)>=50)  out.push('🖐 MANO DI DIO');
+    if((d.autogol|0)>=1) out.push('🤡 BEFFATO DAI GUANTI');
+    return out; }
+};
+
+/* ------ EVENTO TEMATICO dalla DATA (niente server, solo new Date()) -------- */
+function seasonEvent(){
+  const d=new Date(), m=d.getMonth()+1, day=d.getDate();
+  if(m===10 && day>=18) return {id:'evhallow', name:'🎃 NOTTE DELLE STREGHE', hint:'Gioca in stile HALLOWEEN'};
+  if(m===12)            return {id:'evnatale', name:'🎄 NATALE AL CAMP NOU', hint:'Segna 5 di fila sotto le feste'};
+  if(m>=6&&m<=8)        return {id:'evestate', name:'🏖 ESTATE BLAUGRANA',   hint:'10 gol totali in un giorno d\'estate'};
+  return null;
+}
+// obiettivo di STAGIONE (mensile): bersaglio streak per il tiratore, parate per il portiere
+function seasonGoal(){ const m=new Date().getMonth()+1;
+  return { sh: 8+(m%3)*2, kp: 4+(m%2)*2,
+    label: ['','GENNAIO','FEBBRAIO','MARZO','APRILE','MAGGIO','GIUGNO','LUGLIO','AGOSTO','SETTEMBRE','OTTOBRE','NOVEMBRE','DICEMBRE'][m] };
+}
 
 /* ------------------------------- AUDIO -----------------------------------
    Tutto WebAudio procedurale (zero file): bus separati MUSICA / SFX su un
@@ -1912,7 +1967,8 @@ function startGame(){ streak=0; shotNum=0; goals5=0; aleSaves=0; suddenDeath=fal
   // reset dei sistemi di run: missioni, cariche del tiro speciale, blocco difficoltà
   missRun={topRow:0, wood:0, curva:0, incro:0, saves:0};
   specCharges=0; specUsed=0; specGoalRun=0; _lastBlk=0;
-  if(!challengeFromURL) roundSeed=Math.floor(Math.random()*2.1e9).toString(36);   // nuovo seed ogni partita (la SFIDA da URL lo fissa)
+  if(DAILY && MODE==='five') roundSeed=dailySeed();                               // SFIDA DEL GIORNO: seed dalla data
+  else if(!challengeFromURL) roundSeed=Math.floor(Math.random()*2.1e9).toString(36);   // nuovo seed ogni partita (la SFIDA da URL lo fissa)
   Sound.intensity=0;
   applyIdentity();                                   // identita' coerenti col ruolo scelto
   resetForShot(); Sound.ac();
@@ -2516,6 +2572,12 @@ function resolveShot(){
           showAchToast({ic:'🌈', t:'TIRO SPECIALE PRONTO', d:'Tocca il pulsante viola per armarlo'}); } }
       Meta.add((incrocio?12:8)+(shot.special?4:0));
       announceBlockIfChanged();
+      // CARRIERA + EVENTI stagionali
+      Stats.bump('goals'); if(incrocio) Stats.bump('incroci');
+      const ev=seasonEvent();
+      if(ev){ if(ev.id==='evnatale' && streak>=5) Progress.award('evnatale');
+        if(ev.id==='evestate' && (++_sessGoals)>=10) Progress.award('evestate');
+        if(ev.id==='evhallow' && GFX==='halloween') Progress.award('evhallow'); }
     }catch(e){}
     // ESULTANZA (come nei giochi di calcio veri): il TUO giocatore si gira e corre
     // verso la camera con la faccia in primo piano
@@ -2541,7 +2603,9 @@ function resolveShot(){
     // niente gol: la serie per la carica speciale e la missione "in alto" ripartono;
     // il PALO però conta per la missione dei legni e dà comunque un filo di XP
     try{ specGoalRun=0; missRun.topRow=0;
-      if(r==='POST'){ missRun.wood++; if(missRun.wood>=2) Missions.complete('wood2'); Meta.add(3); } }catch(e){}
+      if(r==='POST'){ missRun.wood++; if(missRun.wood>=2) Missions.complete('wood2'); Meta.add(3); Stats.bump('posts'); }
+      else if(r==='MISS'){ Stats.bump('miss'); Stats.worstMiss(shot.target.x,shot.target.y); }
+      else if(r==='SAVE') Stats.bump('parati'); }catch(e){}
     haptic([0,130]); slowmo=1; setState(STATE.SAVE_ANIMATION);
   }
   syncHUD(); try{ announceOutcome(r); }catch(e){}
@@ -2564,6 +2628,7 @@ function resolveKeeper(r){
     // ESULTANZA di ALE: ti ha segnato e viene a dirtelo in faccia (corre verso la camera)
     if(useGLBKicker && kickerGLB){ celeb={t:0,dir:-1}; playKicker('run',1); }
     CharFSM.set('kicker','esultanza'); CharFSM.set('keeper','sconfitta');   // FSM: beffato
+    try{ Stats.bump('subiti'); if(shot&&shot.parryGoal) Stats.bump('autogol'); }catch(e){}   // carriera: gol subiti + beffe
     haptic([0,130]); slowmo=1; setState(STATE.GOAL_ANIMATION);
   } else {                                                   // parata o tiro sbagliato dalla CPU -> festa del portiere
     streak++; scorePulseT=0.7;
@@ -2575,8 +2640,8 @@ function resolveKeeper(r){
       HUD.flash.classList.remove('on'); HUD.flash.classList.add('save'); void HUD.flash.offsetWidth; HUD.flash.classList.add('on');
       haptic([0,40,30,70]);
       try{ if(streak>=3) Progress.award('parata3'); if(streak>=8) Progress.award('muro8'); }catch(e){}
-      // missione "para 4 in una run" + XP parata + banner blocco portiere
-      try{ missRun.saves++; if(missRun.saves>=4) Missions.complete('par4'); Meta.add(10); announceBlockIfChanged(); }catch(e){}
+      // missione "para 4 in una run" + XP parata + banner blocco portiere + carriera
+      try{ missRun.saves++; if(missRun.saves>=4) Missions.complete('par4'); Meta.add(10); announceBlockIfChanged(); Stats.bump('saves'); }catch(e){}
     } else if(r==='POST'){ showResult('PALO! 😅','#ffd884'); engine.view.popWord('PALO!','#ffd24a'); Sound.postClang(); arcadeAudio.playPostSting(); }
     else { showResult('FUORI! 😮‍💨','#ffd28a'); engine.view.popWord('FUORI!','#ffffff'); arcadeAudio.playPostSting(); }
     CharFSM.set('keeper','esultanza'); CharFSM.set('kicker','sconfitta');   // FSM: sei sopravvissuto
@@ -2598,7 +2663,9 @@ function gameOverNow(){ Sound.sfx(180,.2); setTimeout(()=>Sound.sfx(90,.3),130);
     if(MODE!=='five'){ try{ const pb=+(localStorage.getItem('rigk_best')||0); if(streak>pb) localStorage.setItem('rigk_best',streak); }catch(e){} }
     setState(STATE.GAME_OVER); return;                       // il portiere ha un suo record separato (no leaderboard nomi)
   }
-  if(MODE==='five'){ try{ const pb=+(localStorage.getItem('rig5_best')||0); if(goals5>pb) localStorage.setItem('rig5_best',goals5); }catch(e){} }
+  if(MODE==='five'){ try{ const pb=+(localStorage.getItem('rig5_best')||0); if(goals5>pb) localStorage.setItem('rig5_best',goals5); }catch(e){}
+    // leaderboard SEPARATA della sfida del giorno
+    if(DAILY){ try{ if(Daily.save(goals5)) showAchToast({ic:'📅', t:'RECORD DEL GIORNO', d:goals5+'/5 nella sfida di oggi!'}); }catch(e){} } }
   setState(STATE.GAME_OVER);
   if(MODE!=='five' && Scores.isHigh(streak)) askName(); }
 
@@ -3442,6 +3509,14 @@ function syncHUD(){
       if(m) ml.textContent='🎯 MISSIONE: '+m.t+' (+'+m.xp+' XP) · ⭐ PASS LIV.'+Meta.level(); }
     const vb=document.getElementById('varBtn');
     if(vb){ vb.style.display=(state===STATE.MENU_SCREEN && five)? '' : 'none'; vb.textContent=FIVE_VAR_LAB[FIVE_VAR]; }
+    const db=document.getElementById('dailyBtn');
+    if(db){ db.style.display=(state===STATE.MENU_SCREEN)? '' : 'none';
+      const b=Daily.best();
+      db.textContent = DAILY? ('📅 OGGI: SEED '+todayKey()+(b!=null?(' · BEST '+b+'/5'):'')+' ✓') : ('📅 SFIDA DEL GIORNO'+(b!=null?(' · best '+b+'/5'):'')); }
+    const el2=document.getElementById('eventLine');
+    if(el2){ const ev=seasonEvent();
+      el2.style.display=(state===STATE.MENU_SCREEN && ev)? '' : 'none';
+      if(ev) el2.textContent='🎁 EVENTO '+ev.name+' — '+ev.hint+(Progress.has(ev.id)?' ✓':''); }
     const sl=document.getElementById('seedLine');
     if(sl){ const showSeed=(state===STATE.GAME_OVER && five && roundSeed);
       sl.style.display=showSeed? '' : 'none';
@@ -3749,6 +3824,19 @@ function renderSettings(){
   const tl=document.getElementById('trofList');
   if(tl) tl.innerHTML=Progress.DEFS.map(a=>{ const ok=!!d[a.id];
     return '<div class="trow'+(ok?' ok':'')+'"><b>'+a.ic+'</b><div><div class="tt">'+a.t+'</div><div class="td">'+a.d+(a.unlock?(' · sblocca: '+a.unlock):'')+'</div></div><span>'+(ok?'✔':'🔒')+'</span></div>'; }).join('');
+  // CARRIERA: statistiche cumulative, peggior errore, badge, pass e stagione
+  const cb=document.getElementById('careerBox');
+  if(cb){ const s=Stats.data(), g=seasonGoal(), badges=Stats.badges();
+    let bestK=0; try{ bestK=+(localStorage.getItem('rigk_best')||0); }catch(e){}
+    cb.innerHTML =
+      '⭐ Pass Leggenda: <b>LIV. '+Meta.level()+'</b> ('+Meta.intoLevel()+'/100 XP)<br>'+
+      '⚽ Gol: <b>'+(s.goals|0)+'</b> · 🧤 Parate: <b>'+(s.saves|0)+'</b> · 🪵 Legni: <b>'+(s.posts|0)+'</b> · 😱 Fuori: <b>'+(s.miss|0)+'</b><br>'+
+      '💔 Gol subiti: <b>'+(s.subiti|0)+'</b> · 🤡 Beffe dei guanti: <b>'+(s.autogol|0)+'</b>'+
+      ((s.worst|0)>0? ('<br>🙈 Peggior errore: fuori di <b>'+s.worst+' cm</b>') : '')+
+      (badges.length? ('<br>🎖 '+badges.join(' · ')) : '')+
+      '<br>🏁 STAGIONE DI '+g.label+': streak '+g.sh+' da tiratore · '+g.kp+' parate di fila'+
+      ((Scores.best()>=g.sh||bestK>=g.kp)?' ✓':'');
+  }
 }
 function openSettings(){ renderSettings(); document.getElementById('settings').classList.add('show'); Sound.sfx(660,.05); }
 function closeSettings(){ document.getElementById('settings').classList.remove('show'); Sound.sfx(440,.05); }
@@ -3775,6 +3863,10 @@ document.getElementById('setVoice').addEventListener('click',e=>{ e.stopPropagat
   document.getElementById('setSens').addEventListener('click',e=>{ e.stopPropagation(); cycleSens();
     if(sv) sv.textContent=SENS.toUpperCase(); Sound.sfx(700,.05); });
   document.getElementById('varBtn').addEventListener('click',e=>{ e.stopPropagation(); cycleFiveVar(); syncHUD(); Sound.sfx(760,.05); });
+  document.getElementById('dailyBtn').addEventListener('click',e=>{ e.stopPropagation();
+    DAILY=!DAILY; if(DAILY){ MODE='five'; try{localStorage.setItem('rig_mode',MODE);}catch(err){}
+      showTelecro('📅 Sfida del giorno: 5 rigori, seed '+todayKey()+' — uguale per tutti, oggi!'); }
+    syncHUD(); Sound.sfx(820,.05); });
   document.getElementById('specBtn').addEventListener('click',e=>{ e.stopPropagation();
     if(specCharges>0){ specCharges--; specUsed++; armSpecial(); specHUD(); } });
   document.getElementById('seedLine').addEventListener('click',e=>{ e.stopPropagation();
