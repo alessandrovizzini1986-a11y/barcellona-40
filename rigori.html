@@ -2538,21 +2538,24 @@ function updateReplay(dt){
     keeper.position.x=lerp(s.keeperFrom, R.commitX, 1-(1-rp)*(1-rp));
     if(p>=1){ R.impact=true;
       if(s.result==='GOAL'){ ripple={t:0,x:s.target.x,y:s.target.y}; Sound.netSwish();
-        NetSim.impulse(s.sim?s.sim.cross.x:s.target.x, Math.max(0.25,s.sim?s.sim.cross.y:s.target.y), 2.4); }  // la rete si gonfia anche in moviola
+        // stessa botta del live (dal crossVel integrato): con la rete stepped a 0.5x
+        // e' esattamente l'impatto vero rivisto in slow-motion, non una carezza
+        const cv=s.sim&&s.sim.crossVel, sp=cv?Math.hypot(cv.x,cv.y,cv.z):18;
+        NetSim.impulse(s.sim?s.sim.cross.x:s.target.x, Math.max(0.25,s.sim?s.sim.cross.y:s.target.y), clamp(sp*0.42,4.5,10)); }
       else if(s.result==='POST'){ Sound.postClang(); }
       else if(s.result==='SAVE'){ Sound.gloveThud(); } }
   } else if(R.impact){
-    R.endT+=dt;
+    R.endT+=dt*0.5;                                           // anche la CODA resta in slow-motion (prima schizzava a velocita' piena)
     // coda dal path integrato: rete che frena, legno che schizza, spalti coi rimbalzi
     if(s.sim && s.sim.n>1){ posFromPath(s.sim, s.dur*s.simRate + R.endT); updateBallShadow(); }
-    else if(s.result==='GOAL' && ball.position.z>-GD+0.25){ ball.position.z-=dt*1.1; updateBallShadow(); }
+    else if(s.result==='GOAL' && ball.position.z>-GD+0.25){ ball.position.z-=dt*0.55; updateBallShadow(); }
     const tail=(s.result==='MISS'||s.result==='POST')?1.8:1.05;   // fuori/palo: si vede il rimbalzo
     if(R.endT>tail){ replay=null; applyCamFov();
       try{ document.getElementById('replayCine').classList.remove('show'); }catch(e){}
       gameOverNow(); return; }                                // fov di ruolo ripristinato, bande via
   }
   if(ripple.t>=0){ ripple.t+=dt; if(ripple.t>2.2) ripple.t=-1; }
-  NetSim.step(dt);                                            // la rete massa-molla vive anche in moviola
+  NetSim.step(dt*0.5);                                        // la rete vive in moviola ALLA STESSA velocita' della palla (slow-mo coerente)
   // CAMERA MOVIOLA: posizione risolta da solveReplayCam (tutti i punti chiave nel
   // frustum, garantito su ogni aspect); qui solo il LENTO DOLLY in avanti (max -6%)
   if(replay.camD){
