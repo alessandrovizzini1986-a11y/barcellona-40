@@ -76,6 +76,13 @@
   #diffBanner{position:absolute;left:0;right:0;top:26%;text-align:center;font-size:11px;color:#ffd884;
     text-shadow:0 2px 8px #000;letter-spacing:.18em;opacity:0;transition:opacity .3s;pointer-events:none}
   #diffBanner.on{opacity:1}
+  /* MENU A CARD: tre modalità, una frase ciascuna */
+  .modeCards{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:10px 0 4px}
+  .mcard{font:inherit;font-size:13px;color:#e8eefc;background:linear-gradient(160deg,#101a33,#0a1226);
+    border:1px solid rgba(159,176,200,.35);border-radius:12px;padding:10px 6px;cursor:pointer;line-height:1.5}
+  .mcard b{display:block;font-size:7.5px;color:#ffd884;letter-spacing:.08em;margin-top:3px}
+  .mcard small{display:block;font-size:5.8px;color:#9fb0c8;margin-top:3px;line-height:1.6}
+  .mcard:active{transform:scale(.97)}
   /* SCHEDA DEL TIRO: potenza/effetto/distanza dal legno, 1.4s dopo l'esito */
   #shotCard{position:absolute;left:50%;transform:translateX(-50%);top:47%;font-size:7.5px;color:#e8eefc;
     background:rgba(6,10,24,.78);border:1px solid rgba(159,176,200,.4);border-radius:999px;padding:7px 13px;
@@ -342,6 +349,12 @@
 
   <div class="panel" id="menu">
     <h1>RIGORI<br><span class="gold">AL CAMP NOU</span></h1>
+    <!-- MENU A CARD: le tre modalità in una frase, un tocco e giochi -->
+    <div class="modeCards">
+      <button class="mcard" data-mc="rig">⚽<b>RIGORISTA</b><small>Serie infinita: segna finché non sbagli</small></button>
+      <button class="mcard" data-mc="five">🎯<b>SFIDA 5</b><small>5 rigori contro Ale, sfida gli amici col seed</small></button>
+      <button class="mcard" data-mc="keeper">🧤<b>PORTIERE</b><small>Reagisci d'istinto e para tutto</small></button>
+    </div>
     <button id="modeBtn" class="hudbtn modesel">∞ INFINITA</button>
     <button id="roleBtn" class="hudbtn modesel">⚽ TIRI TU</button>
     <button id="varBtn" class="hudbtn modesel" style="display:none">🎬 CLASSICO</button>
@@ -412,6 +425,10 @@
   <button class="srow" id="setSfx"><span>🔊 EFFETTI</span><b class="sw">ON</b></button>
   <button class="srow" id="setVoice"><span>🎙 TELECRONACA</span><b class="sw">ON</b></button>
   <button class="srow" id="setSens"><span>🎯 SENSIBILITÀ</span><b class="sw" id="sensVal">MEDIO</b></button>
+  <button class="srow" id="setShake"><span>📳 SCREEN-SHAKE</span><b class="sw">ON</b></button>
+  <button class="srow" id="setSlow"><span>🐌 SLOW-MOTION</span><b class="sw">ON</b></button>
+  <button class="srow" id="setVolM"><span>🎚 VOLUME MUSICA</span><b class="sw" id="volMVal">100%</b></button>
+  <button class="srow" id="setVolS"><span>🎚 VOLUME EFFETTI/FOLLA</span><b class="sw" id="volSVal">100%</b></button>
   <div class="stitle2">PALLONE</div>
   <div class="ballrow">
     <button class="ballopt" data-ball="classic"><i class="bi-classic"></i><small>CLASSICO</small></button>
@@ -606,6 +623,29 @@ const SENS_P={ lento:{ref:0.72, smooth:0.45, curl:0.68},
 function cycleSens(){ const L=['lento','medio','reattivo']; SENS=L[(L.indexOf(SENS)+1)%3];
   try{ localStorage.setItem('rig_sens',SENS); }catch(e){} }
 
+/* ---------- ACCESSIBILITÀ: shake/slow-mo disattivabili + volumi ------------ */
+let ACCESS={shake:true, slowmo:true};
+try{ const a=JSON.parse(localStorage.getItem('rig_access')||'{}');
+  if(typeof a.shake==='boolean') ACCESS.shake=a.shake;
+  if(typeof a.slowmo==='boolean') ACCESS.slowmo=a.slowmo; }catch(e){}
+function saveAccess(){ try{ localStorage.setItem('rig_access',JSON.stringify(ACCESS)); }catch(e){} }
+let VOLS={music:1, sfx:1};
+try{ const v=JSON.parse(localStorage.getItem('rig_vol')||'{}');
+  if(typeof v.music==='number') VOLS.music=clamp(v.music,0,1);
+  if(typeof v.sfx==='number')   VOLS.sfx=clamp(v.sfx,0,1); }catch(e){}
+function applyVols(){ try{ if(Sound.musicG) Sound.musicG.gain.value=VOLS.music;
+  if(Sound.sfxG) Sound.sfxG.gain.value=VOLS.sfx; }catch(e){}
+  try{ localStorage.setItem('rig_vol',JSON.stringify(VOLS)); }catch(e){} }
+const cycleVol=v=>{ const L=[1,0,0.33,0.66]; return L[(L.indexOf(v)+1)%4]!==undefined?L[(L.indexOf(v)+1)%4]:1; };
+
+/* ------- TUTORIAL LEGGERO: 3 rigori guidati al primo avvio (rig_tut) ------- */
+let TUT=-1; try{ if(!localStorage.getItem('rig_tut')) TUT=0; }catch(e){ TUT=-1; }
+const TUT_MSG=[ '1/3 — Trascina dal pallone verso l\'angolo e RILASCIA: il tiro parte',
+                '2/3 — PIEGA lo swipe di lato per dare EFFETTO a giro (o Q/E da tastiera)',
+                '3/3 — Gesto più LUNGO = più potenza. Il mirino verde dice che sei in porta' ];
+function tutDone(){ if(TUT>=0){ TUT=-1; try{ localStorage.setItem('rig_tut','1'); }catch(e){}
+  showTelecro('🎓 Tutorial finito: adesso fai sul serio!'); } }
+
 /* ------- VARIANTE della Sfida 5 rigori (chiave NUOVA rig5_var) ------------ */
 let FIVE_VAR='classic'; try{ const v=localStorage.getItem('rig5_var'); if(v==='classic'||v==='drama'||v==='crazy') FIVE_VAR=v; }catch(e){}
 const FIVE_VAR_LAB={classic:'🎬 CLASSICO', drama:'🎥 DRAMMA', crazy:'🎲 TIRO PAZZO'};
@@ -711,8 +751,8 @@ const Sound={ ctx:null,musicOn:true,sfxOn:true,voiceOn:true,_t:null,_step:0,_cro
     const comp=a.createDynamicsCompressor();
     comp.threshold.value=-14; comp.knee.value=8; comp.ratio.value=3.5; comp.attack.value=0.004; comp.release.value=0.18;
     this.master.connect(comp); comp.connect(a.destination);
-    this.musicG=a.createGain(); this.musicG.gain.value=1; this.musicG.connect(this.master);
-    this.sfxG=a.createGain(); this.sfxG.gain.value=1; this.sfxG.connect(this.master);
+    this.musicG=a.createGain(); this.musicG.gain.value=(typeof VOLS!=='undefined')?VOLS.music:1; this.musicG.connect(this.master);
+    this.sfxG=a.createGain(); this.sfxG.gain.value=(typeof VOLS!=='undefined')?VOLS.sfx:1; this.sfxG.connect(this.master);
     // eco stadio: mandata dal bus sfx -> delay con feedback filtrato -> master (wet basso)
     const d=a.createDelay(0.7); d.delayTime.value=0.27;
     const fb=a.createGain(); fb.gain.value=0.26;
@@ -2257,6 +2297,7 @@ function ballPathPos(t){
 // risolve target/risultato al rilascio del drag
 function shoot(){
   Sound.ac();
+  if(TUT>=0){ TUT++; if(TUT>=3) tutDone(); }        // tutorial: avanza a ogni tiro vero
   // VARIANTE "TIRO PAZZO": il 5° rigore della sfida è SEMPRE un tiro speciale
   if(MODE==='five' && FIVE_VAR==='crazy' && shotNum===4 && !specialArmed){
     specialArmed=true; showTelecro('🎲 TIRO PAZZO: l\'ultimo è SPECIALE! 💥'); }
@@ -2829,6 +2870,7 @@ function update(dt){
   scorePulseT=Math.max(0,scorePulseT-dt);
   shakeMag=Math.max(0,shakeMag-dt*2.2);
   if(camPunchT>0) camPunchT=Math.max(0,camPunchT-dt);
+  if(!ACCESS.slowmo) slowmo=0;                       // a11y: slow-motion riducibile a zero
   if(slowmo>0) slowmo=Math.max(0,slowmo-dt/(CONFIG.slowmoMs*(isManga()?1.6:1)/1000));   // slow-mo più lunga e drammatica in anime
 
   // RIFLETTORI VIVI: micro-pulsazione dei flare (respiro elettrico, fase diversa per faro)
@@ -3493,8 +3535,9 @@ function syncHUD(){
   HUD.menu.classList.toggle('show',state===STATE.MENU_SCREEN);
   HUD.over.classList.toggle('show',state===STATE.GAME_OVER);
   const playing=(state===STATE.GAME_PLAYING);
-  HUD.hint.textContent = keep? 'SEI IN PORTA 🧤 ALE tira da solo… REAGISCI: tocca/trascina dove vola la palla!' : 'trascina per mirare · rilascia per tirare';
-  HUD.hint.classList.toggle('on',playing && streak<2 && !five);
+  HUD.hint.textContent = keep? 'SEI IN PORTA 🧤 ALE tira da solo… REAGISCI: tocca/trascina dove vola la palla!'
+    : (TUT>=0 && TUT<3 ? '🎓 '+TUT_MSG[TUT] : 'trascina per mirare · rilascia per tirare');
+  HUD.hint.classList.toggle('on',playing && (streak<2 || TUT>=0) && !five);
   if(!playing){ HUD.power.classList.remove('on'); HUD.curl.classList.remove('on'); }
   const mb=document.getElementById('modeBtn'); if(mb) mb.textContent = five?'🎯 5 RIGORI':'∞ INFINITA';
   const rb=document.getElementById('roleBtn'); if(rb) rb.textContent = keep?'🧤 PARI TU':'⚽ TIRI TU';
@@ -3813,6 +3856,10 @@ HUD.snd.addEventListener('click',()=>{ const on=Sound.toggle(); HUD.snd.textCont
 function renderSettings(){
   const sw=(id,on)=>{ const el=document.querySelector(id+' .sw'); if(el){ el.textContent=on?'ON':'OFF'; el.classList.toggle('off',!on); } };
   sw('#setMusic',Sound.musicOn); sw('#setSfx',Sound.sfxOn); sw('#setVoice',Sound.voiceOn);
+  sw('#setShake',ACCESS.shake); sw('#setSlow',ACCESS.slowmo);
+  const vm=document.getElementById('volMVal'); if(vm) vm.textContent=Math.round(VOLS.music*100)+'%';
+  const vs=document.getElementById('volSVal'); if(vs) vs.textContent=Math.round(VOLS.sfx*100)+'%';
+  applyVols();
   document.querySelectorAll('.ballopt').forEach(b=>{ const k=b.dataset.ball, un=Progress.ballUnlocked(k);
     b.classList.toggle('locked',!un); b.classList.toggle('active',BALLSKIN===k);
     const lab=b.querySelector('small');
@@ -3867,6 +3914,19 @@ document.getElementById('setVoice').addEventListener('click',e=>{ e.stopPropagat
     DAILY=!DAILY; if(DAILY){ MODE='five'; try{localStorage.setItem('rig_mode',MODE);}catch(err){}
       showTelecro('📅 Sfida del giorno: 5 rigori, seed '+todayKey()+' — uguale per tutti, oggi!'); }
     syncHUD(); Sound.sfx(820,.05); });
+  // MENU A CARD: un tocco imposta modalità+ruolo e si GIOCA subito
+  document.querySelectorAll('.mcard').forEach(c=>c.addEventListener('click',e=>{ e.stopPropagation();
+    const k=c.dataset.mc;
+    ROLE = (k==='keeper')?'keeper':'shooter';
+    MODE = (k==='five')?'five':'infinite';
+    if(k!=='five') DAILY=false;
+    try{ localStorage.setItem('rig_role',ROLE); localStorage.setItem('rig_mode',MODE); }catch(err){}
+    applyIdentity(); startGame(); }));
+  // ACCESSIBILITÀ: shake e slow-mo on/off, volumi separati musica/effetti
+  document.getElementById('setShake').addEventListener('click',e=>{ e.stopPropagation(); ACCESS.shake=!ACCESS.shake; saveAccess(); renderSettings(); });
+  document.getElementById('setSlow').addEventListener('click',e=>{ e.stopPropagation(); ACCESS.slowmo=!ACCESS.slowmo; saveAccess(); renderSettings(); });
+  document.getElementById('setVolM').addEventListener('click',e=>{ e.stopPropagation(); VOLS.music=cycleVol(VOLS.music); applyVols(); renderSettings(); Sound.sfx(700,.05); });
+  document.getElementById('setVolS').addEventListener('click',e=>{ e.stopPropagation(); VOLS.sfx=cycleVol(VOLS.sfx); applyVols(); renderSettings(); Sound.sfx(700,.05); });
   document.getElementById('specBtn').addEventListener('click',e=>{ e.stopPropagation();
     if(specCharges>0){ specCharges--; specUsed++; armSpecial(); specHUD(); } });
   document.getElementById('seedLine').addEventListener('click',e=>{ e.stopPropagation();
@@ -4046,7 +4106,7 @@ class View {                                     // render Three.js + layer 2D (
     if(g.userData.t>0.95){ g.userData.t=-1; g.visible=false; for(const s of g.children) s.visible=false; }
   }
   // screen-shake: classe CSS su entrambe le canvas. Anime usa il keyframe "shk-a" (+50% ampiezza)
-  shake(level){ if(level<=0) return; const a=cv,b=this.fx, anime=isManga();
+  shake(level){ if(level<=0 || !ACCESS.shake) return; const a=cv,b=this.fx, anime=isManga();   // a11y: shake disattivabile
     a.classList.remove('shake','anime'); b.classList.remove('shake','anime'); void a.offsetWidth;
     a.classList.add('shake'); b.classList.add('shake');
     if(anime){ a.classList.add('anime'); b.classList.add('anime'); }   // PES contenuto · Anime brutale
