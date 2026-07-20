@@ -88,8 +88,9 @@
   .jstep .n{font-family:"Bodoni Moda",serif;font-size:26px;color:var(--gold-deep);line-height:1}
   .jstep h3{font-size:14px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-bright);font-weight:600}
   .es{color:var(--gold);font-style:italic;font-weight:600}
-  #jamonMap{height:340px;border-radius:18px;border:1px solid var(--line-gold);margin-top:12px;z-index:1;display:none}
-  #jamonMap.on{display:block}
+  #jamonMap,#notteMap{height:340px;border-radius:18px;border:1px solid var(--line-gold);margin-top:12px;z-index:1;display:none}
+  #jamonMap.on,#notteMap.on{display:block}
+  .lg-club:before{color:#ff5ea8} .lg-bar:before{color:#2EC4B6} .lg-rest:before{color:#E9CE93} .lg-roof:before{color:#9fd0ff}
   .maplegend{display:flex;gap:16px;justify-content:center;font-size:12px;color:var(--muted);margin-top:8px}
   .maplegend span:before{content:'●';margin-right:5px}
   .lg-merc:before{color:var(--teal)} .lg-jam:before{color:var(--gold)} .lg-hot:before{color:#fff}
@@ -97,6 +98,7 @@
   .plist{display:grid;gap:8px;margin-top:8px}
   .pl{background:var(--night-2);border:1px solid var(--line);border-radius:12px;padding:11px 14px;font-size:14px}
   .pl b{color:var(--gold-bright)} .pl small{display:block;margin-top:1px}
+  .plk a{font-size:12px;margin-right:2px;white-space:nowrap}
   .duo{display:grid;grid-template-columns:1fr 1fr;gap:10px}
   @media(max-width:520px){.duo{grid-template-columns:1fr}}
   footer{text-align:center;padding:44px 18px 10px;color:var(--muted)}
@@ -122,6 +124,7 @@
   <a href="#jamon">Jamón</a>
   <a href="#maremagnum">Maremagnum</a>
   <a href="#locali">Locali</a>
+  <a href="#notte">Notte</a>
   <a href="#dritte">Dritte</a>
 </nav>
 
@@ -321,6 +324,65 @@
     </div>
   </section>
 
+
+  <!-- LA NOTTE: 23 locali dalla guida TikTok, verificati uno per uno -->
+  <section id="notte">
+    <div class="seclab">La notte · verificata locale per locale</div>
+    <h2>Dai rooftop ai club: <em>la mappa della notte.</em></h2>
+    <p class="muted" style="font-size:13px">23 indirizzi dalla guida giusta, controllati uno a uno (luglio 2026): tutti aperti. Tre zone da capire: il <b class="gold">Born</b> (bar, 10&#8211;15 min a piedi da casa), il <b class="gold">lungomare</b> (i mega-club, 8 min di taxi) e il <b class="gold">triangolo di Carrer de Tuset</b> in zona alta &#8212; Focacha, Sutton, Bling Bling, Gatsby e Feroz in 100 metri (15 min di taxi). Le liste gratuite dei club si fanno con l&#8217;app <b>Xceed</b> (30 secondi, ingresso scontato se entri presto).</p>
+
+    <div class="alert">
+      <b>&#127874; Il piano per il SABATO del compleanno:</b>
+      <ol>
+        <li><b>18:30</b> &#8212; brindisi al tramonto a <b>The Roof</b> (Barcelona EDITION, 10 min a piedi da casa)</li>
+        <li><b>21:00</b> &#8212; cena-show da <b>Gatsby</b> (burlesque tra i tavoli, poi diventa club: prenotare 3&#8211;4 settimane prima segnalando il compleanno, camicia obbligatoria)</li>
+        <li><b>01:00</b> &#8212; se avete ancora benzina: <b>Sutton</b> o <b>Bling Bling</b> sono a 100 metri</li>
+      </ol>
+    </div>
+
+    <h3 style="font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-deep);margin:18px 0 4px">&#127926; Nightclub</h3>
+    <div class="plist">
+      <div class="pl"><b>Sutton</b> · zona alta<small>IL club per quarantenni: selezione severa = pubblico adulto. 15–20€ con drink · dress rigoroso (camicia, niente sneakers vistose) · lista Xceed valida fino alle 2<br><span class="plk"><a href="https://www.google.com/maps/search/?api=1&query=Sutton%20Club%20Carrer%20de%20Tuset%2013%20Barcelona" target="_blank" rel="noopener">📍 Maps</a> · <a href="https://www.thesuttonclub.com/en/" target="_blank" rel="noopener">🌐 Sito</a> · <a href="https://www.tripadvisor.it/Search?q=Sutton%20Club%20Barcelona" target="_blank" rel="noopener">⭐ TripAdvisor</a></span></small></div>
+      <div class="pl"><b>Bling Bling</b> · zona alta<small>Glamour, led e show a 50 m da Sutton · 15–20€ · vietate felpe e sneakers bianche · decidete sul posto tra i due in base alla fila<br><span class="plk"><a href="https://www.google.com/maps/search/?api=1&query=Bling%20Bling%20Carrer%20de%20Tuset%208%20Barcelona" target="_blank" rel="noopener">📍 Maps</a> · <a href="https://blingblingbcn.com/" target="_blank" rel="noopener">🌐 Sito</a> · <a href="https://www.tripadvisor.it/Search?q=Bling%20Bling%20Barcelona" target="_blank" rel="noopener">⭐ TripAdvisor</a></span></small></div>
+      <div class="pl"><b>Opium</b> · Barceloneta, fronte mare<small>Il mega-club in spiaggia: EDM/reggaeton, terrazza sul mare · 15–25€ · mossa da adulti: cena al suo ristorante e si entra senza fila<br><span class="plk"><a href="https://www.google.com/maps/search/?api=1&query=Opium%20Barcelona%20Passeig%20Maritim%2034" target="_blank" rel="noopener">📍 Maps</a> · <a href="https://opiumbarcelona.com/en/" target="_blank" rel="noopener">🌐 Sito</a> · <a href="https://www.tripadvisor.it/Search?q=Opium%20Barcelona" target="_blank" rel="noopener">⭐ TripAdvisor</a></span></small></div>
+      <div class="pl"><b>KU (ex Pacha)</b> · lungomare<small>Rinnovato nel 2025, a 100 m da Opium · entro le 00:30 paghi 10€ invece di 20 · doppio Opium+KU nella stessa notte fattibile<br><span class="plk"><a href="https://www.google.com/maps/search/?api=1&query=KU%20Barcelona%20Passeig%20Maritim%2038" target="_blank" rel="noopener">📍 Maps</a> · <a href="https://www.kubarcelona.com/" target="_blank" rel="noopener">🌐 Sito</a> · <a href="https://www.tripadvisor.it/Search?q=KU%20Barcelona%20club" target="_blank" rel="noopener">⭐ TripAdvisor</a></span></small></div>
+      <div class="pl" style="opacity:.55"><b>Downtown</b> · Les Corts<small>Pubblico ventenne/erasmus e posizione scomoda: si salta senza rimpianti (lo dice pure la ricerca)<br><span class="plk"><a href="https://www.google.com/maps/search/?api=1&query=Downtown%20Barcelona%20Avinguda%20Doctor%20Maranon%2017" target="_blank" rel="noopener">📍 Maps</a> · <a href="https://downtownbarcelona.es/" target="_blank" rel="noopener">🌐 Sito</a> · <a href="https://www.tripadvisor.it/Search?q=Downtown%20Barcelona%20club" target="_blank" rel="noopener">⭐ TripAdvisor</a></span></small></div>
+    </div>
+
+    <h3 style="font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-deep);margin:18px 0 4px">&#127864; Bar</h3>
+    <div class="plist">
+      <div class="pl"><b>Monk</b> · Born<small>Speakeasy neogotico dietro una finta drogheria (stessa famiglia di Paradiso) · cocktail 12–16€ · nei weekend coda virtuale col QR: arrivate prima delle 20<br><span class="plk"><a href="https://www.google.com/maps/search/?api=1&query=Monk%20Barcelona%20Carrer%20dels%20Abaixadors%2010" target="_blank" rel="noopener">📍 Maps</a> · <a href="https://monkbarcelona.com/" target="_blank" rel="noopener">🌐 Sito</a> · <a href="https://www.tripadvisor.it/Search?q=Monk%20Barcelona%20bar" target="_blank" rel="noopener">⭐ TripAdvisor</a></span></small></div>
+      <div class="pl"><b>Space Cowboy</b> · Born, 8 min da casa<small>Western-spaziale: cocktail 8–12€, comedy e la sala KARAOKE privata da prenotare per il gruppo — il vostro bar “di quartiere”<br><span class="plk"><a href="https://www.google.com/maps/search/?api=1&query=Space%20Cowboy%20Bar%20Carrer%20dels%20Carders%2031%20Barcelona" target="_blank" rel="noopener">📍 Maps</a> · <a href="https://www.spacecowboybcn.com/" target="_blank" rel="noopener">🌐 Sito</a> · <a href="https://www.tripadvisor.it/Search?q=Space%20Cowboy%20Barcelona" target="_blank" rel="noopener">⭐ TripAdvisor</a></span></small></div>
+      <div class="pl"><b>The Box</b> · Gòtic<small>Micro dive-bar: 60+ infusioni di rum/tequila in barattoli, cartoni al muro · shot 4–10€ · chiedete il giro di assaggi al banco<br><span class="plk"><a href="https://www.google.com/maps/search/?api=1&query=The%20Box%20Carrer%20d%27en%20Gignas%2030%20Barcelona" target="_blank" rel="noopener">📍 Maps</a> · <a href="https://www.instagram.com/thebox.bcn/" target="_blank" rel="noopener">🌐 Sito</a> · <a href="https://www.tripadvisor.it/Search?q=The%20Box%20Barcelona%20bar" target="_blank" rel="noopener">⭐ TripAdvisor</a></span></small></div>
+      <div class="pl"><b>Focacha</b> · zona alta (Tuset 17)<small>Sì, si chiama proprio così: speakeasy 2025 dietro una focacceria, sulla via di Sutton · il pre-serata perfetto: prenotate su Instagram @focacha.bcn<br><span class="plk"><a href="https://www.google.com/maps/search/?api=1&query=Focacha%20Carrer%20de%20Tuset%2017%20Barcelona" target="_blank" rel="noopener">📍 Maps</a> · <a href="https://focacha.bar/" target="_blank" rel="noopener">🌐 Sito</a> · <a href="https://www.tripadvisor.it/Search?q=Focacha%20Barcelona" target="_blank" rel="noopener">⭐ TripAdvisor</a></span></small></div>
+      <div class="pl"><b>Boca Chica</b> · Eixample<small>Bar barocco-coloniale sopra Boca Grande, pubblico elegante 30–50 · cocktail 14–18€ · i bagni sono un’attrazione a sé<br><span class="plk"><a href="https://www.google.com/maps/search/?api=1&query=Boca%20Chica%20Passatge%20de%20la%20Concepcio%2010%20Barcelona" target="_blank" rel="noopener">📍 Maps</a> · <a href="https://www.bocagrande.cat/" target="_blank" rel="noopener">🌐 Sito</a> · <a href="https://www.tripadvisor.it/Search?q=Boca%20Chica%20Barcelona" target="_blank" rel="noopener">⭐ TripAdvisor</a></span></small></div>
+      <div class="pl"><b>Espit Chupitos</b> · Eixample + Port Vell<small>500 chupitos a 2€, metà con fiamme e show · tappa-ponte da 30 minuti sulla strada verso i club del mare<br><span class="plk"><a href="https://www.google.com/maps/search/?api=1&query=Espit%20Chupitos%20Carrer%20d%27Aribau%2077%20Barcelona" target="_blank" rel="noopener">📍 Maps</a> · <a href="https://www.espitchupitos.com/" target="_blank" rel="noopener">🌐 Sito</a> · <a href="https://www.tripadvisor.it/Search?q=Espit%20Chupitos%20Barcelona" target="_blank" rel="noopener">⭐ TripAdvisor</a></span></small></div>
+    </div>
+
+    <h3 style="font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-deep);margin:18px 0 4px">&#127860; Party restaurant</h3>
+    <div class="plist">
+      <div class="pl"><b>Gatsby</b> · zona alta<small>Cena-spettacolo anni ’20: burlesque e live tra i tavoli, poi festa · 70–100€ · IL posto per la cena del compleanno · tavolo centrale vicino al palco<br><span class="plk"><a href="https://www.google.com/maps/search/?api=1&query=Gatsby%20Barcelona%20Carrer%20de%20Tuset%2019" target="_blank" rel="noopener">📍 Maps</a> · <a href="https://gatsbybarcelona.com/" target="_blank" rel="noopener">🌐 Sito</a> · <a href="https://www.tripadvisor.it/Search?q=Gatsby%20Barcelona%20restaurant" target="_blank" rel="noopener">⭐ TripAdvisor</a></span></small></div>
+      <div class="pl"><b>Feroz</b> · zona alta, a 30 m da Gatsby<small>Cena vera + DJ dalle 23 su due ambienti · 50–80€ · sala privata per gruppi con menù dedicato: alternativa seria per il compleanno<br><span class="plk"><a href="https://www.google.com/maps/search/?api=1&query=Feroz%20Restaurante%20Carrer%20de%20Tuset%2027%20Barcelona" target="_blank" rel="noopener">📍 Maps</a> · <a href="https://ferozbcn.com/en/" target="_blank" rel="noopener">🌐 Sito</a> · <a href="https://www.tripadvisor.it/Search?q=Feroz%20Barcelona%20restaurant" target="_blank" rel="noopener">⭐ TripAdvisor</a></span></small></div>
+      <div class="pl"><b>CDLC · Carpe Diem</b> · fronte mare<small>Letti balinesi e cena fusion vista mare, a mezzanotte diventa club · ~60€ · cena tardi in terrazza e si scivola dentro senza fila<br><span class="plk"><a href="https://www.google.com/maps/search/?api=1&query=CDLC%20Carpe%20Diem%20Lounge%20Club%20Barcelona" target="_blank" rel="noopener">📍 Maps</a> · <a href="https://cdlcbarcelona.com/en/" target="_blank" rel="noopener">🌐 Sito</a> · <a href="https://www.tripadvisor.it/Search?q=CDLC%20Barcelona" target="_blank" rel="noopener">⭐ TripAdvisor</a></span></small></div>
+      <div class="pl"><b>Boca Grande</b> · Eixample<small>Pesce e ostriche in interni spettacolari · 70–100€+ · molti locals saltano la cena e fanno solo il cocktail da Boca Chica di sopra<br><span class="plk"><a href="https://www.google.com/maps/search/?api=1&query=Boca%20Grande%20Passatge%20de%20la%20Concepcio%2012%20Barcelona" target="_blank" rel="noopener">📍 Maps</a> · <a href="https://www.bocagrande.cat/" target="_blank" rel="noopener">🌐 Sito</a> · <a href="https://www.tripadvisor.it/Search?q=Boca%20Grande%20Barcelona" target="_blank" rel="noopener">⭐ TripAdvisor</a></span></small></div>
+      <div class="pl"><b>Negro-Rojo</b> · Diagonal alta<small>Doppio concept Tragaluz (mediterraneo + sushi), club house fino alle 5 nel weekend · la serata “da locali” lontano dai turisti<br><span class="plk"><a href="https://www.google.com/maps/search/?api=1&query=Negro%20Rojo%20Avinguda%20Diagonal%20640%20Barcelona" target="_blank" rel="noopener">📍 Maps</a> · <a href="https://grupotragaluz.com/restaurantes/negro/" target="_blank" rel="noopener">🌐 Sito</a> · <a href="https://www.tripadvisor.it/Search?q=Negro%20Rojo%20Barcelona" target="_blank" rel="noopener">⭐ TripAdvisor</a></span></small></div>
+    </div>
+
+    <h3 style="font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-deep);margin:18px 0 4px">&#127751; Rooftop <span style="text-transform:none;letter-spacing:0;color:var(--muted)">(tramonto a ottobre: ~19:15 &#8212; salite per le 18:15)</span></h3>
+    <div class="plist">
+      <div class="pl"><b>The Roof</b> · Barcelona EDITION, Born<small>Il più vicino a casa (10 min): giardino sul tetto vista Santa Caterina, aperto tutto l’anno · cocktail 14–18€ · per gruppi scrivete prima all’hotel<br><span class="plk"><a href="https://www.google.com/maps/search/?api=1&query=The%20Roof%20Barcelona%20EDITION%20Avinguda%20Francesc%20Cambo%2014" target="_blank" rel="noopener">📍 Maps</a> · <a href="https://www.editionhotels.com/barcelona/restaurants-and-bars/the-roof/" target="_blank" rel="noopener">🌐 Sito</a> · <a href="https://www.tripadvisor.it/Search?q=The%20Roof%20Barcelona%20EDITION" target="_blank" rel="noopener">⭐ TripAdvisor</a></span></small></div>
+      <div class="pl"><b>Terraza de Vivi</b> · Kimpton Vividora, Gòtic<small>Vista 360° sul Gotico e la Cattedrale · elegante, prenotate un tavolo lato Cattedrale per il tramonto · cocktail 14–16€<br><span class="plk"><a href="https://www.google.com/maps/search/?api=1&query=Terraza%20de%20Vivi%20Kimpton%20Vividora%20Barcelona" target="_blank" rel="noopener">📍 Maps</a> · <a href="https://casadevivi.com/en/rooftop-terraza-de-vivi-en/" target="_blank" rel="noopener">🌐 Sito</a> · <a href="https://www.tripadvisor.it/Search?q=Terraza%20de%20Vivi%20Barcelona" target="_blank" rel="noopener">⭐ TripAdvisor</a></span></small></div>
+      <div class="pl"><b>L’Àtic · Lamaro Hotel</b> · davanti alla Cattedrale<small>L’ex Hotel Colón rimesso a nuovo: vista frontale sui campanili · ingresso 4€, solo walk-in: arrivate entro le 18:15 per i tavolini a bordo terrazza<br><span class="plk"><a href="https://www.google.com/maps/search/?api=1&query=Lamaro%20Hotel%20Avinguda%20de%20la%20Catedral%207%20Barcelona" target="_blank" rel="noopener">📍 Maps</a> · <a href="https://lamarohotel.com/en/rooftop" target="_blank" rel="noopener">🌐 Sito</a> · <a href="https://www.tripadvisor.it/Search?q=Lamaro%20Hotel%20Barcelona%20rooftop" target="_blank" rel="noopener">⭐ TripAdvisor</a></span></small></div>
+      <div class="pl"><b>Eleven BCN</b> · Rambla de Catalunya<small>11° piano vista 360° (Sagrada, Tibidabo, mare) · venerdì sera c’è il DJ · solo walk-in al bar: arrivate presto e restate per l’ora blu<br><span class="plk"><a href="https://www.google.com/maps/search/?api=1&query=Eleven%20BCN%20Rambla%20de%20Catalunya%2026%20Barcelona" target="_blank" rel="noopener">📍 Maps</a> · <a href="https://www.elevenbcn-rooftopbar.com/en/" target="_blank" rel="noopener">🌐 Sito</a> · <a href="https://www.tripadvisor.it/Search?q=Eleven%20BCN%20rooftop" target="_blank" rel="noopener">⭐ TripAdvisor</a></span></small></div>
+      <div class="pl"><b>La Terraza del Pulitzer</b> · Pl. Catalunya<small>Giungla urbana coi DJ set (a metà ottobre gli ultimi della stagione) · la più abbordabile: cocktail 10–14€ · piccola: prenotate<br><span class="plk"><a href="https://www.google.com/maps/search/?api=1&query=Hotel%20Pulitzer%20Barcelona%20Carrer%20de%20Bergara%208" target="_blank" rel="noopener">📍 Maps</a> · <a href="https://www.hotelpulitzer.es/eat-drink/la-terraza" target="_blank" rel="noopener">🌐 Sito</a> · <a href="https://www.tripadvisor.it/Search?q=Terraza%20Pulitzer%20Barcelona" target="_blank" rel="noopener">⭐ TripAdvisor</a></span></small></div>
+      <div class="pl"><b>Tope</b> · The Hoxton, Poblenou<small>Taqueria sul tetto vista Torre Glòries: tacos e margarita frozen, zero pretese · occhio: chiude per l’inverno a metà novembre — a ottobre ci siete dentro<br><span class="plk"><a href="https://www.google.com/maps/search/?api=1&query=Tope%20The%20Hoxton%20Poblenou%20Barcelona" target="_blank" rel="noopener">📍 Maps</a> · <a href="https://topetacos.com/barcelona/" target="_blank" rel="noopener">🌐 Sito</a> · <a href="https://www.tripadvisor.it/Search?q=Tope%20Hoxton%20Barcelona" target="_blank" rel="noopener">⭐ TripAdvisor</a></span></small></div>
+    </div>
+
+    <div id="notteMap" aria-label="Mappa dei locali della notte"></div>
+    <div class="maplegend"><span class="lg-club">Club</span><span class="lg-bar">Bar</span><span class="lg-rest">Party restaurant</span><span class="lg-roof">Rooftop</span><span class="lg-hot">Casa</span></div>
+    <p class="muted" style="font-size:12px;margin-top:8px">Regola d&#8217;oro locale: si cena alle 21&#8211;22, i bar si riempiono a mezzanotte, i club all&#8217;1. E ai club di zona alta il dress code &#232; una cosa seria: camicia e scarpe vere, o si resta fuori.</p>
+  </section>
+
   <!-- DRITTE -->
   <section id="dritte">
     <div class="seclab">Dritte finali</div>
@@ -373,6 +435,50 @@ window.addEventListener('load', function(){
   // hotel
   pin(41.39539,2.17955,WHITE,'Aparthotel Nàpols – Abapart','Carrer de Nàpols 116 · la vostra base');
 });
+
+// MAPPA DELLA NOTTE: club (fucsia), bar (teal), party restaurant (oro), rooftop (azzurro), casa (bianco)
+window.addEventListener('load', function(){
+  var el=document.getElementById('notteMap');
+  if(!window.L || !el) return;
+  el.classList.add('on');
+  var map=L.map('notteMap',{scrollWheelZoom:false}).setView([41.389,2.172],13);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap'}).addTo(map);
+  function pin(lat,lng,color,label,sub){
+    var gm='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(label+' Barcelona');
+    L.circleMarker([lat,lng],{radius:8,color:'#050507',weight:2,fillColor:color,fillOpacity:0.95})
+      .addTo(map).bindPopup('<b>'+label+'</b><br><small>'+sub+'</small><br><a href="'+gm+'" target="_blank" rel="noopener">📍 Apri in Google Maps</a>');
+  }
+  var CLUB='#ff5ea8', BAR='#2EC4B6', REST='#E9CE93', ROOF='#9fd0ff', WHITE='#ffffff';
+  // club
+  pin(41.3966,2.1499,CLUB,'Sutton','Tuset 13 · il club per adulti, dress rigoroso');
+  pin(41.3960,2.1503,CLUB,'Bling Bling','Tuset 8-10 · glamour, a 50 m da Sutton');
+  pin(41.3852,2.1973,CLUB,'Opium','Pg. Marítim 34 · beach club, terrazza sul mare');
+  pin(41.3856,2.1980,CLUB,'KU (ex Pacha)','Pg. Marítim 38 · entro le 00:30 = 10€');
+  pin(41.3838,2.1130,CLUB,'Downtown','Av. Dr. Marañón 17 · pubblico ventenne, skippabile');
+  // bar
+  pin(41.3838,2.1815,BAR,'Monk','Abaixadors 10, Born · speakeasy dietro la drogheria');
+  pin(41.3866,2.1822,BAR,'Space Cowboy','Carders 31, Born · karaoke privato, 8 min da casa');
+  pin(41.3808,2.1810,BAR,'The Box','Gignàs 30 · 60 infusioni, shot 4-10€');
+  pin(41.3968,2.1500,BAR,'Focacha','Tuset 17 · speakeasy dietro la focacceria');
+  pin(41.3948,2.1594,BAR,'Boca Chica','Ptge. Concepció 10 · barocco-coloniale, bagni wow');
+  pin(41.3891,2.1560,BAR,'Espit Chupitos','Aribau 77 (+ Pg. Colom 8) · chupitos 2€ col fuoco');
+  // party restaurant
+  pin(41.3953,2.1503,REST,'Gatsby','Tuset 19-21 · cena-show anni \'20, LA cena del compleanno');
+  pin(41.3956,2.1501,REST,'Feroz','Tuset 27 · cena + DJ, sala privata per gruppi');
+  pin(41.3850,2.1969,REST,'CDLC · Carpe Diem','Pg. Marítim 32 · letti balinesi, poi club');
+  pin(41.3944,2.1598,REST,'Boca Grande','Ptge. Concepció 12 · pesce e ostriche, interni pazzeschi');
+  pin(41.3927,2.1380,REST,'Negro-Rojo','Diagonal 640 · sushi + club house fino alle 5');
+  // rooftop
+  pin(41.3857,2.1793,ROOF,'The Roof · EDITION','Av. Francesc Cambó 14 · a 10 min da casa');
+  pin(41.3848,2.1723,ROOF,'Terraza de Vivi','Duc 15, Kimpton · 360° sul Gotico');
+  pin(41.3856,2.1764,ROOF,'L\'Àtic · Lamaro','Av. Catedral 7 · vista Cattedrale, 4€ walk-in');
+  pin(41.3898,2.1671,ROOF,'Eleven BCN','Rambla de Catalunya 26 · 11° piano, DJ il venerdì');
+  pin(41.3862,2.1682,ROOF,'La Terraza del Pulitzer','Bergara 8 · DJ set, la più abbordabile');
+  pin(41.4040,2.1940,ROOF,'Tope · The Hoxton','Diagonal 205 · tacos vista Torre Glòries');
+  // casa
+  pin(41.39539,2.17955,WHITE,'Aparthotel Nàpols – Abapart','Carrer de Nàpols 116 · la vostra base');
+});
+
 </script>
 </body>
 </html>
