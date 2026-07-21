@@ -94,6 +94,16 @@
   .maplegend{display:flex;gap:16px;justify-content:center;font-size:12px;color:var(--muted);margin-top:8px}
   .maplegend span:before{content:'●';margin-right:5px}
   .lg-merc:before{color:var(--teal)} .lg-jam:before{color:var(--gold)} .lg-hot:before{color:#fff}
+  /* SEZIONI RIPIEGATE (Jobs: superficie pulita · Bezos: dettaglio a un tocco) */
+  .fold summary{list-style:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .fold summary::-webkit-details-marker{display:none}
+  .fold .sintesi{color:var(--muted);font-size:13.5px;margin-top:2px}
+  .foldcaret{display:inline-block;color:var(--gold-deep);transition:transform .25s;margin-left:4px}
+  .fold[open] .foldcaret{transform:rotate(180deg)}
+  .fold summary:hover h2{color:var(--gold-bright)}
+  .fold .foldbody{margin-top:12px;animation:foldin .35s ease}
+  @keyframes foldin{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+  section{margin:26px 0;border-bottom:1px solid var(--line);padding-bottom:18px}
   /* LISTE LOCALI */
   .plist{display:grid;gap:8px;margin-top:8px}
   .pl{background:var(--night-2);border:1px solid var(--line);border-radius:12px;padding:11px 14px;font-size:14px}
@@ -130,6 +140,20 @@
 
 <div class="wrap">
 
+  <!-- IL WEEKEND IN 10 RIGHE: la risposta prima della domanda. Il dettaglio è
+       tutto qui sotto, ripiegato: una sezione = un tocco. -->
+  <div class="card" id="inbreve" style="margin-top:22px">
+    <h3 style="letter-spacing:.14em;text-transform:uppercase">Il weekend in 10 righe</h3>
+    <p style="line-height:1.9;font-size:14px;margin-top:8px">
+      &#9992;&#65039; <b>Ven 16</b> — atterri alle 8:05: Boqueria, <b>Sagrada a mezzogiorno</b> (biglietto!), Camp Nou tour, sera nel Born.<br>
+      &#129309; <b>Sab 17</b> — Mario atterra alle 9:45: mercati e Gotico a costo zero, tramonto a <b>The Roof</b>, <b>cena dei 40 da Benzina</b>, poi Sutton.<br>
+      &#127958;&#65039; <b>Dom 18</b> — mare o Park G&#252;ell, Maremagnum, volo alle 23:05.<br>
+      &#127968; Base: <b>Abapart, N&#224;pols 116</b> (Eixample) &#183; &#128663; taxi medio in citt&#224; 7&#8211;11&#8364;<br>
+      &#128071; Tutto il dettaglio &#232; nelle sezioni qui sotto: <b>tocca una riga per aprirla</b>.
+    </p>
+  </div>
+
+
   <div class="alert">
     <b>⚠️ Da prenotare ADESSO (si esauriscono):</b>
     <ol>
@@ -141,8 +165,11 @@
 
   <!-- VENERDI -->
   <section id="venerdi">
+  <details class="fold"><summary>
     <div class="seclab">Venerdì 16 · da solo</div>
     <h2>Atterri alle 8. <em>Si parte forte.</em></h2>
+    <p class="sintesi">Da solo coi biglietti giusti: Boqueria, Sagrada a mezzogiorno, Camp Nou, sera nel Born. <span class="foldcaret">&#9662;</span></p></summary>
+  <div class="foldbody">
     <ul class="tl">
       <li><span class="h">8:45</span><b>Aerobús A1/A2 → Pl. Catalunya</b><p>~35 min, 7,25€. Poi 15 min a piedi o L1 fino ad Arc de Triomf: valigia all'<b>Abapart (Carrer de Nàpols 116)</b> — check-in alle 15, ma la tengono loro.</p></li>
       <li><span class="h">10:00</span><b>La Boqueria + colazione al Bar Pinotxo</b><p>Il banco storico dentro il mercato. Primo cono di jamón della vita (vedi guida sotto). Girala ora che è viva.</p></li>
@@ -154,12 +181,16 @@
       <li><span class="h">21:30</span><b>Cena: El Xampanyet</b><p>Cava della casa e acciughe leggendarie, dal 1929. Vai presto o fai fila. Piano B di livello: Bar Cañete (Raval, ~40€).</p></li>
       <li><span class="h">23:00</span><b>Serata per conoscere gente</b><p><b>Ovella Negra</b> (tavoloni + caraffe, impossibile non fare amicizia) → <b>Espit Chupitos</b> (500 chupito, alcuni flambé) → oppure <b>pub crawl del Gòtic</b> da Plaça Reial (~20€): finisci in gruppo in un club al porto per le 2. Alternativa fine: bancone del <b>Paradiso</b> (Born), tra i migliori cocktail bar del mondo.</p></li>
     </ul>
+  </div></details>
   </section>
 
   <!-- SABATO -->
   <section id="sabato">
+  <details class="fold"><summary>
     <div class="seclab">Sabato 17 · con Mario</div>
     <h2>Lui atterra alle 9. <em>Giornata a costo zero.</em></h2>
+    <p class="sintesi">Arriva Mario: mercati e Gotico a costo zero, tramonto in rooftop, la cena dei 40. <span class="foldcaret">&#9662;</span></p></summary>
+  <div class="foldbody">
     <ul class="tl">
       <li><span class="h">9:30</span><b>Tu: mercato di Santa Caterina</b><p>13 min a piedi dall'Abapart, il tetto ondulato di ceramiche colorate. Mario intanto viaggia: sarà in hotel per le 10:45.</p></li>
       <li><span class="h">11:15</span><b>Arc de Triomf → Parc de la Ciutadella</b><p>La Cascada monumentale (ci lavorò Gaudí studente), i pappagalli, il lago. Gratis.</p></li>
@@ -171,12 +202,16 @@
       <li><span class="h">22:15</span><b>Cena low cost a Carrer de Blai</b><p>Poble-sec, a 10 min a piedi: la via dei pinchos a 1–2€ (Blai 9, La Tasqueta de Blai). Giovane, rumorosa, perfetta.</p></li>
     </ul>
     <div class="card"><h3>Bonus se avanza tempo</h3><p class="muted">Il <b class="gold">MNAC è gratis il sabato dalle 15:00</b> — anche solo la sala grande e la vista dalla scalinata valgono la deviazione. E <b class="gold">Els Encants</b> (il mercato delle pulci sotto lo specchio dorato, Glòries) sabato è aperto fino alle 20.</p></div>
+  </div></details>
   </section>
 
   <!-- DOMENICA -->
   <section id="domenica">
+  <details class="fold"><summary>
     <div class="seclab">Domenica 18 · gran finale</div>
     <h2>Il giorno che <em>non ti aspetti.</em></h2>
+    <p class="sintesi">Gran finale: mare o collina, flamenco, volo alle 23. <span class="foldcaret">&#9662;</span></p></summary>
+  <div class="foldbody">
     <p class="muted" style="font-size:14px">La domenica i mercati e mezzi negozi sono chiusi: è il giorno delle cose che i turisti si perdono.</p>
     <ul class="tl" style="margin-top:14px">
       <li><span class="h">9:00</span><b>Churros y chocolate — Granja La Pallaresa</b><p>Carrer Petritxol (Gòtic), dal 1947. Cioccolata da cucchiaio.</p></li>
@@ -187,12 +222,16 @@
       <li><span class="h">20:00</span><b>Flamenco</b><p><b>23 Robadors</b> (Raval, ~10€, crudo e vero) o <b>Palau Dalmases</b> (Born, palazzo barocco, ~25€). Mezz'ora di brividi per chiudere il weekend.</p></li>
     </ul>
     <div class="card"><h3>Variante adrenalina</h3><p class="muted">Nel weekend è aperto il <b class="gold">Tibidabo</b>: luna park del 1901 in cima alla montagna, con la giostra dell'aeroplano e la vista più vertiginosa d'Europa.</p></div>
+  </div></details>
   </section>
 
   <!-- SPOSTAMENTI: a piedi vs Uber, dalla base -->
   <section id="spostamenti">
+  <details class="fold"><summary>
     <div class="seclab">Spostamenti dalla base</div>
     <h2>A piedi o Uber? <em>Le due varianti.</em></h2>
+    <p class="sintesi">A piedi o Uber da casa: tempi e prezzi per ogni destinazione. <span class="foldcaret">&#9662;</span></p></summary>
+  <div class="foldbody">
     <p class="muted" style="font-size:13px;margin-bottom:10px">Tutti i tempi partono dall'<b class="gold">Abapart (Nàpols 116)</b>. Prezzi = corsa media <b>Uber/Cabify/FREE NOW</b> di giorno; di notte (22–06) conta un <b>+15–20%</b>. La corsa minima in città è ~€7: sotto i 15 minuti a piedi il taxi raramente conviene.</p>
     <div class="plist">
       <div class="pl"><b>Sagrada Família</b><small>🚶 13 min · 🚕 5 min · ~€7</small></div>
@@ -208,12 +247,16 @@
       <div class="pl"><b>Aeroporto El Prat</b><small>🚌 Aerobús 35 min · €7,25 · 🚕 25–30 min · ~€35–40 (i taxi da/per l'aeroporto hanno supplemento fisso — Uber costa uguale)</small></div>
     </div>
     <p class="muted" style="font-size:12px;margin-top:8px">Dritta: le app funzionano tutte (Uber, Cabify, FREE NOW), ma a Barcellona quasi sempre ti mandano un <b>taxi ufficiale</b> giallo-nero: stesso prezzo, arrivo in 2–4 min. In strada si ferma anche a mano se ha la luce verde accesa.</p>
+  </div></details>
   </section>
 
   <!-- MERCATI -->
   <section id="mercati">
+  <details class="fold"><summary>
     <div class="seclab">La missione mercati</div>
     <h2>Boqueria, Santa Caterina <em>e il terzo che vale.</em></h2>
+    <p class="sintesi">Boqueria presto, Santa Caterina con calma, Sant Antoni da locali. <span class="foldcaret">&#9662;</span></p></summary>
+  <div class="foldbody">
     <div class="card">
       <h3>🥇 La Boqueria — Rambla 91</h3>
       <p>Lun–sab 8–20:30, <b>domenica CHIUSA</b> → va fatta ven/sab. Regola da locale: <b>supera i primi banchi</b> (i coni di frutta all'ingresso sono i più cari) e vai in profondità. Da fare: cono di jamón (5–10€), succhi a 1,5€ nei banchi interni, ostriche + cava, e il <b>Bar Pinotxo</b> (chipirones, cap i pota) o <b>El Quim</b> (uova fritte coi gamberi). Vai alle 9–11: dopo le 12 è un imbuto.</p>
@@ -227,12 +270,16 @@
       <p>Ristrutturato, gigantesco, zero trappole — e il quartiere intorno è il più in fermento della città. Lun–sab 8–20. <b>Domenica mattina</b> intorno al mercato c'è lo storico <b>mercatino dei libri</b> (8–14): incastrato apposta nell'itinerario di domenica.</p>
       <p class="muted" style="margin-top:8px"><small>Menzione: <b>Els Encants</b> (Glòries) — pulci e vintage sotto lo specchio dorato gigante, 10 min di metro. Solo se avanza tempo sabato.</small></p>
     </div>
+  </div></details>
   </section>
 
   <!-- JAMON: GUIDA DEFINITIVA -->
   <section id="jamon">
+  <details class="fold"><summary>
     <div class="seclab">Guida definitiva al jamón ibérico</div>
     <h2>Dal banco del mercato <em>alla valigia.</em></h2>
+    <p class="sintesi">La guida definitiva: fascette, tagli, dove comprarlo e il rituale a casa. <span class="foldcaret">&#9662;</span></p></summary>
+  <div class="foldbody">
 
     <div class="jstep"><span class="n">1</span><h3>Le regole d'oro — etichette e quantità</h3></div>
     <p class="muted" style="font-size:14px">Sul garretto c'è una fascetta colorata: è la legge spagnola, e ti dice tutto.</p>
@@ -280,24 +327,32 @@
     <div class="jstep"><span class="n">📍</span><h3>La mappa del jamón</h3></div>
     <div id="jamonMap" aria-label="Mappa di mercati e jamonerías consigliate"></div>
     <div class="maplegend"><span class="lg-merc">Mercati</span><span class="lg-jam">Jamonerías</span><span class="lg-hot">Abapart · Nàpols 116</span></div>
+  </div></details>
   </section>
 
   <!-- MAREMAGNUM -->
   <section id="maremagnum">
+  <details class="fold"><summary>
     <div class="seclab">Guida Maremagnum</div>
     <h2>Il jolly della <em>domenica.</em></h2>
+    <p class="sintesi">Il centro commerciale sul mare, aperto anche di domenica. <span class="foldcaret">&#9662;</span></p></summary>
+  <div class="foldbody">
     <div class="card">
       <p>Moll d'Espanya, Port Vell: ci si arriva dalla Rambla attraversando la <b>Rambla de Mar</b>, la passerella di legno che si apre per far passare le barche. <b>Aperto 365 giorni l'anno, 10–21</b> (ristoranti fino a mezzanotte): quando la domenica tutta Barcellona ha la serranda giù, lui no.</p>
       <p style="margin-top:8px">~40 negozi: Mango, H&M, Bershka, Pull&Bear, Lefties, Lacoste, Victoria's Secret… e soprattutto la <b>FC Botiga, lo store ufficiale del Barça</b> — maglia blaugrana d'ordinanza per voi due, visto il gioco dei rigori. ⚽</p>
       <p style="margin-top:8px">La novità grossa: sul rooftop ha aperto il <b>Time Out Market</b> — food hall coi migliori locali scelti da Time Out e terrazza-belvedere sul porto e sullo skyline. Ognuno prende da un banco diverso, tavolo condiviso, tramonto sul porto: cena di domenica risolta senza prenotare.</p>
       <p class="muted" style="margin-top:8px"><small>Accanto c'è L'Aquàrium col tunnel degli squali: carta di riserva se piove.</small></p>
     </div>
+  </div></details>
   </section>
 
   <!-- LOCALI -->
   <section id="locali">
+  <details class="fold"><summary>
     <div class="seclab">Dove si mangia e si beve meglio</div>
     <h2>La lista <em>salva-serata.</em></h2>
+    <p class="sintesi">La lista salva-serata: dove si mangia e si beve meglio. <span class="foldcaret">&#9662;</span></p></summary>
+  <div class="foldbody">
     <div class="duo">
       <div>
         <h3 style="font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-deep);margin:10px 0 4px">Mangiare</h3>
@@ -322,13 +377,17 @@
         </div>
       </div>
     </div>
+  </div></details>
   </section>
 
 
   <!-- LA NOTTE: 23 locali dalla guida TikTok, verificati uno per uno -->
   <section id="notte">
+  <details class="fold"><summary>
     <div class="seclab">La notte · verificata locale per locale</div>
     <h2>Dai rooftop ai club: <em>la mappa della notte.</em></h2>
+    <p class="sintesi">28 locali verificati: club, bar, rooftop e le cene di festa più quotate. <span class="foldcaret">&#9662;</span></p></summary>
+  <div class="foldbody">
     <p class="muted" style="font-size:13px">23 indirizzi dalla guida giusta, controllati uno a uno (luglio 2026): tutti aperti. Tre zone da capire: il <b class="gold">Born</b> (bar, 10&#8211;15 min a piedi da casa), il <b class="gold">lungomare</b> (i mega-club, 8 min di taxi) e il <b class="gold">triangolo di Carrer de Tuset</b> in zona alta &#8212; Focacha, Sutton, Bling Bling, Gatsby e Feroz in 100 metri (15 min di taxi). Le liste gratuite dei club si fanno con l&#8217;app <b>Xceed</b> (30 secondi, ingresso scontato se entri presto).</p>
 
     <div class="alert">
@@ -391,12 +450,16 @@
     <div id="notteMap" aria-label="Mappa dei locali della notte"></div>
     <div class="maplegend"><span class="lg-club">Club</span><span class="lg-bar">Bar</span><span class="lg-rest">Party restaurant</span><span class="lg-roof">Rooftop</span><span class="lg-hot">Casa</span></div>
     <p class="muted" style="font-size:12px;margin-top:8px">Regola d&#8217;oro locale: si cena alle 21&#8211;22, i bar si riempiono a mezzanotte, i club all&#8217;1. E ai club di zona alta il dress code &#232; una cosa seria: camicia e scarpe vere, o si resta fuori.</p>
+  </div></details>
   </section>
 
   <!-- DRITTE -->
   <section id="dritte">
+  <details class="fold"><summary>
     <div class="seclab">Dritte finali</div>
     <h2>Piccole cose <em>che salvano il viaggio.</em></h2>
+    <p class="sintesi">Borseggiatori, orari spagnoli e piccole regole che salvano il viaggio. <span class="foldcaret">&#9662;</span></p></summary>
+  <div class="foldbody">
     <div class="card"><p>
       🎒 Portafoglio in tasca davanti su Rambla e metro: i borseggiatori sono un'istituzione locale.<br><br>
       🕘 Si cena alle 21–22, i locali si riempiono a mezzanotte, i club all'1. Non arrivare in discoteca alle 23 da italiano.<br><br>
@@ -405,6 +468,7 @@
       📅 Domenica: Boqueria e Santa Caterina CHIUSE, negozi del centro chiusi → per questo domenica = Maremagnum + sardane + paella.<br><br>
       ⚽ Ah: se il Barça gioca in casa quel weekend, i prezzi dei tour cambiano e Collblanc si blinda — controlla il calendario della Liga a settembre.
     </p></div>
+  </div></details>
   </section>
 
   <footer>
@@ -424,6 +488,7 @@ window.addEventListener('load', function(){
   if(!window.L || !el) return;                 // senza Leaflet la mappa resta nascosta (niente riquadro vuoto)
   el.classList.add('on');
   var map=L.map('jamonMap',{scrollWheelZoom:false}).setView([41.386,2.170],14);
+  (window._maps=window._maps||[]).push(map);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,
     attribution:'&copy; OpenStreetMap'}).addTo(map);
   function pin(lat,lng,color,label,sub){
@@ -452,6 +517,7 @@ window.addEventListener('load', function(){
   if(!window.L || !el) return;
   el.classList.add('on');
   var map=L.map('notteMap',{scrollWheelZoom:false}).setView([41.389,2.172],13);
+  (window._maps=window._maps||[]).push(map);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap'}).addTo(map);
   function pin(lat,lng,color,label,sub){
     var gm='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(label+' Barcelona');
@@ -496,6 +562,24 @@ window.addEventListener('load', function(){
   pin(41.39539,2.17955,WHITE,'Aparthotel Nàpols – Abapart','Carrer de Nàpols 116 · la vostra base');
 });
 
+</script>
+
+<script>
+// Le chip della nav APRONO la sezione ripiegata prima di scrollarci (e idem gli hash diretti)
+(function(){
+  function openTarget(hash){ try{ var el=document.querySelector(hash); if(!el) return;
+    var d=el.querySelector('details.fold'); if(d) d.open=true; }catch(e){} }
+  document.querySelectorAll('nav a[href^="#"]').forEach(function(a){
+    a.addEventListener('click',function(){ openTarget(a.getAttribute('href')); }); });
+  if(location.hash) setTimeout(function(){ openTarget(location.hash);
+    var el=document.querySelector(location.hash); if(el) el.scrollIntoView(); },150);
+  // le mappe Leaflet nate dentro un details chiuso hanno size 0: al toggle si ricalcolano
+  window._maps=window._maps||[];
+  document.querySelectorAll('details.fold').forEach(function(d){
+    d.addEventListener('toggle',function(){ if(!d.open) return;
+      setTimeout(function(){ (window._maps||[]).forEach(function(m){ try{m.invalidateSize();}catch(e){} }); },120); });
+  });
+})();
 </script>
 </body>
 </html>
