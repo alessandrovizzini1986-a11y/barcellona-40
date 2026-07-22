@@ -268,6 +268,14 @@
     radial-gradient(80% 50% at 15% 110%,rgba(0,77,152,.06),transparent 60%),var(--night-0)}
   .grain{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
     background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+  /* FUTURO: transizioni di pagina native tra le pagine del sito */
+  @view-transition{navigation:auto}
+  ::view-transition-old(root){animation:vtOut .28s ease both}
+  ::view-transition-new(root){animation:vtIn .34s ease both}
+  @keyframes vtOut{to{opacity:0;transform:scale(.985)}}
+  @keyframes vtIn{from{opacity:0;transform:scale(1.012)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion: reduce){ ::view-transition-old(root),::view-transition-new(root){animation:none} }
 </style>
 </head>
 <body>
