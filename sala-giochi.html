@@ -2,7 +2,9 @@
 <html lang="it">
 <head>
 <meta charset="UTF-8">
+<meta name="description" content="La sala giochi dei 40 di Ale: rigori 3D al Camp Nou e gli altri giochi del compleanno.">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#06060d">
 <meta name="robots" content="noindex,nofollow">
 <title>SALA GIOCHI</title>
@@ -46,6 +48,15 @@
   @keyframes vtOut{to{opacity:0;transform:scale(.985)}}
   @keyframes vtIn{from{opacity:0;transform:scale(1.012)}to{opacity:1;transform:none}}
   @media (prefers-reduced-motion: reduce){ ::view-transition-old(root),::view-transition-new(root){animation:none} }
+
+  /* ======= RIFINITURA EDITORIALE: micro-tipografia, focus, resa numerica ======= */
+  h1,h2,h3{text-wrap:balance}
+  p,li,small,.sintesi{text-wrap:pretty}
+  :focus-visible{outline:2px solid var(--gold,#E9CE93);outline-offset:3px;border-radius:6px}
+  :focus:not(:focus-visible){outline:none}
+  .skiplink{position:fixed;top:-48px;left:12px;z-index:99;background:var(--gold,#E9CE93);color:#050507;
+    padding:9px 15px;border-radius:10px;font-weight:700;font-size:13px;transition:top .2s}
+  .skiplink:focus{top:12px}
 </style>
 </head>
 <body>

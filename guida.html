@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#050507">
 <title>La Guida · I 40 di Ale a Barcellona</title>
 <meta name="description" content="La guida operativa del weekend: itinerario venerdì-sabato-domenica, mercati, jamón ibérico, Maremagnum e i locali giusti. 16–18 ottobre 2026.">
@@ -17,6 +18,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..600;1,6..96,400..600&family=Outfit:wght@300..600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://unpkg.com" crossorigin>
+<link rel="dns-prefetch" href="https://tile.openstreetmap.org">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
@@ -173,9 +176,19 @@
     ::view-transition-old(root),::view-transition-new(root){animation:none}
   }
 
+
+  /* ======= RIFINITURA EDITORIALE: micro-tipografia, focus, resa numerica ======= */
+  h1,h2,h3{text-wrap:balance}
+  p,li,small,.sintesi{text-wrap:pretty}
+  :focus-visible{outline:2px solid var(--gold,#E9CE93);outline-offset:3px;border-radius:6px}
+  :focus:not(:focus-visible){outline:none}
+  .skiplink{position:fixed;top:-48px;left:12px;z-index:99;background:var(--gold,#E9CE93);color:#050507;
+    padding:9px 15px;border-radius:10px;font-weight:700;font-size:13px;transition:top .2s}
+  .skiplink:focus{top:12px}
 </style>
 </head>
 <body>
+<a class="skiplink" href="#inbreve">Salta al contenuto</a>
 <div class="aurora" aria-hidden="true"></div>
 <div class="grain" aria-hidden="true"></div>
 <div id="readbar" aria-hidden="true"></div>
@@ -187,7 +200,7 @@
   <a class="backlink" href="index.html">← torna alla plancia</a>
 </header>
 
-<nav>
+<nav aria-label="Sezioni della guida">
   <a href="#venerdi">Venerdì</a>
   <a href="#sabato">Sabato</a>
   <a href="#domenica">Domenica</a>
@@ -203,7 +216,7 @@
   <a href="#dritte">Dritte</a>
 </nav>
 
-<div class="wrap">
+<div class="wrap" role="main">
 
   <!-- IL WEEKEND IN 10 RIGHE: la risposta prima della domanda. Il dettaglio è
        tutto qui sotto, ripiegato: una sezione = un tocco. -->
