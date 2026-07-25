@@ -498,6 +498,7 @@
   <button class="srow" id="setVolM"><span>🎚 VOLUME MUSICA</span><b class="sw" id="volMVal">100%</b></button>
   <button class="srow" id="setVolS"><span>🎚 VOLUME EFFETTI/FOLLA</span><b class="sw" id="volSVal">100%</b></button>
   <button class="srow" id="setHFace"><span>🎃 TESTE HALLOWEEN</span><b class="sw" id="hfaceVal">ZUCCA</b></button>
+  <button class="srow" id="setMeteo"><span>⛅ METEO</span><b class="sw" id="meteoVal">AUTO</b></button>
   <div class="stitle2">PALLONE</div>
   <div class="ballrow">
     <button class="ballopt" data-ball="classic"><i class="bi-classic"></i><small>CLASSICO</small></button>
@@ -726,6 +727,17 @@ let FIVE_VAR='classic'; try{ const v=localStorage.getItem('rig5_var'); if(v==='c
 const FIVE_VAR_LAB={classic:'🎬 CLASSICO', drama:'🎥 DRAMMA', crazy:'🎲 TIRO PAZZO'};
 function cycleFiveVar(){ const L=['classic','drama','crazy']; FIVE_VAR=L[(L.indexOf(FIVE_VAR)+1)%3];
   try{ localStorage.setItem('rig5_var',FIVE_VAR); }catch(e){} }
+
+/* -------- METEO dinamico (chiave NUOVA rig_meteo, default auto) -------- */
+const METEO_LIST=['auto','sereno','pioggia','temporale','nebbia','neve'];
+const METEO_LAB={auto:'AUTO',sereno:'\u2600\uFE0F SERENO',pioggia:'\uD83C\uDF27 PIOGGIA',temporale:'\u26C8 TEMPORALE',nebbia:'\uD83C\uDF2B NEBBIA',neve:'\u2744\uFE0F NEVE'};
+const METEO_ANN={pioggia:'\uD83C\uDF27 Piove su Barcellona: pallone viscido, occhio alle respinte!',
+  temporale:'\u26C8 TEMPORALE sullo stadio \u2014 tuoni e fulmini veri!',
+  nebbia:'\uD83C\uDF2B Nebbia fitta sul prato: si vede poco\u2026',
+  neve:'\u2744\uFE0F Nevica! Atmosfera da Mondiale d\u2019inverno.'};
+let METEO='auto'; try{ const w=localStorage.getItem('rig_meteo'); if(METEO_LIST.includes(w)) METEO=w; }catch(e){}
+function cycleMeteo(){ METEO=METEO_LIST[(METEO_LIST.indexOf(METEO)+1)%METEO_LIST.length];
+  try{ localStorage.setItem('rig_meteo',METEO); }catch(e){} }
 
 /* --------- CURVA DI DIFFICOLTÀ A BLOCCHI (gradini netti ogni 5) ----------- */
 // Il livello effettivo sale a SCALINI ogni 5 rigori: dentro il blocco la
@@ -2256,6 +2268,8 @@ function startGame(){ streak=0; shotNum=0; goals5=0; aleSaves=0; suddenDeath=fal
   specCharges=0; specUsed=0; specGoalRun=0; _lastBlk=0;
   if(DAILY && MODE==='five') roundSeed=dailySeed();                               // SFIDA DEL GIORNO: seed dalla data
   else if(!challengeFromURL) roundSeed=Math.floor(Math.random()*2.1e9).toString(36);   // nuovo seed ogni partita (la SFIDA da URL lo fissa)
+  const wcond=Weather.roll();                                                     // METEO della partita (in SFIDA esce dal seed: stesso link = stesso cielo)
+  if(METEO_ANN[wcond]) setTimeout(()=>{ try{ showTelecro(METEO_ANN[wcond]); }catch(e){} },450);
   Sound.intensity=0;
   applyIdentity();                                   // identita' coerenti col ruolo scelto
   resetForShot(); Sound.ac();
@@ -2521,7 +2535,7 @@ function buildFlight(tx,ty,p,curl,style,special,bufOverride){
 const _parryBuf=new Float32Array(3*Math.ceil(PHYS.TMAX/PHYS.SAMPLE)+6);
 function tryParry(sim,guess,guessY,power,extra,rng){
   if(!sim || sim.crossT<0) return null;
-  const prob=clamp((power-0.42)*1.15 + (extra||0), 0, 0.88);  // piu' potenza = piu' respinte
+  const prob=clamp((power-0.42)*1.15 + (extra||0) + (Weather.wet()?0.05:0), 0, 0.88);  // piu' potenza = piu' respinte (+5% col pallone bagnato)
   if(rng()>=prob) return null;                                // presa PULITA nei guantoni
   const cv=sim.crossVel;
   const vin=new THREE.Vector3(cv.x,cv.y,cv.z);
@@ -3118,6 +3132,7 @@ function updateReplay(dt){
   if(ripple.t>=0){ ripple.t+=dt; if(ripple.t>2.2) ripple.t=-1; }
   NetSim.step(dt*0.5);                                        // la rete vive in moviola ALLA STESSA velocita' della palla (slow-mo coerente)
   updBallSquash(dt*0.5);
+  Weather.update(dt*0.5);                                     // il meteo vive anche in moviola (slow-mo coerente)
   // CAMERA MOVIOLA: posizione risolta da solveReplayCam (tutti i punti chiave nel
   // frustum, garantito su ogni aspect); qui solo il LENTO DOLLY in avanti (max -6%)
   if(replay.camD){
@@ -3184,6 +3199,7 @@ function update(dt){
   if(!ACCESS.slowmo) slowmo=0;                       // a11y: slow-motion riducibile a zero
   if(slowmo>0) slowmo=Math.max(0,slowmo-dt/(CONFIG.slowmoMs*(isManga()?1.6:1)/1000));   // slow-mo più lunga e drammatica in anime
   updBallSquash(dt);
+  Weather.update(dt);                                // pioggia/neve/fulmini vivono a velocita' reale
 
   // RIFLETTORI VIVI: micro-pulsazione dei flare (respiro elettrico, fase diversa per faro)
   if(lights.beams){ const hd=highDetailMode();
@@ -4271,10 +4287,67 @@ function updateHallow(dt){
   // FULMINI: ogni 9-16 secondi flash bianco + tuono + shake
   HW.boltT-=dt;
   if(HW.boltT<=0){ HW.boltT=9+Math.random()*7;
-    const el=document.getElementById('hwFlash');
-    if(el){ el.classList.remove('on'); void el.offsetWidth; el.classList.add('on'); }
-    try{ Sound.thunder(); engine.view.shake(0.5); }catch(e){} }
+    if(Weather.cond!=='temporale') Weather.bolt(false); }   // col TEMPORALE attivo comanda il meteo (lampi suoi, niente doppioni)
 }
+
+/* ================= METEO DINAMICO (pioggia · temporale · nebbia · neve) =================
+   La condizione viene RISOLTA a inizio partita: scelta dal menu impostazioni o, in
+   AUTO, pescata con pesi per stile (halloween tira verso temporale/nebbia). Con un
+   seed di SFIDA il meteo esce dall'RNG deterministico: stesso link = stesso cielo.
+   Particelle su UN solo THREE.Points (buffer riusato pioggia/neve, count adattivo
+   via highDetailMode). Fulmini unificati col flash halloween (#hwFlash) ma con
+   DOPPIO COLPO (leader + return stroke) e TUONO IN RITARDO dal lampo, come nella
+   realta' — il suono viaggia, la luce no. */
+const Weather={ cond:'sereno', pts:null, buf:null, vel:null, N:340, boltT:0, _thT:null,
+  roll(){ this.cond = METEO==='auto' ? this._auto() : METEO; this.apply(); return this.cond; },
+  _auto(){
+    const rng = roundSeed ? mulberry32((strHash(roundSeed)^0x5EED0)>>>0) : Math.random;
+    const t=rng();
+    if(isHallow()) return t<0.34?'temporale' : t<0.62?'nebbia' : t<0.76?'pioggia' : t<0.88?'sereno':'neve';
+    return t<0.46?'sereno' : t<0.66?'pioggia' : t<0.78?'temporale' : t<0.90?'nebbia':'neve'; },
+  wet(){ return this.cond==='pioggia'||this.cond==='temporale'; },
+  _mk(){ if(this.pts||!scene) return;
+    const N=this.N, pos=new Float32Array(N*3); this.vel=new Float32Array(N*2);
+    const g=new THREE.BufferGeometry(); g.setAttribute('position',new THREE.BufferAttribute(pos,3));
+    const m=new THREE.PointsMaterial({color:0x9fb8dd,size:0.05,transparent:true,opacity:0.5,depthWrite:false,sizeAttenuation:true});
+    this.pts=new THREE.Points(g,m); this.pts.frustumCulled=false; this.pts.renderOrder=2;
+    this.buf=pos; scene.add(this.pts); },
+  _seed(i,fromTop){ const p=this.buf;
+    p[i*3]=rand(-14,14); p[i*3+1]=fromTop? 13+Math.random()*2 : rand(0.2,13); p[i*3+2]=rand(-3,15);
+    this.vel[i*2]=rand(-0.4,0.4); this.vel[i*2+1]= this.cond==='neve'? rand(1.2,2.4) : rand(11,16); },
+  apply(){ if(!scene) return; this._mk();
+    const c=this.cond, snow=c==='neve', prec=this.wet()||snow;
+    if(this.pts){ this.pts.visible=prec;
+      if(prec){ this.pts.material.color.setHex(snow?0xffffff:(isHallow()?0x8fa0cc:0x9fb8dd));
+        this.pts.material.size=snow?0.085:0.05; this.pts.material.opacity=snow?0.85:0.5;
+        for(let i=0;i<this.N;i++) this._seed(i,false);
+        this.pts.geometry.attributes.position.needsUpdate=true; } }
+    // NEBBIA: stringe il fog DELLO STILE (halloween ha gia' il suo violaceo: lo accorcio ancora)
+    if(scene.fog){ if(c==='nebbia'){ scene.fog.near=isHallow()?7:9; scene.fog.far=isHallow()?24:30; }
+      else { scene.fog.near=isHallow()?16:26; scene.fog.far=isHallow()?46:60; } }
+    this.boltT = c==='temporale'? 2.5+Math.random()*4 : 0; },
+  // FULMINE: doppio lampo sfalsato (realistic) + tuono ritardato 0.4-2s con shake
+  bolt(realistic){ const el=document.getElementById('hwFlash');
+    if(el){ el.classList.remove('on'); void el.offsetWidth; el.classList.add('on');
+      if(realistic) setTimeout(()=>{ try{ el.classList.remove('on'); void el.offsetWidth; el.classList.add('on'); }catch(e){} },130); }
+    const delay = realistic? 400+Math.random()*1600 : 0;
+    if(this._thT) clearTimeout(this._thT);
+    this._thT=setTimeout(()=>{ this._thT=null;
+      try{ Sound.thunder(); if(ACCESS.shake) engine.view.shake(realistic?0.7:0.5); }catch(e){} },delay); },
+  update(dt){
+    if(this.cond==='temporale'){ this.boltT-=dt;
+      if(this.boltT<=0){ this.boltT=4+Math.random()*8; this.bolt(true); } }
+    if(!this.pts || !this.pts.visible) return;
+    const hd=highDetailMode(), lim=hd? this.N : (this.N*0.35|0);   // adaptive: sui telefoni lenti restano ~120 gocce
+    const snow=this.cond==='neve', p=this.buf;
+    for(let i=0;i<this.N;i++){ const off=i*3;
+      if(i>=lim){ if(p[off+1]>-50) p[off+1]=-99; continue; }       // eccedenza parcheggiata sotto il campo
+      if(p[off+1]<-50) this._seed(i,true);
+      p[off+1]-=this.vel[i*2+1]*dt;
+      p[off]  +=this.vel[i*2]*dt*(snow?1:0.3) + (snow? Math.sin(stateT*1.7+i)*dt*0.5 : 0);
+      if(p[off+1]<0) this._seed(i,true); }
+    this.pts.geometry.attributes.position.needsUpdate=true; }
+};
 
 /* ----- STILE: PES (realistico) · HOLLY & BENJI (anime) · PELUCHE · 8-BIT ----- */
 // texture stadio/curva per lo stile corrente (fallback sempre alla PES)
@@ -4319,6 +4392,7 @@ function applyGFX(){
     applyBallSkin();                       // palla-zucca maledetta in halloween, skin scelta altrove
     hallowMood(isHallow());                // fog denso violaceo + riflettori arancio (con ripristino)
     hallowEnv(isHallow());                 // luna/lapidi/nebbia/pipistrelli/ragni (creati una volta, toggle visible)
+    Weather.apply();                       // il METEO si ri-applica sopra lo stile (fog nebbia, colore gocce)
   }catch(e){}
   try{ applyPixelDensity(); if(engine&&engine.view) engine.view._sizeFx(); }catch(e){}   // risoluzione per stile
   document.querySelectorAll('.stbtn').forEach(b=>b.classList.toggle('active', b.dataset.gfx===GFX));
@@ -4527,6 +4601,7 @@ function renderSettings(){
   const vm=document.getElementById('volMVal'); if(vm) vm.textContent=Math.round(VOLS.music*100)+'%';
   const vs=document.getElementById('volSVal'); if(vs) vs.textContent=Math.round(VOLS.sfx*100)+'%';
   const hf=document.getElementById('hfaceVal'); if(hf) hf.textContent=(HFACE==='faces')?'FACCE':'ZUCCA';
+  const mv=document.getElementById('meteoVal'); if(mv) mv.textContent=METEO_LAB[METEO]||'AUTO';
   applyVols();
   document.querySelectorAll('.ballopt').forEach(b=>{ const k=b.dataset.ball, un=Progress.ballUnlocked(k);
     b.classList.toggle('locked',!un); b.classList.toggle('active',BALLSKIN===k);
@@ -4599,6 +4674,10 @@ document.getElementById('setVoice').addEventListener('click',e=>{ e.stopPropagat
   document.getElementById('setHFace').addEventListener('click',e=>{ e.stopPropagation();
     HFACE=(HFACE==='zucca')?'faces':'zucca'; try{ localStorage.setItem('rig_hface',HFACE); }catch(err){}
     renderSettings(); try{ hallowHeads(); }catch(err){} Sound.sfx(700,.05); });
+  // ⛅ METEO: AUTO pesca a inizio partita (seed-coerente in SFIDA); forzato = anteprima subito
+  document.getElementById('setMeteo').addEventListener('click',e=>{ e.stopPropagation();
+    cycleMeteo(); renderSettings(); Sound.sfx(700,.05);
+    if(METEO!=='auto'){ Weather.cond=METEO; try{ Weather.apply(); }catch(err){} } });
   document.getElementById('specBtn').addEventListener('click',e=>{ e.stopPropagation();
     if(specCharges>0){ specCharges--; specUsed++; armSpecial(); specHUD(); } });
   document.getElementById('seedLine').addEventListener('click',e=>{ e.stopPropagation();
@@ -4933,6 +5012,8 @@ try{ const _kd=new URLSearchParams(location.search).get('kdbg'); if(_kd==='1'||_
       envOn:!!(HW&&HW.on), bats:HW?HW.bats.filter(b=>b.visible).length:0,
       faceHW:!!(kickerFace&&kickerFace.userData.hwSaved), keeperFaceHW:!!(keeperFace&&keeperFace.userData.hwSaved),
       fog:scene&&scene.fog? scene.fog.color.getHexString():'', hface:HFACE }; },
+    get meteo(){ return { cond:Weather.cond, sel:METEO, vis:Weather.pts?(Weather.pts.visible?1:0):-1,
+      fogN:scene&&scene.fog?scene.fog.near:0, boltT:Math.round(Weather.boltT*10)/10 }; },
     get netDbg(){ if(!NetSim.p) return null;
       const base=backNet.userData.base; let m=0,mi=0;
       for(let i=0;i<NetSim.n;i++){ const k=i*3;
