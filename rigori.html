@@ -1245,6 +1245,7 @@ let keeperDive=null;
 let aimRing, aimDot, trajLine, ballShadow, ballTrail;
 let state=STATE.LOADING, streak=0, stateT=0, lastT=0;
 let shot=null, shakeMag=0, ripple={t:-1,x:0,y:0}, scorePulseT=0, slowmo=0, camPunchT=0;
+let ballSquashT=-1;   // squash&stretch della palla al contatto (per stile)
 let hitStop=0;                     // freeze-frame "anime" (sec) all'impatto
 let capT=-1;                       // timer per catturare il frame del gol (per la Highlight Card)
 let aimHist=[];                    // segni (-1/0/1) dei tiri recenti -> portiere "psicologico"
@@ -1919,9 +1920,9 @@ function startKickerKick(){
   if(!useGLBKicker || !kickerAct.kick){ kickT=0; return; }  // se manca il GLB usa il lean procedurale
   kickPhase='runup'; kickPhaseT=0;
   CharFSM.set('kicker','rincorsa');                          // FSM: parte la rincorsa
-  if(kickerGLB){ kickerGLB.position.set(KICK_STANCE.x,0,KICK_STANCE.z); kickerGLB.rotation.y=KICK_STANCE.yaw; }
+  if(kickerGLB){ kickerGLB.position.set(KICK_STANCE.x,0,KICK_STANCE.z); kickerGLB.rotation.y=KICK_STANCE.yaw; kickerGLB.rotation.x=0; kickerGLB.rotation.z=0; }
   const r=kickerAct.run;
-  if(r){ r.loop=THREE.LoopRepeat; fadeKicker(r,1.2,0.08); kickPhase='runup'; kickPhaseT=0; }  // fadeKicker non tocca la fase
+  if(r){ r.loop=THREE.LoopRepeat; fadeKicker(r,1.2,0.16); kickPhase='runup'; kickPhaseT=0; }   // crossfade lungo: mai scatti idle->corsa  // fadeKicker non tocca la fase
 }
 // velocita' dello SWING legata alla potenza del tiro: un tiro forte e' un colpo
 // rapido, un cucchiaio e' un tocco morbido (vale anche in moviola: il mixer
@@ -2256,7 +2257,8 @@ function resetForShot(){
   if(useGLBKeeper){ keeper.scale.x=1; keeperDive=null; playKeeper('idle'); }
   if(kicker){ kicker.rotation.set(0,0,0); } kickT=-1;
   if(useGLBKicker && kickerGLB){ kickPhase=''; kickPhaseT=0; playKicker('idle');
-    kickerGLB.position.set(KICK_STANCE.x,0,KICK_STANCE.z); kickerGLB.rotation.y=KICK_STANCE.yaw;    // torna in postura di rincorsa
+    kickerGLB.position.set(KICK_STANCE.x,0,KICK_STANCE.z); kickerGLB.rotation.y=KICK_STANCE.yaw;
+    kickerGLB.rotation.x=0; kickerGLB.rotation.z=0;    // torna in postura di rincorsa (lean azzerato)
     kickerGLB.rotation.z=0; kickerGLB.scale.y=kickerGLB.scale.x; }                                  // fine THRILLER/afflosciamento halloween
   ghostRestore();                                    // palla fantasma: opacita'/transparent tornano normali
   aim.active=false; aim.power=0; aim.curl=0; aim.t0=0; aimRing.visible=aimDot.visible=trajLine.visible=false;
@@ -2527,6 +2529,13 @@ function ballPathPos(t){
   if(shot && shot.parrySim && t>=shot.parryCut) posFromPath(shot.parrySim, t-shot.parryCut);
   else if(shot && shot.sim) posFromPath(shot.sim, t);
 }
+// SQUASH & STRETCH al contatto: la palla si schiaccia per ~2 frame e torna tonda
+// (impercettibile in PES, esagerato in Anime: la personalita' resta per stile)
+function updBallSquash(dt){ if(ballSquashT<0||!ball) return;
+  ballSquashT+=dt; const d=ballSquashT/0.11;
+  if(d>=1){ ball.scale.set(1,1,1); ballSquashT=-1; return; }
+  const k=(isManga()?0.45:isPeluche()?0.34:is8bit()?0.28:isHallow()?0.38:0.2)*(1-d);
+  ball.scale.set(1+k*0.8, 1-k, 1+k*0.8); }
 // risolve target/risultato al rilascio del drag
 function shoot(){
   Sound.ac();
@@ -3051,7 +3060,7 @@ function updateReplay(dt){
   // (updateKicker e i mixer avanzano anch'essi a dt*0.5 durante la moviola)
   if(!R.kickStarted && R.t>=-R.wind){ R.kickStarted=true; if(useGLBKicker) startKickerKick(); }
   if(R.t>=0 && !R.impact){
-    if(!R.kicked){ R.kicked=true; Sound.kick(0.6); }
+    if(!R.kicked){ R.kicked=true; Sound.kick(0.6); ballSquashT=0; }
     const p=clamp(R.t/s.dur,0,1);
     if(s.sim && s.sim.n>1){ posFromPath(s.sim, R.t*s.simRate); }   // stesso path fisico del live
     else {
@@ -3091,6 +3100,7 @@ function updateReplay(dt){
   }
   if(ripple.t>=0){ ripple.t+=dt; if(ripple.t>2.2) ripple.t=-1; }
   NetSim.step(dt*0.5);                                        // la rete vive in moviola ALLA STESSA velocita' della palla (slow-mo coerente)
+  updBallSquash(dt*0.5);
   // CAMERA MOVIOLA: posizione risolta da solveReplayCam (tutti i punti chiave nel
   // frustum, garantito su ogni aspect); qui solo il LENTO DOLLY in avanti (max -6%)
   if(replay.camD){
@@ -3156,6 +3166,7 @@ function update(dt){
   if(camPunchT>0) camPunchT=Math.max(0,camPunchT-dt);
   if(!ACCESS.slowmo) slowmo=0;                       // a11y: slow-motion riducibile a zero
   if(slowmo>0) slowmo=Math.max(0,slowmo-dt/(CONFIG.slowmoMs*(isManga()?1.6:1)/1000));   // slow-mo più lunga e drammatica in anime
+  updBallSquash(dt);
 
   // RIFLETTORI VIVI: micro-pulsazione dei flare (respiro elettrico, fase diversa per faro)
   if(lights.flares) for(const f of lights.flares){
@@ -3194,12 +3205,13 @@ function update(dt){
       const rp2=clamp(shot.t/Math.max(0.01,wind),0,1);
       ball.rotation.y+=dt*0.4; updateBallShadow();
       // portiere in TENSIONE: shuffle nervoso sulla linea + si carica scendendo sulle gambe
-      keeper.position.x=shot.keeperFrom + Math.sin(stateT*7)*0.04*(1-rp2*0.5);
-      keeper.position.y=-0.05*rp2; keeper.rotation.z*=0.9;
+      keeper.position.x=shot.keeperFrom + Math.sin(stateT*7)*0.06*(1-rp2*0.5);   // micro-passi nervosi
+      keeper.position.y=-0.09*rp2;                                              // si carica scendendo sulle gambe keeper.rotation.z*=0.9;
       if(isHallow() && isKeeper()) Sound.hbPulse(rp2);   // HALLOWEEN da portiere: il cuore ACCELERA con la rincorsa
     } else {
     if(!shot.launched){ shot.launched=true;               // CONTATTO: suono del calcio + linee cinetiche
       Sound.kick(shot.power); speedLines(); haptic(10);
+      if(!shot.special) ballSquashT=0;                    // squash al contatto (lo special ha gia' la sua pulsazione)
       if(shot.style==='chip'){ engine.view.popWord('CUCCHIAIO!','#9fd0ff'); showTelecro(isKeeper()?'🥄 Cucchiaio! NON tuffarti in anticipo…':'🥄 CUCCHIAIO! Che coraggio…'); }
       else if(shot.style==='low'){ engine.view.popWord('RASOIATA!','#ffd24a'); } }
     const p=clamp(ft/shot.dur,0,1);
@@ -3658,11 +3670,16 @@ function updateKicker(dt){
       const wind=(shot&&shot.windup)||KICK_WINDUP_GLB;
       const ts=kickSwingTS(), lead=Math.max(0.05,(KICK_CONTACT-KICK_START_OFFSET)/ts);  // ultimo passo = clip kick (swing scalato con la potenza)
       const tRun=Math.max(0.05,wind-lead);
-      const p=clamp(kickPhaseT/tRun,0,1), e=p*p*(3-2*p);              // accelera, arriva lanciato
+      // RINCORSA ESPLOSIVA: partenza morbida, arrivo lanciato (e(1)=1: il contatto non si sposta)
+      const p=clamp(kickPhaseT/tRun,0,1), e=p*p*(2.2-1.2*p);
       const yawT=(shot&&shot.kickYaw)||0;                             // il corpo si apre VERSO il bersaglio del tiro
       kickerGLB.position.x=lerp(KICK_STANCE.x,KICK_PLANT.x,e);
       kickerGLB.position.z=lerp(KICK_STANCE.z,KICK_PLANT.z,e);
       kickerGLB.rotation.y=lerp(KICK_STANCE.yaw,yawT,e);
+      // LEAN da rincorsa vera: busto avanti in accelerazione, si raddrizza al plant;
+      // spalla che si chiude verso il lato del tiro nell'ultimo passo
+      kickerGLB.rotation.x=-0.16*Math.sin(Math.PI*Math.min(1,p*1.12));
+      kickerGLB.rotation.z=-yawT*0.35*p;
       if(kickPhaseT>=tRun) fireKickClip();                            // contatto = lancio palla
       return;
     }
@@ -3671,7 +3688,11 @@ function updateKicker(dt){
       if(kickPhaseT>lead){ const q=clamp((kickPhaseT-lead)/0.45,0,1), e=1-(1-q)*(1-q); // slancio che decelera
         kickerGLB.position.x=KICK_PLANT.x;
         kickerGLB.position.z=lerp(KICK_PLANT.z,KICK_FOLLOW_Z,e);
-        kickerGLB.rotation.y=(shot&&shot.kickYaw)||0; }               // il follow-through resta aperto sul tiro
+        const yawT=(shot&&shot.kickYaw)||0;
+        // FOLLOW-THROUGH con torsione: il busto ruota oltre il bersaglio e si assesta
+        kickerGLB.rotation.y=yawT+0.26*Math.sign(yawT||1)*Math.sin(Math.min(1,q*1.4)*Math.PI)*(1-q*0.6);
+        kickerGLB.rotation.x*=Math.max(0,1-dt*6);                     // il busto si raddrizza
+        kickerGLB.rotation.z*=Math.max(0,1-dt*6); }
     }
     return; }
   // fallback procedurale: lean avanti e ritorno
@@ -3679,6 +3700,30 @@ function updateKicker(dt){
   kickT+=dt; const sw=Math.sin(Math.min(1,kickT/0.45)*Math.PI);
   kicker.rotation.x=-0.34*sw;
   if(kickT>0.55){ kickT=-1; kicker.rotation.x=0; }
+}
+/* SGUARDO SULLA PALLA (head-tracking): dopo il contatto, portiere e rigorista
+   seguono il pallone con la testa — vende la direzione del tiro anche in moviola.
+   Additivo DOPO il mixer, ampiezza clampata, rientro morbido quando non serve. */
+let _hkBone=null,_hgBone=null,_htK=0,_htG=0;
+const _wrapPi=a=>{ while(a>Math.PI)a-=2*Math.PI; while(a<-Math.PI)a+=2*Math.PI; return a; };
+function _findHead(root){ let b=null; if(!root) return null;
+  root.traverse(o=>{ if(!b && o.isBone && /head/i.test(o.name||'')) b=o; }); return b; }
+function applyHeadTracking(dt){
+  const flying=(state===STATE.BALL_IN_FLIGHT || state===STATE.GOAL_ANIMATION || replay) && shot && shot.launched && ball;
+  // RIGORISTA: guarda dove ha calciato (forward del modello = -z al netto dello yaw)
+  if(useGLBKicker && kickerGLB){ if(!_hkBone) _hkBone=_findHead(kickerGLB);
+    if(_hkBone){ let want=0;
+      if(flying && !celeb){
+        const dx=ball.position.x-kickerGLB.position.x, dz=ball.position.z-kickerGLB.position.z;
+        want=clamp(_wrapPi(Math.atan2(-dx,-dz)-kickerGLB.rotation.y), -0.65, 0.65); }
+      _htK+=(want-_htK)*Math.min(1,dt*6); _hkBone.rotation.y+=_htK; } }
+  // PORTIERE: segue la palla in arrivo (il gruppo guarda +z verso il dischetto)
+  if(useGLBKeeper && keeperInner){ if(!_hgBone) _hgBone=_findHead(keeperInner);
+    if(_hgBone){ let want=0;
+      if(flying){
+        const dx=ball.position.x-keeper.position.x, dz=ball.position.z-keeper.position.z;
+        want=clamp(_wrapPi(Math.atan2(dx,dz)-keeper.rotation.y), -0.6, 0.6); }
+      _htG+=(want-_htG)*Math.min(1,dt*6); _hgBone.rotation.y+=_htG; } }
 }
 // faccia del giocatore (Mario/Giulio) agganciata alla testa del rigorista GLB
 const _kfwd=new THREE.Vector3(), _ktoCam=new THREE.Vector3();
@@ -4780,6 +4825,7 @@ class View {                                     // render Three.js + layer 2D (
     if(keeperMixer){ keeperMixer.update(adt); applyKeeperReach(); }
     if(kickerMixer){ kickerMixer.update(adt); }
     updateKeeperFace(); updateKickerFace(); updateKicker(adt);
+    applyHeadTracking(adt);                        // DOPO i mixer: lo sguardo segue la palla (il mixer sovrascriverebbe il collo)
     renderer.render(scene,camera);
     this.draw2D(dt);                              // HUD/particelle 2D dopo il 3D (no DOM nel loop)
     if(capT>=0){ capT+=dt; if(capT>0.45){ try{ lastShotPNG=cv.toDataURL('image/jpeg',0.85); }catch(e){} capT=-1; } }  // cattura frame per la card
