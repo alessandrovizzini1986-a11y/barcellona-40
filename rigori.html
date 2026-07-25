@@ -319,7 +319,7 @@
     -webkit-text-stroke:3px #07101f;paint-order:stroke fill;text-shadow:0 0 18px var(--mc,#ffd24a),0 6px 0 #07101f;letter-spacing:1px}
   #mangaword.go{animation:mword .9s cubic-bezier(.2,1.4,.3,1)}
   @keyframes mword{0%{opacity:0;transform:scale(.3) rotate(-9deg)}22%{opacity:1;transform:scale(1.12) rotate(-3deg)}45%{transform:scale(1) rotate(0)}75%{opacity:1}100%{opacity:0;transform:scale(1.04)}}
-  #shotcount{position:absolute;top:calc(70px + env(safe-area-inset-top));left:16px;z-index:18;display:none;
+  #shotcount{position:absolute;top:calc(92px + env(safe-area-inset-top));left:16px;z-index:18;display:none;
     font-size:9px;color:#ffd884;background:rgba(2,12,30,.72);border:1px solid rgba(255,216,132,.4);border-radius:8px;padding:6px 10px}
   #shotcount.on{display:block}
   /* telecronaca (lower-third broadcast) */
@@ -577,9 +577,10 @@ const easeOutBack=t=>{const c=1.7;return 1+(c+1)*Math.pow(t-1,3)+c*Math.pow(t-1,
 const smooth=(a,b,t)=>{t=clamp((t-a)/(b-a),0,1);return t*t*(3-2*t);};
 // PRNG deterministico (per la SFIDA con seed): stesso seed -> stessa "fortuna" del portiere
 const strHash=s=>{ let h=2166136261>>>0; for(let i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=Math.imul(h,16777619); } return h>>>0; };
+const _objOf=v=>(v && typeof v==='object' && !Array.isArray(v))? v : {};   // parse difensivo: solo oggetti veri
 const mulberry32=a=>()=>{ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; };
 const Scores={ KEY:'hs_rigori', MAX:5,
-  all(){ try{return JSON.parse(localStorage.getItem(this.KEY)||'[]');}catch(e){return[];} },
+  all(){ try{ const s=JSON.parse(localStorage.getItem(this.KEY)||'[]'); return Array.isArray(s)? s : []; }catch(e){return[];} },
   best(){ const s=this.all(); return s.length?s[0].s:0; },
   bestName(){ const s=this.all(); return s.length?s[0].n:''; },
   isHigh(x){ const s=this.all(); return x>0&&(s.length<this.MAX||x>s[s.length-1].s); },
@@ -608,7 +609,7 @@ const Progress={ KEY:'rig_ach',
     {id:'evnatale',ic:'🎄', t:'NATALE AL CAMP NOU', d:'5 di fila sotto le feste'},
     {id:'evhallow',ic:'🎃', t:'NOTTE DELLE STREGHE', d:'Segna in stile Halloween nel periodo giusto'},
     {id:'hallow13',ic:'🧟', t:'NOTTE DEI MORTI VIVENTI', d:'13 gol in stile Halloween'} ],
-  data(){ try{return JSON.parse(localStorage.getItem(this.KEY)||'{}');}catch(e){return{};} },
+  data(){ try{return _objOf(JSON.parse(localStorage.getItem(this.KEY)||'{}'));}catch(e){return{};} },
   has(id){ return !!this.data()[id]; },
   count(){ const d=this.data(); return this.DEFS.filter(a=>d[a.id]).length; },
   award(id){ if(this.has(id)) return false;
@@ -679,7 +680,7 @@ const Missions={ KEY:'rig_miss',
     {id:'cucch1', t:'Segna un CUCCHIAIO',                    xp:30},
     {id:'inc2',   t:"Segna 2 volte all'incrocio",            xp:50},
     {id:'par4',   t:'Para 4 rigori nella stessa run',        xp:50} ],
-  data(){ try{ return JSON.parse(localStorage.getItem(this.KEY)||'{}'); }catch(e){ return {}; } },
+  data(){ try{ return _objOf(JSON.parse(localStorage.getItem(this.KEY)||'{}')); }catch(e){ return {}; } },
   done(id){ return !!this.data()[id]; },
   current(){ return this.DEFS.find(m=>!this.done(m.id))||null; },
   complete(id){ if(this.done(id)) return; const m=this.DEFS.find(x=>x.id===id); if(!m) return;
@@ -769,7 +770,7 @@ const todayKey=()=>{ const d=new Date(); return d.getFullYear()*10000+(d.getMont
 const dailySeed=()=>'giorno'+todayKey();
 const Daily={
   KEY:'rig_daily',
-  data(){ try{ return JSON.parse(localStorage.getItem(this.KEY)||'{}'); }catch(e){ return {}; } },
+  data(){ try{ return _objOf(JSON.parse(localStorage.getItem(this.KEY)||'{}')); }catch(e){ return {}; } },
   best(){ const d=this.data(); return (d.day===todayKey())? (d.best|0) : null; },
   save(score){ const d=this.data(); const cur=(d.day===todayKey())? (d.best|0) : -1;
     if(score>cur){ try{ localStorage.setItem(this.KEY,JSON.stringify({day:todayKey(),best:score})); }catch(e){} return true; }
@@ -779,7 +780,7 @@ const Daily={
 /* ------------- CARRIERA: statistiche cumulative (rig_stats) --------------- */
 const Stats={
   KEY:'rig_stats',
-  data(){ try{ return JSON.parse(localStorage.getItem(this.KEY)||'{}'); }catch(e){ return {}; } },
+  data(){ try{ return _objOf(JSON.parse(localStorage.getItem(this.KEY)||'{}')); }catch(e){ return {}; } },
   bump(k,n){ const d=this.data(); d[k]=(d[k]|0)+(n==null?1:n); try{ localStorage.setItem(this.KEY,JSON.stringify(d)); }catch(e){} },
   // "peggior errore": distanza massima (cm) del tiro FUORI dal centro porta
   worstMiss(tx,ty){ const d=this.data();
@@ -822,6 +823,7 @@ const Sound={ ctx:null,musicOn:true,sfxOn:true,voiceOn:true,_t:null,_step:0,_cro
   toggle(){ const on=!(this.musicOn||this.sfxOn); this.musicOn=on; this.sfxOn=on; this._set('arc_music',on); this._set('arc_sfx',on);
     if(!on){ this.musicStop(); this.crowd(0); try{ window.arcadeAudio&&arcadeAudio.stopAll(); }catch(e){} }
     else if(state===STATE.MENU_SCREEN){ try{ window.arcadeAudio&&arcadeAudio.playMenuTheme(); }catch(e){} }
+    else if(state===STATE.GAME_PLAYING||state===STATE.BALL_IN_FLIGHT){ this.musicStart(); }   // riacceso IN PARTITA: riparte il loop di tensione
     return on; },
   // toggle separati (pannello impostazioni): stesse chiavi storiche arc_music/arc_sfx
   toggleMusic(){ this.musicOn=!this.musicOn; this._set('arc_music',this.musicOn);
@@ -830,7 +832,9 @@ const Sound={ ctx:null,musicOn:true,sfxOn:true,voiceOn:true,_t:null,_step:0,_cro
     else if(state===STATE.MENU_SCREEN){ try{ window.arcadeAudio&&arcadeAudio.playMenuTheme(); }catch(e){} }
     return this.musicOn; },
   toggleSfx(){ this.sfxOn=!this.sfxOn; this._set('arc_sfx',this.sfxOn); if(!this.sfxOn) this.crowd(0); return this.sfxOn; },
-  toggleVoice(){ this.voiceOn=!this.voiceOn; this._set('arc_voice',this.voiceOn); return this.voiceOn; },
+  toggleVoice(){ this.voiceOn=!this.voiceOn; this._set('arc_voice',this.voiceOn);
+    if(!this.voiceOn){ try{ speechSynthesis.cancel(); }catch(e){} }   // zittisce anche la battuta in corso
+    return this.voiceOn; },
   ac(){ if(!this.ctx){ try{this.ctx=new (window.AudioContext||window.webkitAudioContext)();}catch(e){} if(this.ctx) this._graph(); } return this.ctx; },
   _graph(){ const a=this.ctx;
     this.master=a.createGain(); this.master.gain.value=1;
@@ -951,6 +955,7 @@ const Sound={ ctx:null,musicOn:true,sfxOn:true,voiceOn:true,_t:null,_step:0,_cro
     this._seq={mode, step:0, nextT:a.currentTime+0.06};
     this._t=setInterval(()=>this._pump(),80); this._pump(); },
   _pump(){ const a=this.ctx; if(!a||!this._seq) return; if(!this.musicOn||a.state!=='running') return;
+    if(this._seq.nextT < a.currentTime-0.1) this._seq.nextT=a.currentTime+0.05;   // tab in background: riallinea (niente raffica di step arretrati)
     while(this._seq && this._seq.nextT < a.currentTime+0.20){
       try{ this._playStep(this._seq.step, this._seq.nextT); }catch(e){}
       const bpm=this._seq.mode==='menu'? 142 : (this.drama? 152 : 124+this.intensity*28);
@@ -1083,7 +1088,11 @@ const Sound={ ctx:null,musicOn:true,sfxOn:true,voiceOn:true,_t:null,_step:0,_cro
     const f=a.createBiquadFilter(); f.type='bandpass'; f.frequency.value=620; f.Q.value=0.7;
     const g=a.createGain(); g.gain.value=0.0; src.connect(f); f.connect(g); g.connect(this._busS()); src.start();
     this._crowd=src; this._crowdG=g; },
-  crowd(level){ if(!this.sfxOn){ if(this._crowdG)this._crowdG.gain.value=0; return; } this.crowdInit();
+  crowd(level){ if(!this.sfxOn){ if(this._crowdG)this._crowdG.gain.value=0; return; }
+    if(level<=0.001){ if(this._crowd){ const a=this.ac();   // stop VERO della sorgente (niente processing perpetuo a gain 0)
+        try{ this._crowdG.gain.linearRampToValueAtTime(0,a.currentTime+0.2); this._crowd.stop(a.currentTime+0.25); }catch(e){}
+        this._crowd=null; this._crowdG=null; } return; }
+    this.crowdInit();
     if(this._crowdG){ const a=this.ac(); this._crowdG.gain.cancelScheduledValues(a.currentTime);
       this._crowdG.gain.setValueAtTime(this._crowdG.gain.value,a.currentTime);
       this._crowdG.gain.linearRampToValueAtTime(level, a.currentTime+0.25); } },
@@ -1305,7 +1314,7 @@ const HUD={ score:document.getElementById('score'), rec:document.getElementById(
   curl:document.getElementById('curl'),
   hint:document.getElementById('hint'), result:document.getElementById('result'), flash:document.getElementById('flash'),
   menu:document.getElementById('menu'), over:document.getElementById('over'),
-  overTitle:document.getElementById('overTitle'), overScore:document.getElementById('overScore'),
+  overTitle:document.getElementById('overTitle'),
   overRec:document.getElementById('overRec'), menuRec:document.getElementById('menuRec'),
   loading:document.getElementById('loading'), barf:document.getElementById('barf'), pct:document.getElementById('pct'),
   nameOv:document.getElementById('nameOv'), snd:document.getElementById('snd') };
@@ -1567,7 +1576,7 @@ function buildScene(textures){
     // cono più stretto e intenso con penombra morbida -> falloff credibile sul prato
     const sp=new THREE.SpotLight(0xeaf2ff, 170, 90, Math.PI/6.2, .55, 1.5);
     sp.position.set(p[0],p[1],p[2]); sp.target.position.set(0,1,0);
-    scene.add(sp); scene.add(sp.target);
+    scene.add(sp); scene.add(sp.target); (lights.spots=lights.spots||[]).push(sp);
     // pilone
     const pole=new THREE.Mesh(new THREE.CylinderGeometry(0.14,0.2,p[1],8), new THREE.MeshStandardMaterial({color:0x223046,roughness:.6,metalness:.4}));
     pole.position.set(p[0],p[1]/2,p[2]); scene.add(pole);
@@ -1794,10 +1803,13 @@ function toonify(root,mode){ mode=mode||'manga'; if(!root) return;
   root.traverse(o=>{ if(o.isMesh && o.material){
     if(!o.userData.pbrMat) o.userData.pbrMat=o.material;          // conserva il materiale realistico per poter tornare a PES
     if(o.material.__toonMode!==mode){ const m=o.userData.pbrMat;
-      const t=new THREE.MeshToonMaterial({ color: m.color?m.color.clone():new THREE.Color(0xffffff), map:m.map||null, gradientMap:toonGrad(steps),
-        vertexColors:m.vertexColors===true });                     // la DIVISA per-vertice sopravvive al cel-shading
-      if(mode==='peluche') t.color.setHex(0xffeadb);               // tinta calda da diorama in feltro
-      t.side=m.side||THREE.FrontSide; t.__toonMode=mode; o.material=t; } } }); }
+      o.userData.toonMats=o.userData.toonMats||{};                 // cache: un materiale toon per modo, MAI ricreato
+      let t=o.userData.toonMats[mode];
+      if(!t){ t=new THREE.MeshToonMaterial({ color: m.color?m.color.clone():new THREE.Color(0xffffff), map:m.map||null, gradientMap:toonGrad(steps),
+          vertexColors:m.vertexColors===true });                   // la DIVISA per-vertice sopravvive al cel-shading
+        if(mode==='peluche') t.color.setHex(0xffeadb);             // tinta calda da diorama in feltro
+        t.side=m.side||THREE.FrontSide; t.__toonMode=mode; o.userData.toonMats[mode]=t; }
+      o.material=t; } } }); }
 function untoonify(root){ if(!root) return; root.traverse(o=>{ if(o.isMesh && o.userData.pbrMat){ o.material=o.userData.pbrMat; } }); }
 function loadGLBKeeper(){
   try{
@@ -2021,8 +2033,8 @@ function updateKeeperDive(dt){
     // portiere ancora di piu: il tuffo e' la TUA scelta e si deve vedere)
     const base = (clipName==='diveL'||clipName==='diveR')? 0.58 : (mode==='high'? 0.72 : 0.62);
     const reach = isKeeper()? Math.min(0.9, base+0.22) : base;
-    keeperDive={ clip:clipName, side, high, mode, t0:st, started:true,
-      commitX: clamp(shot.guess*reach, -HALF+0.6, HALF-0.6),
+    keeperDive={ clip:clipName, side, high, mode, t0:st, started:true, ts:tScale,
+      commitX: clamp(shot.guess*reach*(shot.reach||1), -HALF+0.6, HALF-0.6),   // reazione tardiva = corpo che arriva corto (coerente con l'esito)
       reachTarget: shot.target.clone() };
   }
   if(!keeperDive){
@@ -2265,7 +2277,7 @@ function setState(s){ engine.setState(s); }
 function startGame(){ streak=0; shotNum=0; goals5=0; aleSaves=0; suddenDeath=false; duelResult=''; fiveRes=[]; aimHist=[]; lastShotPNG=null; specialArmed=false;
   // reset dei sistemi di run: missioni, cariche del tiro speciale, blocco difficoltà
   missRun={topRow:0, wood:0, curva:0, incro:0, saves:0};
-  specCharges=0; specUsed=0; specGoalRun=0; _lastBlk=0;
+  specCharges=0; specUsed=0; specGoalRun=0; _lastBlk=0; kHint=0;
   if(DAILY && MODE==='five') roundSeed=dailySeed();                               // SFIDA DEL GIORNO: seed dalla data
   else if(!challengeFromURL) roundSeed=Math.floor(Math.random()*2.1e9).toString(36);   // nuovo seed ogni partita (la SFIDA da URL lo fissa)
   const wcond=Weather.roll();                                                     // METEO della partita (in SFIDA esce dal seed: stesso link = stesso cielo)
@@ -2408,11 +2420,11 @@ const _sv=new THREE.Vector3(), _sn=new THREE.Vector3();
    { path, n, crossT, cross:{x,y}, crossVel, wood, outcome, endT }
    outcome: 'goal-line' (dentro lo specchio) | 'wood-in' | 'wood-out' | 'miss' */
 function integrateFlight(from,v0,spin,opts){
-  const o=opts||{}, wood=o.wood!==false, buf=o.buf||null;
+  const o=opts||{}, wood=o.wood!==false, buf=o.buf||null, reb=!!o.rebound;   // reb: volo di RESPINTA (rimbalza subito, niente regola radente)
   let px=from.x, py=from.y, pz=from.z, vx=v0.x, vy=v0.y, vz=v0.z;
   const path=buf, g=CONFIG.gravity;
-  let n=0, t=0, nextSample=0, crossT=-1, cx=0, cy=0, cvx=0, cvy=0, cvz=0;
-  let woodHit=null, outcome='', inNet=false, bounces=0, done=false;
+  let n=0, t=0, nextSample=PHYS.SAMPLE, crossT=-1, cx=0, cy=0, cvx=0, cvy=0, cvz=0;   // il campione t=0 e' gia' registrato: il prossimo cade a griglia UNIFORME
+  let woodHit=null, outcome='', inNet=false, deepNet=false, bounces=0, done=false;
   // CAOS DETERMINISTICO del legno (LCG seminato dallo stato iniziale): stesso tiro =
   // stesso rimbalzo, SEMPRE. Math.random qui dentro rompeva il determinismo della
   // SFIDA seedata e poteva disallineare l'anteprima dal tiro vero sui tiri a filo palo.
@@ -2470,8 +2482,13 @@ function integrateFlight(from,v0,spin,opts){
     // ---- la RETE e' una SCATOLA: fondo, fianchi e tetto contengono la palla.
     //      Prima frenava solo in profondita': un tiro all'incrocio conservava la
     //      velocita' laterale e USCIVA dal fianco della porta. Ridicolo, appunto. ----
+    // palo esterno che rientra: se DOPO il crossing la palla finisce comunque nello
+    // specchio dietro la linea, la rete la CATTURA (l'esito resta palo/fuori: regola vera)
+    if(!inNet && crossT>=0 && pz<-BALL_R && Math.abs(px)<HALF-BALL_R && py>0 && py<GH-BALL_R*0.5) inNet=true;
     if(inNet){
       if(pz<-GD+BALL_R){ pz=-GD+BALL_R; vz=Math.abs(vz)*0.2; }               // fondo
+      if(pz<-BALL_R*2.2) deepNet=true;
+      if(deepNet && pz>-BALL_R){ pz=-BALL_R; vz=-Math.abs(vz)*0.2; }         // parete FRONTALE: il sacco trattiene
       if(px> HALF-BALL_R){ px= HALF-BALL_R; vx=-Math.abs(vx)*0.25; }          // fianco destro
       if(px<-HALF+BALL_R){ px=-HALF+BALL_R; vx= Math.abs(vx)*0.25; }          // fianco sinistro
       if(py> GH-BALL_R && pz<0){ py=GH-BALL_R; vy=-Math.abs(vy)*0.2; }        // tetto della rete
@@ -2480,13 +2497,13 @@ function integrateFlight(from,v0,spin,opts){
     // ---- terreno: PRIMA dell'esito la rasoiata "striscia" (niente rimbalzi che
     //      sporcherebbero la fedelta' del mirino); DOPO l'esito rimbalza e rotola ----
     if(py<BALL_R && vy<0){
-      if(crossT<0){ py=BALL_R; vy=0; }                        // radente pre-porta
+      if(crossT<0 && !reb){ py=BALL_R; vy=0; }                // radente pre-porta (mai per le respinte)
       else { py=BALL_R; vy=-vy*PHYS.REST_GROUND; vx*=0.82; vz*=0.82; bounces++;
              if(vy<0.65){ vy=0; } }                           // passa al rotolamento
     }
     if(py<=BALL_R+0.001 && vy===0){                           // attrito di rotolamento
       const s2=Math.hypot(vx,vz); if(s2>0.05){ const dec=Math.min(s2,2.6*PHYS.STEP); vx-=vx/s2*dec; vz-=vz/s2*dec; }
-      else if(crossT>=0 || woodHit){ done=true; }
+      else if(crossT>=0 || woodHit || reb){ done=true; }
     }
     // ---- SPALTI dietro la porta: piano inclinato di seggiolini (z=-(Z0+SLOPE*y)) ----
     if(!inNet && pz < -(PHYS.STAND_Z0+PHYS.STAND_SLOPE*Math.max(0,py))){
@@ -2535,7 +2552,8 @@ function buildFlight(tx,ty,p,curl,style,special,bufOverride){
 const _parryBuf=new Float32Array(3*Math.ceil(PHYS.TMAX/PHYS.SAMPLE)+6);
 function tryParry(sim,guess,guessY,power,extra,rng){
   if(!sim || sim.crossT<0) return null;
-  const prob=clamp((power-0.42)*1.15 + (extra||0) + (Weather.wet()?0.05:0), 0, 0.88);  // piu' potenza = piu' respinte (+5% col pallone bagnato)
+  const wetB=(Weather.wet() && (METEO==='auto' || !(DAILY||challengeFromURL)))?0.05:0;   // in SFIDA condivisa il bonus vale solo col meteo dal seed
+  const prob=clamp((power-0.42)*1.15 + (extra||0) + wetB, 0, 0.88);  // piu' potenza = piu' respinte (+5% col pallone bagnato)
   if(rng()>=prob) return null;                                // presa PULITA nei guantoni
   const cv=sim.crossVel;
   const vin=new THREE.Vector3(cv.x,cv.y,cv.z);
@@ -2549,7 +2567,7 @@ function tryParry(sim,guess,guessY,power,extra,rng){
     .multiplyScalar(0.5+rng()*0.25);                          // le mani assorbono parte dell'energia
   const from=new THREE.Vector3(sim.cross.x, Math.max(BALL_R,sim.cross.y), 0.02);
   const spin2=new THREE.Vector3((rng()*2-1)*6,(rng()*2-1)*6,0);
-  const ps=integrateFlight(from,vout,spin2,{wood:true,buf:_parryBuf});
+  const ps=integrateFlight(from,vout,spin2,{wood:true,buf:_parryBuf,rebound:true});
   return { sim:ps, out: (ps.outcome==='goal-line'||ps.outcome==='wood-in')?'goal'
                       : (ps.wood?'wood':'field') };
 }
@@ -2588,7 +2606,7 @@ function shoot(){
   const curl=aim.curl; // -1..1 lateralità voluta
 
   const target=new THREE.Vector3(tx,ty,0);
-  const style=special?'normal':shotStyleOf(tx,ty,p);   // cucchiaio/rasoterra dal gesto di mira
+  const style=special?'normal':shotStyleOf(aim.tx,aim.ty,p);   // stile dal GESTO PURO: coerente con l'anteprima (la micro-variazione non cambia famiglia di tiro)
   // BALISTICA v2: l'intero volo (Magnus, drag, legni, spalti, rete) e' SIMULATO ora
   const sim=buildFlight(tx,ty,p,curl,style,special);
   const speed=sim.speed, arcH=sim.arcH, curlAcc=curl*CONFIG.curlMax;
@@ -2731,10 +2749,13 @@ let kHint=0;       // quante volte abbiamo mostrato il suggerimento in questa pa
 // esito parata: stessa ellisse di shoot(), con reach scalato dal TIMING della reazione
 function keeperOutcome(guess,guessY,reachMul){
   const lvl=clamp(effStreak()/12,0,1);                      // gradini netti anche per i guantoni
-  const tx=shot.target.x, ty=shot.target.y, style=shot.style;
-  const inGoal = Math.abs(tx)<HALF-0.02 && ty>0.06 && ty<GH-0.02;
-  const hitPost = !inGoal && ((Math.abs(Math.abs(tx)-HALF)<0.16 && ty<GH+0.05)
-                           || (Math.abs(ty-GH)<0.12 && Math.abs(tx)<HALF+0.05));   // palo O traversa
+  const sim=shot.sim, style=shot.style;                     // verita' FISICA: il crossing integrato (curl compreso)
+  const tx=sim?sim.cross.x:shot.target.x, ty=sim?sim.cross.y:shot.target.y;
+  const inGoal = sim? (sim.outcome==='goal-line'||sim.outcome==='wood-in')
+                    : (Math.abs(tx)<HALF-0.02 && ty>0.06 && ty<GH-0.02);
+  const hitPost = !inGoal && (sim? !!sim.wood
+                    : ((Math.abs(Math.abs(tx)-HALF)<0.16 && ty<GH+0.05)
+                    || (Math.abs(ty-GH)<0.12 && Math.abs(tx)<HALF+0.05)));   // palo O traversa
   const reach=clamp(2.2-lvl*0.6,1.35,2.2)*reachMul;         // guantoni generosi; a livello alto perdonano meno
   const dx=(tx-guess)/Math.max(0.2,reach), dy=(ty-guessY)/Math.max(0.2,reach*(style==='low'?0.72:0.95));
   const saved = inGoal && (dx*dx+dy*dy<=1);
@@ -2820,7 +2841,8 @@ function keeperDiveNow(tx,ty){
     shot.result=keeperOutcome(guess,guessY,reachMul);
     // INERZIA anche per TE: tuffo tardivo o tiro potente = i TUOI guantoni respingono
     if(shot.result==='SAVE' && shot.sim){
-      const pr=tryParry(shot.sim, shot.sim.cross.x, shot.sim.cross.y, shot.power, late*0.4, Math.random);
+      const prng = roundSeed ? mulberry32((strHash(roundSeed) ^ Math.imul(shotNum+13,2246822519))>>>0) : Math.random;
+      const pr=tryParry(shot.sim, guess, guessY, shot.power, late*0.4, prng);   // stesso seed = stessa respinta; palmo orientato dal TUO tuffo
       if(pr){ shot.parry=true; shot.parrySim=pr.sim; shot.parryCut=shot.sim.crossT;
         if(pr.out==='goal'){ shot.result='GOAL'; shot.parryGoal=true;
           shot.dur=(shot.parryCut+pr.sim.crossT)/shot.simRate; }
@@ -2952,7 +2974,7 @@ function resolveKeeper(r){
     showResult('GOL SUBITO','#ff6a6a'); engine.view.popWord('GOOOOL!','#FF0000');
     if(shot && shot.woodGoal){ Sound.postClang(); engine.view.popWord('PALO-GOL!','#ffd24a'); }
     if(shot && shot.parryGoal){ engine.view.popWord('L\'HAI TOCCATA…','#ffd884'); showTelecro('💔 L\'hai toccata ma entra piano piano… beffa atroce!'); }
-    if(shot && !shot.humanDive && !shot.woodGoal) setTimeout(()=>{ if(isKeeper()) showTelecro('👀 Fermo lì non si para: tocca/trascina DURANTE il volo per tuffarti!'); },800);
+    if(shot && !shot.humanDive && !shot.woodGoal) setTimeout(()=>{ if(isKeeper() && !replay && (state===STATE.GAME_PLAYING||state===STATE.BALL_IN_FLIGHT)) showTelecro('👀 Fermo lì non si para: tocca/trascina DURANTE il volo per tuffarti!'); },800);
     engine.view.burstAt3D(tmpV2.set(shot.target.x,Math.max(0.4,shot.target.y),-GD),'goal');
     Sound.sfx(200,.18,'sawtooth'); Sound.groan();
     if(isHallow()){ Sound.howl(); Sound.bell(); }                    // HALLOWEEN: gol subito = campana a morto per TE
@@ -3063,10 +3085,12 @@ function startReplay(mid){
   const wind=(shot.windup||0.8);
   replay={ mid:!!mid, t:-(wind+0.5), wind, kickStarted:false, kicked:false, diveStarted:false, impact:false, endT:0,
     clip: keeperDive? keeperDive.clip : null,
+    clipTS: keeperDive? (keeperDive.ts||0) : 0,
     commitX: keeperDive? keeperDive.commitX : clamp(shot.guess*0.7,-HALF+0.6,HALF-0.6),
     s:{ from:shot.from.clone(), target:shot.target.clone(), arcH:shot.arcH,
         curlAcc:shot.curlAcc, dur:shot.dur, style:shot.style, result:shot.result,
         sim:shot.sim||null, simRate:shot.simRate||1,          // il replay rigioca il PATH FISICO integrato
+        parrySim:shot.parrySim||null, parryCut:shot.parryCut||0,   // ...respinta dei guantoni COMPRESA
         guess:shot.guess, guessY:shot.guessY, keeperFrom:shot.keeperFrom, reaction:shot.reaction } };
   // scena riportata all'istante del calcio
   ball.position.copy(replay.s.from); ball.scale.set(1,1,1);
@@ -3108,9 +3132,10 @@ function updateReplay(dt){
     if(!R.diveStarted && R.clip && useGLBKeeper && R.t>=s.reaction*0.55){ R.diveStarted=true;
       const cd=keeperAct[R.clip]? keeperAct[R.clip].getClip().duration : s.dur;
       // i mixer girano gia' a meta' velocita' in moviola: stesso tScale del live
-      playKeeper(R.clip, clamp(cd*0.45/Math.max(0.18,s.dur-s.reaction*0.55),0.35,1.6)); }
+      playKeeper(R.clip, R.clipTS || clamp(cd*0.45/Math.max(0.18,s.dur-s.reaction*0.55),0.35,1.6)); }   // ESATTAMENTE il tScale del live
     const rp=clamp((R.t-s.reaction*0.55)/Math.max(0.16,s.dur*0.9),0,1);
     keeper.position.x=lerp(s.keeperFrom, R.commitX, 1-(1-rp)*(1-rp));
+    if(R.clip==='high') keeper.position.y=0.28*Math.sin(Math.PI*rp);   // il salto STACCA anche in moviola
     if(p>=1){ R.impact=true;
       if(s.result==='GOAL'){ ripple={t:0,x:s.target.x,y:s.target.y}; Sound.netSwish();
         // stessa botta del live (dal crossVel integrato): con la rete stepped a 0.5x
@@ -3122,7 +3147,10 @@ function updateReplay(dt){
   } else if(R.impact){
     R.endT+=dt*0.5;                                           // anche la CODA resta in slow-motion (prima schizzava a velocita' piena)
     // coda dal path integrato: rete che frena, legno che schizza, spalti coi rimbalzi
-    if(s.sim && s.sim.n>1){ posFromPath(s.sim, s.dur*s.simRate + R.endT); updateBallShadow(); }
+    if(s.sim && s.sim.n>1){ const pt=s.dur*s.simRate + R.endT;
+      if(s.parrySim && pt>=s.parryCut) posFromPath(s.parrySim, pt-s.parryCut);   // la coda segue la RESPINTA vera
+      else posFromPath(s.sim, pt);
+      updateBallShadow(); }
     else if(s.result==='GOAL' && ball.position.z>-GD+0.25){ ball.position.z-=dt*0.55; updateBallShadow(); }
     const tail=(s.result==='MISS'||s.result==='POST')?1.8:1.05;   // fuori/palo: si vede il rimbalzo
     if(R.endT>tail){ const wasMid=R.mid; replay=null; applyCamFov();
@@ -3168,7 +3196,7 @@ function gloveCatch(s){
    PROFILING (DevTools remoto chrome://inspect): i costi principali sono
    NetSim.step (851 nodi x vincoli), computeVertexNormals della rete,
    il crowd-canvas dello stadio e i particellari 2D — tutti scalati qui. */
-let QUALITY=2, _fpsAcc=0, _fpsN=0, _fpsBad=0, _fpsGood=0;
+let QUALITY=2, _fpsAcc=0, _fpsN=0, _fpsBad=0, _fpsGood=0, _fpsDem=0;
 const highDetailMode=()=>QUALITY>=2;
 function applyQuality(){
   const shBall=QUALITY>0, shChar=QUALITY>1;
@@ -3177,15 +3205,21 @@ function applyQuality(){
     if(kickerGLB) kickerGLB.traverse(o=>{ if(o.isMesh) o.castShadow=shChar; });
     if(keeper) keeper.traverse(o=>{ if(o.isMesh) o.castShadow=shChar; });
     if(renderer && !is8bit()) renderer.setPixelRatio(Math.min(window.devicePixelRatio||1, QUALITY===0?1:2));
+    // Q<=1: via le 4 spot (i flare/beam vendono comunque i riflettori) e shadow map dimezzata
+    if(lights.spots) for(const sp of lights.spots) sp.visible = QUALITY>1;
+    if(lights.key){ const ms = QUALITY>1? 2048 : 1024;
+      if(lights.key.shadow.mapSize.x!==ms){ lights.key.shadow.mapSize.set(ms,ms);
+        if(lights.key.shadow.map){ lights.key.shadow.map.dispose(); lights.key.shadow.map=null; } } }
   }catch(e){}
   showTelecro(QUALITY===2?'⚙ Qualità: ALTA':(QUALITY===1?'⚙ Qualità adattiva: MEDIA (fps)':'⚙ Qualità adattiva: LITE (fps)'));
 }
 function adaptQuality(dt){
+  if(replay) return;                                 // la moviola e' leggera: non promuovere (e ribocciare) li'
   _fpsAcc+=dt; _fpsN++;
   if(_fpsAcc<1) return;
   const fps=_fpsN/_fpsAcc; _fpsAcc=0; _fpsN=0;
-  if(fps<42){ _fpsGood=0; if(++_fpsBad>=3 && QUALITY>0){ QUALITY--; _fpsBad=0; applyQuality(); } }
-  else if(fps>55){ _fpsBad=0; if(++_fpsGood>=10 && QUALITY<2){ QUALITY++; _fpsGood=0; applyQuality(); } }
+  if(fps<42){ _fpsGood=0; if(++_fpsBad>=3 && QUALITY>0){ QUALITY--; _fpsDem++; _fpsBad=0; applyQuality(); } }
+  else if(fps>55){ _fpsBad=0; if(++_fpsGood>=10+_fpsDem*15 && QUALITY<2){ QUALITY++; _fpsGood=0; applyQuality(); } }
   else { _fpsBad=0; _fpsGood=0; }
 }
 function update(dt){
@@ -3204,7 +3238,8 @@ function update(dt){
   // RIFLETTORI VIVI: micro-pulsazione dei flare (respiro elettrico, fase diversa per faro)
   if(lights.beams){ const hd=highDetailMode();
     for(let bi=0;bi<lights.beams.length;bi++){ const b=lights.beams[bi];
-      b.visible=hd; if(hd) b.material.opacity=0.085+0.03*Math.sin(performance.now()/900+bi*1.7); } }
+      b.visible=hd && !(isHallow()&&Weather.wet()&&bi>=2);   // hallow+pioggia: 2 fasci bastano (overdraw)
+      if(b.visible) b.material.opacity=0.085+0.03*Math.sin(performance.now()/900+bi*1.7); } }
   if(lights.flares) for(const f of lights.flares){
     const tw=0.86+0.11*Math.sin(stateT*2.1+f.ph)+0.03*Math.sin(stateT*13+f.ph*3);
     f.gl.material.opacity=tw; f.core.material.opacity=0.7+0.3*tw; f.st.material.opacity=0.25*tw; }
@@ -3235,14 +3270,15 @@ function update(dt){
     const tscale = slowmo>0? 0.32 : 1;                    // slow-mo leggera già in volo? no: solo dopo. mantieni 1
     // DRAMMA (sfida 5): dopo il contatto il VOLO scorre a metà velocità (la
     // rincorsa resta reale, così il timing del calcio non si sfasa)
-    shot.t += dt*((shot.drama && shot.launched)? 0.55 : 1);
+    if(!(isKeeper() && _settingsOpen()))                  // da portiere con menu aperto il volo si PAUSA (niente gol dietro l'overlay)
+      shot.t += dt*((shot.drama && shot.launched)? 0.55 : 1);
     const wind=shot.windup||0, ft=shot.t-wind;            // ft = tempo di VOLO (negativo durante la rincorsa)
     if(ft<0){                                             // ---- RINCORSA: il rigorista corre, la palla aspetta sul dischetto ----
       const rp2=clamp(shot.t/Math.max(0.01,wind),0,1);
       ball.rotation.y+=dt*0.4; updateBallShadow();
       // portiere in TENSIONE: shuffle nervoso sulla linea + si carica scendendo sulle gambe
       keeper.position.x=shot.keeperFrom + Math.sin(stateT*7)*0.06*(1-rp2*0.5);   // micro-passi nervosi
-      keeper.position.y=-0.09*rp2;                                              // si carica scendendo sulle gambe keeper.rotation.z*=0.9;
+      keeper.position.y=-0.09*rp2; keeper.rotation.z*=Math.max(0,1-dt*6);      // si carica scendendo sulle gambe + raddrizza il tilt dell'idle
       if(isHallow() && isKeeper()) Sound.hbPulse(rp2);   // HALLOWEEN da portiere: il cuore ACCELERA con la rincorsa
     } else {
     if(!shot.launched){ shot.launched=true;               // CONTATTO: suono del calcio + linee cinetiche
@@ -3458,8 +3494,9 @@ function updateBallShadow(){
   ballShadow.material.opacity=clamp(0.42-h*0.07,0.06,0.42);
 }
 function pushTrail(){
-  const h=ballTrail.userData.hist; h.unshift({x:ball.position.x,y:ball.position.y,z:ball.position.z});
-  if(h.length>ballTrail.userData.N) h.pop();
+  const h=ballTrail.userData.hist;
+  const o=(h.length>=ballTrail.userData.N)? h.pop() : {x:0,y:0,z:0};   // ricicla l'ultimo nodo: zero alloc per frame
+  o.x=ball.position.x; o.y=ball.position.y; o.z=ball.position.z; h.unshift(o);
   const N=ballTrail.userData.N;
   ballTrail.userData.parts.forEach((m,i)=>{ if(i<h.length){ m.visible=true; m.position.set(h[i].x,h[i].y,h[i].z);
     const f=1-i/N; m.material.opacity=(isManga()?0.5:0.28)*f; m.scale.setScalar(f*(isManga()?1.1:0.9)+0.1);
@@ -3503,8 +3540,11 @@ const NetSim={
   //   8BIT    = arcade: rigidissima, ritorno secco, spostamento QUANTIZZATO a gradini
   // iter=rilassamenti/sottopasso · kS/kD=rigidita' strutturali/shear · grav=peso (m/s^2)
   // damp=smorzamento verlet per sottopasso · anch=molla verso base (1/s^2) · jMul/quant come prima
+  _prof:null,_profG:'',
   profile(){
-    return GFX==='manga'  ? {iter:2, kS:0.85, kD:0.30, grav:4.5, damp:0.012, anch:26,  jMul:1.8, quant:0}
+    if(this._prof && this._profG===GFX) return this._prof;
+    this._profG=GFX;
+    return this._prof = GFX==='manga'  ? {iter:2, kS:0.85, kD:0.30, grav:4.5, damp:0.012, anch:26,  jMul:1.8, quant:0}
          : GFX==='peluche'? {iter:2, kS:0.50, kD:0.16, grav:5.5, damp:0.055, anch:11,  jMul:1.35,quant:0}
          : GFX==='8bit'   ? {iter:3, kS:1.0,  kD:0.85, grav:2.0, damp:0.10,  anch:95,  jMul:1.2, quant:0.14}
          : GFX==='halloween'? {iter:2, kS:0.5, kD:0.18, grav:6.5, damp:0.09, anch:12,  jMul:1.45,quant:0}   // RAGNATELA: molle e appiccicosa
@@ -3641,8 +3681,9 @@ const NetSim={
 function applyNetRipple(t){ if(t<0) NetSim.reset(); }
 
 /* ----------------------- MIRA: visuals + raycast ------------------------- */
+const _ndcV2=new THREE.Vector2();
 function screenToGoal(clientX,clientY){
-  const ndc=new THREE.Vector2((clientX/window.innerWidth)*2-1, -(clientY/window.innerHeight)*2+1);
+  const ndc=_ndcV2.set((clientX/window.innerWidth)*2-1, -(clientY/window.innerHeight)*2+1);
   raycaster.setFromCamera(ndc,camera);
   if(raycaster.ray.intersectPlane(goalPlane,tmpV)) return {x:tmpV.x,y:tmpV.y};
   return {x:0,y:1.2};
@@ -3679,7 +3720,8 @@ function drawTrajPreview(){
   const p=clamp(aim.power,0,1);
   const style=isKeeper()?'normal':shotStyleOf(aim.tx,aim.ty,p);   // l'anteprima MOSTRA il cucchiaio/rasoterra
   const key=(aim.tx*50|0)+'_'+(aim.ty*50|0)+'_'+(p*40|0)+'_'+(aim.curl*40|0)+'_'+style;
-  if(key!==_tpKey){ _tpKey=key; _tpSim=buildFlight(aim.tx,aim.ty,p,aim.curl,style,false,_tpBuf); }
+  if(key===_tpKey){ trajLine.visible=true; return; }           // gesto fermo: la linea e' gia' giusta, zero lavoro
+  _tpKey=key; _tpSim=buildFlight(aim.tx,aim.ty,p,aim.curl,style,false,_tpBuf);
   const sim=_tpSim, arr=trajLine.geometry.attributes.position.array, N=trajLine.userData.N;
   // ANTEPRIMA DISCRETA: mostra solo il primo 70% del volo — la direzione si legge,
   // ma il punto d'arrivo esatto lo dice il mirino, non una linea-mirino perfetta
@@ -3751,14 +3793,16 @@ function applyHeadTracking(dt){
     if(_hkBone){ let want=0;
       if(flying && !celeb){
         const dx=ball.position.x-kickerGLB.position.x, dz=ball.position.z-kickerGLB.position.z;
-        want=clamp(_wrapPi(Math.atan2(-dx,-dz)-kickerGLB.rotation.y), -0.65, 0.65); }
+        const raw=_wrapPi(Math.atan2(-dx,-dz)-kickerGLB.rotation.y);
+        want=Math.abs(raw)>1.2? 0 : clamp(raw, -0.65, 0.65); }   // palla dietro: sguardo avanti
       _htK+=(want-_htK)*Math.min(1,dt*6); _hkBone.rotation.y+=_htK; } }
   // PORTIERE: segue la palla in arrivo (il gruppo guarda +z verso il dischetto)
   if(useGLBKeeper && keeperInner){ if(!_hgBone) _hgBone=_findHead(keeperInner);
     if(_hgBone){ let want=0;
       if(flying){
         const dx=ball.position.x-keeper.position.x, dz=ball.position.z-keeper.position.z;
-        want=clamp(_wrapPi(Math.atan2(dx,dz)-keeper.rotation.y), -0.6, 0.6); }
+        const raw=_wrapPi(Math.atan2(dx,dz)-keeper.rotation.y);
+        want=Math.abs(raw)>1.2? 0 : clamp(raw, -0.6, 0.6); }   // palla in rete alle spalle: il collo torna
       _htG+=(want-_htG)*Math.min(1,dt*6); _hgBone.rotation.y+=_htG; } }
 }
 // faccia del giocatore (Mario/Giulio) agganciata alla testa del rigorista GLB
@@ -3828,15 +3872,16 @@ function buildKicker(){
   g.userData.legL=g.children[0];
   return g;
 }
+const _jerseyTexCache={};                     // cache texture maglia per nome+numero (no leak sui cambi ruolo)
 function setKicker(p){ if(!p) return;
   // rigorista procedurale (fallback)
   if(kicker){ const back=kicker.userData.back;
-    back.material.map=jerseyBackTexture(p.name,p.num); back.material.needsUpdate=true;
+    back.material.map=(_jerseyTexCache['b'+p.name+p.num] ||= jerseyBackTexture(p.name,p.num)); back.material.needsUpdate=true;
     kicker.visible=!useGLBKicker; }
   // rigorista GLB: aggiorna numero sul corpo + faccia + mostra
   if(useGLBKicker && kickerGLB){
-    if(kickerBack){ kickerBack.material.map=jerseyBackPanelTexture(p.name,p.num); kickerBack.material.needsUpdate=true; }
-    if(kickerFace && p.face){ const t=new THREE.TextureLoader().load(p.face); t.colorSpace=THREE.SRGBColorSpace; kickerFace.material.map=t; kickerFace.material.needsUpdate=true; }
+    if(kickerBack){ kickerBack.material.map=(_jerseyTexCache['p'+p.name+p.num] ||= jerseyBackPanelTexture(p.name,p.num)); kickerBack.material.needsUpdate=true; }
+    if(kickerFace && p.face){ kickerFace.material.map=_faceTex(p.face); kickerFace.material.needsUpdate=true; }   // cache facce condivisa
     kickerGLB.visible=true; playKicker('idle');
   } }
 function applyPlayer(){ if(!PLAYER) return; const cr=document.querySelector('#scoreboard .crest');
@@ -3986,7 +4031,7 @@ function syncHUD(){
 }
 function showResult(txt,col){ HUD.result.textContent=txt; HUD.result.style.color=col;
   HUD.result.classList.remove('show'); void HUD.result.offsetWidth; HUD.result.classList.add('show');
-  setTimeout(()=>{ HUD.result.classList.remove('show'); },1300); }
+  clearTimeout(HUD.result._t); HUD.result._t=setTimeout(()=>{ HUD.result.classList.remove('show'); },1300); }
 // SCHEDA DEL TIRO: perché è entrata (o no) — potenza, effetto, distanza dal legno
 function showShotCard(){
   const el=document.getElementById('shotCard'); if(!el||!shot||isKeeper()) return;
@@ -4502,10 +4547,13 @@ function speak(text, ale){ if(!Sound.voiceOn || !window.speechSynthesis) return;
     u.rate= ale?0.98:1.12; u.pitch= ale?0.8:1.1; u.volume=1;  // Ale = voce più bassa/sorniona
     speechSynthesis.cancel(); speechSynthesis.speak(u); }catch(e){} }
 function askName(){ const i=document.getElementById('nameInput');
+  HUD.nameOv._score=streak;                                  // congela il punteggio: il salvataggio usa QUESTO
   document.getElementById('nameScore').textContent=streak+(streak===1?' rigore di fila':' rigori di fila');
   i.value=PLAYER?PLAYER.name:''; HUD.nameOv.classList.add('show'); setTimeout(()=>{try{i.focus();i.select&&i.select();}catch(e){}},60); }
 function saveName(){ const i=document.getElementById('nameInput');
-  const n=(i.value||'').trim().replace(/[<>]/g,'').toUpperCase()||'???'; Scores.add(n,streak); HUD.nameOv.classList.remove('show'); syncHUD(); }
+  const n=(i.value||'').trim().replace(/[<>]/g,'').toUpperCase()||'???';
+  Scores.add(n, HUD.nameOv._score!=null?HUD.nameOv._score:streak); HUD.nameOv._score=null;
+  HUD.nameOv.classList.remove('show'); syncHUD(); }
 
 /* ------------------------------- INPUT ----------------------------------- */
 // L'input (pointer drag per mira/potenza/effetto + tastiera) è incapsulato
@@ -4540,7 +4588,7 @@ function drawAvatar(ctx,img,cx,cy,r,border){
 async function buildCardURL(){
   const W=1080,H=1080, c=document.createElement('canvas'); c.width=W; c.height=H; const x=c.getContext('2d');
   const sw=W/9; for(let i=0;i<9;i++){ x.fillStyle=(i%2)?'#A50044':'#004D98'; x.fillRect(i*sw,0,sw+1,H); }  // strisce blaugrana
-  let src=lastShotPNG; if(!src){ try{ src=cv.toDataURL('image/jpeg',0.85); }catch(e){} }   // fallback: frame attuale
+  let src=lastShotPNG; if(!src){ try{ renderer.render(scene,camera); src=cv.toDataURL('image/jpeg',0.85); }catch(e){} }   // fallback: frame attuale
   const frame = src ? await loadImg(src) : null;
   const fh=600;
   if(frame){ const ar=frame.width/frame.height, tr=W/fh; let cw,ch,cx,cy;
@@ -4662,7 +4710,7 @@ document.getElementById('setVoice').addEventListener('click',e=>{ e.stopPropagat
     const k=c.dataset.mc;
     ROLE = (k==='keeper'||k==='duel')?'keeper':'shooter';
     MODE = (k==='five'||k==='duel')?'five':'infinite';
-    if(MODE!=='five') DAILY=false;
+    DAILY=false;                                   // le card sono partite normali: il seed del giorno resta al bottone dedicato
     try{ localStorage.setItem('rig_role',ROLE); localStorage.setItem('rig_mode',MODE); }catch(err){}
     applyIdentity(); startGame(); }));
   // ACCESSIBILITÀ: shake e slow-mo on/off, volumi separati musica/effetti
@@ -4727,11 +4775,15 @@ class Input {
   down(e){
     if(HUD.nameOv.classList.contains('show')) return;
     const t=e.touches?e.touches[0]:e, x=t.clientX, y=t.clientY;
-    if(state===STATE.MENU_SCREEN||state===STATE.GAME_OVER){ startGame(); return; }
+    if(state===STATE.MENU_SCREEN||state===STATE.GAME_OVER){
+      if(state===STATE.GAME_OVER && stateT<0.5) return;   // il verdetto si LEGGE: il tap che voleva saltare la moviola non riavvia
+      startGame(); return; }
     // PORTIERE A REAZIONE: il tocco e' valido anche durante rincorsa/volo (e' LI' che si para)
     const kFlight = isKeeper() && state===STATE.BALL_IN_FLIGHT && shot && !shot.humanDive;
     if(state!==STATE.GAME_PLAYING && !kFlight) return;
+    if(state===STATE.GAME_PLAYING && stateT<0.22) return;   // doppio-tap dal menu: il secondo tocco non diventa un tiro
     aim.active=true; aim.sx=x; aim.sy=y; aim.cx=x; aim.cy=y; aim.t0=performance.now();   // avvia il decision timer
+    try{ cv.setPointerCapture(e.pointerId); }catch(err){}   // il gesto resta NOSTRO anche sopra HUD/bordi (niente tiri fantasma da pointerleave)
     const g=screenToGoal(x,y-AIM_LIFT()); aim.tx=g.x; aim.ty=g.y; aim.power=CONFIG.minPowerShot; aim.curl=0;   // mira SOPRA il dito (il dito non copre il bersaglio)
     if(isKeeper()){ HUD.power.classList.remove('on'); HUD.curl.classList.remove('on'); return; }   // da portiere: il drag sceglie SOLO dove tuffarsi
     HUD.power.classList.add('on'); HUD.curl.classList.remove('on');
@@ -4753,6 +4805,7 @@ class Input {
     else HUD.curl.classList.remove('on');
   }
   up(e){
+    try{ if(e.pointerId!=null) cv.releasePointerCapture(e.pointerId); }catch(err){}
     // PORTIERE in volo: il rilascio (o il tap) e' IL TUFFO verso il punto mirato
     if(aim.active && isKeeper() && state===STATE.BALL_IN_FLIGHT){ aim.active=false; keeperDiveNow(aim.tx,aim.ty); return; }
     if(!aim.active||state!==STATE.GAME_PLAYING){ aim.active=false; return; }
@@ -4773,6 +4826,7 @@ class Input {
     this.e.physics.shoot();
   }
   key(e){
+    if(HUD.nameOv.classList.contains('show')) return;   // overlay NUOVO RECORD: la tastiera e' sua
     // niente scorciatoie se il focus e' su un controllo UI o se un overlay e' aperto
     const tg=e.target; if(tg && (tg.tagName==='BUTTON'||tg.tagName==='INPUT'||tg.tagName==='A')) return;
     const set=document.getElementById('settings'); if(set && set.classList.contains('show')) return;
@@ -4795,7 +4849,9 @@ class Input {
       if(isKeeper()) this.e.physics.saveShot(); else this.e.physics.shoot(); }
   }
   keyUp(e){ if(e.key===' ' && this.kbCharge){ this.kbCharge=false;      // rilascio SPAZIO = TIRO con la potenza caricata
-      if(state===STATE.GAME_PLAYING && !isKeeper()){ HUD.power.classList.remove('on'); this.e.physics.shoot(); } } }
+      HUD.power.classList.remove('on');
+      if(_settingsOpen()) return;                                       // impostazioni aperte: niente tiro cieco
+      if(state===STATE.GAME_PLAYING && !isKeeper()){ this.e.physics.shoot(); } } }
 }
 class Physics {                                  // volo palla + AI portiere + esito
   constructor(engine){ this.e=engine; }
@@ -4925,7 +4981,7 @@ class View {                                     // render Three.js + layer 2D (
     c.restore(); c.globalAlpha=1;
   }
   render(dt){
-    const adt = replay? dt*0.5 : dt;               // MOVIOLA: anche i PERSONAGGI vanno in slow-mo (coerenti col clock del replay)
+    const adt = replay? dt*0.5 : (shot && shot.drama && shot.launched && state===STATE.BALL_IN_FLIGHT ? dt*0.55 : dt);   // MOVIOLA 0.5x e volo DRAMMA 0.55x: personaggi sempre sul clock della palla
     if(keeperMixer){ keeperMixer.update(adt); applyKeeperReach(); }
     if(kickerMixer){ kickerMixer.update(adt); }
     updateKeeperFace(); updateKickerFace(); updateKicker(adt);
@@ -5059,7 +5115,7 @@ try{ window.__KDBG = new URLSearchParams(location.search).get('kdbg')==='1'; }ca
 try{ const s=new URLSearchParams(location.hash.slice(1)).get('s'); if(s){ roundSeed=s.slice(0,16).replace(/[^a-z0-9]/gi,''); challengeFromURL=!!roundSeed; } }catch(e){}
 function boot(){
   try{
-    renderer=new THREE.WebGLRenderer({canvas:cv, antialias:true, powerPreference:'high-performance', preserveDrawingBuffer:true});
+    renderer=new THREE.WebGLRenderer({canvas:cv, antialias:true, powerPreference:'high-performance'});
   }catch(e){ document.getElementById('webglErr').style.display='flex'; return; }
   if(!renderer || !renderer.getContext()){ document.getElementById('webglErr').style.display='flex'; return; }
   applyPixelDensity();                              // pixel ratio per stile (8-bit renderizza pixelato)
