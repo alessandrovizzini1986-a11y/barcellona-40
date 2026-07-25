@@ -4319,7 +4319,7 @@ const Weather={ cond:'sereno', pts:null, buf:null, vel:null, N:340, boltT:0, _th
     const c=this.cond, snow=c==='neve', prec=this.wet()||snow;
     if(this.pts){ this.pts.visible=prec;
       if(prec){ this.pts.material.color.setHex(snow?0xffffff:(isHallow()?0x8fa0cc:0x9fb8dd));
-        this.pts.material.size=snow?0.085:0.05; this.pts.material.opacity=snow?0.85:0.5;
+        this.pts.material.size=snow?0.085:0.06; this.pts.material.opacity=snow?0.85:0.62;
         for(let i=0;i<this.N;i++) this._seed(i,false);
         this.pts.geometry.attributes.position.needsUpdate=true; } }
     // NEBBIA: stringe il fog DELLO STILE (halloween ha gia' il suo violaceo: lo accorcio ancora)
