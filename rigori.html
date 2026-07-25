@@ -4813,10 +4813,13 @@ try{ const _kd=new URLSearchParams(location.search).get('kdbg'); if(_kd==='1'||_
     get glb(){return {kicker:useGLBKicker,keeper:useGLBKeeper};},
     get ballZ(){return ball.position.z;},
     get kickerPos(){return kickerGLB?[kickerGLB.position.x,kickerGLB.position.z]:null;},
-    // telemetria bug moviola: yaw del rigorista + kickYaw del tiro + fase clip
+    // telemetria bug moviola: yaw del rigorista + kickYaw + fase clip + camera + fallback
     get kickerRot(){ return kickerGLB? { rotY:+kickerGLB.rotation.y.toFixed(3),
       kickYaw:(shot&&shot.kickYaw!=null)?+shot.kickYaw.toFixed(3):null,
-      phase:kickPhase||'', tx:shot?+shot.target.x.toFixed(2):null } : null; },
+      phase:kickPhase||'', tx:shot?+shot.target.x.toFixed(2):null,
+      cam:camera?[+camera.position.x.toFixed(1),+camera.position.y.toFixed(1),+camera.position.z.toFixed(1)]:null,
+      fkVis:(typeof kicker!=='undefined'&&kicker)?!!kicker.visible:null,
+      celeb:!!celeb } : null; },
     // debug contatto: punte dei piedi (mondo) + palla + clock del tiro
     get feet(){ if(!kickerGLB||!ball) return null;
       if(!this._ftL||!this._ftR){ let L=null,R=null,Lf=null,Rf=null;
