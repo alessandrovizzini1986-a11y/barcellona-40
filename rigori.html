@@ -1539,7 +1539,7 @@ function buildScene(textures){
   lights.key.position.set(-9,18,9); lights.key.castShadow=true;
   lights.key.shadow.mapSize.set(2048,2048);
   const sc=lights.key.shadow.camera; sc.near=1; sc.far=70; sc.left=-16; sc.right=16; sc.top=16; sc.bottom=-8;
-  lights.key.shadow.bias=-0.0004; lights.key.shadow.normalBias=0.02; lights.key.shadow.radius=3.5;
+  lights.key.shadow.bias=-0.0004; lights.key.shadow.normalBias=0.02; lights.key.shadow.radius=5.5;   // penombra da riflettore vero
   scene.add(lights.key); scene.add(lights.key.target);
   // FILL freddo dal lato opposto, senza ombre: ammorbidisce i neri sul portiere/rigorista
   lights.fill=new THREE.DirectionalLight(0x6f9fff, 0.42); lights.fill.position.set(11,9,8); scene.add(lights.fill);
@@ -1567,6 +1567,20 @@ function buildScene(textures){
     // flare ANAMORFICO (striscia orizzontale da regia TV) che "respira" col faro
     const st=new THREE.Sprite(glowMat.clone()); st.scale.set(8,0.5,1); st.position.set(p[0],p[1]+0.6,p[2]); st.material.opacity=0.28; scene.add(st);
     lights.flares.push({gl,core,st,ph:fi*1.7});
+    // FASCIO VOLUMETRICO FINTO: cono additivo col gradiente che scende verso il campo
+    // (il "God ray" da broadcast senza post-processing: costa un draw call a faro)
+    if(!lights.beamTex){ const bc=document.createElement('canvas'); bc.width=64; bc.height=256;
+      const bx=bc.getContext('2d'); const bg=bx.createLinearGradient(0,0,0,256);
+      bg.addColorStop(0,'rgba(210,230,255,.55)'); bg.addColorStop(.55,'rgba(190,215,255,.16)'); bg.addColorStop(1,'rgba(180,210,255,0)');
+      bx.fillStyle=bg; bx.fillRect(0,0,64,256); lights.beamTex=new THREE.CanvasTexture(bc); }
+    { const from=new THREE.Vector3(p[0],p[1]+0.6,p[2]), to=new THREE.Vector3(0,0.5,0);
+      const dir=to.clone().sub(from), len=dir.length();
+      const beam=new THREE.Mesh(new THREE.CylinderGeometry(0.9,4.6,len,10,1,true),
+        new THREE.MeshBasicMaterial({map:lights.beamTex,transparent:true,opacity:0.10,blending:THREE.AdditiveBlending,
+          depthWrite:false,side:THREE.DoubleSide,toneMapped:false}));
+      beam.position.copy(from).addScaledVector(dir,0.5);
+      beam.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), dir.clone().normalize().negate());
+      beam.renderOrder=3; scene.add(beam); (lights.beams=lights.beams||[]).push(beam); }
   });
   // FLASH dei telefoni in tribuna: sprite additivi che lampeggiano sul gol/parata
   lights.crowdFlashes=[];
@@ -1656,7 +1670,8 @@ function buildScene(textures){
     side.rotation.y=Math.PI/2; side.position.set(s*HALF,GH/2,-GD/2); scene.add(side); });
 
   // ---- PALLONE PBR ----
-  const ballMat=new THREE.MeshStandardMaterial({ map:textures.ball, roughness:.32, metalness:.08, envMapIntensity:1.15 });
+  const ballMat=new THREE.MeshPhysicalMaterial({ map:textures.ball, roughness:.32, metalness:.08, envMapIntensity:1.15,
+    clearcoat:.55, clearcoatRoughness:.28 });   // CLEARCOAT: pelle lucida da notturna, riflessi dei fari sulla curvatura
   ball=new THREE.Mesh(new THREE.SphereGeometry(BALL_R,32,24), ballMat);
   ball.castShadow=true; ball.position.set(0,BALL_R,SPOT_Z); scene.add(ball);
   ball.userData.classicMap=textures.ball; applyBallSkin();   // skin sbloccabili (oro/fuoco), default classica
@@ -2833,6 +2848,8 @@ function resolveShot(){
     // energia cinetica REALE trasferita alla rete nel punto esatto d'impatto
     { const cv=shot.sim&&shot.sim.crossVel, sp=cv?Math.hypot(cv.x,cv.y,cv.z):shot.speed||18;
       NetSim.impulse(shot.sim?shot.sim.cross.x:shot.target.x, Math.max(0.25,shot.sim?shot.sim.cross.y:shot.target.y), clamp(sp*0.42,4.5,10)); }
+    if(incrocio||shot.special||shot.woodGoal) dramaPulse();
+    if(streak>0 && streak%5===0) crowdFlashParty(8);   // pietra miliare: la curva esplode
     showResult(incrocio?'INCROCIO! 🎯':'GOAL!','#39ff7a'); HUD.flash.classList.remove('on','save'); void HUD.flash.offsetWidth; HUD.flash.classList.add('on');
     burstConfetti(shot.target.x,Math.max(0.6,shot.target.y));
     if(incrocio){ burstConfetti(-shot.target.x*0.5,1.5); setTimeout(()=>burstConfetti(shot.target.x*0.7,1.2),120); }  // festa extra all'incrocio
@@ -3169,6 +3186,9 @@ function update(dt){
   updBallSquash(dt);
 
   // RIFLETTORI VIVI: micro-pulsazione dei flare (respiro elettrico, fase diversa per faro)
+  if(lights.beams){ const hd=highDetailMode();
+    for(let bi=0;bi<lights.beams.length;bi++){ const b=lights.beams[bi];
+      b.visible=hd; if(hd) b.material.opacity=0.085+0.03*Math.sin(performance.now()/900+bi*1.7); } }
   if(lights.flares) for(const f of lights.flares){
     const tw=0.86+0.11*Math.sin(stateT*2.1+f.ph)+0.03*Math.sin(stateT*13+f.ph*3);
     f.gl.material.opacity=tw; f.core.material.opacity=0.7+0.3*tw; f.st.material.opacity=0.25*tw; }
@@ -4304,6 +4324,11 @@ function applyGFX(){
   document.querySelectorAll('.stbtn').forEach(b=>b.classList.toggle('active', b.dataset.gfx===GFX));
 }
 function setGFX(g){ if(!GFX_LIST.includes(g))return; GFX=g; try{localStorage.setItem('rig_gfx',g);}catch(e){} applyGFX(); }
+// DRAMA PULSE: micro-colpo di saturazione/contrasto da regia TV nei momenti clou
+let _dpT=null;
+function dramaPulse(){ try{ const c=document.getElementById('cv'); if(!c) return;
+  c.style.transition='filter .16s ease'; c.style.filter='saturate(1.35) contrast(1.09) brightness(1.05)';
+  clearTimeout(_dpT); _dpT=setTimeout(()=>{ c.style.filter=''; },340); }catch(e){} }
 // EASTER EGG: arma il "tiro speciale" (3 tap rapidi sul centro della porta)
 function armSpecial(){ if(specialArmed) return; specialArmed=true;
   showTelecro('🌈 TIRO SPECIALE ARMATO! Tira adesso 💥'); speak('Tiro speciale!',true);
