@@ -497,7 +497,7 @@
       <div class="pstats"><i style="--v:93%"></i><i style="--v:97%"></i><i style="--v:89%"></i></div></button>
     <button class="pscard" data-player="Ale" id="cardAle"><img src="assets/keeper-face.png" alt="Ale"><span>ALE 👑</span><small>#1 · RE DEI RIGORI</small>
       <div class="pstats"><i style="--v:99%"></i><i style="--v:99%"></i><i style="--v:99%"></i></div>
-      <div class="lock">🔒<small>vinci il DUELLO<br>5 RIGORI per<br>sbloccarlo</small></div></button>
+      <div class="lock">🔒<small>vinci il DUELLO,<br>8 PARATE di fila<br>o LIV.12 del Pass</small></div></button>
   </div>
   <div class="pslegend">TIR · POT · EFF</div>
   <div class="pssub">…CONTRO ALE 🧤👑 IN PORTA</div>
@@ -1264,7 +1264,7 @@ const KICK_FOLLOW_Z=9.90;                            // -> con questo appoggio i
 const KICK_WINDUP_GLB=0.55, KICK_WINDUP_FALLBACK=0.30; // durata rincorsa (s) prima del lancio palla
 let PLAYER=null; try{ const p=localStorage.getItem('rig_player'); if(p&&PLAYERS[p]) PLAYER=PLAYERS[p]; }catch(e){}
 // modalità: 'infinite' (morte improvvisa) | 'five' (5 rigori, conta i gol)
-let MODE='infinite', shotNum=0, goals5=0; try{ const m=localStorage.getItem('rig_mode'); if(m==='five'||m==='infinite') MODE=m; }catch(e){}
+let MODE='infinite', shotNum=0, goals5=0, saveRun=0;   // saveRun = PARATE consecutive vere (i pali/fuori non sono parate) try{ const m=localStorage.getItem('rig_mode'); if(m==='five'||m==='infinite') MODE=m; }catch(e){}
 // RUOLO: 'shooter' (tiri tu, Ale para) | 'keeper' (la CPU tira, TU ti tuffi e pari)
 let ROLE='shooter'; try{ const r=localStorage.getItem('rig_role'); if(r==='keeper'||r==='shooter') ROLE=r; }catch(e){}
 const isKeeper=()=>ROLE==='keeper';
@@ -1697,7 +1697,9 @@ function buildScene(textures){
       bbqTex.minFilter=THREE.LinearFilter; bbqTex.magFilter=THREE.LinearFilter; bbqTex.generateMipmaps=false;
       bbqMat=new THREE.MeshBasicMaterial({map:bbqTex, toneMapped:false, fog:true});
       const bbqDead=()=>{ if(bbqMat){ bbqMat.map=null; bbqMat.color.setHex(0x0a1526); bbqMat.needsUpdate=true; } };
-      bbqVideo.addEventListener('error',bbqDead,true);          // capture: prende anche l'errore dei <source>
+      bbqVideo.addEventListener('error',e=>{ if(e.target===bbqVideo || bbqVideo.error) bbqDead(); });
+      // NIENTE capture: l'errore di un singolo <source> (su iPhone il webm viene scartato)
+      // non deve spegnere lo schermo — il <video> segnala errore solo se falliscono TUTTE
       bbqVideo.addEventListener('loadeddata',()=>bbqPlay());
       const SW=8.6, SH=SW*9/16;      // MAXISCHERMO vero: 8.6m di base, centrato sopra la curva.
                                      // In portrait il campo orizzontale e' ~24 gradi (+-7.3m a questa distanza):
@@ -2127,11 +2129,12 @@ function applyKeeperReach(){
   // a riposo: ripristina il bind (il mixer scrive comunque, ma il reach è un extra)
   if(!useGLBKeeper) return;
   // reach attivo durante il volo e mantenuto nella parata (così i guantoni restano sull'angolo)
-  if((state!==STATE.BALL_IN_FLIGHT && state!==STATE.SAVE_ANIMATION) || !keeperDive){ return; }
+  if(!keeperDive) return;
+  if(!replay && state!==STATE.BALL_IN_FLIGHT && state!==STATE.SAVE_ANIMATION) return;   // in MOVIOLA il reach vive sempre (anche sui gol)
   const d=keeperDive; const u=d.u||0;
   // intensità del reach: cresce col progress; in volo sale come sin(), nella parata
   // resta al picco (guantoni incollati all'angolo).
-  const env=state===STATE.SAVE_ANIMATION? 1 : Math.sin(Math.PI*clamp(u*1.05,0,1));
+  const env=(!replay && state===STATE.SAVE_ANIMATION)? 1 : Math.sin(Math.PI*clamp(u*1.05,0,1));   // in moviola segue la rampa: niente scatto secco
   const armUp=(bone, amount)=>{ if(!bone||!bone.userData.bindQ) return;
     _qx.setFromAxisAngle(_ax, -amount);                 // X locale negativo = mano in alto
     bone.quaternion.multiply(_qx); };
@@ -2333,7 +2336,7 @@ function setState(s){ engine.setState(s); }
 function startGame(){ streak=0; shotNum=0; goals5=0; aleSaves=0; suddenDeath=false; duelResult=''; fiveRes=[]; aimHist=[]; lastShotPNG=null; specialArmed=false;
   // reset dei sistemi di run: missioni, cariche del tiro speciale, blocco difficoltà
   missRun={topRow:0, wood:0, curva:0, incro:0, saves:0};
-  specCharges=0; specUsed=0; specGoalRun=0; _lastBlk=0; kHint=0;
+  specCharges=0; specUsed=0; specGoalRun=0; _lastBlk=0; kHint=0; saveRun=0;
   if(DAILY && MODE==='five') roundSeed=dailySeed();                               // SFIDA DEL GIORNO: seed dalla data
   else if(!challengeFromURL) roundSeed=Math.floor(Math.random()*2.1e9).toString(36);   // nuovo seed ogni partita (la SFIDA da URL lo fissa)
   const wcond=Weather.roll();                                                     // METEO della partita (in SFIDA esce dal seed: stesso link = stesso cielo)
@@ -3038,6 +3041,7 @@ function resolveKeeper(r){
     // ESULTANZA di ALE: ti ha segnato e viene a dirtelo in faccia (corre verso la camera)
     if(useGLBKicker && kickerGLB){ celeb={t:0,dir:-1}; playKicker('run',1); }
     CharFSM.set('kicker','esultanza'); CharFSM.set('keeper','sconfitta');   // FSM: beffato
+    saveRun=0;                                               // gol subito: la serie di parate si spezza
     try{ Stats.bump('subiti'); if(shot&&shot.parryGoal) Stats.bump('autogol'); }catch(e){}   // carriera: gol subiti + beffe
     haptic([0,130]); slowmo=1; setState(STATE.GOAL_ANIMATION);
   } else {                                                   // parata o tiro sbagliato dalla CPU -> festa del portiere
@@ -3050,7 +3054,8 @@ function resolveKeeper(r){
       burstConfetti(shot.guess,Math.max(0.6,shot.guessY||1.2));
       HUD.flash.classList.remove('on'); HUD.flash.classList.add('save'); void HUD.flash.offsetWidth; HUD.flash.classList.add('on');
       haptic([0,40,30,70]);
-      try{ if(streak>=3) Progress.award('parata3'); if(streak>=8) Progress.award('muro8'); }catch(e){}
+      saveRun++;                                             // solo le PARATE contano per i trofei da portiere
+      try{ if(saveRun>=3) Progress.award('parata3'); if(saveRun>=8) Progress.award('muro8'); }catch(e){}
       // missione "para 4 in una run" + XP parata + banner blocco portiere + carriera
       try{ missRun.saves++; if(missRun.saves>=4) Missions.complete('par4'); Meta.add(10); announceBlockIfChanged(); Stats.bump('saves'); }catch(e){}
     } else if(r==='POST'){ showResult('PALO! 😅','#ffd884'); engine.view.popWord('PALO!','#ffd24a'); Sound.postClang(); arcadeAudio.playPostSting();
@@ -3067,13 +3072,15 @@ function gameOver(){
   gameOverNow();
 }
 function gameOverNow(){ Sound.sfx(180,.2); setTimeout(()=>Sound.sfx(90,.3),130);
-  if(challengeFromURL){ challengeFromURL=false; try{ history.replaceState(null,'',location.pathname+location.search); }catch(e){} }   // la sfida da link vale UNA partita: poi seed casuali (niente record dopati a memoria)
+  if(challengeFromURL){ challengeFromURL=false; try{ history.replaceState(null,'',location.pathname+location.search); }catch(e){}
+    try{ const _cn=document.getElementById('challengeNote'); if(_cn) _cn.style.display='none'; }catch(e){} }   // la sfida da link vale UNA partita: poi seed casuali (e il banner si spegne, non mente)
   try{ if(MODE==='five' && duelResult==='win') Progress.award('duello'); }catch(e){}   // vinci il duello -> sblocchi ALE
   // TEMA FINALE: vittoria (duello vinto / grande streak / nuovo record) o sconfitta (mai cupa)
   try{ const won = MODE==='five' ? duelResult==='win' : (streak>=5 || (!isKeeper() && Scores.isHigh(streak)));
     if(won) arcadeAudio.playVictoryTheme(); else arcadeAudio.playDefeatTheme(); }catch(e){}
   if(isKeeper()){
     if(MODE!=='five'){ try{ const pb=+(localStorage.getItem('rigk_best')||0); if(streak>pb) localStorage.setItem('rigk_best',streak); }catch(e){} }
+    else { try{ const pb=+(localStorage.getItem('rigk5_best')||0); if(aleSaves>pb) localStorage.setItem('rigk5_best',aleSaves); }catch(e){} }   // chiave NUOVA: il duello da PORTIERE ha il suo record
     setState(STATE.GAME_OVER); return;                       // il portiere ha un suo record separato (no leaderboard nomi)
   }
   if(MODE==='five'){ try{ const pb=+(localStorage.getItem('rig5_best')||0); if(goals5>pb) localStorage.setItem('rig5_best',goals5); }catch(e){}
@@ -3215,7 +3222,7 @@ function updateReplay(dt){
       updateBallShadow(); }
     else if(s.result==='GOAL' && ball.position.z>-GD+0.25){ ball.position.z-=dt*0.55; updateBallShadow(); }
     const tail=(s.result==='MISS'||s.result==='POST')?1.8:1.05;   // fuori/palo: si vede il rimbalzo
-    if(R.endT>tail){ const wasMid=R.mid; replay=null; applyCamFov();
+    if(R.endT>tail){ const wasMid=R.mid; replay=null; applyCamFov(); _lookOk=false;   // il lookAt riparte pulito dopo la moviola
       try{ document.getElementById('replayCine').classList.remove('show'); }catch(e){}
       if(wasMid){ newAim(); } else gameOverNow(); return; }   // mid-run: si CONTINUA a giocare
   }
@@ -3485,7 +3492,7 @@ function update(dt){
       updateBallShadow(); pushTrail();
     }
     // la palla resta nei guantoni SOLO su vera parata pulita (la respinta segue il path)
-    else if(shot && shot.result==='SAVE' && !shot.parry && useGLBKeeper && gloveCatch(1-Math.pow(0.25,dt))){ /* tenuta nei guantoni: scende a terra COL portiere (fattore frame-rate independent) */ }
+    else if(shot && shot.result==='SAVE' && !shot.parry && useGLBKeeper && gloveCatch(1-Math.pow(0.5,dt*60))){ /* tenuta nei guantoni: scende a terra COL portiere (fattore frame-rate independent) */ }
     else if(stateT<0.4){ ball.position.z += dt*6; ball.position.y+=dt*1.5; }
     // il fuori/palo con simulazione ha una coda piu' lunga: si vede il rimbalzo sugli spalti
     const tailMs = (shot && shot.sim && (shot.result==='MISS'||shot.result==='POST'||shot.parry))
@@ -3514,7 +3521,7 @@ function update(dt){
   HUD.score.classList.toggle('pulse',scorePulseT>0.25);
 }
 
-const _lookCur=new THREE.Vector3(); let _lookOk=false;
+const _lookCur=new THREE.Vector3(), _lookSh=new THREE.Vector3(); let _lookOk=false;
 function updateCamera(dt){
   // base + sway idle handheld (multi-frequenza, ampiezza ridotta) + punch-in snappy +
   // orbita lenta in slow-mo + shake. DA PORTIERE la base e' KCAM (dietro la porta).
@@ -3551,12 +3558,14 @@ function updateCamera(dt){
     lz=lerp(lz, kickerGLB.position.z, k*0.9);
     if(!keep){ py=lerp(py, 2.05, k*0.6); pz=lerp(pz, 16.2, k*0.6); }   // da PORTIERE niente travelling: attraverserebbe rete e traversa
   }
-  if(shakeMag>0){ px+=rand(-1,1)*shakeMag*0.24; py+=rand(-1,1)*shakeMag*0.17; lx+=rand(-1,1)*shakeMag*0.06; }
+  if(shakeMag>0){ px+=rand(-1,1)*shakeMag*0.24; py+=rand(-1,1)*shakeMag*0.17; }
   camPos.set(px,py,pz); camTarget.set(lx,ly,lz);
   camera.position.lerp(camPos,clamp(dt*9,0,1));
-  if(!_lookOk){ _lookCur.copy(camTarget); _lookOk=true; }   // anche l'orientamento insegue: zero frustate ai cambi stato
+  if(!_lookOk){ _lookCur.copy(camTarget); _lookOk=true; }   // l'orientamento insegue: zero frustate ai cambi stato
   else _lookCur.lerp(camTarget, clamp(dt*9,0,1));
-  camera.lookAt(_lookCur);
+  // lo SHAKE si somma DOPO il filtro (dentro verrebbe smorzato al ~28%: la scossa del gol deve pungere)
+  _lookSh.copy(_lookCur); if(shakeMag>0) _lookSh.x+=rand(-1,1)*shakeMag*0.06;
+  camera.lookAt(_lookSh);
 }
 
 function updateBallShadow(){
@@ -4001,6 +4010,9 @@ const _faceTexCache={};
 function _faceTex(url){ if(!_faceTexCache[url]){ const t=new THREE.TextureLoader().load(url);
   t.colorSpace=THREE.SRGBColorSpace; _faceTexCache[url]=t; } return _faceTexCache[url]; }
 function applyIdentity(){
+  // le facce cambiano di posto: hallowHeads deve RI-catturare la map originale,
+  // altrimenti tornando a PES ripristina quella di prima (facce scambiate per sempre)
+  try{ if(kickerFace) kickerFace.userData.hwSaved=false; if(keeperFace) keeperFace.userData.hwSaved=false; }catch(e){}
   const shooter = isKeeper()? ALE_ID : PLAYER;                     // chi prende la rincorsa
   if(shooter) setKicker(shooter);
   if(keeperFace){ const url = isKeeper()? ((PLAYER&&PLAYER.face)||'assets/face-mario.png') : 'assets/keeper-face.png?v=1';
@@ -4017,7 +4029,7 @@ function showReveal(poster){ const r=document.getElementById('reveal'), im=docum
 function pickPlayer(key){
   if(key==='Ale' && !Progress.aleUnlocked()){                      // ALE e' uno sblocco: niente scorciatoie
     const c=document.getElementById('cardAle'); if(c){ c.classList.remove('deny'); void c.offsetWidth; c.classList.add('deny'); }
-    showTelecro('🔒 ALE si sblocca vincendo il DUELLO dei 5 RIGORI!'); Sound.sfx(160,.12,'triangle'); haptic(40); return; }
+    showTelecro('🔒 ALE si sblocca: vinci il DUELLO dei 5 RIGORI, para 8 rigori di fila o arriva a LIV.12 del Pass!'); Sound.sfx(160,.12,'triangle'); haptic(40); return; }
   PLAYER=PLAYERS[key]||null; try{ if(key) localStorage.setItem('rig_player',key); }catch(e){}
   const cd=document.querySelector('#playerSelect .pscard[data-player="'+key+'"]');
   if(cd){ cd.classList.remove('sel'); void cd.offsetWidth; cd.classList.add('sel'); Sound.sfx(760,.06); setTimeout(()=>Sound.sfx(1140,.08),70); }
@@ -4033,11 +4045,12 @@ function syncHUD(){
   const five=(MODE==='five'), keep=isKeeper();
   let best5=0; try{ best5=+(localStorage.getItem('rig5_best')||0); }catch(e){}
   let bestK=0; try{ bestK=+(localStorage.getItem('rigk_best')||0); }catch(e){}
+  let bestK5=0; try{ bestK5=+(localStorage.getItem('rigk5_best')||0); }catch(e){}   // record del duello DA PORTIERE
   const inGameInf = !five && (state===STATE.GAME_PLAYING||state===STATE.BALL_IN_FLIGHT||state===STATE.GOAL_ANIMATION||state===STATE.SAVE_ANIMATION);
   if(keep){
     HUD.score.textContent = five? (aleSaves+'-'+goals5) : (inGameInf? '' : streak);   // parate tue - gol subiti
-    HUD.rec.textContent = five? ('REC '+best5+'/5') : ('REC '+bestK+' 🧤');
-    HUD.menuRec.textContent = five? (best5+'/5') : (bestK+' parate');
+    HUD.rec.textContent = five? ('REC '+bestK5+'/5 🧤') : ('REC '+bestK+' 🧤');
+    HUD.menuRec.textContent = five? (bestK5+'/5 🧤') : (bestK+' parate');
   } else {
     HUD.score.textContent = five? (goals5+'-'+aleSaves) : (inGameInf? '' : streak);   // in infinita lo streak vive SOLO sul canvas (single source of truth)
     HUD.rec.textContent = five? ('REC '+best5+'/5') : ('REC '+Scores.best()+(Scores.bestName()?' '+Scores.bestName():''));
@@ -4086,7 +4099,7 @@ function syncHUD(){
       if(five){ const w=(duelResult==='win');
         if(ol) ol.textContent=(w?'HAI PARATO ':'TI HANNO SEGNATO ')+(w?(aleSaves+' su 5!'):(goals5+' su 5')) + (suddenDeath?'  (spareggio)':'');
         HUD.overTitle.textContent = w?'PORTIERE TOP! 🧤🏆':'BATTUTO 😵';
-        HUD.overRec.textContent=best5+'/5';
+        HUD.overRec.textContent=bestK5+'/5 🧤';
       } else { if(ol) ol.textContent='hai parato '+streak+(streak===1?' rigore':' rigori')+' di fila';
         HUD.overTitle.textContent=streak>=8?'SARACINESCA! 🧤👑':(streak>=4?'CHE RIFLESSI! 🧤':'GOL SUBITO 😵');
         HUD.overRec.textContent=bestK+' 🧤';
@@ -4486,7 +4499,7 @@ function endTexForGFX(){
 // i pixel (image-rendering:pixelated) = pixel art VERA su tutta la scena 3D
 function applyPixelDensity(){
   if(!renderer) return;
-  renderer.setPixelRatio(is8bit()? 0.45 : Math.min(window.devicePixelRatio||1,2));
+  renderer.setPixelRatio(is8bit()? 0.45 : Math.min(window.devicePixelRatio||1, QUALITY===0?1:2));   // RISPETTA la qualita' adattiva: un resize non deve rialzare i pixel
   cv.style.imageRendering = is8bit()? 'pixelated' : '';
   renderer.setSize(window.innerWidth, window.innerHeight);
 }
@@ -4635,8 +4648,12 @@ document.getElementById('nameSave').addEventListener('click',saveName);
 // player-select: scelta calciatore + re-scelta toccando la faccia nello scoreboard
 document.querySelectorAll('#playerSelect .pscard').forEach(b=>b.addEventListener('click',()=>pickPlayer(b.dataset.player)));
 document.getElementById('repick').addEventListener('click',(e)=>{ e.stopPropagation(); document.getElementById('playerSelect').classList.add('show'); });
-document.getElementById('modeBtn').addEventListener('click',(e)=>{ e.stopPropagation(); MODE=(MODE==='five')?'infinite':'five'; try{localStorage.setItem('rig_mode',MODE);}catch(e){} syncHUD(); });
-document.getElementById('roleBtn').addEventListener('click',(e)=>{ e.stopPropagation(); ROLE=(ROLE==='keeper')?'shooter':'keeper'; try{localStorage.setItem('rig_role',ROLE);}catch(e){} applyIdentity(); syncHUD(); });
+document.getElementById('modeBtn').addEventListener('click',(e)=>{ e.stopPropagation(); MODE=(MODE==='five')?'infinite':'five'; try{localStorage.setItem('rig_mode',MODE);}catch(e){}
+  if(MODE!=='five') DAILY=false;                     // fuori dai 5 rigori la sfida del giorno non vale piu' (e non verrebbe salvata)
+  syncHUD(); });
+document.getElementById('roleBtn').addEventListener('click',(e)=>{ e.stopPropagation(); ROLE=(ROLE==='keeper')?'shooter':'keeper'; try{localStorage.setItem('rig_role',ROLE);}catch(e){}
+  if(isKeeper()) DAILY=false;                        // la daily e' da TIRATORE: da portiere il punteggio non verrebbe registrato
+  applyIdentity(); syncHUD(); });
 // selettore STILE: PES <-> Holly & Benji (cambiabile in qualsiasi momento)
 document.querySelectorAll('.stbtn').forEach(b=>b.addEventListener('click',(e)=>{ e.stopPropagation(); setGFX(b.dataset.gfx); }));
 applyGFX();   // imposta classe body + bottoni attivi all'avvio
@@ -4644,8 +4661,14 @@ applyGFX();   // imposta classe body + bottoni attivi all'avvio
 document.getElementById('shareBtn').addEventListener('click',(e)=>{ e.stopPropagation(); shareCard(); });
 
 /* ---- Highlight Card (PNG condivisibile) + Sfida con seed ---- */
-function cardText(){ const who=PLAYER?PLAYER.name:'IO';
-  if(MODE==='five') return duelResult==='win'? (who+' ha BATTUTO Ale 👑🧤 ai rigori al Camp Nou: '+goals5+'-'+aleSaves+'! 🏆') : ('Ale 👑🧤 ha parato: '+aleSaves+'-'+goals5+' a '+who+' al Camp Nou!');
+function cardText(){ const who=PLAYER?PLAYER.name:'IO', keep=isKeeper();
+  // DA PORTIERE la storia e' rovesciata: sei TU il muro, e il punteggio va letto
+  // parate-gol come nell'HUD (prima la card raccontava sempre il tiratore)
+  if(MODE==='five'){
+    if(keep) return duelResult==='win'? (who+' ha PARATO '+aleSaves+' rigori su 5 ad Ale 👑 al Camp Nou: '+aleSaves+'-'+goals5+'! 🧤🏆')
+                                      : ('Ale 👑 ha segnato '+goals5+'-'+aleSaves+' a '+who+' portiere al Camp Nou!');
+    return duelResult==='win'? (who+' ha BATTUTO Ale 👑🧤 ai rigori al Camp Nou: '+goals5+'-'+aleSaves+'! 🏆') : ('Ale 👑🧤 ha parato: '+aleSaves+'-'+goals5+' a '+who+' al Camp Nou!'); }
+  if(keep) return who+' ha parato '+streak+(streak===1?' rigore':' rigori')+' di fila ad ALE 👑 al Camp Nou! 🧤';
   return who+' ha segnato '+streak+(streak===1?' rigore':' rigori')+' di fila ad ALE 👑🧤 al Camp Nou!'; }
 function loadImg(src){ return new Promise(res=>{ const im=new Image(); im.onload=()=>res(im); im.onerror=()=>res(null); im.src=src; }); }
 // faccia ritagliata in cerchio (cover-crop, no deformazione) con ombra "Panini" + bordo
@@ -4681,8 +4704,10 @@ async function buildCardURL(){
   x.fillStyle='#ffd884'; x.font='700 32px Arial,sans-serif'; x.fillText('RIGORI AL CAMP NOU', W/2, 648);
   // punteggione
   let big,sub;
-  if(MODE==='five'){ big=goals5+' - '+aleSaves; sub=(duelResult==='win'?'HAI BATTUTO ALE! 🏆':'DUELLO vs ALE'); }
-  else { big=String(streak); sub='GOL DI FILA'; }
+  const _keep=isKeeper();                                    // da portiere: parate-gol e 'PARATE DI FILA'
+  if(MODE==='five'){ big=_keep? (aleSaves+' - '+goals5) : (goals5+' - '+aleSaves);
+    sub=(duelResult==='win'?(_keep?'HAI PARATO ALE! 🧤🏆':'HAI BATTUTO ALE! 🏆'):'DUELLO vs ALE'); }
+  else { big=String(streak); sub=_keep?'PARATE DI FILA':'GOL DI FILA'; }
   x.fillStyle='#fff'; x.font='800 '+(MODE==='five'?88:104)+'px Arial,sans-serif'; x.fillText(big, W/2, 770);
   x.fillStyle='#9fd0ff'; x.font='700 26px Arial,sans-serif'; x.fillText(sub.toUpperCase(), W/2, 812);
   // FACCE: tu (tiratore) vs ALE (portiere-re)
@@ -4703,7 +4728,7 @@ async function shareCard(){ let url=null; try{ url=await buildCardURL(); }catch(
     if(navigator.canShare && navigator.canShare({files:[file]})){ await navigator.share({files:[file],text:cardText()}); return; } }catch(e){}
   const a=document.createElement('a'); a.href=url; a.download='rigori-camp-nou.jpg'; document.body.appendChild(a); a.click(); a.remove(); }
 function shareChallenge(){ const link=location.href.split('#')[0]+'#s='+(roundSeed||'');
-  const sc=(MODE==='five')?(goals5+'-'+aleSaves):(streak+' di fila');
+  const sc=(MODE==='five')? (isKeeper()? (aleSaves+'-'+goals5) : (goals5+'-'+aleSaves)) : (streak+(isKeeper()?' parate di fila':' di fila'));
   const txt='Ti sfido ai rigori al Camp Nou! Stesso portiere (Ale 👑🧤) e stessa fortuna. Io ho fatto '+sc+'. Battimi 👉';
   if(navigator.share){ navigator.share({title:'Sfida ai rigori al Camp Nou',text:txt,url:link}).catch(()=>{}); }
   else window.open('https://wa.me/?text='+encodeURIComponent(txt+' '+link),'_blank'); }
@@ -4799,8 +4824,10 @@ document.getElementById('setVoice').addEventListener('click',e=>{ e.stopPropagat
   // ⛅ METEO: AUTO pesca a inizio partita (seed-coerente in SFIDA); forzato = anteprima subito
   document.getElementById('setMeteo').addEventListener('click',e=>{ e.stopPropagation();
     cycleMeteo(); renderSettings(); Sound.sfx(700,.05);
-    if(METEO!=='auto'){ Weather.cond=METEO; try{ Weather.apply(); }catch(err){} }
-    else { Weather.cond='sereno'; try{ Weather.apply(); }catch(err){} } });   // AUTO = anteprima SPENTA (il roll vero avviene a inizio partita)
+    if(METEO!=='auto'){ Weather.cond=METEO; try{ Weather.apply(); }catch(err){} }          // scelta manuale: anteprima subito
+    else if(state===STATE.MENU_SCREEN){ Weather.cond='sereno'; try{ Weather.apply(); }catch(err){} } });
+    // AUTO spegne l'anteprima SOLO nel menu: a partita in corso il meteo estratto dal
+    // seed non si tocca (cambierebbe anche il bonus respinta col pallone bagnato)
   document.getElementById('specBtn').addEventListener('click',e=>{ e.stopPropagation();
     if(specCharges>0 && !specialArmed){ specCharges--; specUsed++; armSpecial(); specHUD(); } });   // gia' armato (easter egg): niente carica sprecata
   document.getElementById('seedLine').addEventListener('click',e=>{ e.stopPropagation();
@@ -4809,7 +4836,7 @@ document.getElementById('setVoice').addEventListener('click',e=>{ e.stopPropagat
     catch(err){ try{ prompt('Copia il link:',link); }catch(e2){} } }); }
 document.querySelectorAll('.ballopt').forEach(b=>b.addEventListener('click',e=>{ e.stopPropagation(); const k=b.dataset.ball;
   if(!Progress.ballUnlocked(k)){ b.classList.remove('deny'); void b.offsetWidth; b.classList.add('deny');
-    showTelecro(k==='gold'?'🔒 Pallone ORO: fai 5 gol di fila!':'🔒 Pallone FUOCO: segna col TIRO SPECIALE!'); return; }
+    showTelecro(k==='gold'?'🔒 Pallone ORO: 5 gol di fila (o LIV.4 del Pass)':'🔒 Pallone FUOCO: segna col TIRO SPECIALE (o LIV.8 del Pass)'); return; }
   setBallSkin(k); renderSettings(); Sound.sfx(880,.06); }));
 
 /* ========================== GAME ENGINE (OOP) =============================
@@ -4941,7 +4968,7 @@ class View {                                     // render Three.js + layer 2D (
     this.parts=[]; for(let i=0;i<360;i++) this.parts.push({life:0,life0:1,x:0,y:0,vx:0,vy:0,g:700,r:2,c:'#fff'}); // object pool
     this._sizeFx(); addEventListener('resize',()=>this._sizeFx());
   }
-  _sizeFx(){ const d=is8bit()? 0.45 : Math.min(window.devicePixelRatio||1,2);   // 8-bit: anche i FX 2D sono pixelati
+  _sizeFx(){ const d=is8bit()? 0.45 : Math.min(window.devicePixelRatio||1, QUALITY===0?1:2);   // 8-bit: anche i FX 2D sono pixelati (e a qualita' LITE si resta a 1)
     this.fx.width=Math.round(innerWidth*d); this.fx.height=Math.round(innerHeight*d);
     this.fx.style.imageRendering = is8bit()? 'pixelated' : '';
     this.fxc.setTransform(d,0,0,d,0,0); }
@@ -5010,7 +5037,11 @@ class View {                                     // render Three.js + layer 2D (
   _drawStreak(c,W){
     const inGame = state===STATE.GAME_PLAYING||state===STATE.BALL_IN_FLIGHT||state===STATE.GOAL_ANIMATION||state===STATE.SAVE_ANIMATION;
     if(!inGame || MODE==='five') return;            // 5 rigori usa già il tracker a pallini
-    const best=Scores.best(), record = streak>best && streak>0;   // nuovo record personale in corso
+    const keep=isKeeper();
+    let best=0, bnm='';
+    if(keep){ try{ best=+(localStorage.getItem('rigk_best')||0); }catch(e){} }   // da portiere il PB e' quello delle PARATE
+    else { best=Scores.best(); bnm=Scores.bestName()||''; }
+    const record = streak>best && streak>0;   // nuovo record personale in corso
     const hot = streak>=3, pulse = scorePulseT>0 ? 1+scorePulseT*0.4 : 1;
     c.save(); c.textAlign='center'; c.textBaseline='middle';
     // numero grande: UNICA fonte di verità per lo streak in gioco
@@ -5023,8 +5054,8 @@ class View {                                     // render Three.js + layer 2D (
     c.shadowBlur=0; c.font='700 13px Arial,sans-serif';
     let sub, scol;
     if(record){ sub='NUOVO RECORD! 🏆'; scol='#ffe08a'; }
-    else if(best>0){ const nm=Scores.bestName(); sub='BATTI '+(nm||'IL RECORD')+': '+best; scol='#9fb4dd'; }
-    else { sub='QUANTI DI FILA?'; scol='#9fb4dd'; }
+    else if(best>0){ sub='BATTI '+(bnm||'IL RECORD')+': '+best; scol='#9fb4dd'; }
+    else { sub=keep?'QUANTE NE PARI?':'QUANTI DI FILA?'; scol='#9fb4dd'; }
     c.fillStyle=scol; c.fillText(sub.toUpperCase(), W/2, 124);
     c.restore();
   }
