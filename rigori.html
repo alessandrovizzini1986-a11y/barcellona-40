@@ -385,6 +385,13 @@
 <div id="animefx" aria-hidden="true"><div id="speedlines"></div><div id="mangaword"></div></div>
 <div id="replayCine" aria-hidden="true"><div class="rbadge">🎬 REPLAY ●</div><div class="drip"></div></div>
 <div id="hwFlash" aria-hidden="true"></div>
+<!-- SPOT del MAXISCHERMO: sorgente della VideoTexture (mai a schermo di suo).
+     muted+playsinline+loop = autoplay permesso da tutti i browser mobile. -->
+<video id="bbqvid" muted loop playsinline preload="auto" aria-hidden="true"
+       style="position:absolute;width:2px;height:2px;opacity:0;pointer-events:none;left:-10px;top:-10px">
+  <source src="assets/grigliata.webm" type="video/webm">
+  <source src="assets/grigliata.mp4" type="video/mp4">
+</video>
 <div id="srlive" class="vh" role="status" aria-live="polite"></div>
 
 <div id="hud">
@@ -486,6 +493,8 @@
       <div class="pstats"><i style="--v:96%"></i><i style="--v:88%"></i><i style="--v:91%"></i></div></button>
     <button class="pscard" data-player="Giulio"><img src="assets/face-giulio.png" alt="Giulio"><span>GIULIO</span><small>#7 · 99 OVR</small>
       <div class="pstats"><i style="--v:90%"></i><i style="--v:95%"></i><i style="--v:93%"></i></div></button>
+    <button class="pscard" data-player="Francesco"><img src="assets/face-francesco.png" alt="Francesco"><span>FRANCESCO</span><small>#10 · 99 OVR</small>
+      <div class="pstats"><i style="--v:93%"></i><i style="--v:97%"></i><i style="--v:89%"></i></div></button>
     <button class="pscard" data-player="Ale" id="cardAle"><img src="assets/keeper-face.png" alt="Ale"><span>ALE 👑</span><small>#1 · RE DEI RIGORI</small>
       <div class="pstats"><i style="--v:99%"></i><i style="--v:99%"></i><i style="--v:99%"></i></div>
       <div class="lock">🔒<small>vinci il DUELLO<br>5 RIGORI per<br>sbloccarlo</small></div></button>
@@ -1232,6 +1241,7 @@ let keeperFace=null, keeperHeadBone=null, keeperHandL=null, keeperHandR=null; co
 const PLAYERS={
   Mario:{name:'MARIO',num:'104',face:'assets/face-mario.png',poster:'mario_poster.jpg'},
   Giulio:{name:'GIULIO',num:'7',face:'assets/face-giulio.png',poster:'giulio_poster.jpg'},
+  Francesco:{name:'FRANCESCO',num:'10',face:'assets/face-francesco.png',poster:null},
   // ALE giocabile: si sblocca vincendo il duello dei 5 rigori (Ale vs Ale, il Re contro se stesso)
   Ale:{name:'ALE',num:'1',face:'assets/keeper-face.png',poster:null} };
 let kicker=null, kickT=-1;                            // rigorista procedurale di spalle (fallback se il GLB non carica)
@@ -1286,6 +1296,7 @@ let specialArmed=false;            // EASTER EGG: tiro speciale armato (3 tap al
 let confetti=null;
 let netShatter=null;               // ANIME: segmenti 3D dei "fili" della rete sfondata
 let stadiumMat=null, stadiumTexPES=null, stadiumTexANIME=null, stadiumTexPEL=null, stadiumTex8BIT=null, stadiumTexHALLOW=null;   // stadio per stile, swap in applyGFX
+let bbqVideo=null, bbqTex=null, bbqScreens=[], bbqMat=null;   // MAXISCHERMO: un solo video alimenta i due schermi
 let endMat=null, endTexPES=null, endTexANIME=null, endTexPEL=null, endTex8BIT=null, endTexHALLOW=null;                           // CURVA OPPOSTA (vista portiere)
 let netMat=null;                                     // materiale rete condiviso (halloween: ragnatela, swap in applyGFX)
 const camBase=new THREE.Vector3(0,2.75,18.2);   // camera piu' arretrata e alta: si vede il rigorista e la sua rincorsa
@@ -1672,6 +1683,41 @@ function buildScene(textures){
     [-1,1].forEach(s=>{ const wing2=new THREE.Mesh(new THREE.PlaneGeometry(40,22), endMat);
       wing2.position.set(s*40,8.2,15); wing2.rotation.y=Math.PI+s*Math.PI/4.6; scene.add(wing2); });
   }
+
+  // ---- MAXISCHERMO dello stadio: lo SPOT della grigliata di ALE ----
+  // Un SOLO <video> (decodifica unica) alimenta DUE schermi: uno sulla curva dietro
+  // la porta (lo vedi da tiratore) e uno sulla curva opposta (lo vedi da portiere).
+  // Costo: 2 draw call + 1 decode 640x360; si spegne da solo a qualita' bassa,
+  // a tab nascosta e se il file manca (resta lo schermo spento, mai un buco).
+  try{
+    bbqVideo=document.getElementById('bbqvid');
+    if(bbqVideo){
+      bbqTex=new THREE.VideoTexture(bbqVideo);
+      bbqTex.colorSpace=THREE.SRGBColorSpace;
+      bbqTex.minFilter=THREE.LinearFilter; bbqTex.magFilter=THREE.LinearFilter; bbqTex.generateMipmaps=false;
+      bbqMat=new THREE.MeshBasicMaterial({map:bbqTex, toneMapped:false, fog:true});
+      const bbqDead=()=>{ if(bbqMat){ bbqMat.map=null; bbqMat.color.setHex(0x0a1526); bbqMat.needsUpdate=true; } };
+      bbqVideo.addEventListener('error',bbqDead,true);          // capture: prende anche l'errore dei <source>
+      bbqVideo.addEventListener('loadeddata',()=>bbqPlay());
+      const SW=8.6, SH=SW*9/16;      // MAXISCHERMO vero: 8.6m di base, centrato sopra la curva.
+                                     // In portrait il campo orizzontale e' ~24 gradi (+-7.3m a questa distanza):
+                                     // centrato ci sta tutto con margine, e si legge da lontano.
+      const frameMat=new THREE.MeshStandardMaterial({color:0x0a1220, roughness:.7, metalness:.35});
+      const mk=(x,y,z,ry)=>{
+        const g=new THREE.Group();
+        const cab=new THREE.Mesh(new THREE.BoxGeometry(SW+0.5,SH+0.5,0.28), frameMat);   // cassone/cornice
+        cab.position.z=-0.16; g.add(cab);
+        const scr=new THREE.Mesh(new THREE.PlaneGeometry(SW,SH), bbqMat);
+        g.add(scr);
+        [-1,1].forEach(sx=>{ const arm=new THREE.Mesh(new THREE.CylinderGeometry(0.11,0.16,3.4,8), frameMat);   // due montanti (centrato: niente palo in mezzo alla porta)
+          arm.position.set(sx*SW*0.34,-(SH/2)-1.7,-0.2); g.add(arm); });
+        g.position.set(x,y,z); g.rotation.y=ry||0; scene.add(g);
+        bbqScreens.push(g); return g; };
+      mk(0, 7.9, -16.4, 0);                                      // CENTRATO sopra la curva dietro la porta (vista TIRATORE)
+      mk(0, 7.9,  23.4, Math.PI);                                // CENTRATO sulla curva opposta (vista PORTIERE)
+      bbqPlay();
+    }
+  }catch(e){}
 
   // ---- PORTA arrotondata (palo+barra metallo bianco) ----
   const postMat=new THREE.MeshStandardMaterial({color:0xf4f8ff,roughness:.22,metalness:.45,envMapIntensity:1.1});
@@ -3214,6 +3260,12 @@ function gloveCatch(s){
    il crowd-canvas dello stadio e i particellari 2D — tutti scalati qui. */
 let QUALITY=2, _fpsAcc=0, _fpsN=0, _fpsBad=0, _fpsGood=0, _fpsDem=0;
 const highDetailMode=()=>QUALITY>=2;
+// MAXISCHERMO: prova a far partire lo spot (muted autoplay; se il browser lo nega,
+// riparte al primo tocco dell'utente da Input.down)
+function bbqPlay(){ try{ if(bbqVideo && bbqVideo.paused && highDetailMode()) bbqVideo.play().catch(()=>{}); }catch(e){} }
+function bbqGate(){ const on=highDetailMode();
+  for(const g of bbqScreens) g.visible=on;
+  try{ if(!bbqVideo) return; if(on) bbqPlay(); else bbqVideo.pause(); }catch(e){} }
 function applyQuality(){
   const shBall=QUALITY>0, shChar=QUALITY>1;
   try{
@@ -3223,6 +3275,7 @@ function applyQuality(){
     if(renderer && !is8bit()) renderer.setPixelRatio(Math.min(window.devicePixelRatio||1, QUALITY===0?1:2));
     // Q<=1: via le 4 spot (i flare/beam vendono comunque i riflettori) e shadow map dimezzata
     if(lights.spots) for(const sp of lights.spots) sp.visible = QUALITY>1;
+    bbqGate();                                       // maxischermo acceso solo a qualita' piena
     if(lights.key){ const ms = QUALITY>1? 2048 : 1024;
       if(lights.key.shadow.mapSize.x!==ms){ lights.key.shadow.mapSize.set(ms,ms);
         if(lights.key.shadow.map){ lights.key.shadow.map.dispose(); lights.key.shadow.map=null; } } }
@@ -4457,6 +4510,7 @@ function applyGFX(){
     hallowMood(isHallow());                // fog denso violaceo + riflettori arancio (con ripristino)
     hallowEnv(isHallow());                 // luna/lapidi/nebbia/pipistrelli/ragni (creati una volta, toggle visible)
     Weather.apply();                       // il METEO si ri-applica sopra lo stile (fog nebbia, colore gocce)
+    if(bbqMat && bbqMat.map) bbqMat.color.setHex(isHallow()? 0x9fd8a8 : (is8bit()? 0xd8e4ff : 0xffffff));   // LED malato in halloween
   }catch(e){}
   try{ applyPixelDensity(); if(engine&&engine.view) engine.view._sizeFx(); }catch(e){}   // risoluzione per stile
   document.querySelectorAll('.stbtn').forEach(b=>b.classList.toggle('active', b.dataset.gfx===GFX));
@@ -4803,6 +4857,7 @@ class Input {
     const kFlight = isKeeper() && state===STATE.BALL_IN_FLIGHT && shot && !shot.humanDive;
     if(state!==STATE.GAME_PLAYING && !kFlight) return;
     if(state===STATE.GAME_PLAYING && this._mt && performance.now()-this._mt<260) return;   // SOLO il doppio-tap dal menu viene ignorato, non i gesti veloci a ogni rigore
+    bbqPlay();                                       // il primo tocco sblocca anche lo spot del maxischermo
     aim.active=true; aim.sx=x; aim.sy=y; aim.cx=x; aim.cy=y; aim.t0=performance.now();   // avvia il decision timer
     try{ cv.setPointerCapture(e.pointerId); }catch(err){}   // il gesto resta NOSTRO anche sopra HUD/bordi (niente tiri fantasma da pointerleave)
     const g=screenToGoal(x,y-AIM_LIFT()); aim.tx=g.x; aim.ty=g.y; aim.power=CONFIG.minPowerShot; aim.curl=0;   // mira SOPRA il dito (il dito non copre il bersaglio)
@@ -5090,6 +5145,9 @@ try{ const _kd=new URLSearchParams(location.search).get('kdbg'); if(_kd==='1'||_
       envOn:!!(HW&&HW.on), bats:HW?HW.bats.filter(b=>b.visible).length:0,
       faceHW:!!(kickerFace&&kickerFace.userData.hwSaved), keeperFaceHW:!!(keeperFace&&keeperFace.userData.hwSaved),
       fog:scene&&scene.fog? scene.fog.color.getHexString():'', hface:HFACE }; },
+    get bbq(){ return bbqVideo? { w:bbqVideo.videoWidth|0, h:bbqVideo.videoHeight|0, paused:!!bbqVideo.paused,
+      t:+(bbqVideo.currentTime||0).toFixed(2), err:!!bbqVideo.error, screens:bbqScreens.length,
+      vis:bbqScreens.length? !!bbqScreens[0].visible : false } : null; },
     get meteo(){ return { cond:Weather.cond, sel:METEO, vis:Weather.pts?(Weather.pts.visible?1:0):-1,
       fogN:scene&&scene.fog?scene.fog.near:0, boltT:Math.round(Weather.boltT*10)/10 }; },
     get netDbg(){ if(!NetSim.p) return null;
@@ -5176,8 +5234,8 @@ function boot(){
     if(window.visualViewport) visualViewport.addEventListener('resize',resize);
     // tab nascosta: sospendi TUTTO l'audio (heartbeat/folla/sequencer), riprendi al rientro
     document.addEventListener('visibilitychange',()=>{ try{
-      if(document.hidden){ if(Sound.ctx&&Sound.ctx.state==='running') Sound.ctx.suspend(); }
-      else if(Sound.ctx&&Sound.ctx.state==='suspended') Sound.ctx.resume();
+      if(document.hidden){ if(Sound.ctx&&Sound.ctx.state==='running') Sound.ctx.suspend(); if(bbqVideo) bbqVideo.pause(); }
+      else { if(Sound.ctx&&Sound.ctx.state==='suspended') Sound.ctx.resume(); bbqPlay(); }
     }catch(e){} });
     // ESC chiude gli overlay (impostazioni / scelta giocatore, se un giocatore c'e' gia')
     addEventListener('keydown',e=>{ if(e.key!=='Escape') return;
