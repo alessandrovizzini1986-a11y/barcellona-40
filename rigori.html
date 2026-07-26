@@ -1695,7 +1695,9 @@ function buildScene(textures){
       bbqTex=new THREE.VideoTexture(bbqVideo);
       bbqTex.colorSpace=THREE.SRGBColorSpace;
       bbqTex.minFilter=THREE.LinearFilter; bbqTex.magFilter=THREE.LinearFilter; bbqTex.generateMipmaps=false;
-      bbqMat=new THREE.MeshBasicMaterial({map:bbqTex, toneMapped:false, fog:true});
+      // fog:false = il LED e' EMISSIVO: la nebbia violacea di halloween (e quella del meteo)
+      // non deve mangiarselo. Prima in halloween lo schermo era quasi illeggibile.
+      bbqMat=new THREE.MeshBasicMaterial({map:bbqTex, toneMapped:false, fog:false});
       const bbqDead=()=>{ if(bbqMat){ bbqMat.map=null; bbqMat.color.setHex(0x0a1526); bbqMat.needsUpdate=true; } };
       bbqVideo.addEventListener('error',e=>{ if(e.target===bbqVideo || bbqVideo.error) bbqDead(); });
       // NIENTE capture: l'errore di un singolo <source> (su iPhone il webm viene scartato)
@@ -4523,7 +4525,7 @@ function applyGFX(){
     hallowMood(isHallow());                // fog denso violaceo + riflettori arancio (con ripristino)
     hallowEnv(isHallow());                 // luna/lapidi/nebbia/pipistrelli/ragni (creati una volta, toggle visible)
     Weather.apply();                       // il METEO si ri-applica sopra lo stile (fog nebbia, colore gocce)
-    if(bbqMat && bbqMat.map) bbqMat.color.setHex(isHallow()? 0x9fd8a8 : (is8bit()? 0xd8e4ff : 0xffffff));   // LED malato in halloween
+    if(bbqMat && bbqMat.map) bbqMat.color.setHex(0xffffff);   // schermo SEMPRE a piena luce: nessuna tinta che lo scurisca
   }catch(e){}
   try{ applyPixelDensity(); if(engine&&engine.view) engine.view._sizeFx(); }catch(e){}   // risoluzione per stile
   document.querySelectorAll('.stbtn').forEach(b=>b.classList.toggle('active', b.dataset.gfx===GFX));
