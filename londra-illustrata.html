@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0d1321">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Londra per Olly">
+<title>Londra per Olly · le figure del viaggio</title>
+<meta name="description" content="Il programma del viaggio a Londra spiegato per immagini, stampabile, per Olly.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --night-0:#0d1321;--night-1:#1a2332;--night-2:#212c40;
+    --gold:#d4a94e;--gold-soft:#e8c87e;
+    --bus:#c8362b;--sky:#6db3d8;
+    --ink:#f5f0e8;--muted:#9aa3b5;
+    --line:rgba(245,240,232,.09);--line-gold:rgba(212,169,78,.3);
+    --card-bg:#fdf8ee;--card-ink:#1c1710;
+    --shadow-card:0 18px 44px -20px rgba(0,0,0,.75);
+  }
+  html{background:var(--night-0)}
+  body{background:var(--night-0);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    line-height:1.5;-webkit-font-smoothing:antialiased}
+  h1,h2{font-family:"Playfair Display",Georgia,serif;line-height:1.06;letter-spacing:-.01em}
+  a{color:inherit}
+  .wrap{max-width:760px;margin:0 auto;padding:0 18px}
+  :focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:6px}
+
+  .aurora{position:fixed;inset:0;z-index:-1;pointer-events:none;background:
+    radial-gradient(90% 55% at 75% -10%,rgba(212,169,78,.09),transparent 60%),
+    radial-gradient(80% 50% at 10% 110%,rgba(109,179,216,.06),transparent 60%),
+    linear-gradient(180deg,var(--night-0),#101828 55%,var(--night-0))}
+
+  /* ============ TOP BAR ============ */
+  .ihead{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:10px;
+    padding:12px 16px;background:rgba(13,19,33,.85);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--line)}
+  .backbtn{font-size:13.5px;font-weight:600;color:var(--muted);text-decoration:none;white-space:nowrap}
+  .backbtn:hover{color:var(--gold-soft)}
+  .pbtn{font-family:inherit;font-weight:700;font-size:14px;border:1px solid var(--line-gold);color:var(--gold);
+    background:rgba(212,169,78,.1);border-radius:999px;padding:9px 16px;cursor:pointer;white-space:nowrap}
+  .pbtn:active{transform:scale(.97)}
+
+  /* ============ INTRO ============ */
+  .intro{text-align:center;padding:36px 18px 10px}
+  .intro h1{font-size:clamp(34px,10vw,50px)}
+  .intro h1 .hl{background:linear-gradient(180deg,#fdf6e3 20%,var(--gold-soft) 60%,var(--gold) 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent}
+  .intro p{margin-top:10px;color:var(--muted);font-size:15px;max-width:32ch;margin-left:auto;margin-right:auto}
+
+  /* ============ GIORNATE ============ */
+  .dayblock{padding:30px 0 10px}
+  .dayhead{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+  .daycircle{flex:none;width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    font-family:"Playfair Display",serif;font-weight:700;font-size:19px;border:2px solid;color:#0d1321}
+  .dayhead h2{font-size:clamp(24px,7vw,30px);color:var(--ink)}
+  .dayhead .dsub{font-size:12.5px;color:var(--muted);font-weight:600;letter-spacing:.04em;margin-left:2px}
+  .day-dom .daycircle{background:var(--gold);border-color:var(--gold)}
+  .day-lun .daycircle{background:var(--bus);border-color:var(--bus);color:#fff}
+  .day-mar .daycircle{background:var(--sky);border-color:var(--sky)}
+
+  .cardgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  @media(min-width:520px){.cardgrid{grid-template-columns:repeat(3,1fr)}}
+  @media(min-width:760px){.cardgrid{grid-template-columns:repeat(4,1fr)}}
+
+  .acard{position:relative;background:var(--card-bg);color:var(--card-ink);border-radius:18px;
+    box-shadow:var(--shadow-card);padding:16px 10px 14px;display:flex;flex-direction:column;align-items:center;
+    text-align:center;border-top:6px solid var(--gold)}
+  .day-lun .acard{border-top-color:var(--bus)}
+  .day-mar .acard{border-top-color:var(--sky)}
+  .acard.maybe{border-style:dashed;background:repeating-linear-gradient(135deg,var(--card-bg) 0 10px,#f4ecd8 10px 20px)}
+  .anum{position:absolute;top:8px;left:8px;width:24px;height:24px;border-radius:50%;background:#0d1321;color:var(--gold-soft);
+    font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;font-family:system-ui,sans-serif}
+  .amaybe{position:absolute;top:8px;right:8px;font-size:15px}
+  .aemoji{font-size:clamp(44px,11vw,60px);line-height:1;margin-top:14px}
+  .acap{margin-top:9px;font-size:13.5px;font-weight:700;line-height:1.3}
+  .acap small{display:block;font-weight:500;font-size:11px;color:#5b5342;margin-top:2px}
+
+  /* ============ FOOTER ============ */
+  .ifoot{text-align:center;padding:44px 18px calc(34px + env(safe-area-inset-bottom));color:var(--muted);font-size:12.5px}
+  .ifoot .fam2{font-family:"Playfair Display",serif;font-style:italic;font-size:15px;color:var(--gold-soft);margin-bottom:6px}
+
+  /* ============ STAMPA ============ */
+  @media print{
+    @page{margin:14mm}
+    html,body{background:#fff;color:#111}
+    .aurora,.ihead,.intro p{display:none}
+    .intro{padding-top:0;text-align:left}
+    .intro h1{color:#111;font-size:30px}
+    .intro h1 .hl{background:none;-webkit-text-fill-color:initial;color:#111}
+    .dayblock{page-break-before:always;break-before:page;padding-top:6mm}
+    .dayblock:first-of-type{page-break-before:avoid;break-before:avoid}
+    .dayhead h2{color:#111}
+    .dayhead .dsub{color:#444}
+    .cardgrid{grid-template-columns:repeat(3,1fr);gap:8mm 6mm}
+    .acard{box-shadow:none;border:2px solid #111;break-inside:avoid;background:#fff}
+    .acard.maybe{background:#fff}
+    .anum{background:#111;color:#fff}
+    .acap{color:#111}
+    .acap small{color:#444}
+    .ifoot{color:#444}
+    .ifoot .fam2{color:#111}
+  }
+</style>
+</head>
+<body>
+<div class="aurora"></div>
+
+<header class="ihead">
+  <a class="backbtn" href="londra.html">← Programma completo</a>
+  <button class="pbtn" id="printBtn" type="button">🖨️ Stampa</button>
+</header>
+
+<div class="wrap">
+  <section class="intro">
+    <h1>Londra <span class="hl">per Olly</span></h1>
+    <p>Guarda le figure in ordine: è quello che faremo, giorno per giorno! 💛</p>
+  </section>
+
+  <!-- ============ DOMENICA ============ -->
+  <section class="dayblock day-dom">
+    <div class="dayhead">
+      <span class="daycircle">1</span>
+      <div><h2>Domenica</h2><div class="dsub">15 novembre</div></div>
+    </div>
+    <div class="cardgrid">
+      <article class="acard"><span class="anum">1</span><span class="aemoji">🏠</span><span class="acap">Arriviamo a casa</span></article>
+      <article class="acard"><span class="anum">2</span><span class="aemoji">🥘</span><span class="acap">Mangiamo al mercato</span></article>
+      <article class="acard"><span class="anum">3</span><span class="aemoji">🐠</span><span class="acap">Guardiamo i pesci</span></article>
+      <article class="acard maybe"><span class="anum">4</span><span class="amaybe">❓</span><span class="aemoji">🎄</span><span class="acap">Mercatino di Natale<small>se è già aperto</small></span></article>
+      <article class="acard"><span class="anum">5</span><span class="aemoji">🎡</span><span class="acap">Saliamo sulla ruota</span></article>
+      <article class="acard"><span class="anum">6</span><span class="aemoji">🍽️</span><span class="acap">Ceniamo a casa</span></article>
+    </div>
+  </section>
+
+  <!-- ============ LUNEDÌ ============ -->
+  <section class="dayblock day-lun">
+    <div class="dayhead">
+      <span class="daycircle">2</span>
+      <div><h2>Lunedì</h2><div class="dsub">16 novembre</div></div>
+    </div>
+    <div class="cardgrid">
+      <article class="acard"><span class="anum">1</span><span class="aemoji">🐿️</span><span class="acap">Diamo da guardare agli scoiattoli</span></article>
+      <article class="acard"><span class="anum">2</span><span class="aemoji">🦢</span><span class="acap">Guardiamo i pellicani</span></article>
+      <article class="acard maybe"><span class="anum">3</span><span class="amaybe">❓</span><span class="aemoji">👑</span><span class="acap">Il palazzo della Regina<small>e forse le guardie</small></span></article>
+      <article class="acard"><span class="anum">4</span><span class="aemoji">🎄</span><span class="acap">Il grande albero di Natale</span></article>
+      <article class="acard"><span class="anum">5</span><span class="aemoji">🧸</span><span class="acap">Vetrine piene di giochi</span></article>
+      <article class="acard"><span class="anum">6</span><span class="aemoji">☕</span><span class="acap">Merenda con il tè</span></article>
+      <article class="acard"><span class="anum">7</span><span class="aemoji">✨</span><span class="acap">Passeggiata tra le luci</span></article>
+      <article class="acard"><span class="anum">8</span><span class="aemoji">🎁</span><span class="acap">Il negozio dei giocattoli</span></article>
+      <article class="acard"><span class="anum">9</span><span class="aemoji">🍽️</span><span class="acap">Ceniamo fuori</span></article>
+    </div>
+  </section>
+
+  <!-- ============ MARTEDÌ ============ -->
+  <section class="dayblock day-mar">
+    <div class="dayhead">
+      <span class="daycircle">3</span>
+      <div><h2>Martedì</h2><div class="dsub">17 novembre</div></div>
+    </div>
+    <div class="cardgrid">
+      <article class="acard"><span class="anum">1</span><span class="aemoji">☕</span><span class="acap">Colazione a casa</span></article>
+      <article class="acard"><span class="anum">2</span><span class="aemoji">🌉</span><span class="acap">Il ponte che si apre</span></article>
+      <article class="acard maybe"><span class="anum">3</span><span class="amaybe">☀️/🌧️</span><span class="aemoji">⛵</span><span class="acap">La nave dei pirati<small>o il museo, se piove</small></span></article>
+      <article class="acard"><span class="anum">4</span><span class="aemoji">🧳</span><span class="acap">Prepariamo le valigie</span></article>
+      <article class="acard"><span class="anum">5</span><span class="aemoji">✈️</span><span class="acap">Voliamo verso casa</span></article>
+    </div>
+  </section>
+</div>
+
+<footer class="ifoot">
+  <p class="fam2">Famiglia in viaggio</p>
+  <p>Londra 2026</p>
+</footer>
+
+<script>
+  document.getElementById('printBtn').addEventListener('click',function(){ window.print(); });
+</script>
+</body>
+</html>
