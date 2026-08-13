@@ -217,6 +217,30 @@
   .cprog b{color:var(--gold-soft)}
   .cnote{font-size:11.5px;color:var(--muted);margin-top:4px;font-style:italic}
 
+  /* programma ora per ora */
+  .hp-day{margin-top:24px}
+  .hp-day:first-of-type{margin-top:4px}
+  .hp-badge{display:inline-flex;align-items:center;font-family:"Playfair Display",serif;font-weight:700;font-size:15px;
+    padding:6px 16px;border-radius:999px;margin-bottom:12px}
+  .hp-badge.dom{background:rgba(212,169,78,.15);color:var(--gold-soft);border:1px solid var(--line-gold)}
+  .hp-badge.lun{background:rgba(200,54,43,.16);color:#ff9d94;border:1px solid rgba(200,54,43,.45)}
+  .hp-badge.mar{background:rgba(109,179,216,.14);color:var(--sky);border:1px solid rgba(109,179,216,.4)}
+  .hp-tl{list-style:none;padding-left:16px;border-left:2px solid var(--line)}
+  .hp-day.dom .hp-tl{border-left-color:rgba(212,169,78,.4)}
+  .hp-day.lun .hp-tl{border-left-color:rgba(200,54,43,.4)}
+  .hp-day.mar .hp-tl{border-left-color:rgba(109,179,216,.4)}
+  .hp-tl li{padding:7px 0;font-size:14px;line-height:1.45;display:flex;gap:10px}
+  .hp-tl li:not(:last-child){border-bottom:1px solid var(--line)}
+  .hp-t{flex:none;width:50px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-weight:700;
+    font-size:12.5px;color:var(--gold-soft);padding-top:1px}
+  .hp-day.lun .hp-t{color:#ff9d94}
+  .hp-day.mar .hp-t{color:var(--sky)}
+  .hp-d{flex:1;color:#e7e2d8}
+  .hp-notes{margin-top:20px;display:flex;flex-direction:column;gap:10px}
+  .hp-note{font-size:13px;line-height:1.55;border-radius:12px;padding:11px 13px}
+  .hp-note.warn{background:rgba(200,54,43,.1);border:1px solid rgba(200,54,43,.35);color:#ffb3ac}
+  .hp-note.info{background:rgba(109,179,216,.1);border:1px solid rgba(109,179,216,.35);color:#bcdcee}
+
   /* sezione Olly */
   .olly-count{text-align:center;font-family:"Playfair Display",serif;font-weight:700;font-size:17px;
     color:var(--gold-soft);margin:2px 0 16px}
@@ -465,6 +489,60 @@
     </details>
   </section>
 
+  <!-- ============ PROGRAMMA ORA PER ORA ============ -->
+  <section id="orario">
+    <div class="eyebrow">Programma ora per ora</div>
+    <h2>Timeline dei tre giorni</h2>
+    <p class="sub2">Colpo d'occhio su orari e passaggi, giorno per giorno.</p>
+
+    <div class="hp-day dom">
+      <span class="hp-badge dom">Domenica 15 — Southbank</span>
+      <ul class="hp-tl">
+        <li><span class="hp-t">07:00</span><span class="hp-d">Volo BA, BLQ → LHR (arrivo 08:40)</span></li>
+        <li><span class="hp-t">10:00</span><span class="hp-d">79 Beak St: deposito bagagli</span></li>
+        <li><span class="hp-t">11:00</span><span class="hp-d">Bakerloo line → Waterloo (diretta, zero cambi)</span></li>
+        <li><span class="hp-t">11:30</span><span class="hp-d">Borough Market: pranzo street food (domenica apre 10–16)</span></li>
+        <li><span class="hp-t">13:30</span><span class="hp-d">SEA LIFE Aquarium: squali e pinguini</span></li>
+        <li><span class="hp-t">16:00</span><span class="hp-d">London Eye al tramonto (giro 30 min)</span></li>
+        <li><span class="hp-t">17:15</span><span class="hp-d">Rientro + spesa da Lina Stores ⚠️ chiude alle 18:00 di domenica</span></li>
+        <li><span class="hp-t">18:00</span><span class="hp-d">Check-in con chiave Clevio, cena in appartamento</span></li>
+      </ul>
+    </div>
+
+    <div class="hp-day lun">
+      <span class="hp-badge lun">Lunedì 16 — Royal &amp; Natale</span>
+      <ul class="hp-tl">
+        <li><span class="hp-t">09:30</span><span class="hp-d">Green Park: scoiattoli (15 min a piedi da casa)</span></li>
+        <li><span class="hp-t">10:30</span><span class="hp-d">St James's Park: pellicani, Blue Bridge</span></li>
+        <li><span class="hp-t">11:00</span><span class="hp-d">Buckingham Palace: esterno, guardie</span></li>
+        <li><span class="hp-t">12:00</span><span class="hp-d">The Mall → Trafalgar Square: albero di Natale</span></li>
+        <li><span class="hp-t">12:30</span><span class="hp-d">Covent Garden: pranzo + artisti di strada</span></li>
+        <li><span class="hp-t">14:00</span><span class="hp-d">Piccadilly line → Harrods: vetrine + tè</span></li>
+        <li><span class="hp-t">16:00</span><span class="hp-d">Metro → Camden: mercato e canale</span></li>
+        <li><span class="hp-t">19:00</span><span class="hp-d">Cena a Camden o rientro a Soho</span></li>
+      </ul>
+    </div>
+
+    <div class="hp-day mar">
+      <span class="hp-badge mar">Martedì 17 — Tower Bridge e rientro</span>
+      <ul class="hp-tl">
+        <li><span class="hp-t">08:30</span><span class="hp-d">Colazione in appartamento, valigie pronte</span></li>
+        <li><span class="hp-t">10:30</span><span class="hp-d">Check-out: bagagli in deposito</span></li>
+        <li><span class="hp-t">11:15</span><span class="hp-d">Tower Bridge: ponte se sole / Exhibition se pioggia</span></li>
+        <li><span class="hp-t">12:30</span><span class="hp-d">Golden Hinde ("la nave dei pirati")</span></li>
+        <li><span class="hp-t">13:15</span><span class="hp-d">Pranzo veloce zona London Bridge</span></li>
+        <li><span class="hp-t">14:15</span><span class="hp-d">Ritiro bagagli a Beak St</span></li>
+        <li><span class="hp-t">15:15</span><span class="hp-d">Partenza per Heathrow</span></li>
+        <li><span class="hp-t">18:10</span><span class="hp-d">Volo BA, LHR → BLQ (arrivo 21:25)</span></li>
+      </ul>
+    </div>
+
+    <div class="hp-notes">
+      <div class="hp-note warn">⚠️ Lina Stores domenica chiude alle 18:00 — la spesa va fatta al rientro dall'Eye entro le 17:30–17:45. Piano B: Whole Foods, Piccadilly Circus (aperto fino alle 18:00 di domenica, sulla via del rientro).</div>
+      <div class="hp-note info">ℹ️ Il check-in è self-service Clevio senza orario limite: non serve rientrare alle 15:00 in punto, si fa direttamente alle 18:00 al ritorno da Southbank.</div>
+    </div>
+  </section>
+
   <!-- ============ IL VIAGGIO DI OLLY ============ -->
   <section id="olly">
     <div class="eyebrow">Per Olly</div>
@@ -549,7 +627,17 @@
       </summary>
       <div class="dbody">
         <ul class="notes credits" id="ollyCredits">
-          <li><span class="ic">✈️</span><span><b>Aeroplano</b> — Autore: da confermare · Licenza: da confermare</span></li>
+          <li><span class="ic">✈️</span><span><b>Aeroplano</b> — Alf van Beem, Public Domain (CC0) <small><a href="https://commons.wikimedia.org/wiki/File:G-EUXF_British_Airways_Airbus_A321-231_takeoff_from_Schiphol_(AMS_-_EHAM),_The_Netherlands,_11june2014,_pic-1.JPG" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
+          <li><span class="ic">🦈</span><span><b>Squali dell'acquario</b> — City Dweller 2, CC BY-SA 4.0 <small><a href="https://commons.wikimedia.org/wiki/File:Georgia_Aquarium_Hammerhead_Shark_swimming_in_tank_December_29,_2025.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
+          <li><span class="ic">🐧</span><span><b>Pinguini dell'acquario</b> — Antoine Lamielle, CC BY-SA 4.0 <small><a href="https://commons.wikimedia.org/wiki/File:2020-11_Kerguelen_Islands_-_Gentoo_penguin_01.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
+          <li><span class="ic">🎡</span><span><b>La ruota panoramica</b> — Peter S / Geograph Britain and Ireland, CC BY-SA 2.0 <small><a href="https://commons.wikimedia.org/wiki/File:The_London_Eye_illuminated_at_night_-_geograph.org.uk_-_2198478.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
+          <li><span class="ic">🐿️</span><span><b>Scoiattolo grigio</b> — Diliff, CC BY-SA 3.0 <small><a href="https://commons.wikimedia.org/wiki/File:Eastern_Grey_Squirrel_in_St_James%27s_Park,_London_-_Nov_2006_edit.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
+          <li><span class="ic">🦢</span><span><b>Pellicano</b> — Rmpbedford, CC BY-SA 4.0 <small><a href="https://commons.wikimedia.org/wiki/File:Pelicans_in_St_James%27s_Park,_London.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
+          <li><span class="ic">👑</span><span><b>Buckingham Palace</b> — Cristian Bortes, CC BY 2.0 <small><a href="https://commons.wikimedia.org/wiki/File:London_(6489481669).jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
+          <li><span class="ic">🎄</span><span><b>L'albero di Natale</b> — Peter Trimming, CC BY-SA 2.0 <small><a href="https://commons.wikimedia.org/wiki/File:Trafalgar_Square_Christmas_Tree_2009_-_the_first_picture%5E_-_geograph.org.uk_-_1604934.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
+          <li><span class="ic">✨</span><span><b>Le luci di Natale</b> — The wub, CC BY-SA 4.0 <small><a href="https://commons.wikimedia.org/wiki/File:Christmas_lights_in_Carnaby_Street,_London,_2022.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
+          <li><span class="ic">🌉</span><span><b>Tower Bridge</b> — Acabashi, CC BY-SA 4.0 <small><a href="https://commons.wikimedia.org/wiki/File:Tower_Bridge_from_west_River_Thames_London_England_02.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
+          <li><span class="ic">⛵</span><span><b>La nave dei pirati (Golden Hinde)</b> — Smiley.toerist, CC BY-SA 4.0 <small><a href="https://commons.wikimedia.org/wiki/File:Golden_Hind_in_2015_2.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
         </ul>
       </div>
     </details>
