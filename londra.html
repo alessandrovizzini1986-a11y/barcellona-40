@@ -217,6 +217,35 @@
   .cprog b{color:var(--gold-soft)}
   .cnote{font-size:11.5px;color:var(--muted);margin-top:4px;font-style:italic}
 
+  /* sezione Olly */
+  .olly-count{text-align:center;font-family:"Playfair Display",serif;font-weight:700;font-size:17px;
+    color:var(--gold-soft);margin:2px 0 16px}
+  .olly-count b{color:var(--ink);font-size:19px}
+  .olly-nav{display:flex;gap:8px;margin-bottom:18px}
+  .olly-nav button{flex:1;font-family:inherit;font-weight:700;font-size:13px;padding:10px 6px;border-radius:12px;
+    cursor:pointer;background:var(--night-1);border:1px solid var(--line);color:var(--muted);transition:.15s}
+  .olly-nav button.active{color:#0d1321}
+  .olly-nav button.dom.active{background:var(--gold);border-color:var(--gold)}
+  .olly-nav button.lun.active{background:var(--bus);border-color:var(--bus);color:#fff}
+  .olly-nav button.mar.active{background:var(--sky);border-color:var(--sky)}
+  .olly-grid{display:flex;flex-direction:column;gap:16px}
+  .olly-grid[hidden]{display:none}
+  .olly-card{background:linear-gradient(180deg,var(--night-1),var(--night-2));border:1px solid var(--line);
+    border-radius:20px;overflow:hidden;box-shadow:var(--shadow-card)}
+  .oc-photo{width:100%;aspect-ratio:4/3;background-size:cover;background-position:center;background-color:var(--night-2)}
+  .oc-name{font-family:"Playfair Display",serif;font-weight:700;font-size:25px;text-align:center;padding:16px 16px 4px}
+  .oc-seen{display:flex;align-items:center;justify-content:center;gap:9px;width:calc(100% - 32px);margin:6px 16px 16px;
+    padding:12px;border-radius:999px;font-family:inherit;font-weight:700;font-size:14px;cursor:pointer;
+    background:rgba(212,169,78,.05);border:1.5px solid var(--line-gold);color:var(--ink);transition:.15s}
+  .oc-seen .seen-dot{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--line-gold);flex:none;
+    display:flex;align-items:center;justify-content:center;transition:.15s}
+  .oc-seen.seen{background:rgba(212,169,78,.14);border-color:var(--gold)}
+  .oc-seen.seen .seen-dot{background:var(--gold);border-color:var(--gold)}
+  .oc-seen.seen .seen-dot::after{content:"✓";color:#0d1321;font-size:13px;font-weight:800}
+  .olly-lede{font-size:13.5px;color:var(--muted);line-height:1.6;margin-bottom:16px}
+  .credits li small{display:block;color:var(--muted);font-size:11.5px;margin-top:2px}
+  .credits a{color:var(--sky)}
+
   /* note pratiche */
   .notes{list-style:none;margin-top:8px}
   .notes li{display:flex;gap:11px;padding:9px 0;font-size:13.5px;color:#c9cfdd;border-top:1px solid var(--line)}
@@ -338,10 +367,13 @@
           <li><span class="hh na">—</span><span class="pt"><span>🧳</span></span>
             <span class="tx"><b>Deposito bagagli in struttura</b><small>Check-in non ancora disponibile (apre alle 15:00) — da confermare disponibilità del deposito con la struttura.</small>
               <a class="gmap" href="https://www.google.com/maps/search/?api=1&query=51.5129114,-0.1364381&query_place_id=ChIJR5FBjdQEdkgRuAGI_oe-KPo" target="_blank" rel="noopener">📍 Apri in Google Maps</a></span></li>
+          <li><span class="hh na">—</span><span class="pt"><span>🛒</span></span>
+            <span class="tx"><b>Spesa da Lina Stores Delicatessen</b><small>18 Brewer Street, 2 minuti a piedi dall'appartamento. Gastronomia italiana storica: pasta fresca, salumi, formaggi, sughi per la cena.</small>
+              <a class="gmap" href="https://www.google.com/maps/search/?api=1&query=51.5123401,-0.1342553&query_place_id=ChIJY0B0ndMEdkgRYcp5_6zFtDg" target="_blank" rel="noopener">📍 Apri in Google Maps</a></span></li>
           <li><span class="hh na">—</span><span class="pt"><span>🚇</span></span>
-            <span class="tx"><b>Metro verso Southbank</b><small>Da Oxford Circus/Carnaby: es. Bakerloo o Piccadilly + cambio verso Waterloo/London Bridge. Non è a piedi da qui.</small></span></li>
+            <span class="tx"><b>Metro verso Southbank</b><small>Da Piccadilly Circus: Bakerloo line diretta a Waterloo, zero cambi.</small></span></li>
           <li><span class="hh na">—</span><span class="pt"><span>🥘</span></span>
-            <span class="tx"><b>Pranzo + spesa a Borough Market</b><small>Si compra anche per la cena.</small>
+            <span class="tx"><b>Borough Market</b> <span class="st est">👀 visita, no spesa</span><small>Street food e giro tra le bancarelle, visto che si è già a Southbank — la spesa per la cena è già fatta da Lina Stores.</small>
               <a class="gmap" href="https://www.google.com/maps/search/?api=1&query=51.5055826,-0.0904808&query_place_id=ChIJD2bPdVcDdkgRuUSgnOXnKDE" target="_blank" rel="noopener">📍 Apri in Google Maps</a></span></li>
           <li><span class="hh na">pome</span><span class="pt"><span>🐠</span></span>
             <span class="tx"><b>SEA LIFE Aquarium, County Hall</b><small>Primo pomeriggio.</small>
@@ -354,7 +386,7 @@
             <span class="tx"><b>London Eye al tramonto</b><small>Londra che si accende, vista dall'alto.</small>
               <a class="gmap" href="https://www.google.com/maps/search/?api=1&query=51.5031864,-0.1195192&query_place_id=ChIJc2nSALkEdkgRkuoJJBfzkUI" target="_blank" rel="noopener">📍 Apri in Google Maps</a></span></li>
           <li><span class="hh na">sera</span><span class="pt"><span>🍽️</span></span>
-            <span class="tx"><b>Cena in appartamento</b><small>Con la spesa di Borough Market.</small>
+            <span class="tx"><b>Cena in appartamento</b><small>Con la spesa di Lina Stores.</small>
               <a class="gmap" href="https://www.google.com/maps/search/?api=1&query=51.5129114,-0.1364381&query_place_id=ChIJR5FBjdQEdkgRuAGI_oe-KPo" target="_blank" rel="noopener">📍 Apri in Google Maps</a></span></li>
         </ul>
       </div>
@@ -385,10 +417,10 @@
             <span class="tx"><b>Covent Garden</b><small>5 minuti a piedi. Artisti di strada.</small>
               <a class="gmap" href="https://www.google.com/maps/search/?api=1&query=51.5122737,-0.1234492&query_place_id=ChIJ89JufswEdkgRZd9t_2vxedg" target="_blank" rel="noopener">📍 Apri in Google Maps</a></span></li>
           <li><span class="hh na">pome</span><span class="pt"><span>🧸</span></span>
-            <span class="tx"><b>Harrods</b><small>Vetrine di Natale + tè al Harrods Tea Rooms ☕.</small>
+            <span class="tx"><b>Harrods</b><small>Vetrine di Natale + tè al Harrods Tea Rooms ☕. Se le gambe sono stanche, in metro: da Piccadilly Circus, Piccadilly line diretta a Knightsbridge, zero cambi.</small>
               <a class="gmap" href="https://www.google.com/maps/search/?api=1&query=51.4994055,-0.1632344&query_place_id=ChIJ_zAq7TgFdkgRQg1OSw1j7hU" target="_blank" rel="noopener">📍 Apri in Google Maps</a></span></li>
           <li><span class="hh na">~16–17</span><span class="pt"><span>🎪</span></span>
-            <span class="tx"><b>Camden Town</b> <span class="st est">🚇 richiede la metro</span><small>Mercato, canale, negozi eccentrici. Prima che faccia buio — non è a piedi da qui.</small>
+            <span class="tx"><b>Camden Town</b> <span class="st est">🚇 richiede la metro</span><small>Mercato, canale, negozi eccentrici. Prima che faccia buio. Da Tottenham Court Road: Northern line diretta a Camden Town, zero cambi.</small>
               <a class="gmap" href="https://www.google.com/maps/search/?api=1&query=51.5390261,-0.1425516&query_place_id=ChIJKZQaXxwbdkgRWLo89tC-_V8" target="_blank" rel="noopener">📍 Apri in Google Maps</a></span></li>
           <li><span class="hh na">sera</span><span class="pt"><span>🍽️</span></span>
             <span class="tx"><b>Cena a Camden o rientro a Carnaby</b><small>In alternativa, cena in zona Carnaby / Soho.</small>
@@ -414,7 +446,7 @@
             <span class="tx"><b>Check-out: bagagli in reception</b><small>Si riparte senza valigie.</small>
               <a class="gmap" href="https://www.google.com/maps/search/?api=1&query=51.5129114,-0.1364381&query_place_id=ChIJR5FBjdQEdkgRuAGI_oe-KPo" target="_blank" rel="noopener">📍 Apri in Google Maps</a></span></li>
           <li><span class="hh na">—</span><span class="pt"><span>🚇</span></span>
-            <span class="tx"><b>Metro verso Tower Bridge</b><small>Zona sud-est, richiede un cambio — non è a piedi da qui, ~20 min di metro.</small></span></li>
+            <span class="tx"><b>Metro verso Tower Bridge</b><small>Central line fino a Bank + Circle/District 1 fermata fino a Tower Hill — l'unico cambio di tutto il viaggio.</small></span></li>
           <li><span class="hh na">—</span><span class="pt"><span>🌉</span></span>
             <span class="tx"><b>Tower Bridge</b>
               <a class="gmap" href="https://www.google.com/maps/search/?api=1&query=51.5054564,-0.0753565&query_place_id=ChIJSdtli0MDdkgRLW9aCBpCeJ4" target="_blank" rel="noopener">📍 Apri in Google Maps</a>
@@ -428,6 +460,96 @@
             <span class="tx"><b>Partenza per Heathrow</b><small>Uscita entro le 15:15–15:30.</small></span></li>
           <li><span class="hh">18:10</span><span class="pt"><span>✈️</span></span>
             <span class="tx"><b>Volo LHR → BLQ</b><small>Arrivo a Bologna alle 21:25.</small></span></li>
+        </ul>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ IL VIAGGIO DI OLLY ============ -->
+  <section id="olly">
+    <div class="eyebrow">Per Olly</div>
+    <h2>Il viaggio di Olly</h2>
+    <p class="olly-lede">Da sfogliare insieme prima di partire: guardare le foto vere di ciò che vedrà l'aiuta ad anticipare, riconoscere e nominare.</p>
+    <div class="olly-count"><b id="ollySeen">0</b> cose viste su <b>11</b>! 🌟</div>
+    <div class="olly-nav">
+      <button class="dom active" data-og="dom" type="button">Domenica</button>
+      <button class="lun" data-og="lun" type="button">Lunedì</button>
+      <button class="mar" data-og="mar" type="button">Martedì</button>
+    </div>
+
+    <div class="olly-grid" data-og-group="dom">
+      <article class="olly-card">
+        <div class="oc-photo" style="background-image:url(img/olly/aereo-ba.jpg)"></div>
+        <div class="oc-name">Aeroplano</div>
+        <button class="oc-seen" data-oid="aereo" type="button"><span class="seen-dot"></span>L'ho visto!</button>
+      </article>
+      <article class="olly-card">
+        <div class="oc-photo" style="background-image:url(img/olly/squalo.jpg)"></div>
+        <div class="oc-name">Squali dell'acquario</div>
+        <button class="oc-seen" data-oid="squalo" type="button"><span class="seen-dot"></span>L'ho visto!</button>
+      </article>
+      <article class="olly-card">
+        <div class="oc-photo" style="background-image:url(img/olly/pinguino.jpg)"></div>
+        <div class="oc-name">Pinguini dell'acquario</div>
+        <button class="oc-seen" data-oid="pinguino" type="button"><span class="seen-dot"></span>L'ho visto!</button>
+      </article>
+      <article class="olly-card">
+        <div class="oc-photo" style="background-image:url(img/olly/london-eye.jpg)"></div>
+        <div class="oc-name">La ruota panoramica</div>
+        <button class="oc-seen" data-oid="eye" type="button"><span class="seen-dot"></span>L'ho visto!</button>
+      </article>
+    </div>
+
+    <div class="olly-grid" data-og-group="lun" hidden>
+      <article class="olly-card">
+        <div class="oc-photo" style="background-image:url(img/olly/scoiattolo.jpg)"></div>
+        <div class="oc-name">Scoiattolo grigio</div>
+        <button class="oc-seen" data-oid="scoiattolo" type="button"><span class="seen-dot"></span>L'ho visto!</button>
+      </article>
+      <article class="olly-card">
+        <div class="oc-photo" style="background-image:url(img/olly/pellicano.jpg)"></div>
+        <div class="oc-name">Pellicano</div>
+        <button class="oc-seen" data-oid="pellicano" type="button"><span class="seen-dot"></span>L'ho visto!</button>
+      </article>
+      <article class="olly-card">
+        <div class="oc-photo" style="background-image:url(img/olly/buckingham.jpg)"></div>
+        <div class="oc-name">Buckingham Palace</div>
+        <button class="oc-seen" data-oid="buckingham" type="button"><span class="seen-dot"></span>L'ho visto!</button>
+      </article>
+      <article class="olly-card">
+        <div class="oc-photo" style="background-image:url(img/olly/albero-natale.jpg)"></div>
+        <div class="oc-name">L'albero di Natale</div>
+        <button class="oc-seen" data-oid="albero" type="button"><span class="seen-dot"></span>L'ho visto!</button>
+      </article>
+      <article class="olly-card">
+        <div class="oc-photo" style="background-image:url(img/olly/luci-natale.jpg)"></div>
+        <div class="oc-name">Le luci di Natale</div>
+        <button class="oc-seen" data-oid="luci" type="button"><span class="seen-dot"></span>L'ho visto!</button>
+      </article>
+    </div>
+
+    <div class="olly-grid" data-og-group="mar" hidden>
+      <article class="olly-card">
+        <div class="oc-photo" style="background-image:url(img/olly/tower-bridge.jpg)"></div>
+        <div class="oc-name">Tower Bridge</div>
+        <button class="oc-seen" data-oid="towerbridge" type="button"><span class="seen-dot"></span>L'ho visto!</button>
+      </article>
+      <article class="olly-card">
+        <div class="oc-photo" style="background-image:url(img/olly/golden-hinde.jpg)"></div>
+        <div class="oc-name">La nave dei pirati</div>
+        <button class="oc-seen" data-oid="goldenhinde" type="button"><span class="seen-dot"></span>L'ho visto!</button>
+      </article>
+    </div>
+
+    <details class="acc" style="margin-top:18px">
+      <summary>
+        <span class="daynum" style="color:var(--gold);background:rgba(212,169,78,.1);font-size:15px">📷</span>
+        <span class="dtit"><h3>Crediti fotografici</h3><p>Foto da Wikimedia Commons</p></span>
+        <span class="chev">▼</span>
+      </summary>
+      <div class="dbody">
+        <ul class="notes credits" id="ollyCredits">
+          <li><span class="ic">✈️</span><span><b>Aeroplano</b> — Autore: da confermare · Licenza: da confermare</span></li>
         </ul>
       </div>
     </details>
@@ -561,10 +683,40 @@
     refresh();
   })();
 
+  /* ====== Il viaggio di Olly: nav per giorno + "L'ho visto!" in memoria ====== */
+  (function(){
+    var navBtns=document.querySelectorAll('.olly-nav button');
+    var groups=document.querySelectorAll('.olly-grid');
+    navBtns.forEach(function(btn){
+      btn.addEventListener('click',function(){
+        navBtns.forEach(function(b){ b.classList.remove('active'); });
+        btn.classList.add('active');
+        groups.forEach(function(g){ g.hidden = g.dataset.ogGroup !== btn.dataset.og; });
+      });
+    });
+
+    var seenState={};
+    var seenBtns=document.querySelectorAll('.oc-seen');
+    var seenCount=document.getElementById('ollySeen');
+    function refreshOlly(){
+      var n=0; seenBtns.forEach(function(b){ if(seenState[b.dataset.oid]) n++; });
+      seenCount.textContent=n;
+    }
+    seenBtns.forEach(function(b){
+      b.addEventListener('click',function(){
+        var on=!seenState[b.dataset.oid];
+        seenState[b.dataset.oid]=on;
+        b.classList.toggle('seen',on);
+        refreshOlly();
+      });
+    });
+  })();
+
   /* ====== mappa Leaflet — tile scure CARTO, marker per giorno ====== */
   var COLORS={dom:'#d4a94e',lun:'#c8362b',mar:'#6db3d8'};
   var GIORNI={dom:'Domenica 15',lun:'Lunedì 16',mar:'Martedì 17'};
   var CASA={n:'Bright Carnaby Soho — 79 Beak Street', lat:51.5129114, lng:-0.1364381, note:'La nostra base a Soho · 2 notti'};
+  var LINA={n:'Lina Stores Delicatessen', lat:51.5123401, lng:-0.1342553};
   var BOROUGH={n:'Borough Market', lat:51.5055826, lng:-0.0904808};
   var SEALIFE={n:'SEA LIFE Aquarium', lat:51.501558, lng:-0.119506};
   var EYE={n:'London Eye', lat:51.5031864, lng:-0.1195192};
@@ -579,7 +731,8 @@
   var GOLDENHINDE={n:'Golden Hinde', lat:51.5069501, lng:-0.0903248};
 
   var TAPPE=[
-    {p:BOROUGH,     g:'dom', note:'Pranzo + spesa · in metro dalla base'},
+    {p:LINA,        g:'dom', note:'Spesa per la cena · 2 min a piedi dalla base'},
+    {p:BOROUGH,     g:'dom', note:'Visita + street food, no spesa · in metro dalla base'},
     {p:SEALIFE,     g:'dom', note:'County Hall · primo pomeriggio'},
     {p:EYE,         g:'dom', note:'~16:30, al tramonto 🎡'},
     {p:GREENPARK,   g:'lun', note:'Scoiattoli per Olly 🐿️'},
@@ -596,7 +749,7 @@
   /* percorsi: sequenza di tappe con la modalità del tragitto che porta al punto */
   var ROUTES=[
     {g:'dom', stops:[
-      {p:CASA}, {p:BOROUGH, mode:'metro'}, {p:SEALIFE, mode:'walk'}, {p:EYE, mode:'walk'}, {p:CASA, mode:'metro'}
+      {p:CASA}, {p:LINA, mode:'walk'}, {p:BOROUGH, mode:'metro'}, {p:SEALIFE, mode:'walk'}, {p:EYE, mode:'walk'}, {p:CASA, mode:'metro'}
     ]},
     {g:'lun', stops:[
       {p:CASA}, {p:GREENPARK, mode:'walk'}, {p:STJAMES, mode:'walk'}, {p:PALACE, mode:'walk'},
