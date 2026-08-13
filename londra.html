@@ -94,6 +94,16 @@
   .card h3{font-size:19px}
   .card .meta{color:var(--muted);font-size:13.5px;margin-top:3px}
 
+  /* check-in / check-out */
+  .ci-co{display:flex;gap:10px;margin-top:14px}
+  .ci-co .chip2{flex:1;background:rgba(212,169,78,.08);border:1px solid var(--line-gold);border-radius:12px;
+    padding:10px 12px;text-align:center}
+  .ci-co .chip2 .k{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700}
+  .ci-co .chip2 .v{font-family:"Playfair Display",serif;font-weight:700;font-size:20px;margin-top:3px;color:var(--gold-soft)}
+  .ci-co-note{margin-top:10px;font-size:12.5px;color:var(--muted);line-height:1.5}
+  .why{margin-top:12px;font-size:12.5px;color:var(--muted);line-height:1.55;border-top:1px dashed var(--line);padding-top:12px}
+  .why b{color:var(--ink)}
+
   /* voli */
   .flight{display:flex;align-items:center;gap:10px;margin-top:14px;padding-top:14px;border-top:1px dashed var(--line)}
   .flight:first-of-type{margin-top:12px;padding-top:12px}
@@ -152,6 +162,8 @@
   .legend span{display:inline-flex;align-items:center;gap:6px;background:var(--night-1);border:1px solid var(--line);
     border-radius:999px;padding:5px 11px}
   .legend i{width:10px;height:10px;border-radius:50%;flex:none}
+  .legend i.line{width:20px;height:0;border-radius:0;border-top:3px solid var(--ink)}
+  .legend i.line.dash{border-top-style:dashed}
   .pin{width:22px;height:22px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);
     border:2px solid rgba(245,240,232,.85);box-shadow:0 2px 8px rgba(0,0,0,.6)}
   .pin::after{content:"";position:absolute;inset:5px;border-radius:50%;background:rgba(13,19,33,.4)}
@@ -265,9 +277,36 @@
     </div>
 
     <div class="card">
-      <h3>🏠 Marlin Apartments Empire Square <span class="st ok">✅ prenotato</span></h3>
-      <p class="meta">Southwark · 2 notti · cucina attrezzata · €560</p>
+      <h3>🏠 Bright Carnaby Soho 1BR Apartment <span class="st ok">✅ prenotato</span></h3>
+      <p class="meta">Carnaby Street, Soho (W1F) · 2 notti, 15–17 novembre · €631</p>
+      <p class="meta">Cancellazione gratuita attiva.</p>
+      <div class="ci-co">
+        <div class="chip2"><div class="k">Check-in</div><div class="v">15:00</div></div>
+        <div class="chip2"><div class="k">Check-out</div><div class="v">10:30</div></div>
+      </div>
+      <p class="ci-co-note">⚠️ Impatta domenica (arrivo ~10:00, camera non ancora pronta) e martedì (camera libera alle 10:30, volo solo alle 18:10). Soluzione in entrambi i casi: <b>deposito bagagli in reception</b> — da confermare disponibilità con la struttura.</p>
+      <p class="why"><b>Perché questa zona:</b> è il punto di minor cammino cumulativo per la giornata di lunedì (Royal &amp; Natale, 7 tappe), tutte raggiungibili in 12–21 minuti a piedi, zero attraversamenti del fiume. Si sacrifica la comodità verso Southbank/Tower Bridge (serve la metro), accettabile perché sono tappe isolate su giornate più leggere (domenica e martedì).</p>
     </div>
+  </section>
+
+  <!-- ============ SICUREZZA ============ -->
+  <section id="sicurezza">
+    <div class="eyebrow">Sicurezza</div>
+    <details class="acc">
+      <summary>
+        <span class="daynum" style="color:var(--bus);background:rgba(200,54,43,.14);border-color:rgba(200,54,43,.45)">⚠️</span>
+        <span class="dtit"><h3>Verifica prenotazione</h3><p>Controlli anti-phishing prima di partire</p></span>
+        <span class="chev">▼</span>
+      </summary>
+      <div class="dbody">
+        <ul class="notes">
+          <li><span class="ic">✅</span><span>Confermare tramite l'app o il sito ufficiale <b>Booking.com</b> che la prenotazione risulti attiva e il pagamento gestito dalla piattaforma.</span></li>
+          <li><span class="ic">🚫</span><span><b>Non cliccare né rispondere a link di conferma ricevuti fuori da Booking.com</b> — un tentativo di phishing è già stato individuato e bloccato durante la pianificazione di questo viaggio.</span></li>
+          <li><span class="ic">☎️</span><span>Prima dell'arrivo, contattare la struttura per confermare: indirizzo esatto, che l'unità sia quella prenotata (non un'altra), modalità di check-in, nessun pagamento extra richiesto fuori piattaforma.</span></li>
+          <li><span class="ic">🛑</span><span>Regola generale: qualunque richiesta di pagamento o "conferma" tramite link esterno è una truffa — va segnalata subito a Booking.com.</span></li>
+        </ul>
+      </div>
+    </details>
   </section>
 
   <!-- ============ PROGRAMMA ============ -->
@@ -280,19 +319,24 @@
     <details class="acc dom" open>
       <summary>
         <span class="daynum">15<small>DOM</small></span>
-        <span class="dtit"><h3>Southbank</h3><p>Tutto a piedi dalla base</p></span>
+        <span class="dtit"><h3>Southbank</h3><p>Serve la metro dalla base a Carnaby</p></span>
         <span class="chev">▼</span>
       </summary>
       <div class="dbody">
         <ul class="tl">
-          <li><span class="hh">~11:30</span><span class="pt"><span>🏠</span></span>
-            <span class="tx"><b>Check-in Marlin</b><small>Si molla la valigia e si parte.</small></span></li>
+          <li><span class="hh">08:40</span><span class="pt"><span>🛬</span></span>
+            <span class="tx"><b>Atterraggio a Heathrow</b><small>Arrivo in zona centro verso le 10:00.</small></span></li>
+          <li><span class="hh na">—</span><span class="pt"><span>🧳</span></span>
+            <span class="tx"><b>Deposito bagagli in struttura</b><small>Check-in non ancora disponibile (apre alle 15:00) — da confermare disponibilità del deposito con la struttura.</small></span></li>
+          <li><span class="hh na">—</span><span class="pt"><span>🚇</span></span>
+            <span class="tx"><b>Metro verso Southbank</b><small>Da Oxford Circus/Carnaby: es. Bakerloo o Piccadilly + cambio verso Waterloo/London Bridge. Non è a piedi da qui.</small></span></li>
           <li><span class="hh na">—</span><span class="pt"><span>🥘</span></span>
-            <span class="tx"><b>Pranzo + spesa a Borough Market</b><small>5 min a piedi. Si compra anche per la cena.</small></span></li>
+            <span class="tx"><b>Pranzo + spesa a Borough Market</b><small>Si compra anche per la cena.</small></span></li>
           <li><span class="hh na">pome</span><span class="pt"><span>🐠</span></span>
-            <span class="tx"><b>SEA LIFE Aquarium, County Hall</b><small>15 min a piedi. Primo pomeriggio.</small></span></li>
-          <li><span class="hh">~16:00</span><span class="pt"><span>🎄</span></span>
-            <span class="tx"><b>Passeggiata Southbank</b> <span class="st todo">⚠️ da confermare</span><small>Mercatino di Natale, se già aperto.</small></span></li>
+            <span class="tx"><b>SEA LIFE Aquarium, County Hall</b><small>Primo pomeriggio.</small></span></li>
+          <li><span class="hh">15:00</span><span class="pt"><span>🔑</span></span>
+            <span class="tx"><b>Rientro in struttura: check-in effettivo</b><small>Si ritirano le valigie lasciate in reception.</small>
+              <span class="alt">🔁 <b>In alternativa:</b> restare a Southbank fino al tardo pomeriggio e rientrare per il check-in dopo il London Eye, se più comodo.</span></span></li>
           <li><span class="hh">~16:30</span><span class="pt"><span>🎡</span></span>
             <span class="tx"><b>London Eye al tramonto</b><small>Londra che si accende, vista dall'alto.</small></span></li>
           <li><span class="hh na">sera</span><span class="pt"><span>🍽️</span></span>
@@ -305,7 +349,7 @@
     <details class="acc lun">
       <summary>
         <span class="daynum">16<small>LUN</small></span>
-        <span class="dtit"><h3>Royal &amp; Natale</h3><p>Jubilee line da London Bridge, zero cambi</p></span>
+        <span class="dtit"><h3>Royal &amp; Natale</h3><p>Il giorno cardine: quasi tutto a piedi da Carnaby</p></span>
         <span class="chev">▼</span>
       </summary>
       <div class="dbody">
@@ -315,15 +359,17 @@
           <li><span class="hh na">—</span><span class="pt"><span>🦢</span></span>
             <span class="tx"><b>St James's Park</b><small>I pellicani del parco.</small></span></li>
           <li><span class="hh na">—</span><span class="pt"><span>👑</span></span>
-            <span class="tx"><b>The Mall a piedi → Buckingham Palace</b> <span class="st todo">⚠️ da verificare</span><small>Solo esterno: State Rooms chiuse a novembre. Cambio della guardia se l'orario coincide — calendario da verificare.</small></span></li>
+            <span class="tx"><b>The Mall a piedi → Buckingham Palace</b> <span class="st todo">⚠️ da verificare</span><small>Solo esterno: State Rooms chiuse a novembre. Cambio della guardia se l'orario coincide — calendario ufficiale non ancora pubblicato, da verificare ~3 mesi prima.</small></span></li>
           <li><span class="hh na">—</span><span class="pt"><span>🎄</span></span>
-            <span class="tx"><b>Trafalgar Square</b><small>L'albero di Natale norvegese.</small></span></li>
+            <span class="tx"><b>Trafalgar Square</b><small>L'albero di Natale.</small></span></li>
+          <li><span class="hh na">—</span><span class="pt"><span>🎭</span></span>
+            <span class="tx"><b>Covent Garden</b><small>5 minuti a piedi. Artisti di strada.</small></span></li>
           <li><span class="hh na">pome</span><span class="pt"><span>🧸</span></span>
             <span class="tx"><b>Harrods</b><small>Vetrine di Natale + tè al Harrods Tea Rooms ☕.</small></span></li>
-          <li><span class="hh na">sera</span><span class="pt"><span>✨</span></span>
-            <span class="tx"><b>Carnaby Street illuminata + Hamleys</b><small>Le luci più belle di Londra e il regno dei giocattoli.</small></span></li>
-          <li><span class="hh na">—</span><span class="pt"><span>🍽️</span></span>
-            <span class="tx"><b>Cena fuori</b><small>Zona Carnaby / Soho.</small></span></li>
+          <li><span class="hh na">~16–17</span><span class="pt"><span>🎪</span></span>
+            <span class="tx"><b>Camden Town</b> <span class="st est">🚇 richiede la metro</span><small>Mercato, canale, negozi eccentrici. Prima che faccia buio — non è a piedi da qui.</small></span></li>
+          <li><span class="hh na">sera</span><span class="pt"><span>🍽️</span></span>
+            <span class="tx"><b>Cena a Camden o rientro a Carnaby</b><small>In alternativa, cena in zona Carnaby / Soho.</small></span></li>
         </ul>
       </div>
     </details>
@@ -332,19 +378,25 @@
     <details class="acc mar">
       <summary>
         <span class="daynum">17<small>MAR</small></span>
-        <span class="dtit"><h3>Tower Bridge e rientro</h3><p>12 min a piedi dalla base</p></span>
+        <span class="dtit"><h3>Tower Bridge e rientro</h3><p>Tower Bridge in metro da Carnaby, ~20 min</p></span>
         <span class="chev">▼</span>
       </summary>
       <div class="dbody">
         <ul class="tl">
           <li><span class="hh na">matt</span><span class="pt"><span>☕</span></span>
-            <span class="tx"><b>Colazione e pranzo leggero</b><small>In appartamento, con calma.</small></span></li>
+            <span class="tx"><b>Colazione in appartamento</b><small>Con calma.</small></span></li>
+          <li><span class="hh">10:30</span><span class="pt"><span>🧳</span></span>
+            <span class="tx"><b>Check-out: bagagli in reception</b><small>Si riparte senza valigie.</small></span></li>
+          <li><span class="hh na">—</span><span class="pt"><span>🚇</span></span>
+            <span class="tx"><b>Metro verso Tower Bridge</b><small>Zona sud-est, richiede un cambio — non è a piedi da qui, ~20 min di metro.</small></span></li>
           <li><span class="hh na">—</span><span class="pt"><span>🌉</span></span>
-            <span class="tx"><b>Tower Bridge</b><small>12 min a piedi.</small>
-              <span class="alt">☀️ <b>Se bello:</b> passeggiata sul ponte + Golden Hinde ⛵<br>
+            <span class="tx"><b>Tower Bridge</b>
+              <span class="alt">☀️ <b>Se bello:</b> passeggiata sul ponte + Golden Hinde ⛵ (lì vicino)<br>
               🌧️ <b>Se piove:</b> Tower Bridge Exhibition — passerelle di vetro coperte, 9:30–18:00, ultimo ingresso 17:00</span></span></li>
+          <li><span class="hh na">—</span><span class="pt"><span>🔑</span></span>
+            <span class="tx"><b>Rientro in struttura: ritiro bagagli</b><small>Si recuperano le valigie lasciate in reception.</small></span></li>
           <li><span class="hh">15:15</span><span class="pt"><span>🧳</span></span>
-            <span class="tx"><b>Uscita da casa entro le 15:15–15:30</b><small>Direzione Heathrow.</small></span></li>
+            <span class="tx"><b>Partenza per Heathrow</b><small>Uscita entro le 15:15–15:30.</small></span></li>
           <li><span class="hh">18:10</span><span class="pt"><span>✈️</span></span>
             <span class="tx"><b>Volo LHR → BLQ</b><small>Arrivo a Bologna alle 21:25.</small></span></li>
         </ul>
@@ -356,13 +408,15 @@
   <section id="mappa">
     <div class="eyebrow">Mappa</div>
     <h2>Dove andiamo</h2>
-    <p class="sub2">Un colore per ogni giornata. La casa è il punto fermo.</p>
+    <p class="sub2">Un colore per ogni giornata. Linea piena = a piedi, tratteggiata = metro.</p>
     <div id="map" aria-label="Mappa delle tappe del viaggio"></div>
     <div class="legend">
       <span><i style="background:#d4a94e"></i>Domenica</span>
       <span><i style="background:#c8362b"></i>Lunedì</span>
       <span><i style="background:#6db3d8"></i>Martedì</span>
       <span>🏠 Casa</span>
+      <span><i class="line"></i>A piedi</span>
+      <span><i class="line dash"></i>Metro</span>
     </div>
   </section>
 
@@ -372,7 +426,7 @@
     <details class="acc" open>
       <summary>
         <span class="daynum" style="color:var(--gold);background:rgba(212,169,78,.1)">💶</span>
-        <span class="dtit"><h3>Quanto ci costa</h3><p>Stima totale ~€1.480</p></span>
+        <span class="dtit"><h3>Quanto ci costa</h3><p>Stima totale ~€1.550</p></span>
         <span class="chev">▼</span>
       </summary>
       <div class="dbody">
@@ -380,12 +434,12 @@
           <thead><tr><th>Voce</th><th>Stato</th><th style="text-align:right">Importo</th></tr></thead>
           <tbody>
             <tr><td>Voli</td><td><span class="st todo">⚠️ da prenotare</span></td><td class="imp">€433,39</td></tr>
-            <tr><td>Alloggio</td><td><span class="st ok">✅ prenotato</span></td><td class="imp">€560</td></tr>
+            <tr><td>Alloggio (Carnaby Soho)</td><td><span class="st ok">✅ prenotato</span></td><td class="imp">€631</td></tr>
             <tr><td>Transfer LHR↔casa A/R</td><td><span class="st est">💶 stima</span></td><td class="imp">~€60</td></tr>
             <tr><td>UK ETA ×3</td><td><span class="st est">💶 stima</span></td><td class="imp">~€57</td></tr>
             <tr><td>London Eye + SEA LIFE</td><td><span class="st est">💶 stima</span></td><td class="imp">~€189</td></tr>
             <tr><td>Spesa/pasti</td><td><span class="st est">💶 stima</span></td><td class="imp">~€180</td></tr>
-            <tr class="tot"><td>Totale</td><td></td><td class="imp">~€1.480</td></tr>
+            <tr class="tot"><td>Totale</td><td></td><td class="imp">~€1.550</td></tr>
           </tbody>
         </table>
         <span class="pass">✅ PASS sul tetto 1.500–2.000 €</span>
@@ -481,21 +535,49 @@
   /* ====== mappa Leaflet — tile scure CARTO, marker per giorno ====== */
   var COLORS={dom:'#d4a94e',lun:'#c8362b',mar:'#6db3d8'};
   var GIORNI={dom:'Domenica 15',lun:'Lunedì 16',mar:'Martedì 17'};
+  var CASA={n:'Bright Carnaby Soho', lat:51.5133, lng:-0.1391, note:'La nostra base a Soho · 2 notti'};
+  var BOROUGH={n:'Borough Market', lat:51.5055, lng:-0.0910};
+  var SEALIFE={n:'SEA LIFE Aquarium', lat:51.5019, lng:-0.1195};
+  var EYE={n:'London Eye', lat:51.5033, lng:-0.1196};
+  var GREENPARK={n:'Green Park', lat:51.5040, lng:-0.1410};
+  var STJAMES={n:"St James's Park", lat:51.5027, lng:-0.1347};
+  var PALACE={n:'Buckingham Palace', lat:51.5014, lng:-0.1419};
+  var TRAFALGAR={n:'Trafalgar Square', lat:51.5080, lng:-0.1281};
+  var COVENT={n:'Covent Garden', lat:51.5117, lng:-0.1240};
+  var HARRODS={n:'Harrods', lat:51.4994, lng:-0.1632};
+  var CAMDEN={n:'Camden Town', lat:51.5416, lng:-0.1461};
+  var TOWERBRIDGE={n:'Tower Bridge', lat:51.5055, lng:-0.0754};
+  var GOLDENHINDE={n:'Golden Hinde', lat:51.5069, lng:-0.0903};
+
   var TAPPE=[
-    {n:'Borough Market',        g:'dom', lat:51.5055, lng:-0.0910, note:'Pranzo + spesa · 5 min a piedi da casa'},
-    {n:'SEA LIFE Aquarium',     g:'dom', lat:51.5019, lng:-0.1195, note:'County Hall · primo pomeriggio'},
-    {n:'London Eye',            g:'dom', lat:51.5033, lng:-0.1196, note:'~16:30, al tramonto 🎡'},
-    {n:'Green Park',            g:'lun', lat:51.5040, lng:-0.1410, note:'Scoiattoli per Olly 🐿️'},
-    {n:"St James's Park",       g:'lun', lat:51.5027, lng:-0.1347, note:'I pellicani del parco'},
-    {n:'Buckingham Palace',     g:'lun', lat:51.5014, lng:-0.1419, note:'Solo esterno · cambio della guardia da verificare'},
-    {n:'Trafalgar Square',      g:'lun', lat:51.5080, lng:-0.1281, note:'Albero di Natale norvegese 🎄'},
-    {n:'Harrods',               g:'lun', lat:51.4994, lng:-0.1632, note:'Vetrine di Natale + tè alle Tea Rooms ☕'},
-    {n:'Carnaby Street',        g:'lun', lat:51.5130, lng:-0.1390, note:'Luci di Natale ✨ · sera'},
-    {n:'Hamleys',               g:'lun', lat:51.5121, lng:-0.1410, note:'Il regno dei giocattoli 🧸'},
-    {n:'Tower Bridge',          g:'mar', lat:51.5055, lng:-0.0754, note:'12 min a piedi · Exhibition se piove 🌧️'},
-    {n:'Golden Hinde',          g:'mar', lat:51.5069, lng:-0.0903, note:'Il galeone di Drake ⛵ · se bello ☀️'}
+    {p:BOROUGH,     g:'dom', note:'Pranzo + spesa · in metro dalla base'},
+    {p:SEALIFE,     g:'dom', note:'County Hall · primo pomeriggio'},
+    {p:EYE,         g:'dom', note:'~16:30, al tramonto 🎡'},
+    {p:GREENPARK,   g:'lun', note:'Scoiattoli per Olly 🐿️'},
+    {p:STJAMES,     g:'lun', note:'I pellicani del parco'},
+    {p:PALACE,      g:'lun', note:'Solo esterno · cambio della guardia da verificare'},
+    {p:TRAFALGAR,   g:'lun', note:'Albero di Natale 🎄'},
+    {p:COVENT,      g:'lun', note:'5 min a piedi · artisti di strada 🎭'},
+    {p:HARRODS,     g:'lun', note:'Vetrine di Natale + tè alle Tea Rooms ☕'},
+    {p:CAMDEN,      g:'lun', note:'Mercato e canale · richiede la metro 🚇'},
+    {p:TOWERBRIDGE, g:'mar', note:'In metro dalla base · Exhibition se piove 🌧️'},
+    {p:GOLDENHINDE, g:'mar', note:'Il galeone di Drake ⛵ · se bello ☀️'}
   ];
-  var CASA={n:'Marlin Apartments Empire Square', lat:51.5008, lng:-0.0891, note:'La nostra base a Southwark · 2 notti'};
+
+  /* percorsi: sequenza di tappe con la modalità del tragitto che porta al punto */
+  var ROUTES=[
+    {g:'dom', stops:[
+      {p:CASA}, {p:BOROUGH, mode:'metro'}, {p:SEALIFE, mode:'walk'}, {p:EYE, mode:'walk'}, {p:CASA, mode:'metro'}
+    ]},
+    {g:'lun', stops:[
+      {p:CASA}, {p:GREENPARK, mode:'walk'}, {p:STJAMES, mode:'walk'}, {p:PALACE, mode:'walk'},
+      {p:TRAFALGAR, mode:'walk'}, {p:COVENT, mode:'walk'}, {p:HARRODS, mode:'walk'},
+      {p:CAMDEN, mode:'metro'}, {p:CASA, mode:'metro'}
+    ]},
+    {g:'mar', stops:[
+      {p:CASA}, {p:TOWERBRIDGE, mode:'metro'}, {p:GOLDENHINDE, mode:'walk'}, {p:CASA, mode:'metro'}
+    ]}
+  ];
 
   var map=L.map('map',{scrollWheelZoom:false});
   L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
@@ -517,10 +599,23 @@
   });
 
   var bounds=[];
+
+  /* linee dei percorsi, sotto i marker: tratteggiate per la metro, piene a piedi */
+  ROUTES.forEach(function(r){
+    for(var i=1;i<r.stops.length;i++){
+      var a=r.stops[i-1].p, b=r.stops[i].p, mode=r.stops[i].mode;
+      L.polyline([[a.lat,a.lng],[b.lat,b.lng]],{
+        color:COLORS[r.g], weight:3, opacity:.65,
+        dashArray: mode==='metro' ? '2,10' : null,
+        lineCap:'round'
+      }).addTo(map);
+    }
+  });
+
   TAPPE.forEach(function(t){
-    L.marker([t.lat,t.lng],{icon:pinIcon(COLORS[t.g]),title:t.n}).addTo(map)
-      .bindPopup('<b>'+t.n+'</b><br><small>'+GIORNI[t.g]+' · '+t.note+'</small>');
-    bounds.push([t.lat,t.lng]);
+    L.marker([t.p.lat,t.p.lng],{icon:pinIcon(COLORS[t.g]),title:t.p.n}).addTo(map)
+      .bindPopup('<b>'+t.p.n+'</b><br><small>'+GIORNI[t.g]+' · '+t.note+'</small>');
+    bounds.push([t.p.lat,t.p.lng]);
   });
   L.marker([CASA.lat,CASA.lng],{icon:homeIcon,title:CASA.n,zIndexOffset:500}).addTo(map)
     .bindPopup('<b>🏠 '+CASA.n+'</b><br><small>'+CASA.note+'</small>');
