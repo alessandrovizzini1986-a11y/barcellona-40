@@ -1,0 +1,17 @@
+{
+  "name": "Londra 2026 · Alessandro, Vale e Olly",
+  "short_name": "Londra 2026",
+  "description": "Il nostro viaggio a Londra: 15–17 novembre 2026.",
+  "start_url": "londra.html",
+  "scope": ".",
+  "display": "standalone",
+  "background_color": "#0d1321",
+  "theme_color": "#0d1321",
+  "lang": "it",
+  "icons": [
+    { "src": "icon-londra-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-londra-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-londra-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "icon-londra-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
