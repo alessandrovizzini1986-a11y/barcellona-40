@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Barça 40">
-<meta name="color-scheme" content="dark">
+<meta name="color-scheme" content="dark light">
 <meta name="theme-color" content="#050507">
 <title>Barcellona · I 40 di Ale</title>
 <meta name="description" content="La guida del weekend a Barcellona per i 40 di Ale · 16–18 ottobre 2026.">
@@ -391,14 +391,107 @@
   .dock a:active{transform:scale(.92)}
   body{padding-bottom:14px}
 
+  /* ============================================================
+     TEMA CHIARO "MEDITERRANEO, MATTINA" — segue il telefono, con
+     override manuale (il JS risolve auto/chiaro/scuro in data-theme)
+     ============================================================ */
+  html[data-theme="light"]{
+    --night-0:#F4EEE1;--night-1:#EDE5D3;--night-2:#FBF7ED;
+    --gold-bright:#8A6D2F;--gold:#7C6128;--gold-deep:#6B521F;--gold-antique:#4F3D15;
+    --ink:#241C0F;--muted:#776C58;--done:#9A907C;
+    --line:rgba(60,45,15,.12);--line-gold:rgba(124,97,40,.30);
+    --foil:linear-gradient(100deg,#4F3D15 0%,#8A6D2F 38%,#C9A24B 50%,#8A6D2F 62%,#4F3D15 100%);
+    --shadow-card:0 22px 50px -30px rgba(95,75,30,.35);
+    --shadow-pop:0 28px 66px -34px rgba(95,75,30,.4);
+    --glow-gold:0 0 44px -12px rgba(160,125,50,.25);
+    --glow-cta:0 14px 38px -14px rgba(124,97,40,.45);
+    --amber:#9A6A00;--coral:#C0333F;--teal:#0E8A7E;
+  }
+  html[data-theme="light"] body{background:var(--night-0)}
+  html[data-theme="light"] .aurora{background:
+    radial-gradient(90% 60% at 70% -10%, rgba(201,162,75,.16), transparent 60%),
+    radial-gradient(80% 50% at 15% 110%, rgba(0,77,152,.07), transparent 60%),
+    var(--night-0)}
+  html[data-theme="light"] .grain{opacity:.035;mix-blend-mode:multiply}
+  html[data-theme="light"] .topbar{background:rgba(244,238,225,.85);border-bottom:1px solid var(--line)}
+  html[data-theme="light"] .daytabs{background:rgba(244,238,225,.9)}
+  html[data-theme="light"] .sheet{background:rgba(247,242,231,.98)}
+  html[data-theme="light"] .dock{background:rgba(251,247,237,.92);box-shadow:0 22px 54px -20px rgba(95,75,30,.4)}
+  html[data-theme="light"] .searchbtn,html[data-theme="light"] .chip,html[data-theme="light"] .nrow .btn,
+  html[data-theme="light"] .daytabs button,html[data-theme="light"] .acts a,html[data-theme="light"] .acts button,
+  html[data-theme="light"] .quickbar a,html[data-theme="light"] .hero-chips .chip,html[data-theme="light"] .wxrow .wp,
+  html[data-theme="light"] input{background:rgba(95,75,30,.07)}
+  html[data-theme="light"] .daytabs button.on{background:var(--gold-deep);border-color:var(--gold-deep);color:#FBF7ED}
+  html[data-theme="light"] .now{background:linear-gradient(165deg,#FFFDF6,#F6EFDF)}
+  html[data-theme="light"] .guestcta{background:linear-gradient(100deg,rgba(124,97,40,.13),rgba(124,97,40,.05))}
+  html[data-theme="light"] .go{color:#FBF7ED}
+  html[data-theme="light"] .go span{color:#F3E7C8!important}
+  html[data-theme="light"] .hero-title em{color:var(--ink);-webkit-text-fill-color:var(--ink)}
+  html[data-theme="light"] .sky-far path{fill:#C9BCA2}
+  html[data-theme="light"] .sky-near path{fill:#A99878}
+  html[data-theme="light"] .sky-glow{background:radial-gradient(75% 130% at 50% 100%, rgba(255,214,120,.5), rgba(0,77,152,.08) 60%, transparent 78%)}
+  html[data-theme="light"] .hero-beams{background:
+    conic-gradient(from 190deg at 78% 8%, transparent 0 40%, rgba(180,140,55,.12) 46%, transparent 52%),
+    conic-gradient(from 165deg at 22% 4%, transparent 0 42%, rgba(180,140,55,.08) 47%, transparent 52%)}
+  html[data-theme="light"] .ti-tick{background:var(--night-2)}
+  html[data-theme="light"] .badge-now{color:#FBF7ED}
+  html[data-theme="light"] .leaflet-popup-content-wrapper,html[data-theme="light"] .leaflet-popup-tip{background:#FFFDF6;color:var(--ink)}
+
+  /* ---- toggle tema (topbar) ---- */
+  .thbtn{min-width:44px}
+
+  /* ---- COUNTDOWN LIVE nel hero ---- */
+  .hero-cd{display:flex;gap:10px;justify-content:center;align-items:flex-start;margin-top:26px;animation:fadeUp .8s .75s both}
+  .hero-cd .u{min-width:64px}
+  .hero-cd b{display:block;font-family:"Bodoni Moda",serif;font-weight:500;font-size:clamp(34px,9vw,46px);
+    line-height:1;color:var(--gold);font-variant-numeric:tabular-nums}
+  .hero-cd i{display:block;font-style:normal;font-size:9.5px;font-weight:700;letter-spacing:.22em;
+    text-transform:uppercase;color:var(--muted);margin-top:6px}
+  .hero-cd .sep{font-family:"Bodoni Moda",serif;font-size:clamp(26px,7vw,36px);color:var(--gold);opacity:.55;
+    line-height:1.15;animation:cdBlink 1s steps(1) infinite}
+  @keyframes cdBlink{50%{opacity:.15}}
+  .hero-cd .live{font-size:15px;font-weight:700;color:var(--gold);letter-spacing:.08em}
+
+  /* ---- FILM-STRIP fotografica ---- */
+  .strip-sec{margin:26px 0 4px;overflow:hidden}
+  .strip-lab{max-width:540px;margin:0 auto 12px;padding:0 22px;font-size:10.5px;font-weight:800;
+    letter-spacing:.22em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:8px}
+  .strip-lab::after{content:'';flex:1;height:1px;background:var(--line)}
+  .strip{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);
+    mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
+  .strip-track{display:flex;gap:14px;width:max-content;padding:6px 0 10px;animation:filmroll 46s linear infinite}
+  .strip:hover .strip-track{animation-play-state:paused}
+  @keyframes filmroll{to{transform:translateX(-50%)}}
+  .ph{position:relative;flex:none;width:188px;height:248px;border-radius:16px;overflow:hidden;
+    border:1px solid var(--line-gold);box-shadow:var(--shadow-card);transform:rotate(var(--r,0deg));
+    transition:transform .35s cubic-bezier(.22,.9,.3,1)}
+  .ph:hover{transform:rotate(0) scale(1.04);z-index:2}
+  .ph img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(.92) contrast(1.04);
+    transition:transform 6s ease}
+  .ph:hover img{transform:scale(1.1)}
+  .ph figcaption{position:absolute;left:0;right:0;bottom:0;padding:26px 12px 10px;font-size:12px;font-weight:700;
+    color:#FFF3D6;background:linear-gradient(transparent,rgba(5,5,7,.78));letter-spacing:.04em}
+
+  /* ---- cursor glow (solo pointer fine) ---- */
+  #cursorGlow{display:none}
+  @media (pointer:fine){
+    #cursorGlow{display:block;position:fixed;left:0;top:0;width:520px;height:520px;margin:-260px 0 0 -260px;
+      z-index:1;pointer-events:none;border-radius:50%;opacity:.5;will-change:transform;
+      background:radial-gradient(circle,rgba(233,206,147,.14),transparent 62%);mix-blend-mode:screen}
+    html[data-theme="light"] #cursorGlow{background:radial-gradient(circle,rgba(160,120,40,.10),transparent 62%);mix-blend-mode:multiply}
+  }
+
   @media (prefers-reduced-motion:reduce){
     *,*::before,*::after{animation:none!important;transition:none!important}
     .rv{opacity:1;transform:none}
+    .strip{overflow-x:auto;mask-image:none;-webkit-mask-image:none}
+    #cursorGlow{display:none!important}
   }
 </style>
 </head>
 <body>
 <div class="aurora"></div>
+<div id="cursorGlow" aria-hidden="true"></div>
 <div class="grain"></div>
 
 <!-- STATUS BAR -->
@@ -406,6 +499,7 @@
   <div class="row">
     <span class="tbrand" id="brand40" style="cursor:pointer;-webkit-user-select:none;user-select:none"><span class="tcrest"></span>40</span>
     <div class="status"><span class="dot"></span><span id="phase">—</span> · <b id="clock" class="tnum">--:--</b> · <span id="temp" onclick="openWeather()" title="Andamento orario della giornata">🌡️ ~22°</span><span id="offBadge" style="display:none;margin-left:8px;font-size:11px;font-weight:700;color:var(--amber);border:1px solid var(--line-gold);border-radius:6px;padding:1px 6px">offline</span></div>
+    <button class="searchbtn thbtn" id="themeBtn" onclick="cycleTheme()" aria-label="Tema chiaro/scuro">◐</button>
     <button class="searchbtn" onclick="shareGuide()" aria-label="Condividi la guida">📤</button>
     <button class="searchbtn" onclick="openSearch()" aria-label="Cerca">🔎</button>
   </div>
@@ -433,8 +527,15 @@
     <span class="chip">🏠 <b>Abapart</b> · Nàpols 116</span>
     <span class="chip">🎉 festa <b>sabato</b></span>
   </div>
+  <div class="hero-cd" id="heroCd" aria-label="Countdown alla partenza"></div>
   <a class="hero-cue" href="#adesso" aria-label="Scorri">▾</a>
 </header>
+
+<!-- FILM-STRIP: il weekend in sei fotogrammi -->
+<section class="strip-sec" aria-label="Il weekend in immagini">
+  <div class="strip-lab">Il weekend in sei fotogrammi</div>
+  <div class="strip"><div class="strip-track" id="stripTrack"></div></div>
+</section>
 
 <div class="wrap">
 
@@ -1180,6 +1281,60 @@ function openDet(id){const d=document.getElementById(id);if(d&&!d.open)d.open=tr
 function tick(){try{document.getElementById('clock').textContent=new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit',timeZone:TZ});}catch(e){}}
 tick();setInterval(tick,15000);
 
+/* ===== TEMA: auto (telefono) / chiaro / scuro — risolto in data-theme ===== */
+const THEME_KEY='bcn40_theme';                       // 'auto' | 'light' | 'dark'
+const mqLight=matchMedia('(prefers-color-scheme: light)');
+function themePref(){return localStorage.getItem(THEME_KEY)||'auto';}
+function applyTheme(){
+  const pref=themePref();
+  const mode=pref==='auto'?(mqLight.matches?'light':'dark'):pref;
+  document.documentElement.dataset.theme=mode;
+  document.querySelector('meta[name="theme-color"]').setAttribute('content',mode==='light'?'#F4EEE1':'#050507');
+  const b=document.getElementById('themeBtn'); if(b)b.textContent=pref==='auto'?'◐':(pref==='light'?'☀️':'🌙');
+  if(window.TILES)TILES.setUrl('https://{s}.basemaps.cartocdn.com/'+(mode==='light'?'light_all':'dark_all')+'/{z}/{x}/{y}{r}.png');
+}
+function cycleTheme(){const o={auto:'light',light:'dark',dark:'auto'};localStorage.setItem(THEME_KEY,o[themePref()]);applyTheme();if(navigator.vibrate)navigator.vibrate(8);}
+mqLight.addEventListener?mqLight.addEventListener('change',applyTheme):mqLight.addListener(applyTheme);
+applyTheme();
+
+/* ===== COUNTDOWN LIVE nel hero (tick al secondo) ===== */
+(function(){
+  const el=document.getElementById('heroCd'); if(!el)return;
+  const start=tp(TRIP_START), end=tp('2026-10-19T00:50');
+  const pad=n=>String(n).padStart(2,'0');
+  function u(v,l){return '<span class="u"><b>'+v+'</b><i>'+l+'</i></span>';}
+  function draw(){
+    const now=new Date();
+    if(now<start){
+      const s=Math.floor((start-now)/1000);
+      const g=Math.floor(s/86400),h=Math.floor(s%86400/3600),m=Math.floor(s%3600/60),ss=s%60;
+      el.innerHTML=u(g,'giorni')+'<span class="sep">:</span>'+u(pad(h),'ore')+'<span class="sep">:</span>'+u(pad(m),'min')+'<span class="sep">:</span>'+u(pad(ss),'sec');
+    } else if(now<end){
+      const day=now.getDate()===16?'1':(now.getDate()===17?'2 · il 40°':'3');
+      el.innerHTML='<span class="live">🥂 IN VIAGGIO · GIORNO '+day+'</span>';
+    } else { el.innerHTML='<span class="live">✨ È SUCCESSO DAVVERO</span>'; }
+  }
+  draw(); setInterval(draw,1000);
+})();
+
+/* ===== FILM-STRIP: le foto del weekend in pellicola infinita ===== */
+(function(){
+  const t=document.getElementById('stripTrack'); if(!t)return;
+  const ph=[['sagrada','La Sagrada'],['gaudi','Gaudí'],['barca','Blaugrana'],['mare','Il mare'],['cibo','Tapas & cava'],['festa','La festa']];
+  const cell=(f,c,i)=>'<figure class="ph" style="--r:'+((i%2?1:-1)*(0.6+(i%3)*0.5)).toFixed(1)+'deg"><img src="img/'+f+'.jpg" alt="'+c+'" loading="lazy">'+'<figcaption>'+c+'</figcaption></figure>';
+  const seq=ph.map((p,i)=>cell(p[0],p[1],i)).join('');
+  t.innerHTML=seq+seq;   // doppia sequenza = loop senza salti
+})();
+
+/* ===== CURSOR GLOW (desktop) ===== */
+(function(){
+  const g=document.getElementById('cursorGlow');
+  if(!g||!matchMedia('(pointer:fine)').matches||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  let raf=null,x=0,y=0;
+  addEventListener('mousemove',e=>{x=e.clientX;y=e.clientY;
+    if(!raf)raf=requestAnimationFrame(()=>{raf=null;g.style.transform='translate('+x+'px,'+y+'px)';});},{passive:true});
+})();
+
 /* ===== RESTYLE 360°: reveal on scroll + parallax hero (rispetta prefers-reduced-motion) ===== */
 (function(){
   const noMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1243,7 +1398,7 @@ document.getElementById('mappa').addEventListener('toggle',function(){
   if(!this.open||mapDone||typeof L==='undefined')return;mapDone=true;
   const pts=ITINERARY.filter(it=>it.lat).reduce((a,it)=>{a[it.place]=it;return a;},{});
   const map=L.map('map',{scrollWheelZoom:false}).setView([41.388,2.14],12);
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OpenStreetMap &copy; CARTO',maxZoom:19,subdomains:'abcd'}).addTo(map);
+  window.TILES=L.tileLayer('https://{s}.basemaps.cartocdn.com/'+(document.documentElement.dataset.theme==='light'?'light_all':'dark_all')+'/{z}/{x}/{y}{r}.png',{attribution:'&copy; OpenStreetMap &copy; CARTO',maxZoom:19,subdomains:'abcd'}).addTo(map);
   const g=[];
   Object.values(pts).forEach(it=>{const c=(KIND[it.kind]||{c:'#fff'}).c;
     L.circleMarker([it.lat,it.lng],{radius:8,color:'#050507',weight:2,fillColor:c,fillOpacity:1}).addTo(map)
