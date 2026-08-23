@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="color-scheme" content="dark">
-<meta name="theme-color" content="#050507">
+<meta name="theme-color" content="#0A0A0C">
 <title>La Guida · I 40 di Ale a Barcellona</title>
 <meta name="description" content="La guida operativa del weekend: itinerario venerdì-sabato-domenica, mercati, jamón ibérico, Maremagnum e i locali giusti. 16–18 ottobre 2026.">
 <meta property="og:type" content="website">
@@ -17,36 +17,36 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..600;1,6..96,400..600&family=Outfit:wght@300..600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..900;1,9..144,400..900&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
 <link rel="preconnect" href="https://unpkg.com" crossorigin>
 <link rel="dns-prefetch" href="https://tile.openstreetmap.org">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
   :root{
-    --night-0:#050507; --night-1:#0C0A11; --night-2:#16131C;
-    --gold-bright:#FFF3D6; --gold:#E9CE93; --gold-deep:#C9A24B; --gold-antique:#8A6D2F;
-    --ink:#F4EFE6; --muted:#A8A294; --teal:#2EC4B6;
-    --line:rgba(255,255,255,.08); --line-gold:rgba(233,206,147,.25);
+    --night-0:#0A0A0C; --night-1:#101014; --night-2:#131318;
+    --gold-bright:#FFC46B; --gold:#F2A33C; --gold-deep:#B87310; --gold-antique:#7A5217;
+    --ink:#F2EFE9; --muted:#8D8A82; --teal:#2EC4B6;
+    --line:rgba(242,239,233,.09); --line-gold:rgba(242,163,60,.25);
     --maxw:680px;
-    --foil:linear-gradient(100deg,#8A6D2F 0%,#E9CE93 38%,#FFF3D6 50%,#E9CE93 62%,#8A6D2F 100%);
+    --foil:linear-gradient(100deg,#7A5217 0%,#F2A33C 38%,#FFC46B 50%,#F2A33C 62%,#7A5217 100%);
     --blau:#004D98; --grana:#A50044;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
-  body{background:var(--night-0);color:var(--ink);font-family:"Outfit",system-ui,sans-serif;line-height:1.55;
+  body{background:var(--night-0);color:var(--ink);font-family:"Space Grotesk",system-ui,sans-serif;line-height:1.55;
     -webkit-font-smoothing:antialiased;padding-bottom:60px}
   .wrap{max-width:var(--maxw);margin:0 auto;padding:0 18px}
   a{color:var(--teal);text-decoration:none}
   /* HERO */
   header{padding:52px 18px 26px;text-align:center}
   .kicker{font-size:11px;letter-spacing:.34em;text-transform:uppercase;color:var(--gold-deep)}
-  h1{font-family:"Bodoni Moda",serif;font-weight:500;font-size:clamp(38px,9vw,58px);line-height:1.04;margin:14px 0 10px;
+  h1{font-family:"Fraunces",serif;font-weight:500;font-size:clamp(38px,9vw,58px);line-height:1.04;margin:14px 0 10px;
     background:var(--foil);-webkit-background-clip:text;background-clip:text;color:transparent}
   .sub{color:var(--muted);font-size:15px;max-width:440px;margin:0 auto}
   .backlink{display:inline-block;margin-top:16px;font-size:12px;letter-spacing:.08em;color:var(--muted)}
   /* NAV CHIPS */
-  nav{position:sticky;top:0;z-index:9;background:linear-gradient(180deg,rgba(5,5,7,.96),rgba(5,5,7,.88));backdrop-filter:blur(8px);
+  nav{position:sticky;top:0;z-index:9;background:linear-gradient(180deg,rgba(10,10,12,.96),rgba(10,10,12,.88));backdrop-filter:blur(8px);
     border-bottom:1px solid var(--line);padding:10px 12px;display:flex;gap:8px;overflow-x:auto;-webkit-overflow-scrolling:touch}
   nav::-webkit-scrollbar{display:none}
   nav a{flex:0 0 auto;font-size:12px;font-weight:600;letter-spacing:.04em;color:var(--ink);
@@ -54,16 +54,16 @@
   /* SEZIONI */
   section{margin:38px 0}
   .seclab{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold-deep);margin:0 0 6px}
-  h2{font-family:"Bodoni Moda",serif;font-weight:500;font-size:clamp(26px,6vw,34px);line-height:1.1;margin-bottom:14px}
+  h2{font-family:"Fraunces",serif;font-weight:500;font-size:clamp(26px,6vw,34px);line-height:1.1;margin-bottom:14px}
   h2 em{font-style:italic;color:var(--gold)}
-  .card{background:var(--night-2);border:1px solid var(--line);border-radius:18px;padding:18px;margin:12px 0}
+  .card{background:var(--night-2);border:1px solid var(--line);border-radius:8px;padding:18px;margin:12px 0}
   .card h3{font-size:15px;font-weight:600;letter-spacing:.02em;margin-bottom:6px;color:var(--gold-bright)}
   .card p{font-size:14px;color:var(--ink)}
   .muted{color:var(--muted)} small{color:var(--muted)}
   .gold{color:var(--gold)}
   /* ALERT prenota */
-  .alert{border:1px solid var(--line-gold);background:linear-gradient(160deg,rgba(233,206,147,.09),rgba(233,206,147,.02));
-    border-radius:18px;padding:16px 18px;margin:16px 0}
+  .alert{border:1px solid var(--line-gold);background:linear-gradient(160deg,rgba(242,163,60,.09),rgba(242,163,60,.02));
+    border-radius:8px;padding:16px 18px;margin:16px 0}
   .alert b{color:var(--gold-bright)}
   .alert ol{margin:8px 0 0 18px;font-size:14px}
   .alert li{margin:6px 0}
@@ -71,29 +71,29 @@
   .tl{list-style:none;margin:8px 0 0;position:relative;padding-left:74px}
   .tl:before{content:'';position:absolute;left:58px;top:6px;bottom:6px;width:1px;background:var(--line-gold)}
   .tl li{position:relative;margin:0 0 18px}
-  .tl .h{position:absolute;left:-74px;top:0;width:48px;text-align:right;font-family:"Bodoni Moda",serif;
+  .tl .h{position:absolute;left:-74px;top:0;width:48px;text-align:right;font-family:"Fraunces",serif;
     font-size:15px;color:var(--gold);font-variant-numeric:tabular-nums}
   .tl li:after{content:'';position:absolute;left:-18.5px;top:7px;width:7px;height:7px;border-radius:50%;
-    background:var(--gold-deep);box-shadow:0 0 8px rgba(233,206,147,.5)}
+    background:var(--gold-deep);box-shadow:0 0 8px rgba(242,163,60,.5)}
   .tl b{color:var(--gold-bright);font-weight:600}
   .tl p{font-size:14px;color:var(--muted);margin-top:2px}
   .tl .tag{display:inline-block;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--night-0);
     background:var(--gold);border-radius:4px;padding:1px 7px;margin-left:6px;font-weight:700;vertical-align:2px}
   /* FASCETTE JAMON */
   .fajas{display:grid;gap:10px;margin-top:10px}
-  .faja{display:flex;gap:12px;align-items:flex-start;background:var(--night-2);border:1px solid var(--line);border-radius:14px;padding:13px 14px}
+  .faja{display:flex;gap:12px;align-items:flex-start;background:var(--night-2);border:1px solid var(--line);border-radius:8px;padding:13px 14px}
   .faja .dot{flex:0 0 auto;width:16px;height:16px;border-radius:50%;margin-top:3px;border:2px solid rgba(255,255,255,.25)}
   .faja b{color:var(--gold-bright);font-size:14px}
   .faja p{font-size:13px;color:var(--muted);margin-top:2px}
   .price{color:var(--gold);font-weight:600;white-space:nowrap;font-size:13px}
   /* JAMON: sottotitoli numerati + mappa */
   .jstep{display:flex;align-items:baseline;gap:10px;margin:26px 0 8px}
-  .jstep .n{font-family:"Bodoni Moda",serif;font-size:26px;color:var(--gold-deep);line-height:1}
+  .jstep .n{font-family:"Fraunces",serif;font-size:26px;color:var(--gold-deep);line-height:1}
   .jstep h3{font-size:14px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-bright);font-weight:600}
   .es{color:var(--gold);font-style:italic;font-weight:600}
-  #jamonMap,#notteMap{height:340px;border-radius:18px;border:1px solid var(--line-gold);margin-top:12px;z-index:1;display:none}
+  #jamonMap,#notteMap{height:340px;border-radius:8px;border:1px solid var(--line-gold);margin-top:12px;z-index:1;display:none}
   #jamonMap.on,#notteMap.on{display:block}
-  .lg-club:before{color:#ff5ea8} .lg-bar:before{color:#2EC4B6} .lg-rest:before{color:#E9CE93} .lg-roof:before{color:#9fd0ff}
+  .lg-club:before{color:#ff5ea8} .lg-bar:before{color:#2EC4B6} .lg-rest:before{color:#F2A33C} .lg-roof:before{color:#9fd0ff}
   .maplegend{display:flex;gap:16px;justify-content:center;font-size:12px;color:var(--muted);margin-top:8px}
   .maplegend span:before{content:'●';margin-right:5px}
   .lg-merc:before{color:var(--teal)} .lg-jam:before{color:var(--gold)} .lg-hot:before{color:#fff}
@@ -121,11 +121,11 @@
   /* ============ FUTURO: motion design premium (budget 100k) ============ */
   /* barra di progresso lettura */
   #readbar{position:fixed;top:0;left:0;height:2px;width:0;z-index:50;
-    background:linear-gradient(90deg,var(--gold-deep),var(--gold-bright));box-shadow:0 0 12px rgba(233,206,147,.6)}
+    background:linear-gradient(90deg,var(--gold-deep),var(--gold-bright));box-shadow:0 0 12px rgba(242,163,60,.6)}
   /* AURORA: due blob dorato/blaugrana che respirano dietro tutto */
   .aurora{position:fixed;inset:-20%;z-index:-1;pointer-events:none;filter:blur(90px);opacity:.5}
   .aurora:before,.aurora:after{content:'';position:absolute;width:55vw;height:55vw;border-radius:50%}
-  .aurora:before{background:radial-gradient(circle,rgba(201,162,75,.20),transparent 65%);top:-8%;left:-12%;
+  .aurora:before{background:radial-gradient(circle,rgba(184,115,16,.20),transparent 65%);top:-8%;left:-12%;
     animation:aur1 26s ease-in-out infinite alternate}
   .aurora:after{background:radial-gradient(circle,rgba(0,77,152,.22),rgba(165,0,68,.10) 50%,transparent 70%);
     bottom:-10%;right:-14%;animation:aur2 32s ease-in-out infinite alternate}
@@ -148,9 +148,9 @@
   /* micro-interazioni: le card rispondono al tocco */
   .pl:active{transform:scale(.985)}
   @media(hover:hover){
-    .pl:hover{border-color:var(--line-gold);box-shadow:0 8px 30px rgba(0,0,0,.45),0 0 0 1px rgba(233,206,147,.12);
+    .pl:hover{border-color:var(--line-gold);box-shadow:0 8px 30px rgba(0,0,0,.45),0 0 0 1px rgba(242,163,60,.12);
       background:linear-gradient(160deg,#1a1622,var(--night-2));transform:translateY(-2px)}
-    nav a:hover{border-color:var(--gold);color:var(--gold-bright);box-shadow:0 0 14px rgba(233,206,147,.25)}
+    nav a:hover{border-color:var(--gold);color:var(--gold-bright);box-shadow:0 0 14px rgba(242,163,60,.25)}
     .fold summary:hover .sintesi{color:var(--gold)}
   }
   nav a{transition:border-color .25s,color .25s,box-shadow .25s,background .25s}
@@ -180,9 +180,9 @@
   /* ======= RIFINITURA EDITORIALE: micro-tipografia, focus, resa numerica ======= */
   h1,h2,h3{text-wrap:balance}
   p,li,small,.sintesi{text-wrap:pretty}
-  :focus-visible{outline:2px solid var(--gold,#E9CE93);outline-offset:3px;border-radius:6px}
+  :focus-visible{outline:2px solid var(--gold,#F2A33C);outline-offset:3px;border-radius:6px}
   :focus:not(:focus-visible){outline:none}
-  .skiplink{position:fixed;top:-48px;left:12px;z-index:99;background:var(--gold,#E9CE93);color:#050507;
+  .skiplink{position:fixed;top:-48px;left:12px;z-index:99;background:var(--gold,#F2A33C);color:#0A0A0C;
     padding:9px 15px;border-radius:10px;font-weight:700;font-size:13px;transition:top .2s}
   .skiplink:focus{top:12px}
 </style>
@@ -651,7 +651,7 @@
   </section>
 
   <footer>
-    <div style="font-family:'Bodoni Moda',serif;font-size:22px;color:var(--gold)">Buon 40, <b>Ale.</b></div>
+    <div style="font-family:'Fraunces',serif;font-size:22px;color:var(--gold)">Buon 40, <b>Ale.</b></div>
     <div style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;margin-top:8px">Barcellona · 16–18 ott 2026 · #MésQueUnAle</div>
     <a class="btn" href="rigori.html">⚽ Nell'attesa: Rigori al Camp Nou →</a><br>
     <a class="backlink" href="index.html">← torna alla plancia</a>
@@ -671,10 +671,10 @@ window.addEventListener('load', function(){
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,
     attribution:'&copy; OpenStreetMap'}).addTo(map);
   function pin(lat,lng,color,label,sub){
-    L.circleMarker([lat,lng],{radius:9,color:'#050507',weight:2,fillColor:color,fillOpacity:0.95})
+    L.circleMarker([lat,lng],{radius:9,color:'#0A0A0C',weight:2,fillColor:color,fillOpacity:0.95})
       .addTo(map).bindPopup('<b>'+label+'</b><br><small>'+sub+'</small>');
   }
-  var TEAL='#2EC4B6', GOLD='#E9CE93', WHITE='#ffffff';
+  var TEAL='#2EC4B6', GOLD='#F2A33C', WHITE='#ffffff';
   // mercati
   pin(41.3817,2.1716,TEAL,'Mercat de la Boqueria','Rambla 91 · lun–sab, dom chiuso');
   pin(41.3861,2.1782,TEAL,'Mercat de Santa Caterina','Av. Francesc Cambó · 13 min dall\'Abapart');
@@ -700,10 +700,10 @@ window.addEventListener('load', function(){
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap'}).addTo(map);
   function pin(lat,lng,color,label,sub){
     var gm='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(label+' Barcelona');
-    L.circleMarker([lat,lng],{radius:8,color:'#050507',weight:2,fillColor:color,fillOpacity:0.95})
+    L.circleMarker([lat,lng],{radius:8,color:'#0A0A0C',weight:2,fillColor:color,fillOpacity:0.95})
       .addTo(map).bindPopup('<b>'+label+'</b><br><small>'+sub+'</small><br><a href="'+gm+'" target="_blank" rel="noopener">📍 Apri in Google Maps</a>');
   }
-  var CLUB='#ff5ea8', BAR='#2EC4B6', REST='#E9CE93', ROOF='#9fd0ff', WHITE='#ffffff';
+  var CLUB='#ff5ea8', BAR='#2EC4B6', REST='#F2A33C', ROOF='#9fd0ff', WHITE='#ffffff';
   // club
   pin(41.3966,2.1499,CLUB,'Sutton','Tuset 13 · il club per adulti, dress rigoroso');
   pin(41.3960,2.1503,CLUB,'Bling Bling','Tuset 8-10 · glamour, a 50 m da Sutton');
