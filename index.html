@@ -110,32 +110,50 @@
     text-align:center;color:var(--muted);font-size:14px}
 
   /* ===== TIMELINE OGGI ===== */
-  .daytabs{display:flex;gap:6px;margin:2px 0 10px}
-  .daytabs button{flex:1;height:40px;border-radius:11px;background:rgba(255,255,255,.05);
+  .daytabs{display:flex;gap:6px;margin:2px 0 10px;position:sticky;top:54px;z-index:5;
+    padding:8px 0;background:rgba(5,5,7,.88);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+  .daytabs button{flex:1;min-height:48px;border-radius:11px;background:rgba(255,255,255,.05);
     border:1px solid var(--line);color:var(--muted);font-size:13px;font-weight:700}
   .daytabs button b{display:block;font-size:15px;color:inherit}
+  .daytabs button i{display:block;font-style:normal;font-size:9px;font-weight:600;letter-spacing:.02em;
+    color:inherit;opacity:.72;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 4px}
   .daytabs button.on{background:var(--amber);border-color:var(--amber);color:var(--bg)}
   .tl{position:relative}
-  .ti-row{display:flex;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);align-items:flex-start}
-  .ti-row:last-child{border-bottom:none}
+  /* separatore di fascia (Mattina/Pomeriggio/Sera/Notte) */
+  .ti-sep{display:flex;align-items:center;gap:8px;margin:14px 0 4px;color:var(--muted);
+    font-size:10.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+  .ti-sep::after{content:'';flex:1;height:1px;background:var(--line)}
+  .ti-row{display:flex;gap:12px;padding:11px 0;align-items:flex-start;position:relative}
+  /* SPINA DORSALE: la rail che collega i tick (si interrompe sull'ultima tappa) */
+  .ti-row::before{content:'';position:absolute;left:12px;top:34px;bottom:-6px;width:2px;
+    background:var(--line);border-radius:1px}
+  .ti-row.last::before{display:none}
   .ti-tick{flex:none;width:26px;height:26px;border-radius:50%;border:2px solid var(--line);
-    display:flex;align-items:center;justify-content:center;font-size:13px;margin-top:1px;color:var(--muted)}
-  .ti-body{flex:1;min-width:0}
-  .ti-time{font-size:12px;font-weight:800;color:var(--muted);letter-spacing:.02em}
+    display:flex;align-items:center;justify-content:center;font-size:13px;margin-top:1px;color:var(--muted);
+    position:relative;z-index:1;background:var(--night-0)}
+  .ti-body{flex:1;min-width:0;padding-bottom:6px;border-bottom:1px solid var(--line)}
+  .ti-row.last .ti-body,.ti-row.preSep .ti-body{border-bottom:none}
+  .ti-time{font-size:12px;font-weight:800;color:var(--gold);letter-spacing:.02em}
+  .ti-time .end{color:var(--muted);font-weight:600}
   .ti-title{font-size:15.5px;font-weight:600;margin-top:1px}
-  .ti-note{font-size:12.5px;color:var(--muted);margin-top:1px}
-  .ti-act{flex:none;display:flex;gap:6px;margin-top:2px}
-  .ti-act a{width:44px;height:44px;border-radius:11px;background:rgba(255,255,255,.05);
-    border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:15px}
+  .ti-note{font-size:12.5px;color:var(--muted);margin-top:1px;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;cursor:pointer}
+  .ti-note.xp{-webkit-line-clamp:unset}
+  .ti-act{flex:none;display:flex;gap:5px;margin-top:2px}
+  .ti-act a{width:38px;height:38px;border-radius:10px;background:transparent;
+    border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:14px;opacity:.85}
   /* states */
-  .st-current .ti-tick{border-color:var(--coral);background:var(--coral);color:#050507}
-  .st-current{background:rgba(233,206,147,.06);margin:0 -10px;padding-left:10px;padding-right:10px;border-radius:12px}
+  .st-current .ti-tick{border-color:var(--coral)!important;background:var(--coral);color:#050507}
+  .st-current{background:rgba(233,206,147,.07);margin:0 -10px;padding-left:10px;padding-right:10px;border-radius:12px;
+    box-shadow:inset 3px 0 0 var(--gold)}
+  .st-current::before{left:22px}
   .st-current .ti-title{color:var(--coral)}
-  .st-done .ti-tick{border-color:var(--teal);background:var(--teal);color:#08231f}
+  .st-current .ti-note{-webkit-line-clamp:unset}
+  .st-done .ti-tick{border-color:var(--teal)!important;background:var(--teal);color:#08231f}
   .st-done .ti-title{color:var(--done);text-decoration:line-through}
   .st-done .ti-note{opacity:.6}
-  .st-future .ti-tick{border-color:var(--amber)}
-  .badge-now{font-size:9.5px;font-weight:800;letter-spacing:.1em;color:var(--coral);margin-left:6px}
+  .badge-now{font-size:9px;font-weight:800;letter-spacing:.1em;color:#050507;background:var(--coral);
+    padding:2px 7px;border-radius:99px;margin-left:6px;vertical-align:1px}
 
   /* ===== DETAILS (collapsible) ===== */
   details{background:var(--card);border:1px solid var(--line);border-radius:16px;margin:10px 0;overflow:hidden}
@@ -844,7 +862,7 @@ function renderNow(){
 
   // PORTAMI ADESSO
   if(navTarget&&navTarget.lat){
-    html+='<a class="go" href="'+mapsDir(navTarget.lat,navTarget.lng)+'" target="_blank">▶ PORTAMI ADESSO<span class="muted" style="font-weight:600;font-size:12px"> · '+navTarget.place+'</span></a>';
+    html+='<a class="go" href="'+mapsDir(navTarget.lat,navTarget.lng)+'" target="_blank">▶ PORTAMI ADESSO<span style="font-weight:600;font-size:12px;color:#3a2d10;opacity:.85"> · '+navTarget.place+'</span></a>';
     html+='<div class="nrow" style="margin-top:7px">'+
       '<a class="btn" href="'+citymapper(navTarget.lat,navTarget.lng,navTarget.place)+'" target="_blank">🚇 Mezzi</a>'+
       '<a class="btn" href="'+mapsMode(navTarget.lat,navTarget.lng,'transit')+'" target="_blank">🗺️ Maps</a>'+
@@ -888,7 +906,8 @@ let SELDAY=null;
 function scrollNow(){const cur=document.querySelector('#timeline .st-current');(cur||document.getElementById('oggi')).scrollIntoView({behavior:'smooth',block:cur?'center':'start'});}
 function setDay(d){SELDAY=d;renderTimeline();scrollNow();}
 function renderDayTabs(){
-  document.getElementById('dayTabs').innerHTML=Object.keys(DAYS).map(d=>'<button class="'+(d===SELDAY?'on':'')+'" onclick="setDay(\''+d+'\')"><b>'+d+'</b>'+({'16':'VEN','17':'SAB','18':'DOM'}[d])+'</button>').join('');
+  const SUB={'16':'Ale in solitaria','17':'40° · +Giulio & Manuel','18':'Ultimo giro e rientro'}; // sottotitoli solo visuali
+  document.getElementById('dayTabs').innerHTML=Object.keys(DAYS).map(d=>'<button class="'+(d===SELDAY?'on':'')+'" onclick="setDay(\''+d+'\')"><b>'+d+'</b>'+({'16':'VEN','17':'SAB','18':'DOM'}[d])+'<i>'+(SUB[d]||'')+'</i></button>').join('');
 }
 function renderTimeline(){
   const now=new Date(), items=model(now);
@@ -896,10 +915,14 @@ function renderTimeline(){
   document.getElementById('dayLabel').textContent=DAYS[SELDAY];
   renderDayTabs();
   const day=items.filter(it=>it.day===SELDAY);
-  document.getElementById('timeline').innerHTML=day.map(it=>{
+  // fascia della giornata: dà ritmo alla lista (dall'orario, zero dati extra)
+  const bandOf=h=> h<6?'🌃 Notte':(h<13?'🌅 Mattina':(h<19?'☀️ Pomeriggio':'🌙 Sera'));
+  let lastBand=null;
+  document.getElementById('timeline').innerHTML=day.map((it,i)=>{
     const k=KIND[it.kind]||{e:'•'};
     const stCls='st-'+(it._st==='past'?'done':it._st);
     const tick=it._st==='done'?'✓':(it._st==='current'?'●':k.e);
+    const tickCol=(it._st==='done'||it._st==='current'||it._st==='past')?'':' style="border-color:'+(k.c||'var(--line)')+'"';
     const nowBadge=it._st==='current'?'<span class="badge-now">ORA</span>':'';
     let acts='';
     if(it.lat)acts+='<a href="'+mapsDir(it.lat,it.lng)+'" target="_blank" title="Vai">🧭</a>';
@@ -908,11 +931,15 @@ function renderTimeline(){
     if(it.track)acts+='<a href="'+it.track+'" target="_blank" title="Stato volo">📡</a>';
     let rainChip='';
     if(it.outdoor){const p=rainProb(it.start);if(p!=null&&p>=30){const col=p>=40?'var(--coral)':'var(--amber)';rainChip=' <span style="font-size:11px;font-weight:700;color:'+col+'">🌧️ '+p+'%</span>';}}
-    return '<div class="ti-row '+stCls+'">'+
-      '<button class="ti-tick" onclick="toggleDone(\''+it.id+'\')" title="Segna fatto">'+tick+'</button>'+
-      '<div class="ti-body"><div class="ti-time tnum">'+fmtHM(it._s)+nowBadge+'</div>'+
+    const band=bandOf(it._s.getHours());
+    let sep=''; if(band!==lastBand){sep='<div class="ti-sep">'+band+'</div>';lastBand=band;}
+    const nextBand=i<day.length-1?bandOf(day[i+1]._s.getHours()):null;
+    const rowCls=stCls+(i===day.length-1?' last':'')+(nextBand&&nextBand!==band?' preSep':'');
+    return sep+'<div class="ti-row '+rowCls+'">'+
+      '<button class="ti-tick"'+tickCol+' onclick="toggleDone(\''+it.id+'\')" title="Segna fatto">'+tick+'</button>'+
+      '<div class="ti-body"><div class="ti-time tnum">'+fmtHM(it._s)+'<span class="end"> – '+fmtHM(it._e)+'</span>'+nowBadge+'</div>'+
       '<div class="ti-title">'+it.title+rainChip+'</div>'+
-      (it.note?'<div class="ti-note">'+it.note+'</div>':'')+'</div>'+
+      (it.note?'<div class="ti-note" onclick="this.classList.toggle(\'xp\')">'+it.note+'</div>':'')+'</div>'+
       '<div class="ti-act">'+acts+'</div></div>';
   }).join('');
 }
