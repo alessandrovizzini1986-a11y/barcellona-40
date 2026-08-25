@@ -1,4 +1,13 @@
-# Deploy di blink-monitor — solo da telefono
+# Deploy di blink-monitor — COMPLETATO
+
+> **Stato: online.** Repo privato `alessandrovizzini1986-a11y/blink-monitor`,
+> secrets impostati, run #1 (`push`) verde il 25/08/2026, notifica
+> `✅ blink-monitor ATTIVO` consegnata, `state_milano.json` committato dal bot.
+> Da qui in poi gira da solo col cron notturno.
+>
+> Quanto segue resta come documentazione della procedura.
+
+# Procedura seguita (solo da telefono)
 
 Nessun PC necessario. Servono due form del sito github.com (browser del
 telefono), il resto lo fa Claude via push.
