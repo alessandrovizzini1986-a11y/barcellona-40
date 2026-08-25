@@ -7,9 +7,10 @@ on:
   workflow_dispatch: {}   # lancio manuale dalla tab Actions
   push:
     branches: [main]
-    # Il commit di stato fatto dal bot non deve far ripartire il workflow.
-    paths-ignore:
-      - "state_milano.json"
+    # Nessun paths-ignore: il commit di stato che fa il bot usa GITHUB_TOKEN, e
+    # GitHub per progetto non fa ripartire i workflow sui push fatti con quel
+    # token (niente ricorsione). Cosi' basta modificare state_milano.json dalla
+    # UI web per far ripartire il monitor e testare l'avviso di cambiamento.
 
 permissions:
   contents: write   # per salvare state_milano.json (rileva i cambiamenti)

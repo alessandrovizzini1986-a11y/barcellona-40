@@ -47,3 +47,32 @@ Consiglio: attiva anche l'"Avvisami" su ticketone.it come seconda rete.
 - GitHub sospende i cron su repo inattivi dopo ~60 giorni senza commit;
   questo workflow committa il file di stato quando cambia, ma se ricevi
   una mail GitHub "workflow disabled", riattivalo con un click.
+
+## Come testare che l'avviso funzioni davvero
+
+Il primo run manda solo la conferma di attivazione. Per verificare la parte che
+conta — l'avviso quando qualcosa cambia — si simula un cambiamento falsificando
+lo stato salvato. Tutto dal browser del telefono, senza PC:
+
+1. Apri `state_milano.json` nel repo → tap sulla matita ✏️.
+2. Cambia un valore, per esempio `"is-sold-out": false` → `"is-sold-out": true`.
+3. *Commit changes* direttamente su `main`.
+
+Il commit fa ripartire il workflow. Lo script confronta il file falsificato con
+lo stato vero, vede una differenza e ti manda:
+
+```
+🚨 blink-182 MILANO 13/06/2027 — CAMBIAMENTO RILEVATO:
+• Sold out: SÌ → no
+```
+
+Poi risalva da solo lo stato corretto e lo committa: il test si pulisce da
+sé, non devi rimettere a posto niente.
+
+Se non arriva nulla, guarda la tab *Actions*: il run rosso dice al primo step
+quale secret manca, gli altri errori sono nel log dello step "Run monitor".
+
+### Verificare che il cron parta
+Non c'è modo di anticiparlo: il giorno dopo, nella tab *Actions*, deve comparire
+un run con evento `schedule` attorno alle 23:00 UTC. Se c'è ed è verde, il
+monitor è vivo (in silenzio, com'è giusto).
