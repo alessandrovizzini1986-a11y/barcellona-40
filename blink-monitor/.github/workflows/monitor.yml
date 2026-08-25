@@ -5,6 +5,11 @@ on:
     # 23:00 UTC = mezzanotte italiana in ora solare (01:00 in estate).
     - cron: "0 23 * * *"
   workflow_dispatch: {}   # lancio manuale dalla tab Actions
+  push:
+    branches: [main]
+    # Il commit di stato fatto dal bot non deve far ripartire il workflow.
+    paths-ignore:
+      - "state_milano.json"
 
 permissions:
   contents: write   # per salvare state_milano.json (rileva i cambiamenti)
@@ -14,6 +19,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Controlla che i secrets ci siano
+        env:
+          TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
+          TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
+        run: |
+          missing=""
+          [ -n "$TG_BOT_TOKEN" ] || missing="$missing TG_BOT_TOKEN"
+          [ -n "$TG_CHAT_ID" ]   || missing="$missing TG_CHAT_ID"
+          if [ -n "$missing" ]; then
+            echo "::error::Secrets mancanti:$missing"
+            echo "Vai su Settings > Secrets and variables > Actions e aggiungili,"
+            echo "poi rilancia questo workflow dalla tab Actions (Run workflow)."
+            exit 1
+          fi
+          echo "Secrets presenti."
 
       - name: Run monitor
         env:

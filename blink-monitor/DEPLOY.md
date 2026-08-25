@@ -1,34 +1,22 @@
-# Deploy di blink-monitor — istruzioni operative
+# Deploy di blink-monitor — solo da telefono
 
-Questa cartella contiene l'albero **già pronto** da caricare in un repo GitHub
-privato dedicato (`blink-monitor`). I file vanno alla **radice** di quel repo,
-rispettando i percorsi:
+Nessun PC necessario. Servono due form del sito github.com (browser del
+telefono), il resto lo fa Claude via push.
 
-```
-monitor_blink182.py
-README.md
-.github/workflows/monitor.yml
-```
-
-> Nota: qui dentro il workflow sta in `blink-monitor/.github/workflows/` e
-> quindi **non** viene eseguito da questo repo. GitHub Actions attiva solo i
-> file in `.github/workflows/` alla radice. È voluto.
-
-## Valori già ricavati
+## Valori pronti
 
 | Secret | Valore |
 |---|---|
-| `TG_BOT_TOKEN` | il token di BotFather per `t.me/Blink86_bot` (non committarlo mai) |
+| `TG_BOT_TOKEN` | il token di BotFather per `t.me/Blink86_bot` |
 | `TG_CHAT_ID` | `7755975670` |
 
-`TG_CHAT_ID` è stato ricavato da `getUpdates`: chat privata "Alessandro",
-`chat.id = 7755975670`.
+`TG_CHAT_ID` ricavato da `getUpdates`: chat privata "Alessandro",
+`chat.id = 7755975670`. Il token non è committato in nessun file.
 
-## Verifica già effettuata
+## Verifica già fatta
 
-Lo script è stato eseguito con quei due valori: l'API Seated risponde, l'evento
-di Milano viene trovato e la notifica `✅ blink-monitor ATTIVO` è stata
-consegnata su Telegram. Stato letto:
+Lo script è stato eseguito con quei valori: API Seated raggiungibile, evento di
+Milano trovato, notifica `✅ blink-monitor ATTIVO` consegnata su Telegram.
 
 ```json
 {
@@ -41,42 +29,35 @@ consegnata su Telegram. Stato letto:
 }
 ```
 
-## Comandi per completare il deploy
+## Passi
 
-Da eseguire su una macchina con `gh` installato e autenticato
-(`gh auth login`, scope `repo` + `workflow`):
+1. **Creare il repo** — github.com → `+` → *New repository*
+   - Name: `blink-monitor`
+   - **Private**
+   - non spuntare "Add a README" (il repo deve restare vuoto)
 
-```bash
-# 1. autenticazione
-gh auth status
+2. **Aggiungere i 2 secrets** — repo → *Settings* → *Secrets and variables* →
+   *Actions* → *New repository secret*, due volte, coi valori della tabella
+   sopra. Vanno messi **prima** del push: il workflow parte da solo al push.
 
-# 2. repo privato + push dei file ai percorsi giusti
-mkdir blink-monitor && cd blink-monitor
-# copiare qui monitor_blink182.py, README.md, .github/workflows/monitor.yml
-git init -b main
-git add .
-git commit -m "blink-182 Milano monitor"
-gh repo create blink-monitor --private --source=. --push
+3. **Claude carica i file** ai percorsi giusti:
+   ```
+   monitor_blink182.py
+   README.md
+   .github/workflows/monitor.yml
+   ```
 
-# 3. secrets
-gh secret set TG_BOT_TOKEN --body '<TOKEN_BOTFATHER>'
-gh secret set TG_CHAT_ID  --body '7755975670'
+4. Il push fa partire il workflow (trigger `push` su `main`). Su Telegram
+   arriva `✅ blink-monitor ATTIVO`.
 
-# 4. primo lancio + verifica
-gh workflow run "blink-182 Milano monitor"
-sleep 5
-gh run watch "$(gh run list --workflow=monitor.yml --limit 1 --json databaseId --jq '.[0].databaseId')"
-```
+## Se il run è rosso
 
-Al termine il run deve essere verde e su Telegram arriva
-`✅ blink-monitor ATTIVO`.
+Lo step "Controlla che i secrets ci siano" dice esattamente quale manca.
+Aggiungilo e rilancia da *Actions* → *blink-182 Milano monitor* →
+*Run workflow*.
 
-## Se il primo run non manda nulla
+## Se lo script non manda nulla
 
-Lo script notifica solo al **primo** run (quando `state_milano.json` non
-esiste). Se il file è già stato committato, cancellalo dal repo e rilancia:
-
-```bash
-git rm state_milano.json && git commit -m "reset state" && git push
-gh workflow run "blink-182 Milano monitor"
-```
+Notifica solo al **primo** run, cioè quando `state_milano.json` non esiste
+ancora nel repo. Per riavere la conferma: cancella quel file dal repo
+(*Actions* non serve, basta il cestino nella UI web) e rilancia.
