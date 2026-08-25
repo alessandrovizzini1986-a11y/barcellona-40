@@ -48,6 +48,30 @@ Consiglio: attiva anche l'"Avvisami" su ticketone.it come seconda rete.
   questo workflow committa il file di stato quando cambia, ma se ricevi
   una mail GitHub "workflow disabled", riattivalo con un click.
 
+## Scrivere al bot
+
+Il bot risponde a due comandi:
+
+| Comando | Cosa fa |
+|---|---|
+| `/stato` | situazione attuale del concerto, letta live dal sito ufficiale |
+| `/aiuto` | elenco dei comandi |
+
+**La risposta non e' immediata: arriva entro circa un'ora.** Non c'e' un server
+acceso — il bot si sveglia a ogni giro del workflow (cron orario), legge i
+messaggi con `getUpdates` e risponde. E' il prezzo del costo zero.
+
+Dettagli di funzionamento:
+- l'offset degli update sta in `state_bot.json`, cosi' non risponde due volte
+  alla stessa cosa;
+- i messaggi piu' vecchi di 3 ore vengono ignorati (niente risposte a comandi
+  ormai scaduti dopo un guasto lungo);
+- i messaggi da chat diverse da `TG_CHAT_ID` vengono scartati: il bot e'
+  pubblico su Telegram, chiunque puo' trovarlo, ma risponde solo a te.
+
+Non serve comunque chiedere niente: quando le vendite si aprono, e' il bot che
+scrive per primo.
+
 ## Come testare che l'avviso funzioni davvero
 
 Il primo run manda solo la conferma di attivazione. Per verificare la parte che

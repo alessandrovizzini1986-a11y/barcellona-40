@@ -2,18 +2,25 @@ name: blink-182 Milano monitor
 
 on:
   schedule:
-    # 23:00 UTC = mezzanotte italiana in ora solare (01:00 in estate).
-    - cron: "0 23 * * *"
+    # Ogni ora: serve a far rispondere il bot ai comandi entro ~1h. Il
+    # controllo del concerto in realta' basterebbe una volta al giorno.
+    # ~720 run/mese, dentro i 2.000 minuti gratuiti dei repo privati.
+    - cron: "0 * * * *"
   workflow_dispatch: {}   # lancio manuale dalla tab Actions
   push:
     branches: [main]
-    # Nessun paths-ignore: il commit di stato che fa il bot usa GITHUB_TOKEN, e
+    # Nessun paths-ignore: i commit di stato li fa il bot con GITHUB_TOKEN, e
     # GitHub per progetto non fa ripartire i workflow sui push fatti con quel
     # token (niente ricorsione). Cosi' basta modificare state_milano.json dalla
     # UI web per far ripartire il monitor e testare l'avviso di cambiamento.
 
 permissions:
-  contents: write   # per salvare state_milano.json (rileva i cambiamenti)
+  contents: write   # per salvare state_milano.json e state_bot.json
+
+# Due run insieme si darebbero fastidio su getUpdates e sul commit di stato.
+concurrency:
+  group: blink-monitor
+  cancel-in-progress: false
 
 jobs:
   check:
@@ -43,10 +50,20 @@ jobs:
           TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
         run: python3 monitor_blink182.py
 
+      - name: Rispondi ai comandi Telegram
+        env:
+          TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
+          TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
+        run: python3 rispondi_comandi.py
+
+      # always(): se la risposta ai comandi va in errore, lo stato del monitor
+      # deve comunque essere salvato, altrimenti al giro dopo rimanda lo stesso
+      # avviso. Il run resta rosso e l'errore si vede.
       - name: Commit state
+        if: always()
         run: |
           git config user.name "blink-monitor"
           git config user.email "bot@users.noreply.github.com"
-          git add state_milano.json || true
+          git add state_milano.json state_bot.json || true
           git diff --cached --quiet || git commit -m "update state"
           git push || true
