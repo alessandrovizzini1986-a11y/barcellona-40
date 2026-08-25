@@ -1,0 +1,30 @@
+name: blink-182 Milano monitor
+
+on:
+  schedule:
+    # 23:00 UTC = mezzanotte italiana in ora solare (01:00 in estate).
+    - cron: "0 23 * * *"
+  workflow_dispatch: {}   # lancio manuale dalla tab Actions
+
+permissions:
+  contents: write   # per salvare state_milano.json (rileva i cambiamenti)
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run monitor
+        env:
+          TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
+          TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
+        run: python3 monitor_blink182.py
+
+      - name: Commit state
+        run: |
+          git config user.name "blink-monitor"
+          git config user.email "bot@users.noreply.github.com"
+          git add state_milano.json || true
+          git diff --cached --quiet || git commit -m "update state"
+          git push || true
