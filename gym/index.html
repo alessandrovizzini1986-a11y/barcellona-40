@@ -292,6 +292,49 @@ svg.chart{width:100%;height:auto;display:block}
 .chart .ar{fill:url(#ag);stroke:none}
 .chart .dot{fill:var(--bg);stroke:var(--acc);stroke-width:2.4}
 
+/* ---------------- PROSSIMO ALLENAMENTO ---------------- */
+.nxt{position:relative;overflow:hidden;padding:18px;margin:16px 0 14px;border-radius:22px;
+  border:1px solid var(--line2);box-shadow:var(--e2);
+  background:radial-gradient(120% 100% at 0% 0%,rgba(51,214,255,.13),transparent 58%),linear-gradient(180deg,var(--s3),var(--s1))}
+.nxt .r{display:flex;align-items:flex-start;gap:14px}
+.nxt .badge{flex:none;width:56px;height:56px;border-radius:17px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;background:linear-gradient(160deg,var(--acc),var(--acc2));color:var(--acc-ink)}
+.nxt .badge b{font-size:22px;font-weight:900;line-height:1}
+.nxt .badge span{font-size:7.5px;font-weight:900;letter-spacing:.14em;margin-top:2px}
+.nxt h3{font-size:21px;font-weight:900;letter-spacing:-.028em;line-height:1.1}
+.nxt .meta{font-size:11.5px;color:var(--mut);margin-top:4px}
+.nxt .meta b{color:var(--c2);font-weight:800}
+.nxt ul{list-style:none;margin-top:14px;border-top:1px solid var(--line);padding-top:4px}
+.nxt li{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);font-size:13.5px}
+.nxt li:last-child{border-bottom:none}
+.nxt li .dot{flex:none;width:8px;height:8px;border-radius:50%;background:var(--exc,var(--faint))}
+.nxt li .nm{flex:1;min-width:0;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nxt li .kg{font-weight:900;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.nxt li .up{font-size:9px;font-weight:900;letter-spacing:.1em;padding:3px 7px;border-radius:6px;
+  background:rgba(214,255,62,.16);color:var(--acc)}
+.nxt li .same{font-size:9px;font-weight:800;letter-spacing:.08em;color:var(--faint)}
+.nxt .go{margin-top:14px;width:100%}
+.suggchip{display:inline-block;margin-top:5px;font-size:9.5px;font-weight:900;letter-spacing:.1em;
+  padding:3px 8px;border-radius:6px;background:rgba(214,255,62,.14);color:var(--acc)}
+
+/* ---------------- GRUPPI MUSCOLARI ---------------- */
+.gbars{margin-top:6px}
+.gbar{margin:11px 0}
+.gbar .t{display:flex;justify-content:space-between;align-items:baseline;font-size:11.5px;margin-bottom:5px}
+.gbar .t b{font-weight:800;letter-spacing:.02em}
+.gbar .t span{color:var(--faint);font-weight:700;font-variant-numeric:tabular-nums;font-size:10.5px}
+.gbar .track{height:9px;border-radius:99px;background:rgba(255,255,255,.06);overflow:hidden}
+.gbar .track i{display:block;height:100%;border-radius:99px;background:var(--gc,var(--acc));
+  transition:width .8s var(--ease);box-shadow:0 0 12px -2px var(--gc,var(--acc))}
+.radarwrap{display:flex;justify-content:center;padding:4px 0 2px}
+svg.radar{width:100%;max-width:360px;height:auto}
+.radar .web{fill:none;stroke:rgba(255,255,255,.07);stroke-width:1}
+.radar .spoke{stroke:rgba(255,255,255,.07);stroke-width:1}
+.radar .area{fill:rgba(214,255,62,.16);stroke:var(--acc);stroke-width:2;stroke-linejoin:round}
+.radar .pt{fill:var(--acc)}
+.radar .lbl{fill:var(--mut);font-size:9.5px;font-weight:800;font-family:system-ui;letter-spacing:.06em}
+.radar .val{fill:var(--faint);font-size:8px;font-family:system-ui;font-weight:700}
+
 /* ---------------- REPORT ---------------- */
 #view-report .rex{page-break-inside:avoid}
 #view-report table{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:10px}
@@ -383,6 +426,7 @@ nav.tabs button.on::before{content:'';position:absolute;top:0;left:24%;right:24%
 
 <!-- ================== ALLENAMENTO ================== -->
 <main class="view on" id="view-workout">
+  <div id="prossimo"></div>
   <div class="hero" id="hero"></div>
   <div class="chips" id="dayChips"></div>
   <div id="workoutList"></div>
@@ -401,6 +445,8 @@ nav.tabs button.on::before{content:'';position:absolute;top:0;left:24%;right:24%
 <!-- ================== STORICO ================== -->
 <main class="view" id="view-history">
   <div id="histTop"></div>
+  <h2 class="sec">Gruppi muscolari</h2>
+  <div id="gruppiBox"></div>
   <h2 class="sec">Progressione</h2>
   <div class="card">
     <select id="chartEx" aria-label="Esercizio"></select>
@@ -528,6 +574,38 @@ function carica(){
 let dati=carica();
 function salva(){try{localStorage.setItem(K_DATI,JSON.stringify(dati));}catch(e){toast('Spazio esaurito: esporta un backup','warn');}}
 salva();
+
+/* ---- GRUPPI MUSCOLARI: dedotti dal nome/note, poi correggibili
+   nella Scheda (campo 'gruppo'). Servono per volume ed equilibrio. ---- */
+const GRUPPI={
+  gambe:  {n:'Gambe',   c:'var(--c1)', re:/leg|squat|affond|press.*gamb|quadric|femoral|glute|polpacc|calf|stacco|hip/i},
+  dorso:  {n:'Dorso',   c:'var(--c2)', re:/lat |lat$|latissimus|row|rematore|pulley|dorsal|trazion|pull.?up|pull.?down|romboid/i},
+  petto:  {n:'Petto',   c:'var(--c3)', re:/chest|panca|pettoral|croci|fly|pect|dip/i},
+  spalle: {n:'Spalle',  c:'var(--c4)', re:/shoulder|spall|deltoid|alzate|lento|military|tirate/i},
+  braccia:{n:'Braccia', c:'var(--c5)', re:/curl|bicip|tricip|french|push.?down|estension|braccia/i},
+  core:   {n:'Core',    c:'var(--c6)', re:/crunch|addom|plank|core|obliqu|abs/i}
+};
+function gruppoDi(ex){
+  if(!ex)return 'core';
+  if(ex.gruppo&&GRUPPI[ex.gruppo])return ex.gruppo;
+  const t=(ex.nome||'')+' '+(ex.note||'');
+  for(const k of ['core','gambe','dorso','petto','spalle','braccia'])if(GRUPPI[k].re.test(t))return k;
+  return 'core';
+}
+/* volume per gruppo nel periodo (kg sollevati = carico x ripetizioni) */
+function volumeGruppi(giorniIndietro){
+  const lim=giorniIndietro?Date.now()-giorniIndietro*864e5:0;
+  const out={};for(const k of Object.keys(GRUPPI))out[k]={vol:0,serie:0};
+  for(const s of dati.sessioni){
+    if(!s.chiusa)continue;
+    if(lim&&new Date(s.data+'T12:00').getTime()<lim)continue;
+    for(const [id,arr] of Object.entries(s.esercizi)){
+      const g=gruppoDi(exById(id)||{nome:id});
+      for(const x of arr)if(x.fatta){out[g].serie++;out[g].vol+=(x.kg||0)*(x.reps||0);}
+    }
+  }
+  return out;
+}
 
 /* ---- COLORE: ogni esercizio ha la sua tinta, stabile nel tempo ---- */
 const PALETTE=['var(--c1)','var(--c2)','var(--c3)','var(--c4)','var(--c5)','var(--c6)','var(--c7)','var(--c8)'];
@@ -690,11 +768,18 @@ function renderPlan(){
       '<div><label>Rip min</label><input data-f="repMin" type="number" min="1" max="60" value="'+e.repMin+'"></div>'+
       '<div><label>Rip max</label><input data-f="repMax" type="number" min="1" max="60" value="'+e.repMax+'"></div>'+
       '<div><label>Rec (s)</label><input data-f="rec" type="number" min="0" max="600" step="15" value="'+e.rec+'"></div>'+
+      '<div class="full"><label>Gruppo muscolare</label><select data-f="gruppo">'+
+        Object.keys(GRUPPI).map(k=>'<option value="'+k+'"'+(gruppoDi(e)===k?' selected':'')+'>'+GRUPPI[k].n+'</option>').join('')+
+      '</select></div>'+
       '<div class="full"><label>Note</label><input data-f="note" value="'+esc(e.note||'')+'"></div>'+
       '<div class="full"><label>Come si fa</label><textarea data-f="desc">'+esc(e.desc||'')+'</textarea></div>'+
       '</div></div>').join('')+
     '<div class="addrow"><button class="btn sm" data-a="addex">＋ Esercizio</button></div></div>').join('');
 }
+$('#view-plan').addEventListener('change',e=>{if(e.target.dataset.f==='gruppo'){
+  const gEl=e.target.closest('.gday'),g=dati.scheda.giorni[+gEl.dataset.g];
+  const ex=g.esercizi[+e.target.closest('.exed').dataset.e];
+  if(ex){ex.gruppo=e.target.value;salva();renderWorkout();}}});
 $('#view-plan').addEventListener('input',e=>{
   const gEl=e.target.closest('.gday');if(!gEl)return;
   const g=dati.scheda.giorni[+gEl.dataset.g], eEl=e.target.closest('.exed'), f=e.target.dataset.f;
@@ -703,6 +788,7 @@ $('#view-plan').addEventListener('input',e=>{
   else{
     const ex=g.esercizi[+eEl.dataset.e];if(!ex)return;
     if(f==='exnome')ex.nome=e.target.value;
+    else if(f==='gruppo')ex.gruppo=e.target.value;
     else if(f==='note')ex.note=e.target.value;
     else if(f==='desc')ex.desc=e.target.value;
     else ex[f]=Math.max(0,parseInt(e.target.value,10)||0);
@@ -727,6 +813,62 @@ $('#btnAddDay').onclick=()=>{
   dati.scheda.giorni.push({id:l,nome:'Giorno '+l,esercizi:[]});
   salva();renderPlan();renderWorkout();toast('Giorno '+l+' aggiunto','good');
 };
+
+/* ---- SUGGERIMENTO CARICO: doppia progressione. Se l'ultima volta hai
+   chiuso tutte le serie al massimo delle ripetizioni, sali di 2,5 kg. ---- */
+function suggerimento(ex){
+  let ultima=null;
+  for(let i=dati.sessioni.length-1;i>=0;i--){
+    const s=dati.sessioni[i];if(!s.chiusa)continue;
+    const arr=(s.esercizi[ex.id]||[]).filter(x=>x.fatta&&x.kg!=null);
+    if(arr.length){ultima={data:s.data,arr};break;}
+  }
+  if(!ultima)return {kg:null,su:false,txt:'primo tentativo'};
+  const kg=Math.max(...ultima.arr.map(x=>x.kg));
+  const pieno=ultima.arr.length>=ex.serie&&ultima.arr.every(x=>(x.reps||0)>=ex.repMax);
+  return pieno?{kg:+(kg+2.5).toFixed(1),su:true,txt:'salita: hai chiuso tutte le serie a '+ex.repMax}
+              :{kg,su:false,txt:'stesso carico, punta a '+ex.repMax+' rip'};
+}
+/* ---- Vista PROSSIMO ALLENAMENTO: cosa ti aspetta e con che carichi ---- */
+function renderProssimo(){
+  const box=$('#prossimo');if(!box)return;
+  const g=giornoCorrente(), s=sessioneAperta(false);
+  const iniziata=s&&s.inizio;
+  if(!g||!g.esercizi.length||iniziata){box.innerHTML='';return;}
+  const ultimaVolta=[...dati.sessioni].reverse().find(x=>x.chiusa&&x.giorno===g.id);
+  let quando='mai fatto prima';
+  if(ultimaVolta){
+    const gg=Math.round((new Date(oggiISO()+'T12:00')-new Date(ultimaVolta.data+'T12:00'))/864e5);
+    quando=gg===0?'già fatto oggi':(gg===1?'ieri':gg+' giorni fa');
+  }
+  const nSerie=g.esercizi.reduce((n,e)=>n+e.serie,0);
+  const stima=Math.round(g.esercizi.reduce((m,e)=>m+e.serie*((e.rec||60)+40),0)/60);
+  const righe=g.esercizi.map(e=>{
+    const su=suggerimento(e);
+    return '<li style="--exc:'+colorEx(e.id)+'"><span class="dot"></span>'+
+      '<span class="nm">'+esc(e.nome)+'</span>'+
+      '<span class="kg">'+(su.kg!=null?su.kg+' kg':'—')+'</span>'+
+      (su.su?'<span class="up">+2,5</span>':'<span class="same">'+e.serie+'×'+e.repMin+(e.repMax>e.repMin?'-'+e.repMax:'')+'</span>')+'</li>';
+  }).join('');
+  box.innerHTML='<div class="nxt"><div class="r">'+
+    '<div class="badge"><b>'+esc(g.id)+'</b><span>GIORNO</span></div>'+
+    '<div class="grow"><div class="eyebrow">Prossimo allenamento</div><h3>'+esc(g.nome)+'</h3>'+
+    '<div class="meta">'+g.esercizi.length+' esercizi · '+nSerie+' serie · <b>~'+stima+' min</b><br>ultima volta: '+quando+'</div></div></div>'+
+    '<ul>'+righe+'</ul>'+
+    '<button class="btn pri go" id="btnStart">▶ Inizia l\'allenamento</button></div>';
+}
+/* 'Inizia' fa partire davvero la sessione: da qui contano ora e durata.
+   Se non lo premi, la sessione parte comunque alla prima serie spuntata. */
+$('#prossimo').addEventListener('click',e=>{
+  if(!e.target.closest('#btnStart'))return;
+  const s=sessioneAperta(true);
+  s.inizio=Date.now();
+  if(dati.pref.geo===true&&!s.luogoNome)rilevaLuogo(false);
+  salva();buzz(HAP.serie);renderWorkout();aggiornaContesto();
+  toast('Si parte · '+fmtOra(s.inizio)+' ⏱️','good');
+  const first=document.querySelector('.ex');
+  if(first)first.scrollIntoView({behavior:'smooth',block:'start'});
+});
 
 /* ========================= ALLENAMENTO ========================= */
 let dayId=null;
@@ -798,7 +940,7 @@ function renderDayChips(){
 $('#dayChips').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;buzz(HAP.tap);dayId=b.dataset.d;renderWorkout();});
 
 function renderWorkout(){
-  renderDayChips();renderHero();
+  renderDayChips();renderHero();renderProssimo();
   const g=giornoCorrente(), box=$('#workoutList');
   if(!g||!g.esercizi.length){box.innerHTML='<div class="empty"><span class="big">🗒️</span>Nessun esercizio in questo giorno.<br>Aggiungili dalla tab <b>Scheda</b>.</div>';return;}
   const s=sessioneAperta(true);salva();
@@ -809,12 +951,13 @@ function renderWorkout(){
     const arr=s.esercizi[e.id], fatte=arr.filter(x=>x.fatta).length, done=fatte>=e.serie;
     const nextIdx=arr.findIndex(x=>!x.fatta);
     const hasLast=!!ultimaSerie(e.id,0);
-    const pr=recordCarico(e.id,s.id);
+    const pr=recordCarico(e.id,s.id), sg=suggerimento(e);
     const isPR=x=>pr!=null&&x.fatta&&x.kg!=null&&x.kg>pr;
     const hasPR=arr.some(isPR);
     return '<div class="card ex'+(done?' exdone':'')+(e.id===activeId?' active':'')+'" data-ex="'+esc(e.id)+'" style="--exc:'+colorEx(e.id)+'">'+
       '<div class="head"><div class="miniring">'+ringSVG(fatte/e.serie,38)+'<i>'+fatte+'/'+e.serie+'</i></div>'+
-      '<div class="grow"><h3>'+esc(e.nome)+(hasPR?'<span class="prbadge">RECORD</span>':'')+'</h3><div class="tgt tnum">'+e.repMin+(e.repMax>e.repMin?'–'+e.repMax:'')+' rip · rec '+e.rec+'s'+(e.note?' · '+esc(e.note):'')+'</div></div>'+
+      '<div class="grow"><h3>'+esc(e.nome)+(hasPR?'<span class="prbadge">RECORD</span>':'')+'</h3><div class="tgt tnum">'+e.repMin+(e.repMax>e.repMin?'–'+e.repMax:'')+' rip · rec '+e.rec+'s · '+GRUPPI[gruppoDi(e)].n+'</div>'+
+      (sg&&sg.su&&fatte===0?'<span class="suggchip">CONSIGLIATO '+sg.kg+' KG</span>':'')+'</div>'+
       (e.desc?'<button class="howbtn" data-a="how" aria-label="Come si fa">📖</button>':'')+'</div>'+
       '<div class="sethead"><span>#</span><span>Carico kg</span><span>Ripetizioni</span><span>Fatta</span></div>'+
       arr.map((serie,i)=>{
@@ -1024,6 +1167,7 @@ function renderHistory(){
       '<div class="row noprint" style="margin-top:10px"><button class="btn sm danger" data-del="'+esc(s.id)+'">Elimina sessione</button></div>'+
       '</details></div>';
   }).join(''):'<div class="empty"><span class="big">📈</span>Ancora nessuna sessione chiusa.<br>La prima è la più dura 💪</div>';
+  renderGruppi();
   const sel=$('#chartEx'), es=tuttiEs(), cur=sel.value;
   sel.innerHTML=es.map(e=>'<option value="'+esc(e.id)+'">'+esc(e.nome)+'</option>').join('');
   if(es.some(e=>e.id===cur))sel.value=cur;
@@ -1035,6 +1179,47 @@ $('#sessList').addEventListener('click',e=>{
   dati.sessioni=dati.sessioni.filter(s=>s.id!==id);salva();renderAll();toast('Sessione eliminata');
 });
 $('#chartEx').onchange=()=>disegnaGrafico($('#chartEx').value,$('#chartBox'),0,'#chartHint');
+
+/* ---- grafici per gruppo: volume assoluto e radar dell'equilibrio ---- */
+function renderGruppi(){
+  const box=$('#gruppiBox');if(!box)return;
+  const g28=volumeGruppi(28);
+  const chiavi=Object.keys(GRUPPI);
+  const tot=chiavi.reduce((v,k)=>v+g28[k].vol,0);
+  if(!tot){box.innerHTML='<div class="card"><div class="empty" style="padding:26px"><span class="big">🫀</span>Ancora nessun volume nelle ultime 4 settimane.</div></div>';return;}
+  const max=Math.max(...chiavi.map(k=>g28[k].vol));
+  const barre=chiavi.filter(k=>g28[k].vol>0).sort((a,b)=>g28[b].vol-g28[a].vol).map(k=>{
+    const v=g28[k].vol,pc=Math.round(v/tot*100);
+    return '<div class="gbar" style="--gc:'+GRUPPI[k].c+'">'+
+      '<div class="t"><b>'+GRUPPI[k].n+'</b><span>'+Math.round(v).toLocaleString('it-IT')+' kg · '+g28[k].serie+' serie · '+pc+'%</span></div>'+
+      '<div class="track"><i style="width:'+Math.max(3,Math.round(v/max*100))+'%"></i></div></div>';
+  }).join('');
+  // radar: 6 assi, area = quanto è bilanciato l'allenamento
+  const R=74,CX=150,CY=112,N=chiavi.length;   // viewBox largo: le etichette non si tagliano
+  const ang=i=>(-Math.PI/2)+i*2*Math.PI/N;
+  const pt=(i,f)=>[CX+Math.cos(ang(i))*R*f,CY+Math.sin(ang(i))*R*f];
+  let web='';
+  for(const f of [.25,.5,.75,1]){
+    web+='<polygon class="web" points="'+chiavi.map((_,i)=>pt(i,f).map(n=>n.toFixed(1)).join(',')).join(' ')+'"/>';
+  }
+  const spokes=chiavi.map((_,i)=>{const p=pt(i,1);
+    return '<line class="spoke" x1="'+CX+'" y1="'+CY+'" x2="'+p[0].toFixed(1)+'" y2="'+p[1].toFixed(1)+'"/>';}).join('');
+  const pts=chiavi.map((k,i)=>pt(i,Math.max(.04,g28[k].vol/max)));
+  const area='<polygon class="area" points="'+pts.map(p=>p.map(n=>n.toFixed(1)).join(',')).join(' ')+'"/>';
+  const dots=pts.map(p=>'<circle class="pt" cx="'+p[0].toFixed(1)+'" cy="'+p[1].toFixed(1)+'" r="3"/>').join('');
+  const labs=chiavi.map((k,i)=>{const p=pt(i,1.26);
+    const anchor=Math.abs(p[0]-CX)<6?'middle':(p[0]>CX?'start':'end');
+    return '<text class="lbl" x="'+p[0].toFixed(1)+'" y="'+(p[1]+3).toFixed(1)+'" text-anchor="'+anchor+'">'+GRUPPI[k].n.toUpperCase()+'</text>';}).join('');
+  // gruppo più trascurato: suggerimento onesto
+  const attivi=chiavi.filter(k=>tuttiEs().some(e=>gruppoDi(e)===k));
+  const debole=attivi.sort((a,b)=>g28[a].vol-g28[b].vol)[0];
+  box.innerHTML='<div class="card"><div class="eyebrow">Volume · ultime 4 settimane</div><div class="gbars">'+barre+'</div></div>'+
+    '<div class="card"><div class="eyebrow">Equilibrio</div><div class="radarwrap">'+
+      '<svg class="radar" viewBox="0 0 300 236" role="img" aria-label="Equilibrio tra gruppi muscolari">'+
+      web+spokes+area+dots+labs+'</svg></div>'+
+      (debole&&g28[debole].vol<max*.5?'<p class="muted" style="margin-top:4px">Il gruppo meno allenato è <b style="color:'+GRUPPI[debole].c+'">'+GRUPPI[debole].n+'</b>: se la scheda lo prevede, dagli una serie in più.</p>':'')+
+    '</div>';
+}
 
 /* ========================= GRAFICO ========================= */
 function seriePerEsercizio(exId,giorniIndietro){
@@ -1111,6 +1296,14 @@ function renderReport(){
   const gi=+val;
   $('#printPeriod').textContent='Periodo: '+(gi?'ultime '+(gi/7)+' settimane':'tutto lo storico')+
     ' · generato il '+fmtData(oggiISO())+' alle '+fmtOra(Date.now());
+  // sintesi per gruppo muscolare, utile al trainer
+  const vg=volumeGruppi(gi), tvg=Object.values(vg).reduce((v,x)=>v+x.vol,0);
+  const bloccoGruppi=tvg?'<div class="card rex"><h2 class="sec">Volume per gruppo muscolare</h2>'+
+    '<table><tr><th>Gruppo</th><th>Volume</th><th>Serie</th><th>Quota</th></tr>'+
+    Object.keys(GRUPPI).filter(k=>vg[k].vol>0).sort((a,b)=>vg[b].vol-vg[a].vol).map(k=>
+      '<tr><td>'+GRUPPI[k].n+'</td><td class="tnum">'+Math.round(vg[k].vol).toLocaleString('it-IT')+' kg</td>'+
+      '<td class="tnum">'+vg[k].serie+'</td><td class="tnum">'+Math.round(vg[k].vol/tvg*100)+'%</td></tr>').join('')+
+    '</table></div>':'';
   const blocchi=tuttiEs().map(e=>{
     const pts=seriePerEsercizio(e.id,gi);if(!pts.length)return '';
     const best=Math.max(...pts.map(p=>p.best)), vol=Math.round(pts.reduce((v,p)=>v+p.vol,0));
@@ -1124,7 +1317,7 @@ function renderReport(){
         p.serie.map(x=>x.kg+'×'+(x.reps??'—')).join(' · ')+'</td><td class="tnum">'+p.best+'</td>'+
         '<td class="tnum">'+Math.round(p.vol)+'</td></tr>').join('')+'</table></div>';
   }).join('');
-  $('#reportBody').innerHTML=blocchi||'<div class="empty"><span class="big">🧾</span>Nessuna sessione nel periodo scelto.</div>';
+  $('#reportBody').innerHTML=(blocchi?bloccoGruppi+blocchi:'')||'<div class="empty"><span class="big">🧾</span>Nessuna sessione nel periodo scelto.</div>';
   for(const e of tuttiEs()){const el=document.getElementById('rep-ch-'+e.id);if(el)disegnaGrafico(e.id,el,gi,null);}
 }
 /* Report di UNA giornata: riepilogo, dettaglio serie per serie e
