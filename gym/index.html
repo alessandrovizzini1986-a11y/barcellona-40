@@ -324,12 +324,7 @@ svg.chart{width:100%;height:auto;display:block}
   </div>
   <div class="card noprint">
     <div class="row">
-      <select id="repPeriod" class="grow" aria-label="Periodo">
-        <option value="28">Ultime 4 settimane</option>
-        <option value="56" selected>Ultime 8 settimane</option>
-        <option value="84">Ultime 12 settimane</option>
-        <option value="0">Tutto lo storico</option>
-      </select>
+      <select id="repPeriod" class="grow" aria-label="Periodo o singola giornata"></select>
       <button class="btn pri" id="btnPrint">🖨️ Salva PDF</button>
     </div>
     <p class="muted" style="margin-top:9px">Su Android: «Salva PDF» → destinazione «Salva come PDF», poi condividilo su WhatsApp col trainer.</p>
@@ -836,8 +831,39 @@ function disegnaGrafico(exId,box,giorniIndietro,hintSel){
 }
 
 /* ========================= REPORT ========================= */
+/* Il selettore offre i periodi aggregati e, sotto, SOLO le giornate in cui
+   ti sei davvero allenato (niente giorni vuoti): value 'd:AAAA-MM-GG'. */
+function giorniAllenati(){
+  const m={};
+  for(const s of dati.sessioni){
+    if(!s.chiusa)continue;
+    const st=statSessione(s);
+    if(!st.serie)continue;
+    (m[s.data]=m[s.data]||[]).push(s);
+  }
+  return Object.keys(m).sort().reverse().map(d=>({data:d,sessioni:m[d]}));
+}
+function popolaPeriodi(){
+  const sel=$('#repPeriod'), cur=sel.value;
+  const gg=giorniAllenati();
+  sel.innerHTML='<optgroup label="Periodo">'+
+      '<option value="28">Ultime 4 settimane</option>'+
+      '<option value="56">Ultime 8 settimane</option>'+
+      '<option value="84">Ultime 12 settimane</option>'+
+      '<option value="0">Tutto lo storico</option></optgroup>'+
+    (gg.length?'<optgroup label="Singolo allenamento">'+gg.map(g=>{
+      const st=g.sessioni.reduce((a,s)=>{const x=statSessione(s);return {serie:a.serie+x.serie,vol:a.vol+x.vol};},{serie:0,vol:0});
+      const gio=g.sessioni.map(s=>s.giorno).join('+');
+      const dl=new Date(g.data+'T12:00').toLocaleDateString('it-IT',{weekday:'short',day:'numeric',month:'short'});
+      return '<option value="d:'+g.data+'">'+dl+' · '+gio+' · '+st.serie+' serie</option>';
+    }).join('')+'</optgroup>':'');
+  sel.value=[...sel.options].some(o=>o.value===cur)?cur:'56';
+}
 function renderReport(){
-  const gi=+$('#repPeriod').value;
+  popolaPeriodi();
+  const val=$('#repPeriod').value;
+  if(val.startsWith('d:'))return renderReportGiorno(val.slice(2));
+  const gi=+val;
   $('#printPeriod').textContent='Periodo: '+(gi?'ultime '+(gi/7)+' settimane':'tutto lo storico')+
     ' · generato il '+fmtData(oggiISO())+' alle '+fmtOra(Date.now());
   const blocchi=tuttiEs().map(e=>{
@@ -855,6 +881,57 @@ function renderReport(){
   }).join('');
   $('#reportBody').innerHTML=blocchi||'<div class="empty"><span class="big">🧾</span>Nessuna sessione nel periodo scelto.</div>';
   for(const e of tuttiEs()){const el=document.getElementById('rep-ch-'+e.id);if(el)disegnaGrafico(e.id,el,gi,null);}
+}
+/* Report di UNA giornata: riepilogo, dettaglio serie per serie e
+   confronto con la volta precedente dello stesso esercizio. */
+function renderReportGiorno(dataISO){
+  const sess=dati.sessioni.filter(s=>s.chiusa&&s.data===dataISO);
+  const dl=new Date(dataISO+'T12:00').toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  $('#printPeriod').textContent='Allenamento di '+dl+' · generato il '+fmtData(oggiISO())+' alle '+fmtOra(Date.now());
+  if(!sess.length){$('#reportBody').innerHTML='<div class="empty"><span class="big">🧾</span>Nessun allenamento in questa data.</div>';return;}
+
+  const tot=sess.reduce((a,s)=>{const x=statSessione(s);return {serie:a.serie+x.serie,vol:a.vol+x.vol};},{serie:0,vol:0});
+  const durata=sess.reduce((m,s)=>m+((s.inizio&&s.fine)?Math.round((s.fine-s.inizio)/60000):0),0);
+  const nEs=new Set(sess.flatMap(s=>Object.entries(s.esercizi).filter(([,a])=>a.some(x=>x.fatta)).map(([id])=>id))).size;
+  const meta=sess.map(s=>{
+    const g=dati.scheda.giorni.find(x=>x.id===s.giorno);
+    return 'Giorno '+esc(s.giorno)+(g?' · '+esc(g.nome):'')+
+      (s.inizio?' · '+fmtOra(s.inizio)+(s.fine?'–'+fmtOra(s.fine):''):'')+
+      (s.luogoNome?' · 📍 '+esc(s.luogoNome):'');
+  }).join('<br>');
+
+  let html='<div class="card"><h2 class="sec">'+dl.charAt(0).toUpperCase()+dl.slice(1)+'</h2>'+
+    '<div class="kpi"><span><b class="tnum">'+tot.serie+'</b>serie</span>'+
+    '<span><b class="tnum">'+Math.round(tot.vol).toLocaleString('it-IT')+' kg</b>volume</span>'+
+    (durata?'<span><b class="tnum">'+durata+'′</b>durata</span>':'')+
+    '<span><b class="tnum">'+nEs+'</b>esercizi</span></div>'+
+    '<p class="muted" style="margin-top:10px">'+meta+'</p></div>';
+
+  for(const s of sess){
+    for(const [id,arr] of Object.entries(s.esercizi)){
+      const fatte=arr.filter(x=>x.fatta);if(!fatte.length)continue;
+      const ex=exById(id), nome=ex?ex.nome:id;
+      const best=Math.max(...fatte.map(x=>x.kg??0));
+      const vol=fatte.reduce((v,x)=>v+((x.kg||0)*(x.reps||0)),0);
+      // confronto con l'ultima volta PRIMA di questa data
+      const prec=dati.sessioni.filter(p=>p.chiusa&&p.data<dataISO&&(p.esercizi[id]||[]).some(x=>x.fatta&&x.kg!=null)).pop();
+      let conf='';
+      if(prec){
+        const pf=prec.esercizi[id].filter(x=>x.fatta&&x.kg!=null);
+        const pb=Math.max(...pf.map(x=>x.kg)), d=+(best-pb).toFixed(1);
+        conf='<span><b class="tnum">'+(d>0?'+':'')+d+' kg</b>vs '+fmtData(prec.data)+'</span>';
+      }
+      html+='<div class="card rex"><h2 class="sec">'+esc(nome)+'</h2>'+
+        '<div class="kpi"><span><b class="tnum">'+best+' kg</b>miglior carico</span>'+
+        '<span><b class="tnum">'+Math.round(vol).toLocaleString('it-IT')+' kg</b>volume</span>'+
+        '<span><b class="tnum">'+fatte.length+'</b>serie</span>'+conf+'</div>'+
+        '<table><tr><th>Serie</th><th>Carico</th><th>Rip</th><th>Volume</th></tr>'+
+        fatte.map((x,i)=>'<tr><td class="tnum">'+(i+1)+'</td><td class="tnum">'+(x.kg??'—')+' kg</td>'+
+          '<td class="tnum">'+(x.reps??'—')+'</td><td class="tnum">'+Math.round((x.kg||0)*(x.reps||0))+'</td></tr>').join('')+
+        '</table>'+(ex&&ex.note?'<p class="muted" style="margin-top:6px">'+esc(ex.note)+'</p>':'')+'</div>';
+    }
+  }
+  $('#reportBody').innerHTML=html;
 }
 $('#repPeriod').onchange=renderReport;
 $('#btnPrint').onclick=()=>{renderReport();setTimeout(()=>window.print(),80);};
