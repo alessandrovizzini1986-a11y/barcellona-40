@@ -265,7 +265,65 @@ svg.chart{width:100%;height:auto;display:block}
   #printhead .muted{color:#666}
 }
 #printhead{display:none}
-@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+/* ---------------- COLORE (una tinta per esercizio) ---------------- */
+:root{
+  --c1:#C6F24D; --c2:#4DD9F2; --c3:#F24DA7; --c4:#FF8A3D;
+  --c5:#A66DF2; --c6:#4ECB94; --c7:#F2C94D; --c8:#F2604D;
+}
+.ex{border-left:4px solid var(--exc,var(--line))}
+.ex .miniring .fg{stroke:var(--exc,var(--acc))}
+.ex h3{color:var(--ink)}
+.ex.active{border-color:var(--exc,var(--acc-dim));
+  box-shadow:0 0 0 1px color-mix(in srgb,var(--exc,var(--acc)) 35%,transparent),0 16px 38px -24px var(--exc,var(--acc));
+  background:linear-gradient(140deg,color-mix(in srgb,var(--exc,var(--acc)) 11%,transparent),rgba(20,22,25,.5) 55%),var(--srf)}
+.ex.active h3{color:var(--exc,var(--acc))}
+.serie.next .ck{border-color:var(--exc,var(--acc));color:var(--exc,var(--acc));
+  animation:nextpulse 2.4s ease-out infinite}
+.ex .howbtn{color:var(--exc,var(--mut));border-color:color-mix(in srgb,var(--exc,var(--line)) 40%,transparent)}
+.ex.exdone{border-left-color:var(--ok)}
+/* hero e chip: gradienti pieni, non grigi */
+.hero{background:
+  linear-gradient(135deg,rgba(198,242,77,.20),rgba(77,217,242,.13) 42%,rgba(242,77,167,.12) 78%,rgba(20,22,25,.25)),
+  linear-gradient(180deg,var(--srf2),var(--srf))}
+.hero .dayname{background:linear-gradient(92deg,var(--c1),var(--c2) 55%,var(--c3));
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.chips button:nth-child(4n+1){--cc:var(--c1)}.chips button:nth-child(4n+2){--cc:var(--c2)}
+.chips button:nth-child(4n+3){--cc:var(--c3)}.chips button:nth-child(4n+4){--cc:var(--c4)}
+.chips button.on{background:linear-gradient(150deg,var(--cc,var(--acc)),color-mix(in srgb,var(--cc,var(--acc)) 55%,#000));
+  color:#0A0C05;box-shadow:0 10px 26px -12px var(--cc,var(--acc))}
+nav.tabs button:nth-child(1).on{color:var(--c1)}nav.tabs button:nth-child(2).on{color:var(--c2)}
+nav.tabs button:nth-child(3).on{color:var(--c3)}nav.tabs button:nth-child(4).on{color:var(--c4)}
+nav.tabs button:nth-child(1).on::before{background:var(--c1)}nav.tabs button:nth-child(2).on::before{background:var(--c2)}
+nav.tabs button:nth-child(3).on::before{background:var(--c3)}nav.tabs button:nth-child(4).on::before{background:var(--c4)}
+h2.sec{background:linear-gradient(90deg,var(--c1),var(--c2));-webkit-background-clip:text;background-clip:text;color:transparent}
+#view-report .kpi b{color:var(--c1)}
+.sess .pill{border-color:color-mix(in srgb,var(--c2) 35%,transparent);color:var(--c2)}
+/* record e obiettivi */
+.toast.pr{border-color:var(--c4);background:linear-gradient(120deg,rgba(255,138,61,.22),var(--srf3));color:#FFE7D2}
+.toast.goal{border-color:var(--c3);background:linear-gradient(120deg,rgba(242,77,167,.22),var(--srf3));color:#FFE1F1}
+.serie.pr .fld{border-color:var(--c4)}
+.serie.pr .fld input{color:var(--c4)}
+.ex .prbadge{display:inline-block;margin-left:6px;font-size:9.5px;font-weight:900;letter-spacing:.1em;
+  padding:2px 7px;border-radius:99px;background:var(--c4);color:#2B1200;vertical-align:2px}
+/* celebrazione: coriandoli CSS, nessun suono */
+#party{position:fixed;inset:0;z-index:80;pointer-events:none;overflow:hidden}
+#party i{position:absolute;top:-14px;width:9px;height:14px;border-radius:2px;opacity:.95;
+  animation:fall var(--dur,1.9s) linear forwards}
+@keyframes fall{to{transform:translateY(104svh) rotate(var(--rot,540deg));opacity:.15}}
+.medal{position:fixed;left:50%;top:34%;transform:translate(-50%,-50%);z-index:81;pointer-events:none;
+  text-align:center;animation:medal 1.9s var(--ease) forwards}
+.medal{background:radial-gradient(50% 50% at 50% 45%,rgba(6,7,9,.92),rgba(6,7,9,.7) 60%,transparent 78%);
+  padding:34px 46px;border-radius:50%}
+.medal .ic{font-size:74px;filter:drop-shadow(0 12px 26px rgba(0,0,0,.6))}
+.medal .tx{margin-top:6px;font-size:17px;font-weight:900;letter-spacing:.02em;
+  background:linear-gradient(92deg,var(--c1),var(--c4));-webkit-background-clip:text;background-clip:text;color:transparent}
+@keyframes medal{0%{opacity:0;transform:translate(-50%,-50%) scale(.5)}
+  18%{opacity:1;transform:translate(-50%,-50%) scale(1.12)}
+  32%{transform:translate(-50%,-50%) scale(1)}
+  80%{opacity:1}100%{opacity:0;transform:translate(-50%,-62%) scale(.96)}}
+
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}
+  #party,.medal{display:none!important}}
 </style>
 </head>
 <body>
@@ -375,6 +433,18 @@ const uid=()=>Math.random().toString(36).slice(2,9);
 const oggiISO=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');};
 const fmtData=iso=>{const [y,m,g]=iso.split('-');return g+'/'+m+'/'+y.slice(2);};
 const fmtOra=ts=>ts?new Date(ts).toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'}):'';
+/* ---- FEEDBACK APTICO: solo vibrazione, mai suoni. Ogni evento ha la
+   sua "firma" così la riconosci col telefono in tasca o sulla panca. ---- */
+const HAP={
+  tap:[8], step:[6], serie:[22],
+  esercizio:[26,55,26],                 // esercizio completato
+  pr:[35,45,35,45,150],                 // record di carico
+  volume:[20,40,20,40,20,40,140],       // record di volume
+  obiettivo:[45,70,45,70,200],          // obiettivo raggiunto
+  sessione:[60,80,40,80,40,80,240],     // allenamento completato
+  recupero:[220,110,220],               // fine recupero
+  annulla:[10,40,10]
+};
 const buzz=p=>{try{navigator.vibrate&&navigator.vibrate(p);}catch(e){}};
 
 function schedaDefault(){return {giorni:[{id:'A',nome:'Full Body',esercizi:[
@@ -408,6 +478,46 @@ function carica(){
 let dati=carica();
 function salva(){try{localStorage.setItem(K_DATI,JSON.stringify(dati));}catch(e){toast('Spazio esaurito: esporta un backup','warn');}}
 salva();
+
+/* ---- COLORE: ogni esercizio ha la sua tinta, stabile nel tempo ---- */
+const PALETTE=['var(--c1)','var(--c2)','var(--c3)','var(--c4)','var(--c5)','var(--c6)','var(--c7)','var(--c8)'];
+function colorEx(id){let h=0;for(let i=0;i<id.length;i++)h=(h*31+id.charCodeAt(i))>>>0;return PALETTE[h%PALETTE.length];}
+
+/* ---- RECORD: il meglio di sempre PRIMA della sessione in corso ---- */
+function recordCarico(exId,escludiSessId){
+  let best=null;
+  for(const s of dati.sessioni){
+    if(!s.chiusa||s.id===escludiSessId)continue;
+    for(const x of (s.esercizi[exId]||[]))if(x.fatta&&x.kg!=null)best=Math.max(best??-1e9,x.kg);
+  }
+  return best;
+}
+function recordVolume(escludiSessId){
+  let best=0;
+  for(const s of dati.sessioni){
+    if(!s.chiusa||s.id===escludiSessId)continue;
+    best=Math.max(best,statSessione(s).vol);
+  }
+  return best;
+}
+/* ---- CELEBRAZIONE: coriandoli + medaglia, e la vibrazione giusta ---- */
+function festa(icona,testo,pattern,n){
+  buzz(pattern||HAP.obiettivo);
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  const host=document.createElement('div');host.id='party';
+  const cols=['#C6F24D','#4DD9F2','#F24DA7','#FF8A3D','#A66DF2','#4ECB94','#F2C94D'];
+  let h='';
+  for(let i=0;i<(n||34);i++){
+    h+='<i style="left:'+(Math.random()*100).toFixed(1)+'%;background:'+cols[i%cols.length]+
+       ';--dur:'+(1.4+Math.random()*1.3).toFixed(2)+'s;--rot:'+(360+Math.random()*720|0)+'deg;'+
+       'animation-delay:'+(Math.random()*.45).toFixed(2)+'s"></i>';
+  }
+  host.innerHTML=h;document.body.appendChild(host);
+  const med=document.createElement('div');med.className='medal';
+  med.innerHTML='<div class="ic">'+icona+'</div><div class="tx">'+esc(testo)+'</div>';
+  document.body.appendChild(med);
+  setTimeout(()=>{host.remove();med.remove();},2400);
+}
 
 const exById=id=>{for(const g of dati.scheda.giorni){const e=g.esercizi.find(x=>x.id===id);if(e)return e;}return null;};
 const tuttiEs=()=>{const seen={},out=[];for(const g of dati.scheda.giorni)for(const e of g.esercizi){if(!seen[e.id]){seen[e.id]=1;out.push(e);}}return out;};
@@ -499,7 +609,7 @@ function rilevaLuogo(interattivo){
     mostraLuogo();
   },{enableHighAccuracy:false,timeout:8000,maximumAge:120000});
 }
-$('#placeBtn').onclick=()=>{buzz(6);rilevaLuogo(true);};
+$('#placeBtn').onclick=()=>{buzz(HAP.tap);rilevaLuogo(true);};
 
 /* ========================= SCHEDA ========================= */
 function renderPlan(){
@@ -546,7 +656,7 @@ $('#view-plan').addEventListener('click',e=>{
     if(a==='up'&&ei>0)[g.esercizi[ei-1],g.esercizi[ei]]=[g.esercizi[ei],g.esercizi[ei-1]];
     if(a==='down'&&ei<g.esercizi.length-1)[g.esercizi[ei+1],g.esercizi[ei]]=[g.esercizi[ei],g.esercizi[ei+1]];
   }
-  buzz(6);salva();renderPlan();renderWorkout();
+  buzz(HAP.tap);salva();renderPlan();renderWorkout();
 });
 $('#btnAddDay').onclick=()=>{
   const l=String.fromCharCode(65+dati.scheda.giorni.length);
@@ -619,7 +729,7 @@ function renderDayChips(){
   $('#dayChips').innerHTML=dati.scheda.giorni.map(d=>'<button data-d="'+esc(d.id)+'" class="'+(d.id===dayId?'on ':'')+(d.id===sug?'sugg':'')+'">'+
     esc(d.id)+'<small>'+esc(d.nome)+'</small></button>').join('');
 }
-$('#dayChips').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;buzz(5);dayId=b.dataset.d;renderWorkout();});
+$('#dayChips').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;buzz(HAP.tap);dayId=b.dataset.d;renderWorkout();});
 
 function renderWorkout(){
   renderDayChips();renderHero();
@@ -633,15 +743,18 @@ function renderWorkout(){
     const arr=s.esercizi[e.id], fatte=arr.filter(x=>x.fatta).length, done=fatte>=e.serie;
     const nextIdx=arr.findIndex(x=>!x.fatta);
     const hasLast=!!ultimaSerie(e.id,0);
-    return '<div class="card ex'+(done?' exdone':'')+(e.id===activeId?' active':'')+'" data-ex="'+esc(e.id)+'">'+
+    const pr=recordCarico(e.id,s.id);
+    const isPR=x=>pr!=null&&x.fatta&&x.kg!=null&&x.kg>pr;
+    const hasPR=arr.some(isPR);
+    return '<div class="card ex'+(done?' exdone':'')+(e.id===activeId?' active':'')+'" data-ex="'+esc(e.id)+'" style="--exc:'+colorEx(e.id)+'">'+
       '<div class="head"><div class="miniring">'+ringSVG(fatte/e.serie,38)+'<i>'+fatte+'/'+e.serie+'</i></div>'+
-      '<div class="grow"><h3>'+esc(e.nome)+'</h3><div class="tgt tnum">'+e.repMin+(e.repMax>e.repMin?'–'+e.repMax:'')+' rip · rec '+e.rec+'s'+(e.note?' · '+esc(e.note):'')+'</div></div>'+
+      '<div class="grow"><h3>'+esc(e.nome)+(hasPR?'<span class="prbadge">RECORD</span>':'')+'</h3><div class="tgt tnum">'+e.repMin+(e.repMax>e.repMin?'–'+e.repMax:'')+' rip · rec '+e.rec+'s'+(e.note?' · '+esc(e.note):'')+'</div></div>'+
       (e.desc?'<button class="howbtn" data-a="how" aria-label="Come si fa">📖</button>':'')+'</div>'+
       arr.map((serie,i)=>{
         const ult=ultimaSerie(e.id,i);
         const kg=serie.kg!=null?serie.kg:(ult&&ult.kg!=null?ult.kg:'');
         const rp=serie.reps!=null?serie.reps:(ult&&ult.reps!=null?ult.reps:'');
-        return '<div class="serie'+(serie.fatta?' fatta':'')+(i===nextIdx&&e.id===activeId?' next':'')+'" data-i="'+i+'">'+
+        return '<div class="serie'+(serie.fatta?' fatta':'')+(isPR(serie)?' pr':'')+(i===nextIdx&&e.id===activeId?' next':'')+'" data-i="'+i+'">'+
         '<span class="n tnum">'+(i+1)+'</span>'+
         '<div class="fld"><input type="number" inputmode="decimal" step="0.5" min="0" data-f="kg" placeholder="kg" value="'+kg+'" aria-label="Carico serie '+(i+1)+'">'+
           '<span class="stp"><button data-s="kg" data-d="2.5" aria-label="Più peso">＋</button><button data-s="kg" data-d="-2.5" aria-label="Meno peso">−</button></span></div>'+
@@ -674,7 +787,7 @@ $('#workoutList').addEventListener('click',e=>{
     const base=inp.value===''?(f==='kg'?0:0):parseFloat(inp.value);
     const nv=Math.max(0,Math.round(((isNaN(base)?0:base)+d)*(f==='kg'?2:1))/(f==='kg'?2:1));
     inp.value=nv;
-    const s=sessioneAperta(true);s.esercizi[exId][i][f]=nv;salva();buzz(4);
+    const s=sessioneAperta(true);s.esercizi[exId][i][f]=nv;salva();buzz(HAP.step);
     if(row.classList.contains('fatta'))renderHero();
     return;
   }
@@ -691,13 +804,39 @@ $('#workoutList').addEventListener('click',e=>{
         toast('Sessione iniziata alle '+fmtOra(s.inizio)+' ⏱️','good');
         if(dati.pref.geo===true&&!s.luogoNome)rilevaLuogo(false);
       }
-      buzz([18]);
       const ex=exById(exId);
-      if(ex&&ex.rec>0)avviaTimer(ex.rec,ex.nome);
-      // progressione: confronto col carico della stessa serie l'ultima volta
-      const u=ultimaSerie(exId,i);
-      if(u&&u.kg!=null&&serie.kg!=null&&serie.kg>u.kg)toast('💥 +'+(serie.kg-u.kg)+' kg su '+(ex?ex.nome:'')+'!','good');
-    }else{serie.fatta=false;stopTimer();}
+      const prPrima=recordCarico(exId,s.id);
+      let celebrato=false;
+
+      /* 1. RECORD DI CARICO: mai sollevato tanto su questo esercizio */
+      if(prPrima!=null&&serie.kg!=null&&serie.kg>prPrima){
+        festa('🏆','RECORD · '+(ex?ex.nome:'')+' '+serie.kg+' kg',HAP.pr,44);
+        toast('🏆 Nuovo record: '+serie.kg+' kg (+'+(+(serie.kg-prPrima).toFixed(1))+') su '+(ex?ex.nome:''),'pr');
+        celebrato=true;
+      }else{
+        /* 2. progresso sulla stessa serie rispetto alla volta prima */
+        const u=ultimaSerie(exId,i);
+        if(u&&u.kg!=null&&serie.kg!=null&&serie.kg>u.kg){
+          buzz(HAP.pr);
+          toast('💥 +'+(+(serie.kg-u.kg).toFixed(1))+' kg su '+(ex?ex.nome:'')+' rispetto all\'ultima volta','pr');
+          celebrato=true;
+        }
+      }
+
+      /* 3. ESERCIZIO COMPLETATO / 4. ALLENAMENTO COMPLETO */
+      const arrEx=s.esercizi[exId], exFinito=ex&&arrEx.filter(x=>x.fatta).length>=ex.serie;
+      const gg=giornoCorrente();
+      const tuttoFatto=gg&&gg.esercizi.every(e2=>s.esercizi[e2.id].filter(x=>x.fatta).length>=e2.serie);
+      if(tuttoFatto){
+        festa('🎉','ALLENAMENTO COMPLETATO',HAP.sessione,60);
+        toast('🎉 Tutte le serie fatte: chiudi la sessione e sei a posto','goal');
+      }else if(exFinito){
+        buzz(HAP.esercizio);
+        if(!celebrato)toast('✔ '+(ex?ex.nome:'')+' completato','good');
+      }else if(!celebrato)buzz(HAP.serie);
+
+      if(ex&&ex.rec>0&&!tuttoFatto)avviaTimer(ex.rec,ex.nome);
+    }else{serie.fatta=false;buzz(HAP.annulla);stopTimer();}
     salva();renderWorkout();aggiornaContesto();
     return;
   }
@@ -708,10 +847,27 @@ $('#btnCloseSession').onclick=()=>{
   if(!s){toast('Nessuna sessione aperta oggi','warn');return;}
   const st=statSessione(s);
   if(!st.serie){toast('Nessuna serie spuntata: niente da salvare','warn');return;}
+  const volPrec=recordVolume(s.id);
   s.chiusa=true;s.fine=Date.now();                       // ORA DI FINE automatica
   if(!s.inizio)s.inizio=s.fine;
   const min=Math.max(1,Math.round((s.fine-s.inizio)/60000));
-  salva();stopTimer();renderAll();buzz([25,60,25]);
+  salva();stopTimer();
+
+  /* obiettivi di fine sessione, in ordine di importanza */
+  const nSess=dati.sessioni.filter(x=>x.chiusa).length;
+  const settimana=dati.sessioni.filter(x=>x.chiusa&&(Date.now()-new Date(x.data+'T12:00'))<7*864e5).length;
+  if(st.vol>volPrec&&volPrec>0){
+    festa('💪','RECORD DI VOLUME · '+Math.round(st.vol).toLocaleString('it-IT')+' kg',HAP.volume,50);
+    toast('💪 Sessione più pesante di sempre: '+Math.round(st.vol).toLocaleString('it-IT')+' kg','pr');
+  }else if([1,5,10,25,50,100].includes(nSess)){
+    festa('🥇','ALLENAMENTO N° '+nSess,HAP.obiettivo,52);
+    toast('🥇 Traguardo: '+nSess+(nSess===1?'ª sessione, si comincia!':'ª sessione'),'goal');
+  }else if(settimana>=3){
+    festa('🔥',settimana+' ALLENAMENTI QUESTA SETTIMANA',HAP.obiettivo,46);
+    toast('🔥 '+settimana+' allenamenti in 7 giorni: che ritmo','goal');
+  }else buzz(HAP.sessione);
+
+  renderAll();
   toast('Sessione salvata · '+st.serie+' serie · '+min+' min'+(s.luogoNome?' · '+s.luogoNome:''),'good');
 };
 
@@ -739,11 +895,7 @@ function tickTimer(){
     $('#timerSub').textContent='recupero finito';$('#timerProg').style.width='100%';
     if(!t.beep){
       t.beep=1;localStorage.setItem(K_TIMER,JSON.stringify(t));
-      buzz([200,90,200]);
-      try{const ac=new (window.AudioContext||window.webkitAudioContext)();
-        const o=ac.createOscillator(),gn=ac.createGain();o.connect(gn);gn.connect(ac.destination);
-        o.frequency.value=880;gn.gain.setValueAtTime(.25,ac.currentTime);
-        gn.gain.exponentialRampToValueAtTime(.001,ac.currentTime+.7);o.start();o.stop(ac.currentTime+.7);}catch(e){}
+      buzz(HAP.recupero);      // niente suoni: in palestra parla solo la vibrazione
     }
     if(ms<-10000)stopTimer();
     return;
@@ -757,9 +909,9 @@ function tickTimer(){
 $('#timerPlus').onclick=()=>{
   let t=null;try{t=JSON.parse(localStorage.getItem(K_TIMER)||'null');}catch(e){}
   if(!t)return;t.fine=Math.max(t.fine,Date.now())+30000;t.tot=(t.tot||60)+30;delete t.beep;
-  localStorage.setItem(K_TIMER,JSON.stringify(t));tickTimer();buzz(5);
+  localStorage.setItem(K_TIMER,JSON.stringify(t));tickTimer();buzz(HAP.tap);
 };
-$('#timerStop').onclick=()=>{buzz(5);stopTimer();};
+$('#timerStop').onclick=()=>{buzz(HAP.tap);stopTimer();};
 
 /* ========================= STORICO ========================= */
 function renderHistory(){
@@ -953,7 +1105,7 @@ function apriSheet(ex){
   host.querySelector('.sheet').onclick=e=>{if(e.target.closest('[data-close]')||!e.target.closest('.pan'))host.innerHTML='';};
 }
 $$('nav.tabs button').forEach(b=>b.onclick=()=>{
-  buzz(4);
+  buzz(HAP.tap);
   $$('nav.tabs button').forEach(x=>x.classList.toggle('on',x===b));
   $$('.view').forEach(v=>v.classList.toggle('on',v.id==='view-'+b.dataset.v));
   ({workout:renderWorkout,plan:renderPlan,history:renderHistory,report:renderReport}[b.dataset.v]||(()=>{}))();
