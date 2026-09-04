@@ -626,7 +626,7 @@ nav.tabs button.on::before{content:'';position:absolute;top:0;left:24%;right:24%
    ================================================================ */
 
 /* ========================= STORAGE ========================= */
-const K_DATI='gym_v1', K_TIMER='gym_timer_v1';
+const K_DATI='gym_v1', K_TIMER='gym_timer_v1', K_BAK='gym_v1_bak';
 /* VISTA TRAINER: con ?trainer nell'indirizzo l'app mostra lo storico
    PUBBLICATO (storico.json nel sito) invece dei dati del telefono, in
    sola lettura: nessuna scrittura tocca il localStorage di chi guarda. */
@@ -665,6 +665,11 @@ function statoVuoto(){return {v:2,scheda:schedaDefault(),sessioni:[],luoghi:[],p
 function carica(){
   let g=null;
   try{g=JSON.parse(localStorage.getItem(K_DATI)||'null');}catch(e){}
+  if(!g||!g.scheda){                       // dati illeggibili: uso la copia di sicurezza
+    try{const bak=JSON.parse(localStorage.getItem(K_BAK)||'null');
+      if(bak&&bak.scheda&&Array.isArray(bak.sessioni)){g=bak;setTimeout(()=>toast('Ripristinato dalla copia di sicurezza','warn'),900);}
+    }catch(e){}
+  }
   if(!g||!g.scheda||!Array.isArray(g.sessioni)){
     try{ // migrazione dalla bozza multi-file
       const old=JSON.parse(localStorage.getItem('palestra_dati_v1')||'null');
@@ -680,9 +685,15 @@ function carica(){
   return g;
 }
 let dati=carica();
+let ultimoBak=0;
 function salva(){
   if(TRAINER)return;                    // in vista trainer non si scrive nulla
-  try{localStorage.setItem(K_DATI,JSON.stringify(dati));}catch(e){toast('Spazio esaurito: esporta un backup','warn');}
+  try{
+    const j=JSON.stringify(dati);
+    localStorage.setItem(K_DATI,j);
+    // copia di sicurezza (max 1 al minuto): se il file principale si corrompe, si riparte da qui
+    if(Date.now()-ultimoBak>60000){localStorage.setItem(K_BAK,j);ultimoBak=Date.now();}
+  }catch(e){toast('Spazio esaurito: esporta un backup','warn');}
 }
 if(!TRAINER)salva();
 
@@ -806,8 +817,7 @@ $('#fileImport').onchange=e=>{
 
 /* ---- Scarta la sessione in corso: le prove non sporcano lo storico ---- */
 $('#btnCancelSession').onclick=()=>{
-  const g=giornoCorrente();
-  const s=dati.sessioni.find(x=>x.data===oggiISO()&&g&&x.giorno===g.id&&!x.chiusa);
+  const s=sessioneCorrente();
   if(!s){toast('Nessuna sessione da annullare','warn');return;}
   const n=statSessione(s).serie;
   if(n&&!confirm('Butto via la sessione in corso ('+n+' serie segnate)? Non finisce nello storico.'))return;
@@ -1077,9 +1087,23 @@ function giornoSuggerito(){
   const i=gs.findIndex(g=>g.id===last.giorno);
   return gs[(i+1)%gs.length].id;
 }
-function sessioneAperta(crea){
+/* La sessione aperta di OGGI; se ti alleni a cavallo della mezzanotte
+   riprende quella di ieri (iniziata da meno di 12 ore e con serie fatte)
+   invece di aprirne una nuova e "perdere" il lavoro dalla vista. */
+function sessioneCorrente(){
   const g=giornoCorrente();if(!g)return null;
   let s=dati.sessioni.find(x=>x.data===oggiISO()&&x.giorno===g.id&&!x.chiusa);
+  if(!s){
+    const d=new Date();d.setDate(d.getDate()-1);
+    const ieri=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    s=dati.sessioni.find(x=>x.data===ieri&&x.giorno===g.id&&!x.chiusa&&x.inizio&&
+      (Date.now()-x.inizio)<12*3600e3&&statSessione(x).serie>0);
+  }
+  return s||null;
+}
+function sessioneAperta(crea){
+  const g=giornoCorrente();if(!g)return null;
+  let s=sessioneCorrente();
   if(!s&&crea){
     s={id:oggiISO()+'-'+uid(),data:oggiISO(),giorno:g.id,chiusa:false,inizio:null,fine:null,esercizi:{}};
     if(luogoAttuale){s.luogoId=luogoAttuale.id;s.luogoNome=luogoAttuale.nome;}
@@ -1257,9 +1281,8 @@ function gestisciClick(e){
 }
 $('#workoutList').addEventListener('click',gestisciClick);
 $('#btnCloseSession').onclick=()=>{
-  const g=giornoCorrente();
-  const s=dati.sessioni.find(x=>x.data===oggiISO()&&g&&x.giorno===g.id&&!x.chiusa);
-  if(!s){toast('Nessuna sessione aperta oggi','warn');return;}
+  const s=sessioneCorrente();
+  if(!s){toast('Nessuna sessione aperta','warn');return;}
   const st=statSessione(s);
   if(!st.serie){toast('Nessuna serie spuntata: niente da salvare','warn');return;}
   const volPrec=recordVolume(s.id);
@@ -1714,9 +1737,22 @@ if(TRAINER){
     .catch(()=>{bannerTrainer(null,true);renderHistory();renderReport();vaiA('history');});
 }
 
+/* Chiede al browser di NON buttare via i dati quando lo spazio scarseggia. */
+if(!TRAINER&&navigator.storage&&navigator.storage.persist){
+  navigator.storage.persisted().then(ok=>{if(!ok)navigator.storage.persist().catch(()=>{});}).catch(()=>{});
+}
+
 /* boot */
 dayId=giornoSuggerito();
 renderAll();
+/* se rientri a metà allenamento te lo dico, così sai che non hai perso nulla */
+if(!TRAINER){
+  const ap=sessioneCorrente();
+  if(ap){
+    const n=statSessione(ap).serie;
+    if(n)setTimeout(()=>toast('Riprendo l\'allenamento: '+n+' serie già salvate ✔','good'),700);
+  }
+}
 aggiornaContesto();setInterval(aggiornaContesto,30000);   // data/ora/durata sempre vive
 tickTimer();if(localStorage.getItem(K_TIMER))timerInt=setInterval(tickTimer,250);
 if(dati.pref.geo===true&&!TRAINER)rilevaLuogo(false);      // luogo riconosciuto da solo
