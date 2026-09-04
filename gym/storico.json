@@ -1,0 +1,86 @@
+{
+ "v": 2,
+ "aggiornato": null,
+ "scheda": {
+  "giorni": [
+   {
+    "id": "A",
+    "nome": "Full Body",
+    "esercizi": [
+     {
+      "id": "leg-press",
+      "nome": "Leg Press",
+      "serie": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rec": 90,
+      "note": "Quadricipiti, glutei, femorali",
+      "desc": "Schiena e bacino appoggiati. Piedi a larghezza spalle, punte in fuori. Scendi a 90° senza staccare il bacino, spingi con tutta la pianta senza bloccare le ginocchia."
+     },
+     {
+      "id": "lat-machine",
+      "nome": "Lat Machine presa larga",
+      "serie": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rec": 90,
+      "note": "Dorsali, bicipiti",
+      "desc": "Presa più larga delle spalle, petto in fuori. Tira verso la parte alta del petto portando i gomiti in basso. Risali controllando, spalle lontane dalle orecchie."
+     },
+     {
+      "id": "chest-press",
+      "nome": "Chest Press machine",
+      "serie": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rec": 90,
+      "note": "Petto, tricipiti",
+      "desc": "Maniglie a metà petto, scapole appoggiate e strette. Spingi senza bloccare i gomiti, torna finché senti il petto in allungamento, senza sbattere i pesi."
+     },
+     {
+      "id": "seated-row",
+      "nome": "Seated Row machine",
+      "serie": 3,
+      "repMin": 10,
+      "repMax": 12,
+      "rec": 90,
+      "note": "Dorsali, romboidi",
+      "desc": "Petto al supporto, spalle basse. Tira verso i fianchi stringendo le scapole. Niente slancio col busto; rilascia lento."
+     },
+     {
+      "id": "shoulder-press",
+      "nome": "Shoulder Press machine",
+      "serie": 2,
+      "repMin": 10,
+      "repMax": 12,
+      "rec": 75,
+      "note": "Spalle, tricipiti",
+      "desc": "Maniglie all'altezza spalle, addome contratto. Spingi in alto senza bloccare i gomiti, scendi fino alle orecchie."
+     },
+     {
+      "id": "leg-curl",
+      "nome": "Leg Curl",
+      "serie": 2,
+      "repMin": 12,
+      "repMax": 15,
+      "rec": 60,
+      "note": "Femorali",
+      "desc": "Rullo sopra i talloni, ginocchia in linea col perno. Fletti coi talloni verso i glutei, pausa breve, risali lento senza staccare il bacino."
+     },
+     {
+      "id": "crunch",
+      "nome": "Crunch machine",
+      "serie": 2,
+      "repMin": 15,
+      "repMax": 15,
+      "rec": 60,
+      "note": "Addominali",
+      "desc": "Arrotola il busto avvicinando sterno e bacino: movimento corto. Espira chiudendo, risali senza scaricare la tensione."
+     }
+    ]
+   }
+  ]
+ },
+ "sessioni": [],
+ "luoghi": []
+}

@@ -9,7 +9,23 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Palestra</title>
-<meta name="description" content="Scheda, allenamento, storico e report. Offline, tutto sul telefono.">
+<meta name="description" content="Alza. Segna. Migliora. Ogni serie, ogni carico, ogni record: lo storico di Ale, sempre aggiornato.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/gym/">
+<meta property="og:site_name" content="Palestra · Ale">
+<meta property="og:title" content="ALZA. SEGNA. MIGLIORA.">
+<meta property="og:description" content="Ogni serie, ogni carico, ogni record. Lo storico di Ale, sempre aggiornato: scheda, progressi e report per il trainer.">
+<meta property="og:image" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/gym/og-palestra.jpg?v=1">
+<meta property="og:image:secure_url" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/gym/og-palestra.jpg?v=1">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Ale in palestra, versione cartoon, con il claim Alza Segna Migliora">
+<meta property="og:locale" content="it_IT">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ALZA. SEGNA. MIGLIORA.">
+<meta name="twitter:description" content="Lo storico di Ale: scheda, progressi e report per il trainer.">
+<meta name="twitter:image" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/gym/og-palestra.jpg?v=1">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -96,7 +112,9 @@ header.top{position:sticky;top:0;z-index:30;
   background:linear-gradient(180deg,rgba(8,9,11,.96),rgba(8,9,11,.86));
   backdrop-filter:blur(18px) saturate(140%);-webkit-backdrop-filter:blur(18px) saturate(140%);
   border-bottom:1px solid var(--line)}
-header.top .r1{display:flex;align-items:flex-start;gap:12px}
+header.top .r1{display:flex;align-items:center;gap:12px}
+header.top .avatar{flex:none;width:46px;height:46px;border-radius:50%;object-fit:cover;object-position:50% 18%;
+  border:2px solid rgba(214,255,62,.55);box-shadow:0 6px 18px -8px rgba(214,255,62,.6);background:var(--s2)}
 header.top .hi{font-size:22px;font-weight:900;letter-spacing:-.02em;line-height:1.1}
 header.top .when{font-size:11.5px;color:var(--mut);margin-top:3px;letter-spacing:.01em}
 header.top .when b{color:var(--acc);font-weight:800}
@@ -292,6 +310,16 @@ svg.chart{width:100%;height:auto;display:block}
 .chart .ar{fill:url(#ag);stroke:none}
 .chart .dot{fill:var(--bg);stroke:var(--acc);stroke-width:2.4}
 
+/* ---------------- VISTA TRAINER (sola lettura, dati pubblicati) ---------------- */
+body.trainer nav.tabs button[data-v=workout],body.trainer nav.tabs button[data-v=plan],
+body.trainer #view-workout,body.trainer #view-plan,body.trainer .noshare{display:none!important}
+.tbanner{margin:16px 0 4px;padding:14px 16px;border-radius:16px;border:1px solid rgba(51,214,255,.4);
+  background:linear-gradient(140deg,rgba(51,214,255,.14),var(--s1));box-shadow:var(--e1)}
+.tbanner b{display:block;font-size:15px;font-weight:900;letter-spacing:-.01em;color:var(--c2)}
+.tbanner span{font-size:12px;color:var(--mut)}
+.sharecard{border-color:rgba(51,214,255,.28)}
+.sharecard .eyebrow{color:var(--c2)}
+
 /* ---------------- MODALITA' TRAINER (focus) ---------------- */
 body.locked{overflow:hidden;position:fixed;width:100%}
 .focus{position:fixed;inset:0;z-index:90;display:flex;flex-direction:column;
@@ -469,6 +497,7 @@ nav.tabs button.on::before{content:'';position:absolute;top:0;left:24%;right:24%
 
 <header class="top">
   <div class="r1">
+    <img class="avatar" src="ale.jpg" alt="" width="46" height="46">
     <div class="grow">
       <div class="hi" id="hiText">Ciao</div>
       <div class="when tnum" id="whenText"></div>
@@ -499,6 +528,7 @@ nav.tabs button.on::before{content:'';position:absolute;top:0;left:24%;right:24%
 
 <!-- ================== STORICO ================== -->
 <main class="view" id="view-history">
+  <div id="tbanner"></div>
   <div id="histTop"></div>
   <h2 class="sec">Gruppi muscolari</h2>
   <div id="gruppiBox"></div>
@@ -519,7 +549,16 @@ nav.tabs button.on::before{content:'';position:absolute;top:0;left:24%;right:24%
     </div>
     <p class="muted" style="margin-top:9px">I dati stanno solo su questo telefono. Esporta ogni tanto: se il browser pulisce i dati del sito, il backup ti salva.</p>
   </div>
-  <div class="card danger-zone">
+  <div class="card sharecard noshare">
+    <div class="eyebrow">Condividi col trainer</div>
+    <p class="muted" style="margin:8px 0 12px">Finito l'allenamento, scarica il file e mandamelo in chat: lo pubblico sul sito e il tuo trainer vede lo storico aggiornato dal suo telefono, in sola lettura.</p>
+    <div class="row" style="flex-wrap:wrap;gap:10px">
+      <button class="btn grow" id="btnExportPT">📤 Esporta per il trainer</button>
+      <button class="btn grow" id="btnLinkPT">🔗 Link per il trainer</button>
+    </div>
+    <p class="muted" style="margin-top:9px">Il file non contiene le coordinate GPS: solo i nomi delle palestre.</p>
+  </div>
+  <div class="card danger-zone noshare">
     <div class="eyebrow">Riparti da zero</div>
     <p class="muted" style="margin:8px 0 12px">Hai fatto sessioni di prova? Puoi ripulire. <b>Prima di cancellare scarico sempre un backup</b>, così puoi tornare indietro reimportandolo.</p>
     <div class="row" style="flex-wrap:wrap;gap:10px">
@@ -588,6 +627,10 @@ nav.tabs button.on::before{content:'';position:absolute;top:0;left:24%;right:24%
 
 /* ========================= STORAGE ========================= */
 const K_DATI='gym_v1', K_TIMER='gym_timer_v1';
+/* VISTA TRAINER: con ?trainer nell'indirizzo l'app mostra lo storico
+   PUBBLICATO (storico.json nel sito) invece dei dati del telefono, in
+   sola lettura: nessuna scrittura tocca il localStorage di chi guarda. */
+const TRAINER=new URLSearchParams(location.search).has('trainer');
 const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const uid=()=>Math.random().toString(36).slice(2,9);
@@ -637,8 +680,11 @@ function carica(){
   return g;
 }
 let dati=carica();
-function salva(){try{localStorage.setItem(K_DATI,JSON.stringify(dati));}catch(e){toast('Spazio esaurito: esporta un backup','warn');}}
-salva();
+function salva(){
+  if(TRAINER)return;                    // in vista trainer non si scrive nulla
+  try{localStorage.setItem(K_DATI,JSON.stringify(dati));}catch(e){toast('Spazio esaurito: esporta un backup','warn');}
+}
+if(!TRAINER)salva();
 
 /* ---- GRUPPI MUSCOLARI: dedotti dal nome/note, poi correggibili
    nella Scheda (campo 'gruppo'). Servono per volume ed equilibrio. ---- */
@@ -721,6 +767,29 @@ $('#btnExport').onclick=()=>{
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);
   a.download='palestra-backup-'+oggiISO()+'.json';a.click();URL.revokeObjectURL(a.href);
   toast('Backup scaricato ✔','good');
+};
+/* Export destinato alla pubblicazione: solo sessioni chiuse, niente
+   coordinate GPS (il trainer vede i nomi delle palestre, non dove sono). */
+$('#btnExportPT').onclick=()=>{
+  const chiuse=dati.sessioni.filter(s=>s.chiusa&&statSessione(s).serie);
+  if(!chiuse.length){toast('Nessuna sessione chiusa da condividere','warn');return;}
+  const pubblico={v:2,aggiornato:new Date().toISOString(),
+    scheda:dati.scheda,sessioni:chiuse,
+    luoghi:(dati.luoghi||[]).map(l=>({id:l.id,nome:l.nome}))};
+  const blob=new Blob([JSON.stringify(pubblico,null,1)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='storico.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+  buzz(HAP.serie);
+  toast('storico.json scaricato · mandalo in chat per pubblicarlo','good');
+};
+$('#btnLinkPT').onclick=async()=>{
+  const url=location.origin+location.pathname.replace(/index\.html$/,'')+'?trainer';
+  buzz(HAP.tap);
+  try{
+    if(navigator.share){await navigator.share({title:'ALZA. SEGNA. MIGLIORA.',
+      text:'Qui trovi i miei allenamenti sempre aggiornati: carichi, record e report. Dagli un occhio 💪',url});return;}
+    await navigator.clipboard.writeText(url);toast('Link copiato: mandalo al trainer','good');
+  }catch(e){prompt('Copia questo link e mandalo al trainer:',url);}
 };
 $('#btnImport').onclick=()=>$('#fileImport').click();
 $('#fileImport').onchange=e=>{
@@ -1617,12 +1686,40 @@ $$('nav.tabs button').forEach(b=>b.onclick=()=>{
 });
 function renderAll(){renderWorkout();renderPlan();renderHistory();renderReport();aggiornaContesto();mostraLuogo();}
 
+/* ---- boot in VISTA TRAINER: legge lo storico pubblicato nel sito ---- */
+function bannerTrainer(quando,errore){
+  const el=$('#tbanner');if(!el)return;
+  el.innerHTML='<div class="tbanner"><b>🧑‍🏫 Vista trainer · sola lettura</b>'+
+    '<span>'+(errore?'Nessuno storico pubblicato per ora.':
+      'Storico di Alessandro'+(quando?' · aggiornato al '+new Date(quando).toLocaleDateString('it-IT',{day:'numeric',month:'long',year:'numeric'})+
+      ' alle '+new Date(quando).toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'}):''))+'</span></div>';
+}
+function vaiA(v){
+  $$('nav.tabs button').forEach(x=>x.classList.toggle('on',x.dataset.v===v));
+  $$('.view').forEach(x=>x.classList.toggle('on',x.id==='view-'+v));
+}
+if(TRAINER){
+  document.body.classList.add('trainer');
+  document.title='Storico allenamenti · vista trainer';
+  fetch('storico.json?nc='+Date.now(),{cache:'no-store'})
+    .then(r=>r.ok?r.json():Promise.reject())
+    .then(j=>{
+      if(j&&j.scheda&&Array.isArray(j.sessioni)){
+        dati=j;if(!Array.isArray(dati.luoghi))dati.luoghi=[];if(!dati.pref)dati.pref={geo:null};
+      }
+      bannerTrainer(j&&j.aggiornato,!(j&&j.sessioni&&j.sessioni.length));
+      renderHistory();renderReport();vaiA('history');
+      $('#hiText').textContent='Allenamenti di Ale';
+    })
+    .catch(()=>{bannerTrainer(null,true);renderHistory();renderReport();vaiA('history');});
+}
+
 /* boot */
 dayId=giornoSuggerito();
 renderAll();
 aggiornaContesto();setInterval(aggiornaContesto,30000);   // data/ora/durata sempre vive
 tickTimer();if(localStorage.getItem(K_TIMER))timerInt=setInterval(tickTimer,250);
-if(dati.pref.geo===true)rilevaLuogo(false);                // luogo riconosciuto da solo
+if(dati.pref.geo===true&&!TRAINER)rilevaLuogo(false);      // luogo riconosciuto da solo
 document.addEventListener('visibilitychange',()=>{if(!document.hidden){aggiornaContesto();tickTimer();}});
 if('serviceWorker'in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 </script>
