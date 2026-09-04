@@ -292,6 +292,60 @@ svg.chart{width:100%;height:auto;display:block}
 .chart .ar{fill:url(#ag);stroke:none}
 .chart .dot{fill:var(--bg);stroke:var(--acc);stroke-width:2.4}
 
+/* ---------------- MODALITA' TRAINER (focus) ---------------- */
+body.locked{overflow:hidden;position:fixed;width:100%}
+.focus{position:fixed;inset:0;z-index:90;display:flex;flex-direction:column;
+  background:radial-gradient(120% 60% at 50% 0%,rgba(214,255,62,.07),transparent 60%),var(--bg);
+  animation:fzin .28s var(--ease);overscroll-behavior:none}
+@keyframes fzin{from{opacity:0;transform:scale(.98)}to{opacity:1;transform:none}}
+.fx-top{flex:none;display:flex;align-items:center;gap:12px;padding:calc(env(safe-area-inset-top) + 12px) 16px 12px;
+  border-bottom:1px solid var(--line)}
+.fx-top .cnt{font-size:12px;font-weight:900;letter-spacing:.14em;color:var(--mut);text-transform:uppercase}
+.fx-dots{display:flex;gap:5px;justify-content:center;flex:1}
+.fx-dots i{width:7px;height:7px;border-radius:50%;background:var(--s4);transition:all .3s var(--ease)}
+.fx-dots i.on{background:var(--acc);width:20px;border-radius:99px}
+.fx-dots i.ok{background:var(--ok)}
+.fx-dots i.on.ok{background:var(--ok);width:20px}
+.fx-x{flex:none;width:44px;height:44px;border-radius:13px;background:var(--s3);border:1px solid var(--line);
+  font-size:17px;color:var(--mut)}
+.fx-body{flex:1;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:18px 16px 26px}
+.fx-name{font-size:30px;font-weight:900;letter-spacing:-.035em;line-height:1.05;color:var(--exc,var(--ink))}
+.fx-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.fx-meta .pill{border-color:color-mix(in srgb,var(--exc,var(--line2)) 40%,transparent);color:var(--exc,var(--mut))}
+.fx-how{margin-top:16px;padding:15px;border-radius:16px;background:var(--s2);border:1px solid var(--line);
+  font-size:15px;line-height:1.65;color:var(--mut)}
+.fx-how b{display:block;color:var(--ink);font-size:10.5px;font-weight:900;letter-spacing:.16em;
+  text-transform:uppercase;margin-bottom:8px}
+.fx-sets{margin-top:18px}
+.fx-sets .sethead{padding:0 0 8px}
+.fx-sets .serie{padding:6px 0}
+.fx-sets .fld input{font-size:22px;min-height:60px}
+.fx-sets .serie .ck{min-height:60px;font-size:22px}
+.fx-pt{display:flex;align-items:center;gap:11px;margin-top:16px;padding:13px 15px;border-radius:15px;
+  border:1px solid var(--line2);background:var(--s2);width:100%;font-size:14px;font-weight:700;text-align:left}
+.fx-pt .sw{margin-left:auto;flex:none;width:46px;height:27px;border-radius:99px;background:var(--s4);
+  position:relative;transition:background .25s}
+.fx-pt .sw::after{content:'';position:absolute;top:3px;left:3px;width:21px;height:21px;border-radius:50%;
+  background:var(--ink);transition:transform .25s var(--ease)}
+.fx-pt.on{border-color:rgba(51,214,255,.5);background:rgba(51,214,255,.09);color:var(--c2)}
+.fx-pt.on .sw{background:var(--c2)}
+.fx-pt.on .sw::after{transform:translateX(19px);background:#04222B}
+.fx-nav{flex:none;display:flex;gap:10px;padding:12px 16px calc(14px + env(safe-area-inset-bottom));
+  border-top:1px solid var(--line);background:linear-gradient(180deg,transparent,rgba(8,9,11,.9))}
+.fx-nav button{flex:1;min-height:58px;border-radius:16px;border:1px solid var(--line2);background:var(--s3);
+  font-weight:900;font-size:15px;display:flex;align-items:center;justify-content:center;gap:8px}
+.fx-nav button:disabled{opacity:.32}
+.fx-nav button.avanti{background:linear-gradient(165deg,var(--acc),var(--acc2));border-color:transparent;color:var(--acc-ink)}
+.fx-nav button:active:not(:disabled){transform:scale(.97)}
+.fx-done{margin-top:14px;padding:12px;border-radius:14px;text-align:center;font-size:13.5px;font-weight:800;
+  background:rgba(61,220,151,.12);border:1px solid rgba(61,220,151,.35);color:var(--ok)}
+.focusbtn{flex:none;width:40px;height:40px;border-radius:12px;background:var(--s3);border:1px solid var(--line);
+  font-size:15px;color:var(--mut)}
+.ptbadge{display:inline-block;margin-left:6px;font-size:8.5px;font-weight:900;letter-spacing:.12em;
+  padding:3px 7px;border-radius:5px;background:rgba(51,214,255,.18);color:var(--c2);vertical-align:2px}
+.danger-zone{border-color:rgba(255,93,93,.25)}
+.danger-zone .eyebrow{color:var(--err)}
+
 /* ---------------- PROSSIMO ALLENAMENTO ---------------- */
 .nxt{position:relative;overflow:hidden;padding:18px;margin:16px 0 14px;border-radius:22px;
   border:1px solid var(--line2);box-shadow:var(--e2);
@@ -432,6 +486,7 @@ nav.tabs button.on::before{content:'';position:absolute;top:0;left:24%;right:24%
   <div id="workoutList"></div>
   <div class="row noprint" style="margin-top:14px">
     <button class="btn grow" id="btnCloseSession">✅ Chiudi e salva sessione</button>
+    <button class="btn icon" id="btnCancelSession" title="Annulla la sessione in corso" aria-label="Annulla sessione">🗑</button>
   </div>
 </main>
 
@@ -464,6 +519,15 @@ nav.tabs button.on::before{content:'';position:absolute;top:0;left:24%;right:24%
     </div>
     <p class="muted" style="margin-top:9px">I dati stanno solo su questo telefono. Esporta ogni tanto: se il browser pulisce i dati del sito, il backup ti salva.</p>
   </div>
+  <div class="card danger-zone">
+    <div class="eyebrow">Riparti da zero</div>
+    <p class="muted" style="margin:8px 0 12px">Hai fatto sessioni di prova? Puoi ripulire. <b>Prima di cancellare scarico sempre un backup</b>, così puoi tornare indietro reimportandolo.</p>
+    <div class="row" style="flex-wrap:wrap;gap:10px">
+      <button class="btn grow danger" id="btnWipeSess">🧹 Azzera lo storico</button>
+      <button class="btn grow danger" id="btnWipeAll">💣 Azzera tutto</button>
+    </div>
+    <p class="muted" style="margin-top:9px">«Azzera lo storico» cancella le sessioni e tiene la scheda. «Azzera tutto» riporta anche la scheda a quella di partenza e dimentica le palestre salvate.</p>
+  </div>
 </main>
 
 <!-- ================== REPORT ================== -->
@@ -494,6 +558,7 @@ nav.tabs button.on::before{content:'';position:absolute;top:0;left:24%;right:24%
   <button class="btn sm ghost icon" id="timerStop" aria-label="Chiudi">✕</button>
 </div>
 
+<div id="focusHost"></div>
 <div id="toasts" aria-live="polite"></div>
 <div id="sheetHost"></div>
 
@@ -670,6 +735,44 @@ $('#fileImport').onchange=e=>{
   e.target.value='';
 };
 
+/* ---- Scarta la sessione in corso: le prove non sporcano lo storico ---- */
+$('#btnCancelSession').onclick=()=>{
+  const g=giornoCorrente();
+  const s=dati.sessioni.find(x=>x.data===oggiISO()&&g&&x.giorno===g.id&&!x.chiusa);
+  if(!s){toast('Nessuna sessione da annullare','warn');return;}
+  const n=statSessione(s).serie;
+  if(n&&!confirm('Butto via la sessione in corso ('+n+' serie segnate)? Non finisce nello storico.'))return;
+  dati.sessioni=dati.sessioni.filter(x=>x!==s);
+  salva();stopTimer();chiudiFocus();renderAll();buzz(HAP.annulla);
+  toast('Sessione annullata: niente è stato salvato','good');
+};
+/* ---- Ripartire da zero, ma mai senza rete: backup scaricato prima ---- */
+function backupAutomatico(){
+  try{
+    const blob=new Blob([JSON.stringify(dati,null,1)],{type:'application/json'});
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+    a.download='palestra-backup-PRIMA-DEL-RESET-'+oggiISO()+'.json';a.click();
+    setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+    return true;
+  }catch(e){return false;}
+}
+$('#btnWipeSess').onclick=()=>{
+  const n=dati.sessioni.filter(s=>s.chiusa).length;
+  if(!confirm('Cancello '+n+' sessioni salvate e riparto da zero?\n\nLa scheda resta com\'è. Scarico prima un backup.'))return;
+  backupAutomatico();
+  dati.sessioni=[];salva();stopTimer();chiudiFocus();renderAll();buzz(HAP.annulla);
+  toast('Storico azzerato · backup scaricato','good');
+};
+$('#btnWipeAll').onclick=()=>{
+  if(!confirm('AZZERO TUTTO: sessioni, scheda e palestre salvate.\n\nScarico prima un backup. Procedo?'))return;
+  if(!confirm('Sicuro? Questa è l\'ultima conferma.'))return;
+  backupAutomatico();
+  dati=statoVuoto();salva();stopTimer();chiudiFocus();
+  luogoAttuale=null;dayId=null;localStorage.removeItem(K_TIMER);
+  renderAll();mostraLuogo();buzz(HAP.annulla);
+  toast('Tutto azzerato · backup scaricato','good');
+};
+
 /* ============== CONTESTO: data, ora e luogo automatici ============== */
 /* Ora e data: l'app le legge da sola; la sessione registra inizio, fine
    e durata reale senza che tu prema nulla. Il luogo è opt-in: al primo
@@ -814,6 +917,22 @@ $('#btnAddDay').onclick=()=>{
   salva();renderPlan();renderWorkout();toast('Giorno '+l+' aggiunto','good');
 };
 
+/* ---- PERSONAL TRAINER: marca la sessione e/o i singoli esercizi ---- */
+function ptSessione(s){return !!(s&&s.pt);}
+function ptEs(s,exId){return !!(s&&s.ptEx&&s.ptEx[exId]);}
+function togglePTsessione(){
+  const s=sessioneAperta(true);
+  s.pt=!s.pt;salva();buzz(HAP.tap);renderWorkout();
+  toast(s.pt?'🧑‍🏫 Sessione segnata: seguito dal trainer':'Sessione senza trainer','good');
+}
+function togglePTes(exId){
+  const s=sessioneAperta(true);
+  s.ptEx=s.ptEx||{};
+  s.ptEx[exId]=!s.ptEx[exId];
+  if(!s.ptEx[exId])delete s.ptEx[exId];
+  salva();buzz(HAP.tap);renderWorkout();if(FOCUS.on)renderFocus();
+}
+
 /* ---- SUGGERIMENTO CARICO: doppia progressione. Se l'ultima volta hai
    chiuso tutte le serie al massimo delle ripetizioni, sali di 2,5 kg. ---- */
 function suggerimento(ex){
@@ -855,11 +974,18 @@ function renderProssimo(){
     '<div class="grow"><div class="eyebrow">Prossimo allenamento</div><h3>'+esc(g.nome)+'</h3>'+
     '<div class="meta">'+g.esercizi.length+' esercizi · '+nSerie+' serie · <b>~'+stima+' min</b><br>ultima volta: '+quando+'</div></div></div>'+
     '<ul>'+righe+'</ul>'+
-    '<button class="btn pri go" id="btnStart">▶ Inizia l\'allenamento</button></div>';
+    '<button class="btn pri go" id="btnStart">▶ Inizia l\'allenamento</button>'+
+    '<button class="btn go" id="btnStartFocus" style="margin-top:9px">🔍 Inizia in modalità trainer</button></div>';
 }
 /* 'Inizia' fa partire davvero la sessione: da qui contano ora e durata.
    Se non lo premi, la sessione parte comunque alla prima serie spuntata. */
 $('#prossimo').addEventListener('click',e=>{
+  if(e.target.closest('#btnStartFocus')){
+    const s=sessioneAperta(true);if(!s.inizio)s.inizio=Date.now();
+    salva();renderWorkout();aggiornaContesto();
+    const g=giornoCorrente();if(g&&g.esercizi.length)apriFocus(g.esercizi[0].id);
+    return;
+  }
   if(!e.target.closest('#btnStart'))return;
   const s=sessioneAperta(true);
   s.inizio=Date.now();
@@ -920,6 +1046,7 @@ function renderHero(){
   const tot=g.esercizi.reduce((n,e)=>n+e.serie,0)||1;
   const pct=Math.min(1,st.serie/tot);
   const min=s.inizio?Math.max(0,Math.round((Date.now()-s.inizio)/60000)):0;
+  $('#hero').onclick=ev=>{if(ev.target.closest('[data-a=ptses]'))togglePTsessione();};
   $('#hero').innerHTML=
     '<div class="top"><div class="ring">'+ringSVG(pct,104)+
       '<div class="mid"><b>'+Math.round(pct*100)+'%</b><i>FATTO</i></div></div>'+
@@ -929,7 +1056,9 @@ function renderHero(){
       (s.luogoNome?'<br>📍 '+esc(s.luogoNome):'')+'</div></div></div>'+
     '<div class="kpis"><div><b class="tnum">'+st.serie+'<span style="color:var(--faint);font-size:13px">/'+tot+'</span></b><span>serie</span></div>'+
     '<div class="v"><b class="tnum">'+Math.round(st.vol).toLocaleString('it-IT')+'</b><span>volume kg</span></div>'+
-    '<div class="t"><b class="tnum">'+(s.inizio?min:0)+'′</b><span>durata</span></div></div>';
+    '<div class="t"><b class="tnum">'+(s.inizio?min:0)+'′</b><span>durata</span></div></div>'+
+    '<button class="fx-pt'+(ptSessione(s)?' on':'')+'" data-a="ptses" style="margin-top:12px">'+
+      '🧑‍🏫 <span>Oggi seguito dal personal trainer</span><span class="sw"></span></button>';
 }
 function renderDayChips(){
   const g=giornoCorrente();dayId=g?g.id:null;
@@ -956,8 +1085,9 @@ function renderWorkout(){
     const hasPR=arr.some(isPR);
     return '<div class="card ex'+(done?' exdone':'')+(e.id===activeId?' active':'')+'" data-ex="'+esc(e.id)+'" style="--exc:'+colorEx(e.id)+'">'+
       '<div class="head"><div class="miniring">'+ringSVG(fatte/e.serie,38)+'<i>'+fatte+'/'+e.serie+'</i></div>'+
-      '<div class="grow"><h3>'+esc(e.nome)+(hasPR?'<span class="prbadge">RECORD</span>':'')+'</h3><div class="tgt tnum">'+e.repMin+(e.repMax>e.repMin?'–'+e.repMax:'')+' rip · rec '+e.rec+'s · '+GRUPPI[gruppoDi(e)].n+'</div>'+
+      '<div class="grow"><h3>'+esc(e.nome)+(hasPR?'<span class="prbadge">RECORD</span>':'')+(ptEs(s,e.id)?'<span class="ptbadge">PT</span>':'')+'</h3><div class="tgt tnum">'+e.repMin+(e.repMax>e.repMin?'–'+e.repMax:'')+' rip · rec '+e.rec+'s · '+GRUPPI[gruppoDi(e)].n+'</div>'+
       (sg&&sg.su&&fatte===0?'<span class="suggchip">CONSIGLIATO '+sg.kg+' KG</span>':'')+'</div>'+
+      '<button class="focusbtn" data-a="focus" aria-label="Modalità trainer">🔍</button>'+
       (e.desc?'<button class="howbtn" data-a="how" aria-label="Come si fa">📖</button>':'')+'</div>'+
       '<div class="sethead"><span>#</span><span>Carico kg</span><span>Ripetizioni</span><span>Fatta</span></div>'+
       arr.map((serie,i)=>{
@@ -977,18 +1107,23 @@ function renderWorkout(){
   }).join('');
 }
 /* input diretto: salva senza ri-renderizzare (il cursore non deve saltare) */
-$('#workoutList').addEventListener('input',e=>{
+function gestisciInput(e){
   const f=e.target.dataset.f;if(!f)return;
-  const exId=e.target.closest('.ex').dataset.ex, i=+e.target.closest('.serie').dataset.i;
+  const cont=e.target.closest('[data-ex]');if(!cont)return;
+  const exId=cont.dataset.ex, i=+e.target.closest('.serie').dataset.i;
   const s=sessioneAperta(true), v=e.target.value===''?null:parseFloat(e.target.value);
   s.esercizi[exId][i][f]=isNaN(v)?null:v;salva();
-});
-$('#workoutList').addEventListener('click',e=>{
+}
+$('#workoutList').addEventListener('input',gestisciInput);
+
+/* stessa logica per la lista e per la modalità trainer */
+function gestisciClick(e){
   const btn=e.target.closest('button');if(!btn)return;
-  const exEl=e.target.closest('.ex');if(!exEl)return;
+  const exEl=e.target.closest('[data-ex]');if(!exEl)return;
   const exId=exEl.dataset.ex;
 
   if(btn.dataset.a==='how'){apriSheet(exById(exId));return;}
+  if(btn.dataset.a==='focus'){apriFocus(exId);return;}
 
   /* stepper ± : niente tastiera, si usa con una mano */
   if(btn.dataset.s){
@@ -1047,10 +1182,11 @@ $('#workoutList').addEventListener('click',e=>{
 
       if(ex&&ex.rec>0&&!tuttoFatto)avviaTimer(ex.rec,ex.nome);
     }else{serie.fatta=false;buzz(HAP.annulla);stopTimer();}
-    salva();renderWorkout();aggiornaContesto();
+    salva();renderWorkout();if(FOCUS.on)renderFocus();aggiornaContesto();
     return;
   }
-});
+}
+$('#workoutList').addEventListener('click',gestisciClick);
 $('#btnCloseSession').onclick=()=>{
   const g=giornoCorrente();
   const s=dati.sessioni.find(x=>x.data===oggiISO()&&g&&x.giorno===g.id&&!x.chiusa);
@@ -1080,6 +1216,87 @@ $('#btnCloseSession').onclick=()=>{
   renderAll();
   toast('Sessione salvata · '+st.serie+' serie · '+min+' min'+(s.luogoNome?' · '+s.luogoNome:''),'good');
 };
+
+/* ========================= MODALITA' TRAINER =========================
+   Un esercizio alla volta a schermo pieno: si passa il telefono al PT.
+   Si cambia SOLO con le frecce: la pagina dietro è bloccata, così nessuno
+   scroll accidentale ti sbatte in fondo alla scheda. ==================== */
+const FOCUS={on:false,idx:0};
+function apriFocus(exId){
+  const g=giornoCorrente();if(!g||!g.esercizi.length)return;
+  const i=g.esercizi.findIndex(e=>e.id===exId);
+  FOCUS.on=true;FOCUS.idx=i<0?0:i;
+  document.body.classList.add('locked');
+  buzz(HAP.tap);renderFocus();
+}
+function chiudiFocus(){
+  FOCUS.on=false;
+  document.body.classList.remove('locked');
+  $('#focusHost').innerHTML='';
+}
+function focusVai(d){
+  const g=giornoCorrente();if(!g)return;
+  const n=Math.min(g.esercizi.length-1,Math.max(0,FOCUS.idx+d));
+  if(n===FOCUS.idx)return;
+  FOCUS.idx=n;buzz(HAP.tap);
+  renderFocus();
+  const b=$('#focusHost .fx-body');if(b)b.scrollTop=0;   // il nuovo esercizio parte dall'alto
+}
+function renderFocus(){
+  if(!FOCUS.on)return;
+  const g=giornoCorrente(), s=sessioneAperta(true);
+  const e=g.esercizi[FOCUS.idx];if(!e){chiudiFocus();return;}
+  const arr=s.esercizi[e.id]||[], fatte=arr.filter(x=>x.fatta).length, done=fatte>=e.serie;
+  const nextIdx=arr.findIndex(x=>!x.fatta);
+  const pr=recordCarico(e.id,s.id), sg=suggerimento(e);
+  const isPR=x=>pr!=null&&x.fatta&&x.kg!=null&&x.kg>pr;
+  const dots=g.esercizi.map((x,i)=>{
+    const a=s.esercizi[x.id]||[];const compl=a.filter(y=>y.fatta).length>=x.serie;
+    return '<i class="'+(i===FOCUS.idx?'on ':'')+(compl?'ok':'')+'"></i>';}).join('');
+  const righe=arr.map((serie,i)=>{
+    const ult=ultimaSerie(e.id,i);
+    const kg=serie.kg!=null?serie.kg:(ult&&ult.kg!=null?ult.kg:'');
+    const rp=serie.reps!=null?serie.reps:(ult&&ult.reps!=null?ult.reps:'');
+    return '<div class="serie'+(serie.fatta?' fatta':'')+(isPR(serie)?' pr':'')+(i===nextIdx?' next':'')+'" data-i="'+i+'">'+
+      '<span class="n tnum">'+(i+1)+'</span>'+
+      '<div class="fld"><input type="number" inputmode="decimal" step="0.5" min="0" data-f="kg" placeholder="kg" value="'+kg+'" aria-label="Carico serie '+(i+1)+'">'+
+        '<span class="stp"><button data-s="kg" data-d="2.5" aria-label="Più peso">＋</button><button data-s="kg" data-d="-2.5" aria-label="Meno peso">−</button></span></div>'+
+      '<div class="fld"><input type="number" inputmode="numeric" min="0" data-f="reps" placeholder="rip" value="'+rp+'" aria-label="Ripetizioni serie '+(i+1)+'">'+
+        '<span class="stp"><button data-s="reps" data-d="1" aria-label="Più ripetizioni">＋</button><button data-s="reps" data-d="-1" aria-label="Meno ripetizioni">−</button></span></div>'+
+      '<button class="ck" data-a="ck" aria-label="Serie '+(i+1)+' fatta">✓</button></div>';
+  }).join('');
+  $('#focusHost').innerHTML='<div class="focus" data-ex="'+esc(e.id)+'" style="--exc:'+colorEx(e.id)+'">'+
+    '<div class="fx-top"><span class="cnt tnum">'+(FOCUS.idx+1)+'/'+g.esercizi.length+'</span>'+
+      '<span class="fx-dots">'+dots+'</span>'+
+      '<button class="fx-x" data-a="chiudi" aria-label="Esci dalla modalità trainer">✕</button></div>'+
+    '<div class="fx-body">'+
+      '<h2 class="fx-name">'+esc(e.nome)+'</h2>'+
+      '<div class="fx-meta"><span class="pill">'+GRUPPI[gruppoDi(e)].n+'</span>'+
+        '<span class="pill">'+e.serie+' × '+e.repMin+(e.repMax>e.repMin?'–'+e.repMax:'')+' rip</span>'+
+        '<span class="pill">rec '+e.rec+'s</span>'+
+        (sg.kg!=null?'<span class="pill">'+(sg.su?'consigliato ':'ultimo ')+sg.kg+' kg</span>':'')+
+        (pr!=null?'<span class="pill">record '+pr+' kg</span>':'')+'</div>'+
+      (e.desc?'<div class="fx-how"><b>Come si fa</b>'+esc(e.desc)+'</div>':'')+
+      (e.note?'<p class="muted" style="margin-top:10px">'+esc(e.note)+'</p>':'')+
+      '<div class="fx-sets"><div class="sethead"><span>#</span><span>Carico kg</span><span>Ripetizioni</span><span>Fatta</span></div>'+righe+'</div>'+
+      '<button class="fx-pt'+(ptEs(s,e.id)?' on':'')+'" data-a="ptex">🧑‍🏫 <span>Eseguito col personal trainer</span><span class="sw"></span></button>'+
+      (done?'<div class="fx-done">✔ Esercizio completato'+(FOCUS.idx<g.esercizi.length-1?' — vai al prossimo':'')+'</div>':'')+
+    '</div>'+
+    '<div class="fx-nav">'+
+      '<button data-a="prev"'+(FOCUS.idx===0?' disabled':'')+'>‹ Precedente</button>'+
+      '<button class="avanti" data-a="next"'+(FOCUS.idx>=g.esercizi.length-1?' disabled':'')+'>Successivo ›</button>'+
+    '</div></div>';
+}
+$('#focusHost').addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;
+  const a=b.dataset.a;
+  if(a==='chiudi'){chiudiFocus();renderWorkout();return;}
+  if(a==='prev'){focusVai(-1);return;}
+  if(a==='next'){focusVai(1);return;}
+  if(a==='ptex'){togglePTes(e.target.closest('.focus').dataset.ex);return;}
+  gestisciClick(e);          // stepper e spunta: stessa logica della lista
+});
+$('#focusHost').addEventListener('input',e=>gestisciInput(e));
 
 /* ========================= TIMER ========================= */
 /* usa l'istante di FINE, non un contatore: resta corretto anche se lo
@@ -1155,6 +1372,7 @@ function renderHistory(){
     const min=(s.inizio&&s.fine)?Math.max(1,Math.round((s.fine-s.inizio)/60000)):null;
     return '<div class="card sess"><details><summary>'+
       '<span class="d">'+fmtData(s.data)+'</span><span class="pill">'+esc(s.giorno)+(gg?' · '+esc(gg.nome):'')+'</span>'+
+      (ptSessione(s)?'<span class="ptbadge">🧑‍🏫 PT</span>':'')+
       '<span class="meta grow">'+st.serie+' serie · '+Math.round(st.vol).toLocaleString('it-IT')+' kg'+
       ((s.inizio||s.luogoNome)?'<br>'+(s.inizio?fmtOra(s.inizio)+(min?' · '+min+' min':''):'')+(s.luogoNome?' · 📍'+esc(s.luogoNome):''):'')+
       '</span></summary>'+
@@ -1162,7 +1380,7 @@ function renderHistory(){
       Object.entries(s.esercizi).map(([id,arr])=>{
         const fatte=arr.filter(x=>x.fatta);if(!fatte.length)return '';
         const ex=exById(id);
-        return '<tr><td>'+esc(ex?ex.nome:id)+'</td><td class="tnum">'+fatte.map(x=>(x.kg??'—')+'×'+(x.reps??'—')).join(' · ')+'</td></tr>';
+        return '<tr><td>'+esc(ex?ex.nome:id)+(ptEs(s,id)?' <span class="ptbadge">PT</span>':'')+'</td><td class="tnum">'+fatte.map(x=>(x.kg??'—')+'×'+(x.reps??'—')).join(' · ')+'</td></tr>';
       }).join('')+'</table>'+
       '<div class="row noprint" style="margin-top:10px"><button class="btn sm danger" data-del="'+esc(s.id)+'">Elimina sessione</button></div>'+
       '</details></div>';
@@ -1335,7 +1553,7 @@ function renderReportGiorno(dataISO){
     const g=dati.scheda.giorni.find(x=>x.id===s.giorno);
     return 'Giorno '+esc(s.giorno)+(g?' · '+esc(g.nome):'')+
       (s.inizio?' · '+fmtOra(s.inizio)+(s.fine?'–'+fmtOra(s.fine):''):'')+
-      (s.luogoNome?' · 📍 '+esc(s.luogoNome):'');
+      (s.luogoNome?' · 📍 '+esc(s.luogoNome):'')+(ptSessione(s)?' · 🧑‍🏫 seguito dal personal trainer':'');
   }).join('<br>');
 
   let html='<div class="card"><h2 class="sec">'+dl.charAt(0).toUpperCase()+dl.slice(1)+'</h2>'+
@@ -1359,7 +1577,7 @@ function renderReportGiorno(dataISO){
         const pb=Math.max(...pf.map(x=>x.kg)), d=+(best-pb).toFixed(1);
         conf='<span><b class="tnum">'+(d>0?'+':'')+d+' kg</b>vs '+fmtData(prec.data)+'</span>';
       }
-      html+='<div class="card rex"><h2 class="sec">'+esc(nome)+'</h2>'+
+      html+='<div class="card rex"><h2 class="sec">'+esc(nome)+(ptEs(s,id)?' · con PT':'')+'</h2>'+
         '<div class="kpi"><span><b class="tnum">'+best+' kg</b>miglior carico</span>'+
         '<span><b class="tnum">'+Math.round(vol).toLocaleString('it-IT')+' kg</b>volume</span>'+
         '<span><b class="tnum">'+fatte.length+'</b>serie</span>'+conf+'</div>'+
