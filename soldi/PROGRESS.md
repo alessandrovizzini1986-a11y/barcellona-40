@@ -63,13 +63,17 @@ la chiusura mese sono elencati nella Pagella invece di aprire 3 modali.
 - [x] Città che cresce (skyline SVG, 1 edificio / 100 €, monumento per tredicesima)
 - [x] Screenshot + commit "feat(soldi): gamification" + deploy
 
-## Fase 3 — Rifinitura
-- [ ] Onboarding 3 schermate
-- [ ] Scorciatoia PWA "Aggiungi spesa" → tastierino
-- [ ] Ricerca/filtro spese; spese ricorrenti variabili
-- [ ] Accessibilità base (contrasto AA, focus, aria-label)
-- [ ] Performance (< 250 KB, prima interazione < 1 s)
-- [ ] Screenshot + commit + deploy
+## Fase 3 — Rifinitura ✅
+Lighthouse mobile (locale): performance 99, accessibility 100, best
+practices 96 (unico rilievo: il Chrome di Lighthouse nel sandbox non
+raggiunge Google Fonts). File 128 KB, font caricati non bloccanti.
+Ricerca spese e ricorrenti variabili erano già in Fase 1.
+- [x] Onboarding 3 schermate
+- [x] Scorciatoia PWA "Aggiungi spesa" → tastierino
+- [x] Ricerca/filtro spese; spese ricorrenti variabili
+- [x] Accessibilità base (contrasto AA, focus, aria-label)
+- [x] Performance (< 250 KB, prima interazione < 1 s)
+- [x] Screenshot + commit + deploy
 
 ## Fase 4 — QA
 - [ ] 1. Safe-to-spend il 27, il 12, il 26

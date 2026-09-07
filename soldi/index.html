@@ -2,7 +2,7 @@
 <html lang="it" data-theme="dark">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Soldi</title>
 <meta name="description" content="Il tuo budget mensile, in tasca. Nessun account, tutto sul telefono.">
 <meta name="theme-color" content="#0F1117" media="(prefers-color-scheme: dark)">
@@ -16,11 +16,12 @@
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap"></noscript>
 <style>
 :root{
   --bg:#0F1117; --surface:#1A1D27; --surface-2:#232736; --surface-3:#2C3144;
-  --text:#F5F6FA; --text-2:#A6ADC2; --text-3:#6F7790; --line:rgba(255,255,255,.08);
+  --text:#F5F6FA; --text-2:#A6ADC2; --text-3:#8089A3; --line:rgba(255,255,255,.08);
   --orange:#FF7A00; --orange-2:#FF9A3D; --green:#22C55E; --amber:#F59E0B; --red:#EF4444; --violet:#8B5CF6;
   --shadow:0 10px 30px rgba(0,0,0,.35); --shadow-sm:0 4px 14px rgba(0,0,0,.25);
   --r:20px; --tab-h:64px; --sat:env(safe-area-inset-top,0px); --sab:env(safe-area-inset-bottom,0px);
@@ -29,7 +30,7 @@
 }
 [data-theme=light]{
   --bg:#F6F7FB; --surface:#FFFFFF; --surface-2:#F0F2F8; --surface-3:#E4E7F0;
-  --text:#121420; --text-2:#4B5268; --text-3:#7C8399; --line:rgba(0,0,0,.08);
+  --text:#121420; --text-2:#4B5268; --text-3:#646B80; --line:rgba(0,0,0,.08);
   --shadow:0 10px 30px rgba(20,30,60,.12); --shadow-sm:0 4px 14px rgba(20,30,60,.08);
   --green:#16A34A; --amber:#D97706; --red:#DC2626; --violet:#7C3AED; --orange:#F26D00; --orange-2:#FF8A1F;
   color-scheme:light;
@@ -70,7 +71,8 @@ input:focus-visible{outline-offset:0}
 .pill.green{background:rgba(34,197,94,.16);color:var(--green)}
 .pill.amber{background:rgba(245,158,11,.18);color:var(--amber)}
 .pill.red{background:rgba(239,68,68,.16);color:var(--red)}
-.pill.violet{background:rgba(139,92,246,.18);color:var(--violet)}
+.pill.violet{background:rgba(139,92,246,.18);color:#A78BFA}
+[data-theme=light] .pill.violet,[data-theme=light] .xpbar .lv{color:#6D28D9}
 .pill.orange{background:rgba(255,122,0,.16);color:var(--orange)}
 
 /* HOME hero */
@@ -107,10 +109,10 @@ input:focus-visible{outline-offset:0}
 
 /* tab bar */
 .tabbar{position:fixed;left:0;right:0;bottom:0;height:calc(var(--tab-h) + var(--sab));padding-bottom:var(--sab);background:color-mix(in srgb,var(--surface) 88%,transparent);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-top:1px solid var(--line);display:flex;justify-content:space-around;align-items:center;z-index:40}
-.tabbar .tab{flex:1;height:var(--tab-h);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:12px;font-weight:500;color:var(--text-3);transition:color .15s;min-width:44px}
+.tabbar .tab{flex:1;height:var(--tab-h);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:14px;font-weight:500;color:var(--text-3);transition:color .15s;min-width:44px}
 .tabbar .tab svg{width:24px;height:24px}
 .tabbar .tab.active{color:var(--orange)}
-.tabbar .tab span{font-size:12px}
+.tabbar .tab span{font-size:14px}
 .fab{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#FF7A00,#FF3D71);color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 24px rgba(255,122,0,.45);margin-top:-30px;transition:transform .15s;flex:0 0 auto}
 .fab:active{transform:scale(.94)}
 .fab svg{width:30px;height:30px}
@@ -241,14 +243,14 @@ input:focus-visible{outline-offset:0}
 /* gamification */
 .xpbar{padding:10px 14px 12px;background:var(--surface);border-radius:16px;margin:12px 0 0;box-shadow:var(--shadow-sm)}
 .xpbar .top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;min-width:0}
-.xpbar .lv{font-family:var(--num);font-weight:700;font-size:14px;color:var(--violet);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
-.xpbar .xp{font-size:13px;color:var(--text-2);white-space:nowrap;display:flex;align-items:center;gap:6px;flex:0 0 auto}
+.xpbar .lv{font-family:var(--num);font-weight:700;font-size:14px;color:#A78BFA;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.xpbar .xp{font-size:14px;color:var(--text-2);white-space:nowrap;display:flex;align-items:center;gap:6px;flex:0 0 auto}
 .badges{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 .badge{background:var(--surface-2);border-radius:16px;padding:10px 4px;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;min-height:84px}
 .badge .em{font-size:28px;filter:grayscale(1);opacity:.35}
 .badge.on .em{filter:none;opacity:1}
 .badge.on{background:linear-gradient(160deg,rgba(139,92,246,.35),var(--surface-2))}
-.badge .nm{font-size:12px;line-height:1.15;color:var(--text-2)}
+.badge .nm{font-size:14px;line-height:1.15;color:var(--text-2)}
 .badge.on .nm{color:var(--text)}
 .city{display:block;width:100%;height:auto;border-radius:16px}
 .insight{display:flex;gap:10px;align-items:flex-start;background:linear-gradient(135deg,rgba(139,92,246,.22),rgba(255,122,0,.12));border-radius:18px;padding:14px;font-size:15px;margin:12px 0}
@@ -258,7 +260,7 @@ input:focus-visible{outline-offset:0}
 .pagella .grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
 .pagella .stat{background:var(--surface-2);border-radius:16px;padding:12px;text-align:center}
 .pagella .stat .v{font-family:var(--num);font-weight:700;font-size:22px}
-.pagella .stat .k{font-size:13px;color:var(--text-2)}
+.pagella .stat .k{font-size:14px;color:var(--text-2)}
 
 /* onboarding */
 .onb{position:fixed;inset:0;background:var(--bg);z-index:200;display:flex;flex-direction:column;padding:calc(var(--sat) + 30px) 24px calc(var(--sab) + 24px);overflow-y:auto}
@@ -380,11 +382,11 @@ input:focus-visible{outline-offset:0}
 
 <!-- ===== TAB BAR ===== -->
 <nav class="tabbar" aria-label="Navigazione">
-  <button class="tab active" data-tab="home" aria-label="Oggi"><svg><use href="#i-home"/></svg><span>Oggi</span></button>
-  <button class="tab" data-tab="month" aria-label="Mese"><svg><use href="#i-cal"/></svg><span>Mese</span></button>
+  <button class="tab active" data-tab="home"><svg><use href="#i-home"/></svg><span>Oggi</span></button>
+  <button class="tab" data-tab="month"><svg><use href="#i-cal"/></svg><span>Mese</span></button>
   <button class="fab" id="fab" aria-label="Aggiungi spesa"><svg><use href="#i-plus"/></svg></button>
-  <button class="tab" data-tab="goals" aria-label="Obiettivi"><svg><use href="#i-goal"/></svg><span>Obiettivi</span></button>
-  <button class="tab" data-tab="settings" aria-label="Impostazioni"><svg><use href="#i-gear"/></svg><span>Altro</span></button>
+  <button class="tab" data-tab="goals"><svg><use href="#i-goal"/></svg><span>Obiettivi</span></button>
+  <button class="tab" data-tab="settings"><svg><use href="#i-gear"/></svg><span>Altro</span></button>
 </nav>
 
 <div class="overlay" id="overlay"></div>
@@ -469,9 +471,9 @@ input:focus-visible{outline-offset:0}
 </div>
 
 <!-- ===== MODALE GENERICA ===== -->
-<div class="modal" id="modal" role="dialog" aria-modal="true"><div class="box" id="modal-box"></div></div>
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Messaggio"><div class="box" id="modal-box"></div></div>
 
-<div class="toast" id="toast" role="status" aria-live="polite"><span class="grow" id="toast-msg"></span><button id="toast-btn"></button></div>
+<div class="toast" id="toast" role="status" aria-live="polite"><span class="grow" id="toast-msg"></span><button id="toast-btn">OK</button></div>
 <canvas class="confetti hidden" id="confetti"></canvas>
 <div id="onboarding"></div>
 <script>
@@ -885,7 +887,7 @@ function renderHome(){
   // categorie preferite (6 più usate)
   const totals = byCatTotals(st.list);
   const fav = cats().slice().sort((a,b) => (b.uses||0) - (a.uses||0) || a.order - b.order).slice(0,6);
-  $('#home-cats').innerHTML = fav.map(c => `<button class="catbtn" style="--c:${c.color}" data-cat="${c.id}" aria-label="Aggiungi spesa ${esc(c.name)}"><span class="em">${c.emoji}</span><span class="nm">${esc(c.name)}</span><span class="amt num">${totals[c.id] ? eur(totals[c.id]) : '—'}</span></button>`).join('');
+  $('#home-cats').innerHTML = fav.map(c => `<button class="catbtn" style="--c:${c.color}" data-cat="${c.id}" aria-label="${esc(c.name)}: aggiungi spesa"><span class="em">${c.emoji}</span><span class="nm">${esc(c.name)}</span><span class="amt num">${totals[c.id] ? eur(totals[c.id]) : '—'}</span></button>`).join('');
   renderGamiHome(st);
 }
 $('#home-cats').addEventListener('click', e => { const b = e.target.closest('[data-cat]'); if (!b) return; b.dataset.cat ? openKeypad({catId: b.dataset.cat}) : openKeypad({}); });
@@ -988,7 +990,7 @@ function donutSVG(entries, total){
     if (v / total > 0.999) paths += `<circle cx="75" cy="75" r="49" fill="none" stroke="${cat(id).color}" stroke-width="22"/>`;
     else paths += `<path d="M${x0} ${y0} A${R} ${R} 0 ${big} 1 ${x1} ${y1} L${x2} ${y2} A${r} ${r} 0 ${big} 0 ${x3} ${y3} Z" fill="${cat(id).color}" stroke="var(--surface)" stroke-width="2"/>`;
   }
-  return `<svg viewBox="0 0 150 150" role="img" aria-label="Spese per categoria">${paths}<text x="75" y="70" text-anchor="middle" font-family="Space Grotesk" font-weight="700" font-size="20" fill="var(--text)">${fmt(total,0)} €</text><text x="75" y="90" text-anchor="middle" font-family="Inter" font-size="11" fill="var(--text-2)">variabili</text></svg>`;
+  return `<svg viewBox="0 0 150 150" role="img" aria-label="Spese per categoria">${paths}<text x="75" y="70" text-anchor="middle" font-family="Space Grotesk" font-weight="700" font-size="20" fill="var(--text)">${fmt(total,0)} €</text><text x="75" y="90" text-anchor="middle" font-family="Inter" font-size="13" fill="var(--text-2)">variabili</text></svg>`;
 }
 function barsSVG(fm, list, perDay, asOf){
   const W = 340, H = 120, padL = 4, padB = 18, n = fm.days;
@@ -1006,8 +1008,8 @@ function barsSVG(fm, list, perDay, asOf){
     if (i === todayIdx && i <= n-1) bars += `<rect x="${(padL + i*bw).toFixed(1)}" y="${H-padB+3}" width="${bw.toFixed(1)}" height="3" rx="1.5" fill="var(--orange)"/>`;
   });
   const ly = y(perDay);
-  const labels = [0, Math.floor(n/2), n-1].map(i => `<text x="${(padL + i*bw + bw/2).toFixed(1)}" y="${H-3}" text-anchor="middle" font-size="10" font-family="Inter" fill="var(--text-3)">${fmtShort(addDays(fm.start, i))}</text>`).join('');
-  return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Spesa giornaliera">${bars}<line x1="${padL}" x2="${W-padL}" y1="${ly.toFixed(1)}" y2="${ly.toFixed(1)}" stroke="var(--amber)" stroke-width="1.5" stroke-dasharray="4 4"/><text x="${W-padL}" y="${(ly-4).toFixed(1)}" text-anchor="end" font-size="10" font-family="Inter" fill="var(--amber)">budget/g ${fmt(perDay,0)} €</text>${labels}</svg>`;
+  const labels = [0, Math.floor(n/2), n-1].map(i => `<text x="${(padL + i*bw + bw/2).toFixed(1)}" y="${H-3}" text-anchor="middle" font-size="13" font-family="Inter" fill="var(--text-3)">${fmtShort(addDays(fm.start, i))}</text>`).join('');
+  return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Spesa giornaliera">${bars}<line x1="${padL}" x2="${W-padL}" y1="${ly.toFixed(1)}" y2="${ly.toFixed(1)}" stroke="var(--amber)" stroke-width="1.5" stroke-dasharray="4 4"/><text x="${W-padL}" y="${(ly-4).toFixed(1)}" text-anchor="end" font-size="13" font-family="Inter" fill="var(--amber)">budget/g ${fmt(perDay,0)} €</text>${labels}</svg>`;
 }
 function renderMonth(){
   const t = today(); const cur = finMonth(t);
@@ -1480,14 +1482,14 @@ function citySVG(){
   for (let m = 0; m < Math.min(monuments, 3); m++) { const x = W - 40 - m*30; els += `<polygon points="${x},${ground} ${x+14},${ground-78} ${x+28},${ground}" fill="#FF7A00"/><rect x="${x+12}" y="${ground-84}" width="4" height="10" fill="#FFB366"/><circle cx="${x+14}" cy="${ground-86}" r="4" fill="#FDE68A"/>`; }
   const stars = Array.from({length: 26}, (_, i) => `<circle cx="${(rnd(i*3)*W).toFixed(0)}" cy="${(rnd(i*5)*80+6).toFixed(0)}" r="${(rnd(i*7)*1.2+.5).toFixed(1)}" fill="#fff" opacity="${(rnd(i*11)*.6+.3).toFixed(2)}"/>`).join('');
   const next = 100 - (total % 100);
-  return `<svg class="city" viewBox="0 0 ${W} ${H}" role="img" aria-label="La tua città: ${buildings} edifici"><defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0B1030"/><stop offset="1" stop-color="#2A1F5C"/></linearGradient></defs><rect width="${W}" height="${H}" fill="url(#sky)"/>${stars}<circle cx="318" cy="30" r="14" fill="#FDE68A"/><circle cx="324" cy="26" r="12" fill="#1A1F4A"/>${els}<rect x="0" y="${ground}" width="${W}" height="${H-ground}" fill="#141838"/>${n === 0 ? `<text x="${W/2}" y="${ground-30}" text-anchor="middle" font-family="Inter" font-size="13" fill="#A6ADC2">Terreno pronto: il primo edificio arriva a 100 € risparmiati</text>` : ''}<text x="12" y="${H-9}" font-family="Inter" font-size="11" fill="#A6ADC2">${buildings} edifici${monuments ? ' · ' + monuments + ' monument' + (monuments===1?'o':'i') : ''} · prossimo tra ${eur(next)}</text></svg>`;
+  return `<svg class="city" viewBox="0 0 ${W} ${H}" role="img" aria-label="La tua città: ${buildings} edifici"><defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0B1030"/><stop offset="1" stop-color="#2A1F5C"/></linearGradient></defs><rect width="${W}" height="${H}" fill="url(#sky)"/>${stars}<circle cx="318" cy="30" r="14" fill="#FDE68A"/><circle cx="324" cy="26" r="12" fill="#1A1F4A"/>${els}<rect x="0" y="${ground}" width="${W}" height="${H-ground}" fill="#141838"/>${n === 0 ? `<text x="${W/2}" y="${ground-30}" text-anchor="middle" font-family="Inter" font-size="14" fill="#C3C9DA">Terreno pronto: il primo edificio arriva a 100 € risparmiati</text>` : ''}<text x="12" y="${H-8}" font-family="Inter" font-size="13" fill="#C3C9DA">${buildings} edifici${monuments ? ' · ' + monuments + ' monument' + (monuments===1?'o':'i') : ''} · prossimo tra ${eur(next)}</text></svg>`;
 }
 
 /* ---- rendering in home / obiettivi ---- */
 function renderGamiHome(st){
   const lv = levelOf(G().xp); const pct = lv.to ? (G().xp - lv.from) / (lv.to - lv.from) * 100 : 100;
   const streak = G().streak || 0;
-  $('#xpbar-home').innerHTML = `<div class="xpbar"><div class="top"><span class="lv">Lv${lv.n} · ${esc(lv.name)}</span><span class="xp">${streak >= 2 ? `<span class="pill orange" style="padding:3px 8px" title="Giorni di fila con spese registrate o no-spend">🔥 ${streak}</span>` : ''}<span>${G().xp} XP</span></span></div><div class="bar xp thin"><i style="width:${pct.toFixed(0)}%"></i></div>${lv.to ? `<div class="small faint" style="margin-top:6px;font-size:13px">${lv.to - G().xp} XP al Lv${lv.n+1} · ${esc(LEVELS[lv.n][1])}</div>` : ''}</div>`;
+  $('#xpbar-home').innerHTML = `<div class="xpbar"><div class="top"><span class="lv">Lv${lv.n} · ${esc(lv.name)}</span><span class="xp">${streak >= 2 ? `<span class="pill orange" style="padding:3px 8px" title="Giorni di fila con spese registrate o no-spend">🔥 ${streak}</span>` : ''}<span>${G().xp} XP</span></span></div><div class="bar xp thin"><i style="width:${pct.toFixed(0)}%"></i></div>${lv.to ? `<div class="small faint" style="margin-top:6px">${lv.to - G().xp} XP al Lv${lv.n+1} · ${esc(LEVELS[lv.n][1])}</div>` : ''}</div>`;
   const ins = insights(st); const it = ins[(G().insightIdx||0) % ins.length];
   $('#insight-home').innerHTML = `<div class="insight"><span class="em">${it.em}</span><span>${esc(it.t)}</span></div>`;
   const ch = weeklyChallenge(); const w = ch.week, end = addDays(w, 6);
@@ -1532,8 +1534,45 @@ function afterMonthClose(closed){
 function showPagella(id){ const rec = S.months.find(m => m.id === id); if (rec) { modalOpen(pagellaHTML(rec, false)); $('#m-ok').onclick = modalClose; } }
 </script>
 <script>
-/* stub Fase 3 */
-function showOnboarding(force){ if (!force) { S.settings.onboarded = true; save(); } }
+/* =====================================================================
+   ONBOARDING — 3 schermate, numeri già precompilati, solo conferma
+   ===================================================================== */
+let onbStep = 0;
+function showOnboarding(force){
+  onbStep = 0; renderOnb();
+}
+function onbDone(){
+  S.settings.onboarded = true; S.settings.updatedAt = Date.now(); save();
+  $('#onboarding').innerHTML = ''; document.body.style.overflow = '';
+  renderAll(); toast('Si parte! Segna la prima spesa quando vuoi 🧡');
+}
+function renderOnb(){
+  const s = S.settings; const B = s.salary - s.fixed - s.savingsGoal; const fm = finMonth(today());
+  const dots = `<div class="dots">${[0,1,2].map(i => `<i class="${i===onbStep?'on':''}"></i>`).join('')}</div>`;
+  let body = '';
+  if (onbStep === 0) body = `<div class="spacer"></div><div class="em">🧡</div><h1>Ciao ${esc(s.name)}, sono Soldi</h1><p>Ogni giorno ti dico <b>quanto puoi spendere</b> senza toccare i 300 € da mettere da parte. Tu segni le spese in 3 tap: al resto penso io.</p><p>Niente account, niente server, niente giudizi. Tutto resta sul tuo telefono.</p><div class="spacer"></div>${dots}<button class="btn primary" id="onb-next">Vediamo i numeri</button>`;
+  else if (onbStep === 1) body = `<div class="em">🧮</div><h1>I tuoi numeri</h1><p>Li ho già messi io. Cambiali se serve, li ritrovi in Impostazioni.</p>
+    <div class="card" style="text-align:left"><div class="field"><label for="ob-salary">Stipendio netto mensile</label><div class="unit"><input id="ob-salary" type="number" inputmode="decimal" value="${s.salary}"><span>€</span></div></div>
+    <div class="field"><label for="ob-fixed">Casa &amp; fissi (mutuo, bollette, carburante, telefono, assicurazioni, abbonamenti)</label><div class="unit"><input id="ob-fixed" type="number" inputmode="decimal" value="${s.fixed}"><span>€</span></div></div>
+    <div class="row"><div class="field grow"><label for="ob-goal">Risparmio al mese</label><div class="unit"><input id="ob-goal" type="number" inputmode="decimal" value="${s.savingsGoal}"><span>€</span></div></div><div class="field grow"><label for="ob-payday">Giorno di paga</label><input id="ob-payday" type="number" inputmode="numeric" min="1" max="31" value="${s.payday}"></div></div>
+    <div class="small muted" id="ob-calc" style="margin-top:4px"></div></div>
+    <div class="spacer"></div>${dots}<div class="btnrow"><button class="btn ghost" id="onb-back">Indietro</button><button class="btn primary" id="onb-next">Perfetto</button></div>`;
+  else body = `<div class="em">🐷</div><h1>I salvadanai</h1><p>A ogni giorno di paga il risparmio del mese finisce qui, diviso così. Tredicesima e quattordicesima vanno <b>tutte</b> nei salvadanai.</p>
+    <div class="card" style="text-align:left">${goals().map(g => `<div class="row" style="padding:8px 0"><span style="font-size:28px">${g.emoji}</span><div class="grow"><div style="font-weight:600">${esc(g.name)}</div><div class="small muted">obiettivo ${eur(g.target)}</div></div><b class="num">${Math.round(splitDefault()[g.id]||0)}%</b></div>`).join('') || '<div class="small muted">Nessun salvadanaio: lo crei dopo.</div>'}
+    <div class="small muted" style="margin-top:8px">Traguardo annuo: ${eur(s.savingsGoal)} × 12 + ${eur(s.extra.tredicesima)} + ${eur(s.extra.quattordicesima)} = <b class="num">${eur(s.savingsGoal*12 + (+s.extra.tredicesima||0) + (+s.extra.quattordicesima||0))}</b></div></div>
+    <div class="spacer"></div>${dots}<div class="btnrow"><button class="btn ghost" id="onb-back">Indietro</button><button class="btn primary" id="onb-next">Si parte! 🚀</button></div>`;
+  $('#onboarding').innerHTML = `<div class="onb" role="dialog" aria-label="Benvenuto">${body}</div>`;
+  document.body.style.overflow = 'hidden';
+  const nx = $('#onb-next'), bk = $('#onb-back');
+  const calc = () => { const sal = +$('#ob-salary').value || 0, fx = +$('#ob-fixed').value || 0, g = +$('#ob-goal').value || 0; const b = sal - fx - g; $('#ob-calc').innerHTML = b >= 0 ? `Disponibile ${eur(sal - fx)} → da spendere <b class="num">${eur(b)}</b>/mese ≈ <b class="num">${eur(b / fm.days, 2)}</b> al giorno.` : `<span style="color:var(--amber)">Così i conti non tornano: mancano ${eur(-b)}. Abbassa il risparmio o i fissi.</span>`; };
+  if (onbStep === 1) { calc(); $$('#ob-salary,#ob-fixed,#ob-goal').forEach(i => i.addEventListener('input', calc)); }
+  nx.addEventListener('click', () => {
+    if (onbStep === 1) { const sal = +$('#ob-salary').value, fx = +$('#ob-fixed').value, g = +$('#ob-goal').value, pd = clamp(Math.round(+$('#ob-payday').value || 27), 1, 31);
+      if (sal > 0) S.settings.salary = sal; if (fx >= 0) S.settings.fixed = fx; if (g >= 0) S.settings.savingsGoal = g; S.settings.payday = pd; S.settings.updatedAt = Date.now(); S.meta.currentMonth = finMonth(today()).id; save(); }
+    if (onbStep < 2) { onbStep++; renderOnb(); } else onbDone();
+  });
+  if (bk) bk.addEventListener('click', () => { onbStep--; renderOnb(); });
+}
 </script>
 <script>
 /* =====================================================================
@@ -1544,9 +1583,7 @@ function showOnboarding(force){ if (!force) { S.settings.onboarded = true; save(
   if (qp.get('today')) { sessionStorage.setItem('soldi:today', qp.get('today')); }
   const local = load();
   S = normalize(local || defaultState());
-  const seed = await loadSeed();
-  if (!local) { if (seed) { S = normalize(Object.assign(defaultState(), seed)); S.seedVersion = seed.seedVersion || 1; } }
-  else if (seed) mergeSeed(seed);
+  if (!local) { const seed = await loadSeed(); if (seed) { S = normalize(Object.assign(defaultState(), seed)); S.seedVersion = seed.seedVersion || 1; } save(); }
   applyTheme();
   const closed = rolloverMonths();
   runRecurring();
@@ -1555,6 +1592,7 @@ function showOnboarding(force){ if (!force) { S.settings.onboarded = true; save(
   renderAll();
   afterMonthClose(closed);
   if (!S.settings.onboarded) showOnboarding(false);
+  if (local) loadSeed().then(seed => { if (seed && mergeSeed(seed)) { renderAll(); toast('Dati aggiornati dal seed v' + S.seedVersion + ' ✅'); } }); // in background: l'app è già interattiva
   if (qp.get('action') === 'add' || location.hash === '#add') setTimeout(() => openKeypad({}), 250);
   if ('serviceWorker' in navigator) addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
 })();
