@@ -710,7 +710,9 @@ const K_DATI='gym_v1', K_TIMER='gym_timer_v1', K_BAK='gym_v1_bak';
 /* VISTA TRAINER: con ?trainer nell'indirizzo l'app mostra lo storico
    PUBBLICATO (storico.json nel sito) invece dei dati del telefono, in
    sola lettura: nessuna scrittura tocca il localStorage di chi guarda. */
-const TRAINER=new URLSearchParams(location.search).has('trainer');
+const _qs=new URLSearchParams(location.search);
+const TRAINER=_qs.has('trainer');
+const TRAINER_VIEW=(_qs.get('trainer')||'').toLowerCase()==='report'?'report':'history';
 const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const uid=()=>Math.random().toString(36).slice(2,9);
@@ -1019,7 +1021,8 @@ $('#btnExportPT').onclick=()=>{
   toast('storico.json scaricato · mandalo in chat per pubblicarlo','good');
 };
 $('#btnLinkPT').onclick=async()=>{
-  const url=location.origin+location.pathname.replace(/index\.html$/,'')+'?trainer';
+  const base=location.origin+location.pathname.replace(/index\.html$/,'');
+  const url=base+'?trainer';
   buzz(HAP.tap);
   try{
     if(navigator.share){await navigator.share({title:'ALZA. SEGNA. MIGLIORA.',
@@ -1758,7 +1761,7 @@ function renderHistory(){
   $('#sessList').innerHTML=list.length?list.map(s=>{
     const st=statSessione(s), gg=dati.scheda.giorni.find(g=>g.id===s.giorno);
     const min=(s.inizio&&s.fine)?Math.max(1,Math.round((s.fine-s.inizio)/60000)):null;
-    return '<div class="card sess"><details><summary>'+
+    return '<div class="card sess"><details'+(TRAINER?' open':'')+'><summary>'+
       '<span class="d">'+fmtData(s.data)+'</span><span class="pill">'+esc(s.giorno)+(gg?' · '+esc(gg.nome):'')+'</span>'+
       (ptSessione(s)?'<span class="ptbadge">🧑‍🏫 PT</span>':'')+
       '<span class="meta grow">'+st.serie+' serie · '+Math.round(st.vol).toLocaleString('it-IT')+' kg'+
@@ -2143,10 +2146,10 @@ if(TRAINER){
         dati=j;if(!Array.isArray(dati.luoghi))dati.luoghi=[];if(!dati.pref)dati.pref={geo:null};
       }
       bannerTrainer(j&&j.aggiornato,!(j&&j.sessioni&&j.sessioni.length));
-      renderHistory();renderReport();vaiA('history');
+      renderHistory();renderReport();vaiA(TRAINER_VIEW);
       $('#hiText').textContent='Allenamenti di Ale';
     })
-    .catch(()=>{bannerTrainer(null,true);renderHistory();renderReport();vaiA('history');});
+    .catch(()=>{bannerTrainer(null,true);renderHistory();renderReport();vaiA(TRAINER_VIEW);});
 }
 
 /* Chiede al browser di NON buttare via i dati quando lo spazio scarseggia. */

@@ -1,6 +1,6 @@
 /* Palestra · service worker — app shell in cache, offline-first.
    Alza CACHE a ogni release per far arrivare gli aggiornamenti. */
-const CACHE = 'gym-v11';
+const CACHE = 'gym-v12';
 const SHELL = ['./', 'index.html', 'manifest.json', 'icon-192.png', 'icon-512.png', 'icon-maskable-512.png', 'apple-touch-icon.png', 'ale.jpg', 'og-palestra.jpg'];
 
 self.addEventListener('install', e => {
