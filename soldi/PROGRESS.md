@@ -21,27 +21,30 @@ voce non spuntata.
 - [x] Commit + push, workflow verde (run #347), `/soldi/` risponde
 - [x] Verifica tooling: file, commit, push, esito Actions, CDN (Fonts, Chart.js), Playwright screenshot `screenshots/test.png`
 
-## Fase 1 — Core (MVP)
-- [ ] A. Home "Oggi": safe-to-spend gigante, residuo mese · giorni alla paga, colore verde/ambra/rosso
-- [ ] A. Barra risparmio 0→300 con proiezione a fine mese
-- [ ] A. Riformulazione "300 € = 10 €/giorno"
-- [ ] A. Griglia 6 categorie preferite → tastierino → salva (max 3 tap), toast 2 s con undo
-- [ ] A. Bottone "+" fisso in basso
-- [ ] B. Tastierino: cifre grandi, virgola, quick amounts 2/5/10/20/50, nota, data (oggi/ieri), vibrazione
-- [ ] C. Mese: riepilogo stipendio/fissi/variabili/risparmio vs 300/delta/giorni
-- [ ] C. Ciambella categorie, barre giornaliere con linea budget/giorno, confronto mese precedente
-- [ ] C. Lista spese per giorno, tap = modifica, swipe sinistra = elimina con undo
-- [ ] C. Chiusura automatica al giorno di paga (archivio, pagella, reset)
-- [ ] D. Obiettivi: multipli, precaricati Fondo emergenza 3000 / Barcellona 300
-- [ ] D. Barra progresso + "mancano X · a questo ritmo N mesi"; Traguardo annuo 6.400
-- [ ] D. Entrate straordinarie (tredicesima/quattordicesima/extra) con split %
-- [ ] D. Versamento automatico risparmio a chiusura mese
-- [ ] E. Impostazioni: stipendio, fissi con sotto-voci, obiettivo, giorno paga, categorie, quick amounts, export/import, reset doppia conferma, versione, link README
-- [ ] Seed JSON: `seed.json` + caricamento/merge per `seedVersion`
-- [ ] PWA: `manifest.json`, icone 192/512, shortcut "Aggiungi spesa", `sw.js`
-- [ ] `README.md` (flusso seed in 5 righe)
-- [ ] Screenshot 390x844 Home/Tastierino/Mese/Obiettivi dark+light, guardati e corretti
-- [ ] Commit "feat(soldi): core MVP" + deploy
+## Fase 1 — Core (MVP) ✅
+Note: grafici (ciambella, barre) in SVG a mano, niente Chart.js. Test
+funzionali Playwright (scratch `test.mjs`): flusso 3 tap, undo, rollover
+mese, split 70/30, export/import, merge seed, mese negativo → tutti verdi.
+- [x] A. Home "Oggi": safe-to-spend gigante, residuo mese · giorni alla paga, colore verde/ambra/rosso
+- [x] A. Barra risparmio 0→300 con proiezione a fine mese
+- [x] A. Riformulazione "300 € = 10 €/giorno"
+- [x] A. Griglia 6 categorie preferite → tastierino → salva (max 3 tap), toast 2 s con undo
+- [x] A. Bottone "+" fisso in basso
+- [x] B. Tastierino: cifre grandi, virgola, quick amounts 2/5/10/20/50, nota, data (oggi/ieri), vibrazione
+- [x] C. Mese: riepilogo stipendio/fissi/variabili/risparmio vs 300/delta/giorni
+- [x] C. Ciambella categorie, barre giornaliere con linea budget/giorno, confronto mese precedente
+- [x] C. Lista spese per giorno, tap = modifica, swipe sinistra = elimina con undo
+- [x] C. Chiusura automatica al giorno di paga (archivio, pagella, reset)
+- [x] D. Obiettivi: multipli, precaricati Fondo emergenza 3000 / Barcellona 300
+- [x] D. Barra progresso + "mancano X · a questo ritmo N mesi"; Traguardo annuo 6.400
+- [x] D. Entrate straordinarie (tredicesima/quattordicesima/extra) con split %
+- [x] D. Versamento automatico risparmio a chiusura mese
+- [x] E. Impostazioni: stipendio, fissi con sotto-voci, obiettivo, giorno paga, categorie, quick amounts, export/import, reset doppia conferma, versione, link README
+- [x] Seed JSON: `seed.json` + caricamento/merge per `seedVersion`
+- [x] PWA: `manifest.json`, icone 192/512, shortcut "Aggiungi spesa", `sw.js`
+- [x] `README.md` (flusso seed in 5 righe)
+- [x] Screenshot 390x844 Home/Tastierino/Mese/Obiettivi dark+light, guardati e corretti
+- [x] Commit "feat(soldi): core MVP" + deploy
 
 ## Fase 2 — Gamification
 - [ ] XP (+10 spesa max 5/g, +25 no-spend day, +50 settimana sotto budget, +200 mese ≥300, +100 obiettivo)
