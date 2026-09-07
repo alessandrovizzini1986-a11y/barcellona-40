@@ -35,7 +35,7 @@
   color-scheme:light;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);font-size:16px;line-height:1.35;-webkit-font-smoothing:antialiased;overscroll-behavior-y:none}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);font-size:16px;line-height:1.35;-webkit-font-smoothing:antialiased;overscroll-behavior-y:none;overflow-x:hidden;max-width:100vw}
 body{min-height:100dvh;padding-top:var(--sat)}
 button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer;border:0;background:none;padding:0;margin:0;touch-action:manipulation}
@@ -239,10 +239,10 @@ input:focus-visible{outline-offset:0}
 .emojigrid button.on{background:var(--surface-3)}
 
 /* gamification */
-.xpbar{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--surface);border-radius:16px;margin:12px 0 0;box-shadow:var(--shadow-sm)}
-.xpbar .lv{font-family:var(--num);font-weight:700;font-size:14px;color:var(--violet);white-space:nowrap}
-.xpbar .bar{flex:1}
-.xpbar .xp{font-size:13px;color:var(--text-2);white-space:nowrap}
+.xpbar{padding:10px 14px 12px;background:var(--surface);border-radius:16px;margin:12px 0 0;box-shadow:var(--shadow-sm)}
+.xpbar .top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;min-width:0}
+.xpbar .lv{font-family:var(--num);font-weight:700;font-size:14px;color:var(--violet);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.xpbar .xp{font-size:13px;color:var(--text-2);white-space:nowrap;display:flex;align-items:center;gap:6px;flex:0 0 auto}
 .badges{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 .badge{background:var(--surface-2);border-radius:16px;padding:10px 4px;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;min-height:84px}
 .badge .em{font-size:28px;filter:grayscale(1);opacity:.35}
@@ -487,7 +487,8 @@ const uid = () => Math.random().toString(36).slice(2,10) + Date.now().toString(3
 const clamp = (v,a,b) => Math.min(b, Math.max(a, v));
 const round2 = v => Math.round(v*100)/100;
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
-const vibrate = (p=12) => { try { navigator.vibrate && navigator.vibrate(p); } catch(e){} };
+let userGesture = false; addEventListener('pointerdown', () => { userGesture = true; }, {once:true, passive:true}); addEventListener('keydown', () => { userGesture = true; }, {once:true});
+const vibrate = (p=12) => { if (!userGesture) return; try { navigator.vibrate && navigator.vibrate(p); } catch(e){} };
 
 /* ---------- formattazione ---------- */
 const nf0 = new Intl.NumberFormat('it-IT', {maximumFractionDigits:0});
@@ -803,7 +804,7 @@ let openSheet = null;
 function sheetOpen(id){
   if (openSheet && openSheet !== id) $('#' + openSheet).classList.remove('open');
   openSheet = id; $('#overlay').classList.add('open'); $('#' + id).classList.add('open');
-  document.body.style.overflow = 'hidden';
+  document.body.style.overflow = 'hidden'; $('#toast').classList.remove('show'); clearTimeout(toastTimer);
 }
 function sheetClose(){
   if (openSheet) $('#' + openSheet).classList.remove('open');
@@ -1030,9 +1031,10 @@ function renderMonth(){
     <span class="k">Obiettivo</span><span class="v num">${eur(goal)}</span>
     <span class="k">Delta</span><span class="v num" style="color:${delta>=0?'var(--green)':'var(--red)'}">${delta>=0?'+':''}${eur(delta)}</span>
     ${isCur ? `<span class="k">Budget variabile residuo</span><span class="v num">${eur(st.residual)} · ${st.daysLeft} gg</span>` : ''}
-  </div><div style="margin-top:10px">${cmp}</div></div>`;
+  </div><div class="row between" style="margin-top:10px;flex-wrap:wrap">${cmp}${arch ? `<button class="btn ghost sm" id="btn-pagella">📋 Pagella</button>` : ''}</div></div>`;
+  const bp = $('#btn-pagella'); if (bp) bp.addEventListener('click', () => showPagella(fm.id));
   const totals = byCatTotals(st.list); const entries = Object.entries(totals).sort((a,b) => b[1]-a[1]);
-  $('#month-donut').innerHTML = `<div class="card"><h2>Per categoria</h2><div class="donutwrap">${donutSVG(entries, st.spent)}<div class="legend grow" style="flex-direction:column;gap:6px">${entries.slice(0,6).map(([id,v]) => `<div class="it"><span class="dot" style="background:${cat(id).color}"></span><span class="nm">${cat(id).emoji} ${esc(cat(id).name)}</span><b class="num">${eur(v)}</b></div>`).join('') || '<div class="it">Nessuna spesa ancora</div>'}</div></div></div>`;
+  $('#month-donut').innerHTML = `<div class="card"><h2>Per categoria</h2><div class="donutwrap">${donutSVG(entries, st.spent)}<div class="legend grow" style="flex-direction:column;flex-wrap:nowrap;gap:6px">${entries.slice(0,6).map(([id,v]) => `<div class="it"><span class="dot" style="background:${cat(id).color}"></span><span class="nm">${cat(id).emoji} ${esc(cat(id).name)}</span><b class="num">${eur(v)}</b></div>`).join('') || '<div class="it">Nessuna spesa ancora</div>'}</div></div></div>`;
   $('#month-bars').innerHTML = `<div class="card"><h2>Giorno per giorno</h2>${barsSVG(fm, st.list, st.perDayIdeal, asOf)}<div class="row between small muted" style="margin-top:6px"><span>media ${eur(st.avgDaily, 2)}/g</span><span>ideale ${eur(st.perDayIdeal, 2)}/g</span></div></div>`;
   // lista
   let list = st.list.slice().sort((a,b) => b.date.localeCompare(a.date) || (b.ts||0) - (a.ts||0));
@@ -1287,11 +1289,251 @@ async function resetAll(){
 }
 </script>
 <script>
-/* stub Fase 1: sostituito in Fase 2 */
-function renderGamiHome(){ $('#xpbar-home').innerHTML = ''; $('#insight-home').innerHTML=''; $('#challenge-home').innerHTML=''; $('#city-home').innerHTML=''; }
-function renderBadges(){ $('#badges-card').innerHTML = ''; }
+/* =====================================================================
+   GAMIFICATION — ogni meccanica è legata a un evento finanziario reale.
+   Niente streak di login, niente classifiche, niente confetti a ogni spesa.
+   ===================================================================== */
+const LEVELS = [
+  [0,'Portafoglio Bucato'],[100,'Apprendista del Resto'],[250,'Cacciatore di Sconti'],[500,'Contabile di Casa'],
+  [800,'Formica Emiliana'],[1200,'Guardiano del Budget'],[1700,'Stratega del Salvadanaio'],[2300,'Maestro del Residuo'],
+  [3000,'Drago del Risparmio'],[4000,'Squalo del Risparmio']
+];
+const BADGES = [
+  {id:'first',       em:'✍️', name:'Prima spesa',            desc:'Hai registrato la prima spesa'},
+  {id:'first300',    em:'🏆', name:'Primo mese a +300',      desc:'Mese chiuso con almeno 300 € risparmiati'},
+  {id:'week7',       em:'📅', name:'7 giorni sotto budget',  desc:'Una settimana intera sotto il budget giornaliero'},
+  {id:'nospend3',    em:'🧘', name:'3 no-spend di fila',     desc:'Tre giorni consecutivi senza spese variabili'},
+  {id:'bar20',       em:'☕', name:'Bar −20%',               desc:'Bar/Pranzo fuori −20% rispetto al mese prima'},
+  {id:'fondo25',     em:'🛟', name:'Fondo al 25%',           desc:'Fondo emergenza al 25%'},
+  {id:'fondo50',     em:'🛟', name:'Fondo al 50%',           desc:'Fondo emergenza al 50%'},
+  {id:'fondo100',    em:'🏦', name:'Fondo completo',         desc:'Fondo emergenza al 100%'},
+  {id:'tredicesima', em:'🎄', name:'Tredicesima al sicuro',  desc:'Tredicesima interamente nei salvadanai'},
+  {id:'streak14',    em:'🔥', name:'14 giorni di fila',      desc:'Due settimane di registrazione senza buchi'},
+  {id:'goal',        em:'🎯', name:'Salvadanaio pieno',      desc:'Primo obiettivo raggiunto'},
+  {id:'tris',        em:'🥇', name:'Tris di mesi',           desc:'Tre mesi di fila con obiettivo centrato'},
+];
+const G = () => S.gami;
+const dayISO = ts => iso(new Date(ts));
+const firstUse = () => S.meta.firstUse || (S.meta.firstUse = dayISO(S.meta.created || Date.now()));
+function levelOf(xp){ let i = 0; for (let k = 0; k < LEVELS.length; k++) if (xp >= LEVELS[k][0]) i = k; return { n: i+1, name: LEVELS[i][1], from: LEVELS[i][0], to: LEVELS[i+1] ? LEVELS[i+1][0] : null }; }
+function addXP(n, why){
+  const before = levelOf(G().xp).n; G().xp += n; G().updatedAt = Date.now(); save();
+  const after = levelOf(G().xp);
+  if (after.n > before) { G().seenLevel = after.n; setTimeout(() => toast(`Livello ${after.n}: ${after.name}! 🎉`), 600); vibrate([20,40,20]); }
+  return n;
+}
+function unlockBadge(id, quiet){
+  if (G().badges.some(b => b.id === id)) return false;
+  const def = BADGES.find(b => b.id === id); if (!def) return false;
+  G().badges.push({ id, at: today() }); G().updatedAt = Date.now(); save();
+  if (!quiet) celebrate(`Badge sbloccato: ${def.em} ${def.name}`, def.desc);
+  return true;
+}
+/* ---- confetti (solo: obiettivo raggiunto, mese ≥300, badge) ---- */
+function celebrate(title, text, onClose){
+  vibrate([30,60,30,60,60]);
+  modalOpen(`<div style="text-align:center"><div style="font-size:56px" class="pop">🎉</div><h2>${esc(title)}</h2><p class="muted" style="margin:0 0 14px">${esc(text||'')}</p><button class="btn primary" id="m-ok">Grande!</button></div>`, onClose);
+  $('#m-ok').onclick = modalClose;
+  if (REDUCED) return;
+  const c = $('#confetti'); c.classList.remove('hidden'); const ctx = c.getContext('2d');
+  c.width = innerWidth * devicePixelRatio; c.height = innerHeight * devicePixelRatio; ctx.scale(devicePixelRatio, devicePixelRatio);
+  const cols = ['#FF7A00','#22C55E','#8B5CF6','#F59E0B','#38BDF8','#F472B6'];
+  const P = Array.from({length: 120}, () => ({ x: innerWidth/2 + (Math.random()-.5)*120, y: innerHeight*0.45, vx: (Math.random()-.5)*14, vy: -Math.random()*16-4, r: Math.random()*6+4, c: cols[Math.floor(Math.random()*cols.length)], a: Math.random()*Math.PI, va: (Math.random()-.5)*.3 }));
+  const t0 = performance.now();
+  (function frame(t){ const el = (t - t0)/1000; ctx.clearRect(0,0,innerWidth,innerHeight);
+    for (const p of P) { p.vy += .5; p.x += p.vx; p.y += p.vy; p.vx *= .99; p.a += p.va; ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.a); ctx.fillStyle = p.c; ctx.globalAlpha = Math.max(0, 1 - el/2.2); ctx.fillRect(-p.r/2,-p.r/2,p.r,p.r*.6); ctx.restore(); }
+    if (el < 2.4) requestAnimationFrame(frame); else { ctx.clearRect(0,0,innerWidth,innerHeight); c.classList.add('hidden'); } })(t0);
+}
+
+/* ---- rilevazioni a ogni apertura ---- */
+function weekId(d){ const dt = fromISO(d); const day = (dt.getDay()+6)%7; dt.setDate(dt.getDate()-day); return iso(dt); } // lunedì
+function activityDays(){ const s = new Set(expenses().map(e => e.date)); for (const d of G().noSpend) s.add(d); return s; }
+function detectNoSpend(){
+  const t = today(); const from = G().lastSeen ? addDays(G().lastSeen, 0) : firstUse();
+  const start = addDays(t, -3) > from ? addDays(t, -3) : from; // al massimo 3 giorni indietro: se sparisci una settimana non regalo XP
+  const spentDays = new Set(expenses().map(e => e.date));
+  let n = 0;
+  for (let d = start; d < t; d = addDays(d, 1)) {
+    if (d < firstUse()) continue;
+    if (!spentDays.has(d) && !G().noSpend.includes(d)) { G().noSpend.push(d); n++; }
+  }
+  if (n) { addXP(25*n); toast(n === 1 ? `Ieri zero spese: +25 XP 🧘` : `${n} giorni senza spese: +${25*n} XP 🧘`); }
+  // badge 3 di fila
+  const ns = G().noSpend.slice().sort();
+  for (let i = 2; i < ns.length; i++) if (daysBetween(ns[i-2], ns[i]) === 2) { unlockBadge('nospend3'); break; }
+}
+function computeStreak(){
+  // giorni consecutivi con almeno una spesa registrata O un no-spend day; 1 "gelo" gratis al mese copre un buco
+  const A = activityDays(); const t = today(); const used = G().freezeUsed || (G().freezeUsed = {});
+  const pending = {}; const chain = []; // [{d, bridge}] dal più recente
+  let d = A.has(t) ? t : addDays(t, -1);
+  while (d >= firstUse() && chain.length < 3650) {
+    if (A.has(d)) chain.push({ d, bridge: false });
+    else { const m = d.slice(0,7); if (used[m] === d) chain.push({ d, bridge: true }); else if (!used[m] && !pending[m]) { pending[m] = d; chain.push({ d, bridge: true }); } else break; }
+    d = addDays(d, -1);
+  }
+  while (chain.length && chain[0].bridge) { const x = chain.shift(); const m = x.d.slice(0,7); if (pending[m] === x.d) delete pending[m]; } // un gelo vale solo tra due giorni attivi
+  while (chain.length && chain[chain.length-1].bridge) { const x = chain.pop(); const m = x.d.slice(0,7); if (pending[m] === x.d) delete pending[m]; }
+  Object.assign(used, pending);
+  const n = chain.length;
+  G().streak = n; if (n > (G().streakBest||0)) G().streakBest = n;
+  if (n >= 14) unlockBadge('streak14');
+  G().updatedAt = Date.now();
+}
+function checkWeeks(){ // settimane (lun-dom) chiuse sotto budget → +50
+  const t = today(); const thisWeek = weekId(t); let w = weekId(firstUse());
+  if (w < firstUse()) w = addDays(w, 7);
+  G().weeksClosed = G().weeksClosed || [];
+  while (addDays(w, 6) < t && w < thisWeek) {
+    if (!G().weeksClosed.includes(w)) {
+      const end = addDays(w, 6); const fm = finMonth(end); const per = budgetVar() / fm.days;
+      const spent = sum(expenses().filter(e => e.date >= w && e.date <= end));
+      G().weeksClosed.push(w);
+      if (spent <= per * 7) { addXP(50); toast(`Settimana ${fmtShort(w)}–${fmtShort(end)} sotto budget: +50 XP 🟢`); }
+      // sfida settimanale della settimana chiusa
+      const ch = G().weekly; if (ch && ch.week === w && ch.catId) { const s = sum(expenses().filter(e => e.date >= w && e.date <= end && e.catId === ch.catId)); if (s <= ch.target) { addXP(30); toast(`Sfida vinta: ${cat(ch.catId).emoji} ${eur(s)} ≤ ${eur(ch.target)} · +30 XP`); } }
+    }
+    w = addDays(w, 7);
+  }
+  // 7 giorni consecutivi sotto budget/giorno
+  const fm = finMonth(t); const per = budgetVar() / fm.days; const byDay = {}; for (const e of expenses()) byDay[e.date] = (byDay[e.date]||0) + e.amount;
+  let run = 0; for (let d = addDays(t, -1); d >= firstUse() && d >= addDays(t, -60); d = addDays(d, -1)) { if ((byDay[d]||0) <= per) { run++; if (run >= 7) { unlockBadge('week7'); break; } } else run = 0; }
+}
+function weeklyChallenge(){
+  const t = today(); const w = weekId(t);
+  if (G().weekly && G().weekly.week === w) return G().weekly;
+  const from = addDays(w, -28), to = addDays(w, -1);
+  const hist = expenses().filter(e => e.date >= from && e.date <= to);
+  let ch = { week: w, catId: null, target: 0, base: 0 };
+  if (hist.length >= 3) {
+    const tot = byCatTotals(hist); const pick = Object.entries(tot).filter(([id]) => id !== 'spesa').sort((a,b) => b[1]-a[1])[0] || Object.entries(tot).sort((a,b) => b[1]-a[1])[0];
+    if (pick) ch = { week: w, catId: pick[0], base: round2(pick[1]), target: Math.max(5, Math.round(pick[1] / 4 * 0.8)) };
+  }
+  G().weekly = ch; G().updatedAt = Date.now(); save(); return ch;
+}
+function checkGoalBadges(){
+  const f = S.goals.find(g => g.id === 'fondo' && !g.deleted) || goals().find(g => /emergenz/i.test(g.name));
+  if (f && f.target > 0) { const p = f.balance / f.target; if (p >= 1) unlockBadge('fondo100'); else if (p >= .5) unlockBadge('fondo50'); else if (p >= .25) unlockBadge('fondo25'); }
+}
+function onOpen(){
+  firstUse();
+  if (expenses().length) unlockBadge('first');
+  detectNoSpend(); checkWeeks(); computeStreak(); weeklyChallenge(); checkGoalBadges();
+  G().lastSeen = today(); G().insightIdx = (G().insightIdx||0) + 1; G().updatedAt = Date.now(); save();
+}
+EV.on('open', onOpen);
+EV.on('expenseAdded', e => {
+  const d = today(); const log = G().xpLog; const cnt = log[d] || 0;
+  if (e.date === d && cnt < 5) { log[d] = cnt + 1; addXP(10); }
+  const i = G().noSpend.indexOf(e.date); if (i >= 0) G().noSpend.splice(i, 1); // era segnato no-spend: non più
+  if (expenses().length === 1) unlockBadge('first');
+  computeStreak(); save();
+});
+EV.on('goalReached', g => { addXP(100); const nb = unlockBadge('goal', true); checkGoalBadges(); celebrate(`${g.emoji} ${g.name}: obiettivo raggiunto!`, `${eur(g.target)} messi da parte. Sul serio.${nb ? ' Badge 🎯 Salvadanaio pieno sbloccato.' : ''}`); });
+EV.on('income', inc => { if (inc.type === 'tredicesima' && inc.amount >= (+S.settings.extra.tredicesima || 0)) unlockBadge('tredicesima'); checkGoalBadges(); });
+EV.on('monthClosed', rec => {
+  const hit = rec.saved >= rec.goal;
+  if (hit) { addXP(200); unlockBadge('first300', true); }
+  if (rec.prevByCat && rec.prevByCat.bar > 0 && (rec.byCat.bar||0) <= rec.prevByCat.bar * 0.8) unlockBadge('bar20', true);
+  const closed = S.months.slice().sort((a,b) => a.id.localeCompare(b.id)); const last3 = closed.slice(-3);
+  if (last3.length === 3 && last3.every(m => m.saved >= m.goal)) unlockBadge('tris', true);
+  rec.badges = G().badges.filter(b => b.at === today()).map(b => b.id);
+  checkGoalBadges();
+});
+
+/* ---- insight concreti (1 alla volta, ruotano) ---- */
+function insights(st){
+  const out = []; const goal = S.settings.savingsGoal; const fm = st.fm;
+  const totals = byCatTotals(st.list); const top = Object.entries(totals).sort((a,b) => b[1]-a[1])[0];
+  if (top && st.daysElapsed >= 3) {
+    const c = cat(top[0]); const projC = top[1] / st.daysElapsed * fm.days; const target = Math.max(10, Math.round(projC * 0.7 / 10) * 10);
+    const gain = projC - target; const days = Math.floor(gain / st.perDayIdeal);
+    if (st.projectedSaving < goal) out.push({ em: c.emoji, t: `Se tieni ${c.name} a ${eur(target)}/mese (ora viaggi a ${eur(projC)}) recuperi ${eur(gain)} e ${st.projectedSaving + gain >= goal ? 'centri i ' + eur(goal) : 'ti avvicini ai ' + eur(goal)}.` });
+    else if (days >= 1) out.push({ em: c.emoji, t: `Se tagli ${c.name} a ${eur(target)}/mese raggiungi i ${eur(goal)} con ${days} giorn${days===1?'o':'i'} di anticipo.` });
+  }
+  const ns = G().noSpend.filter(d => d >= fm.start && d <= fm.end).length;
+  if (ns) out.push({ em: '🧘', t: `${ns} giorn${ns===1?'o':'i'} senza spese questo mese: valgono ${eur(ns * st.perDayIdeal)} di budget tenuto in tasca.` });
+  const prev = sameDayPrevMonth(fm, today()); if (prev.hasData && st.daysElapsed >= 2) out.push({ em: prev.spent >= st.spent ? '📉' : '📈', t: prev.spent >= st.spent ? `Allo stesso giorno del mese scorso avevi speso ${eur(prev.spent)}: oggi sei a ${eur(st.spent)}, ${eur(prev.spent - st.spent)} in meno.` : `Allo stesso giorno del mese scorso eri a ${eur(prev.spent)}: oggi ${eur(st.spent)}. Occhio alle prossime ${st.daysLeft} giornate.` });
+  for (const g of goals()) if (g.deadline && g.balance < g.target) { const dl = daysBetween(today(), g.deadline); if (dl >= 0 && dl <= 90) out.push({ em: g.emoji, t: `${g.name} tra ${dl} giorni: mancano ${eur(g.target - g.balance)}. ${eur(Math.ceil((g.target - g.balance) / Math.max(1, dl)))} al giorno e ci sei.` }); }
+  const a = annualProgress(); if (a.total > 0) out.push({ em: '🏁', t: `Traguardo annuo: ${eur(a.total)} su ${eur(a.target)} (${Math.round(a.total/a.target*100)}%). ${eur(a.target - a.total)} e sei in cima.` });
+  if (st.spentToday === 0 && st.daysElapsed > 1) out.push({ em: '☀️', t: `Oggi zero spese finora. Se resta così: +25 XP stasera e ${eur(st.perDayIdeal)} in più di margine.` });
+  if (!out.length) out.push({ em: '🌱', t: `Registra tutto per qualche giorno: da lì arrivano i consigli fatti sui tuoi numeri.` });
+  return out;
+}
+function cityIndex(){
+  const total = sum(S.incomes.filter(i => !i.deleted)); // versamenti nei salvadanai (mensili + extra)
+  const monuments = S.incomes.filter(i => !i.deleted && (i.type === 'tredicesima' || i.type === 'quattordicesima')).length;
+  return { total, buildings: Math.floor(total / 100), monuments };
+}
+function citySVG(){
+  const { total, buildings, monuments } = cityIndex();
+  const W = 360, H = 150, ground = 122; const n = Math.min(buildings, 28); const bw = n > 14 ? 20 : 26; const gap = 4;
+  const startX = Math.max(8, (W - n*(bw+gap)) / 2);
+  let els = ''; const cols = ['#4C5BD4','#7C3AED','#2E3A8C'];
+  const rnd = i => { const x = Math.sin(i*9301+49297) * 233280; return x - Math.floor(x); };
+  for (let i = 0; i < n; i++) {
+    const h = 30 + Math.round(rnd(i) * 60); const x = startX + i*(bw+gap); const y = ground - h; const col = cols[i % 3];
+    els += `<rect x="${x}" y="${y}" width="${bw}" height="${h}" rx="2" fill="${col}"/>`;
+    if (rnd(i+7) > .5) els += `<rect x="${x + bw/2 - 3}" y="${y-8}" width="6" height="8" fill="${col}"/>`;
+    for (let r = 0; r < Math.floor((h-8)/12); r++) for (let c = 0; c < Math.floor((bw-6)/8); c++) if (rnd(i*31 + r*7 + c*3) > .35) els += `<rect x="${x + 4 + c*8}" y="${y + 6 + r*12}" width="4" height="6" fill="#FDE68A" opacity=".95"/>`;
+  }
+  for (let m = 0; m < Math.min(monuments, 3); m++) { const x = W - 40 - m*30; els += `<polygon points="${x},${ground} ${x+14},${ground-78} ${x+28},${ground}" fill="#FF7A00"/><rect x="${x+12}" y="${ground-84}" width="4" height="10" fill="#FFB366"/><circle cx="${x+14}" cy="${ground-86}" r="4" fill="#FDE68A"/>`; }
+  const stars = Array.from({length: 26}, (_, i) => `<circle cx="${(rnd(i*3)*W).toFixed(0)}" cy="${(rnd(i*5)*80+6).toFixed(0)}" r="${(rnd(i*7)*1.2+.5).toFixed(1)}" fill="#fff" opacity="${(rnd(i*11)*.6+.3).toFixed(2)}"/>`).join('');
+  const next = 100 - (total % 100);
+  return `<svg class="city" viewBox="0 0 ${W} ${H}" role="img" aria-label="La tua città: ${buildings} edifici"><defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0B1030"/><stop offset="1" stop-color="#2A1F5C"/></linearGradient></defs><rect width="${W}" height="${H}" fill="url(#sky)"/>${stars}<circle cx="318" cy="30" r="14" fill="#FDE68A"/><circle cx="324" cy="26" r="12" fill="#1A1F4A"/>${els}<rect x="0" y="${ground}" width="${W}" height="${H-ground}" fill="#141838"/>${n === 0 ? `<text x="${W/2}" y="${ground-30}" text-anchor="middle" font-family="Inter" font-size="13" fill="#A6ADC2">Terreno pronto: il primo edificio arriva a 100 € risparmiati</text>` : ''}<text x="12" y="${H-9}" font-family="Inter" font-size="11" fill="#A6ADC2">${buildings} edifici${monuments ? ' · ' + monuments + ' monument' + (monuments===1?'o':'i') : ''} · prossimo tra ${eur(next)}</text></svg>`;
+}
+
+/* ---- rendering in home / obiettivi ---- */
+function renderGamiHome(st){
+  const lv = levelOf(G().xp); const pct = lv.to ? (G().xp - lv.from) / (lv.to - lv.from) * 100 : 100;
+  const streak = G().streak || 0;
+  $('#xpbar-home').innerHTML = `<div class="xpbar"><div class="top"><span class="lv">Lv${lv.n} · ${esc(lv.name)}</span><span class="xp">${streak >= 2 ? `<span class="pill orange" style="padding:3px 8px" title="Giorni di fila con spese registrate o no-spend">🔥 ${streak}</span>` : ''}<span>${G().xp} XP</span></span></div><div class="bar xp thin"><i style="width:${pct.toFixed(0)}%"></i></div>${lv.to ? `<div class="small faint" style="margin-top:6px;font-size:13px">${lv.to - G().xp} XP al Lv${lv.n+1} · ${esc(LEVELS[lv.n][1])}</div>` : ''}</div>`;
+  const ins = insights(st); const it = ins[(G().insightIdx||0) % ins.length];
+  $('#insight-home').innerHTML = `<div class="insight"><span class="em">${it.em}</span><span>${esc(it.t)}</span></div>`;
+  const ch = weeklyChallenge(); const w = ch.week, end = addDays(w, 6);
+  if (ch.catId) {
+    const c = cat(ch.catId); const spent = sum(expenses().filter(e => e.date >= w && e.date <= end && e.catId === ch.catId)); const p = clamp(spent / ch.target, 0, 1);
+    $('#challenge-home').innerHTML = `<div class="card challenge"><div class="row between"><h2 style="margin:0">Sfida della settimana</h2><span class="pill ${spent<=ch.target?'green':'red'}">${spent <= ch.target ? 'in corsa' : 'sforata'}</span></div><div class="small muted" style="margin:6px 0 8px">${c.emoji} ${esc(c.name)}: nelle ultime 4 settimane ${eur(ch.base)}. Questa settimana max <b>${eur(ch.target)}</b>.</div><div class="bar thin ${spent<=ch.target?'reward':''}" style="${spent>ch.target?'':''}"><i style="width:${(p*100).toFixed(0)}%;${spent>ch.target?'background:var(--red)':''}"></i></div><div class="nums"><span>${eur(spent)} spesi</span><span>${spent <= ch.target ? eur(ch.target - spent) + ' di margine' : 'oltre di ' + eur(spent - ch.target)} · fino a ${fmtShort(end)}</span></div></div>`;
+  } else $('#challenge-home').innerHTML = `<div class="card challenge"><h2>Sfida della settimana</h2><div class="small muted">Prima settimana di dati: registra tutto, la sfida su misura parte lunedì ${fmtShort(addDays(w, 7))}.</div></div>`;
+  $('#city-home').innerHTML = `<div class="card" style="padding:12px"><div class="row between" style="margin:2px 4px 10px"><h2 style="margin:0">La tua città</h2><span class="small muted">1 edificio ogni 100 €</span></div>${citySVG()}</div>`;
+}
+function renderBadges(){
+  const got = new Set(G().badges.map(b => b.id)); const lv = levelOf(G().xp);
+  $('#badges-card').innerHTML = `<div class="card"><div class="row between"><h2 style="margin:0">Badge</h2><span class="pill violet">Lv${lv.n} · ${G().xp} XP</span></div><div class="small muted" style="margin:6px 0 10px">${got.size} su ${BADGES.length}. Tutti legati a soldi veri.${G().streakBest ? ' Streak migliore: ' + G().streakBest + ' giorni.' : ''}</div><div class="badges">${BADGES.map(b => `<div class="badge ${got.has(b.id)?'on':''}" title="${esc(b.desc)}" aria-label="${esc(b.name)}: ${got.has(b.id)?'sbloccato':'da sbloccare'}"><span class="em">${b.em}</span><span class="nm">${esc(b.name)}</span></div>`).join('')}</div></div>`;
+}
+
+/* ---- Pagella: fresh start al giorno di paga ---- */
+function pagellaHTML(rec, isNew){
+  const hit = rec.saved >= rec.goal; const ents = Object.entries(rec.byCat || {});
+  let best = null, worst = null;
+  if (rec.prevByCat) { const diffs = ents.map(([id,v]) => [id, v - (rec.prevByCat[id]||0)]).sort((a,b) => a[1]-b[1]); if (diffs.length) { best = diffs[0]; worst = diffs[diffs.length-1]; } }
+  else if (ents.length) { const s = ents.slice().sort((a,b) => a[1]-b[1]); best = s[0]; worst = s[s.length-1]; }
+  const badges = (rec.badges||[]).map(id => BADGES.find(b => b.id === id)).filter(Boolean);
+  let tip;
+  if (rec.saved < 0) tip = `Il mese è finito a ${eur(rec.saved)}: nessun versamento, nessun dramma. Questo mese il budget riparte da ${eur(rec.budget)}: la prima settimana punta a ${eur(rec.budget/rec.days*7)}.`;
+  else if (!hit) tip = `Mancavano ${eur(rec.goal - rec.saved)}. ${worst ? `${cat(worst[0]).emoji} ${cat(worst[0]).name} è la voce da tenere d'occhio: ` + eur(rec.byCat[worst[0]]) + ' nel mese.' : ''} Riparti con ${eur(rec.budget / rec.days)} al giorno.`;
+  else tip = `Obiettivo centrato con ${eur(rec.saved - rec.goal)} di margine. ${best ? `${cat(best[0]).emoji} ${cat(best[0]).name} è andata benissimo.` : ''} Stesso ritmo e a fine anno sei oltre il traguardo.`;
+  return `<div class="pagella"><div style="text-align:center"><div style="font-size:44px">${isNew ? '🚀' : '📋'}</div><h2 style="margin:4px 0 2px">${isNew ? 'Nuovo mese' : 'Pagella'} · ${esc(rec.name)}</h2><div class="small muted">${fmtShort(rec.start)} → ${fmtShort(rec.end)}</div></div>
+  <div class="grid"><div class="stat"><div class="v" style="color:${hit?'var(--green)':rec.saved>=0?'var(--amber)':'var(--red)'}">${eur(rec.saved)}</div><div class="k">risparmiati su ${eur(rec.goal)}</div></div><div class="stat"><div class="v">${eur(rec.spent)}</div><div class="k">${rec.count} spese variabili</div></div>
+  ${best ? `<div class="stat"><div class="v" style="font-size:26px">${cat(best[0]).emoji}</div><div class="k">migliore: ${esc(cat(best[0]).name)}${rec.prevByCat ? ' (' + (best[1] <= 0 ? '' : '+') + eur(best[1]) + ')' : ''}</div></div>` : ''}
+  ${worst && worst[0] !== (best||[])[0] ? `<div class="stat"><div class="v" style="font-size:26px">${cat(worst[0]).emoji}</div><div class="k">da tenere d'occhio: ${esc(cat(worst[0]).name)}${rec.prevByCat ? ' (+' + eur(worst[1]) + ')' : ''}</div></div>` : ''}</div>
+  ${rec.deposit > 0 ? `<div class="small" style="margin:4px 0 10px">💰 Versati ${eur(rec.deposit)} nei salvadanai: ${Object.entries(rec.alloc||{}).map(([g,v]) => (S.goals.find(x=>x.id===g)||{emoji:'?'}).emoji + ' ' + eur(v)).join(' · ')}</div>` : ''}
+  ${badges.length ? `<div class="small" style="margin:4px 0 10px">🏅 Badge: ${badges.map(b => b.em + ' ' + esc(b.name)).join(', ')}</div>` : ''}
+  <div class="insight" style="margin:6px 0 12px"><span class="em">💡</span><span>${esc(tip)}</span></div>
+  <button class="btn primary" id="m-ok">${isNew ? 'Si riparte!' : 'Chiudi'}</button></div>`;
+}
+function afterMonthClose(closed){
+  if (!closed.length) return;
+  const rec = closed[closed.length-1];
+  const openPagella = () => { modalOpen(pagellaHTML(rec, true)); $('#m-ok').onclick = modalClose; };
+  if (rec.saved >= rec.goal) celebrate(`Mese chiuso a ${eur(rec.saved)}!`, `Obiettivo ${eur(rec.goal)} centrato. ${eur(rec.deposit)} nei salvadanai.`, openPagella);
+  else openPagella();
+}
+function showPagella(id){ const rec = S.months.find(m => m.id === id); if (rec) { modalOpen(pagellaHTML(rec, false)); $('#m-ok').onclick = modalClose; } }
+</script>
+<script>
+/* stub Fase 3 */
 function showOnboarding(force){ if (!force) { S.settings.onboarded = true; save(); } }
-function afterMonthClose(closed){ if (closed.length) toast(`Mese chiuso: ${eur(closed[closed.length-1].saved)} messi da parte`); }
 </script>
 <script>
 /* =====================================================================

@@ -46,17 +46,22 @@ mese, split 70/30, export/import, merge seed, mese negativo → tutti verdi.
 - [x] Screenshot 390x844 Home/Tastierino/Mese/Obiettivi dark+light, guardati e corretti
 - [x] Commit "feat(soldi): core MVP" + deploy
 
-## Fase 2 — Gamification
-- [ ] XP (+10 spesa max 5/g, +25 no-spend day, +50 settimana sotto budget, +200 mese ≥300, +100 obiettivo)
-- [ ] Livelli ironici Lv1→Lv10, barra XP visibile
-- [ ] Streak di registrazione con 1 gelo/mese
-- [ ] Badge (max 12, reali)
-- [ ] Sfida settimanale automatica sui dati
-- [ ] Insight concreti in home (rotazione)
-- [ ] Fresh start: "Nuovo mese 🚀" + Pagella
-- [ ] Celebrazione (confetti + vibrazione) solo su eventi reali
-- [ ] Città che cresce (skyline SVG, 1 edificio / 100 €, monumento per tredicesima)
-- [ ] Screenshot + commit "feat(soldi): gamification" + deploy
+## Fase 2 — Gamification ✅
+Scelte: no-spend day rilevati all'apertura solo per gli ultimi 3 giorni
+(se sparisci una settimana non regalo XP); il gelo dello streak vale solo
+tra due giorni attivi; sfida settimanale vinta = +30 XP (non in specifica,
+aggiunto perché una sfida senza premio è moscia); badge sbloccati durante
+la chiusura mese sono elencati nella Pagella invece di aprire 3 modali.
+- [x] XP (+10 spesa max 5/g, +25 no-spend day, +50 settimana sotto budget, +200 mese ≥300, +100 obiettivo)
+- [x] Livelli ironici Lv1→Lv10, barra XP visibile
+- [x] Streak di registrazione con 1 gelo/mese
+- [x] Badge (max 12, reali)
+- [x] Sfida settimanale automatica sui dati
+- [x] Insight concreti in home (rotazione)
+- [x] Fresh start: "Nuovo mese 🚀" + Pagella
+- [x] Celebrazione (confetti + vibrazione) solo su eventi reali
+- [x] Città che cresce (skyline SVG, 1 edificio / 100 €, monumento per tredicesima)
+- [x] Screenshot + commit "feat(soldi): gamification" + deploy
 
 ## Fase 3 — Rifinitura
 - [ ] Onboarding 3 schermate
