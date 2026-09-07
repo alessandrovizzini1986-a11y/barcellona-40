@@ -230,10 +230,16 @@ header.top .place.on{border-color:rgba(214,255,62,.4);color:var(--acc);backgroun
 .serie .ck{min-height:54px;border-radius:var(--r2);border:1.5px solid var(--line2);background:var(--s3);
   font-size:20px;color:var(--faint);transition:all .18s var(--ease);display:flex;align-items:center;justify-content:center}
 .serie .ck:active{transform:scale(.88)}
-.serie.next .ck{border-color:var(--exc,var(--acc));color:var(--exc,var(--acc));animation:nextpulse 2.4s ease-out infinite}
-@keyframes nextpulse{0%{box-shadow:0 0 0 0 rgba(214,255,62,.35)}70%{box-shadow:0 0 0 10px rgba(214,255,62,0)}100%{box-shadow:0 0 0 0 rgba(214,255,62,0)}}
+.serie.next .ck{border-color:var(--exc,var(--acc));color:var(--exc,var(--acc));position:relative}
+.serie.next .ck::after{content:'';position:absolute;inset:-2px;border-radius:inherit;pointer-events:none;
+  border:2px solid var(--exc,var(--acc));opacity:.5;will-change:transform,opacity;
+  animation:nextpulse 2.4s ease-out infinite}
+@keyframes nextpulse{0%{transform:scale(1);opacity:.5}70%{transform:scale(1.35);opacity:0}100%{transform:scale(1.35);opacity:0}}
 .serie.fatta .ck{background:linear-gradient(165deg,var(--ok),#2AB87A);border-color:transparent;color:#04221A;
   box-shadow:0 8px 18px -10px rgba(61,220,151,.8)}
+.plankrow{padding:12px 15px 0 17px}
+.plankrow .btn{width:100%;min-height:54px}
+.plankrow .muted{display:block;margin-top:7px;font-size:11px;line-height:1.4}
 .tgline{padding:8px 15px 0 17px;font-size:10.5px;font-weight:800;letter-spacing:.04em;color:var(--acc2)}
 .serie .n .mx{display:block;font-style:normal;font-size:7.5px;font-weight:900;letter-spacing:.08em;color:var(--c4);margin-top:2px}
 .serie.maxset .fld:last-of-type{border-color:rgba(255,138,61,.45)}
@@ -556,6 +562,8 @@ nav.tabs button.on::before{content:'';position:absolute;top:0;left:24%;right:24%
   #printhead .muted{color:#666}
 }
 #printhead{display:none}
+/* app in secondo piano: niente animazioni, niente batteria sprecata */
+body.pausa *,body.pausa *::before,body.pausa *::after{animation-play-state:paused!important}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}
   #party,.medal{display:none!important}}
 </style>
@@ -1398,6 +1406,16 @@ function renderWorkout(){
           '<span class="stp"><button data-s="reps" data-d="'+(e.tipo==='tempo'?5:1)+'" aria-label="Più">＋</button><button data-s="reps" data-d="'+(e.tipo==='tempo'?-5:-1)+'" aria-label="Meno">−</button></span></div>'+
         '<button class="ck" data-a="ck" aria-label="Serie '+(i+1)+' fatta">✓</button></div>';
       }).join('')+
+      (e.tipo==='tempo'?(()=>{
+        const idx=arr.findIndex(x=>!x.fatta);
+        if(idx<0)return '';
+        const t=(e.target&&e.target[idx])||{};
+        let q=null;try{q=JSON.parse(localStorage.getItem(K_TIMER)||'null');}catch(_){}
+        const inCorso=q&&q.modo==='plank'&&q.exId===e.id;
+        return '<div class="plankrow"><button class="btn pri" data-a="plank" data-i="'+idx+'" data-sec="'+(t.rip||30)+'">'+
+          (inCorso?'■ Ferma il plank':'▶ Avvia serie '+(idx+1)+' · '+(t.rip||30)+'\"')+'</button>'+
+          '<span class="muted">Parte il countdown: a fine tempo vibra e segna la serie da sola.</span></div>';
+      })():'')+
       (e.tipo!=='rt'?'<div class="tgline">Target settimana '+SETT+' · '+targetTxt(e)+'</div>':'')+
       (hasLast?'<div class="lastrow"><b>Ultima volta</b> · '+arr.map((_,i)=>{const u=ultimaSerie(e.id,i);return u&&u.kg!=null?(u.kg+'×'+(u.reps??'?')):'—';}).join('  ·  ')+(pr!=null?'   ·   <b>record</b> '+pr+' kg':'')+'</div>':'')+
       '</div>';
@@ -1407,7 +1425,7 @@ function renderWorkout(){
     const def=SCHEDA.giorni.flatMap(x=>x.esercizi).find(x=>x.id===box.dataset.rt);
     if(def)renderRT(def,box,s);
   });
-  if(!RTint)RTint=setInterval(tickRT,1000);
+  if(!RTint&&document.querySelector('[data-rt]'))RTint=setInterval(tickRT,1000);
   renderWarm();
 }
 /* input diretto: salva senza ri-renderizzare (il cursore non deve saltare) */
@@ -1449,6 +1467,13 @@ function gestisciClick(e){
       toast(d.reps+' RT in '+Math.floor(d.sec/60)+"' "+(d.sec%60)+'"','good');
     }
     salva();renderWorkout();return;
+  }
+  if(btn.dataset.a==='plank'){
+    let q=null;try{q=JSON.parse(localStorage.getItem(K_TIMER)||'null');}catch(_){}
+    if(q&&q.modo==='plank'&&q.exId===exId){stopTimer();buzz(HAP.annulla);toast('Plank annullato');renderWorkout();return;}
+    const ex=exById(exId);
+    avviaTimer(+btn.dataset.sec,ex?ex.nome:'Plank',{modo:'plank',exId:exId,idx:+btn.dataset.i});
+    buzz(HAP.serie);toast('Vai! '+btn.dataset.sec+'\" di tenuta','good');renderWorkout();return;
   }
   if(btn.dataset.a==='how'){apriSheet(exById(exId));return;}
   if(btn.dataset.a==='focus'){apriFocus(exId);return;}
@@ -1694,9 +1719,10 @@ $('#focusHost').addEventListener('input',e=>gestisciInput(e));
 /* usa l'istante di FINE, non un contatore: resta corretto anche se lo
    schermo si blocca o ricarichi la pagina */
 let timerInt=null;
-function avviaTimer(sec,label){
-  localStorage.setItem(K_TIMER,JSON.stringify({fine:Date.now()+sec*1000,tot:sec,label}));
-  tickTimer();if(!timerInt)timerInt=setInterval(tickTimer,250);
+/* extra: {modo:'plank',exId,idx} → a fine countdown la serie si spunta da sola */
+function avviaTimer(sec,label,extra){
+  localStorage.setItem(K_TIMER,JSON.stringify(Object.assign({fine:Date.now()+sec*1000,tot:sec,label},extra||{})));
+  tickTimer();if(!timerInt)timerInt=setInterval(tickTimer,500);
 }
 function stopTimer(){
   localStorage.removeItem(K_TIMER);
@@ -1708,14 +1734,29 @@ function tickTimer(){
   if(!t){stopTimer();return;}
   const ms=t.fine-Date.now(), bar=$('#timerbar');
   bar.hidden=false;
-  $('#timerEx').textContent=t.label||'Recupero';
+  $('#timerEx').textContent=(t.modo==='plank'?'⏱️ ':'')+(t.label||'Recupero');
   if(ms<=0){
     bar.classList.add('due');$('#timerT').textContent='VAI!';
     $('#timerSub').textContent='recupero finito';
     $('#timerRing').setAttribute('stroke-dashoffset','0');
     if(!t.beep){
       t.beep=1;localStorage.setItem(K_TIMER,JSON.stringify(t));
-      buzz(HAP.recupero);      // niente suoni: in palestra parla solo la vibrazione
+      buzz(t.modo==='plank'?HAP.esercizio:HAP.recupero);   // niente suoni: parla la vibrazione
+      /* plank finito: segno la serie da solo, così non tocchi il telefono da terra */
+      if(t.modo==='plank'){
+        const s=sessioneAperta(true), arr=s.esercizi[t.exId];
+        if(arr&&arr[t.idx]&&!arr[t.idx].fatta){
+          arr[t.idx].reps=t.tot;arr[t.idx].kg=0;arr[t.idx].fatta=true;
+          if(!s.inizio)s.inizio=Date.now();
+          salva();
+          const ex=exById(t.exId), restano=arr.filter(x=>!x.fatta).length;
+          toast('Plank '+t.tot+'\" completato'+(restano?' · ne restano '+restano:' · esercizio finito'),'good');
+          stopTimer();
+          if(ex&&ex.rec>0&&restano)avviaTimer(ex.rec,ex.nome);
+          renderWorkout();if(FOCUS.on)renderFocus();
+          return;
+        }
+      }
     }
     if(ms<-10000)stopTimer();
     return;
@@ -1723,7 +1764,7 @@ function tickTimer(){
   bar.classList.remove('due');
   const s=Math.ceil(ms/1000);
   $('#timerT').textContent=Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
-  $('#timerSub').textContent='riposa, poi la prossima serie';
+  $('#timerSub').textContent=t.modo==='plank'?'tieni la posizione':'riposa, poi la prossima serie';
   const C=2*Math.PI*24, frazione=Math.max(0,Math.min(1,ms/(t.tot*1000)));
   $('#timerRing').setAttribute('stroke-dashoffset',(C*(1-frazione)).toFixed(1));
 }
@@ -2170,10 +2211,27 @@ if(!TRAINER){
     if(n)setTimeout(()=>toast('Riprendo l\'allenamento: '+n+' serie già salvate ✔','good'),700);
   }
 }
-aggiornaContesto();setInterval(aggiornaContesto,30000);   // data/ora/durata sempre vive
-tickTimer();if(localStorage.getItem(K_TIMER))timerInt=setInterval(tickTimer,250);
+aggiornaContesto();
+let ctxInt=setInterval(aggiornaContesto,30000);            // data/ora/durata sempre vive
+/* Risparmio batteria: in secondo piano fermo timer e animazioni; al ritorno
+   ricalcolo tutto dai timestamp, quindi nulla va perso. */
+document.addEventListener('visibilitychange',()=>{
+  const via=document.hidden;
+  document.body.classList.toggle('pausa',via);
+  if(via){
+    if(timerInt){clearInterval(timerInt);timerInt=null;}
+    if(RTint){clearInterval(RTint);RTint=null;}
+    if(ctxInt){clearInterval(ctxInt);ctxInt=null;}
+  }else{
+    if(!ctxInt)ctxInt=setInterval(aggiornaContesto,30000);
+    if(localStorage.getItem(K_TIMER)&&!timerInt)timerInt=setInterval(tickTimer,500);
+    if(!RTint&&document.querySelector('[data-rt]'))RTint=setInterval(tickRT,1000);
+    aggiornaContesto();tickTimer();tickRT();
+  }
+});
+tickTimer();if(localStorage.getItem(K_TIMER))timerInt=setInterval(tickTimer,500);
 if(dati.pref.geo===true&&!TRAINER)rilevaLuogo(false);      // luogo riconosciuto da solo
-document.addEventListener('visibilitychange',()=>{if(!document.hidden){aggiornaContesto();tickTimer();}});
+
 /* primo avvio: il tutorial parte da solo, una volta sola */
 if(!TRAINER){
   let visto=null;try{visto=localStorage.getItem(K_TUT);}catch(e){}
