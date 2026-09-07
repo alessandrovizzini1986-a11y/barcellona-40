@@ -1,7 +1,7 @@
 /* Soldi · service worker — app shell in cache, funziona offline.
    Alza VERSION a ogni release: il nuovo SW si installa in silenzio e alla
    prossima apertura la cache vecchia sparisce. */
-const VERSION = 'soldi-v3';
+const VERSION = 'soldi-v4';
 const SHELL = ['./', 'index.html', 'manifest.json', 'seed.json', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/icon-maskable-512.png', 'icons/apple-touch-icon.png'];
 
 self.addEventListener('install', e => {

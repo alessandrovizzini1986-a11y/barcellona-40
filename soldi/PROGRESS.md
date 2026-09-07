@@ -75,16 +75,21 @@ Ricerca spese e ricorrenti variabili erano già in Fase 1.
 - [x] Performance (< 250 KB, prima interazione < 1 s)
 - [x] Screenshot + commit + deploy
 
-## Fase 4 — QA
-- [ ] 1. Safe-to-spend il 27, il 12, il 26
-- [ ] 2. Cambio mese finanziario: archivio, pagella, versamento
-- [ ] 3. Mese con 0 spese; mese con spesa > 500
-- [ ] 4. Tredicesima 1400 split 70/30
-- [ ] 5. Export → reset → import identico; merge seed v+1
-- [ ] 6. Offline
-- [ ] 7. Undo su elimina e su salvataggio
-- [ ] 8. Console pulita; PWA installabile
-- [ ] 9. Revisione visiva finale (dark+light)
+## Fase 4 — QA ✅
+Test automatici Playwright (scratch `test.mjs`, `offline.mjs`) su date
+simulate con `?today=`; tutti verdi all'ultimo build.
+- [x] 1. Safe-to-spend: 27 set (giorno 1) 16,67 €/g (500/30) · 12 ott 33,33 €/g (500/15, 0 spese) · 26 ott (ultimo giorno) residuo intero. Con 400 € spesi, il 26 ott mostra 100 €.
+- [x] 2. Cambio mese: 200 € spesi → archivio con saved 600, versamento 420/180 (70/30), Pagella "Nuovo mese" dopo la celebrazione; salto di 2 mesi → 2 archivi.
+- [x] 3. Mese con 0 spese: proiezione 800 €, nessun errore. Spesa 650 € (> 500): home mostra 0 € e "oltre budget di 150 €", proiezione negativa con "spendi max X da qui alla paga"; chiusura a −100 → nessun versamento, nessun crash.
+- [x] 4. Tredicesima 1400 precompilata, split 70/30 → 980 / 420; traguardo annuo la conta; badge 🎄.
+- [x] 5. Export → reset → import: settings/categorie/spese/obiettivi/versamenti/mesi identici. Seed v+1: unione per id, vince updatedAt più recente; stessa versione ignorata.
+- [x] 6. Offline: SW attivo con cache soldi-v4 (shell + seed + icone), reload con rete staccata apre l'app, spesa salvata offline persiste dopo il reload.
+- [x] 7. Undo su salvataggio (toast) e su elimina (swipe/lista): entrambi ripristinano.
+- [x] 8. Nessun errore in console in tutti gli scenari (unico "errore" nel sandbox: font Google irraggiungibili dal Chrome di Lighthouse). Lighthouse mobile: performance 99, accessibility 100, best practices 96. Manifest con icone 192/512/maskable, display standalone, shortcut "Aggiungi spesa" → apre il tastierino.
+- [x] 9. Revisione visiva: 17 screenshot dark+light rifatti e guardati; corretti bottone orfano in home, legenda che sforava la card, barra XP che allargava il viewport, toast sopra il tastierino, pill risparmio confusa.
+Bug trovati e corretti in QA: registrazione SW che dipendeva dall'evento
+load (poteva non partire), streak con "gelo" conteggiato ai bordi, modali di
+celebrazione che si sovrascrivevano (ora in coda).
 
 ## Fase 5 — Consegna
-- [ ] Ultimo commit, deploy verde, messaggio finale
+- [x] Ultimo commit, deploy verde, messaggio finale

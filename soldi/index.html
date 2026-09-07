@@ -812,9 +812,16 @@ function sheetClose(){
   if (openSheet) $('#' + openSheet).classList.remove('open');
   openSheet = null; $('#overlay').classList.remove('open'); document.body.style.overflow = '';
 }
-let modalOnClose = null;
-function modalOpen(html, onClose){ $('#modal-box').innerHTML = html; $('#modal').classList.add('open'); modalOnClose = onClose || null; document.body.style.overflow = 'hidden'; }
-function modalClose(){ $('#modal').classList.remove('open'); document.body.style.overflow = ''; const f = modalOnClose; modalOnClose = null; if (f) f(); }
+let modalOnClose = null; const modalQueue = [];
+function modalOpen(html, onClose, queue){
+  if (queue && $('#modal').classList.contains('open')) { modalQueue.push([html, onClose]); return; }
+  $('#modal-box').innerHTML = html; $('#modal').classList.add('open'); modalOnClose = onClose || null; document.body.style.overflow = 'hidden';
+  const ok = $('#m-ok'); if (ok) ok.onclick = modalClose;
+}
+function modalClose(){
+  $('#modal').classList.remove('open'); document.body.style.overflow = ''; const f = modalOnClose; modalOnClose = null; if (f) f();
+  if (modalQueue.length && !$('#modal').classList.contains('open')) { const [h, c] = modalQueue.shift(); setTimeout(() => modalOpen(h, c), 250); }
+}
 function confirmDialog(title, text, okLabel, danger){
   return new Promise(res => {
     modalOpen(`<h2>${esc(title)}</h2><p class="muted" style="margin:0 0 6px">${text}</p><div class="btnrow"><button class="btn ghost" id="m-no">Annulla</button><button class="btn ${danger?'danger':'primary'}" id="m-ok">${esc(okLabel||'OK')}</button></div>`);
@@ -1334,8 +1341,7 @@ function unlockBadge(id, quiet){
 /* ---- confetti (solo: obiettivo raggiunto, mese ≥300, badge) ---- */
 function celebrate(title, text, onClose){
   vibrate([30,60,30,60,60]);
-  modalOpen(`<div style="text-align:center"><div style="font-size:56px" class="pop">🎉</div><h2>${esc(title)}</h2><p class="muted" style="margin:0 0 14px">${esc(text||'')}</p><button class="btn primary" id="m-ok">Grande!</button></div>`, onClose);
-  $('#m-ok').onclick = modalClose;
+  modalOpen(`<div style="text-align:center"><div style="font-size:56px" class="pop">🎉</div><h2>${esc(title)}</h2><p class="muted" style="margin:0 0 14px">${esc(text||'')}</p><button class="btn primary" id="m-ok">Grande!</button></div>`, onClose, true);
   if (REDUCED) return;
   const c = $('#confetti'); c.classList.remove('hidden'); const ctx = c.getContext('2d');
   c.width = innerWidth * devicePixelRatio; c.height = innerHeight * devicePixelRatio; ctx.scale(devicePixelRatio, devicePixelRatio);
@@ -1527,11 +1533,11 @@ function pagellaHTML(rec, isNew){
 function afterMonthClose(closed){
   if (!closed.length) return;
   const rec = closed[closed.length-1];
-  const openPagella = () => { modalOpen(pagellaHTML(rec, true)); $('#m-ok').onclick = modalClose; };
+  const openPagella = () => modalOpen(pagellaHTML(rec, true), null, true);
   if (rec.saved >= rec.goal) celebrate(`Mese chiuso a ${eur(rec.saved)}!`, `Obiettivo ${eur(rec.goal)} centrato. ${eur(rec.deposit)} nei salvadanai.`, openPagella);
   else openPagella();
 }
-function showPagella(id){ const rec = S.months.find(m => m.id === id); if (rec) { modalOpen(pagellaHTML(rec, false)); $('#m-ok').onclick = modalClose; } }
+function showPagella(id){ const rec = S.months.find(m => m.id === id); if (rec) modalOpen(pagellaHTML(rec, false)); }
 </script>
 <script>
 /* =====================================================================
@@ -1588,9 +1594,9 @@ function renderOnb(){
   const closed = rolloverMonths();
   runRecurring();
   S.meta.lastOpen = today(); save();
+  afterMonthClose(closed);   // prima la Pagella (la cosa più importante), poi eventuali badge
   EV.emit('open');
   renderAll();
-  afterMonthClose(closed);
   if (!S.settings.onboarded) showOnboarding(false);
   if (local) loadSeed().then(seed => { if (seed && mergeSeed(seed)) { renderAll(); toast('Dati aggiornati dal seed v' + S.seedVersion + ' ✅'); } }); // in background: l'app è già interattiva
   if (qp.get('action') === 'add' || location.hash === '#add') setTimeout(() => openKeypad({}), 250);
