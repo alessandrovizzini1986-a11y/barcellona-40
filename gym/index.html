@@ -633,6 +633,7 @@ nav.tabs button.on::before{content:'';position:absolute;top:0;left:24%;right:24%
     <div class="row" style="flex-wrap:wrap;gap:10px">
       <button class="btn grow" id="btnExportPT">📤 Esporta per il trainer</button>
       <button class="btn grow" id="btnLinkPT">🔗 Link per il trainer</button>
+      <a class="btn grow" href="trainer.html" target="_blank" rel="noopener" style="text-decoration:none">👁 Anteprima</a>
     </div>
     <p class="muted" style="margin-top:9px">Il file non contiene le coordinate GPS: solo i nomi delle palestre.</p>
   </div>
@@ -1022,11 +1023,11 @@ $('#btnExportPT').onclick=()=>{
 };
 $('#btnLinkPT').onclick=async()=>{
   const base=location.origin+location.pathname.replace(/index\.html$/,'');
-  const url=base+'?trainer';
+  const url=base+'trainer.html';        // pagina con anteprima dedicata al trainer
   buzz(HAP.tap);
   try{
-    if(navigator.share){await navigator.share({title:'ALZA. SEGNA. MIGLIORA.',
-      text:'Qui trovi i miei allenamenti sempre aggiornati: carichi, record e report. Dagli un occhio 💪',url});return;}
+    if(navigator.share){await navigator.share({title:'Alessandro Vizzini · report allenamenti',
+      text:'Ciao! Qui trovi i miei allenamenti sempre aggiornati: storico, target vs eseguito e report da salvare in PDF.',url});return;}
     await navigator.clipboard.writeText(url);toast('Link copiato: mandalo al trainer','good');
   }catch(e){prompt('Copia questo link e mandalo al trainer:',url);}
 };
