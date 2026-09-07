@@ -11,12 +11,15 @@ voce non spuntata.
   pushati sia sul branch di lavoro `claude/soldi-autonomy-test-37139h`
   sia su `main` (come richiesto nel prompt).
 - Sotto-app con `sw.js` proprio (stesso pattern di `gym/`), scope `./`.
+- Screenshot: Chromium headless nel sandbox non esce in rete (TLS reset
+  sul proxy); le richieste del browser vengono servite tramite `curl` con
+  `page.route`. Font Google e Chart.js caricano correttamente così.
 
 ## Fase 0 — Test di autonomia
 - [x] Repo letto (workflow `deploy-pages.yml`, push su `main` → Pages, root `.`)
 - [x] `soldi/PROGRESS.md` + `soldi/index.html` placeholder
-- [ ] Commit + push, workflow verde, `/soldi/` risponde
-- [ ] Verifica tooling: file, commit, push, esito Actions, CDN (Fonts, Chart.js), Playwright screenshot `screenshots/test.png`
+- [x] Commit + push, workflow verde (run #347), `/soldi/` risponde
+- [x] Verifica tooling: file, commit, push, esito Actions, CDN (Fonts, Chart.js), Playwright screenshot `screenshots/test.png`
 
 ## Fase 1 — Core (MVP)
 - [ ] A. Home "Oggi": safe-to-spend gigante, residuo mese · giorni alla paga, colore verde/ambra/rosso
