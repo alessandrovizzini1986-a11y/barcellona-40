@@ -935,7 +935,7 @@ function volumeGruppi(giorniIndietro){
     if(lim&&new Date(s.data+'T12:00').getTime()<lim)continue;
     for(const [id,arr] of Object.entries(s.esercizi)){
       const g=gruppoDi(exById(id)||{nome:id});
-      for(const x of arr)if(x.fatta){out[g].serie++;out[g].vol+=(x.kg||0)*(x.reps||0);}
+      for(const x of arr)if(x.fatta){out[g].serie++;out[g].vol+=volSerie(x);}
     }
   }
   return out;
@@ -1310,9 +1310,12 @@ function ultimaSerie(exId,idx){
   }
   return null;
 }
+/* Volume = kg davvero sollevati. I carichi negativi sono ASSISTENZA
+   (pull up alla macchina): non sono peso alzato, quindi non contano. */
+const volSerie=x=>(x.kg>0&&x.reps>0)?x.kg*x.reps:0;
 function statSessione(s){
   let serie=0,vol=0;
-  for(const arr of Object.values(s.esercizi))for(const x of arr)if(x.fatta){serie++;if(x.kg&&x.reps)vol+=x.kg*x.reps;}
+  for(const arr of Object.values(s.esercizi))for(const x of arr)if(x.fatta){serie++;vol+=volSerie(x);}
   return {serie,vol};
 }
 function ringSVG(pct,size,cls){
@@ -1832,7 +1835,7 @@ function seriePerEsercizio(exId,giorniIndietro){
     if(lim&&new Date(s.data+'T12:00').getTime()<lim)continue;
     const arr=(s.esercizi[exId]||[]).filter(x=>x.fatta&&x.kg!=null);
     if(!arr.length)continue;
-    out.push({data:s.data,best:Math.max(...arr.map(x=>x.kg)),vol:arr.reduce((v,x)=>v+(x.kg*(x.reps||0)),0),serie:arr});
+    out.push({data:s.data,best:Math.max(...arr.map(x=>x.kg)),vol:arr.reduce((v,x)=>v+volSerie(x),0),serie:arr});
   }
   return out;
 }
@@ -1997,7 +2000,7 @@ function renderReportGiorno(dataISO){
       const fatte=arr.filter(x=>x.fatta);if(!fatte.length)continue;
       const ex=exById(id), nome=ex?ex.nome:id;
       const best=Math.max(...fatte.map(x=>x.kg??0));
-      const vol=fatte.reduce((v,x)=>v+((x.kg||0)*(x.reps||0)),0);
+      const vol=fatte.reduce((v,x)=>v+volSerie(x),0);
       // confronto con l'ultima volta PRIMA di questa data
       const prec=dati.sessioni.filter(p=>p.chiusa&&p.data<dataISO&&(p.esercizi[id]||[]).some(x=>x.fatta&&x.kg!=null)).pop();
       let conf='';
@@ -2012,7 +2015,7 @@ function renderReportGiorno(dataISO){
         '<span><b class="tnum">'+fatte.length+'</b>serie</span>'+conf+'</div>'+
         '<table><tr><th>Serie</th><th>Carico</th><th>Rip</th><th>Volume</th></tr>'+
         fatte.map((x,i)=>'<tr><td class="tnum">'+(i+1)+'</td><td class="tnum">'+(x.kg??'—')+' kg</td>'+
-          '<td class="tnum">'+(x.reps??'—')+'</td><td class="tnum">'+Math.round((x.kg||0)*(x.reps||0))+'</td></tr>').join('')+
+          '<td class="tnum">'+(x.reps??'—')+'</td><td class="tnum">'+(volSerie(x)?Math.round(volSerie(x)):'—')+'</td></tr>').join('')+
         '</table>'+(ex&&ex.note?'<p class="muted" style="margin-top:6px">'+esc(ex.note)+'</p>':'')+'</div>';
     }
   }

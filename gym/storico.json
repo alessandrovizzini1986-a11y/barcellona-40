@@ -1,86 +1,679 @@
 {
  "v": 2,
- "aggiornato": null,
+ "aggiornato": "2026-09-07T19:20:23.480Z",
  "scheda": {
   "giorni": [
    {
     "id": "A",
-    "nome": "Full Body",
+    "nome": "Giorno A",
     "esercizi": [
      {
       "id": "leg-press",
       "nome": "Leg Press",
+      "gruppo": "gambe",
+      "rec": 105,
+      "recTxt": "1'30–2'",
+      "note": "",
+      "desc": "",
+      "tipo": "carico",
+      "perMano": false,
+      "assist": false,
       "serie": 3,
-      "repMin": 10,
-      "repMax": 12,
-      "rec": 90,
-      "note": "Quadricipiti, glutei, femorali",
-      "desc": "Schiena e bacino appoggiati. Piedi a larghezza spalle, punte in fuori. Scendi a 90° senza staccare il bacino, spingi con tutta la pianta senza bloccare le ginocchia."
+      "target": [
+       {
+        "kg": 70,
+        "rip": 12,
+        "ripMax": null,
+        "max": false
+       },
+       {
+        "kg": 80,
+        "rip": 10,
+        "ripMax": null,
+        "max": false
+       },
+       {
+        "kg": 90,
+        "rip": 8,
+        "ripMax": null,
+        "max": false
+       }
+      ],
+      "repMin": 8,
+      "repMax": 12
      },
      {
-      "id": "lat-machine",
-      "nome": "Lat Machine presa larga",
-      "serie": 3,
-      "repMin": 10,
-      "repMax": 12,
+      "id": "pull-up-ass",
+      "nome": "Pull up assistiti",
+      "gruppo": "dorso",
+      "rec": 105,
+      "recTxt": "1'30–2'",
+      "note": "Il carico è l’assistenza della macchina: meno assistenza = più difficile.",
+      "desc": "Il carico è l’assistenza della macchina: meno assistenza = più difficile.",
+      "tipo": "carico",
+      "perMano": false,
+      "assist": true,
+      "serie": 4,
+      "target": [
+       {
+        "kg": -60,
+        "rip": 9,
+        "ripMax": null,
+        "max": false
+       },
+       {
+        "kg": -60,
+        "rip": 9,
+        "ripMax": null,
+        "max": false
+       },
+       {
+        "kg": -60,
+        "rip": 9,
+        "ripMax": null,
+        "max": false
+       },
+       {
+        "kg": -60,
+        "rip": 9,
+        "ripMax": null,
+        "max": false
+       }
+      ],
+      "repMin": 9,
+      "repMax": 9
+     },
+     {
+      "id": "leg-extension",
+      "nome": "Leg Extension",
+      "gruppo": "gambe",
       "rec": 90,
-      "note": "Dorsali, bicipiti",
-      "desc": "Presa più larga delle spalle, petto in fuori. Tira verso la parte alta del petto portando i gomiti in basso. Risali controllando, spalle lontane dalle orecchie."
+      "recTxt": "1'30",
+      "note": "Fermo 2\" in alto, in massima contrazione.",
+      "desc": "Fermo 2\" in alto, in massima contrazione.",
+      "tipo": "carico",
+      "perMano": false,
+      "assist": false,
+      "serie": 3,
+      "target": [
+       {
+        "kg": 25,
+        "rip": 9,
+        "ripMax": null,
+        "max": false
+       },
+       {
+        "kg": 25,
+        "rip": 9,
+        "ripMax": null,
+        "max": false
+       },
+       {
+        "kg": 25,
+        "rip": 9,
+        "ripMax": null,
+        "max": false
+       }
+      ],
+      "repMin": 9,
+      "repMax": 9
+     },
+     {
+      "id": "pulley-triangolo",
+      "nome": "Pulley con triangolo",
+      "gruppo": "dorso",
+      "rec": 90,
+      "recTxt": "1'30",
+      "note": "",
+      "desc": "",
+      "tipo": "carico",
+      "perMano": false,
+      "assist": false,
+      "serie": 3,
+      "target": [
+       {
+        "kg": 25,
+        "rip": 11,
+        "ripMax": null,
+        "max": false
+       },
+       {
+        "kg": 25,
+        "rip": 11,
+        "ripMax": null,
+        "max": false
+       },
+       {
+        "kg": 25,
+        "rip": 11,
+        "ripMax": null,
+        "max": false
+       }
+      ],
+      "repMin": 11,
+      "repMax": 11
      },
      {
       "id": "chest-press",
-      "nome": "Chest Press machine",
-      "serie": 3,
-      "repMin": 10,
-      "repMax": 12,
-      "rec": 90,
-      "note": "Petto, tricipiti",
-      "desc": "Maniglie a metà petto, scapole appoggiate e strette. Spingi senza bloccare i gomiti, torna finché senti il petto in allungamento, senza sbattere i pesi."
+      "nome": "Chest Press",
+      "gruppo": "petto",
+      "rec": 105,
+      "recTxt": "1'30–2'",
+      "note": "",
+      "desc": "",
+      "tipo": "carico",
+      "perMano": false,
+      "assist": false,
+      "serie": 4,
+      "target": [
+       {
+        "kg": 35,
+        "rip": 8,
+        "ripMax": null,
+        "max": false
+       },
+       {
+        "kg": 35,
+        "rip": 8,
+        "ripMax": null,
+        "max": false
+       },
+       {
+        "kg": 30,
+        "rip": 10,
+        "ripMax": null,
+        "max": false
+       },
+       {
+        "kg": 30,
+        "rip": 10,
+        "ripMax": null,
+        "max": false
+       }
+      ],
+      "repMin": 8,
+      "repMax": 10
      },
      {
-      "id": "seated-row",
-      "nome": "Seated Row machine",
-      "serie": 3,
-      "repMin": 10,
-      "repMax": 12,
+      "id": "push-down",
+      "nome": "Push down",
+      "gruppo": "braccia",
       "rec": 90,
-      "note": "Dorsali, romboidi",
-      "desc": "Petto al supporto, spalle basse. Tira verso i fianchi stringendo le scapole. Niente slancio col busto; rilascia lento."
+      "recTxt": "1'30",
+      "note": "",
+      "desc": "",
+      "tipo": "carico",
+      "perMano": false,
+      "assist": false,
+      "serie": 3,
+      "target": [
+       {
+        "kg": 12.5,
+        "rip": 10,
+        "ripMax": 12,
+        "max": false
+       },
+       {
+        "kg": 12.5,
+        "rip": 10,
+        "ripMax": 12,
+        "max": false
+       },
+       {
+        "kg": 12.5,
+        "rip": 10,
+        "ripMax": 12,
+        "max": false
+       }
+      ],
+      "repMin": 10,
+      "repMax": 12
      },
      {
-      "id": "shoulder-press",
-      "nome": "Shoulder Press machine",
-      "serie": 2,
-      "repMin": 10,
-      "repMax": 12,
-      "rec": 75,
-      "note": "Spalle, tricipiti",
-      "desc": "Maniglie all'altezza spalle, addome contratto. Spingi in alto senza bloccare i gomiti, scendi fino alle orecchie."
+      "id": "plank",
+      "nome": "Plank",
+      "gruppo": "core",
+      "rec": 60,
+      "recTxt": "1'",
+      "note": "Target in secondi. Bacino in linea, addome e glutei attivi.",
+      "desc": "Target in secondi. Bacino in linea, addome e glutei attivi.",
+      "tipo": "tempo",
+      "perMano": false,
+      "assist": false,
+      "serie": 3,
+      "target": [
+       {
+        "kg": 0,
+        "rip": 35,
+        "ripMax": null,
+        "max": false
+       },
+       {
+        "kg": 0,
+        "rip": 35,
+        "ripMax": null,
+        "max": false
+       },
+       {
+        "kg": 0,
+        "rip": 35,
+        "ripMax": null,
+        "max": false
+       }
+      ],
+      "repMin": 35,
+      "repMax": 35
+     }
+    ]
+   },
+   {
+    "id": "B",
+    "nome": "Giorno B",
+    "esercizi": [
+     {
+      "id": "affondi-indietro",
+      "nome": "Affondi indietro",
+      "gruppo": "gambe",
+      "rec": 40,
+      "recTxt": "30–45\" tra le gambe",
+      "note": "Ultima serie a ripetizioni massime.",
+      "desc": "Ultima serie a ripetizioni massime.",
+      "tipo": "carico",
+      "perMano": true,
+      "assist": false,
+      "serie": 4,
+      "target": [
+       {
+        "kg": 4,
+        "rip": 10,
+        "ripMax": null,
+        "max": false
+       },
+       {
+        "kg": 6,
+        "rip": 8,
+        "ripMax": null,
+        "max": false
+       },
+       {
+        "kg": 8,
+        "rip": 6,
+        "ripMax": null,
+        "max": false
+       },
+       {
+        "kg": 4,
+        "rip": null,
+        "ripMax": null,
+        "max": true
+       }
+      ],
+      "repMin": 6,
+      "repMax": 10
+     },
+     {
+      "id": "lat-prona",
+      "nome": "Lat machine presa prona",
+      "gruppo": "dorso",
+      "rec": 105,
+      "recTxt": "1'30–2'",
+      "note": "Ultima serie a ripetizioni massime.",
+      "desc": "Ultima serie a ripetizioni massime.",
+      "tipo": "carico",
+      "perMano": false,
+      "assist": false,
+      "serie": 4,
+      "target": [
+       {
+        "kg": 30,
+        "rip": 13,
+        "ripMax": null,
+        "max": false
+       },
+       {
+        "kg": 35,
+        "rip": 11,
+        "ripMax": null,
+        "max": false
+       },
+       {
+        "kg": 40,
+        "rip": 9,
+        "ripMax": null,
+        "max": false
+       },
+       {
+        "kg": 30,
+        "rip": null,
+        "ripMax": null,
+        "max": true
+       }
+      ],
+      "repMin": 9,
+      "repMax": 13
      },
      {
       "id": "leg-curl",
       "nome": "Leg Curl",
-      "serie": 2,
-      "repMin": 12,
-      "repMax": 15,
-      "rec": 60,
-      "note": "Femorali",
-      "desc": "Rullo sopra i talloni, ginocchia in linea col perno. Fletti coi talloni verso i glutei, pausa breve, risali lento senza staccare il bacino."
+      "gruppo": "gambe",
+      "rec": 90,
+      "recTxt": "1'30",
+      "note": "Fermo 2\" in basso, in massima contrazione.",
+      "desc": "Fermo 2\" in basso, in massima contrazione.",
+      "tipo": "carico",
+      "perMano": false,
+      "assist": false,
+      "serie": 3,
+      "target": [
+       {
+        "kg": 35,
+        "rip": 9,
+        "ripMax": null,
+        "max": false
+       },
+       {
+        "kg": 35,
+        "rip": 9,
+        "ripMax": null,
+        "max": false
+       },
+       {
+        "kg": 35,
+        "rip": 9,
+        "ripMax": null,
+        "max": false
+       }
+      ],
+      "repMin": 9,
+      "repMax": 9
      },
      {
-      "id": "crunch",
-      "nome": "Crunch machine",
+      "id": "low-row",
+      "nome": "Low row",
+      "gruppo": "dorso",
+      "rec": 90,
+      "recTxt": "1'30",
+      "note": "",
+      "desc": "",
+      "tipo": "carico",
+      "perMano": false,
+      "assist": false,
+      "serie": 3,
+      "target": [
+       {
+        "kg": 30,
+        "rip": 11,
+        "ripMax": null,
+        "max": false
+       },
+       {
+        "kg": 30,
+        "rip": 11,
+        "ripMax": null,
+        "max": false
+       },
+       {
+        "kg": 30,
+        "rip": 11,
+        "ripMax": null,
+        "max": false
+       }
+      ],
+      "repMin": 11,
+      "repMax": 11
+     },
+     {
+      "id": "push-up-ginocchia",
+      "nome": "Push up con ginocchia a terra",
+      "gruppo": "petto",
+      "rec": 0,
+      "recTxt": "a sensazione",
+      "note": "Ripetizioni totali nel minor tempo possibile, in quante serie vuoi. Sotto gli 8 minuti il target sale di 5 la settimana dopo.",
+      "desc": "Ripetizioni totali nel minor tempo possibile, in quante serie vuoi. Sotto gli 8 minuti il target sale di 5 la settimana dopo.",
+      "tipo": "rt",
+      "perMano": false,
+      "assist": false,
+      "serie": 1,
+      "target": [
+       {
+        "rt": 30
+       }
+      ],
+      "repMin": 30,
+      "repMax": 30
+     },
+     {
+      "id": "curl-manubri",
+      "nome": "Curl manubri",
+      "gruppo": "braccia",
+      "rec": 90,
+      "recTxt": "1'30",
+      "note": "",
+      "desc": "",
+      "tipo": "carico",
+      "perMano": true,
+      "assist": false,
+      "serie": 3,
+      "target": [
+       {
+        "kg": 8,
+        "rip": 10,
+        "ripMax": null,
+        "max": false
+       },
+       {
+        "kg": 8,
+        "rip": 10,
+        "ripMax": null,
+        "max": false
+       },
+       {
+        "kg": 6,
+        "rip": 12,
+        "ripMax": null,
+        "max": false
+       }
+      ],
+      "repMin": 10,
+      "repMax": 12
+     },
+     {
+      "id": "alzate-laterali",
+      "nome": "Alzate laterali",
+      "gruppo": "spalle",
+      "rec": 90,
+      "recTxt": "1'30",
+      "note": "",
+      "desc": "",
+      "tipo": "carico",
+      "perMano": true,
+      "assist": false,
       "serie": 2,
+      "target": [
+       {
+        "kg": 4,
+        "rip": 15,
+        "ripMax": 20,
+        "max": false
+       },
+       {
+        "kg": 4,
+        "rip": 15,
+        "ripMax": 20,
+        "max": false
+       }
+      ],
       "repMin": 15,
-      "repMax": 15,
-      "rec": 60,
-      "note": "Addominali",
-      "desc": "Arrotola il busto avvicinando sterno e bacino: movimento corto. Espira chiudendo, risali senza scaricare la tensione."
+      "repMax": 20
      }
     ]
    }
   ]
  },
- "sessioni": [],
- "luoghi": []
+ "sessioni": [
+  {
+   "id": "2026-09-07-6wowjgd",
+   "data": "2026-09-07",
+   "giorno": "A",
+   "settimana": 2,
+   "chiusa": true,
+   "inizio": 1788804996107,
+   "fine": 1788808808971,
+   "esercizi": {
+    "leg-press": [
+     {
+      "kg": 70,
+      "reps": 12,
+      "fatta": true
+     },
+     {
+      "kg": 80,
+      "reps": 10,
+      "fatta": true
+     },
+     {
+      "kg": 90,
+      "reps": 8,
+      "fatta": true
+     }
+    ],
+    "pull-up-ass": [
+     {
+      "kg": -60,
+      "reps": 9,
+      "fatta": true
+     },
+     {
+      "kg": -60,
+      "reps": 9,
+      "fatta": true
+     },
+     {
+      "kg": -60,
+      "reps": 9,
+      "fatta": true
+     },
+     {
+      "kg": -60,
+      "reps": 9,
+      "fatta": true
+     }
+    ],
+    "leg-extension": [
+     {
+      "kg": 25,
+      "reps": 9,
+      "fatta": true
+     },
+     {
+      "kg": 25,
+      "reps": 9,
+      "fatta": true
+     },
+     {
+      "kg": 25,
+      "reps": 9,
+      "fatta": true
+     }
+    ],
+    "pulley-triangolo": [
+     {
+      "kg": 25,
+      "reps": 11,
+      "fatta": true
+     },
+     {
+      "kg": 25,
+      "reps": 11,
+      "fatta": true
+     },
+     {
+      "kg": 25,
+      "reps": 11,
+      "fatta": true
+     }
+    ],
+    "chest-press": [
+     {
+      "kg": 35,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 35,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 30,
+      "reps": 10,
+      "fatta": true
+     },
+     {
+      "kg": 30,
+      "reps": 10,
+      "fatta": true
+     }
+    ],
+    "push-down": [
+     {
+      "kg": 12.5,
+      "reps": 12,
+      "fatta": true
+     },
+     {
+      "kg": 12.5,
+      "reps": 10,
+      "fatta": true
+     },
+     {
+      "kg": 12.5,
+      "reps": 10,
+      "fatta": true
+     }
+    ],
+    "plank": [
+     {
+      "kg": 0,
+      "reps": 35,
+      "fatta": true
+     },
+     {
+      "kg": 0,
+      "reps": 35,
+      "fatta": true
+     },
+     {
+      "kg": 0,
+      "reps": 35,
+      "fatta": true
+     }
+    ]
+   },
+   "warm": {
+    "w0": true,
+    "w1": true,
+    "stretch": true
+   },
+   "luogoId": "m55o4e4",
+   "luogoNome": "MCFIT CASALECCHIO",
+   "pt": true,
+   "ptEx": {},
+   "note": "Devo ricordarm iil toast"
+  }
+ ],
+ "luoghi": [
+  {
+   "id": "m55o4e4",
+   "nome": "MCFIT CASALECCHIO"
+  },
+  {
+   "id": "pti8mu4",
+   "nome": "Casa"
+  },
+  {
+   "id": "fxlkov8",
+   "nome": "GLS"
+  }
+ ]
 }
