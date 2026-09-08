@@ -1,0 +1,18 @@
+/* Livello MEDIO: transizioni di vista, reveal, easter egg. Niente scroll-driven. */
+@media (prefers-reduced-motion: no-preference){
+  ::view-transition-old(root){ animation:vt-out 160ms var(--ease) both; }
+  ::view-transition-new(root){ animation:vt-in 220ms var(--ease) both; }
+}
+@keyframes vt-out{ to{ opacity:0; } }
+@keyframes vt-in{ from{ opacity:0; transform:translateY(6px); } }
+.view{ animation:view-in var(--dur-2) var(--ease) both; }
+@keyframes view-in{ from{ opacity:0; transform:translateY(6px); } to{ opacity:1; transform:none; } }
+.pulse{ animation:pulse 1.2s var(--ease) infinite alternate; }
+@keyframes pulse{ from{ opacity:.7; } to{ opacity:1; } }
+@media (prefers-reduced-motion: reduce){ .view,.pulse{ animation:none; } }
+
+/* Easter egg: 40 tessere che si riordinano nel numero 40 */
+.egg{ position:fixed; inset:0; z-index:90; background:rgba(14,17,22,.96); display:flex; align-items:center; justify-content:center; animation:fade-in var(--dur-2) var(--ease) both; }
+.egg__grid{ position:relative; width:min(92vw, 360px); aspect-ratio:1.6; }
+.egg__tile{ position:absolute; width:8%; aspect-ratio:1; border-radius:3px; transition:left var(--dur-3) var(--ease), top var(--dur-3) var(--ease), transform var(--dur-3) var(--ease); transition-delay:var(--d, 0ms); }
+.egg__caption{ position:absolute; left:0; right:0; bottom:12svh; text-align:center; color:var(--ink-2); font-family:var(--font-display); font-size:var(--fs-2); letter-spacing:.08em; text-transform:uppercase; }

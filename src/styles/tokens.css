@@ -1,0 +1,24 @@
+:root{
+  --bg:#0E1116; --bg-2:#151A21; --bg-3:#1C232C;
+  --ink:#F2E9DE; --ink-2:#B9B2A7; --ink-3:#7E7A72;
+  --terracotta:#E8552E; --acqua:#2CA6A4; --giallo:#F2B705; --blu:#3D5A80;
+  --ven:var(--terracotta); --sab:var(--giallo); --dom:var(--acqua);
+  --ok:#3DD68C; --warn:#F2B705; --err:#FF5C5C;
+  --radius-s:10px; --radius-m:16px; --radius-l:24px;
+  --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px; --space-5:24px; --space-6:32px; --space-7:48px;
+  --shadow-1:0 1px 2px rgba(0,0,0,.4); --shadow-2:0 8px 24px rgba(0,0,0,.45);
+  --font-display:"Clash Display", system-ui, sans-serif;
+  --font-body:"Inter", system-ui, sans-serif;
+  --fs-0:clamp(13px,3.4vw,14px); --fs-1:16px; --fs-2:clamp(18px,4.6vw,20px);
+  --fs-3:clamp(24px,6.5vw,30px); --fs-4:clamp(34px,9.5vw,44px); --fs-5:clamp(48px,14vw,72px);
+  --ease:cubic-bezier(.2,.8,.2,1); --dur-1:120ms; --dur-2:220ms; --dur-3:420ms;
+  --safe-b:env(safe-area-inset-bottom,0px);
+}
+:root[data-theme="light"]{ --bg:#F7F2EA; --bg-2:#FFFFFF; --bg-3:#EFE8DD; --ink:#151A21; --ink-2:#4A4740; --ink-3:#7E7A72; }
+@media (prefers-reduced-motion: reduce){ :root{ --dur-1:0ms; --dur-2:0ms; --dur-3:0ms; } }
+
+/* Token derivati: colore del giorno corrente (impostato da JS su <html>) e tinte */
+:root{ --day:var(--terracotta); --line:color-mix(in srgb, var(--ink) 12%, transparent); --line-2:color-mix(in srgb, var(--ink) 20%, transparent); }
+:root[data-day="ven"]{ --day:var(--ven); }
+:root[data-day="sab"]{ --day:var(--sab); }
+:root[data-day="dom"]{ --day:var(--dom); }

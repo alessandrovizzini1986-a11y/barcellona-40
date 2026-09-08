@@ -1,0 +1,23 @@
+#app{ min-height:100svh; padding-bottom:calc(72px + var(--safe-b) + var(--space-5)); }
+.header{ position:relative; padding:var(--space-5) var(--space-4) var(--space-4); background-color:var(--bg-2); background-image:var(--mosaic); background-size:420px 420px; border-bottom:1px solid var(--line); overflow:hidden; }
+.header::after{ content:""; position:absolute; inset:0; background:linear-gradient(180deg, transparent 30%, var(--bg-2) 100%); pointer-events:none; }
+.header > *{ position:relative; z-index:1; }
+.header__row{ display:flex; align-items:flex-start; justify-content:space-between; gap:var(--space-3); }
+.header__title{ font-size:var(--fs-4); font-weight:700; user-select:none; -webkit-user-select:none; touch-action:manipulation; }
+.header__title b{ color:var(--day); font-weight:700; }
+.header__sub{ color:var(--ink-2); font-size:var(--fs-0); margin-top:var(--space-1); }
+.header__anchor{ display:inline-block; margin-top:var(--space-2); font-family:var(--font-display); font-size:var(--fs-0); letter-spacing:.12em; text-transform:uppercase; color:var(--day); }
+.person-chip{ display:inline-flex; align-items:center; gap:var(--space-2); min-height:44px; padding:0 var(--space-3); border-radius:999px; background:var(--bg-3); border:1px solid var(--line-2); font-size:var(--fs-0); font-weight:600; white-space:nowrap; }
+.person-chip__dot{ width:10px; height:10px; border-radius:50%; background:var(--pc, var(--day)); }
+.view{ padding:var(--space-4); display:flex; flex-direction:column; gap:var(--space-4); max-width:720px; margin:0 auto; }
+.view--flush{ padding:0; gap:0; max-width:none; }
+.section-title{ font-size:var(--fs-2); color:var(--ink); display:flex; align-items:center; justify-content:space-between; gap:var(--space-3); }
+.section-title small{ font-family:var(--font-body); font-size:var(--fs-0); color:var(--ink-3); font-weight:500; }
+.stack{ display:flex; flex-direction:column; gap:var(--space-3); }
+.row{ display:flex; align-items:center; gap:var(--space-2); flex-wrap:wrap; }
+.grow{ flex:1; }
+.muted{ color:var(--ink-2); }
+.faint{ color:var(--ink-3); font-size:var(--fs-0); }
+.bento{ display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:var(--space-3); }
+.bento > .span-2{ grid-column:span 2; }
+@media (min-width:640px){ .bento{ grid-template-columns:repeat(4, minmax(0,1fr)); } .bento > .span-2{ grid-column:span 2; } }
