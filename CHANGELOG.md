@@ -14,3 +14,8 @@
 ## Fase 3 · Design system
 - Token "Trencadís digitale", base, layout, componenti, motion, viste. Mosaico SVG seedato per giorno (`src/ui/mosaic.js`).
 - Store localStorage con fallback in memoria, time.js con override `?now=`, router hash con View Transitions, tab bar, card tappa, badge, ring, toast, sheet, confetti lazy, easter egg "40".
+
+## Fase 4 · Onboarding, Oggi, Programma
+- Onboarding "Chi sei?" con 4 card, confetti brevi, salvataggio persona.
+- Oggi: countdown + checklist pre-partenza, bento durante il weekend (Adesso, Prossima, Progresso, Copia riepilogo, Da verificare per Alessandro), "Missione compiuta" dopo.
+- Programma: segmented Ven/Sab/Dom, timeline filtrata per persona, empty state dedicati.

@@ -4,7 +4,7 @@ import { chromium } from 'playwright-core'
 import { mkdirSync } from 'node:fs'
 const [base, outDir, ...rest] = process.argv.slice(2)
 const opts = Object.fromEntries(rest.filter((a) => a.startsWith('--')).map((a) => a.slice(2).split('=')))
-const shots = rest.filter((a) => !a.startsWith('--')).map((a) => a.split('='))
+const shots = rest.filter((a) => !a.startsWith('--')).map((a) => [a.slice(0, a.indexOf('=')), a.slice(a.indexOf('=') + 1)])
 mkdirSync(outDir, { recursive: true })
 const exe = process.env.CHROME_PATH || '/opt/pw-browsers/chromium-1194/chrome-linux/chrome'
 const b = await chromium.launch({ executablePath: exe, args: ['--no-sandbox'] })
