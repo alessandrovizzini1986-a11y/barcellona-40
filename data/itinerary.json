@@ -1,0 +1,614 @@
+{
+ "days": [
+  {
+   "date": "2026-10-16",
+   "label": "Venerdì",
+   "color": "--ven",
+   "people": [
+    "ale",
+    "monne"
+   ],
+   "stops": [
+    {
+     "id": "f1",
+     "time": "08:05",
+     "timeStatus": "verificato",
+     "venueId": "bcnT2",
+     "title": "Atterraggio a Barcellona",
+     "why": "FR2097. Il weekend inizia adesso.",
+     "details": [
+      "Monne ha 7 ore prima del check-in delle 15:00: chiedere all'hotel il deposito bagagli (da verificare)",
+      "Aerobus A2 dal T2 → Plaça Catalunya, oppure taxi"
+     ],
+     "people": [
+      "ale",
+      "monne"
+     ],
+     "badges": [
+      "verificato"
+     ],
+     "actions": {
+      "maps": true,
+      "taxi": true,
+      "metro": null
+     },
+     "distFromPrevM": null,
+     "minFromPrev": null
+    },
+    {
+     "id": "f2",
+     "time": "10:00",
+     "timeStatus": "stimato",
+     "venueId": "ciutadella",
+     "title": "Parc de la Ciutadella",
+     "why": "Prima passeggiata, ritmo lento, Barcellona che si sveglia.",
+     "details": [],
+     "people": [
+      "ale",
+      "monne"
+     ],
+     "badges": [
+      "stimato",
+      "geocoded"
+     ],
+     "actions": {
+      "maps": true,
+      "taxi": false,
+      "metro": null
+     },
+     "distFromPrevM": 15500,
+     "distMode": "auto",
+     "minFromPrev": null
+    },
+    {
+     "id": "f3",
+     "time": "11:30",
+     "timeStatus": "stimato",
+     "venueId": "santacaterina",
+     "title": "Mercat de Santa Caterina · jamón da Debón",
+     "why": "Il jamón per il bocadillo di sabato si compra qui.",
+     "details": [
+      "Xarcuteria Debón: 5.0 su 246 recensioni",
+      "Va in frigo in appartamento alle 15:00"
+     ],
+     "people": [
+      "ale",
+      "monne"
+     ],
+     "badges": [
+      "stimato",
+      "geocoded"
+     ],
+     "actions": {
+      "maps": true,
+      "taxi": false,
+      "metro": null
+     },
+     "distFromPrevM": 1781,
+     "minFromPrev": 21
+    },
+    {
+     "id": "f4",
+     "time": "13:00",
+     "timeStatus": "stimato",
+     "venueId": "chaopescao",
+     "title": "Pranzo · Chao Pescao",
+     "why": "Pesce, semplice, vicino.",
+     "details": [],
+     "people": [
+      "ale",
+      "monne"
+     ],
+     "badges": [
+      "stimato",
+      "geocoded"
+     ],
+     "actions": {
+      "maps": true,
+      "taxi": false,
+      "metro": null
+     },
+     "distFromPrevM": 2533,
+     "minFromPrev": 30
+    },
+    {
+     "id": "f5",
+     "time": "15:00",
+     "timeStatus": "verificato",
+     "venueId": "apt",
+     "title": "Check-in · Aparthotel Nàpols 116",
+     "why": "Casa per due notti. Chiedi 3 set di chiavi.",
+     "details": [
+      "Prenotazione #6178165481 · €430 totali · 2 camere, 70 m²",
+      "Reception 24h: Giulio e Manuel possono fare check-in da soli sabato",
+      "Frigo in cucina: metti subito il jamón",
+      "Sovrapprezzo 3° ospite sabato notte (€65 + tassa): da chiarire in reception"
+     ],
+     "prices": [
+      {
+       "label": "Appartamento (2 notti)",
+       "eur": 430
+      }
+     ],
+     "people": [
+      "ale",
+      "monne"
+     ],
+     "badges": [
+      "verificato",
+      "da_verificare"
+     ],
+     "actions": {
+      "maps": true,
+      "taxi": false,
+      "metro": null
+     },
+     "distFromPrevM": 2572,
+     "minFromPrev": 31
+    },
+    {
+     "id": "f6",
+     "time": "16:30",
+     "timeStatus": "verificato",
+     "venueId": "taps",
+     "title": "Enoteca Taps · una bollicina",
+     "why": "Riapre alle 16:30. Primo brindisi, senza fretta.",
+     "details": [],
+     "people": [
+      "ale",
+      "monne"
+     ],
+     "badges": [
+      "verificato",
+      "da_verificare"
+     ],
+     "actions": {
+      "maps": true,
+      "taxi": false,
+      "metro": null
+     }
+    },
+    {
+     "id": "f7",
+     "time": "18:00",
+     "timeStatus": "stimato",
+     "venueId": "rooftop",
+     "title": "Rooftop Garden · El Palace",
+     "why": "Il tramonto dall'alto. In due, una bottiglia ha senso.",
+     "details": [
+      "Recaredo Terrers, Corpinnat: metodo classico, miglior qualità/prezzo della carta",
+      "Alternative a calice: Ruinart Rosé €25, Mirgin Cava €12",
+      "Cocktail: St. Germain Spritz €16, Trencadís €21, Espresso Martini €20"
+     ],
+     "prices": [
+      {
+       "label": "Recaredo Terrers (bottiglia)",
+       "eur": 60
+      },
+      {
+       "label": "Ruinart Rosé (calice)",
+       "eur": 25
+      }
+     ],
+     "people": [
+      "ale",
+      "monne"
+     ],
+     "badges": [
+      "stimato",
+      "da_verificare"
+     ],
+     "actions": {
+      "maps": true,
+      "taxi": false,
+      "metro": null
+     }
+    },
+    {
+     "id": "f8",
+     "time": "20:30",
+     "timeStatus": "stimato",
+     "venueId": "braseria",
+     "title": "Cena · Braseria Sarrià",
+     "why": "La brace che chiude il primo giorno.",
+     "details": [
+      "Voce 41: entrecot con osso, maturazione 60 giorni, 500 g",
+      "Voce 47: costilla de vaca vieja, 450 g — la fiorentina spagnola (bassa temperatura + salsa, non brace pura)",
+      "Vino: Bai Gorri ½ L, Rioja Tempranillo — il formato giusto per non esagerare",
+      "Un bicchiere d'acqua per ogni calice. Niente digestivi. Domani alle 10:30 sei alla Sagrada",
+      "PRENOTAZIONE DA PORTARE A 2 PERSONE (Monne)"
+     ],
+     "prices": [
+      {
+       "label": "Entrecot 60gg 500 g",
+       "eur": 39
+      },
+      {
+       "label": "Costilla vaca vieja 450 g",
+       "eur": 28.5
+      },
+      {
+       "label": "Bai Gorri ½ L",
+       "eur": 22.5
+      }
+     ],
+     "people": [
+      "ale",
+      "monne"
+     ],
+     "badges": [
+      "verificato",
+      "da_verificare"
+     ],
+     "actions": {
+      "maps": true,
+      "taxi": true,
+      "metro": "FGC → Sarrià"
+     }
+    }
+   ]
+  },
+  {
+   "date": "2026-10-17",
+   "label": "Sabato",
+   "color": "--sab",
+   "people": [
+    "ale",
+    "giulio",
+    "manuel",
+    "monne"
+   ],
+   "stops": [
+    {
+     "id": "s1",
+     "time": "07:40",
+     "timeStatus": "verificato",
+     "venueId": "apt",
+     "title": "Giulio atterra e fa self check-in",
+     "why": "Reception 24h. Non serve chiamare nessuno.",
+     "details": [
+      "Chiedi le chiavi a nome Alessandro, prenotazione #6178165481",
+      "Poi a piedi alla Sagrada: 1 km, 12–15 minuti"
+     ],
+     "people": [
+      "giulio"
+     ],
+     "badges": [
+      "verificato"
+     ],
+     "actions": {
+      "maps": true,
+      "taxi": true,
+      "metro": null
+     },
+     "distFromPrevM": null,
+     "minFromPrev": null
+    },
+    {
+     "id": "s2",
+     "time": "08:15",
+     "timeStatus": "verificato",
+     "venueId": "bcnT2",
+     "title": "Monne esce · Terminal 2 · FR5220 10:20",
+     "why": "17 km, 24 minuti in auto senza traffico. Fuori entro le 8:15.",
+     "details": [
+      "Sveglia 07:15",
+      "Taxi consigliato (Aerobus 35–40 min + attesa)",
+      "Giulio arriva in appartamento verso le 8:10–8:20: probabilmente non vi incrociate"
+     ],
+     "people": [
+      "monne"
+     ],
+     "badges": [
+      "verificato"
+     ],
+     "actions": {
+      "maps": true,
+      "taxi": true,
+      "metro": null
+     },
+     "distFromPrevM": 17100,
+     "minFromPrev": 24,
+     "distMode": "auto"
+    },
+    {
+     "id": "s3",
+     "time": "09:45",
+     "timeStatus": "verificato",
+     "venueId": "olimpo",
+     "title": "Manuel atterra · dritto a Olimpo",
+     "why": "Niente Sagrada per te. Apre alle 8, prendi un vermut e aspettaci.",
+     "details": [
+      "Carrer de Mallorca 494",
+      "Ci vediamo lì verso le 11:15"
+     ],
+     "people": [
+      "manuel"
+     ],
+     "badges": [
+      "verificato"
+     ],
+     "actions": {
+      "maps": true,
+      "taxi": true,
+      "metro": null
+     },
+     "distFromPrevM": null,
+     "minFromPrev": null
+    },
+    {
+     "id": "s4",
+     "time": "10:30",
+     "timeStatus": "verificato",
+     "venueId": "sagradaIn",
+     "title": "Sagrada Família · ingresso Carrer de la Marina",
+     "why": "Alle 10:30 la luce sale sulle torri. Documento e auricolari in tasca.",
+     "details": [
+      "Biglietto Alessandro: 105578278 · Giulio: stesso slot",
+      "Serve documento con foto, biglietto non cedibile",
+      "Tolleranza ritardo 15 min · visita 45–50 min",
+      "Audioguida: app ufficiale (data + email + numero prenotazione) → auricolari"
+     ],
+     "prices": [
+      {
+       "label": "Biglietto General",
+       "eur": 26
+      }
+     ],
+     "people": [
+      "ale",
+      "giulio"
+     ],
+     "badges": [
+      "verificato"
+     ],
+     "actions": {
+      "maps": true,
+      "taxi": false,
+      "metro": null
+     },
+     "distFromPrevM": 1000,
+     "minFromPrev": 13
+    },
+    {
+     "id": "s5",
+     "time": "11:20",
+     "timeStatus": "stimato",
+     "venueId": "olimpo",
+     "title": "Vermutería Olimpo · i tre vermut",
+     "why": "Dodici minuti a piedi e siete tutti e tre allo stesso tavolo.",
+     "details": [
+      "De la Casa (negre) · Potent (doble botànic) · De Taronja o Llimona",
+      "Non è un cocktail bar: qui si viene per il vermut",
+      "Menú del día: 1 vermut + 2 piatti + bevanda, dolce o caffè offerto"
+     ],
+     "prices": [
+      {
+       "label": "Vermut de la Casa",
+       "eur": 2.9
+      },
+      {
+       "label": "Vermut Potent",
+       "eur": 3.9
+      },
+      {
+       "label": "Aperol Spritz",
+       "eur": 6
+      }
+     ],
+     "people": [
+      "ale",
+      "giulio",
+      "manuel"
+     ],
+     "badges": [
+      "verificato"
+     ],
+     "actions": {
+      "maps": true,
+      "taxi": false,
+      "metro": null
+     },
+     "distFromPrevM": 975,
+     "minFromPrev": 12
+    },
+    {
+     "id": "s6",
+     "time": "13:30",
+     "timeStatus": "stimato",
+     "venueId": "apt",
+     "title": "Bocadillo de jamón in appartamento",
+     "why": "Il jamón di Debón, il pane, il divano. Pausa vera.",
+     "details": [],
+     "people": [
+      "ale",
+      "giulio",
+      "manuel"
+     ],
+     "badges": [
+      "stimato"
+     ],
+     "actions": {
+      "maps": true,
+      "taxi": false,
+      "metro": null
+     },
+     "distFromPrevM": 1795,
+     "minFromPrev": 22
+    },
+    {
+     "id": "s7",
+     "time": "15:00",
+     "timeStatus": "stimato",
+     "venueId": "monumental",
+     "title": "Pomeriggio libero · opzione techno diurno",
+     "why": "Solo se finisce prima delle 19:00. Da confermare su Resident Advisor.",
+     "details": [
+      "SOUNDIT Plaza: Marcel Dettmann @ Plaza Monumental (1,6 km, 20 min a piedi) — evento NON confermato",
+      "Happy Techno Open Air @ La Terrrazza (4,7 km, taxi 10 min) — evento NON confermato",
+      "Se non confermati: siesta, Sant Antoni (3,1 km) o passeggiata"
+     ],
+     "people": [
+      "ale",
+      "giulio",
+      "manuel"
+     ],
+     "badges": [
+      "da_verificare"
+     ],
+     "actions": {
+      "maps": true,
+      "taxi": true,
+      "metro": null
+     },
+     "distFromPrevM": 1640,
+     "minFromPrev": 20
+    },
+    {
+     "id": "s8",
+     "time": "19:30",
+     "timeStatus": "verificato",
+     "venueId": "biarritz",
+     "title": "Cena dei 40 · Bodega Biarritz 1881",
+     "why": "Alle 19:30 siete già seduti. Niente prenotazione: si arriva puntuali.",
+     "details": [
+      "Foto di gruppo obbligatoria"
+     ],
+     "people": [
+      "ale",
+      "giulio",
+      "manuel"
+     ],
+     "badges": [
+      "verificato",
+      "geocoded"
+     ],
+     "actions": {
+      "maps": true,
+      "taxi": true,
+      "metro": null
+     },
+     "distFromPrevM": 3781,
+     "minFromPrev": 45
+    },
+    {
+     "id": "s9",
+     "time": "00:15",
+     "timeStatus": "stimato",
+     "venueId": "apolo",
+     "title": "Sala Apolo · dopo mezzanotte",
+     "why": "3,5 km: metro L2/L3 fino a Paral·lel o taxi in dieci minuti.",
+     "details": [
+      "ATTENZIONE: sabato 17 a 89 m da Apolo c'è Soundhood Barcelona 2026 (Paral·lel 62, porte 17:00, concerto 20:30, Mandy Indiana / Honeyglaze / Fat Dog, da €31,15). Verificare il programma notturno di Apolo prima di contarci"
+     ],
+     "people": [
+      "ale",
+      "giulio",
+      "manuel"
+     ],
+     "badges": [
+      "da_verificare"
+     ],
+     "actions": {
+      "maps": true,
+      "taxi": true,
+      "metro": "L2/L3 → Paral·lel"
+     },
+     "distFromPrevM": 3500,
+     "minFromPrev": 12,
+     "distMode": "taxi"
+    }
+   ]
+  },
+  {
+   "date": "2026-10-18",
+   "label": "Domenica",
+   "color": "--dom",
+   "people": [
+    "ale",
+    "giulio",
+    "manuel"
+   ],
+   "stops": [
+    {
+     "id": "d1",
+     "time": "13:00",
+     "timeStatus": "stimato",
+     "venueId": "canfisher",
+     "title": "Pranzo · Can Fisher",
+     "why": "Ultimo pranzo, ritmo lento.",
+     "details": [],
+     "people": [
+      "ale",
+      "giulio",
+      "manuel"
+     ],
+     "badges": [
+      "stimato",
+      "geocoded"
+     ],
+     "actions": {
+      "maps": true,
+      "taxi": true,
+      "metro": null
+     },
+     "distFromPrevM": null,
+     "minFromPrev": null
+    },
+    {
+     "id": "d2",
+     "time": "16:00",
+     "timeStatus": "verificato",
+     "venueId": "bunkers",
+     "title": "Bunkers del Carmel · 16:00–19:00",
+     "why": "La città tutta insieme, dall'alto, prima di tornare.",
+     "details": [],
+     "people": [
+      "ale",
+      "giulio",
+      "manuel"
+     ],
+     "badges": [
+      "verificato",
+      "geocoded"
+     ],
+     "actions": {
+      "maps": true,
+      "taxi": true,
+      "metro": null
+     },
+     "distFromPrevM": 5635,
+     "distMode": "auto",
+     "minFromPrev": null
+    },
+    {
+     "id": "d3",
+     "time": "20:00",
+     "timeStatus": "da_verificare",
+     "venueId": "bcnT2",
+     "title": "Rientro a Bologna",
+     "why": "Orari dei voli di ritorno da confermare.",
+     "details": [
+      "Alessandro, Giulio, Manuel: numero volo e orario da inserire"
+     ],
+     "people": [
+      "ale",
+      "giulio",
+      "manuel"
+     ],
+     "badges": [
+      "da_verificare"
+     ],
+     "actions": {
+      "maps": true,
+      "taxi": true,
+      "metro": null
+     },
+     "distFromPrevM": 20767,
+     "distMode": "auto",
+     "minFromPrev": null
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,20 @@
+{
+  "people": [
+    { "id":"ale", "name":"Alessandro", "role":"Il festeggiato", "color":"--terracotta",
+      "arrival":{"date":"2026-10-16","time":"08:05","flight":"FR2097","from":"BLQ","status":"da_verificare","note":"Probabile stesso volo di Monne: confermare"},
+      "departure":{"date":"2026-10-18","time":null,"flight":null,"status":"da_verificare"},
+      "nights":["2026-10-16","2026-10-17"], "skips":[] },
+    { "id":"monne", "name":"Monne", "fullName":"Nicholas", "role":"Speedrunner", "color":"--giallo",
+      "arrival":{"date":"2026-10-16","time":"08:05","flight":"FR2097","from":"BLQ","booking":"Y6R6KD","status":"verificato"},
+      "departure":{"date":"2026-10-17","time":"10:20","flight":"FR5220","to":"BLQ","terminal":"T2","leaveApartmentBy":"08:15","status":"verificato"},
+      "nights":["2026-10-16"], "skips":["s1","s3","s4","s5","s6","s7","s8","s9","d1","d2","d3"] },
+    { "id":"giulio", "name":"Giulio", "role":"Self check-in ninja", "color":"--blu",
+      "arrival":{"date":"2026-10-17","time":"07:40","flight":null,"status":"da_verificare","note":"Orario atterraggio confermato, numero volo da inserire"},
+      "departure":{"date":"2026-10-18","time":null,"flight":null,"status":"da_verificare"},
+      "nights":["2026-10-17"], "skips":["f1","f2","f3","f4","f5","f6","f7","f8","f9","s2","s3"] },
+    { "id":"manuel", "name":"Manuel", "role":"Primo al vermut", "color":"--acqua",
+      "arrival":{"date":"2026-10-17","time":"09:45","flight":null,"status":"da_verificare"},
+      "departure":{"date":"2026-10-18","time":null,"flight":null,"status":"da_verificare"},
+      "nights":["2026-10-17"], "skips":["f1","f2","f3","f4","f5","f6","f7","f8","f9","s1","s2","s4"] }
+  ]
+}

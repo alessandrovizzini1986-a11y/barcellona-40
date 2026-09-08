@@ -1,0 +1,12 @@
+{ "checks":[
+ {"id":"c1","stopId":"f1","who":"ale","text":"Volo di andata di Alessandro: numero e orario (probabile FR2097 06:20→08:05)"},
+ {"id":"c2","stopId":"d3","who":"ale","text":"Voli di ritorno domenica 18: Alessandro, Giulio, Manuel"},
+ {"id":"c3","stopId":"f8","who":"ale","text":"Braseria Sarrià: portare la prenotazione a 2 coperti"},
+ {"id":"c4","stopId":"f5","who":"ale","text":"Hotel: il prezzo €430 include già il 3° adulto? Aliquota tassa di soggiorno? Quando si paga il sovrapprezzo?"},
+ {"id":"c5","stopId":"f5","who":"ale","text":"Hotel: cancellare la richiesta di letto extra per il 4° ospite di sabato (non serve più)"},
+ {"id":"c6","stopId":"f1","who":"monne","text":"Deposito bagagli venerdì mattina 08:05 → 15:00"},
+ {"id":"c7","stopId":"s9","who":"ale","text":"Programma notturno Sala Apolo sabato 17 (interferenza Soundhood a 89 m)"},
+ {"id":"c8","stopId":"s7","who":"ale","text":"SOUNDIT Plaza / Happy Techno Open Air: esistono? orari? (Resident Advisor)"},
+ {"id":"c9","stopId":"f8","who":"ale","text":"Civico esatto Braseria Sarrià e Rooftop Garden El Palace"},
+ {"id":"c10","stopId":null,"who":"ale","text":"Coordinate geocodificate automaticamente: Ciutadella, Santa Caterina, Chao Pescao, Taps, Rooftop, Biarritz, Can Fisher, Bunkers"}
+]}

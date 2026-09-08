@@ -1,0 +1,170 @@
+{
+ "venues": {
+  "apt": {
+   "name": "Aparthotel Nàpols – Abapart",
+   "addr": "Carrer de Nàpols 116, Eixample",
+   "lat": 41.395437,
+   "lng": 2.179608,
+   "verified": true
+  },
+  "bcnT2": {
+   "name": "Aeroporto BCN – Terminal 2",
+   "addr": "El Prat de Llobregat",
+   "lat": 41.3033401,
+   "lng": 2.076845,
+   "verified": true
+  },
+  "bcnT1": {
+   "name": "Aeroporto BCN – Terminal 1",
+   "addr": "El Prat de Llobregat",
+   "lat": 41.2891331,
+   "lng": 2.0747619,
+   "verified": true
+  },
+  "sagradaIn": {
+   "name": "Sagrada Família – ingresso Carrer de la Marina",
+   "addr": "Carrer de la Marina (Facciata della Natività)",
+   "lat": 41.4039406,
+   "lng": 2.1751597,
+   "verified": true
+  },
+  "olimpo": {
+   "name": "Vermutería Olimpo",
+   "addr": "Carrer de Mallorca 494",
+   "lat": 41.4066347,
+   "lng": 2.1799385,
+   "verified": true,
+   "rating": 4.6,
+   "reviews": 1238,
+   "hours": "sab 08:00–"
+  },
+  "braseria": {
+   "name": "Braseria Sarrià",
+   "addr": "Sarrià – civico da confermare",
+   "lat": 41.3925995,
+   "lng": 2.1344166,
+   "verified": true
+  },
+  "apolo": {
+   "name": "Sala Apolo",
+   "addr": "Carrer Nou de la Rambla 113",
+   "lat": 41.3744026,
+   "lng": 2.1695739,
+   "verified": true,
+   "rating": 4.2
+  },
+  "parallel62": {
+   "name": "Paral·lel 62 (Soundhood)",
+   "addr": "Av. del Paral·lel 62",
+   "lat": 41.3752,
+   "lng": 2.1696047,
+   "verified": true
+  },
+  "monumental": {
+   "name": "Plaza Monumental",
+   "addr": "Gran Via de les Corts Catalanes 749",
+   "lat": 41.4001033,
+   "lng": 2.181227,
+   "verified": true,
+   "rating": 4.2
+  },
+  "terrrazza": {
+   "name": "La Terrrazza",
+   "addr": "Poble Espanyol",
+   "lat": 41.3692036,
+   "lng": 2.1467476,
+   "verified": true,
+   "rating": 4.1
+  },
+  "santantoni": {
+   "name": "Mercat de Sant Antoni",
+   "addr": "Eixample",
+   "lat": 41.3786358,
+   "lng": 2.1620492,
+   "verified": true,
+   "hours": "sab 08:00–20:30, dom chiuso"
+  },
+  "boqueria": {
+   "name": "Mercat de la Boqueria",
+   "addr": "La Rambla 91",
+   "lat": 41.3817399,
+   "lng": 2.1715853,
+   "verified": true,
+   "hours": "sab 08:00–20:30, dom chiuso"
+  },
+  "ciutadella": {
+   "name": "Parc de la Ciutadella",
+   "addr": "Passeig de Picasso 21, Barcelona",
+   "lat": 41.388416,
+   "lng": 2.1862546,
+   "verified": false,
+   "geocoded": true,
+   "geocodedFrom": "Parc de la Ciutadella, 21, Ciutat Vella, Barcelona, Barcelonès, Barcelona, Catalunya, 08003, Espanya"
+  },
+  "santacaterina": {
+   "name": "Mercat de Santa Caterina – Xarcuteria Debón",
+   "addr": "Av. de Francesc Cambó 16, Barcelona",
+   "lat": 41.3863594,
+   "lng": 2.1781611,
+   "verified": false,
+   "rating": 5,
+   "reviews": 246,
+   "geocoded": true,
+   "geocodedFrom": "16, Avinguda de Francesc Cambó, Santa Caterina, Sant Pere, Santa Caterina i la Ribera, Ciutat Vella, Barcelona, Barcelonès, Barcelona, Catalunya, 08003, Espanya",
+   "geocodedBy": "indirizzo"
+  },
+  "chaopescao": {
+   "name": "Chao Pescao",
+   "addr": "Barcelona",
+   "lat": 41.3861408,
+   "lng": 2.1840991,
+   "verified": false,
+   "geocoded": true,
+   "geocodedFrom": "Chao Pescao, 1, Passatge Mercantil, la Ribera, Sant Pere, Santa Caterina i la Ribera, Ciutat Vella, Barcelona, Barcelonès, Barcelona, Catalunya, 08003, Espanya"
+  },
+  "taps": {
+   "name": "Enoteca Taps Sagrada Família",
+   "addr": "Barcelona",
+   "lat": null,
+   "lng": null,
+   "verified": false,
+   "hours": "riapre 16:30",
+   "geocoded": false
+  },
+  "rooftop": {
+   "name": "Rooftop Garden – El Palace Barcelona",
+   "addr": "Gran Via de les Corts Catalanes 668, Barcelona",
+   "lat": null,
+   "lng": null,
+   "verified": false,
+   "geocoded": false
+  },
+  "biarritz": {
+   "name": "Bodega Biarritz 1881",
+   "addr": "Barcelona",
+   "lat": 41.3792173,
+   "lng": 2.1770987,
+   "verified": false,
+   "geocoded": true,
+   "geocodedFrom": "Bodega Biarritz, Carrer d'en Rull, la Mercè, el Gòtic, Ciutat Vella, Barcelona, Barcelonès, Barcelona, Catalunya, 08002, Espanya"
+  },
+  "canfisher": {
+   "name": "Can Fisher",
+   "addr": "Barcelona",
+   "lat": 41.3946058,
+   "lng": 2.2062439,
+   "verified": false,
+   "geocoded": true,
+   "geocodedFrom": "Can Fisher, Passeig Marítim del Bogatell, la Plata, el Poblenou, Sant Martí, Barcelona, Barcelonès, Barcelona, Catalunya, 08071, Espanya"
+  },
+  "bunkers": {
+   "name": "Bunkers del Carmel",
+   "addr": "Carrer de Marià Labèrnia, Barcelona",
+   "lat": 41.4193923,
+   "lng": 2.1616974,
+   "verified": false,
+   "geocoded": true,
+   "geocodedFrom": "Bateries antiaèries i barraques del Carmel, Carrer de Marià Labèrnia, Can Baró, Horta-Guinardó, Barcelona, Barcelonès, Barcelona, Catalunya, 08032, Espanya"
+  }
+ }
+}

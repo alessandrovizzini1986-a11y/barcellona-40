@@ -1,0 +1,20 @@
+{ "levels":[{"min":0,"title":"Turista"},{"min":200,"title":"Local"},{"min":400,"title":"Barcelonès"},{"min":600,"title":"Leggenda dei 40"}],
+  "missions":[
+   {"id":"m1","stopId":"f3","title":"Jamón Hunter","desc":"Jamón comprato da Debón","xp":30,"people":["ale","monne"]},
+   {"id":"m2","stopId":"f7","title":"Rooftop Society","desc":"Bottiglia di Corpinnat al tramonto","xp":40,"people":["ale","monne"]},
+   {"id":"m3","stopId":"f8","title":"Brasa Legend","desc":"Entrecot o costilla a Braseria Sarrià","xp":50,"people":["ale","monne"]},
+   {"id":"m4","stopId":"s2","title":"Speedrun Monne","desc":"Fuori dall'appartamento entro le 08:15","xp":100,"people":["monne"],"timer":{"deadline":"2026-10-17T08:15"}},
+   {"id":"m5","stopId":"s1","title":"Self Check-in Ninja","desc":"In appartamento senza chiamare nessuno","xp":40,"people":["giulio"]},
+   {"id":"m6","stopId":"s4","title":"Gaudí Explorer","desc":"Sagrada Família completata","xp":60,"people":["ale","giulio"]},
+   {"id":"m7","stopId":"s3","title":"Primo al Vermut","desc":"Seduto a Olimpo prima delle 11:15","xp":40,"people":["manuel"]},
+   {"id":"m8","stopId":"s5","title":"Vermut Trilogy","desc":"I tre vermut, in ordine","xp":30,"people":["ale","giulio","manuel"]},
+   {"id":"m9","stopId":"s8","title":"Compleanno a Biarritz","desc":"Foto di gruppo alla cena","xp":80,"people":["ale","giulio","manuel"]},
+   {"id":"m10","stopId":"s9","title":"Night Owl","desc":"Dentro Apolo dopo mezzanotte","xp":50,"people":["ale","giulio","manuel"]},
+   {"id":"m11","stopId":"d2","title":"Bunkers Sunset","desc":"Bunkers del Carmel","xp":40,"people":["ale","giulio","manuel"]},
+   {"id":"m12","stopId":null,"title":"Zero Sintomi","desc":"Sabato mattina sveglio senza mal di testa","xp":70,"people":["ale","monne"],"unlocksBadge":"Bai Gorri Wisdom"}
+  ],
+  "badges":[
+   {"id":"b_trencadis","title":"Trencadís","rule":"tutte le missioni di un giorno"},
+   {"id":"b_festeggiato","title":"Il Festeggiato","rule":"solo ale, sblocco automatico alle 00:00 del 17/10/2026"},
+   {"id":"b_baigorri","title":"Bai Gorri Wisdom","rule":"missione m12"}
+  ]}
