@@ -19,3 +19,6 @@
 - Onboarding "Chi sei?" con 4 card, confetti brevi, salvataggio persona.
 - Oggi: countdown + checklist pre-partenza, bento durante il weekend (Adesso, Prossima, Progresso, Copia riepilogo, Da verificare per Alessandro), "Missione compiuta" dopo.
 - Programma: segmented Ven/Sab/Dom, timeline filtrata per persona, empty state dedicati.
+
+## Fase 5 · Mappa
+- Leaflet in chunk separato caricato con `import()` alla prima apertura. Tile CARTO dark (light nel tema chiaro), layer per giorno con toggle, marker numerati, polilinee, popup con Maps, "Dove sono" on-demand con toast in caso di errore. Tappe senza coordinate elencate sotto la mappa.
