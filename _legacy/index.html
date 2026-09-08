@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Barça 40">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0A0A0C">
+<title>I 40 di Ale · Barcellona</title>
+<meta name="description" content="16–18 ottobre 2026. 3 amici · 2 notti · 1 solo 40° compleanno. Nos vemos en Barcelona.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/">
+<meta property="og:title" content="I 40 di Ale · Barcellona">
+<meta property="og:description" content="16–18 ottobre 2026 · 3 amici · 2 notti · 1 solo 40° compleanno.">
+<meta property="og:image" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/og-viaggio.jpg?v=5">
+<meta property="og:image:secure_url" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/og-viaggio.jpg?v=5">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="it_IT">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/og-viaggio.jpg?v=5">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..900;1,9..144,400..900&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+/* ================================================================
+   I 40 DI ALE — BARCELLONA · poster edition
+   Fraunces (display) + Space Grotesk (testo/numeri) · un solo accento
+   ================================================================ */
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0A0A0C; --bg2:#101014; --panel:#131318;
+  --ink:#F2EFE9; --mut:#8D8A82; --faint:#55534E;
+  --acc:#F2A33C; --acc-deep:#B87310; --acc-ink:#1C1206;
+  --hair:rgba(242,239,233,.09); --hair2:rgba(242,239,233,.16);
+  --ok:#79C7A6;
+  --disp:"Fraunces",Georgia,serif;
+  --sans:"Space Grotesk",system-ui,sans-serif;
+  --pad:clamp(20px,5vw,48px);
+}
+html{scroll-behavior:smooth;background:var(--bg)}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.55;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;font-size:15px}
+a{color:inherit;text-decoration:none}
+::selection{background:var(--acc);color:var(--acc-ink)}
+.tnum{font-variant-numeric:tabular-nums}
+
+/* fondale: una sola luce ambra in deriva lentissima + vignetta */
+.bgfx{position:fixed;inset:0;z-index:-1;pointer-events:none;background:var(--bg)}
+.bgfx::before{content:'';position:absolute;width:130vmax;height:130vmax;left:50%;top:-55vmax;
+  transform:translateX(-50%);border-radius:50%;
+  background:radial-gradient(closest-side,rgba(242,163,60,.075),transparent 65%);
+  animation:drift 40s ease-in-out infinite alternate}
+.bgfx::after{content:'';position:absolute;inset:0;
+  background:radial-gradient(120% 90% at 50% 8%,transparent 55%,rgba(0,0,0,.5))}
+@keyframes drift{from{transform:translateX(-62%) rotate(0)}to{transform:translateX(-38%) rotate(8deg)}}
+
+/* ---------- NAV ---------- */
+.dnav{position:fixed;top:0;left:0;right:0;z-index:90;display:flex;align-items:center;gap:4px;
+  padding:0 var(--pad);height:56px;background:rgba(10,10,12,.78);
+  -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid var(--hair)}
+.dnav .brand{font-family:var(--disp);font-weight:900;font-size:17px;letter-spacing:.02em;margin-right:auto}
+.dnav .brand em{font-style:italic;color:var(--acc)}
+.dnav a.nl{font-size:11px;font-weight:700;letter-spacing:.18em;color:var(--mut);
+  padding:0 10px;height:56px;display:flex;align-items:center;transition:color .25s;position:relative}
+.dnav a.nl:hover{color:var(--ink)}
+.dnav a.nl.on{color:var(--acc)}
+.dnav a.nl.on::after{content:'';position:absolute;left:10px;right:10px;bottom:-1px;height:2px;background:var(--acc)}
+
+/* ---------- HERO ---------- */
+.hero{position:relative;min-height:100svh;display:flex;flex-direction:column;justify-content:center;
+  padding:96px var(--pad) 72px;overflow:hidden}
+.wm40{position:absolute;right:-6vw;top:50%;transform:translateY(-54%) rotate(-8deg);z-index:-1;
+  font-family:var(--disp);font-weight:900;font-style:italic;font-size:min(72vw,640px);line-height:1;
+  color:transparent;-webkit-text-stroke:1.5px rgba(242,163,60,.16);user-select:none;
+  animation:wmfloat 12s ease-in-out infinite}
+@keyframes wmfloat{0%,100%{transform:translateY(-54%) rotate(-8deg)}50%{transform:translateY(-50%) rotate(-7deg)}}
+.kick{font-size:11.5px;font-weight:700;letter-spacing:.42em;color:var(--acc);text-transform:uppercase;
+  animation:rise .8s .1s both}
+.h1{font-family:var(--disp);font-weight:900;line-height:.92;letter-spacing:-.015em;
+  font-size:clamp(58px,14.5vw,168px);margin-top:18px;text-wrap:balance;animation:rise .9s .22s both}
+.h1 .out{display:block;color:transparent;-webkit-text-stroke:1.5px var(--ink);font-style:italic;font-weight:700}
+.stat{display:flex;gap:14px;align-items:baseline;flex-wrap:wrap;margin-top:26px;color:var(--mut);
+  font-size:clamp(13px,3.6vw,16px);font-weight:500;letter-spacing:.04em;animation:rise .8s .34s both}
+.stat b{color:var(--ink);font-weight:700}
+.stat .d{color:var(--faint)}
+/* countdown */
+.cd{display:flex;gap:clamp(10px,3.5vw,26px);align-items:flex-start;margin-top:44px;animation:rise .8s .46s both}
+.cd .u b{display:flex;font-family:var(--sans);font-weight:700;font-size:clamp(42px,11.5vw,92px);
+  line-height:1;color:var(--acc);letter-spacing:-.02em}
+.cd .u i{display:block;font-style:normal;font-size:10px;font-weight:700;letter-spacing:.3em;
+  text-transform:uppercase;color:var(--faint);margin-top:8px}
+.cd .dg{display:inline-block;font-variant-numeric:tabular-nums}
+.cd .dg.tick{animation:dgin .45s cubic-bezier(.22,.9,.3,1)}
+@keyframes dgin{from{opacity:0;transform:translateY(38%)}to{opacity:1;transform:none}}
+.cd .co{font-weight:300;font-size:clamp(30px,8vw,64px);line-height:1.25;color:var(--faint);animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:.25}}
+.cd .live{font-family:var(--disp);font-style:italic;font-weight:600;font-size:clamp(24px,6.5vw,44px);color:var(--acc)}
+/* scroll cue */
+.cue{position:absolute;left:var(--pad);bottom:26px;display:flex;align-items:center;gap:12px;
+  font-size:10px;font-weight:700;letter-spacing:.34em;color:var(--faint);text-transform:uppercase}
+.cue::before{content:'';width:1px;height:44px;background:var(--hair2);position:relative;display:block;overflow:hidden}
+.cue i{position:absolute;left:0;top:0;width:1px;height:14px;background:var(--acc);animation:cuedrop 1.8s ease-in-out infinite}
+@keyframes cuedrop{from{transform:translateY(-14px)}to{transform:translateY(46px)}}
+
+@keyframes rise{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+
+/* ---------- SEZIONI GIORNO ---------- */
+.day{position:relative;padding:clamp(64px,12vh,120px) var(--pad) 40px;border-top:1px solid var(--hair)}
+.dhead{position:relative;margin-bottom:clamp(28px,6vw,56px)}
+.dnum{font-family:var(--disp);font-weight:900;font-style:italic;line-height:.8;
+  font-size:clamp(130px,36vw,320px);letter-spacing:-.04em;
+  color:transparent;-webkit-text-stroke:1.5px var(--hair2);user-select:none}
+.day.today .dnum{color:var(--acc);-webkit-text-stroke:0;text-shadow:0 0 80px rgba(242,163,60,.25)}
+.dtit{position:absolute;left:clamp(56px,18vw,190px);bottom:clamp(6px,2vw,26px)}
+.dtit h2{font-family:var(--disp);font-weight:700;font-size:clamp(28px,7vw,54px);line-height:1;letter-spacing:.01em}
+.dtit p{margin-top:6px;font-size:clamp(12px,3.2vw,15px);color:var(--mut);letter-spacing:.06em}
+.dtit .tag{display:inline-block;margin-top:10px;font-size:10px;font-weight:700;letter-spacing:.3em;
+  text-transform:uppercase;color:var(--acc);border:1px solid rgba(242,163,60,.35);padding:5px 12px}
+/* timeline */
+.steps{position:relative;list-style:none;max-width:660px}
+.steps::before{content:'';position:absolute;left:5px;top:6px;bottom:6px;width:1px;background:var(--hair)}
+.steps .fill{position:absolute;left:5px;top:6px;bottom:6px;width:1px;background:var(--acc);
+  transform-origin:top;transform:scaleY(0);transition:transform 2.2s cubic-bezier(.22,.9,.3,1)}
+.day.in .steps .fill{transform:scaleY(1)}
+.step{position:relative;padding:0 0 30px 34px}
+.step:last-child{padding-bottom:8px}
+.step::before{content:'';position:absolute;left:0;top:7px;width:11px;height:11px;border-radius:50%;
+  background:var(--bg);border:1.5px solid var(--kc,var(--faint));z-index:1;transition:background .3s,border-color .3s}
+.step.cur::before{background:var(--acc);border-color:var(--acc);box-shadow:0 0 0 0 rgba(242,163,60,.5);
+  animation:pulse 2.2s ease-out infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 11px rgba(242,163,60,0)}100%{box-shadow:0 0 0 0 rgba(242,163,60,0)}}
+.step.done::before{background:var(--ok);border-color:var(--ok)}
+.s-top{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.s-time{font-weight:700;font-size:14px;color:var(--acc);letter-spacing:.05em}
+.s-time .e{color:var(--faint);font-weight:500}
+.badge-ora{font-size:9px;font-weight:700;letter-spacing:.22em;background:var(--acc);color:var(--acc-ink);
+  padding:3px 9px;animation:pulse 2.2s ease-out infinite}
+.s-tit{font-family:var(--disp);font-weight:600;font-size:clamp(18px,4.8vw,22px);line-height:1.22;margin-top:5px;
+  letter-spacing:.005em;display:flex;gap:9px;align-items:baseline}
+.s-tit .ke{font-size:15px;flex:none;transform:translateY(-1px)}
+.s-note{margin-top:6px;font-size:13.5px;color:var(--mut);max-width:56ch}
+.s-acts{display:flex;gap:18px;flex-wrap:wrap;margin-top:10px}
+.s-acts a{font-size:10.5px;font-weight:700;letter-spacing:.22em;color:var(--acc);text-transform:uppercase;
+  padding:6px 0;position:relative;transition:color .25s}
+.s-acts a::after{content:'';position:absolute;left:0;bottom:3px;height:1px;width:100%;background:var(--acc-deep);
+  transform:scaleX(.35);transform-origin:left;transition:transform .3s}
+.s-acts a:hover{color:var(--ink)}
+.s-acts a:hover::after{transform:scaleX(1)}
+/* checkbox "fatto" */
+.chk{position:absolute;right:0;top:2px;width:44px;height:44px;display:flex;align-items:center;justify-content:center;
+  background:none;border:none;cursor:pointer}
+.chk span{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--hair2);display:flex;align-items:center;
+  justify-content:center;font-size:13px;color:transparent;transition:all .3s cubic-bezier(.22,.9,.3,1)}
+.chk:active span{transform:scale(.8)}
+.step.done .chk span{background:var(--ok);border-color:var(--ok);color:#06231A;transform:none}
+.step.done .s-tit{color:var(--faint);text-decoration:line-through;text-decoration-color:rgba(242,239,233,.35)}
+.step.done .s-note{opacity:.55}
+.step{padding-right:52px}
+
+/* ---------- MAPPA ---------- */
+.mapsec{border-top:1px solid var(--hair);padding-top:clamp(56px,10vh,96px)}
+.mhead{padding:0 var(--pad);margin-bottom:26px}
+.eyebrow{font-size:10.5px;font-weight:700;letter-spacing:.4em;color:var(--acc);text-transform:uppercase}
+.mhead h2,.ihead h2{font-family:var(--disp);font-weight:900;font-size:clamp(34px,9vw,72px);line-height:1;margin-top:10px}
+.mhead p{color:var(--mut);margin-top:8px;font-size:13.5px}
+#map{height:min(64svh,520px);border-top:1px solid var(--hair);border-bottom:1px solid var(--hair);
+  background:var(--bg2);filter:saturate(.9)}
+.leaflet-container{background:var(--bg2);font-family:var(--sans)}
+.leaflet-popup-content-wrapper{background:var(--panel);color:var(--ink);border-radius:4px;
+  border:1px solid var(--hair2);box-shadow:0 20px 50px -20px rgba(0,0,0,.8)}
+.leaflet-popup-tip{background:var(--panel);border:1px solid var(--hair2)}
+.leaflet-popup-content{margin:12px 16px;font-size:13px;line-height:1.5}
+.pp-t{font-family:var(--disp);font-weight:600;font-size:15px}
+.pp-m{color:var(--mut);font-size:11.5px;margin-top:2px}
+.leaflet-container a.pp-a{display:inline-block;margin-top:8px;color:var(--acc);font-weight:700;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase}
+.leaflet-bar a{background:var(--panel);color:var(--ink);border-bottom:1px solid var(--hair)}
+.mlegend{display:flex;gap:16px;flex-wrap:wrap;padding:16px var(--pad);color:var(--mut);font-size:11px;letter-spacing:.06em}
+.mlegend span{display:flex;align-items:center;gap:6px}
+.mlegend i{width:9px;height:9px;border-radius:50%;display:inline-block}
+
+/* ---------- INFO ---------- */
+.info{padding:clamp(56px,10vh,96px) var(--pad) 30px}
+.ihead{margin-bottom:34px}
+.igrid{display:grid;gap:0;max-width:980px}
+.sched{border-top:1px solid var(--hair2);padding:26px 0 34px;position:relative}
+.sched .n{position:absolute;right:0;top:22px;font-family:var(--disp);font-style:italic;font-weight:700;
+  font-size:15px;color:var(--faint)}
+.sched h3{font-family:var(--disp);font-weight:700;font-size:22px;letter-spacing:.01em}
+.sched .sub{color:var(--mut);font-size:13px;margin-top:3px}
+.sched .bd{margin-top:14px;font-size:13.5px}
+.krow{display:flex;justify-content:space-between;gap:14px;padding:9px 0;border-bottom:1px solid var(--hair);align-items:baseline}
+.krow:last-child{border-bottom:none}
+.krow .k{color:var(--mut)}
+.krow a{color:var(--acc);font-weight:700}
+.tips li{margin:0 0 10px 16px;color:var(--mut)}
+.tips b{color:var(--ink);font-weight:700}
+.tips i{font-style:italic}
+.inline-links a{color:var(--acc);font-weight:600;white-space:nowrap}
+.inline-links{color:var(--faint);line-height:2}
+.alink{display:inline-block;margin-top:12px;margin-right:22px;font-size:10.5px;font-weight:700;
+  letter-spacing:.22em;color:var(--acc);text-transform:uppercase}
+
+/* ---------- FOOTER ---------- */
+footer{border-top:1px solid var(--hair);padding:clamp(56px,12vh,110px) var(--pad);text-align:center}
+footer .fin{font-family:var(--disp);font-style:italic;font-weight:600;font-size:clamp(30px,8vw,64px);line-height:1.1}
+footer .fin b{color:var(--acc);font-style:normal}
+footer .sig{margin-top:18px;color:var(--faint);font-size:10.5px;letter-spacing:.34em;text-transform:uppercase}
+
+/* ---------- reveal ---------- */
+.rv{opacity:0;transform:translateY(22px);transition:opacity .8s cubic-bezier(.22,.9,.3,1),transform .8s cubic-bezier(.22,.9,.3,1);transition-delay:var(--d,0ms)}
+.rv.in{opacity:1;transform:none}
+
+/* ---------- desktop editoriale ---------- */
+@media(min-width:920px){
+  .day{display:grid;grid-template-columns:minmax(300px,42%) 1fr;gap:clamp(24px,4vw,64px)}
+  .dhead{position:sticky;top:96px;align-self:start;margin-bottom:0}
+  .day:nth-child(even) .dhead{text-align:right}
+  .day:nth-child(even) .dtit{left:auto;right:clamp(56px,10vw,150px)}
+  .igrid{grid-template-columns:1fr 1fr;column-gap:64px}
+  .hero{padding-left:calc(var(--pad) + 3vw)}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .rv{opacity:1;transform:none}
+  .steps .fill{transform:scaleY(1)}
+}
+</style>
+</head>
+<body>
+<div class="bgfx" aria-hidden="true"></div>
+
+<nav class="dnav" aria-label="Sezioni">
+  <a class="brand" href="#top">ALE·<em>40</em></a>
+  <a class="nl" href="#d16" data-nav="d16">16</a>
+  <a class="nl" href="#d17" data-nav="d17">17</a>
+  <a class="nl" href="#d18" data-nav="d18">18</a>
+  <a class="nl" href="#mappa" data-nav="mappa">MAPPA</a>
+  <a class="nl" href="#info" data-nav="info">INFO</a>
+</nav>
+
+<!-- ============ 1 · HERO ============ -->
+<header class="hero" id="top">
+  <div class="wm40" aria-hidden="true">40</div>
+  <div class="kick">Barcellona · 16–18 ottobre 2026</div>
+  <h1 class="h1">I 40 DI ALE<span class="out">BARCELONA</span></h1>
+  <div class="stat"><b>3</b> amici <span class="d">·</span> <b>2</b> notti <span class="d">·</span> <b>1</b> solo 40° compleanno</div>
+  <div class="cd tnum" id="cd" aria-label="Countdown alla partenza"></div>
+  <div class="cue">Scorri<i></i></div>
+</header>
+
+<main>
+  <!-- ============ 2 · I TRE GIORNI ============ -->
+  <section class="day" id="d16" data-day="16">
+    <div class="dhead">
+      <div class="dnum" aria-hidden="true">16</div>
+      <div class="dtit"><h2>Venerdì</h2><p>L'avanscoperta — Ale in solitaria</p><span class="tag">apre le danze</span></div>
+    </div>
+    <ol class="steps" data-steps="16"><div class="fill"></div></ol>
+  </section>
+
+  <section class="day" id="d17" data-day="17">
+    <div class="dhead">
+      <div class="dnum" aria-hidden="true">17</div>
+      <div class="dtit"><h2>Sabato</h2><p>Il Quarantesimo — arrivano Giulio &amp; Manuel</p><span class="tag">🎂 il giorno</span></div>
+    </div>
+    <ol class="steps" data-steps="17"><div class="fill"></div></ol>
+  </section>
+
+  <section class="day" id="d18" data-day="18">
+    <div class="dhead">
+      <div class="dnum" aria-hidden="true">18</div>
+      <div class="dtit"><h2>Domenica</h2><p>L'ultimo giro — e si rientra in tre</p><span class="tag">gran finale</span></div>
+    </div>
+    <ol class="steps" data-steps="18"><div class="fill"></div></ol>
+  </section>
+
+  <!-- ============ 3 · MAPPA ============ -->
+  <section class="mapsec" id="mappa">
+    <div class="mhead rv">
+      <div class="eyebrow">La città</div>
+      <h2>Ogni punto, una tappa</h2>
+      <p>Tocca un marker per i dettagli · colori per categoria</p>
+    </div>
+    <div id="map" role="application" aria-label="Mappa delle tappe"></div>
+    <div class="mlegend" id="mlegend"></div>
+  </section>
+
+  <!-- ============ 4 · INFO RAPIDE ============ -->
+  <section class="info" id="info">
+    <div class="ihead rv">
+      <div class="eyebrow">Da tenere a portata</div>
+      <h2>Info rapide</h2>
+    </div>
+    <div class="igrid">
+      <div class="sched rv"><span class="n">01</span>
+        <h3>La base</h3><div class="sub" id="aptSub"></div>
+        <div class="bd" id="aptBody"></div>
+      </div>
+      <div class="sched rv"><span class="n">02</span>
+        <h3>Contatti</h3><div class="sub">un tap e squilla</div>
+        <div class="bd" id="ctList"></div>
+      </div>
+      <div class="sched rv"><span class="n">03</span>
+        <h3>Da sapere</h3><div class="sub">le regole della città</div>
+        <div class="bd"><ul class="tips" id="tipList"></ul></div>
+      </div>
+      <div class="sched rv"><span class="n">04</span>
+        <h3>Indirizzi giusti</h3><div class="sub">se cambia il piano</div>
+        <div class="bd inline-links" id="dnList"></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============ 5 · FOOTER ============ -->
+<footer>
+  <div class="fin rv">Nos vemos en <b>Barcelona</b> 🥂</div>
+  <div class="sig">ALE·40 — 16·17·18 ottobre 2026</div>
+</footer>
+
+<script>
+const TZ='Europe/Madrid';
+const TRIP_START='2026-10-16T06:20';
+const DAYS={'16':'Venerdì 16 ott','17':'Sabato 17 ott · 40°','18':'Domenica 18 ott'};
+
+// kind → emoji/categoria; color per mappa
+const KIND={
+  flight:{e:'✈️',c:'#9db1c6'}, transfer:{e:'🚕',c:'#9db1c6'}, work:{e:'💻',c:'#C9A24B'},
+  food:{e:'🍽️',c:'#f4ece0'}, sight:{e:'🏛️',c:'#E9CE93'}, spa:{e:'🧖',c:'#2ec4b6'},
+  sea:{e:'🏖️',c:'#2ec4b6'}, night:{e:'🍸',c:'#f4ece0'}, admin:{e:'🚿',c:'#9db1c6'}, base:{e:'🏨',c:'#C9A24B'}
+};
+
+const ITINERARY=[
+  // VENERDÌ 16 — Alessandro solo
+  {id:'v1',day:'16',start:'2026-10-16T06:20',end:'2026-10-16T08:05',kind:'flight',title:'Volo FR2097 · BLQ → BCN',place:'Aeroporto · partenza',note:'In BLQ entro 04:50 · solo bagaglio a mano',track:'https://www.bologna-airport.it/voli/vola-da-bologna/voli-in-tempo-reale/?idC=62178',flightNo:'FR2097',fdate:'2026-10-16'},
+  {id:'v2',day:'16',start:'2026-10-16T08:30',end:'2026-10-16T09:30',kind:'transfer',title:'Aeroporto → Abapart · bagagli in consigna',place:'Aparthotel Nàpols – Abapart · Nàpols 116',lat:41.39539,lng:2.17955,note:'Aerobús A1 → Pl. Catalunya + L1 fino ad Arc de Triomf (~€10) o taxi ~€35. Check-in dalle 15: valigie in consigna gratuita'},
+  {id:'v3',day:'16',start:'2026-10-16T10:00',end:'2026-10-16T11:15',kind:'sight',title:'Parc de la Ciutadella',place:'Parc de la Ciutadella',lat:41.38812,lng:2.18602,note:'350 m da Arc de Triomf · fontana monumentale',outdoor:true,planB:'caffè coperto in zona Born'},
+  {id:'v4',day:'16',start:'2026-10-16T11:45',end:'2026-10-16T12:45',kind:'sight',title:'Mercat de Santa Caterina + Xarcuteria Debón',place:'Mercat de Santa Caterina',lat:41.38636,lng:2.17816,note:'Jamón ibérico da Debón (5,0★): per i bocadillos di sabato · chiedere affettato al coltello, fascia ~€20'},
+  {id:'v5',day:'16',start:'2026-10-16T13:00',end:'2026-10-16T14:15',kind:'food',title:'Pranzo · Chao Pescao Born',place:'Passatge Mercantil 1',lat:41.38618,lng:2.18412,note:'4,8★ · pesce dal banco, si fissa il budget a persona prima di ordinare'},
+  {id:'v6',day:'16',start:'2026-10-16T15:00',end:'2026-10-16T16:20',kind:'admin',title:'Check-in + riposo',place:'Abapart · Nàpols 116',lat:41.39539,lng:2.17955,note:'Jamón in frigo · chiedere unità silenziosa lontano dall\'ascensore · doccia e mezz\'ora di riposo'},
+  {id:'v7',day:'16',start:'2026-10-16T16:30',end:'2026-10-16T16:55',kind:'admin',title:'Enoteca Taps · bollicina',place:'Provença 474',lat:41.40547,lng:2.17598,note:'Corpinnat: Recaredo Terrers / Raventós De la Finca / Gramona Imperial (~€30) · prenderne 2'},
+  {id:'v8',day:'16',start:'2026-10-16T16:55',end:'2026-10-16T17:20',kind:'admin',title:'Spesa · Mercadona',place:'Sardenya 229',lat:41.40036,lng:2.17708,note:'Sulla strada del ritorno · bollicina in frigo appena a casa'},
+  {id:'v9',day:'16',start:'2026-10-16T17:45',end:'2026-10-16T18:40',kind:'sight',title:'Passeggiata Passeig de Gràcia',place:'Casa Batlló',lat:41.39170,lng:2.16492,note:'Casa Milà e Casa Batlló dall\'esterno, discesa verso Gran Via',outdoor:true,planB:'vetrine e gallerie coperte su Pg. de Gràcia'},
+  {id:'v10',day:'16',start:'2026-10-16T18:45',end:'2026-10-16T20:15',kind:'night',title:'Aperitivo · Rooftop Garden (El Palace)',place:'Gran Via 668',lat:41.39141,lng:2.17142,note:'4,4★ · vista Sagrada Família e skyline',outdoor:true,planB:'bar interno El Palace o cocktail bar in zona'},
+  {id:'v11',day:'16',start:'2026-10-16T20:20',end:'2026-10-16T20:50',kind:'transfer',title:'Uber → Sarrià',note:'~5 km · €14-19 · 15 min'},
+  {id:'v12',day:'16',start:'2026-10-16T21:00',end:'2026-10-16T23:00',kind:'food',title:'Cena · Braseria Sarrià ★ PRENOTATO',place:'Carrer de Can Ràbia 3',lat:41.39260,lng:2.13442,phone:'+34930244377',book:'tel:+34930244377',note:'4,9★ · Entrecot con hueso 500g, 60 giorni, €39 · cottura "poco hecho" · chiedere vaca joven, maduración corta'},
+  {id:'v13',day:'16',start:'2026-10-16T23:00',end:'2026-10-17T00:30',kind:'night',title:'Opzionale · Kahala Tiki Bar',place:'Av. Diagonal 537',lat:41.39070,lng:2.13800,note:'370 m a piedi dalla braseria · aperto fino alle 3 · poi Uber a casa. Se stanco: dritto a letto, sveglio dalle 4'},
+  // SABATO 17 — 40° · arrivano Giulio e Manuel
+  {id:'s1',day:'17',start:'2026-10-17T05:55',end:'2026-10-17T07:40',kind:'flight',title:'Volo Giulio · FR2097 BLQ → BCN',note:'Giulio in appartamento verso le 9: registrazione documento + seconda chiave',track:'https://www.aena.es/en/flight-info.html',flightNo:'FR2097',fdate:'2026-10-17'},
+  {id:'s2',day:'17',start:'2026-10-17T08:00',end:'2026-10-17T09:45',kind:'flight',title:'Volo Manuel · FR5219 BLQ → BCN',note:'Manuel arriva in zona Sagrada Família verso le 11:15',track:'https://www.aena.es/en/flight-info.html',flightNo:'FR5219',fdate:'2026-10-17'},
+  {id:'s3',day:'17',start:'2026-10-17T10:00',end:'2026-10-17T11:30',kind:'sight',title:'Sagrada Família (Ale + Giulio)',place:'Sagrada Família',lat:41.40363,lng:2.17436,book:'https://sagradafamilia.org/',note:'Slot 10:00 · biglietto base €26 con app audioguida · 13 min a piedi da casa · sab chiude alle 18'},
+  {id:'s4',day:'17',start:'2026-10-17T11:30',end:'2026-10-17T12:10',kind:'food',title:'Ape veloce · Vermuteria Olimpo',place:'Mallorca 494',lat:41.40663,lng:2.17994,note:'4,6★ · a fianco della Basilica · qui vi raggiunge Manuel · vermut alla spina e gilde'},
+  {id:'s5',day:'17',start:'2026-10-17T12:15',end:'2026-10-17T12:30',kind:'admin',title:'Pane · Forn de Pa El Molí',place:'Castillejos 243',lat:41.40488,lng:2.18027,note:'Chiedere: "un pa de pagès recién horneado, cortado por la mitad a lo largo"'},
+  {id:'s6',day:'17',start:'2026-10-17T13:00',end:'2026-10-17T14:30',kind:'food',title:'Pranzo a casa · bocadillo + cava',place:'Abapart · Nàpols 116',lat:41.39539,lng:2.17955,note:'Bocadillo al jamón di Debón + bollicina fredda · brindisi di benvenuto'},
+  {id:'s7',day:'17',start:'2026-10-17T14:30',end:'2026-10-17T17:00',kind:'base',title:'Riposo + bonding',place:'Abapart · Nàpols 116',lat:41.39539,lng:2.17955,note:'Ricarica per la serata'},
+  {id:'s8',day:'17',start:'2026-10-17T17:00',end:'2026-10-17T19:00',kind:'sight',title:'Giro nel Born / Gòtic',place:'El Born',lat:41.38500,lng:2.18280,note:'Passeggiata verso la zona della cena · Sta. Maria del Mar, Passeig del Born',outdoor:true,planB:'Museo Picasso o caffè coperto'},
+  {id:'s9',day:'17',start:'2026-10-17T19:30',end:'2026-10-17T22:30',kind:'food',title:'Cena 40° · Bodega Biarritz 1881',place:'Nou de Sant Francesc 7',lat:41.37860,lng:2.17720,note:'4,7★ · NO prenotazioni: arrivare alle 19:30 · menu a sorpresa, si concorda il prezzo a persona sulla porta: "Somos tres. ¿Cuáles son las opciones de precio que ofrecéis?" · Piano B: Bornès, Carassa 2'},
+  {id:'s10',day:'17',start:'2026-10-18T00:00',end:'2026-10-18T04:00',kind:'night',title:'Sala Apolo · festa 40°',place:'Nou de la Rambla 113',lat:41.37440,lng:2.16957,note:'Apre a mezzanotte · sabato notte metro h24 per il rientro (L2/L3 Paral·lel → verificare su TMB)'},
+  // DOMENICA 18
+  {id:'d1',day:'18',start:'2026-10-18T10:30',end:'2026-10-18T11:00',kind:'admin',title:'Check-out + bagagli in consigna',place:'Abapart · Nàpols 116',lat:41.39539,lng:2.17955,note:'Check-out entro le 11 · consigna gratuita, ritiro senza limiti di orario'},
+  {id:'d2',day:'18',start:'2026-10-18T11:15',end:'2026-10-18T12:45',kind:'sight',title:'Centro commerciale · Westfield Glòries',place:'Av. Diagonal 208',lat:41.40540,lng:2.19190,note:'Opzione relax/shopping post-Apolo · 1,3 km da casa · domenica verificare orari apertura'},
+  {id:'d3',day:'18',start:'2026-10-18T13:00',end:'2026-10-18T15:00',kind:'food',title:'Pranzo sul mare · Can Fisher',place:'Av. del Litoral 64 · Bogatell',lat:41.39370,lng:2.20570,note:'Rodaballo a la meunière €38 (chiedere se salvaje) o spaghetti alle vongole €26 · evitare piatti S/M (prezzo mercato) · arrossi min 2 persone: siete in 3, ok'},
+  {id:'d4',day:'18',start:'2026-10-18T16:00',end:'2026-10-18T18:30',kind:'sight',title:'Bunkers del Carmel · tramonto',place:'Turó de la Rovira',lat:41.41930,lng:2.16183,note:'Vista 360° sulla città · dom 16-19 · salita ripida: bus V17 o taxi fino a metà',outdoor:true,planB:'relax al Parc de la Ciutadella o ultimo giro nel Born'},
+  {id:'d5',day:'18',start:'2026-10-18T19:00',end:'2026-10-18T19:30',kind:'admin',title:'Recupero bagagli',place:'Abapart · Nàpols 116',lat:41.39539,lng:2.17955},
+  {id:'d6',day:'18',start:'2026-10-18T20:00',end:'2026-10-18T21:00',kind:'transfer',title:'Verso l\'aeroporto T2',place:'Aeroporto BCN · T2',lat:41.30180,lng:2.07930,note:'L1 Arc de Triomf → Catalunya + Aerobús (~50 min, ~€10) o Uber ~€35 · partire ENTRO le 20:00'},
+  {id:'d7',day:'18',start:'2026-10-18T21:00',end:'2026-10-18T22:00',kind:'admin',title:'Sala VIP Canudas · T2',place:'Aeroporto BCN · T2',lat:41.30180,lng:2.07930,note:'Cibo + drink prima del volo · chiude alle 22:00'},
+  {id:'d8',day:'18',start:'2026-10-18T22:25',end:'2026-10-18T23:05',kind:'flight',title:'Al gate',place:'Aeroporto BCN · T2',track:'https://www.aena.es/en/flight-info.html',flightNo:'FR5220',fdate:'2026-10-18'},
+  {id:'d9',day:'18',start:'2026-10-18T23:05',end:'2026-10-19T00:50',kind:'flight',title:'Volo FR5220 · BCN → BLQ · tutti e tre',place:'Rientro a casa',note:'Atterraggio 00:50 lunedì',track:'https://www.aena.es/en/flight-info.html',flightNo:'FR5220',fdate:'2026-10-18'}
+];
+
+const CONTACTS=[
+  {n:'Aparthotel Nàpols – Abapart',v:'Nàpols 116 · check-in 15:00 · vedi email di prenotazione',url:'https://www.google.com/maps/search/?api=1&query=Aparthotel+Napols+Abapart+Carrer+de+N%C3%A0pols+116+Barcelona',i:'🏠'},
+  {n:'Aire Ancient Baths · spa',v:'prenota online',url:'https://relax.beaire.com/es/aire-ancient-baths-barcelona',i:'🧖'},
+  {n:'Barriteca · cena ven',v:'+34 934 851 859',tel:'+34934851859',i:'🍽️'},
+  {n:'Cuadro · Vila Olímpica',v:'+34 640 065 174',tel:'+34640065174',i:'🍷'},
+  {n:'Sir Victor · rooftop',v:'+34 681 084 156',tel:'+34681084156',i:'🌆'},
+  {n:'Museo Picasso',v:'+34 932 563 000',tel:'+34932563000',i:'🖼️'},
+  {n:'FREE NOW · taxi',v:'app',url:'https://free-now.com/es/',i:'🚖'},
+  {n:'Emergenze UE',v:'112',tel:'112',i:'🆘'}
+];
+
+const DINING={
+  rist:[
+    {n:'Can Recasens',a:'Rambla del Poblenou 102',d:'Formaggi, salumi e vini in un modernista. Bohémien.',site:'https://canrecasens.restaurant/',lat:41.4006,lng:2.1976},
+    {n:'Els Tres Porquets',a:'Rambla del Poblenou 165',d:'Tapas creative & carni · 9,4 su TheFork.',fork:'https://www.thefork.com/restaurant/els-tres-porquets-r16747',lat:41.4031,lng:2.1991},
+    {n:'Els Pescadors',a:'Plaça de Prim 1',d:'Pesce e arroces, riferimento storico.',fork:'https://www.thefork.com/restaurant/els-pescadors-r17877',lat:41.4046,lng:2.2061},
+    {n:'El 58',a:'Rambla del Poblenou 58',d:'Tapas locali: bravas, croquetas. Da gente del posto.',lat:41.3981,lng:2.1958},
+    {n:'Els Pollos de Llull',a:'C/ de Ramon Turró 13',d:'Pollo arrosto, un classico di Barcellona.',site:'https://elspollos.com/',lat:41.3906,lng:2.1929},
+    {n:'Masa Vins',a:'C/ de Pallars 154',d:'Wine bar con cucina, calici e cocktail.',site:'https://www.instagram.com/masa.vins/',lat:41.4007,lng:2.1931},
+    {n:'Barriteca',a:'Poblenou',d:'Catalana vera, trattano benissimo chi cena solo.',lat:41.4013,lng:2.2031},
+    {n:'Cuadro',a:'Vila Olímpica',d:'Bistrot vicino alla spiaggia, comodo e veloce.',lat:41.3936,lng:2.1954}
+  ],
+  cocktail:[
+    {n:'Balius',a:'C/ de Pujades 196',d:'Cocktail classici in una ex-farmacia · jazz la domenica.',site:'https://baliusbar.com/',lat:41.4011,lng:2.1996},
+    {n:'Dreamboat Bar & Deli',a:'C/ de la Llacuna 136',d:'Cocktail giocosi + grilled cheese gourmet.',site:'https://dreamboatbar.com/',lat:41.4002,lng:2.1966},
+    {n:"Henry's Bar",a:'C/ de la Llacuna 92',d:'Dive bar creativo, dog-friendly, terrazza.',site:'https://www.instagram.com/henrys.cocktailbar/',lat:41.3991,lng:2.1958},
+    {n:'Madame George',a:'C/ de Pujades 179',d:'Speakeasy raffinato, atmosfera intima.',lat:41.4008,lng:2.1989},
+    {n:'Bubar',a:'Poblenou',d:'Vini naturali e cocktail di quartiere.',lat:41.4000,lng:2.1980}
+  ]
+};
+
+// ====== ALLOGGIO UFFICIALE (Aparthotel Nàpols – Abapart) + cosa c'è A PIEDI ======
+const APT={n:'Aparthotel Nàpols – Abapart',a:'Carrer de Nàpols 116, Eixample (Fort Pienc)',lat:41.39539,lng:2.17955};
+const NEARBY=[
+  // dietro l'angolo — Fort Pienc / Arc de Triomf (base: Nàpols 116)
+  {n:"Parc de l'Estació del Nord",a:'4 min a piedi',d:'Il giardino con le dune di ceramica blu di Beverly Pepper: il tuo angolo verde sotto casa.',i:'🌳',lat:41.3933,lng:2.1818,mins:4},
+  {n:'Plaça de Braus Monumental',a:'7 min a piedi',d:'L\'ex arena in stile moresco (niente più corride): scenografica da vedere da fuori.',i:'🏟️',lat:41.3999,lng:2.1817,mins:7},
+  {n:'Arc de Triomf + Parc de la Ciutadella',a:'8 min a piedi',d:'L\'Arco di Trionfo in mattoni e il parco con laghetto e cascata, verso il Born. Birra al tramonto sul passeig.',i:'🌿',lat:41.3888,lng:2.1866,mins:8},
+  {n:"L'Auditori & Teatre Nacional",a:'9 min a piedi',d:'Auditorium e TNC: il quartiere della cultura a due passi.',i:'🎭',lat:41.3987,lng:2.1873,mins:9},
+  // 10–20 min a piedi
+  {n:'Sagrada Família',a:'13 min a piedi',d:'Il capolavoro di Gaudí. Biglietto con orario ONLINE in anticipo: si esaurisce, mai dai bagarini.',i:'⛪',url:'https://sagradafamilia.org/',lat:41.4036,lng:2.1744,mins:13},
+  {n:'Mercat de la Concepció',a:'13 min a piedi',d:'Mercato di quartiere coi banchi di fiori: spuntino tra la gente del posto.',i:'🌸',url:'https://www.laconcepcio.cat/',lat:41.3955,lng:2.1667,mins:13},
+  {n:'Plaça de les Glòries',a:'14 min a piedi',d:'Grande parco urbano rinnovato: verde e spazio aperto per staccare.',i:'🌳',lat:41.4030,lng:2.1885,mins:14},
+  {n:'Museu del Disseny (DHUB)',a:'14 min a piedi',d:'Museo del design nell\'edificio "la pinzatrice": terrazza panoramica e mostre spesso gratuite.',i:'🎨',url:'https://ajuntament.barcelona.cat/museudeldisseny/en',lat:41.4028,lng:2.1875,mins:14},
+  {n:'Torre Glòries + Mirador',a:'15 min a piedi',d:'La torre-proiettile (ex Agbar): salita al Mirador 360° con la nuvola di sfere. Di sera si illumina.',i:'🗼',url:'https://miradortorreglories.com/',lat:41.4033,lng:2.1894,mins:15},
+  {n:'Els Encants Vells',a:'15 min a piedi',d:'Mercatino delle pulci sotto la tettoia dorata a specchi. Lun/Mer/Ven/Sab mattina. Si contratta.',i:'🛍️',url:'https://encantsbarcelona.com/',lat:41.4045,lng:2.1876,mins:15},
+  {n:'Passeig de Gràcia · Casa Batlló / La Pedrera',a:'16 min a piedi',d:'Le case di Gaudí. Prenota online; a piedi ~16 min o L2 da Monumental.',i:'🏠',url:'https://www.casabatllo.es/',lat:41.3916,lng:2.1649,mins:16},
+  {n:'Recinte Modernista Sant Pau',a:'25 min a piedi',d:'Complesso modernista UNESCO, splendido e molto meno affollato della Sagrada. Da non perdere.',i:'✨',url:'https://www.santpaubarcelona.org/en',lat:41.4127,lng:2.1745,mins:25}
+];
+// Note locali (attenzioni pratiche)
+const TIPS=[
+  '<b>Borseggiatori</b>: metro, Sagrada Família ed Els Encants. Zaino davanti, telefono in tasca chiusa.',
+  '<b>Sagrada Família</b>: biglietto con orario <b>online in anticipo</b>. Mai dai bagarini in strada.',
+  '<b>Orari cucina</b>: pranzo 13:30–16, cena 21–23. A pranzo feriale cerca il <i>menú del día</i>.',
+  '<b>Els Encants</b>: solo <b>lun/mer/ven/sab mattina</b>. Si contratta.',
+  '<b>Domenica</b>: molti negozi chiusi; musei e mercati con orari ridotti.',
+  '<b>Scam</b>: no al "braccialetto/rosmarino gratis" e al gioco delle tre carte.',
+  '<b>Metro vicino</b>: Tetuan (L2) a 4 min, Arc de Triomf (L1) a 7 min, Monumental (L2) a 7 min. Rodalies e bus a Estació del Nord.',
+  '<b>Acqua</b>: del rubinetto è potabile; molti locali servono quella in bottiglia.'
+];
+const CAMP_NOU={lat:41.3809,lng:2.1228,book:'https://www.fcbarcelona.com/en/tickets/camp-nou-experience'};
+
+// ====== PIANI ARRIVO (06:00 → check-in 16:00): A sole · B pioggia · C smart working ======
+const ARRIVO=[
+  {k:'A',e:'☀️',t:'Sole',sub:'Passeggiata & aria aperta',ps:[
+    {n:'Colazione + passeggiata',d:'Caffè e croissant in Eixample, poi cammini con calma verso il verde.',q:'cafeteria Eixample Barcelona'},
+    {n:'Parc de la Ciutadella',d:'Parco con laghetto, cascata e Arc de Triomf. Perfetto la mattina.',q:'Parc de la Ciutadella Barcelona'},
+    {n:'Recinte Modernista de Sant Pau',d:'Complesso modernista UNESCO (apre ~09:30), ~18 min a piedi. Meno affollato della Sagrada.',q:'Recinte Modernista Sant Pau Barcelona',url:'https://www.santpaubarcelona.org/en'}
+  ]},
+  {k:'B',e:'🌧️',t:'Pioggia',sub:'Al coperto: musei & shopping',ps:[
+    {n:'Museu Picasso',d:'Apre ~10:00 (venerdì aperto). Nel Born, ~10 min di metro.',q:'Museu Picasso Barcelona',url:'https://www.museupicasso.bcn.cat/en'},
+    {n:'Palau de la Música Catalana',d:'Visite guidate dal mattino. Gioiello modernista UNESCO.',q:'Palau de la Música Catalana Barcelona',url:'https://www.palaumusica.cat/en'},
+    {n:'Arenas de Barcelona',d:'Ex arena → centro commerciale con terrazza panoramica. Apre ~10:00, tutto al coperto.',q:'Arenas de Barcelona centre comercial'}
+  ]},
+  {k:'C',e:'💻',t:'Smart working',sub:'09–17 · coworking o mall',ps:[
+    {n:'Aticco Monumental',d:'Coworking con day pass, vicinissimo (zona Monumental).',q:'Aticco Monumental Barcelona',url:'https://aticco.com/'},
+    {n:'Boca11 Coworking',d:'Spazio tranquillo in Eixample, day pass.',q:'Boca11 coworking Barcelona'},
+    {n:'Eixample 46 Coworking',d:'Postazioni e sale riunioni in Eixample.',q:'Eixample 46 coworking Barcelona'},
+    {n:'Westfield Glòries',d:'Mall grande e spazioso (~7 min a piedi): caffè con Wi-Fi, tavoli, food court.',q:'Westfield Glòries Barcelona'},
+    {n:'Diagonal Mar',d:'Mall ampio vicino al mare, tanti spazi comodi per lavorare.',q:'Centre Comercial Diagonal Mar Barcelona'}
+  ]}
+];
+
+/* ================= MOTORE (riscritto, minimale) ================= */
+const DONE_KEY='bcn40_done_v1';
+const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const tp=t=>new Date(t.length<=16?t+':00':t);
+const pad=n=>String(n).padStart(2,'0');
+const fmtHM=d=>pad(d.getHours())+':'+pad(d.getMinutes());
+const getDone=()=>{try{return new Set(JSON.parse(localStorage.getItem(DONE_KEY)||'[]'))}catch(e){return new Set()}};
+const saveDone=s=>localStorage.setItem(DONE_KEY,JSON.stringify([...s]));
+const esc=s=>String(s).replace(/"/g,'&quot;');
+
+function model(now){
+  const done=getDone();
+  const items=ITINERARY.map(x=>Object.assign({},x));
+  items.forEach(it=>{it._s=tp(it.start);it._e=it.end?tp(it.end):new Date(it._s.getTime()+36e5);});
+  items.sort((a,b)=>a._s-b._s);
+  items.forEach(it=>{
+    if(done.has(it.id))it._st='done';
+    else if(now>=it._s&&now<it._e)it._st='cur';
+    else if(now<it._s)it._st='fut';
+    else it._st='past';
+  });
+  return items;
+}
+
+/* ---- timeline dei 3 giorni ---- */
+function stepHTML(it,i){
+  const k=KIND[it.kind]||{e:'•',c:'#55534E'};
+  const cls=(it._st==='cur'?' cur':'')+(it._st==='done'?' done':'');
+  let acts='';
+  if(it.lat)acts+='<a href="https://www.google.com/maps/dir/?api=1&destination='+it.lat+','+it.lng+'&travelmode=walking" target="_blank" rel="noopener">Mappa ↗</a>';
+  if(it.phone)acts+='<a href="tel:'+it.phone+'">Chiama ↗</a>';
+  if(it.book&&!String(it.book).startsWith('tel:'))acts+='<a href="'+it.book+'" target="_blank" rel="noopener">Prenota ↗</a>';
+  if(it.track)acts+='<a href="'+it.track+'" target="_blank" rel="noopener">Volo live ↗</a>';
+  return '<li class="step rv'+cls+'" data-id="'+it.id+'" style="--kc:'+(k.c||'#55534E')+';--d:'+Math.min(i*60,420)+'ms">'+
+    '<div class="s-top"><span class="s-time tnum">'+fmtHM(it._s)+'<span class="e"> – '+fmtHM(it._e)+'</span></span>'+
+    (it._st==='cur'?'<span class="badge-ora">ORA</span>':'')+'</div>'+
+    '<div class="s-tit"><span class="ke">'+k.e+'</span><span>'+it.title+'</span></div>'+
+    (it.note?'<div class="s-note">'+it.note+'</div>':'')+
+    (acts?'<div class="s-acts">'+acts+'</div>':'')+
+    '<button class="chk" onclick="toggleDone(\''+it.id+'\')" aria-label="Segna fatto"><span>✓</span></button></li>';
+}
+function renderDays(){
+  const now=new Date(), items=model(now);
+  ['16','17','18'].forEach(d=>{
+    const ol=document.querySelector('[data-steps="'+d+'"]'); if(!ol)return;
+    const rows=items.filter(it=>it.day===d);
+    ol.innerHTML='<div class="fill"></div>'+rows.map((it,i)=>stepHTML(it,i)).join('');
+  });
+  // giorno corrente evidenziato da solo (16/17/18 ottobre 2026)
+  const today=now.getFullYear()===2026&&now.getMonth()===9?String(now.getDate()):null;
+  document.querySelectorAll('.day').forEach(s=>s.classList.toggle('today',s.dataset.day===today));
+  observeRv();
+}
+function toggleDone(id){const s=getDone();s.has(id)?s.delete(id):s.add(id);saveDone(s);renderDays();}
+
+/* ---- countdown live con cifre morbide ---- */
+const cdEl=document.getElementById('cd');
+let cdPrev='';
+function cdUnit(v,l,key){
+  let dgs='';
+  const pv=cdPrev?cdPrev.split('|')[key]||'':'';
+  String(v).split('').forEach((ch,j)=>{dgs+='<span class="dg'+(pv[j]!==ch?' tick':'')+'">'+ch+'</span>';});
+  return '<span class="u"><b>'+dgs+'</b><i>'+l+'</i></span>';
+}
+function cdDraw(){
+  const now=new Date(), start=tp(TRIP_START), end=tp('2026-10-19T00:50');
+  if(now<start){
+    const s=Math.floor((start-now)/1000);
+    const g=String(Math.floor(s/86400)),h=pad(Math.floor(s%86400/3600)),m=pad(Math.floor(s%3600/60)),ss=pad(s%60);
+    cdEl.innerHTML=cdUnit(g,'giorni',0)+'<span class="co">:</span>'+cdUnit(h,'ore',1)+'<span class="co">:</span>'+cdUnit(m,'min',2)+'<span class="co">:</span>'+cdUnit(ss,'sec',3);
+    cdPrev=g+'|'+h+'|'+m+'|'+ss;
+  } else if(now<end){
+    const day=now.getDate()===16?'uno':(now.getDate()===17?'due — il Quarantesimo':'tre');
+    cdEl.innerHTML='<span class="live">In viaggio · giorno '+day+' 🥂</span>';
+  } else cdEl.innerHTML='<span class="live">È successo davvero ✨</span>';
+}
+cdDraw();setInterval(cdDraw,1000);
+
+/* ---- reveal on scroll ---- */
+let rvIO=null;
+function observeRv(){
+  const els=[].slice.call(document.querySelectorAll('.rv:not(.in)'));
+  if(RM){els.forEach(el=>el.classList.add('in'));return;}
+  if(!rvIO)rvIO=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');rvIO.unobserve(e.target);}}),{rootMargin:'0px 0px -6% 0px'});
+  els.forEach(el=>rvIO.observe(el));
+}
+/* linea che si disegna quando il giorno entra in vista */
+const dayIO=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');}),{threshold:.08});
+document.querySelectorAll('.day').forEach(s=>dayIO.observe(s));
+
+/* ---- nav attiva ---- */
+const navIO=new IntersectionObserver(es=>{
+  es.forEach(e=>{if(e.isIntersecting){
+    document.querySelectorAll('.dnav .nl').forEach(a=>a.classList.toggle('on',a.dataset.nav===e.target.id));
+  }});},{rootMargin:'-40% 0px -55% 0px'});
+['d16','d17','d18','mappa','info'].forEach(id=>{const el=document.getElementById(id);if(el)navIO.observe(el);});
+
+/* ---- mappa ---- */
+function initMap(){
+  if(!window.L){setTimeout(initMap,300);return;}
+  const map=L.map('map',{scrollWheelZoom:false}).setView([41.39,2.165],13);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+    {attribution:'&copy; OpenStreetMap &copy; CARTO',maxZoom:19,subdomains:'abcd'}).addTo(map);
+  const items=model(new Date());
+  items.filter(it=>it.lat).forEach(it=>{
+    const k=KIND[it.kind]||{e:'•',c:'#8D8A82'};
+    const pop='<div class="pp-t">'+k.e+' '+it.title+'</div><div class="pp-m">'+(DAYS[it.day]||'')+' · '+fmtHM(it._s)+'</div>'+
+      '<a class="pp-a" href="https://www.google.com/maps/dir/?api=1&destination='+it.lat+','+it.lng+'&travelmode=walking" target="_blank" rel="noopener">Portami qui ↗</a>';
+    L.circleMarker([it.lat,it.lng],{radius:7,color:'#0A0A0C',weight:2,fillColor:k.c||'#8D8A82',fillOpacity:.95}).addTo(map).bindPopup(pop);
+  });
+  L.circleMarker([APT.lat,APT.lng],{radius:10,color:'#0A0A0C',weight:3,fillColor:'#F2A33C',fillOpacity:1}).addTo(map)
+    .bindPopup('<div class="pp-t">🏠 '+APT.n+'</div><div class="pp-m">'+APT.a+'</div>'+
+      '<a class="pp-a" href="https://www.google.com/maps/dir/?api=1&destination='+APT.lat+','+APT.lng+'&travelmode=transit" target="_blank" rel="noopener">Portami qui ↗</a>');
+  // legenda dalle categorie davvero usate
+  const used={}; items.filter(it=>it.lat).forEach(it=>{used[it.kind]=1;});
+  const lab={flight:'voli',transfer:'transfer',food:'tavola',sight:'da vedere',spa:'relax',sea:'mare',night:'notte',admin:'logistica',base:'base',work:'lavoro'};
+  document.getElementById('mlegend').innerHTML=Object.keys(used).map(kk=>{
+    const k=KIND[kk]||{};return '<span><i style="background:'+(k.c||'#8D8A82')+'"></i>'+(lab[kk]||kk)+'</span>';}).join('')+
+    '<span><i style="background:#F2A33C"></i>la base</span>';
+}
+
+/* ---- info rapide ---- */
+function renderInfo(){
+  document.getElementById('aptSub').textContent=APT.n;
+  document.getElementById('aptBody').innerHTML=
+    '<div class="krow"><span class="k">Indirizzo</span><span>'+APT.a+'</span></div>'+
+    '<div class="krow"><span class="k">Check-in</span><span>15:00 · valigie custodite prima</span></div>'+
+    '<div class="krow"><span class="k">Check-out</span><span>entro le 11 · consigna gratuita</span></div>'+
+    '<a class="alink" href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(APT.n+' '+APT.a)+'" target="_blank" rel="noopener">Apri in mappe ↗</a>'+
+    '<a class="alink" href="https://www.google.com/maps/dir/?api=1&destination='+APT.lat+','+APT.lng+'&travelmode=transit" target="_blank" rel="noopener">Come arrivare ↗</a>';
+  document.getElementById('ctList').innerHTML=CONTACTS.map(c=>{
+    const href=c.tel?'tel:'+c.tel:c.url;
+    return '<div class="krow"><span class="k">'+c.i+' '+c.n+'</span><a href="'+href+'"'+(c.url?' target="_blank" rel="noopener"':'')+'>'+c.v+'</a></div>';}).join('');
+  document.getElementById('tipList').innerHTML=TIPS.map(t=>'<li>'+t+'</li>').join('');
+  const dn=x=>'<a href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(x.n+' Barcelona')+'" target="_blank" rel="noopener">'+x.n+'</a>';
+  document.getElementById('dnList').innerHTML=
+    '<b style="color:var(--ink)">Tavola</b> — '+DINING.rist.map(dn).join(' · ')+
+    '<br><b style="color:var(--ink)">Cocktail</b> — '+DINING.cocktail.map(dn).join(' · ');
+}
+
+renderDays();renderInfo();observeRv();initMap();
+setInterval(renderDays,30000);
+if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+</script>
+</body>
+</html>

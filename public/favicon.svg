@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <path d="M6 10 L52 3 L61 22 L58 57 L14 61 L3 40 Z" fill="#E8552E"/>
+  <path d="M6 10 L52 3 L61 22 L58 57 L14 61 L3 40 Z" fill="none" stroke="#F2E9DE" stroke-opacity=".25" stroke-width="2"/>
+  <text x="32" y="44" text-anchor="middle" font-family="Clash Display, Arial Black, system-ui, sans-serif" font-weight="700" font-size="32" fill="#FFFFFF">40</text>
+</svg>
