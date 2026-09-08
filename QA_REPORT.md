@@ -56,7 +56,7 @@ Unico risultato: il commento in `index.html` che spiega il divieto. Nessun `100v
 | Best Practices | 100 |
 | SEO | 100 |
 
-FCP 1,7 s · LCP 1,7 s · CLS 0,001 · TBT 0 ms (throttling mobile simulato). Report completo in `docs/lighthouse.json`. Correzioni fatte durante la QA: testi piccoli passati da `--ink-3` a `--ink-2` (contrasto AA), `public/robots.txt`.
+FCP 1,1 s · LCP 1,7 s · CLS 0,001 · TBT 0 ms (throttling mobile simulato). Report completo in `docs/lighthouse.json`. Correzioni fatte durante la QA: testi piccoli passati da `--ink-3` a `--ink-2` (contrasto AA), `public/robots.txt`.
 
 ## Riepilogo test e2e
 45/45 verdi (`node scripts/qa/e2e.mjs http://localhost:4173`).
