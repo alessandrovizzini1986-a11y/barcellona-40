@@ -30,3 +30,7 @@
 ## Fase 7 · Info, Speedrun, DA VERIFICARE
 - Info: accordion (appartamento, documenti, eSIM, regole anti-mal di testa, 112, profilo con cambio persona/tema/gamification, DA VERIFICARE da `checks.json` con checkbox persistenti attive solo per Alessandro).
 - Speedrun per Monne: banner dalla vista Oggi, timer live verso le 08:15, sveglia 07:15 negli appunti, timeline compressa f1→f8 + s2, cosa portare via.
+
+## Fase 8 · Copy e documentazione
+- Copy rivisto (tu diretto, àncora "Zero fatica, tutto gusto", niente parole vietate, dati `da_verificare` sempre condizionali).
+- `README.md` (aggiornare i JSON, deploy), `DA_VERIFICARE.md` finale.
