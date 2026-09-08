@@ -108,8 +108,11 @@ export async function render(root, { person, header, params }) {
   const key = dayKey()
   const mine = stopsFor(person)
   const todays = stopsForDay(person, key)
-  const cur = currentStop(todays)
   const nxt = nextStop(mine)
+  // "Adesso" = ultima tappa di oggi già iniziata; se non c'è ancora e la prossima è entro 45 min, è lei
+  let cur = currentStop(todays)
+  let imminent = false
+  if (!cur && nxt && nxt.dayKey === key && minutesUntil(nxt.at) <= 45) { cur = nxt; imminent = true }
   const doneToday = todays.filter((s) => store.isDone(s.id)).length
   const allDoneCount = mine.filter((s) => store.isDone(s.id)).length
   const openChecks = checks.filter((c) => !store.isChecked(c.id))
@@ -120,7 +123,7 @@ export async function render(root, { person, header, params }) {
     <div class="bento">
       <div class="tile tile--accent span-2" style="--day:${DAY_COLOR[key]}">
         <div class="tile__label">Adesso</div>
-        ${cur ? stopCard(cur, { person, isNow: true }) : `<p class="muted">${monneGone ? 'Tu a quest\'ora sei già a Bologna. Missione compiuta.' : 'La prima tappa di oggi non è ancora iniziata. Respira, c\'è tempo.'}</p>`}
+        ${cur ? (imminent ? `<p class="faint">Prossima tappa, ${nextIn(cur)}.</p>` : '') + stopCard(cur, { person, isNow: true }) : `<p class="muted">${monneGone ? 'Tu a quest\'ora sei già a Bologna. Missione compiuta.' : 'La prima tappa di oggi non è ancora iniziata. Respira, c\'è tempo.'}</p>`}
       </div>
       <div class="tile">
         <div class="tile__label">Prossima</div>
