@@ -12,12 +12,12 @@
 .view{ padding:var(--space-4); display:flex; flex-direction:column; gap:var(--space-4); max-width:720px; margin:0 auto; }
 .view--flush{ padding:0; gap:0; max-width:none; }
 .section-title{ font-size:var(--fs-2); color:var(--ink); display:flex; align-items:center; justify-content:space-between; gap:var(--space-3); }
-.section-title small{ font-family:var(--font-body); font-size:var(--fs-0); color:var(--ink-3); font-weight:500; }
+.section-title small{ font-family:var(--font-body); font-size:var(--fs-0); color:var(--ink-2); font-weight:500; }
 .stack{ display:flex; flex-direction:column; gap:var(--space-3); }
 .row{ display:flex; align-items:center; gap:var(--space-2); flex-wrap:wrap; }
 .grow{ flex:1; }
 .muted{ color:var(--ink-2); }
-.faint{ color:var(--ink-3); font-size:var(--fs-0); }
+.faint{ color:var(--ink-2); font-size:var(--fs-0); }
 .bento{ display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:var(--space-3); }
 .bento > .span-2{ grid-column:span 2; }
 @media (min-width:640px){ .bento{ grid-template-columns:repeat(4, minmax(0,1fr)); } .bento > .span-2{ grid-column:span 2; } }

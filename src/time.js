@@ -1,7 +1,8 @@
 // "Adesso", countdown e tappa corrente. Override per i test: ?now=2026-10-17T07:50 (query string,
 // anche dopo l'hash: #/oggi?now=...). Gli orari del piano sono ora locale di Barcellona (stesso fuso dell'Italia).
 export const WEEKEND_START = new Date(2026, 9, 16, 0, 0, 0)
-export const WEEKEND_END = new Date(2026, 9, 19, 0, 0, 0) // fine del 18/10
+// Fine del weekend: 30 minuti dopo l'ultima tappa (d3, rientro 20:00 del 18/10, orario da verificare)
+export const WEEKEND_END = new Date(2026, 9, 18, 20, 30, 0)
 export const BIRTHDAY = new Date(2026, 9, 17, 0, 0, 0)
 export const SPEEDRUN_DEADLINE = new Date(2026, 9, 17, 8, 15, 0)
 

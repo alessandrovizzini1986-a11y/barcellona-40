@@ -16,7 +16,7 @@ export function distChip(stop) {
   return `<span class="chip">${icon('walk')} ${d}${stop.minFromPrev != null ? ` · ${stop.minFromPrev} min a piedi` : ''}</span>`
 }
 
-export function stopCard(stop, { person = null, isNow = false, showCheck = true, reveal = false } = {}) {
+export function stopCard(stop, { person = null, isNow = false, nowLabel = 'adesso', showCheck = true, reveal = false } = {}) {
   const done = store.isDone(stop.id)
   const mission = missionByStop(stop.id)
   const missionMine = mission && (!person || mission.people.includes(person))
@@ -29,7 +29,7 @@ export function stopCard(stop, { person = null, isNow = false, showCheck = true,
   if (stop.actions?.metro) acts.push(`<span class="btn btn--ghost" aria-label="Metro: ${esc(stop.actions.metro)}">${icon('train')} ${esc(stop.actions.metro)}</span>`)
   return `<article class="card${done ? ' card--done' : ''}${isNow ? ' card--now' : ''}" data-stop="${stop.id}" style="--dc:${DAY_COLOR[stop.dayKey]}" aria-label="${esc(stop.title)}">
     <div class="card__head">
-      <div class="card__time tnum">${stop.timeStatus === 'stimato' ? '~' : ''}${stop.time}${isNow ? '<small>adesso</small>' : ''}</div>
+      <div class="card__time tnum">${stop.timeStatus === 'stimato' ? '~' : ''}${stop.time}${isNow ? `<small>${esc(nowLabel)}</small>` : ''}</div>
       <div class="grow">
         <h3 class="card__title">${esc(stop.title)}</h3>
         ${v ? `<div class="card__venue">${esc(v.name)}${v.addr && v.addr !== 'Barcelona' ? ` · ${esc(v.addr)}` : ''}</div>` : ''}

@@ -123,7 +123,7 @@ export async function render(root, { person, header, params }) {
     <div class="bento">
       <div class="tile tile--accent span-2" style="--day:${DAY_COLOR[key]}">
         <div class="tile__label">Adesso</div>
-        ${cur ? (imminent ? `<p class="faint">Prossima tappa, ${nextIn(cur)}.</p>` : '') + stopCard(cur, { person, isNow: true }) : `<p class="muted">${monneGone ? 'Tu a quest\'ora sei già a Bologna. Missione compiuta.' : 'La prima tappa di oggi non è ancora iniziata. Respira, c\'è tempo.'}</p>`}
+        ${cur ? stopCard(cur, { person, isNow: true, nowLabel: imminent ? nextIn(cur) : 'adesso' }) : `<p class="muted">${monneGone ? 'Tu a quest\'ora sei già a Bologna. Missione compiuta.' : 'La prima tappa di oggi non è ancora iniziata. Respira, c\'è tempo.'}</p>`}
       </div>
       <div class="tile">
         <div class="tile__label">Prossima</div>
