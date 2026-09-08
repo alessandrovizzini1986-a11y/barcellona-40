@@ -91,5 +91,10 @@ Bug trovati e corretti in QA: registrazione SW che dipendeva dall'evento
 load (poteva non partire), streak con "gelo" conteggiato ai bordi, modali di
 celebrazione che si sovrascrivevano (ora in coda).
 
+## Post-consegna (8 set)
+- [x] Fix scroll Android: tolti overflow-x:hidden/overscroll-behavior su html/body (SW v5)
+- [x] "Questo mese è diverso": override per singolo mese di entrate/fissi/obiettivo (bottone nel Mese, `monthOverrides` nel seed, merge per updatedAt)
+- [x] Seed v2: 10 movimenti bancari 28 ago → 8 set + ricorrente McFIT + mese 27 ago→26 set con obiettivo 0 (SW v6)
+
 ## Fase 5 — Consegna
 - [x] Ultimo commit, deploy verde, messaggio finale

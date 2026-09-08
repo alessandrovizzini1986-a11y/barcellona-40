@@ -1,5 +1,5 @@
 {
-  "seedVersion": 1,
+  "seedVersion": 2,
   "settings": {
     "name": "Ale",
     "salary": 1900,
@@ -14,12 +14,28 @@
     "onboarded": false,
     "updatedAt": 1
   },
-  "expenses": [],
+  "monthOverrides": {
+    "2026-08-27": { "salary": 2691, "fixed": 2250, "savingsGoal": 0, "note": "Entrate: stipendio 2.038 + rimborso Unisalute 500 + 153 dal conto comune. Fissi: 1.250 + 1.000 contributi spese famigliari. Questo mese niente da parte.", "updatedAt": 2 }
+  },
+  "expenses": [
+    { "id": "bank-20260828-sowl",     "amount": 22.40, "catId": "altro",  "note": "SO.WL (POS)",              "date": "2026-08-28", "ts": 2, "updatedAt": 2 },
+    { "id": "bank-20260829-carrefour","amount": 70.62, "catId": "spesa",  "note": "Carrefour",                "date": "2026-08-29", "ts": 2, "updatedAt": 2 },
+    { "id": "bank-20260830-tramvia",  "amount": 90.00, "catId": "cena",   "note": "Tramvia srl (POS)",        "date": "2026-08-30", "ts": 2, "updatedAt": 2 },
+    { "id": "bank-20260831-satispay", "amount": 71.00, "catId": "altro",  "note": "Ricarica Satispay",        "date": "2026-08-31", "ts": 2, "updatedAt": 2 },
+    { "id": "bank-20260831-canone",   "amount": 2.00,  "catId": "casa",   "note": "Canone conto corrente",    "date": "2026-08-31", "ts": 2, "updatedAt": 2 },
+    { "id": "bank-20260901-satispay", "amount": 51.00, "catId": "altro",  "note": "Ricarica Satispay",        "date": "2026-09-01", "ts": 2, "updatedAt": 2 },
+    { "id": "bank-20260903-mcfit",    "amount": 29.90, "catId": "salute", "note": "Palestra McFIT",           "date": "2026-09-03", "ts": 2, "updatedAt": 2 },
+    { "id": "bank-20260905-tigota",   "amount": 7.86,  "catId": "casa",   "note": "Tigotà",                   "date": "2026-09-05", "ts": 2, "updatedAt": 2 },
+    { "id": "bank-20260907-farmacia", "amount": 4.10,  "catId": "salute", "note": "Farmacia San Biagio",      "date": "2026-09-07", "ts": 2, "updatedAt": 2 },
+    { "id": "bank-20260908-satispay", "amount": 51.00, "catId": "altro",  "note": "Ricarica Satispay",        "date": "2026-09-08", "ts": 2, "updatedAt": 2 }
+  ],
   "goals": [
     { "id": "fondo", "name": "Fondo emergenza", "emoji": "🛟", "target": 3000, "balance": 0, "deadline": null, "createdAt": "2026-09-08", "updatedAt": 1 },
     { "id": "bcn", "name": "Barcellona 16-18 ott", "emoji": "🇪🇸", "target": 300, "balance": 0, "deadline": "2026-10-16", "createdAt": "2026-09-08", "updatedAt": 1 }
   ],
   "incomes": [],
   "months": [],
-  "recurring": []
+  "recurring": [
+    { "id": "rec-mcfit", "name": "Palestra McFIT", "amount": 29.90, "day": 3, "catId": "salute", "createdAt": "2026-09-04", "done": ["2026-09"], "updatedAt": 2 }
+  ]
 }

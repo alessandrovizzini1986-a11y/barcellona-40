@@ -566,7 +566,7 @@ function defaultState(){
       split: {}, onboarded: false, updatedAt: now
     },
     categories: DEFAULT_CATS.map((c,i) => ({...c, order:i, uses:0, updatedAt: now})),
-    expenses: [], goals: [], incomes: [], months: [], recurring: [],
+    expenses: [], goals: [], incomes: [], months: [], recurring: [], monthOverrides: {},
     gami: { xp:0, badges:[], streak:0, streakBest:0, streakLast:null, freezeMonth:null, noSpend:[], xpLog:{}, weekly:{}, insightIdx:0, lastSeen:null, weeksClosed:[], seenLevel:1 },
     meta: { created: now, lastOpen: null, currentMonth: null, version: APP_VERSION }
   };
@@ -588,6 +588,7 @@ function normalize(st){
   st.settings.fixedItems = st.settings.fixedItems || [];
   st.settings.quickAmounts = (st.settings.quickAmounts || d.settings.quickAmounts).slice(0,5);
   for (const k of ['categories','expenses','goals','incomes','months','recurring']) st[k] = Array.isArray(st[k]) ? st[k] : [];
+  st.monthOverrides = (st.monthOverrides && typeof st.monthOverrides === 'object') ? st.monthOverrides : {};
   st.gami = Object.assign(d.gami, st.gami || {});
   st.meta = Object.assign(d.meta, st.meta || {});
   if (!st.categories.length) st.categories = d.categories;
@@ -610,6 +611,7 @@ function mergeSeed(seed){
   if (seed.settings && (seed.settings.updatedAt || 0) > (S.settings.updatedAt || 0)) S.settings = Object.assign({}, S.settings, seed.settings);
   for (const k of ['categories','expenses','goals','incomes','months','recurring']) if (Array.isArray(seed[k])) S[k] = mergeById(S[k], seed[k]);
   if (seed.gami && (seed.gami.updatedAt || 0) > (S.gami.updatedAt || 0)) S.gami = Object.assign({}, S.gami, seed.gami);
+  if (seed.monthOverrides) { S.monthOverrides = S.monthOverrides || {}; for (const k in seed.monthOverrides) { const inc = seed.monthOverrides[k], cur = S.monthOverrides[k]; if (!cur || (inc.updatedAt || 0) > (cur.updatedAt || 0)) S.monthOverrides[k] = inc; } }
   S.seedVersion = sv;
   normalize(S); save();
   return true;
@@ -632,12 +634,18 @@ const sum = list => list.reduce((a,e) => a + (+e.amount || 0), 0);
 const byCatTotals = list => { const m = {}; for (const e of list) m[e.catId] = (m[e.catId]||0) + (+e.amount||0); return m; };
 
 /* ---------- calcoli del mese ---------- */
-function budgetVar(){ return S.settings.salary - S.settings.fixed - S.settings.savingsGoal; }
+/* parametri del mese: standard dalle impostazioni, oppure "questo mese è diverso" (override per singolo mese) */
+function monthParams(fm){
+  const o = (S.monthOverrides || {})[fm ? fm.id : finMonth(today()).id];
+  const s = S.settings;
+  return { salary: o && isFinite(o.salary) ? +o.salary : s.salary, fixed: o && isFinite(o.fixed) ? +o.fixed : s.fixed, savingsGoal: o && isFinite(o.savingsGoal) ? +o.savingsGoal : s.savingsGoal, note: o ? (o.note || '') : '', custom: !!o };
+}
+function budgetVar(fm){ const p = monthParams(fm); return p.salary - p.fixed - p.savingsGoal; }
 function monthStats(fm, asOf){
   asOf = asOf || today();
   const list = inMonth(fm);
   const spent = sum(list);
-  const B = budgetVar();
+  const P = monthParams(fm); const B = P.salary - P.fixed - P.savingsGoal;
   const residual = B - spent;
   const inside = asOf >= fm.start && asOf <= fm.end;
   const dayIdx = inside ? daysBetween(fm.start, asOf) : (asOf < fm.start ? -1 : fm.days); // 0-based
@@ -651,10 +659,10 @@ function monthStats(fm, asOf){
   const color = ratio >= 1 ? 'green' : ratio >= .8 ? 'amber' : 'red';
   const avgDaily = daysElapsed > 0 ? spent / daysElapsed : 0;
   const projectedSpend = spent + avgDaily * Math.max(0, daysLeft - 1);
-  const saved = S.settings.salary - S.settings.fixed - spent; // risparmio se il mese finisse ora
-  const projectedSaving = S.settings.salary - S.settings.fixed - projectedSpend;
-  const toGoal = S.settings.savingsGoal - saved;
-  return { fm, list, spent, B, residual, dayIdx, daysElapsed, daysLeft, perDayIdeal, safeToday, spentToday, spentBeforeToday, ratio, color, avgDaily, projectedSpend, saved, projectedSaving, toGoal, inside };
+  const saved = P.salary - P.fixed - spent; // risparmio se il mese finisse ora
+  const projectedSaving = P.salary - P.fixed - projectedSpend;
+  const toGoal = P.savingsGoal - saved;
+  return { fm, list, spent, B, params: P, goal: P.savingsGoal, residual, dayIdx, daysElapsed, daysLeft, perDayIdeal, safeToday, spentToday, spentBeforeToday, ratio, color, avgDaily, projectedSpend, saved, projectedSaving, toGoal, inside };
 }
 function sameDayPrevMonth(fm, asOf){
   const p = prevFinMonth(fm);
@@ -727,7 +735,7 @@ function closeMonth(fm){
   let alloc = {};
   if (deposit > 0) { const inc = addIncome('monthly', deposit, fm.end, splitDefault(), 'Risparmio ' + fm.name); alloc = inc.alloc; }
   const prev = S.months.find(m => m.id === prevFinMonth(fm).id);
-  const rec = { id: fm.id, start: fm.start, end: fm.end, name: fm.name, salary: S.settings.salary, fixed: S.settings.fixed, goal: S.settings.savingsGoal,
+  const rec = { id: fm.id, start: fm.start, end: fm.end, name: fm.name, salary: st.params.salary, fixed: st.params.fixed, goal: st.params.savingsGoal, custom: st.params.custom, note: st.params.note,
     budget: st.B, spent: round2(st.spent), saved, deposit, alloc, byCat: totals, count: st.list.length, days: fm.days, closedAt: Date.now(), updatedAt: Date.now(),
     prevSpent: prev ? prev.spent : null, prevByCat: prev ? prev.byCat : null, badges: [] };
   S.months.push(rec);
@@ -877,20 +885,20 @@ function renderHome(){
   $('#sts-under').textContent = (st.residual >= 0 ? `residuo mese ${eur(st.residual)}` : `oltre budget di ${eur(-st.residual)}`) + ' · ' + days;
   $('#sts-cheer').textContent = cheerLine(st);
   // risparmio
-  const goal = S.settings.savingsGoal;
+  const goal = st.goal;
   const proj = st.projectedSaving;
-  const cur = clamp(st.saved, 0, Infinity);
-  $('#sav-pill').textContent = `🎯 ${fmt(goal, 0)} €`;
-  const fill = clamp(proj / goal, 0, 1) * 100;
+  $('#sav-pill').textContent = st.params.custom ? `✏️ ${fmt(goal, 0)} €` : `🎯 ${fmt(goal, 0)} €`;
+  const fill = goal > 0 ? clamp(proj / goal, 0, 1) * 100 : (proj >= 0 ? 100 : 0);
   const f = $('#sav-fill'); f.style.width = fill + '%';
-  f.style.background = proj >= goal ? '' : (proj >= goal * .8 ? 'linear-gradient(90deg,#F59E0B,#FCD34D)' : 'linear-gradient(90deg,#EF4444,#F87171)');
+  f.style.background = proj >= goal ? '' : (proj >= goal * .8 && goal > 0 ? 'linear-gradient(90deg,#F59E0B,#FCD34D)' : 'linear-gradient(90deg,#EF4444,#F87171)');
   let projTxt;
-  if (st.dayIdx === 0 && st.spent === 0) projTxt = `Se tieni il ritmo di ${eur(st.perDayIdeal, 2)}/g chiudi a ${eur(goal)} ✅`;
+  if (goal <= 0) projTxt = proj >= 0 ? `Obiettivo 0 questo mese: a questo ritmo chiudi a ${eur(proj)}, in pari ✅` : `A questo ritmo chiudi a ${eur(proj)} 🔴 · per restare in pari spendi max ${eur(Math.max(0, st.params.salary - st.params.fixed - st.spent))} da qui alla paga`;
+  else if (st.dayIdx === 0 && st.spent === 0) projTxt = `Se tieni il ritmo di ${eur(st.perDayIdeal, 2)}/g chiudi a ${eur(goal)} ✅`;
   else if (proj >= goal) projTxt = `A questo ritmo: ${eur(proj)} ✅`;
   else if (proj >= 0) projTxt = `A questo ritmo: ${eur(proj)} ⚠️ (mancano ${eur(goal - proj)})`;
-  else projTxt = `A questo ritmo: ${eur(proj)} 🔴 · per salvare qualcosa spendi max ${eur(Math.max(0, S.settings.salary - S.settings.fixed - st.spent))} da qui alla paga`;
+  else projTxt = `A questo ritmo: ${eur(proj)} 🔴 · per salvare qualcosa spendi max ${eur(Math.max(0, st.params.salary - st.params.fixed - st.spent))} da qui alla paga`;
   $('#sav-proj').textContent = projTxt;
-  $('#sav-reframe').textContent = `${fmt(goal,0)} € = ${fmt(goal / fm.days, 0)} €/giorno`;
+  $('#sav-reframe').textContent = goal > 0 ? `${fmt(goal,0)} € = ${fmt(goal / fm.days, 0)} €/giorno` : (st.params.note ? `✏️ ${st.params.note}` : 'Questo mese niente da mettere via: basta non sforare.');
   $('#today-spent').textContent = st.spentToday > 0 ? `oggi ${eur(st.spentToday)}` : 'oggi niente, per ora';
   // categorie preferite (6 più usate)
   const totals = byCatTotals(st.list);
@@ -1029,20 +1037,22 @@ function renderMonth(){
   $('#month-title').textContent = fm.label;
   $('#month-next').style.visibility = fm.end < t ? '' : 'hidden';
   $('#month-sub').textContent = isCur ? `${fm.name} · ${st.daysLeft} giorni alla paga` : (arch ? `${fm.name} · archiviato` : fm.name);
-  const salary = arch ? arch.salary : S.settings.salary, fixed = arch ? arch.fixed : S.settings.fixed, goal = arch ? arch.goal : S.settings.savingsGoal;
+  const salary = arch ? arch.salary : st.params.salary, fixed = arch ? arch.fixed : st.params.fixed, goal = arch ? arch.goal : st.params.savingsGoal;
+  const custom = arch ? arch.custom : st.params.custom; const note = arch ? arch.note : st.params.note;
   const saved = salary - fixed - st.spent; const delta = saved - goal;
   const prev = sameDayPrevMonth(fm, asOf);
   const cmp = prev.hasData ? (st.spent <= prev.spent ? `<span class="pill green">−${eur(prev.spent - st.spent)} vs mese scorso allo stesso giorno</span>` : `<span class="pill amber">+${eur(st.spent - prev.spent)} vs mese scorso allo stesso giorno</span>`) : `<span class="pill">primo mese: nessun confronto</span>`;
-  $('#month-summary').innerHTML = `<div class="card"><h2>Riepilogo</h2><div class="kv">
-    <span class="k">Stipendio</span><span class="v num">${eur(salary)}</span>
+  $('#month-summary').innerHTML = `<div class="card"><div class="row between"><h2 style="margin:0">Riepilogo</h2>${custom ? '<span class="pill amber">✏️ mese personalizzato</span>' : ''}</div>${note ? `<div class="small muted" style="margin:4px 0 8px">${esc(note)}</div>` : '<div style="height:10px"></div>'}<div class="kv">
+    <span class="k">${custom ? 'Entrate del mese' : 'Stipendio'}</span><span class="v num">${eur(salary)}</span>
     <span class="k">Casa &amp; fissi</span><span class="v num">− ${eur(fixed)}</span>
     <span class="k">Spese variabili (${st.list.length})</span><span class="v num">− ${eur(st.spent)}</span>
     <span class="k tot">Risparmio ${isCur ? 'a oggi' : 'del mese'}</span><span class="v num tot" style="color:${saved>=goal?'var(--green)':saved>=0?'var(--amber)':'var(--red)'}">${eur(saved)}</span>
     <span class="k">Obiettivo</span><span class="v num">${eur(goal)}</span>
     <span class="k">Delta</span><span class="v num" style="color:${delta>=0?'var(--green)':'var(--red)'}">${delta>=0?'+':''}${eur(delta)}</span>
     ${isCur ? `<span class="k">Budget variabile residuo</span><span class="v num">${eur(st.residual)} · ${st.daysLeft} gg</span>` : ''}
-  </div><div class="row between" style="margin-top:10px;flex-wrap:wrap">${cmp}${arch ? `<button class="btn ghost sm" id="btn-pagella">📋 Pagella</button>` : ''}</div></div>`;
+  </div><div class="row between" style="margin-top:10px;flex-wrap:wrap">${cmp}${arch ? `<button class="btn ghost sm" id="btn-pagella">📋 Pagella</button>` : `<button class="btn ghost sm" id="btn-override">✏️ Questo mese è diverso</button>`}</div></div>`;
   const bp = $('#btn-pagella'); if (bp) bp.addEventListener('click', () => showPagella(fm.id));
+  const bo = $('#btn-override'); if (bo) bo.addEventListener('click', () => editOverride(fm));
   const totals = byCatTotals(st.list); const entries = Object.entries(totals).sort((a,b) => b[1]-a[1]);
   $('#month-donut').innerHTML = `<div class="card"><h2>Per categoria</h2><div class="donutwrap">${donutSVG(entries, st.spent)}<div class="legend grow" style="flex-direction:column;flex-wrap:nowrap;gap:6px">${entries.slice(0,6).map(([id,v]) => `<div class="it"><span class="dot" style="background:${cat(id).color}"></span><span class="nm">${cat(id).emoji} ${esc(cat(id).name)}</span><b class="num">${eur(v)}</b></div>`).join('') || '<div class="it">Nessuna spesa ancora</div>'}</div></div></div>`;
   $('#month-bars').innerHTML = `<div class="card"><h2>Giorno per giorno</h2>${barsSVG(fm, st.list, st.perDayIdeal, asOf)}<div class="row between small muted" style="margin-top:6px"><span>media ${eur(st.avgDaily, 2)}/g</span><span>ideale ${eur(st.perDayIdeal, 2)}/g</span></div></div>`;
@@ -1159,7 +1169,7 @@ $('#btn-income').addEventListener('click', openIncome);
    IMPOSTAZIONI
    ===================================================================== */
 function renderSettings(){
-  const s = S.settings; const B = budgetVar(); const fm = finMonth(today());
+  const s = S.settings; const fm = finMonth(today()); const B = s.salary - s.fixed - s.savingsGoal;
   const fixedRows = s.fixedItems.map((f,i) => `<div class="setrow"><div><div class="l">${esc(f.name)}</div></div><div class="row"><span class="num">${eur(f.amount)}</span><button class="link" data-fx="${i}" aria-label="Modifica ${esc(f.name)}">${svgUse('i-edit')}</button></div></div>`).join('');
   $('#settings-body').innerHTML = `
   <div class="card"><h2>Budget</h2>
@@ -1215,6 +1225,20 @@ function renderSettings(){
   $('#btn-reset').addEventListener('click', resetAll);
   $('#btn-onb').addEventListener('click', () => showOnboarding(true));
   const rd = $('#btn-realdate'); if (rd) rd.addEventListener('click', () => { sessionStorage.removeItem('soldi:today'); location.href = location.pathname; });
+}
+function editOverride(fm){
+  const p = monthParams(fm); const s = S.settings;
+  modalOpen(`<h2>Questo mese è diverso</h2><p class="muted small" style="margin:0 0 6px">Vale solo per ${esc(fm.label)}. Le impostazioni standard restano com'erano.</p>
+    <div class="field"><label for="ov-salary">Entrate del mese</label><div class="unit"><input id="ov-salary" type="number" inputmode="decimal" value="${p.salary}"><span>€</span></div></div>
+    <div class="field"><label for="ov-fixed">Fissi del mese</label><div class="unit"><input id="ov-fixed" type="number" inputmode="decimal" value="${p.fixed}"><span>€</span></div></div>
+    <div class="field"><label for="ov-goal">Obiettivo risparmio del mese (0 = basta non sforare)</label><div class="unit"><input id="ov-goal" type="number" inputmode="decimal" min="0" value="${p.savingsGoal}"><span>€</span></div></div>
+    <div class="field"><label for="ov-note">Nota (perché è diverso)</label><input id="ov-note" maxlength="80" value="${esc(p.note)}" placeholder="Es. rimborso Unisalute, spese extra"></div>
+    <div class="small muted" id="ov-calc"></div>
+    <div class="btnrow">${p.custom ? '<button class="btn ghost" id="ov-reset">Torna allo standard</button>' : ''}<button class="btn primary" id="ov-ok">Salva</button></div>`);
+  const calc = () => { const sal = +$('#ov-salary').value || 0, fx = +$('#ov-fixed').value || 0, g = +$('#ov-goal').value || 0; const b = sal - fx - g; $('#ov-calc').innerHTML = `Budget variabile del mese: <b class="num">${eur(b)}</b> ≈ ${eur(b / fm.days, 2)}/giorno (standard: ${eur(s.salary - s.fixed - s.savingsGoal)}).`; };
+  calc(); $$('#ov-salary,#ov-fixed,#ov-goal').forEach(i => i.addEventListener('input', calc));
+  $('#ov-ok').onclick = () => { S.monthOverrides[fm.id] = { salary: +$('#ov-salary').value || 0, fixed: +$('#ov-fixed').value || 0, savingsGoal: Math.max(0, +$('#ov-goal').value || 0), note: $('#ov-note').value.trim(), updatedAt: Date.now() }; save(); modalClose(); renderAll(); toast('Mese personalizzato ✏️'); };
+  const r = $('#ov-reset'); if (r) r.onclick = () => { delete S.monthOverrides[fm.id]; save(); modalClose(); renderAll(); toast('Tornato ai valori standard'); };
 }
 function moveCat(c, dir){ const list = cats(); const i = list.indexOf(c); const j = i + dir; if (j < 0 || j >= list.length) return; const o = list[j]; [c.order, o.order] = [o.order, c.order]; c.updatedAt = o.updatedAt = Date.now(); save(); renderSettings(); }
 function editFixed(i){
@@ -1395,7 +1419,7 @@ function checkWeeks(){ // settimane (lun-dom) chiuse sotto budget → +50
   G().weeksClosed = G().weeksClosed || [];
   while (addDays(w, 6) < t && w < thisWeek) {
     if (!G().weeksClosed.includes(w)) {
-      const end = addDays(w, 6); const fm = finMonth(end); const per = budgetVar() / fm.days;
+      const end = addDays(w, 6); const fm = finMonth(end); const per = budgetVar(fm) / fm.days;
       const spent = sum(expenses().filter(e => e.date >= w && e.date <= end));
       G().weeksClosed.push(w);
       if (spent <= per * 7) { addXP(50); toast(`Settimana ${fmtShort(w)}–${fmtShort(end)} sotto budget: +50 XP 🟢`); }
@@ -1405,7 +1429,7 @@ function checkWeeks(){ // settimane (lun-dom) chiuse sotto budget → +50
     w = addDays(w, 7);
   }
   // 7 giorni consecutivi sotto budget/giorno
-  const fm = finMonth(t); const per = budgetVar() / fm.days; const byDay = {}; for (const e of expenses()) byDay[e.date] = (byDay[e.date]||0) + e.amount;
+  const fm = finMonth(t); const per = budgetVar(fm) / fm.days; const byDay = {}; for (const e of expenses()) byDay[e.date] = (byDay[e.date]||0) + e.amount;
   let run = 0; for (let d = addDays(t, -1); d >= firstUse() && d >= addDays(t, -60); d = addDays(d, -1)) { if ((byDay[d]||0) <= per) { run++; if (run >= 7) { unlockBadge('week7'); break; } } else run = 0; }
 }
 function weeklyChallenge(){
@@ -1452,7 +1476,7 @@ EV.on('monthClosed', rec => {
 
 /* ---- insight concreti (1 alla volta, ruotano) ---- */
 function insights(st){
-  const out = []; const goal = S.settings.savingsGoal; const fm = st.fm;
+  const out = []; const goal = st.goal; const fm = st.fm;
   const totals = byCatTotals(st.list); const top = Object.entries(totals).sort((a,b) => b[1]-a[1])[0];
   if (top && st.daysElapsed >= 3) {
     const c = cat(top[0]); const projC = top[1] / st.daysElapsed * fm.days; const target = Math.max(10, Math.round(projC * 0.7 / 10) * 10);
