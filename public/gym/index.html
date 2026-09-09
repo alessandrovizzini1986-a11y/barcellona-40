@@ -2302,7 +2302,7 @@ if(!TRAINER&&PRIMO_AVVIO){
       (j.luoghi||[]).forEach(l=>{if(l&&l.id&&!lid.has(l.id))dati.luoghi.push(l);});
       if(j.note&&!Object.keys(dati.note).length)dati.note=j.note;
       if(j.resoconto&&!dati.resoconto)dati.resoconto=j.resoconto;
-      salva();renderAll();buzz(HAP.obiettivo);
+      salva();dayId=giornoSuggerito();renderAll();buzz(HAP.obiettivo);
       toast('Storico ripristinato dal sito: '+nuove.length+(nuove.length===1?' sessione':' sessioni')+' ✔','good');
     }).catch(()=>{});
 }
