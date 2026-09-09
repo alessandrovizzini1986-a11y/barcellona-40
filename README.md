@@ -30,7 +30,8 @@ Test delle date: aggiungi `?now=2026-10-17T07:50` all'URL (prima dell'hash), es.
 - `src/main.js` bootstrap, `src/router.js` router hash (`#/oggi #/programma #/mappa #/missioni #/info #/speedrun`), `src/store.js` stato, `src/time.js` tempo e tappa corrente, `src/data.js` accesso ai JSON, `src/game.js` XP/livelli/badge.
 - `src/ui/` componenti puri, `src/views/` viste, `src/map/leaflet.js` mappa caricata lazy.
 - `scripts/` script dati e QA (`scripts/qa/shot.mjs` screenshot 380×800, `scripts/qa/og.mjs` immagine Open Graph).
-- `_legacy/` il sito precedente: il plugin `copy-legacy` di `vite.config.js` lo copia in `dist/` a fine build, così gli URL storici (`viaggio.html`, `tour.html`, `soldi/`, `gym/`, …) restano online. Restano fuori `index.html`, `sw.js` e `manifest.json` di root.
+- `_legacy/` il sito precedente: il plugin `copy-legacy` di `vite.config.js` lo copia in `dist/` a fine build, così gli URL storici (`viaggio.html`, `tour.html`, `londra.html`, `rigori.html`, …) restano online. Restano fuori `index.html`, `sw.js` e `manifest.json` di root.
+- `public/soldi/` l'app budget "Soldi" e `public/gym/` l'app palestra (file statici, copiati così come sono in `dist/soldi/` e `dist/gym/`): https://alessandrovizzini1986-a11y.github.io/barcellona-40/soldi/
 
 ## Deploy
 

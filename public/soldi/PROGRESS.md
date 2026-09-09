@@ -96,5 +96,7 @@ celebrazione che si sovrascrivevano (ora in coda).
 - [x] "Questo mese è diverso": override per singolo mese di entrate/fissi/obiettivo (bottone nel Mese, `monthOverrides` nel seed, merge per updatedAt)
 - [x] Seed v2: 10 movimenti bancari 28 ago → 8 set + ricorrente McFIT + mese 27 ago→26 set con obiettivo 0 (SW v6)
 
+- [x] 9 set: il repo è diventato un progetto Vite e `soldi/` era finita in `_legacy/` (non pubblicata) → spostata in `public/soldi/`, stesso URL
+
 ## Fase 5 — Consegna
 - [x] Ultimo commit, deploy verde, messaggio finale
