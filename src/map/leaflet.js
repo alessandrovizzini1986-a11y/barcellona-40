@@ -7,7 +7,13 @@ import { icon } from '../ui/icons.js'
 import { esc } from '../ui/html.js'
 import { toast } from '../ui/toast.js'
 
-const TILES = { dark: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', light: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png' }
+// Chiave CARTO Basemaps (raster, gratuita fino a 5M tile/mese): senza chiave i tile mostrano la filigrana "API key required".
+// Attribution CARTO + OpenStreetMap sempre visibile: è la condizione del piano gratuito.
+const CARTO_KEY = 'cb1_31r6_1_0b27de76f374107fbc8f7c13'
+const TILES = {
+  dark: `https://{s}.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}{r}.png?key=${CARTO_KEY}`,
+  light: `https://{s}.basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}{r}.png?key=${CARTO_KEY}`
+}
 
 export function createMap(el, stopsByDay, { theme = 'dark' } = {}) {
   const map = L.map(el, { preferCanvas: true, zoomControl: false, attributionControl: false, tap: false })
