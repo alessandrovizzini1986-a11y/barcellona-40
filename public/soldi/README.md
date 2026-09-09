@@ -11,5 +11,5 @@ URL: https://alessandrovizzini1986-a11y.github.io/barcellona-40/soldi/
 5. In Impostazioni → **Importa backup** si può anche ricaricare un file a mano (unisci o sostituisci).
 
 ## Sviluppo
-Nessun build: apri `index.html` da un server statico. Per simulare una data: `?today=2026-10-27`. Per aprire subito il tastierino: `?action=add`.
+Nessun build: la cartella sta in `public/soldi/` e Vite la copia pari pari in `dist/soldi/`. In locale apri `index.html` da un server statico. Per simulare una data: `?today=2026-10-27`. Per aprire subito il tastierino: `?action=add`.
 Versione cache del service worker in `sw.js` (`VERSION`): alzala a ogni release.

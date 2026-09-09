@@ -31,6 +31,7 @@ Test delle date: aggiungi `?now=2026-10-17T07:50` all'URL (prima dell'hash), es.
 - `src/ui/` componenti puri, `src/views/` viste, `src/map/leaflet.js` mappa caricata lazy.
 - `scripts/` script dati e QA (`scripts/qa/shot.mjs` screenshot 380×800, `scripts/qa/og.mjs` immagine Open Graph).
 - `_legacy/` il sito precedente, conservato e non più pubblicato dalla build.
+- `public/soldi/` l'app budget "Soldi" (file statici, copiati così come sono in `dist/soldi/`): https://alessandrovizzini1986-a11y.github.io/barcellona-40/soldi/
 
 ## Deploy
 
