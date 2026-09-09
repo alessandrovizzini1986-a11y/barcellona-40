@@ -639,9 +639,10 @@ body.pausa *,body.pausa *::before,body.pausa *::after{animation-play-state:pause
     <div class="row" style="flex-wrap:wrap;gap:10px">
       <button class="btn grow" id="btnExport">⬇️ Esporta backup</button>
       <button class="btn grow" id="btnImport">⬆️ Importa backup</button>
+      <button class="btn grow" id="btnRestore">☁️ Ripristina dal sito</button>
       <input type="file" id="fileImport" accept="application/json" hidden>
     </div>
-    <p class="muted" style="margin-top:9px">I dati stanno solo su questo telefono. Esporta ogni tanto: se il browser pulisce i dati del sito, il backup ti salva.</p>
+    <p class="muted" style="margin-top:9px">I dati stanno solo su questo telefono. Esporta ogni tanto: se il browser pulisce i dati del sito, il backup ti salva. «Ripristina dal sito» riprende le sessioni pubblicate (quelle che vede il trainer).</p>
   </div>
   <div class="card sharecard noshare">
     <div class="eyebrow">Condividi col trainer</div>
@@ -724,7 +725,7 @@ body.pausa *,body.pausa *::before,body.pausa *::after{animation-play-state:pause
 
 /* ========================= STORAGE ========================= */
 const K_DATI='gym_v1', K_TIMER='gym_timer_v1', K_BAK='gym_v1_bak';
-const PRIMO_AVVIO=!localStorage.getItem(K_DATI)&&!localStorage.getItem(K_BAK); // nessun dato sul telefono
+const K_NOAUTO='gym_noauto';               // messo da "azzera": non rimettere lo storico da solo
 /* VISTA TRAINER: con ?trainer nell'indirizzo l'app mostra lo storico
    PUBBLICATO (storico.json nel sito) invece dei dati del telefono, in
    sola lettura: nessuna scrittura tocca il localStorage di chi guarda. */
@@ -1094,14 +1095,14 @@ $('#btnWipeSess').onclick=()=>{
   const n=dati.sessioni.filter(s=>s.chiusa).length;
   if(!confirm('Cancello '+n+' sessioni salvate e riparto da zero?\n\nLa scheda resta com\'è. Scarico prima un backup.'))return;
   backupAutomatico();
-  dati.sessioni=[];salva();stopTimer();chiudiFocus();renderAll();buzz(HAP.annulla);
+  dati.sessioni=[];salva();localStorage.setItem(K_NOAUTO,'1');stopTimer();chiudiFocus();renderAll();buzz(HAP.annulla);
   toast('Storico azzerato · backup scaricato','good');
 };
 $('#btnWipeAll').onclick=()=>{
   if(!confirm('AZZERO TUTTO: sessioni, scheda e palestre salvate.\n\nScarico prima un backup. Procedo?'))return;
   if(!confirm('Sicuro? Questa è l\'ultima conferma.'))return;
   backupAutomatico();
-  dati=statoVuoto();salva();stopTimer();chiudiFocus();
+  dati=statoVuoto();salva();localStorage.setItem(K_NOAUTO,'1');stopTimer();chiudiFocus();
   luogoAttuale=null;dayId=null;localStorage.removeItem(K_TIMER);
   renderAll();mostraLuogo();buzz(HAP.annulla);
   toast('Tutto azzerato · backup scaricato','good');
@@ -2285,27 +2286,28 @@ if(!TRAINER){
     if(n)setTimeout(()=>toast('Riprendo l\'allenamento: '+n+' serie già salvate ✔','good'),700);
   }
 }
-/* Telefono senza dati (cambio telefono, dati del browser cancellati, app
-   reinstallata): recupero le sessioni dallo storico PUBBLICATO sul sito.
-   Solo se la chiave locale manca del tutto: dopo un "azzera" voluto la
-   chiave esiste (vuota) e non rimetto niente. */
-if(!TRAINER&&PRIMO_AVVIO){
+/* Telefono senza sessioni (cambio telefono, dati del browser cancellati,
+   app reinstallata): recupero le sessioni dallo storico PUBBLICATO sul
+   sito. Da solo solo se non hai azzerato apposta; dal bottone sempre. */
+function ripristinaDalSito(manuale){
   fetch('storico.json?nc='+Date.now(),{cache:'no-store'})
     .then(r=>r.ok?r.json():Promise.reject())
     .then(j=>{
-      if(!j||!Array.isArray(j.sessioni)||!j.sessioni.length)return;
       const ids=new Set(dati.sessioni.map(s=>s.id));
-      const nuove=j.sessioni.filter(s=>s&&s.id&&!ids.has(s.id));
-      if(!nuove.length)return;
+      const nuove=(j&&Array.isArray(j.sessioni)?j.sessioni:[]).filter(s=>s&&s.id&&!ids.has(s.id));
+      if(!nuove.length){if(manuale)toast('Sul sito non c\'è niente in più di quello che hai già','warn');return;}
       dati.sessioni.push(...nuove);ordinaSessioni();
       const lid=new Set(dati.luoghi.map(l=>l.id));
       (j.luoghi||[]).forEach(l=>{if(l&&l.id&&!lid.has(l.id))dati.luoghi.push(l);});
       if(j.note&&!Object.keys(dati.note).length)dati.note=j.note;
       if(j.resoconto&&!dati.resoconto)dati.resoconto=j.resoconto;
+      localStorage.removeItem(K_NOAUTO);
       salva();dayId=giornoSuggerito();renderAll();buzz(HAP.obiettivo);
       toast('Storico ripristinato dal sito: '+nuove.length+(nuove.length===1?' sessione':' sessioni')+' ✔','good');
-    }).catch(()=>{});
+    }).catch(()=>{if(manuale)toast('Non riesco a leggere lo storico dal sito: sei online?','warn');});
 }
+$('#btnRestore').onclick=()=>ripristinaDalSito(true);
+if(!TRAINER&&!localStorage.getItem(K_NOAUTO)&&!dati.sessioni.some(s=>s.chiusa&&statSessione(s).serie))ripristinaDalSito(false);
 aggiornaContesto();
 let ctxInt=setInterval(aggiornaContesto,30000);            // data/ora/durata sempre vive
 /* Risparmio batteria: in secondo piano fermo timer e animazioni; al ritorno
