@@ -1,6 +1,6 @@
 {
  "v": 2,
- "aggiornato": "2026-09-07T19:20:23.480Z",
+ "aggiornato": "2026-09-10T19:34:45.182Z",
  "scheda": {
   "giorni": [
    {
@@ -660,6 +660,145 @@
    "pt": true,
    "ptEx": {},
    "note": "Devo ricordarm iil toast"
+  },
+  {
+   "id": "2026-09-10-pgepyxt",
+   "data": "2026-09-10",
+   "giorno": "B",
+   "settimana": 2,
+   "chiusa": true,
+   "inizio": 1789064982999,
+   "fine": 1789068704032,
+   "esercizi": {
+    "affondi-indietro": [
+     {
+      "kg": 4,
+      "reps": 10,
+      "fatta": true
+     },
+     {
+      "kg": 6,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 8,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": 4,
+      "reps": null,
+      "fatta": true
+     }
+    ],
+    "lat-prona": [
+     {
+      "kg": 30,
+      "reps": 13,
+      "fatta": true
+     },
+     {
+      "kg": 35,
+      "reps": 12,
+      "fatta": true
+     },
+     {
+      "kg": 40,
+      "reps": 9,
+      "fatta": true
+     },
+     {
+      "kg": 30,
+      "reps": null,
+      "fatta": true
+     }
+    ],
+    "leg-curl": [
+     {
+      "kg": 35,
+      "reps": 9,
+      "fatta": true
+     },
+     {
+      "kg": 35,
+      "reps": 9,
+      "fatta": true
+     },
+     {
+      "kg": 35,
+      "reps": 9,
+      "fatta": true
+     }
+    ],
+    "low-row": [
+     {
+      "kg": 30,
+      "reps": 11,
+      "fatta": true
+     },
+     {
+      "kg": 30,
+      "reps": 11,
+      "fatta": true
+     },
+     {
+      "kg": 30,
+      "reps": 11,
+      "fatta": true
+     }
+    ],
+    "push-up-ginocchia": [
+     {
+      "kg": null,
+      "reps": null,
+      "fatta": false
+     }
+    ],
+    "curl-manubri": [
+     {
+      "kg": 8,
+      "reps": 10,
+      "fatta": true
+     },
+     {
+      "kg": 8,
+      "reps": 10,
+      "fatta": true
+     },
+     {
+      "kg": 6,
+      "reps": 12,
+      "fatta": true
+     }
+    ],
+    "alzate-laterali": [
+     {
+      "kg": 4,
+      "reps": 15,
+      "fatta": true
+     },
+     {
+      "kg": 4,
+      "reps": 15,
+      "fatta": true
+     }
+    ]
+   },
+   "rt": {
+    "push-up-ginocchia": {
+     "reps": 30,
+     "sec": 278,
+     "start": null
+    }
+   },
+   "warm": {
+    "w0": true,
+    "stretch": true
+   },
+   "luogoId": "hkfbbse",
+   "luogoNome": "Mcfit",
+   "note": "Tutto bene, sicuramente push up e affondi fatti male da rivedere"
   }
  ],
  "luoghi": [
@@ -674,6 +813,14 @@
   {
    "id": "fxlkov8",
    "nome": "GLS"
+  },
+  {
+   "id": "f70tziq",
+   "nome": "Casa"
+  },
+  {
+   "id": "hkfbbse",
+   "nome": "Mcfit"
   }
  ]
 }
