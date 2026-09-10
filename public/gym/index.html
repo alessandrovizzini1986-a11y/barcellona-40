@@ -970,7 +970,8 @@ function serieTxt(t,e){
   if(t.rt!=null)return t.rt+' rip totali';
   const kg=(t.kg===0?'corpo libero':(t.kg<0?t.kg+'':t.kg+'')+(t.kg!==0?' kg':''));
   const r=t.max?'max':(t.ripMax?t.rip+'-'+t.ripMax:t.rip);
-  return (t.kg===0&&!e.assist?'':kg)+'×'+r+(e&&e.tipo==='tempo'?'"':'');
+  if(e&&e.tipo==='tempo')return r+'"';            // tenute: solo i secondi
+  return (t.kg===0&&!e.assist?'':kg)+'×'+r;
 }
 /* "4× 60×9" invece di quattro volte la stessa serie */
 function compatta(items){
@@ -1886,7 +1887,7 @@ function renderHistory(){
       Object.entries(s.esercizi).map(([id,arr])=>{
         const fatte=arr.filter(x=>x.fatta);if(!fatte.length)return '';
         const ex=exById(id);
-        return '<tr><td>'+esc(ex?ex.nome:id)+(ptEs(s,id)?' <span class="ptbadge">PT</span>':'')+'</td><td class="tnum">'+fatte.map(x=>(x.kg??'—')+'×'+(x.reps??'—')).join(' · ')+'</td></tr>';
+        return '<tr><td>'+esc(ex?ex.nome:id)+(ptEs(s,id)?' <span class="ptbadge">PT</span>':'')+'</td><td class="tnum">'+compatta(fatte.map(x=>ex&&ex.tipo==='tempo'?(x.reps??'—')+'"':(x.kg??'—')+'×'+(x.reps??'—')))+'</td></tr>';
       }).join('')+'</table>'+
       '<div class="row noprint" style="margin-top:10px"><button class="btn sm danger" data-del="'+esc(s.id)+'">Elimina sessione</button></div>'+
       '</details></div>';
@@ -2048,7 +2049,7 @@ function renderReport(){
           }else{
             const arr=sess.flatMap(s=>(s.esercizi[e.id]||[]).filter(x=>x.fatta));
             if(arr.length)fatto=compatta(arr.map((x,i)=>{
-              const tt=t[i]||{};const v=(x.kg??'—')+'×'+(x.reps??'—')+(e.tipo==='tempo'?'"':'');
+              const tt=t[i]||{};const v=e.tipo==='tempo'?(x.reps??'—')+'"':(x.kg??'—')+'×'+(x.reps??'—');
               return tt.max?'<b>'+v+'</b>':v;}));
           }
           out+='<tr><td>'+esc(e.n)+'</td><td class="tnum">S'+w+'</td>'+
