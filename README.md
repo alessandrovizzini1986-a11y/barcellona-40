@@ -23,6 +23,7 @@ Test delle date: aggiungi `?now=2026-10-17T07:50` all'URL (prima dell'hash), es.
    - Per un luogo nuovo lascia `lat`/`lng` a `null` e `verified:false`: lo geocodifica lo script. Se conosci le coordinate, mettile e segna `verified:true`.
    - I prezzi ammessi da `validate.mjs` sono in `scripts/validate.mjs` (`ALLOWED_PRICES`): aggiungi lì un prezzo nuovo prima di usarlo.
 2. `npm run data` (deve finire con `✓ validate`). Le voci non risolte finiscono in `DA_VERIFICARE.md`.
+   Distanze e tempi arrivano da Valhalla di OpenStreetMap (costing `pedestrian`, `auto` per le tratte in auto o taxi; nessuna chiave). I minuti sono quelli restituiti da Valhalla. Per rifare i conti su una tappa, rimetti a `null` i suoi `distFromPrevM` e `minFromPrev`; i valori verificati a mano restano finché non li azzeri.
 3. `git add -A && git commit -m "..." && git push`
 
 ## Struttura

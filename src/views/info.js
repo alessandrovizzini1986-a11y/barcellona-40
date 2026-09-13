@@ -66,6 +66,10 @@ export async function render(root, { person, sub, header }) {
       }).join('')}</div>`, openId === 'verifiche')}
     </div>
     <p class="faint">Pagina web normale: nessuna installazione, la barra del browser resta sempre visibile.</p>
+    <div class="row faint" style="justify-content:space-between">
+      <span>Versione: ${__BUILD_ID__}</span>
+      <button class="btn btn--sm btn--ghost" id="reload">${icon('refresh')} Ricarica l'ultima versione</button>
+    </div>
   </section>`
 
   if (openId) root.querySelector(`#sec-${openId}`)?.scrollIntoView({ block: 'start' })
@@ -76,6 +80,10 @@ export async function render(root, { person, sub, header }) {
     navigate('oggi')
   })
   root.querySelector('#theme').addEventListener('change', (e) => { store.theme = e.target.checked ? 'light' : 'dark' })
+  // Rete di sicurezza contro la cache del browser: ricarica con una query nuova
+  root.querySelector('#reload').addEventListener('click', () => {
+    location.replace(location.pathname + '?r=' + Date.now())
+  })
   root.querySelector('#gam').addEventListener('change', (e) => { store.gamificationHidden = e.target.checked })
   root.addEventListener('change', (e) => {
     const cb = e.target.closest('input[data-check]')

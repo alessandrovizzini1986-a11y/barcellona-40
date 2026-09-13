@@ -23,8 +23,9 @@ import User from 'lucide/dist/esm/icons/user.mjs'
 import Phone from 'lucide/dist/esm/icons/phone.mjs'
 import Clock from 'lucide/dist/esm/icons/clock.mjs'
 import X from 'lucide/dist/esm/icons/x.mjs'
+import RefreshCw from 'lucide/dist/esm/icons/refresh-cw.mjs'
 
-const ICONS = { sun: Sun, list: List, map: MapIcon, trophy: Trophy, info: Info, 'map-pin': MapPin, taxi: CarTaxiFront, train: TrainFront, copy: Copy, check: Check, alarm: AlarmClock, locate: Locate, alert: TriangleAlert, chevron: ChevronDown, walk: Footprints, zap: Zap, download: Download, upload: Upload, sparkles: Sparkles, user: User, phone: Phone, clock: Clock, x: X }
+const ICONS = { sun: Sun, list: List, map: MapIcon, trophy: Trophy, info: Info, 'map-pin': MapPin, taxi: CarTaxiFront, train: TrainFront, copy: Copy, check: Check, alarm: AlarmClock, locate: Locate, alert: TriangleAlert, chevron: ChevronDown, walk: Footprints, zap: Zap, download: Download, upload: Upload, sparkles: Sparkles, user: User, phone: Phone, clock: Clock, x: X, refresh: RefreshCw }
 
 export function icon(name, attrs = {}) {
   const node = ICONS[name]

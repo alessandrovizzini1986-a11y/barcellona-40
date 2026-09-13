@@ -39,6 +39,10 @@ function copyLegacy() {
 export default defineConfig({
   base: process.env.BASE_PATH || '/',
   plugins: [copyLegacy()],
+  // Data e ora della build, mostrata in fondo alla vista Info
+  define: {
+    __BUILD_ID__: JSON.stringify(new Date().toISOString().slice(0, 16).replace('T', ' '))
+  },
   build: {
     target: 'es2022',
     cssMinify: true,
