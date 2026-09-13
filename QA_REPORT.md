@@ -60,3 +60,40 @@ FCP 1,1 s · LCP 1,7 s · CLS 0,001 · TBT 0 ms (throttling mobile simulato). Re
 
 ## Riepilogo test e2e
 45/45 verdi (`node scripts/qa/e2e.mjs http://localhost:4173`).
+
+---
+
+## 11. Tappa Barcelona Duck Store (venerdì)
+Venerdì passa da 8 a 9 tappe: `f3b` alle 12:15 tra il Mercat de Santa Caterina e il pranzo. Verificato nel browser a 380 px: ordine `f1 → f2 → f3 → f3b → f4 → f5 → f6 → f7 → f8`, chip "677 m · 9 min a piedi", missione "Duck Hunter +30 XP" sulla card e in lista Missioni, marker numero 4 sul layer di venerdì. Nessun errore in console, nessun overflow. Soglie dei livelli invariate.
+
+## 12. Motore di routing sostituito
+Il server demo `router.project-osrm.org` ignora il profilo `/foot/`. Verificato interrogando lo stesso tratto con cinque profili diversi:
+
+| profilo | distanza |
+|---|---|
+| foot | 2891 m |
+| walking | 2891 m |
+| driving | 2891 m |
+| car | 2891 m |
+| bike | 2891 m |
+
+Valore identico ovunque, contro 866 m in linea d'aria: quel server ospita solo la rete per auto. Sostituito con Valhalla di OpenStreetMap (`costing: pedestrian`, `auto` per le tratte in auto o taxi), con i minuti presi dal tempo restituito. Controprova: `appartamento → Sagrada` calcolato da Valhalla dà 1309 m · 16 min, identico al valore verificato fornito a mano. `npm run data` finisce con `✓ validate: 21 tappe, 21 venue, 13 missioni, 10 check`.
+
+## 13. Cache del browser
+**Cosa è stato fatto.** `public/_headers` con le regole di cache; dati importati come moduli e quindi inclusi nel bundle con hash nel nome (già così, nessun `fetch` a runtime nel sorgente); `__BUILD_ID__` mostrato in fondo alla vista Info con il pulsante "Ricarica l'ultima versione", verificato nel browser (la riga mostra la data della build, il pulsante porta a `?r=<timestamp>` e la pagina si ricarica senza errori).
+
+**Header realmente serviti da GitHub Pages** (misurati con `curl -I`):
+
+| risorsa | Cache-Control |
+|---|---|
+| `/` e `/index.html` | `max-age=600` |
+| `/assets/index-*.js` | `max-age=600` |
+| `/_headers` | `max-age=600`, servito come file di testo |
+
+**Esito: gli header di `public/_headers` non vengono applicati.** GitHub Pages non li legge, li pubblica come un file qualsiasi, e impone `max-age=600` a tutto. La causa è la piattaforma di hosting, non il deploy. Conseguenza pratica: una ricarica normale può servire l'`index.html` in cache **fino a 10 minuti** dopo la pubblicazione. Passati i 10 minuti il browser rivalida (verificato: una richiesta con `If-None-Match` risponde `304`), ottiene l'`index.html` nuovo e con esso il bundle nuovo.
+
+**Quello che il punto 2 garantisce comunque.** I dati stanno dentro il bundle con hash, quindi non può mai capitare di vedere codice nuovo con dati vecchi: o è vecchio tutto, o è nuovo tutto. Prova raccolta sui deploy di oggi: cambiando i dati dell'itinerario il file passa da `index-B473M3UX.js` a `index-C_Uo6irR.js` e il contenuto servito contiene i testi nuovi.
+
+**Quello che non è stato testato qui.** La ricarica normale da smartphone sul sito pubblico: in questo ambiente il proxy di rete blocca `github.io` per il browser automatizzato (curl passa, Chromium no), quindi il test con cache reale del browser non è eseguibile. Va fatto a mano. Attesa: la modifica compare subito se sono passati più di 10 minuti dal deploy, oppure immediatamente premendo "Ricarica l'ultima versione" in Info.
+
+**Per azzerare i 10 minuti** serve un hosting che applichi `_headers`: su Cloudflare Pages il file già pronto imporrebbe `no-cache, must-revalidate` su `index.html` e un anno immutabile sugli asset.
