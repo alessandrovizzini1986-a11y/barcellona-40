@@ -23,7 +23,8 @@ const views = {
   mappa: () => import('./views/mappa.js'),
   missioni: () => import('./views/missioni.js'),
   info: () => import('./views/info.js'),
-  speedrun: () => import('./views/speedrun.js')
+  speedrun: () => import('./views/speedrun.js'),
+  coro: () => import('./views/coro.js')
 }
 
 const app = document.getElementById('app')
@@ -68,7 +69,9 @@ async function route({ route, sub, params }) {
     return
   }
   if (route === 'speedrun' && store.person !== 'monne') { navigate('oggi'); return }
-  renderTabbar(route, { hideMissions: store.gamificationHidden })
+  // La modalità coro è a schermo pieno: la tab bar sparisce (#tabbar:empty non si mostra)
+  if (route === 'coro') document.getElementById('tabbar').innerHTML = ''
+  else renderTabbar(route, { hideMissions: store.gamificationHidden })
   const mod = await views[route]()
   if (my !== token) return
   cleanup = await mod.render(app, { route, sub, params, person: store.person, header })

@@ -38,7 +38,6 @@ Generato in parte dagli script dati (`npm run data`). Le sezioni tra marker veng
 
 ## Altri dati mancanti o non verificati
 
-- **Testo di "Disonesti".** Non è nel repo. Sotto il player c'è "Leggi il testo" con un segnaposto marcato `da_verificare`. Mandando il testo definitivo, va in `src/ui/song.js` nella costante `LYRICS`, come elenco di blocchi `{ section, lines }`: le sezioni il cui nome contiene "ritornello" vengono evidenziate in terracotta automaticamente.
 
 - **Album Google Foto: verificare i permessi di caricamento.** Il link risponde 302 e porta a un album condiviso, ma resta da controllare che l'impostazione "Consenti ad altri di aggiungere foto" sia attiva, altrimenti gli altri possono solo guardare. Da controllare aprendo il link in una finestra anonima.
 

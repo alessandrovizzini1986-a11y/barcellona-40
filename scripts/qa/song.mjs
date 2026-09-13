@@ -126,8 +126,47 @@ async function open(person, path, opts = {}) {
   const txt = decodeURIComponent(href.split('?text=')[1])
   ok('link wa.me per l\'inno', href.startsWith('https://wa.me/?text=') && txt.includes('Alza il volume'))
   ok('a capo preservati', txt.split('\n').length >= 3, `${txt.split('\n').length} righe`)
-  ok('testo: segnaposto dichiarato da verificare', (await p.locator('.song__lyrics .badge--da_verificare').count()) === 1)
   ok('testo chiuso di default', (await p.locator('.song__lyrics[open]').count()) === 0)
+  ok('nessun segnaposto da verificare nel testo', (await p.locator('.song__lyrics .badge--da_verificare').count()) === 0)
+  // sezioni nell'ordine giusto
+  const secs = (await p.locator('.song__section').allTextContents()).map((x) => x.trim())
+  const attese = ['[Intro]', '[Strofa 1]', '[Build]', '[Ritornello]', '[Strofa 2]', '[Build]', '[Ritornello]', '[Break]', '[Ritornello finale]', '[Outro]']
+  ok('dieci sezioni nell\'ordine giusto', secs.join('|').toLowerCase() === attese.join('|').toLowerCase(), secs.join(' '))
+  ok('tre blocchi di ritornello evidenziati', (await p.locator('.song__lines--chorus').count()) === 3)
+  const shouts = (await p.locator('.song__shout').allTextContents()).map((x) => x.trim())
+  ok('cori tra parentesi evidenziati', shouts.filter((x) => x === '(Bar-ça!)').length === 3 && shouts.includes('(strumentale)'), shouts.join(' '))
+  // apertura e colori
+  await p.locator('.song__lyrics summary').click(); await p.waitForTimeout(400)
+  ok('il testo si apre', await p.locator('.song__lyrics-body').isVisible())
+  const cSec = await p.locator('.song__section').first().evaluate((e) => getComputedStyle(e).color)
+  const cCho = await p.locator('.song__lines--chorus').first().evaluate((e) => getComputedStyle(e).color)
+  const cSho = await p.locator('.song__shout').first().evaluate((e) => getComputedStyle(e).color)
+  const cVer = await p.locator('.song__lines:not(.song__lines--chorus)').nth(1).evaluate((e) => getComputedStyle(e).color)
+  ok('sezioni in ink-3', cSec === 'rgb(126, 122, 114)', cSec)
+  ok('ritornello in terracotta', cCho === 'rgb(232, 85, 46)', cCho)
+  ok('cori in giallo', cSho === 'rgb(242, 183, 5)', cSho)
+  ok('strofe in ink-2', cVer === 'rgb(185, 178, 167)', cVer)
+  const fCho = parseFloat(await p.locator('.song__lines--chorus').first().evaluate((e) => getComputedStyle(e).fontSize))
+  const fVer = parseFloat(await p.locator('.song__lines:not(.song__lines--chorus)').nth(1).evaluate((e) => getComputedStyle(e).fontSize))
+  ok('ritornello più grande delle strofe', fCho > fVer, `${fCho}px vs ${fVer}px`)
+  await ctx.close()
+}
+// Modalità coro
+{
+  const { p, ctx, errs } = await open('ale', '/#/info')
+  await p.locator('.song a[href="#/coro"]').click(); await p.waitForTimeout(600)
+  ok('il pulsante porta alla modalità coro', (await p.evaluate(() => location.hash)) === '#/coro')
+  const righe = (await p.locator('.coro__lines li').allTextContents()).map((x) => x.replace(/\s+/g, ' ').trim())
+  ok('quattro righe di ritornello', righe.length === 4, String(righe.length))
+  ok('righe uguali al ritornello', righe.join(' | ') === "Mi tiro su la bamba | Ci lascio un'altra gamba | Disonesti! (Bar-ça!) | Non finiamo mai", righe.join(' | '))
+  ok('coro: tab bar nascosta', (await p.locator('#tabbar .tab').count()) === 0 && !(await p.locator('#tabbar').isVisible()))
+  ok('coro: a schermo pieno', await p.locator('.coro').evaluate((e) => e.getBoundingClientRect().height >= window.innerHeight - 2))
+  ok('coro: nessun overflow', !(await p.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1)))
+  ok('coro: (Bar-ça!) in giallo', (await p.locator('.coro__lines .song__shout').evaluate((e) => getComputedStyle(e).color)) === 'rgb(242, 183, 5)')
+  await p.locator('.coro__close').click(); await p.waitForTimeout(600)
+  ok('la chiusura torna alla canzone', (await p.evaluate(() => location.hash)) === '#/info/canzone')
+  ok('uscendo torna la tab bar', (await p.locator('#tabbar .tab').count()) === 5)
+  ok('coro: nessun errore JS', errs.length === 0, errs.join(' | '))
   await ctx.close()
 }
 // prefers-reduced-motion

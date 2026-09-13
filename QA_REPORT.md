@@ -149,3 +149,20 @@ Suite dedicata: `node scripts/qa/song.mjs` → **52/52 verdi**. Le altre restano
 **Due difetti trovati e corretti in questa QA.**
 1. `bindSong` marcava il contenitore come già collegato. `#app` sopravvive ai re-render, mentre audio e video vengono ricreati ogni volta: dalla seconda vista in poi i nuovi elementi restavano senza listener, quindi il toggle del video e la rotazione del disco non funzionavano. Ora il flag sta sull'elemento audio.
 2. `.song__video` aveva `display:flex`, che ha la precedenza sull'attributo `hidden`: il video risultava sempre visibile e scaricabile. Aggiunta la regola `.song__video[hidden]{ display:none }`.
+
+## 16. Testo della canzone e modalità coro
+Suite dell'inno aggiornata: **71/71 verdi**. Le altre restano verdi: e2e 45/45, album 66/66.
+
+| Verifica | Esito |
+|---|---|
+| Nessun segnaposto "da verificare" nel testo | ✓ |
+| Dieci sezioni nell'ordine giusto, da [Intro] a [Outro] | ✓ |
+| Tre blocchi di ritornello evidenziati | ✓ due [Ritornello] più [Ritornello finale] |
+| Etichette di sezione in `--ink-3` | ✓ `rgb(126,122,114)` |
+| Ritornello in `--terracotta` e più grande delle strofe | ✓ `rgb(232,85,46)`, 16 px contro 13 |
+| Strofe in `--ink-2` | ✓ `rgb(185,178,167)` |
+| Cori tra parentesi in `--giallo` e più piccoli | ✓ `rgb(242,183,5)`, tre `(Bar-ça!)` più `(strumentale)` |
+| Testo chiuso di default, si apre al tocco | ✓ |
+| `#/coro`: quattro righe identiche al ritornello | ✓ |
+| `#/coro` a schermo pieno, tab bar nascosta | ✓ e alla chiusura la tab bar torna a 5 voci |
+| `#/coro` senza overflow a 380 px | ✓ |

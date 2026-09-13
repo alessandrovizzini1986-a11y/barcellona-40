@@ -6,18 +6,35 @@ import { esc } from './html.js'
 
 const SHARE_TEXT = `L'inno ufficiale del weekend. Alza il volume e impara il ritornello.\n\n${SITE_URL}`
 
-// Testo della canzone: non è nel repo. Finché non arriva resta un segnaposto dichiarato.
-// Struttura pronta: { section: 'Strofa 1' | 'Ritornello' | …, lines: [...] }
-export const LYRICS = null
+// Testo di "Disonesti". Le etichette tra parentesi quadre sono riferimenti, non si cantano.
+// Le sezioni il cui nome contiene "ritornello" vengono evidenziate.
+export const LYRICS = [
+  { section: 'Intro', lines: ['(strumentale)'] },
+  { section: 'Strofa 1', lines: ["Quaranta e sto una bomba", 'Stasera Barcellona', 'Quattro scemi in aeroporto', 'Il weekend più storto'] },
+  { section: 'Build', lines: ["Se arrivo a quarant'anni", 'Io faccio mille danni'] },
+  { section: 'Ritornello', lines: ['Mi tiro su la bamba', "Ci lascio un'altra gamba", 'Disonesti! (Bar-ça!)', 'Non finiamo mai'] },
+  { section: 'Strofa 2', lines: ['Il volo di mattina', 'La notte non finiva', 'Un vermut e una risata', 'La città già spalancata'] },
+  { section: 'Build', lines: ["Se arrivo a quarant'anni", 'Io faccio mille danni'] },
+  { section: 'Ritornello', lines: ['Mi tiro su la bamba', "Ci lascio un'altra gamba", 'Disonesti! (Bar-ça!)', 'Non finiamo mai'] },
+  { section: 'Break', lines: ['Ale! Monne! Giulio! Manuel!', 'Ale! Monne! Giulio! Manuel!', 'Non cresciamo mai', 'Non cresciamo mai'] },
+  { section: 'Ritornello finale', lines: ['Mi tiro su la bamba', "Ci lascio un'altra gamba", 'Disonesti! (Bar-ça!)', 'Non finiamo mai'] },
+  { section: 'Outro', lines: ['La la la la', 'La la la la', 'Non finiamo mai'] }
+]
+
+// Le quattro righe del ritornello, usate anche dalla modalità coro
+export const CHORUS = LYRICS.find((b) => b.section === 'Ritornello').lines
+
+const isChorus = (section) => /ritornello/i.test(section)
+
+// I cori tra parentesi tonde, tipo (Bar-ça!), vanno in giallo e più piccoli
+export function shout(line) {
+  return esc(line).replace(/\(([^)]+)\)/g, '<i class="song__shout">($1)</i>')
+}
 
 function lyricsHtml() {
-  if (!LYRICS) {
-    return `<p class="song__missing"><span class="badge badge--da_verificare">${icon('alert')}da verificare</span>
-      Il testo non è ancora nel sito. Mandalo e lo pubblichiamo qui, con il ritornello evidenziato.</p>`
-  }
   return LYRICS.map((b) => `<div class="song__block">
-    <div class="song__section">${esc(b.section)}</div>
-    <div class="song__lines${/ritornello/i.test(b.section) ? ' song__lines--chorus' : ''}">${b.lines.map((l) => `<span>${esc(l)}</span>`).join('')}</div>
+    <div class="song__section">[${esc(b.section)}]</div>
+    <div class="song__lines${isChorus(b.section) ? ' song__lines--chorus' : ''}">${b.lines.map((l) => `<span>${shout(l)}</span>`).join('')}</div>
   </div>`).join('')
 }
 
@@ -43,6 +60,8 @@ export function songCard({ line = "L'inno ufficiale dei quaranta. Alza il volume
       <a class="btn song__cta" href="${SONG_MP4}" download="${esc(SONG_TITLE)} - Barcelona 40.mp4" aria-label="Scarica il video di ${esc(SONG_TITLE)}">${icon('download')} Scarica video</a>
     </div>
     <a class="btn btn--ghost btn--block" href="https://wa.me/?text=${encodeURIComponent(SHARE_TEXT)}" target="_blank" rel="noopener" aria-label="Manda l'inno ai ragazzi su WhatsApp">${icon('whatsapp')} Manda ai ragazzi</a>
+
+    <a class="btn btn--ghost btn--block" href="#/coro" aria-label="Modalità coro: il ritornello a schermo pieno">${icon('music')} Modalità coro</a>
 
     <details class="song__lyrics"><summary>Leggi il testo${icon('chevron')}</summary><div class="song__lyrics-body">${lyricsHtml()}</div></details>
   </section>`

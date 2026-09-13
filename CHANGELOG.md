@@ -79,3 +79,5 @@
 - `public/_headers`: `/media/*` con `max-age=604800`.
 - Due scostamenti dalla specifica, per farla funzionare: i percorsi dei media passano da `import.meta.env.BASE_URL` invece di essere assoluti (`/media/...` darebbe 404 sotto `/barcellona-40/`), e l'icona musica punta a `#/info/canzone` invece di `#/info#canzone`, che un router a hash non può interpretare.
 - Due difetti trovati dai test e corretti: `bindSong` marcava il contenitore come collegato, ma `#app` sopravvive ai re-render mentre audio e video vengono ricreati, quindi dalla seconda vista restavano senza listener; e `.song__video` con `display:flex` batteva l'attributo `hidden`, lasciando il video sempre visibile.
+- Testo di "Disonesti" pubblicato: dieci sezioni, etichette in maiuscoletto grigio, ritornello in terracotta più grande, cori tra parentesi in giallo. Rimossi il segnaposto e la voce in `DA_VERIFICARE.md`.
+- Nuova vista `#/coro`: le quattro righe del ritornello a schermo pieno, tab bar nascosta, raggiungibile dal pulsante "Modalità coro" nella card. La tab bar resta a 5 voci.

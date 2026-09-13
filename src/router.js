@@ -1,5 +1,5 @@
 // Router hash: #/oggi #/programma #/mappa #/missioni #/info #/speedrun (default #/oggi)
-const ROUTES = ['oggi', 'programma', 'mappa', 'missioni', 'info', 'speedrun']
+const ROUTES = ['oggi', 'programma', 'mappa', 'missioni', 'info', 'speedrun', 'coro']
 let handler = null
 
 export function parseHash(hash = location.hash) {
