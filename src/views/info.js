@@ -5,16 +5,22 @@ import { icon } from '../ui/icons.js'
 import { esc } from '../ui/html.js'
 import { toast } from '../ui/toast.js'
 import { navigate } from '../router.js'
+import { albumBanner, bindAlbum } from '../ui/album.js'
+import { shareAlbum, bindShareAlbum } from '../ui/share-album.js'
 
 const sec = (id, title, body, open = false) => `<details id="sec-${id}" ${open ? 'open' : ''}><summary>${esc(title)}${icon('chevron')}</summary><div class="acc__body">${body}</div></details>`
 
 export async function render(root, { person, sub, header }) {
   const p = personById(person)
-  const openId = sub === 'profilo' ? 'profilo' : sub === 'verifiche' ? 'verifiche' : null
+  const openId = ['profilo', 'verifiche', 'foto'].includes(sub) ? sub : null
   const openChecks = checks.filter((c) => !store.isChecked(c.id)).length
 
   root.innerHTML = header('Le cose da sapere, in un posto solo') + `<section class="view">
     <div class="acc">
+    ${sec('foto', 'Foto', `
+      <p>Un album solo, quattro telefoni. Carica le tue quando vuoi, anche dopo essere tornato a casa.</p>
+      ${albumBanner()}
+      ${person === 'ale' ? shareAlbum() : ''}`, !openId || openId === 'foto')}
     ${sec('apt', 'Appartamento', `
       <p><strong>Aparthotel Nàpols – Abapart</strong><br>Carrer de Nàpols 116, Eixample</p>
       <ul>
@@ -24,7 +30,7 @@ export async function render(root, { person, sub, header }) {
         <li>Frigo in cucina: il jamón di Debón va dentro subito</li>
         <li>Sovrapprezzo 3° ospite sabato notte (€65 + tassa): da chiarire in reception</li>
       </ul>
-      <a class="btn" href="https://www.google.com/maps/dir/?api=1&destination=41.395437,2.179608&travelmode=walking" target="_blank" rel="noopener">${icon('map-pin')} Apri in Maps</a>`, !openId)}
+      <a class="btn" href="https://www.google.com/maps/dir/?api=1&destination=41.395437,2.179608&travelmode=walking" target="_blank" rel="noopener">${icon('map-pin')} Apri in Maps</a>`)}
     ${sec('doc', 'Documenti', `
       <ul>
         <li>Spagna = UE/Schengen: passaporto e visto non necessari</li>
@@ -72,6 +78,8 @@ export async function render(root, { person, sub, header }) {
     </div>
   </section>`
 
+  bindAlbum(root)
+  if (person === 'ale') bindShareAlbum(root)
   if (openId) root.querySelector(`#sec-${openId}`)?.scrollIntoView({ block: 'start' })
   root.querySelector('#person').addEventListener('change', (e) => {
     store.person = e.target.value

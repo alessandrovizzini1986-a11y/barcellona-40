@@ -166,3 +166,32 @@ select.input,input.input{ min-height:44px; background:var(--bg-3); border:1px so
 .switch input::after{ content:""; position:absolute; top:2px; left:2px; width:20px; height:20px; border-radius:50%; background:var(--ink-2); transition:transform var(--dur-2) var(--ease), background var(--dur-2) var(--ease); }
 .switch input:checked{ background:var(--day); }
 .switch input:checked::after{ transform:translateX(20px); background:#0E1116; }
+
+/* Album del weekend */
+.album{ position:relative; display:flex; gap:var(--space-4); align-items:flex-start; padding:var(--space-4); border-radius:var(--radius-l); background-color:var(--bg-2); border:2px solid var(--giallo); overflow:hidden; }
+.album::before{ content:""; position:absolute; inset:0; background-image:var(--album-mosaic); background-size:420px 420px; opacity:.10; pointer-events:none; }
+.album > *{ position:relative; }
+.album__icon{ flex:none; width:56px; height:56px; border-radius:var(--radius-m); background:color-mix(in srgb, var(--giallo) 18%, transparent); color:var(--giallo); display:grid; place-items:center; }
+.album__icon svg{ width:30px; height:30px; }
+.album__body{ flex:1; min-width:0; display:flex; flex-direction:column; gap:var(--space-2); }
+.album__title{ font-size:var(--fs-2); font-family:var(--font-display); font-weight:700; }
+.album__line{ color:var(--ink-2); font-size:var(--fs-0); }
+.album__cta{ min-height:48px; background:var(--giallo); color:#0E1116; border-color:transparent; font-weight:700; }
+
+/* Manda l'album ai ragazzi */
+.share-album{ display:flex; flex-direction:column; gap:var(--space-3); padding:var(--space-4); border-radius:var(--radius-l); background:var(--bg-2); border:2px solid var(--acqua); }
+.share-album__head{ display:flex; gap:var(--space-3); align-items:flex-start; }
+.share-album__icon{ flex:none; width:44px; height:44px; border-radius:var(--radius-s); background:color-mix(in srgb, var(--acqua) 18%, transparent); color:var(--acqua); display:grid; place-items:center; }
+.share-album__icon svg{ width:24px; height:24px; }
+.share-album__cta{ min-height:48px; background:var(--acqua); color:#0E1116; border-color:transparent; font-weight:700; }
+.share-album__preview{ font-size:var(--fs-0); color:var(--ink-2); }
+.share-album__preview summary{ display:flex; align-items:center; justify-content:space-between; min-height:44px; cursor:pointer; list-style:none; font-weight:600; -webkit-user-select:none; user-select:none; }
+.share-album__preview summary::-webkit-details-marker{ display:none; }
+.share-album__preview summary svg{ width:18px; height:18px; transition:transform var(--dur-2) var(--ease); }
+.share-album__preview[open] summary svg{ transform:rotate(180deg); }
+.share-album__preview pre{ white-space:pre-wrap; word-break:break-word; background:var(--bg-3); border-radius:var(--radius-s); padding:var(--space-3); margin:0; font-family:var(--font-body); line-height:1.5; max-height:44dvh; overflow:auto; }
+
+/* Icona album nell'header */
+.header__actions{ display:flex; align-items:center; gap:var(--space-2); flex-wrap:wrap; justify-content:flex-end; }
+.header__camera{ display:grid; place-items:center; width:44px; height:44px; flex:none; border-radius:999px; background:var(--bg-3); border:1px solid var(--line-2); color:var(--giallo); }
+.header__camera svg{ width:22px; height:22px; }

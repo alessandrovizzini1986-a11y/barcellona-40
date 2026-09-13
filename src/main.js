@@ -6,13 +6,14 @@ import './styles/components.css'
 import './styles/motion.css'
 import './styles/views.css'
 
-import { store } from './store.js'
+import { store, PHOTO_ALBUM } from './store.js'
 import { startRouter, navigate, parseHash } from './router.js'
 import { readOverride, now, dayKey, phase } from './time.js'
 import { applyMosaic } from './ui/mosaic.js'
 import { renderTabbar } from './ui/tabbar.js'
 import { personById } from './data.js'
 import { esc } from './ui/html.js'
+import { icon } from './ui/icons.js'
 import { renderOnboarding } from './views/onboarding.js'
 import { easterEgg } from './ui/egg.js'
 
@@ -47,7 +48,10 @@ export function header(subtitle) {
         <p class="header__sub">${esc(subtitle || '16–18 ottobre 2026')}</p>
         <span class="header__anchor">Zero fatica, tutto gusto</span>
       </div>
-      ${p ? `<a class="person-chip" href="#/info/profilo" style="--pc:var(${p.color})" aria-label="Profilo: ${esc(p.name)}"><span class="person-chip__dot"></span>${esc(p.name)}</a>` : ''}
+      <div class="header__actions">
+        <a class="header__camera" href="${PHOTO_ALBUM}" target="_blank" rel="noopener" aria-label="Apri l'album foto">${icon('camera')}</a>
+        ${p ? `<a class="person-chip" href="#/info/profilo" style="--pc:var(${p.color})" aria-label="Profilo: ${esc(p.name)}"><span class="person-chip__dot"></span>${esc(p.name)}</a>` : ''}
+      </div>
     </div>
   </header>`
 }

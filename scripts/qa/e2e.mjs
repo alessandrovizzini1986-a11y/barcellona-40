@@ -18,6 +18,15 @@ async function open(person, path, { storageBroken = false, permissions = [] } = 
   await p.waitForTimeout(400)
   return { p, ctx, errors }
 }
+
+// Spunta una checkbox portandola al centro dello schermo: senza questo, un clic forzato
+// può finire sulla tab bar fissa in fondo e navigare via.
+async function tick(p, sel) {
+  const el = p.locator(sel)
+  await el.evaluate((e) => e.scrollIntoView({ block: 'center' }))
+  await el.check()
+  await p.waitForTimeout(350)
+}
 const text = (p, sel) => p.locator(sel).first().textContent().then((t) => (t || '').trim()).catch(() => '')
 
 // 3. Date
@@ -54,10 +63,11 @@ const text = (p, sel) => p.locator(sel).first().textContent().then((t) => (t || 
 
 // 6. Missioni
 { const { p, ctx } = await open('ale', '/?now=2026-10-17T12:00#/missioni')
-  await p.locator('input[data-mission="m6"]').check({ force: true }); await p.waitForTimeout(300)
+  await tick(p, 'input[data-mission="m6"]')
   ok('missione → XP', (await text(p, '.ring__label')).startsWith('60'))
   ok('toast +XP', (await text(p, '.toast')).includes('+60 XP'))
-  await p.locator('input[data-mission="m8"]').check({ force: true }); await p.locator('input[data-mission="m9"]').check({ force: true }); await p.locator('input[data-mission="m10"]').check({ force: true }); await p.waitForTimeout(300)
+  // una spunta alla volta: la lista si ridisegna a ogni cambio
+  for (const id of ['m8', 'm9', 'm10']) await tick(p, `input[data-mission="${id}"]`)
   ok('badge Trencadís (tutte le missioni di sabato)', (await p.locator('[data-badge="b_trencadis"].badge-card--on').count()) === 1)
   ok('badge Festeggiato (dopo le 00:00 del 17)', (await p.locator('[data-badge="b_festeggiato"].badge-card--on').count()) === 1)
   ok('livello Local (220 XP)', (await text(p, '.xp-head__level')) === 'Local')
@@ -68,7 +78,7 @@ const text = (p, sel) => p.locator(sel).first().textContent().then((t) => (t || 
   ok('export stringa (toast o sheet)', (await p.locator('.toast, .sheet').count()) >= 1)
   await ctx.close() }
 { const { p, ctx } = await open('ale', '/#/programma/sab')
-  await p.locator('input[data-done="s4"]').check({ force: true }); await p.waitForTimeout(300)
+  await tick(p, 'input[data-done="s4"]')
   ok('Fatto su card → missione e toast', (await text(p, '.toast')).includes('+60 XP'))
   await p.goto(base + '/#/missioni'); await p.waitForTimeout(400)
   ok('Fatto su card → missione m6 spuntata', await p.locator('input[data-mission="m6"]').isChecked())

@@ -10,6 +10,7 @@ import { toast } from '../ui/toast.js'
 import { openSheet } from '../ui/sheet.js'
 import { short as confettiShort, big as confettiBig } from '../ui/confetti.js'
 import { copyText } from './oggi.js'
+import { PHOTO_ALBUM } from '../store.js'
 
 function timerHtml() {
   const c = countdownTo(SPEEDRUN_DEADLINE)
@@ -30,6 +31,7 @@ function missionItem(m, person) {
       <div class="mission__title">${esc(m.title)}</div>
       <div class="mission__desc">${esc(m.desc)}${stop ? ` · ${stop.time}` : ''}${m.unlocksBadge ? ` · sblocca “${esc(m.unlocksBadge)}”` : ''}</div>
       ${m.timer && person === 'monne' && !done ? `<div data-timer>${timerHtml()}</div>` : ''}
+      ${m.id === 'm9' || m.id === 'm14' ? `<a class="btn btn--sm album__cta" style="margin-top:var(--space-2)" href="${PHOTO_ALBUM}" target="_blank" rel="noopener" aria-label="Carica su album, apre l'album foto">${icon('camera')} Carica su album</a>` : ''}
     </div>
     <div class="mission__xp">+${m.xp}</div>
   </li>`

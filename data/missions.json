@@ -165,6 +165,19 @@
     "ale",
     "monne"
    ]
+  },
+  {
+   "id": "m14",
+   "stopId": null,
+   "title": "Album Contributor",
+   "desc": "Almeno una foto caricata nell'album condiviso",
+   "xp": 40,
+   "people": [
+    "ale",
+    "giulio",
+    "manuel",
+    "monne"
+   ]
   }
  ],
  "badges": [

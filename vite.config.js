@@ -41,7 +41,8 @@ export default defineConfig({
   plugins: [copyLegacy()],
   // Data e ora della build, mostrata in fondo alla vista Info
   define: {
-    __BUILD_ID__: JSON.stringify(new Date().toISOString().slice(0, 16).replace('T', ' '))
+    __BUILD_ID__: JSON.stringify(new Date().toISOString().slice(0, 16).replace('T', ' ')),
+    __SITE_URL__: JSON.stringify(process.env.SITE_URL || 'https://barcelona40.pages.dev')
   },
   build: {
     target: 'es2022',

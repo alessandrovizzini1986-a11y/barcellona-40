@@ -60,3 +60,12 @@
 - `public/_headers` con le regole di cache (rivalidazione per `index.html` e `/data/*`, un anno immutabile per `/assets/*`). Lo legge Cloudflare Pages; GitHub Pages lo ignora.
 - I dati erano già importati come moduli in `src/data.js`, non via fetch: finiscono nel bundle con hash nel nome, quindi una modifica ai dati produce un file nuovo e la cache non può servire dati vecchi.
 - `__BUILD_ID__` definito in `vite.config.js` e mostrato in fondo alla vista Info, con il pulsante "Ricarica l'ultima versione" come rete di sicurezza.
+
+## Album foto condiviso
+- `PHOTO_ALBUM` e `SITE_URL` in `src/store.js`, `__SITE_URL__` iniettato in build (il workflow lo imposta all'URL GitHub Pages reale).
+- `src/ui/album.js`: banner "Album del weekend" con mosaico in filigrana, "Apri l'album" e "Copia link". Visibile a tutti i profili.
+- `src/ui/share-album.js`: "Manda l'album ai ragazzi" con messaggio WhatsApp già pronto, copia messaggio, invio del solo link del sito e anteprima richiudibile. Creato solo per Alessandro, per gli altri non esiste nel DOM.
+- Oggi: banner primo blocco durante il weekend, sotto il countdown prima, e "Guarda com'è andata" come azione principale dopo il 18/10. Prima della partenza Alessandro ha il blocco di invio in fondo alla checklist.
+- Info: nuova sezione "Foto", prima e già aperta. Header: icona macchina fotografica in tutte le viste. Tab bar invariata a 5 voci.
+- Missione `m14` "Album Contributor" (40 XP, tutti). Pulsante "Carica su album" su `m9` e `m14`. Livelli invariati.
+- Corretto un bug scoperto qui: `mosaicDataUri()` restituiva `url("…")` con virgolette doppie e, inserito in un attributo `style`, ne chiudeva il valore in anticipo rompendo il markup. Ora usa apici singoli.

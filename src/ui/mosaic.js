@@ -18,7 +18,9 @@ export function mosaicDataUri(seed = 40, tiles = 40, size = 420) {
     out += `<polygon points="${pts}" fill="${c}" fill-opacity=".12" transform="translate(${x} ${y}) rotate(${rot})"/>`
   }
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">${out}</svg>`
-  return `url("data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}")`
+  // Apici singoli: il valore finisce anche dentro attributi style="..." e le virgolette doppie
+  // chiuderebbero l'attributo in anticipo. Il payload è percent-encoded, non contiene apici.
+  return `url('data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}')`
 }
 
 // Seed derivato dalla data (YYYY-MM-DD)

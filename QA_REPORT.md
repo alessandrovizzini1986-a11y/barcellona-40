@@ -97,3 +97,29 @@ Valore identico ovunque, contro 866 m in linea d'aria: quel server ospita solo l
 **Quello che non è stato testato qui.** La ricarica normale da smartphone sul sito pubblico: in questo ambiente il proxy di rete blocca `github.io` per il browser automatizzato (curl passa, Chromium no), quindi il test con cache reale del browser non è eseguibile. Va fatto a mano. Attesa: la modifica compare subito se sono passati più di 10 minuti dal deploy, oppure immediatamente premendo "Ricarica l'ultima versione" in Info.
 
 **Per azzerare i 10 minuti** serve un hosting che applichi `_headers`: su Cloudflare Pages il file già pronto imporrebbe `no-cache, must-revalidate` su `index.html` e un anno immutabile sugli asset.
+
+## 14. Album foto condiviso
+Suite dedicata: `node scripts/qa/album.mjs` → **66/66 verdi**. Suite principale: **45/45**.
+
+| Verifica | Esito |
+|---|---|
+| Banner album in Oggi e Info, tutti e quattro i profili | ✓ |
+| Icona macchina fotografica nell'header in tutte e cinque le viste | ✓ |
+| `share-album` assente dal DOM per giulio, manuel, monne (non nascosto: proprio non creato) | ✓ |
+| `share-album` presente per ale | ✓ |
+| A capo preservati dopo `encodeURIComponent` | ✓ 19 righe nel testo decodificato |
+| "Copia il messaggio" e "Copia link" senza WhatsApp installato | ✓ scrivono negli appunti e mostrano il toast |
+| Missione m14 presente per tutti e vale 40 XP | ✓ su tutti e quattro i profili |
+| Tab bar ancora a 5 voci | ✓ su quattro combinazioni di profilo e vista |
+| Banner primo blocco durante il weekend, sotto il countdown prima | ✓ |
+| "Guarda com'è andata" dopo il 18/10 | ✓ |
+| "Foto" primo accordion di Info e aperto di default | ✓ |
+| Nessun overflow orizzontale dove compare l'album | ✓ |
+
+**Link WhatsApp.** Gli href sono `https://wa.me/?text=<testo>`, il formato universale di WhatsApp: su Android apre l'app con il testo già compilato, su desktop apre WhatsApp Web. Qui è stato verificato il formato del link e il contenuto del testo dopo la decodifica; il comportamento sul dispositivo non è verificabile in questo ambiente e va provato a mano.
+
+**Album.** Il link risponde `302` e reindirizza a un album Google Foto condiviso. Resta da controllare che i permessi consentano anche il caricamento, non solo la visualizzazione: è in `DA_VERIFICARE.md`.
+
+**Due difetti trovati e corretti durante questa QA.**
+1. `mosaicDataUri()` restituiva `url("data:…")` con virgolette doppie. Inserito in `style="--album-mosaic:…"` chiudeva l'attributo in anticipo e il resto dell'SVG finiva nel markup come attributi spuri. Ora usa apici singoli; il payload è percent-encoded e non contiene apici.
+2. I test usavano `click({ force: true })` sulle checkbox: il clic forzato ignora l'occlusione e, quando l'elemento finiva sotto la tab bar fissa, colpiva la voce "Oggi" navigando via. Ora i test portano l'elemento al centro dello schermo e usano `check()` senza `force`, così un elemento davvero coperto farebbe fallire il test. Le due suite sono state rieseguite più volte con esito stabile.

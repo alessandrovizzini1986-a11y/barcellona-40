@@ -1,3 +1,8 @@
+// Album condiviso del weekend (link verificato: 302 verso un album Google Foto condiviso)
+export const PHOTO_ALBUM = 'https://photos.app.goo.gl/mqfbvmyvrwXwRLPF6'
+// URL pubblico del sito, iniettato in fase di build (vedi vite.config.js)
+export const SITE_URL = __SITE_URL__
+
 // Stato persistente in localStorage con prefisso b40:v1:. Safari privato può lanciare eccezioni:
 // ogni accesso è protetto da try/catch e ha un fallback in memoria.
 const PREFIX = 'b40:v1:'

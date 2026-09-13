@@ -10,6 +10,9 @@ import { toast } from '../ui/toast.js'
 import { openSheet } from '../ui/sheet.js'
 import { xpFor, maxXpFor, doneCountFor, levelFor, summaryFor } from '../game.js'
 import { big as confettiBig } from '../ui/confetti.js'
+import { albumBanner, bindAlbum } from '../ui/album.js'
+import { shareAlbum, bindShareAlbum } from '../ui/share-album.js'
+import { PHOTO_ALBUM } from '../store.js'
 
 const DAY_LABEL = { ven: 'Venerdì 16', sab: 'Sabato 17', dom: 'Domenica 18' }
 const PREP = [
@@ -55,14 +58,18 @@ export async function render(root, { person, header, params }) {
         <div class="countdown" id="cd" role="timer" aria-label="Countdown alla partenza">${countdownHtml()}</div>
         <p class="muted">Zero fatica, tutto gusto. Quando atterri, il piano è già pronto.</p>
       </div>
+      ${albumBanner({ line: 'Ogni foto che carichi finisce nello stesso posto. Stasera riguardate tutto insieme.' })}
       <h2 class="section-title">Checklist pre-partenza <small>${prep.size}/${PREP.length}</small></h2>
       <div class="stack checklist">
         ${PREP.map(([id, t]) => `<label class="check list-item"><input type="checkbox" data-prep="${id}" ${prep.has(id) ? 'checked' : ''}><span>${esc(t)}</span></label>`).join('')}
       </div>
+      ${person === 'ale' ? `<h2 class="section-title">Manda l'album ai ragazzi</h2>${shareAlbum()}` : ''}
       ${person === 'monne' ? speedBanner() : ''}
       ${isOverridden() ? `<p class="faint">Data simulata: ${now().toLocaleString('it-IT')}</p>` : ''}
     </section>`
     root.innerHTML = html
+    bindAlbum(root)
+    if (person === 'ale') bindShareAlbum(root)
     const cd = root.querySelector('#cd')
     timers.push(setInterval(() => { cd.innerHTML = countdownHtml() }, 30_000))
     root.addEventListener('change', (e) => {
@@ -92,10 +99,12 @@ export async function render(root, { person, header, params }) {
           <div class="xp-head__next">${doneCountFor(person)} missioni su ${missionsFor(person).length} completate · ${xp} XP su ${max}</div>
         </div>
       </div>
-      <button class="btn btn--primary btn--block" id="export">${icon('download')} Esporta punteggio</button>
+      <a class="btn album__cta btn--block" href="${PHOTO_ALBUM}" target="_blank" rel="noopener" aria-label="Guarda com'è andata, apre l'album foto">${icon('camera')} Guarda com'è andata</a>
+      <button class="btn btn--block" id="export">${icon('download')} Esporta punteggio</button>
       <a class="btn btn--block" href="#/missioni">${icon('trophy')} Vedi missioni e classifica</a>
     </section>`
     root.innerHTML = html
+    bindAlbum(root)
     root.querySelector('#export').addEventListener('click', () => {
       const s = summaryFor(person)
       copyText(store.export(s.person, s.xp, s.done), 'Punteggio copiato: mandalo agli altri')
@@ -119,6 +128,7 @@ export async function render(root, { person, header, params }) {
   const monneGone = person === 'monne' && now() > mine[mine.length - 1]?.at
 
   html = header(`${DAY_LABEL[key]} · ${p.name}`) + `<section class="view">
+    ${albumBanner({ line: 'Ogni foto che carichi finisce nello stesso posto. Stasera riguardate tutto insieme.' })}
     ${person === 'monne' && !monneGone ? speedBanner() : ''}
     <div class="bento">
       <div class="tile tile--accent span-2" style="--day:${DAY_COLOR[key]}">
@@ -156,6 +166,7 @@ export async function render(root, { person, header, params }) {
     ${isOverridden() ? `<p class="faint">Data simulata: ${now().toLocaleString('it-IT')}</p>` : ''}
   </section>`
   root.innerHTML = html
+  bindAlbum(root)
   bindCards(root, { person, onChange: () => { /* i contatori si aggiornano al prossimo render */ } })
   root.querySelector('#copy')?.addEventListener('click', () => copyText(summaryText(person, key)))
   return () => timers.forEach(clearInterval)

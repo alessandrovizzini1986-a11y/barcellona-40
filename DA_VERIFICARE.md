@@ -38,6 +38,8 @@ Generato in parte dagli script dati (`npm run data`). Le sezioni tra marker veng
 
 ## Altri dati mancanti o non verificati
 
+- **Album Google Foto: verificare i permessi di caricamento.** Il link risponde 302 e porta a un album condiviso, ma resta da controllare che l'impostazione "Consenti ad altri di aggiungere foto" sia attiva, altrimenti gli altri possono solo guardare. Da controllare aprendo il link in una finestra anonima.
+
 - **Distanze a piedi: motore di routing sostituito.** Il server demo `router.project-osrm.org` ignora il profilo `/foot/` e restituisce sempre percorsi stradali per auto (verificato: `/foot/` e `/driving/` danno risultati identici), quindi gonfiava ogni distanza a piedi. Ora `scripts/distances.mjs` usa Valhalla di OpenStreetMap con costing `pedestrian` (`auto` per le tratte in auto o taxi) e prende i minuti dal tempo restituito da Valhalla, non più da una conversione a 5 km/h. Restano stime su dati OpenStreetMap, non rilievi sul posto.
 - **La tappa f4 si chiama "Chao Pescao" nei dati, ma la correzione sulle distanze la chiamava "Bar Joan".** Il nome del locale non è stato cambiato, perché non era richiesto: se il pranzo di venerdì si sposta da Chao Pescao a Bar Joan servono nome, indirizzo e coordinate del nuovo locale.
 - **Distanze non calcolate**: `f5→f6`, `f6→f7`, `f7→f8`, perché Enoteca Taps e Rooftop Garden El Palace non hanno coordinate. Le tappe sono marcate `da_verificare`.
