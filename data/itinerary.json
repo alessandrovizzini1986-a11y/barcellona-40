@@ -88,6 +88,34 @@
      "minFromPrev": 21
     },
     {
+     "id": "f3b",
+     "time": "12:15",
+     "timeStatus": "stimato",
+     "venueId": "duckstore",
+     "title": "Barcelona Duck Store · la paperella per Olly",
+     "why": "Tredici minuti dal mercato, dentro e fuori in dieci. Centinaia di paperelle, una sola torna a casa.",
+     "details": [
+      "Carrer dels Banys Nous 1, Barri Gòtic",
+      "4,4 su 108 recensioni",
+      "Venerdì aperto 10:30–20:30",
+      "Souvenir per Olly"
+     ],
+     "people": [
+      "ale",
+      "monne"
+     ],
+     "badges": [
+      "verificato"
+     ],
+     "actions": {
+      "maps": true,
+      "taxi": false,
+      "metro": null
+     },
+     "distFromPrevM": 1113,
+     "minFromPrev": 13
+    },
+    {
      "id": "f4",
      "time": "13:00",
      "timeStatus": "stimato",
@@ -108,8 +136,8 @@
       "taxi": false,
       "metro": null
      },
-     "distFromPrevM": 2533,
-     "minFromPrev": 30
+     "distFromPrevM": 2891,
+     "minFromPrev": 35
     },
     {
      "id": "f5",

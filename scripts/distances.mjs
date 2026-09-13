@@ -1,4 +1,11 @@
 // Distanze a piedi tra tappe consecutive (OSRM, profilo foot). Usa SOLO `distance` (metri):
+//
+// ATTENZIONE — limite noto del server pubblico router.project-osrm.org: ospita solo la rete
+// per auto, e restituisce la stessa distanza per ogni profilo (foot, driving, bike). I percorsi
+// quindi seguono i sensi unici ed evitano le zone pedonali: nel Gòtic sono 2-3 volte più lunghi
+// del cammino reale (es. Duck Store → Chao Pescao: 2891 m calcolati, 866 m in linea d'aria).
+// Per numeri realistici serve un'istanza OSRM con profilo foot o un altro servizio di routing
+// pedonale. Vedi DA_VERIFICARE.md.
 // minFromPrev = round(m / 83.3) → 5 km/h. La `duration` di OSRM non viene usata.
 // "Tappa precedente" = la tappa precedente dello stesso giorno che condivide almeno una persona.
 // Se la distanza a piedi supera 5 km la tappa viene marcata distMode:"auto" e i minuti restano null

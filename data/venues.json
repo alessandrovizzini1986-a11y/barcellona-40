@@ -165,6 +165,16 @@
    "verified": false,
    "geocoded": true,
    "geocodedFrom": "Bateries antiaèries i barraques del Carmel, Carrer de Marià Labèrnia, Can Baró, Horta-Guinardó, Barcelona, Barcelonès, Barcelona, Catalunya, 08032, Espanya"
+  },
+  "duckstore": {
+   "name": "Barcelona Duck Store",
+   "addr": "Carrer dels Banys Nous 1, Barri Gòtic",
+   "lat": 41.3819198,
+   "lng": 2.1753751,
+   "verified": true,
+   "rating": 4.4,
+   "reviews": 108,
+   "hours": "ven 10:30–20:30 · sab 11:00–20:00 · dom 11:00–15:00 e 16:00–20:00"
   }
  }
 }

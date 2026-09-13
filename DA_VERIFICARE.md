@@ -5,8 +5,8 @@ Generato in parte dagli script dati (`npm run data`). Le sezioni tra marker veng
 ## geocoding
 
 <!-- geocoding:start -->
-- **Enoteca Taps Sagrada Família** (`taps`): coordinate mancanti, nessun risultato. Query: "Enoteca Taps Sagrada Família, Barcelona"
-- **Rooftop Garden – El Palace Barcelona** (`rooftop`): coordinate mancanti, nessun risultato; anche l'indirizzo "Gran Via de les Corts Catalanes 668, Barcelona" non risolve a un civico preciso. Query: "Rooftop Garden – El Palace Barcelona, Barcelona"
+- **Enoteca Taps Sagrada Família** (`taps`): coordinate mancanti, errore rete: Nominatim HTTP 429. Query: "Enoteca Taps Sagrada Família, Barcelona"
+- **Rooftop Garden – El Palace Barcelona** (`rooftop`): coordinate mancanti, errore rete: Nominatim HTTP 429. Query: "Rooftop Garden – El Palace Barcelona, Barcelona"
 - **Parc de la Ciutadella** (`ciutadella`): coordinate automatiche da Nominatim (41.388416, 2.1862546), da controllare sul posto
 - **Mercat de Santa Caterina – Xarcuteria Debón** (`santacaterina`): coordinate automatiche da Nominatim (41.3863594, 2.1781611), da controllare sul posto
 - **Chao Pescao** (`chaopescao`): coordinate automatiche da Nominatim (41.3861408, 2.1840991), da controllare sul posto
@@ -37,6 +37,8 @@ Generato in parte dagli script dati (`npm run data`). Le sezioni tra marker veng
 - c10 · Coordinate geocodificate automaticamente (vedi sezione geocoding)
 
 ## Altri dati mancanti o non verificati
+
+- **Le distanze "a piedi" sono sovrastimate.** Il server pubblico `router.project-osrm.org` usato da `scripts/distances.mjs` ospita solo la rete per auto: restituisce lo stesso identico valore per i profili foot, driving e bike, quindi i percorsi seguono i sensi unici ed evitano le zone pedonali. Esempio verificato: Duck Store → Chao Pescao risulta 2891 m (35 min) contro 866 m in linea d'aria, cioè una decina di minuti a piedi reali. Riguarda tutte le tappe con distanza calcolata dallo script, non solo questa. I valori inseriti a mano nei dati (per esempio i 1113 m del Mercat de Santa Caterina → Duck Store) non sono interessati. Per sistemare serve un servizio di routing pedonale vero.
 
 - Numero volo di Giulio (atterraggio 07:40 confermato) e di Manuel (09:45).
 - Enoteca Taps Sagrada Família e Rooftop Garden El Palace: nessuna coordinata (Nominatim non le trova); le tappe f6/f7 sono `da_verificare` e sulla mappa compaiono nella lista "Senza coordinate". Inserire `lat`/`lng` a mano in `data/venues.json` con `verified:true`.
