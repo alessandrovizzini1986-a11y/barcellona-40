@@ -50,6 +50,7 @@ export function header(subtitle) {
       </div>
       <div class="header__actions">
         <a class="header__camera" href="${PHOTO_ALBUM}" target="_blank" rel="noopener" aria-label="Apri l'album foto">${icon('camera')}</a>
+        <a class="header__music" href="#/info/canzone" aria-label="Ascolta l'inno">${icon('music')}</a>
         ${p ? `<a class="person-chip" href="#/info/profilo" style="--pc:var(${p.color})" aria-label="Profilo: ${esc(p.name)}"><span class="person-chip__dot"></span>${esc(p.name)}</a>` : ''}
       </div>
     </div>

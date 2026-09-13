@@ -178,6 +178,19 @@
     "manuel",
     "monne"
    ]
+  },
+  {
+   "id": "m15",
+   "stopId": null,
+   "title": "Coro Ufficiale",
+   "desc": "Ritornello cantato a memoria, tutti insieme",
+   "xp": 50,
+   "people": [
+    "ale",
+    "giulio",
+    "manuel",
+    "monne"
+   ]
   }
  ],
  "badges": [

@@ -51,7 +51,9 @@ for (const person of ['ale', 'monne', 'giulio', 'manuel']) {
 // share-album: solo Alessandro, e proprio assente nel DOM per gli altri
 for (const person of ['giulio', 'manuel', 'monne']) {
   const { p, ctx } = await open(person, '/#/info')
-  const inDom = await p.evaluate(() => document.body.innerHTML.includes('share-album') || document.body.innerHTML.includes('wa.me'))
+  // Cerca proprio il blocco e il suo testo: un link wa.me generico non basta come indizio,
+  // perché la card della canzone ne ha uno legittimo, visibile a tutti.
+  const inDom = await p.evaluate(() => document.body.innerHTML.includes('share-album') || document.body.innerHTML.includes("Manda l'album ai ragazzi"))
   ok(`share-album assente dal DOM (${person})`, (await p.locator('.share-album').count()) === 0 && !inDom)
   await ctx.close()
 }

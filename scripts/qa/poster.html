@@ -1,0 +1,42 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face{font-family:"Clash Display";src:url("../../public/fonts/ClashDisplay-Bold.woff2") format("woff2");font-weight:700}
+@font-face{font-family:"Inter";src:url("../../public/fonts/Inter-Variable.woff2") format("woff2");font-weight:100 900}
+html,body{margin:0;width:824px;height:1464px;background:#0E1116;overflow:hidden;position:relative}
+svg.bg{position:absolute;inset:0}
+.wrap{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px}
+.kicker{font-family:Inter;font-weight:700;font-size:30px;letter-spacing:.22em;text-transform:uppercase;color:#F2B705}
+.title{font-family:"Clash Display";font-weight:700;font-size:150px;line-height:.95;color:#F2E9DE;letter-spacing:-.02em;text-align:center}
+.sub{font-family:Inter;font-weight:500;font-size:34px;color:#B9B2A7;text-align:center;max-width:620px;line-height:1.35}
+.disc{width:300px;height:300px;margin-bottom:14px}
+.rule{width:180px;height:6px;border-radius:3px;background:#E8552E}
+.foot{position:absolute;left:0;right:0;bottom:70px;text-align:center;font-family:Inter;font-weight:600;font-size:28px;color:#7E7A72;letter-spacing:.06em}
+</style></head><body>
+<svg class="bg" width="824" height="1464" viewBox="0 0 824 1464" id="bg"></svg>
+<div class="wrap">
+  <svg class="disc" viewBox="0 0 100 100" aria-hidden="true">
+    <circle cx="50" cy="50" r="46" fill="#151A21" stroke="#E8552E" stroke-width="3"/>
+    <circle cx="50" cy="50" r="34" fill="none" stroke="#2CA6A4" stroke-width="1.5" stroke-opacity=".6"/>
+    <circle cx="50" cy="50" r="26" fill="none" stroke="#3D5A80" stroke-width="1.5" stroke-opacity=".6"/>
+    <circle cx="50" cy="50" r="15" fill="#E8552E"/>
+    <circle cx="50" cy="50" r="4.5" fill="#0E1116"/>
+    <path d="M50 4 A46 46 0 0 1 96 50" fill="none" stroke="#F2B705" stroke-width="3" stroke-linecap="round"/>
+  </svg>
+  <div class="kicker">Barcelona 40</div>
+  <div class="title">Disonesti</div>
+  <div class="rule"></div>
+  <div class="sub">L'inno ufficiale dei quaranta.<br>Alza il volume.</div>
+</div>
+<div class="foot">16–18 OTTOBRE 2026</div>
+<script>
+// Mosaico trencadís seedato: stesso poster a ogni generazione
+let seed = 1975; const r = () => { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return seed / 0x7fffffff }
+const colors = ['#E8552E','#2CA6A4','#F2B705','#3D5A80','#F2E9DE'];
+let out = '';
+for (let i = 0; i < 150; i++) {
+  const x = r() * 824, y = r() * 1464, w = 40 + r() * 120, h = 30 + r() * 100, rot = (r() - .5) * 44;
+  const pts = [[0,0],[w, r()*12],[w - r()*14, h],[r()*12, h - r()*10]].map(p => p.map(n => n.toFixed(1)).join(',')).join(' ');
+  out += `<polygon points="${pts}" fill="${colors[Math.floor(r()*colors.length)]}" fill-opacity="${(.07 + r()*.11).toFixed(2)}" transform="translate(${x.toFixed(0)} ${y.toFixed(0)}) rotate(${rot.toFixed(0)})"/>`;
+}
+document.getElementById('bg').innerHTML = out;
+</script>
+</body></html>

@@ -123,3 +123,29 @@ Suite dedicata: `node scripts/qa/album.mjs` → **66/66 verdi**. Suite principal
 **Due difetti trovati e corretti durante questa QA.**
 1. `mosaicDataUri()` restituiva `url("data:…")` con virgolette doppie. Inserito in `style="--album-mosaic:…"` chiudeva l'attributo in anticipo e il resto dell'SVG finiva nel markup come attributi spuri. Ora usa apici singoli; il payload è percent-encoded e non contiene apici.
 2. I test usavano `click({ force: true })` sulle checkbox: il clic forzato ignora l'occlusione e, quando l'elemento finiva sotto la tab bar fissa, colpiva la voce "Oggi" navigando via. Ora i test portano l'elemento al centro dello schermo e usano `check()` senza `force`, così un elemento davvero coperto farebbe fallire il test. Le due suite sono state rieseguite più volte con esito stabile.
+
+## 15. L'inno ufficiale
+Suite dedicata: `node scripts/qa/song.mjs` → **52/52 verdi**. Le altre restano verdi: e2e 45/45, album 66/66.
+
+| Verifica | Esito |
+|---|---|
+| `preload="none"`: i 6 MB del video non vengono scaricati all'apertura | ✓ alla prima richiesta partono solo il poster e l'audio, nessun `.mp4` |
+| `playsinline` sul video | ✓ presente |
+| Audio e video mai in riproduzione insieme | ✓ verificato con spia sulle chiamate a `pause()` |
+| Disco che ruota solo durante la riproduzione | ✓ parte su `play`, si ferma su `pause` e su `ended` |
+| `prefers-reduced-motion`: nessuna rotazione | ✓ `animation-name: none` |
+| Download con nome corretto | ✓ il salvataggio propone `Disonesti - Barcelona 40.mp3` |
+| Card usabile a 380 px, anche con il video aperto | ✓ nessun overflow su tre viste |
+| Ordine in Oggi: album, poi inno | ✓ prima e durante il weekend |
+| Info: "La canzone" subito dopo "Foto", aperta di default | ✓ |
+| Icona musica in tutte e cinque le viste e tab bar a 5 voci | ✓ |
+| Onboarding senza player | ✓ |
+| Missione m15 per tutti, 50 XP | ✓ sui quattro profili |
+
+**Metadati dei file**, letti dai file stessi: video 165,6 s, cioè 2:45 esatti; audio 3.831.791 byte che a 185 kbps danno 2:45. I media sono serviti con il content-type giusto e rispondono `206` alle richieste `Range`, quindi lo spostamento nella traccia funziona.
+
+**Quello che non è testabile qui.** La riproduzione vera: il Chromium di Playwright è la build senza codec proprietari e non decodifica MP3 né H.264, quindi l'audio non parte. Sono stati verificati il markup, gli attributi e tutta la logica del componente con eventi sintetici. Il comportamento su Chrome Android e Safari iOS, incluso il fatto che il video non apra a schermo intero grazie a `playsinline`, va provato a mano sui dispositivi.
+
+**Due difetti trovati e corretti in questa QA.**
+1. `bindSong` marcava il contenitore come già collegato. `#app` sopravvive ai re-render, mentre audio e video vengono ricreati ogni volta: dalla seconda vista in poi i nuovi elementi restavano senza listener, quindi il toggle del video e la rotazione del disco non funzionavano. Ora il flag sta sull'elemento audio.
+2. `.song__video` aveva `display:flex`, che ha la precedenza sull'attributo `hidden`: il video risultava sempre visibile e scaricabile. Aggiunta la regola `.song__video[hidden]{ display:none }`.

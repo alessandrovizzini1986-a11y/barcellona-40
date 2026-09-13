@@ -3,6 +3,14 @@ export const PHOTO_ALBUM = 'https://photos.app.goo.gl/mqfbvmyvrwXwRLPF6'
 // URL pubblico del sito, iniettato in fase di build (vedi vite.config.js)
 export const SITE_URL = __SITE_URL__
 
+// L'inno ufficiale. I percorsi passano da BASE_URL: il sito è pubblicato sotto
+// /barcellona-40/, quindi un percorso assoluto "/media/..." darebbe 404.
+const MEDIA = import.meta.env.BASE_URL.replace(/\/$/, '') + '/media/'
+export const SONG_MP3 = MEDIA + 'vizzo_barcellona_hit.mp3'
+export const SONG_MP4 = MEDIA + 'vizzo_barcellona_hit.mp4'
+export const SONG_POSTER = MEDIA + 'song-poster.jpg'
+export const SONG_TITLE = 'Disonesti'
+
 // Stato persistente in localStorage con prefisso b40:v1:. Safari privato può lanciare eccezioni:
 // ogni accesso è protetto da try/catch e ha un fallback in memoria.
 const PREFIX = 'b40:v1:'

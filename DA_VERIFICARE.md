@@ -38,6 +38,8 @@ Generato in parte dagli script dati (`npm run data`). Le sezioni tra marker veng
 
 ## Altri dati mancanti o non verificati
 
+- **Testo di "Disonesti".** Non è nel repo. Sotto il player c'è "Leggi il testo" con un segnaposto marcato `da_verificare`. Mandando il testo definitivo, va in `src/ui/song.js` nella costante `LYRICS`, come elenco di blocchi `{ section, lines }`: le sezioni il cui nome contiene "ritornello" vengono evidenziate in terracotta automaticamente.
+
 - **Album Google Foto: verificare i permessi di caricamento.** Il link risponde 302 e porta a un album condiviso, ma resta da controllare che l'impostazione "Consenti ad altri di aggiungere foto" sia attiva, altrimenti gli altri possono solo guardare. Da controllare aprendo il link in una finestra anonima.
 
 - **Distanze a piedi: motore di routing sostituito.** Il server demo `router.project-osrm.org` ignora il profilo `/foot/` e restituisce sempre percorsi stradali per auto (verificato: `/foot/` e `/driving/` danno risultati identici), quindi gonfiava ogni distanza a piedi. Ora `scripts/distances.mjs` usa Valhalla di OpenStreetMap con costing `pedestrian` (`auto` per le tratte in auto o taxi) e prende i minuti dal tempo restituito da Valhalla, non più da una conversione a 5 km/h. Restano stime su dati OpenStreetMap, non rilievi sul posto.

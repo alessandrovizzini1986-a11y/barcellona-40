@@ -11,6 +11,7 @@ import { openSheet } from '../ui/sheet.js'
 import { xpFor, maxXpFor, doneCountFor, levelFor, summaryFor } from '../game.js'
 import { big as confettiBig } from '../ui/confetti.js'
 import { albumBanner, bindAlbum } from '../ui/album.js'
+import { songCard, bindSong } from '../ui/song.js'
 import { shareAlbum, bindShareAlbum } from '../ui/share-album.js'
 import { PHOTO_ALBUM } from '../store.js'
 
@@ -59,6 +60,7 @@ export async function render(root, { person, header, params }) {
         <p class="muted">Zero fatica, tutto gusto. Quando atterri, il piano è già pronto.</p>
       </div>
       ${albumBanner({ line: 'Ogni foto che carichi finisce nello stesso posto. Stasera riguardate tutto insieme.' })}
+      ${songCard({ line: 'Due minuti e quarantacinque. Dopo il terzo ascolto il ritornello non esce più.' })}
       <h2 class="section-title">Checklist pre-partenza <small>${prep.size}/${PREP.length}</small></h2>
       <div class="stack checklist">
         ${PREP.map(([id, t]) => `<label class="check list-item"><input type="checkbox" data-prep="${id}" ${prep.has(id) ? 'checked' : ''}><span>${esc(t)}</span></label>`).join('')}
@@ -69,6 +71,7 @@ export async function render(root, { person, header, params }) {
     </section>`
     root.innerHTML = html
     bindAlbum(root)
+    bindSong(root)
     if (person === 'ale') bindShareAlbum(root)
     const cd = root.querySelector('#cd')
     timers.push(setInterval(() => { cd.innerHTML = countdownHtml() }, 30_000))
@@ -129,6 +132,7 @@ export async function render(root, { person, header, params }) {
 
   html = header(`${DAY_LABEL[key]} · ${p.name}`) + `<section class="view">
     ${albumBanner({ line: 'Ogni foto che carichi finisce nello stesso posto. Stasera riguardate tutto insieme.' })}
+    ${songCard({ line: 'Due minuti e quarantacinque. Dopo il terzo ascolto il ritornello non esce più.' })}
     ${person === 'monne' && !monneGone ? speedBanner() : ''}
     <div class="bento">
       <div class="tile tile--accent span-2" style="--day:${DAY_COLOR[key]}">
@@ -167,6 +171,7 @@ export async function render(root, { person, header, params }) {
   </section>`
   root.innerHTML = html
   bindAlbum(root)
+  bindSong(root)
   bindCards(root, { person, onChange: () => { /* i contatori si aggiornano al prossimo render */ } })
   root.querySelector('#copy')?.addEventListener('click', () => copyText(summaryText(person, key)))
   return () => timers.forEach(clearInterval)

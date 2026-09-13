@@ -69,3 +69,13 @@
 - Info: nuova sezione "Foto", prima e già aperta. Header: icona macchina fotografica in tutte le viste. Tab bar invariata a 5 voci.
 - Missione `m14` "Album Contributor" (40 XP, tutti). Pulsante "Carica su album" su `m9` e `m14`. Livelli invariati.
 - Corretto un bug scoperto qui: `mosaicDataUri()` restituiva `url("…")` con virgolette doppie e, inserito in un attributo `style`, ne chiudeva il valore in anticipo rompendo il markup. Ora usa apici singoli.
+
+## L'inno ufficiale
+- `public/media/`: `vizzo_barcellona_hit.mp3` (3,7 MB) e `vizzo_barcellona_hit.mp4` (6,1 MB, 824x1464 verticale), entrambi 2:45 verificati leggendo i metadati dei file.
+- `public/media/song-poster.jpg` (824x1464): illustrazione originale in stile trencadís con il titolo, generata da `scripts/qa/poster.mjs`. ffmpeg non poteva estrarre un frame perché la build disponibile è priva dei decoder h264 e mp3.
+- `src/ui/song.js`: card "Disonesti" con player audio nativo, toggle per il video (`playsinline`, `preload="none"`, poster), due download con nome file esplicito, invio su WhatsApp e testo richiudibile. Audio e video non suonano mai insieme; il disco ruota solo durante la riproduzione e sta fermo con `prefers-reduced-motion`.
+- Oggi: la card è il secondo blocco, subito sotto il banner album. Info: nuova sezione "La canzone" dopo "Foto", aperta di default. Header: icona musica in tutte le viste. Tab bar invariata a 5 voci. Onboarding non toccato.
+- Missione `m15` "Coro Ufficiale" (50 XP, tutti). Livelli invariati.
+- `public/_headers`: `/media/*` con `max-age=604800`.
+- Due scostamenti dalla specifica, per farla funzionare: i percorsi dei media passano da `import.meta.env.BASE_URL` invece di essere assoluti (`/media/...` darebbe 404 sotto `/barcellona-40/`), e l'icona musica punta a `#/info/canzone` invece di `#/info#canzone`, che un router a hash non può interpretare.
+- Due difetti trovati dai test e corretti: `bindSong` marcava il contenitore come collegato, ma `#app` sopravvive ai re-render mentre audio e video vengono ricreati, quindi dalla seconda vista restavano senza listener; e `.song__video` con `display:flex` batteva l'attributo `hidden`, lasciando il video sempre visibile.
