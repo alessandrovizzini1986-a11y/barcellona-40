@@ -166,3 +166,25 @@ Suite dell'inno aggiornata: **71/71 verdi**. Le altre restano verdi: e2e 45/45, 
 | `#/coro`: quattro righe identiche al ritornello | ✓ |
 | `#/coro` a schermo pieno, tab bar nascosta | ✓ e alla chiusura la tab bar torna a 5 voci |
 | `#/coro` senza overflow a 380 px | ✓ |
+
+## 17. Canvas papera
+Suite dedicata: `node scripts/qa/canvas.mjs` → **26/26 verdi**. Le altre restano verdi: canzone 71/71, e2e 45/45, album 66/66.
+
+| Verifica | Esito |
+|---|---|
+| `<video>` con `autoplay muted loop playsinline`, `muted` anche come proprietà | ✓ |
+| Poster e sorgente = `CANVAS_POSTER` e `CANVAS_MP4` | ✓ |
+| `aria-hidden`, `tabindex=-1`, dietro al contenuto | ✓ |
+| `object-fit: cover; object-position: center 60%` | ✓ `50% 60%` calcolato |
+| Gradiente da `.25` in alto a `.88` in basso | ✓ letto dallo stile calcolato |
+| Telefono: video 3:4 ancorato in alto, palco libero sopra titolo e pulsanti | ✓ video 413 px su card 704, titolo a 270 px, muso della papera nel 45% alto |
+| Desktop (card più larga che alta): il video copre tutta la card | ✓ 700 px su 704, con bordo |
+| Il canvas viene richiesto all'apertura; il video da 6 MB no | ✓ |
+| `prefers-reduced-motion`: nessun `<video>`, poster statico, mp4 non scaricato | ✓ |
+| "Manda ai ragazzi" punta a `canzone.html` | ✓ |
+| `canzone.html` porta a `#/info/canzone` con la card presente | ✓ |
+| Nessun overflow a 380 px, nessun errore JS | ✓ |
+
+**Open Graph.** `canzone.html` è servita con `og:image` assoluto verso `media/disonesti-canvas-poster.jpg` (540x720). WhatsApp mostra le immagini verticali come miniatura quadrata accanto al testo, non come anteprima larga: per l'anteprima grande servirebbe un'immagine 1200x630. L'anteprima effettiva su WhatsApp non è verificabile da qui e va provata condividendo il link.
+
+**Riproduzione.** Come per l'inno, il Chromium di Playwright non decodifica H.264: l'autoplay è verificato come richiesta di rete e attributi, non come fotogrammi. Da provare sul telefono: il loop deve partire da solo, in silenzio, e stare fermo con "Riduci movimento" attivo.

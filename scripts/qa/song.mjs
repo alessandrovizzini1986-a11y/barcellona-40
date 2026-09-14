@@ -65,7 +65,8 @@ async function open(person, path, opts = {}) {
 // preload: il video non deve essere scaricato all'apertura
 {
   const { p, ctx, reqs } = await open('ale', '/#/info')
-  ok('video non richiesto all\'apertura (preload none)', !reqs.some((u) => u.endsWith('.mp4')), reqs.filter((u) => u.includes('media')).map((u) => u.split('/').pop()).join(','))
+  // Il canvas della papera (900 KB, autoplay) deve caricarsi; il video da 6 MB no
+  ok('video grande non richiesto all\'apertura (preload none)', !reqs.some((u) => u.endsWith('vizzo_barcellona_hit.mp4')), reqs.filter((u) => u.includes('media')).map((u) => u.split('/').pop()).join(','))
   ok('poster richiesto', reqs.some((u) => u.includes('song-poster.jpg')))
   ok('attributo preload sul video', (await p.locator('[data-song-video]').getAttribute('preload')) === 'none')
   ok('playsinline presente', (await p.locator('[data-song-video]').getAttribute('playsinline')) !== null)

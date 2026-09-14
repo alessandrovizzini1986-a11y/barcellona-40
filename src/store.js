@@ -10,6 +10,11 @@ export const SONG_MP3 = MEDIA + 'vizzo_barcellona_hit.mp3'
 export const SONG_MP4 = MEDIA + 'vizzo_barcellona_hit.mp4'
 export const SONG_POSTER = MEDIA + 'song-poster.jpg'
 export const SONG_TITLE = 'Disonesti'
+// Canvas: la papera in loop dietro la card della canzone (video muto, 9 s, seamless)
+export const CANVAS_MP4 = MEDIA + 'disonesti-canvas.mp4'
+export const CANVAS_POSTER = MEDIA + 'disonesti-canvas-poster.jpg'
+// Pagina statica con l'Open Graph della papera: è quella da condividere su WhatsApp
+export const SONG_URL = SITE_URL.replace(/\/?$/, '/') + 'canzone.html'
 
 // Stato persistente in localStorage con prefisso b40:v1:. Safari privato può lanciare eccezioni:
 // ogni accesso è protetto da try/catch e ha un fallback in memoria.

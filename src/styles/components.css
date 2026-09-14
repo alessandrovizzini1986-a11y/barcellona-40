@@ -197,9 +197,19 @@ select.input,input.input{ min-height:44px; background:var(--bg-3); border:1px so
 .header__camera svg{ width:22px; height:22px; }
 
 /* Inno ufficiale */
-.song{ position:relative; display:flex; flex-direction:column; gap:var(--space-3); padding:var(--space-4); border-radius:var(--radius-l); background-color:var(--bg-2); border:2px solid var(--terracotta); overflow:hidden; }
-.song::before{ content:""; position:absolute; inset:0; background-image:var(--song-mosaic); background-size:420px 420px; opacity:.10; pointer-events:none; }
-.song > *{ position:relative; }
+.song{ position:relative; display:flex; flex-direction:column; justify-content:flex-end; gap:var(--space-3); min-height:560px; padding:var(--space-4); border-radius:var(--radius-l); background-color:var(--bg-2); border:2px solid var(--terracotta); overflow:hidden; isolation:isolate; }
+.song::before{ content:""; position:absolute; inset:0; background-image:var(--song-mosaic); background-size:420px 420px; opacity:.10; pointer-events:none; z-index:1; }
+.song > *{ position:relative; z-index:2; }
+/* Canvas: la papera sta in basso al centro nel video, quindi l'inquadratura resta su di lei
+   anche quando la card è più larga che alta */
+/* Su telefono la card è molto più alta che larga: il video tiene il suo 3:4 ancorato in alto e sfuma
+   nel fondo della card, così la papera resta nel palco in alto. Quando invece la card è più larga
+   che alta (desktop), max-height lo limita alla card e il ritaglio verticale al 60% tiene la papera. */
+.song__canvas{ position:absolute; top:0; left:0; z-index:0; width:100%; height:auto; aspect-ratio:540/720; max-height:100%; object-fit:cover; object-position:center 60%; background-color:#0E1116; pointer-events:none; -webkit-mask-image:linear-gradient(180deg, #000 62%, transparent 100%); mask-image:linear-gradient(180deg, #000 62%, transparent 100%); }
+.song__canvas--still{ background-position:center 60%; background-size:cover; background-repeat:no-repeat; }
+/* Gradiente: denso in basso dove stanno titolo e pulsanti, leggero in alto dove resta la papera */
+.song__shade{ position:absolute; inset:0; z-index:1; background:linear-gradient(180deg, rgba(14,17,22,.25) 0%, rgba(14,17,22,.55) 45%, rgba(14,17,22,.88) 100%); pointer-events:none; }
+.song__stage{ flex:1 1 auto; min-height:240px; }
 .song__head{ display:flex; gap:var(--space-4); align-items:center; }
 .song__disc{ flex:none; width:64px; height:64px; border-radius:50%; background:color-mix(in srgb, var(--terracotta) 18%, transparent); color:var(--terracotta); display:grid; place-items:center; }
 .song__disc svg{ width:38px; height:38px; }
@@ -208,7 +218,7 @@ select.input,input.input{ min-height:44px; background:var(--bg-3); border:1px so
 @media (prefers-reduced-motion: reduce){ .song__disc--spin svg{ animation:none; } }
 .song__meta{ min-width:0; display:flex; flex-direction:column; gap:var(--space-1); }
 .song__title{ font-family:var(--font-display); font-weight:700; font-size:var(--fs-2); }
-.song__line{ color:var(--ink-2); font-size:var(--fs-0); }
+.song__line{ color:var(--ink); opacity:.85; font-size:var(--fs-0); }
 .song__audio{ width:100%; min-height:44px; }
 .song__audio[hidden]{ display:none !important; }
 .song__video{ display:flex; justify-content:center; }

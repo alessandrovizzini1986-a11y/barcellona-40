@@ -81,3 +81,12 @@
 - Due difetti trovati dai test e corretti: `bindSong` marcava il contenitore come collegato, ma `#app` sopravvive ai re-render mentre audio e video vengono ricreati, quindi dalla seconda vista restavano senza listener; e `.song__video` con `display:flex` batteva l'attributo `hidden`, lasciando il video sempre visibile.
 - Testo di "Disonesti" pubblicato: dieci sezioni, etichette in maiuscoletto grigio, ritornello in terracotta più grande, cori tra parentesi in giallo. Rimossi il segnaposto e la voce in `DA_VERIFICARE.md`.
 - Nuova vista `#/coro`: le quattro righe del ritornello a schermo pieno, tab bar nascosta, raggiungibile dal pulsante "Modalità coro" nella card. La tab bar resta a 5 voci.
+
+## Canvas papera
+- `public/media/disonesti-canvas.mp4` (540x720, 9,2 s, muto, loop) e `disonesti-canvas-poster.jpg` (primo frame). Costanti `CANVAS_MP4`, `CANVAS_POSTER` e `SONG_URL` in `src/store.js`, percorsi sul base path come gli altri media.
+- La card della canzone ha il video in loop come sfondo: `autoplay muted loop playsinline`, `preload="metadata"`, poster, `aria-hidden`, fuori dal tab order, in pausa quando esce dallo schermo (IntersectionObserver). Con `prefers-reduced-motion` o risparmio dati attivo il video non viene creato né scaricato: resta il poster come immagine statica.
+- Inquadratura: `object-fit: cover; object-position: center 60%`. Sul telefono la card è molto più alta che larga e il ritaglio sarebbe orizzontale, quindi il video tiene il suo 3:4 ancorato in alto e sfuma nel fondo della card (`mask-image`), con un palco di 240 px sopra titolo e pulsanti dove la papera resta visibile. Quando la card è più larga che alta il video copre tutto e il 60% verticale tiene la papera.
+- Gradiente sopra il video da `rgba(14,17,22,.25)` in alto a `.88` in basso, con titolo e pulsanti in basso.
+- `public/canzone.html`: pagina ponte con l'Open Graph della papera (titolo, descrizione, `og:image` = poster) che porta subito a `#/info/canzone`. Il pulsante "Manda ai ragazzi" condivide questo URL, così su WhatsApp l'anteprima è la papera. Un router a hash non può avere Open Graph diversi per vista: è l'unico modo.
+- Il documento "canvas video in loop" citato nella richiesta non è mai arrivato in questa sessione: applicato lo schema standard più le precisazioni date.
+- Caricato anche `disonesti-canvas-9x16.mp4` (404x720): non era nella specifica, non è stato pubblicato.

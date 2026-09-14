@@ -1,10 +1,11 @@
 // Player dell'inno ufficiale. Controlli nativi: su mobile sono i più affidabili e accessibili.
-import { SONG_MP3, SONG_MP4, SONG_POSTER, SONG_TITLE, SITE_URL } from '../store.js'
+import { SONG_MP3, SONG_MP4, SONG_POSTER, SONG_TITLE, SONG_URL, CANVAS_MP4, CANVAS_POSTER } from '../store.js'
 import { icon } from './icons.js'
 import { mosaicDataUri } from './mosaic.js'
 import { esc } from './html.js'
 
-const SHARE_TEXT = `L'inno ufficiale del weekend. Alza il volume e impara il ritornello.\n\n${SITE_URL}`
+// Il link condiviso è canzone.html: porta alla stessa card ma con l'anteprima della papera su WhatsApp
+const SHARE_TEXT = `L'inno ufficiale del weekend. Alza il volume e impara il ritornello.\n\n${SONG_URL}`
 
 // Testo di "Disonesti". Le etichette tra parentesi quadre sono riferimenti, non si cantano.
 // Le sezioni il cui nome contiene "ritornello" vengono evidenziate.
@@ -38,8 +39,20 @@ function lyricsHtml() {
   </div>`).join('')
 }
 
+// Sfondo animato: video muto in loop. Con prefers-reduced-motion o risparmio dati resta il poster.
+function canvasHtml() {
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches || navigator.connection?.saveData === true
+  if (still) return `<div class="song__canvas song__canvas--still" style="background-image:url('${CANVAS_POSTER}')" aria-hidden="true"></div>`
+  return `<video class="song__canvas" data-song-canvas autoplay muted loop playsinline preload="metadata" poster="${CANVAS_POSTER}" aria-hidden="true" tabindex="-1" disablepictureinpicture disableremoteplayback>
+    <source src="${CANVAS_MP4}" type="video/mp4">
+  </video>`
+}
+
 export function songCard({ line = "L'inno ufficiale dei quaranta. Alza il volume." } = {}) {
   return `<section class="song" style="--song-mosaic:${mosaicDataUri(2745, 26)}" aria-labelledby="song-title">
+    ${canvasHtml()}
+    <div class="song__shade" aria-hidden="true"></div>
+    <div class="song__stage" aria-hidden="true"></div>
     <div class="song__head">
       <span class="song__disc" data-song-disc aria-hidden="true">${icon('disc')}</span>
       <div class="song__meta">
@@ -80,6 +93,15 @@ export function bindSong(container) {
   const wrap = container.querySelector('#song-video')
   const toggle = container.querySelector('[data-song-toggle]')
   if (!audio) return
+
+  // Il canvas gira solo quando la card è sullo schermo: batteria e banda
+  const canvas = container.querySelector('[data-song-canvas]')
+  if (canvas && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) { if (e.isIntersecting) canvas.play().catch(() => {}); else canvas.pause() }
+    }, { threshold: 0.1 })
+    io.observe(canvas)
+  }
 
   const spin = (on) => disc?.classList.toggle('song__disc--spin', on)
   audio.addEventListener('play', () => { video?.pause(); spin(true) })
