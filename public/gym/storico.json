@@ -1,6 +1,6 @@
 {
  "v": 2,
- "aggiornato": "2026-09-10T19:35:49.499763Z",
+ "aggiornato": "2026-09-14T19:36:07.399121Z",
  "scheda": {
   "giorni": [
    {
@@ -18,7 +18,7 @@
       "tipo": "carico",
       "perMano": false,
       "assist": false,
-      "serie": 3,
+      "serie": 4,
       "target": [
        {
         "kg": 70,
@@ -37,9 +37,15 @@
         "rip": 8,
         "ripMax": null,
         "max": false
+       },
+       {
+        "kg": 100,
+        "rip": 6,
+        "ripMax": null,
+        "max": false
        }
       ],
-      "repMin": 8,
+      "repMin": 6,
       "repMax": 12
      },
      {
@@ -57,31 +63,31 @@
       "target": [
        {
         "kg": -60,
-        "rip": 9,
+        "rip": 10,
         "ripMax": null,
         "max": false
        },
        {
         "kg": -60,
-        "rip": 9,
+        "rip": 10,
         "ripMax": null,
         "max": false
        },
        {
         "kg": -60,
-        "rip": 9,
+        "rip": 10,
         "ripMax": null,
         "max": false
        },
        {
         "kg": -60,
-        "rip": 9,
+        "rip": 10,
         "ripMax": null,
         "max": false
        }
       ],
-      "repMin": 9,
-      "repMax": 9
+      "repMin": 10,
+      "repMax": 10
      },
      {
       "id": "leg-extension",
@@ -98,25 +104,25 @@
       "target": [
        {
         "kg": 25,
-        "rip": 9,
+        "rip": 10,
         "ripMax": null,
         "max": false
        },
        {
         "kg": 25,
-        "rip": 9,
+        "rip": 10,
         "ripMax": null,
         "max": false
        },
        {
         "kg": 25,
-        "rip": 9,
+        "rip": 10,
         "ripMax": null,
         "max": false
        }
       ],
-      "repMin": 9,
-      "repMax": 9
+      "repMin": 10,
+      "repMax": 10
      },
      {
       "id": "pulley-triangolo",
@@ -133,25 +139,25 @@
       "target": [
        {
         "kg": 25,
-        "rip": 11,
+        "rip": 12,
         "ripMax": null,
         "max": false
        },
        {
         "kg": 25,
-        "rip": 11,
+        "rip": 12,
         "ripMax": null,
         "max": false
        },
        {
         "kg": 25,
-        "rip": 11,
+        "rip": 12,
         "ripMax": null,
         "max": false
        }
       ],
-      "repMin": 11,
-      "repMax": 11
+      "repMin": 12,
+      "repMax": 12
      },
      {
       "id": "chest-press",
@@ -167,8 +173,8 @@
       "serie": 4,
       "target": [
        {
-        "kg": 35,
-        "rip": 8,
+        "kg": 40,
+        "rip": 6,
         "ripMax": null,
         "max": false
        },
@@ -179,8 +185,8 @@
         "max": false
        },
        {
-        "kg": 30,
-        "rip": 10,
+        "kg": 35,
+        "rip": 8,
         "ripMax": null,
         "max": false
        },
@@ -191,7 +197,7 @@
         "max": false
        }
       ],
-      "repMin": 8,
+      "repMin": 6,
       "repMax": 10
      },
      {
@@ -208,26 +214,26 @@
       "serie": 3,
       "target": [
        {
-        "kg": 12.5,
+        "kg": 15,
         "rip": 10,
-        "ripMax": 12,
+        "ripMax": null,
         "max": false
        },
        {
-        "kg": 12.5,
+        "kg": 15,
         "rip": 10,
-        "ripMax": 12,
+        "ripMax": null,
         "max": false
        },
        {
-        "kg": 12.5,
+        "kg": 15,
         "rip": 10,
-        "ripMax": 12,
+        "ripMax": null,
         "max": false
        }
       ],
       "repMin": 10,
-      "repMax": 12
+      "repMax": 10
      },
      {
       "id": "plank",
@@ -285,19 +291,19 @@
       "target": [
        {
         "kg": 4,
-        "rip": 10,
+        "rip": 12,
         "ripMax": null,
         "max": false
        },
        {
         "kg": 6,
-        "rip": 8,
+        "rip": 10,
         "ripMax": null,
         "max": false
        },
        {
         "kg": 8,
-        "rip": 6,
+        "rip": 8,
         "ripMax": null,
         "max": false
        },
@@ -308,8 +314,8 @@
         "max": true
        }
       ],
-      "repMin": 6,
-      "repMax": 10
+      "repMin": 8,
+      "repMax": 12
      },
      {
       "id": "lat-prona",
@@ -326,19 +332,19 @@
       "target": [
        {
         "kg": 30,
-        "rip": 13,
+        "rip": 14,
         "ripMax": null,
         "max": false
        },
        {
         "kg": 35,
-        "rip": 11,
+        "rip": 12,
         "ripMax": null,
         "max": false
        },
        {
         "kg": 40,
-        "rip": 9,
+        "rip": 10,
         "ripMax": null,
         "max": false
        },
@@ -349,8 +355,8 @@
         "max": true
        }
       ],
-      "repMin": 9,
-      "repMax": 13
+      "repMin": 10,
+      "repMax": 14
      },
      {
       "id": "leg-curl",
@@ -367,25 +373,25 @@
       "target": [
        {
         "kg": 35,
-        "rip": 9,
+        "rip": 10,
         "ripMax": null,
         "max": false
        },
        {
         "kg": 35,
-        "rip": 9,
+        "rip": 10,
         "ripMax": null,
         "max": false
        },
        {
         "kg": 35,
-        "rip": 9,
+        "rip": 10,
         "ripMax": null,
         "max": false
        }
       ],
-      "repMin": 9,
-      "repMax": 9
+      "repMin": 10,
+      "repMax": 10
      },
      {
       "id": "low-row",
@@ -402,25 +408,25 @@
       "target": [
        {
         "kg": 30,
-        "rip": 11,
+        "rip": 12,
         "ripMax": null,
         "max": false
        },
        {
         "kg": 30,
-        "rip": 11,
+        "rip": 12,
         "ripMax": null,
         "max": false
        },
        {
         "kg": 30,
-        "rip": 11,
+        "rip": 12,
         "ripMax": null,
         "max": false
        }
       ],
-      "repMin": 11,
-      "repMax": 11
+      "repMin": 12,
+      "repMax": 12
      },
      {
       "id": "push-up-ginocchia",
@@ -436,7 +442,7 @@
       "serie": 1,
       "target": [
        {
-        "rt": 30
+        "rt": 35
        }
       ],
       "repMin": 30,
@@ -468,14 +474,14 @@
         "max": false
        },
        {
-        "kg": 6,
-        "rip": 12,
+        "kg": 8,
+        "rip": 10,
         "ripMax": null,
         "max": false
        }
       ],
       "repMin": 10,
-      "repMax": 12
+      "repMax": 10
      },
      {
       "id": "alzate-laterali",
@@ -488,8 +494,14 @@
       "tipo": "carico",
       "perMano": true,
       "assist": false,
-      "serie": 2,
+      "serie": 3,
       "target": [
+       {
+        "kg": 4,
+        "rip": 15,
+        "ripMax": 20,
+        "max": false
+       },
        {
         "kg": 4,
         "rip": 15,
@@ -799,6 +811,152 @@
    "luogoId": "hkfbbse",
    "luogoNome": "Mcfit",
    "note": "Tutto bene, sicuramente push up e affondi fatti male da rivedere"
+  },
+  {
+   "id": "2026-09-14-uueypad",
+   "data": "2026-09-14",
+   "giorno": "B",
+   "settimana": 3,
+   "chiusa": true,
+   "inizio": 1789409396460,
+   "fine": 1789414031616,
+   "esercizi": {
+    "affondi-indietro": [
+     {
+      "kg": 4,
+      "reps": 12,
+      "fatta": true
+     },
+     {
+      "kg": 6,
+      "reps": 10,
+      "fatta": true
+     },
+     {
+      "kg": 8,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 4,
+      "reps": 14,
+      "fatta": true
+     }
+    ],
+    "lat-prona": [
+     {
+      "kg": 30,
+      "reps": 14,
+      "fatta": true
+     },
+     {
+      "kg": 35,
+      "reps": 12,
+      "fatta": true
+     },
+     {
+      "kg": 40,
+      "reps": 10,
+      "fatta": true
+     },
+     {
+      "kg": 30,
+      "reps": null,
+      "fatta": true
+     }
+    ],
+    "leg-curl": [
+     {
+      "kg": 35,
+      "reps": 10,
+      "fatta": true
+     },
+     {
+      "kg": 35,
+      "reps": 10,
+      "fatta": true
+     },
+     {
+      "kg": 35,
+      "reps": 10,
+      "fatta": true
+     }
+    ],
+    "low-row": [
+     {
+      "kg": 30,
+      "reps": 12,
+      "fatta": true
+     },
+     {
+      "kg": 30,
+      "reps": 12,
+      "fatta": true
+     },
+     {
+      "kg": 30,
+      "reps": 12,
+      "fatta": true
+     }
+    ],
+    "push-up-ginocchia": [
+     {
+      "kg": null,
+      "reps": null,
+      "fatta": false
+     }
+    ],
+    "curl-manubri": [
+     {
+      "kg": 8,
+      "reps": 10,
+      "fatta": true
+     },
+     {
+      "kg": 8,
+      "reps": 10,
+      "fatta": true
+     },
+     {
+      "kg": 8,
+      "reps": 10,
+      "fatta": true
+     }
+    ],
+    "alzate-laterali": [
+     {
+      "kg": 4,
+      "reps": 20,
+      "fatta": true
+     },
+     {
+      "kg": 4,
+      "reps": 15,
+      "fatta": true
+     },
+     {
+      "kg": 4,
+      "reps": 18,
+      "fatta": true
+     }
+    ]
+   },
+   "luogoId": "hkfbbse",
+   "luogoNome": "Mcfit",
+   "rt": {
+    "push-up-ginocchia": {
+     "reps": 40,
+     "sec": 385,
+     "start": null
+    }
+   },
+   "warm": {
+    "w0": true,
+    "w1": true,
+    "stretch": true
+   },
+   "warmOpen": false,
+   "pt": true
   }
  ],
  "luoghi": [
