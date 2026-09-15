@@ -23,12 +23,12 @@ Fischio dell'arbitro, boato del gol, "oooh" della parata e applausi sono sinteti
 `audio/music/inno.mp3`, `tensione.mp3`, `vittoria.mp3`: da fornire (vedi `DA_VERIFICARE.md`). Finché mancano, silenzio.
 
 ## Modelli 3D
-- `models/character.glb` (mesh riggata, usata sia per il portiere sia per il tiratore, colori delle maglie applicati a runtime), `models/kicker_kick_full.glb` e tutte le clip `keeper_*.glb`, `kicker_*.glb`: provengono dal gioco precedente di questo stesso progetto (`_legacy/assets/keeper.glb`, `kicker.glb`, `gk_*.glb`, `keeper_*.glb`, `kicker_*.glb`), ricompressi con Draco (`@gltf-transform/cli`). Le clip di animazione portano il nome `mixamo.com`: sono animazioni Mixamo (Adobe). Le condizioni d'uso correnti di Mixamo vanno verificate e annotate qui: vedi `DA_VERIFICARE.md`.
+- `models/character.glb` (manichino riggato, **invisibile**: serve solo da scheletro per le animazioni; il personaggio visibile è costruito a runtime con primitive Three.js attaccate alle ossa, stile "big head", vedi `src/rigori/scene/bighead.js`), `models/kicker_kick_full.glb` e tutte le clip `keeper_*.glb`, `kicker_*.glb`: provengono dal gioco precedente di questo stesso progetto (`_legacy/assets/keeper.glb`, `kicker.glb`, `gk_*.glb`, `keeper_*.glb`, `kicker_*.glb`), ricompressi con Draco (`@gltf-transform/cli`). Le clip di animazione portano il nome `mixamo.com`: sono animazioni Mixamo (Adobe). Le condizioni d'uso correnti di Mixamo vanno verificate e annotate qui: vedi `DA_VERIFICARE.md`.
 - Stadio, gradinate, torri faro, porta, pallone, campo, pubblico, cielo: geometria e texture generate proceduralmente nel codice (`src/rigori/scene/`). Nessun asset esterno.
 
 ## Texture
 - `textures/ball.png`: pallone del gioco precedente di questo progetto (`_legacy/assets/rig-ball.png`), pentagoni senza marchi.
-- Erba, cielo notturno, gradinate: procedurali (canvas), nessun file esterno.
+- Erba (colore e normal map), cielo notturno, maglie (strisce e numero), teste (pelle + foto sull'emisfero frontale), ombre di contatto, aloni dei fari: procedurali (canvas), nessun file esterno.
 
 ## Volti
 - `faces/face-monne-head.webp`, `faces/face-monne.webp`: forniti dall'autore del progetto nel prompt di lavoro.

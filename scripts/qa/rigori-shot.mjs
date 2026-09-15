@@ -5,7 +5,8 @@ const [url, out, ...rest] = process.argv.slice(2)
 const opts = Object.fromEntries(rest.filter((a) => a.startsWith('--')).map((a) => { const i = a.indexOf('='); return [a.slice(2, i), a.slice(i + 1)] }))
 const exe = process.env.CHROME_PATH || '/opt/pw-browsers/chromium-1194/chrome-linux/chrome'
 const b = await chromium.launch({ executablePath: exe, args: ['--no-sandbox', '--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--autoplay-policy=no-user-gesture-required'] })
-const ctx = await b.newContext({ viewport: { width: 380, height: 800 }, deviceScaleFactor: 1, isMobile: true, hasTouch: true })
+const [vw, vh] = (opts.vp || '380x800').split('x').map(Number)
+const ctx = await b.newContext({ viewport: { width: vw, height: vh }, deviceScaleFactor: 1, isMobile: true, hasTouch: true })
 const p = await ctx.newPage()
 const errors = [], logs = []
 p.on('pageerror', (e) => errors.push('pageerror: ' + e.message))

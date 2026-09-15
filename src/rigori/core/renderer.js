@@ -5,9 +5,8 @@ export function createRenderer(container) {
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2))
   renderer.outputColorSpace = THREE.SRGBColorSpace
   renderer.toneMapping = THREE.ACESFilmicToneMapping
-  renderer.toneMappingExposure = 1.0
-  renderer.shadowMap.enabled = true
-  renderer.shadowMap.type = THREE.PCFShadowMap
+  renderer.toneMappingExposure = 1.1
+  renderer.shadowMap.enabled = false // ombre di contatto morbide al posto delle shadow map
   renderer.domElement.setAttribute('aria-hidden', 'true')
   container.appendChild(renderer.domElement)
   const size = { w: 1, h: 1 }
@@ -20,7 +19,7 @@ export function createRenderer(container) {
   window.addEventListener('resize', resize)
   return {
     renderer, size, resize,
-    setShadows(on) { renderer.shadowMap.enabled = !!on; renderer.shadowMap.needsUpdate = true },
+    setShadows() { /* shadow map disattivata: ombre di contatto morbide */ },
     setPixelRatio(r) { renderer.setPixelRatio(Math.min(r, 2)); resize() },
     dispose() { window.removeEventListener('resize', resize); renderer.dispose() }
   }

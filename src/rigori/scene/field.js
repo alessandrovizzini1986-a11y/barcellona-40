@@ -1,9 +1,9 @@
 import * as THREE from 'three'
-import { grassTexture } from './textures.js'
+import { grassTexture, grassNormalTexture } from './textures.js'
 // Campo: erba tileable, area di rigore (16,5 × 40,32), area piccola (5,5 × 18,32), dischetto a 11 m, lunetta.
 export function createField() {
   const g = new THREE.Group()
-  const ground = new THREE.Mesh(new THREE.PlaneGeometry(120, 140), new THREE.MeshStandardMaterial({ map: grassTexture(), roughness: .95, metalness: 0 }))
+  const ground = new THREE.Mesh(new THREE.PlaneGeometry(120, 140), new THREE.MeshStandardMaterial({ map: grassTexture(), normalMap: grassNormalTexture(), normalScale: new THREE.Vector2(0.35, 0.35), roughness: .95, metalness: 0 }))
   ground.rotation.x = -Math.PI / 2; ground.position.z = 30; ground.receiveShadow = true
   g.add(ground)
   const white = new THREE.MeshBasicMaterial({ color: 0xf4f4f4 })

@@ -2,18 +2,20 @@ import * as THREE from 'three'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js'
 import { clone as skeletonClone } from 'three/addons/utils/SkeletonUtils.js'
-import { jerseyTexture } from './textures.js'
-// Camera condivisa: serve per nascondere il volto quando il personaggio dà le spalle (lo sprite guarderebbe comunque l'obiettivo)
+import { buildBigHead } from './bighead.js'
+import { blobShadowTexture } from './textures.js'
+// Camera condivisa (compatibilità con il bootstrap; il big head non ha più sprite da orientare)
 let CAMERA = null
 export const setCamera = (c) => { CAMERA = c }
-const _fwd = new THREE.Vector3(), _toCam = new THREE.Vector3(), _hp = new THREE.Vector3()
 // Kit dei personaggi: un solo modello riggato (manichino Mixamo "Y Bot", in metri) + clip solo-animazione
-// dello stesso scheletro. Maglia = colore del materiale + pannelli (petto e schiena) con strisce e numero.
+// dello stesso scheletro. Il manichino è INVISIBILE: fa solo da scheletro per le primitive del big head.
+export const BODY_SCALE = 0.7                // corpo piccolo, testa enorme (≈ 40 % dell'altezza)
 const CLIP_FILES = {
   keeperIdle: 'keeper_idle.glb', diveL: 'keeper_dive2.glb', diveR: 'keeper_dive.glb', block: 'keeper_block.glb',
   catch: 'keeper_catch.glb', miss: 'keeper_miss.glb', ready: 'keeper_ready.glb', high: 'keeper_high.glb', beaten: 'keeper_beaten.glb',
   kickerIdle: 'kicker_idle.glb', run: 'kicker_run.glb', kick: 'kicker_kick_full.glb'
 }
+let blobTex = null
 export async function loadCharacterKit(ASSETS, manager) {
   const draco = new DRACOLoader(manager); draco.setDecoderPath(ASSETS + 'draco/')
   const loader = new GLTFLoader(manager); loader.setDRACOLoader(draco)
@@ -21,48 +23,32 @@ export async function loadCharacterKit(ASSETS, manager) {
   const base = await load('character.glb')
   const clips = {}
   await Promise.all(Object.entries(CLIP_FILES).map(async ([k, f]) => { const g = await load(f); const c = g.animations[0]; if (c) { c.name = k; clips[k] = c } }))
-  base.scene.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = false; o.frustumCulled = false } })
+  base.scene.traverse((o) => { if (o.isMesh) { o.visible = false; o.castShadow = false; o.receiveShadow = false; o.frustumCulled = false } })
   return { base: base.scene, clips }
 }
 export function loadFace(ASSETS, path, manager) {
   const t = new THREE.TextureLoader(manager).load(ASSETS + path); t.colorSpace = THREE.SRGBColorSpace; return t
 }
-export function makeCharacter(kit, { maglia, numero, faceTexture, faceScale = 0.46, faceLift = 0.06 }) {
+// maglia/numero → corpo; faceUrl → foto sull'emisfero frontale della testa; glove → guantoni (portiere)
+export function makeCharacter(kit, { maglia, numero, faceUrl = null, glove = false, manager = undefined }) {
   const group = new THREE.Group()
   const model = skeletonClone(kit.base)
-  const primary = maglia.tipo === 'strisce' ? maglia.colori[0] : maglia.colore
-  model.traverse((o) => {
-    if (!o.isMesh) return
-    o.material = o.material.clone(); o.material.roughness = 0.75; o.material.metalness = 0
-    o.material.color.set(/Surface/i.test(o.name) ? primary : '#232830') // corpo con la maglia, giunture scure
-  })
-  group.add(model)
+  // Il wrapper porta la scala: i controller usano model.scale.x = ±1 per specchiare, e continuano a funzionare
+  const scaler = new THREE.Group(); scaler.scale.setScalar(BODY_SCALE); scaler.add(model); group.add(scaler)
   const mixer = new THREE.AnimationMixer(model)
   const actions = {}
   for (const [k, c] of Object.entries(kit.clips)) { const a = mixer.clipAction(c); a.clampWhenFinished = true; actions[k] = a }
-  // Volto: sprite sull'osso della testa, sempre rivolto alla camera
-  // GLTFLoader sanifica i nomi dei nodi (toglie i due punti): "mixamorig:Head" diventa "mixamorigHead"
-  const bone = (n) => model.getObjectByName(n.replace(':', '')) || model.getObjectByName(n)
-  const head = bone('mixamorig:Head'), spine = bone('mixamorig:Spine2')
-  if (!head || !spine) console.warn('Ossa non trovate:', { head: !!head, spine: !!spine })
-  // Il volto vive nello spazio mondo (non figlio dell'osso): segue la testa a ogni frame e non finisce mai dietro la mesh
-  let faceSprite = null
-  const headPos = new THREE.Vector3()
-  if (faceTexture && head) {
-    faceSprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: faceTexture, transparent: true, depthWrite: false, depthTest: false }))
-    faceSprite.scale.set(faceScale, faceScale, 1); faceSprite.renderOrder = 30
-    group.add(faceSprite)
-  }
-  // Pannelli maglia: schiena con numero, petto con le strisce (senza numero). Nessuno stemma.
-  if (spine) {
-    const back = new THREE.Mesh(new THREE.PlaneGeometry(0.34, 0.36), new THREE.MeshStandardMaterial({ map: jerseyTexture(maglia, numero), roughness: .8, side: THREE.DoubleSide, polygonOffset: true, polygonOffsetFactor: -2 }))
-    back.position.set(0, 0.10, -0.12); back.rotation.y = Math.PI; spine.add(back)
-    const front = new THREE.Mesh(new THREE.PlaneGeometry(0.30, 0.30), new THREE.MeshStandardMaterial({ map: jerseyTexture(maglia, ''), roughness: .8, side: THREE.DoubleSide, polygonOffset: true, polygonOffsetFactor: -2 }))
-    front.position.set(0, 0.08, 0.13); spine.add(front)
-  }
+  group.updateMatrixWorld(true)
+  const big = buildBigHead(model, { maglia, numero, glove, manager, faceUrl })
+  // Ombra di contatto morbida sotto i piedi (segue i fianchi), al posto delle ombre dure
+  blobTex = blobTex || blobShadowTexture()
+  const shadow = new THREE.Mesh(new THREE.PlaneGeometry(1.1, 1.1), new THREE.MeshBasicMaterial({ map: blobTex, transparent: true, depthWrite: false, opacity: 1 }))
+  shadow.rotation.x = -Math.PI / 2; shadow.position.y = 0.015; shadow.renderOrder = 1; group.add(shadow)
+  const hips = model.getObjectByName('mixamorigHips')
+  const _hp = new THREE.Vector3(); let hipsBase = null
   let current = null
   return {
-    group, model, mixer, actions, faceSprite,
+    group, model, mixer, actions, big, shadow, faceSprite: null,
     play(name, { loop = false, fade = 0.15, timeScale = 1, from = 0 } = {}) {
       const a = actions[name]; if (!a) return null
       a.reset(); a.setLoop(loop ? THREE.LoopRepeat : THREE.LoopOnce, loop ? Infinity : 1); a.timeScale = timeScale; a.time = from; a.enabled = true
@@ -74,9 +60,13 @@ export function makeCharacter(kit, { maglia, numero, faceTexture, faceScale = 0.
     setLean(x) { model.rotation.z = -x * 0.18 },
     update(dt) {
       mixer.update(dt)
-      if (faceSprite && head) {
-        head.getWorldPosition(_hp); headPos.copy(_hp); group.worldToLocal(headPos); faceSprite.position.set(headPos.x, headPos.y + faceLift, headPos.z)
-        if (CAMERA) { model.getWorldDirection(_fwd); _toCam.copy(CAMERA.position).sub(_hp).normalize(); faceSprite.visible = _fwd.dot(_toCam) > -0.15 }
+      if (big) { group.updateMatrixWorld(true); big.update() }
+      if (hips) {
+        hips.getWorldPosition(_hp); group.worldToLocal(_hp)
+        if (hipsBase == null) hipsBase = _hp.y
+        shadow.position.x = _hp.x; shadow.position.z = _hp.z
+        const lift = Math.max(0, _hp.y - hipsBase + group.position.y)
+        const s = Math.max(0.45, 1 - lift * 0.7); shadow.scale.setScalar(s); shadow.material.opacity = s
       }
     }
   }

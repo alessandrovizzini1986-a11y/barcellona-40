@@ -6,7 +6,10 @@ export const PRESETS = {
   dietroPortiere:  { pos: [0, 2.2, -4.5],  look: [0, 1.0, 11] },
   lateraleReplay:  { pos: [-9.5, 1.6, 4.5], look: [0, 1.1, 1.5] },
   drone:           { pos: [0, 14, 12],     look: [0, 0.5, 2] },
-  dischetto:       { pos: [0.35, 0.35, 11.6], look: [0, 1.3, 0] }
+  dischetto:       { pos: [0.35, 0.35, 11.6], look: [0, 1.3, 0] },
+  // primi piani (QA visivo e schermate): portiere in porta, tiratore sul dischetto
+  primoPianoPortiere: { pos: [1.0, 1.35, 3.6], look: [0, 1.0, 0.55] },
+  primoPianoTiratore: { pos: [0.2, 1.25, 9.9], look: [0.55, 1.0, 12.7] }
 }
 export function createCameraRig(aspect) {
   const camera = new THREE.PerspectiveCamera(58, aspect, 0.1, 400)

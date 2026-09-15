@@ -5,7 +5,7 @@ import { netTexture } from './textures.js'
 export const GOAL = { w: 7.32, h: 2.44, depth: 2.0, post: 0.06 }
 export function createGoal() {
   const g = new THREE.Group()
-  const white = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: .35, metalness: .1 })
+  const white = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: .3, metalness: .05 })
   const post = (x) => { const m = new THREE.Mesh(new THREE.CylinderGeometry(GOAL.post, GOAL.post, GOAL.h + GOAL.post, 16), white); m.position.set(x, (GOAL.h + GOAL.post) / 2, 0); m.castShadow = true; g.add(m); return m }
   post(-GOAL.w / 2); post(GOAL.w / 2)
   const bar = new THREE.Mesh(new THREE.CylinderGeometry(GOAL.post, GOAL.post, GOAL.w + GOAL.post * 2, 16), white)
@@ -13,11 +13,11 @@ export function createGoal() {
   const back = (x, z) => { const m = new THREE.Mesh(new THREE.CylinderGeometry(GOAL.post * .6, GOAL.post * .6, GOAL.depth, 10), white); m.rotation.x = Math.PI / 2; m.position.set(x, 0.05, -GOAL.depth / 2); g.add(m) }
   back(-GOAL.w / 2); back(GOAL.w / 2)
   const tex = netTexture()
-  const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, side: THREE.DoubleSide, depthWrite: false, opacity: .85 })
+  const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, side: THREE.DoubleSide, depthWrite: false, opacity: .6 })
   const panels = []
   const panel = (w, h, segsW, segsH, setup) => {
     const geo = new THREE.PlaneGeometry(w, h, segsW, segsH)
-    const m = new THREE.Mesh(geo, mat.clone()); m.material.map = tex.clone(); m.material.map.repeat.set(w * 2.2, h * 2.2); m.material.map.needsUpdate = true
+    const m = new THREE.Mesh(geo, mat.clone()); m.material.map = tex.clone(); m.material.map.repeat.set(w / 0.12, h / 0.12); m.material.map.needsUpdate = true
     setup(m); g.add(m); m.userData.base = geo.attributes.position.array.slice(); m.userData.vel = new Float32Array(geo.attributes.position.count * 3); panels.push(m); return m
   }
   panel(GOAL.w, GOAL.h, 24, 10, (m) => { m.position.set(0, GOAL.h / 2, -GOAL.depth) })                              // fondo

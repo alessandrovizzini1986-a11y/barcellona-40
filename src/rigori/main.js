@@ -15,7 +15,7 @@ import { createInput } from './core/input.js'
 import { createShot, aimFromGesture } from './game/shot.js'
 import { createTiming } from './game/timing.js'
 import { createGhost } from './game/ghost.js'
-import { loadCharacterKit, makeCharacter, loadFace } from './scene/players.js'
+import { loadCharacterKit, makeCharacter } from './scene/players.js'
 import { createKeeper } from './game/keeper.js'
 import { createJuice } from './game/juice.js'
 import { createShootout } from './game/modes/shootout.js'
@@ -61,13 +61,13 @@ manager.onProgress = (_u, loaded, total) => { const f = total ? loaded / total :
 // ---------- scena ----------
 const R = createRenderer(stage)
 const scene = new THREE.Scene()
-scene.fog = new THREE.Fog(0x0a0e22, 38, 170) // nebbia leggera scura: profondità (direzione visiva)
+scene.fog = new THREE.FogExp2(0x0E1116, 0.018) // la profondità arriva da qui (direzione visiva)
 const rig = createCameraRig(R.size.w / R.size.h)
 setCamera(rig.camera)
-const lights = createLights(); scene.add(lights.group)
-const field = createField(); scene.add(field)
 const stadium = createStadium(); scene.add(stadium.group)
-const crowd = createCrowd(reducedMotion ? 1400 : 2600); scene.add(crowd.mesh)
+const lights = createLights({ towerPositions: stadium.lightPos, aim: stadium.aim }); scene.add(lights.group)
+const field = createField(); scene.add(field)
+const crowd = createCrowd(reducedMotion ? 3200 : 6400); scene.add(crowd.mesh); scene.add(crowd.phones)
 const goal = createGoal(); scene.add(goal.group)
 const ballTex = new THREE.TextureLoader(manager).load(ASSETS + 'textures/ball.png'); ballTex.colorSpace = THREE.SRGBColorSpace
 const ball = createBall(ballTex); scene.add(ball.mesh); scene.add(ball.shadow)
@@ -75,7 +75,8 @@ const fx = createPostFx(R.renderer, scene, rig.camera, R.size)
 
 // Qualità: auto (degrada da sola), bassa, alta · DA VERIFICARE: soglie da provare su telefono vero
 const quality = { bloom: !reducedMotion, shadows: true, particles: true, crowd: 1 }
-const applyQuality = () => { fx.setEnabled(quality.bloom); R.setShadows(quality.shadows); lights.setShadows(quality.shadows); crowd.setDensity(quality.crowd) }
+const cssVignette = document.querySelector('.rg-vignette')
+const applyQuality = () => { fx.setEnabled(quality.bloom); cssVignette.hidden = fx.enabled /* la vignettatura la fa lo shader; in fallback resta quella CSS */; R.setShadows(quality.shadows); lights.setShadows(quality.shadows); crowd.setDensity(quality.crowd) }
 const perf = createPerf({
   onDegrade: (step) => { if (step === 'bloom') quality.bloom = false; if (step === 'shadows') quality.shadows = false; if (step === 'particles') quality.particles = false; if (step === 'crowd') quality.crowd = 0.5; applyQuality() },
   onRestore: (step) => { if (step === 'crowd') quality.crowd = 1; if (step === 'particles') quality.particles = true; if (step === 'shadows') quality.shadows = true; if (step === 'bloom') quality.bloom = !reducedMotion; applyQuality() }
@@ -84,6 +85,7 @@ applyQuality()
 let timingEnabled = true               // opzione (fase 9); ON di default
 // Opzione "riduci flash e shake" (fase 9) + prefers-reduced-motion: niente shake né particelle intense, lo slow-mo resta
 const settings = Object.assign({ audio: true, music: true, vibration: true, reduceFx: reducedMotion, timing: true, quality: 'auto' }, save.get('settings', {}))
+if (new URLSearchParams(location.search).get('q')) settings.quality = new URLSearchParams(location.search).get('q') // QA: ?q=alta|bassa|auto
 function applySettings() {
   timingEnabled = settings.timing !== false
   perf.lock(settings.quality !== 'auto')
@@ -124,11 +126,9 @@ const shot = createShot({ ball, goal, keeper: null, onEvent: (e) => { events.pus
 // Ale va sul dischetto e il tiratore scelto va in porta.
 let kit = null, keeper = null, kicker = null, shooterId = 'monne' // DA VERIFICARE: tiratore di partenza
 const chars = {}, controllers = {}
-const faces = {}
 const charFor = (p) => {
   if (chars[p.id]) return chars[p.id]
-  faces[p.id] = faces[p.id] || loadFace(ASSETS, faceOf(p), manager)
-  chars[p.id] = makeCharacter(kit, { maglia: p.maglia, numero: p.numero, faceTexture: faces[p.id], faceScale: p.id === 'ale' ? 0.5 : 0.46 })
+  chars[p.id] = makeCharacter(kit, { maglia: p.maglia, numero: p.numero, faceUrl: ASSETS + faceOf(p), glove: p.ruolo === 'portiere', manager })
   return chars[p.id]
 }
 function setPair(keeperP, kickerP) {
@@ -324,7 +324,7 @@ window.__rigori = {
   // Tiro deterministico per la QA: aim = { x, y, power, curve }
   fire: (aim, timingPerfect = false, delay = 0) => { shot.fire(aim, { timingPerfect, delay }); if (delay) kicker?.windup(); else rig.followLook(ball.mesh) },
   setShooter, shooter: () => shooterId, flow: () => flow, settings, applySettings,
-  kitReady, startMode, mode: () => mode, role: () => role, xpLog, ctx,
+  kitReady, startMode, mode: () => mode, role: () => role, xpLog, ctx, chars, rig, get frames() { return frames },
   setPrecision: (v) => shot.setPrecision(v), events, shotState: () => shot.state, lastResult: () => [...events].reverse().find((e) => e.type === 'result')?.result || null,
   info: () => ({ fps: +perf.fps.toFixed(1), level: perf.level, quality: { ...quality }, frames, draws: R.renderer.info.render.calls, tris: R.renderer.info.render.triangles, camera: rig.current })
 }
