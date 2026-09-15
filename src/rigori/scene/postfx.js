@@ -9,7 +9,7 @@ export function createPostFx(renderer, scene, camera, size) {
   const build = () => {
     composer = new EffectComposer(renderer)
     composer.addPass(new RenderPass(scene, camera))
-    bloom = new UnrealBloomPass(new THREE.Vector2(size.w, size.h), 0.28, 0.6, 0.85) // DA VERIFICARE: intensità a occhio
+    bloom = new UnrealBloomPass(new THREE.Vector2(size.w, size.h), 0.16, 0.5, 0.96) // DA VERIFICARE: intensità a occhio
     composer.addPass(bloom); composer.addPass(new OutputPass())
   }
   return {

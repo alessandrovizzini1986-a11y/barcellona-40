@@ -22,3 +22,14 @@ html,body{ margin:0; height:100%; background:var(--bg); color:var(--ink); font-f
 .rg-loading__bar i{ display:block; height:100%; background:var(--giallo); transform-origin:left; transform:scaleX(0); transition:transform .2s var(--ease); }
 .rg-loading__pct{ font-variant-numeric:tabular-nums; color:var(--ink-2); font-size:var(--fs-0); }
 .rg-loading__tip{ margin:0; max-width:32ch; color:var(--ink-2); font-size:var(--fs-0); }
+
+/* HUD del tiro */
+.rg-hud{ position:absolute; inset:0; pointer-events:none; }
+.rg-hint{ position:absolute; left:50%; bottom:calc(18% + var(--safe-b)); transform:translateX(-50%); padding:10px 16px; border-radius:999px; background:color-mix(in srgb, var(--bg) 70%, transparent); color:var(--ink); font-weight:600; font-size:var(--fs-0); white-space:nowrap; }
+.rg-hint[hidden]{ display:none; }
+.rg-hint--pulse{ animation:rg-pulse .5s var(--ease); }
+@keyframes rg-pulse{ 0%{ transform:translateX(-50%) scale(1); } 40%{ transform:translateX(-50%) scale(1.12); } 100%{ transform:translateX(-50%) scale(1); } }
+.rg-timing{ position:absolute; left:50%; bottom:calc(9% + var(--safe-b)); transform:translateX(-50%); width:min(72vw, 300px); height:14px; border-radius:7px; background:color-mix(in srgb, var(--ink) 18%, transparent); overflow:visible; }
+.rg-timing[hidden]{ display:none; }
+.rg-timing__win{ position:absolute; left:41%; width:18%; top:0; bottom:0; border-radius:7px; background:var(--acqua); }
+.rg-timing__cur{ position:absolute; top:-5px; width:6px; height:24px; margin-left:-3px; border-radius:3px; background:var(--giallo); box-shadow:0 0 0 2px var(--bg); }

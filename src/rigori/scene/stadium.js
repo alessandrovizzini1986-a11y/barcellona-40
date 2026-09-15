@@ -20,14 +20,14 @@ export function createStadium() {
     tier(7, halfD * 2 + off * 2, cx + halfW + off, cz, 0, i)            // destra
   }
   // Torri faro
-  const lamp = new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0xfff3c4, emissiveIntensity: 2.4 })
+  const lamp = new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0xfff3c4, emissiveIntensity: 1.1 })
   const pole = new THREE.MeshStandardMaterial({ color: 0x8a8f99, roughness: .6, metalness: .4 })
   const towers = []
   // Due torri dietro la porta restano nell'inquadratura del tiratore (portrait): il bagliore è parte della scena
-  for (const [x, z, h] of [[-26, -34, 30], [26, -34, 30], [-60, 100, 44], [60, 100, 44]]) {
+  for (const [x, z, h] of [[-11, -42, 28], [11, -42, 28], [-60, 100, 44], [60, 100, 44]]) {
     const p = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.8, h, 8), pole); p.position.set(x, h / 2, z); g.add(p)
     const head = new THREE.Mesh(new THREE.BoxGeometry(6, 2.6, 1.0), lamp); head.position.set(x, h, z + (z < 30 ? 1.5 : -1.5)); head.lookAt(0, 0, 11); g.add(head); towers.push(head)
-    const halo = new THREE.Mesh(new THREE.PlaneGeometry(9, 5), new THREE.MeshBasicMaterial({ color: 0xfff3c4, transparent: true, opacity: .18, depthWrite: false })); halo.position.copy(head.position); halo.lookAt(0, 0, 11); g.add(halo)
+    const halo = new THREE.Mesh(new THREE.PlaneGeometry(9, 5), new THREE.MeshBasicMaterial({ color: 0xfff3c4, transparent: true, opacity: .07, depthWrite: false })); halo.position.copy(head.position); halo.lookAt(0, 0, 11); g.add(halo)
   }
   // Cielo: sfera con gradiente notturno e stelle
   const skyGeo = new THREE.SphereGeometry(300, 24, 12)
