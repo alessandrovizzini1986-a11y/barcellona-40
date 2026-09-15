@@ -6,3 +6,19 @@
 html,body{ margin:0; height:100%; background:var(--bg); color:var(--ink); font-family:var(--font-body); font-size:var(--fs-1); line-height:1.5; overflow:hidden; overscroll-behavior:none; -webkit-font-smoothing:antialiased; }
 #game{ position:fixed; inset:0; height:100dvh; }
 .rg-boot{ margin:0; padding:var(--space-5); font-family:var(--font-display); }
+
+/* Stage 3D e livelli UI */
+.rg-stage{ position:absolute; inset:0; }
+.rg-stage canvas{ display:block; width:100%; height:100%; touch-action:none; }
+.rg-ui{ position:absolute; inset:0; pointer-events:none; }
+.rg-ui > *{ pointer-events:auto; }
+
+/* Loading */
+.rg-loading{ position:absolute; inset:0; z-index:20; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:var(--space-4); padding:var(--space-5); background:var(--bg); text-align:center; transition:opacity .45s var(--ease); }
+.rg-loading--out{ opacity:0; pointer-events:none; }
+.rg-loading__title{ font-family:var(--font-display); font-weight:700; font-size:var(--fs-4); line-height:1; }
+.rg-loading__title b{ color:var(--terracotta); }
+.rg-loading__bar{ width:min(70vw, 280px); height:8px; border-radius:4px; background:var(--bg-3); overflow:hidden; }
+.rg-loading__bar i{ display:block; height:100%; background:var(--giallo); transform-origin:left; transform:scaleX(0); transition:transform .2s var(--ease); }
+.rg-loading__pct{ font-variant-numeric:tabular-nums; color:var(--ink-2); font-size:var(--fs-0); }
+.rg-loading__tip{ margin:0; max-width:32ch; color:var(--ink-2); font-size:var(--fs-0); }
