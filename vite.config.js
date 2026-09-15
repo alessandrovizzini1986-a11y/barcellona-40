@@ -8,6 +8,9 @@ import path from 'node:path'
 //   Deve restare 404 così i browser che lo avevano installato lo disinstallano.
 // - manifest.json: lo usava solo la vecchia home, e il sito nuovo è una pagina web normale.
 const LEGACY_SKIP_ROOT = new Set(['index.html', 'sw.js', 'manifest.json'])
+// Il gioco dei rigori precedente resta pubblicato come fallback, ma con un altro nome:
+// /rigori/ è del gioco nuovo, il vecchio risponde a /rigori-classic.html
+const LEGACY_RENAME_ROOT = { 'rigori.html': 'rigori-classic.html' }
 
 // Copia _legacy/ dentro dist/ mantenendo gli URL storici (viaggio.html, tour.html, soldi/, gym/, …).
 // Non sovrascrive mai un file prodotto dalla build.
@@ -24,7 +27,8 @@ function copyLegacy() {
         mkdirSync(to, { recursive: true })
         for (const name of readdirSync(from)) {
           if (depth === 0 && LEGACY_SKIP_ROOT.has(name)) { skipped++; continue }
-          const f = path.join(from, name), t = path.join(to, name)
+          const outName = depth === 0 && LEGACY_RENAME_ROOT[name] ? LEGACY_RENAME_ROOT[name] : name
+          const f = path.join(from, name), t = path.join(to, outName)
           if (statSync(f).isDirectory()) walk(f, t, depth + 1)
           else if (existsSync(t)) skipped++
           else { copyFileSync(f, t); copied++ }
@@ -48,9 +52,11 @@ export default defineConfig({
     target: 'es2022',
     cssMinify: true,
     rollupOptions: {
+      // Seconda entry: il gioco dei rigori (multi-page)
+      input: { main: path.resolve('index.html'), rigori: path.resolve('rigori/index.html') },
       output: {
-        // Leaflet in un chunk separato, caricato lazy solo dalla vista Mappa
-        manualChunks: (id) => (id.includes('node_modules/leaflet') ? 'leaflet' : undefined)
+        // Leaflet e Three in chunk separati: Leaflet lazy nella Mappa, Three solo nel gioco
+        manualChunks: (id) => (id.includes('node_modules/leaflet') ? 'leaflet' : id.includes('node_modules/three') ? 'three' : undefined)
       }
     }
   }
