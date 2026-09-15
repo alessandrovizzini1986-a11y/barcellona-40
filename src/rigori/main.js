@@ -1,7 +1,6 @@
 // Bootstrap: loading screen con progresso reale, scena, loop, degradazione automatica.
 import './styles/rigori.css'
 import * as THREE from 'three'
-import { Timer } from 'three/addons/misc/Timer.js'
 import { createRenderer } from './core/renderer.js'
 import { createCameraRig } from './core/camera.js'
 import { createPerf } from './core/perf.js'
@@ -59,7 +58,7 @@ const onResize = () => { R.resize(); rig.setAspect(R.size.w / R.size.h); fx.resi
 window.addEventListener('resize', onResize); onResize()
 
 // ---------- loop ----------
-const timer = new Timer()
+const timer = new THREE.Timer()
 let timeScale = 1, frames = 0
 const systems = [] // moduli con update(dt) aggiunti dalle fasi successive
 function loop() {
