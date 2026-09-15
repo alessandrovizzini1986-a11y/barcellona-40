@@ -38,11 +38,13 @@ export function makeCharacter(kit, { maglia, numero, faceTexture, faceScale = 0.
   for (const [k, c] of Object.entries(kit.clips)) { const a = mixer.clipAction(c); a.clampWhenFinished = true; actions[k] = a }
   // Volto: sprite sull'osso della testa, sempre rivolto alla camera
   const head = model.getObjectByName('mixamorig:Head'), spine = model.getObjectByName('mixamorig:Spine2')
+  // Il volto vive nello spazio mondo (non figlio dell'osso): segue la testa a ogni frame e non finisce mai dietro la mesh
   let faceSprite = null
+  const headPos = new THREE.Vector3()
   if (faceTexture && head) {
-    faceSprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: faceTexture, transparent: true, depthWrite: false }))
-    faceSprite.scale.set(faceScale, faceScale, 1); faceSprite.position.set(0, faceLift, 0.02); faceSprite.renderOrder = 20
-    head.add(faceSprite)
+    faceSprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: faceTexture, transparent: true, depthWrite: false, depthTest: false }))
+    faceSprite.scale.set(faceScale, faceScale, 1); faceSprite.renderOrder = 30
+    group.add(faceSprite)
   }
   // Pannelli maglia: schiena con numero, petto con le strisce (senza numero). Nessuno stemma.
   if (spine) {
@@ -63,6 +65,9 @@ export function makeCharacter(kit, { maglia, numero, faceTexture, faceScale = 0.
     },
     // inclinazione del busto (tell del tiratore): x in [-1, 1]
     setLean(x) { model.rotation.z = -x * 0.18 },
-    update(dt) { mixer.update(dt) }
+    update(dt) {
+      mixer.update(dt)
+      if (faceSprite && head) { head.getWorldPosition(headPos); group.worldToLocal(headPos); faceSprite.position.set(headPos.x, headPos.y + faceLift, headPos.z) }
+    }
   }
 }

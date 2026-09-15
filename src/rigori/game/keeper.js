@@ -7,7 +7,7 @@ export const zoneOf = (x, y) => (y > 1.15 ? 0 : 3) + (x < -1.22 ? 0 : x > 1.22 ?
 export const zoneCenter = (z) => ({ x: [-2.4, 0, 2.4][z % 3], y: z < 3 ? 1.75 : 0.6 })
 const DIFF = {
   facile:  { pCol: 0.40, tell: 0.15, pRow: 0.55, reach: 0.85, delay: 0.16, speed: 1.0 },
-  normale: { pCol: 0.52, tell: 0.20, pRow: 0.62, reach: 0.95, delay: 0.12, speed: 1.0 },   // DA VERIFICARE
+  normale: { pCol: 0.52, tell: 0.20, pRow: 0.62, reach: 0.95, delay: 0.08, speed: 1.0 },   // DA VERIFICARE
   boss:    { pCol: 0.78, tell: 0.06, pRow: 0.78, reach: 1.15, delay: 0.02, speed: 1.4 }    // +40% reattività, tell quasi assente
 }
 export function createKeeper(char, { difficulty = 'normale' } = {}) {
@@ -18,11 +18,14 @@ export function createKeeper(char, { difficulty = 'normale' } = {}) {
   const zoneX = (z) => [-1.9, 0, 1.9][z % 3]
   const idle = () => { state = 'idle'; char.play('keeperIdle', { loop: true, fade: 0.3 }) }
   idle()
+  // Le clip Mixamo hanno una lunga preparazione: si parte più avanti e più veloci, così l'allungo
+  // arriva mentre la palla è ancora in volo (0,55–0,85 s). DA VERIFICARE: offset e velocità a occhio.
+  const CLIP_START = { diveL: 0.55, diveR: 0.55, block: 0.35, catch: 0.30, high: 0.50 }
   const dive = (zone, speed = 1) => {
     plan = { ...plan, zone, target: zoneCenter(zone), startX: g.position.x, t: 0, speed }
     const col = zone % 3, row = zone < 3 ? 0 : 1
-    const clip = col === 0 ? 'diveL' : col === 2 ? 'diveR' : row === 0 ? 'block' : 'catch'
-    char.play(row === 0 && col !== 1 ? 'high' : clip, { fade: 0.08, timeScale: speed })
+    const clip = row === 0 && col !== 1 ? 'high' : col === 0 ? 'diveL' : col === 2 ? 'diveR' : row === 0 ? 'block' : 'catch'
+    char.play(clip, { fade: 0.06, timeScale: 1.7 * speed, from: CLIP_START[clip] || 0 })
     // le clip "high" non hanno direzione: specchio il modello per il lato sinistro
     char.model.scale.x = (row === 0 && col === 0) ? -1 : 1
     state = 'diving'
@@ -80,7 +83,7 @@ export function createKeeper(char, { difficulty = 'normale' } = {}) {
       }
       if (state === 'diving' && plan) {
         plan.t = (plan.t || 0) + dt
-        const k = Math.min(1, plan.t / 0.45)
+        const k = Math.min(1, plan.t / 0.30)
         g.position.x = THREE.MathUtils.lerp(plan.startX ?? 0, zoneX(plan.zone), k * k * (3 - 2 * k))
       }
     }
