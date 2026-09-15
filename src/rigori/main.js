@@ -25,6 +25,16 @@ import { createSkill } from './game/modes/skill.js'
 import { cpuAim, XP } from './game/modes/base.js'
 import { zoneOf } from './game/keeper.js'
 import { pickZone, handoff } from './ui/screens/passaggio.js'
+import { chiTira } from './ui/screens/chiTira.js'
+import { modalita } from './ui/screens/modalita.js'
+import { showEsito, hideEsito } from './ui/screens/esito.js'
+import { risultato } from './ui/screens/risultato.js'
+import { opzioni } from './ui/screens/opzioni.js'
+import { sblocchi } from './ui/screens/sblocchi.js'
+import { onboarding } from './ui/screens/onboarding.js'
+import { toast } from './ui/components/toast.js'
+import { save } from './core/save.js'
+import { setCamera } from './scene/players.js'
 import { keeper as keeperData, faceOf, byId } from './data/players.js'
 import { createKicker, KICK_DELAY } from './game/kicker.js'
 
@@ -53,6 +63,7 @@ const R = createRenderer(stage)
 const scene = new THREE.Scene()
 scene.fog = new THREE.Fog(0x0a0e22, 38, 170) // nebbia leggera scura: profondità (direzione visiva)
 const rig = createCameraRig(R.size.w / R.size.h)
+setCamera(rig.camera)
 const lights = createLights(); scene.add(lights.group)
 const field = createField(); scene.add(field)
 const stadium = createStadium(); scene.add(stadium.group)
@@ -70,6 +81,18 @@ const perf = createPerf({
   onRestore: (step) => { if (step === 'crowd') quality.crowd = 1; if (step === 'particles') quality.particles = true; if (step === 'shadows') quality.shadows = true; if (step === 'bloom') quality.bloom = !reducedMotion; applyQuality() }
 })
 applyQuality()
+let timingEnabled = true               // opzione (fase 9); ON di default
+// Opzione "riduci flash e shake" (fase 9) + prefers-reduced-motion: niente shake né particelle intense, lo slow-mo resta
+const settings = Object.assign({ audio: true, music: true, vibration: true, reduceFx: reducedMotion, timing: true, quality: 'auto' }, save.get('settings', {}))
+function applySettings() {
+  timingEnabled = settings.timing !== false
+  perf.lock(settings.quality !== 'auto')
+  if (settings.quality === 'bassa') { quality.bloom = false; quality.shadows = false; quality.particles = false; quality.crowd = 0.5 }
+  else if (settings.quality === 'alta') { quality.bloom = !reducedMotion; quality.shadows = true; quality.particles = true; quality.crowd = 1 }
+  applyQuality()
+  save.set('settings', settings)
+}
+applySettings()
 
 const onResize = () => { R.resize(); rig.setAspect(R.size.w / R.size.h); fx.resize(R.size.w, R.size.h) }
 window.addEventListener('resize', onResize); onResize()
@@ -91,8 +114,6 @@ function loop() {
 
 // ---------- tiro: input → mira → volo → esito ----------
 const timing = createTiming()
-// Opzione "riduci flash e shake" (fase 9) + prefers-reduced-motion: niente shake né particelle intense, lo slow-mo resta
-const settings = { reduceFx: reducedMotion }
 const juice = createJuice({ scene, rig, reduced: () => settings.reduceFx })
 const ghost = createGhost(scene)
 const events = []                      // ultimi eventi del tiro (per QA e per le modalità)
@@ -133,7 +154,6 @@ const hud = document.createElement('div'); hud.className = 'rg-hud'; hud.innerHT
   <div class="rg-hint" id="rg-hint">Trascina dal pallone</div>`
 document.getElementById('rg-ui').appendChild(hud)
 const timingEl = document.getElementById('rg-timing'), timingCur = timingEl.querySelector('.rg-timing__cur'), hint = document.getElementById('rg-hint')
-let timingEnabled = true               // opzione (fase 9); ON di default
 const input = createInput(stage, { camera: rig.camera, getBallWorld: () => ball.mesh.position, size: R.size, enabled: () => !shot.busy && window.__rigori.ready })
 input.on('start', () => { if (timingEnabled && input.mode === 'shooter') { timing.start(); timingEl.hidden = false } hint.hidden = true })
 input.on('move', (g) => { if (g.ok && input.mode === 'shooter') ghost.show(aimFromGesture(g, R.size)) })
@@ -157,7 +177,7 @@ function onShotEvent(e) {
   if (e.type === 'windup') hint.hidden = true
   if (e.type === 'kick') { hint.hidden = true; juice.clearRecord(); replayPending = true; kicker?.onKick(); rig.followLook(ball.mesh); keeper?.prepare({ aim: e.aim, timingPerfect: e.timingPerfect, power: e.aim.power }) }
   if (e.type === 'result') kicker?.react(e.result)
-  if (e.type === 'result') { juice.setSlow(false); keeper?.react(e.result) }
+  if (e.type === 'result') { juice.setSlow(false); keeper?.react(e.result); showEsito(game.ui, { result: e.result, corner: e.corner, taunt: game.tauntFor?.(e) || '' }) }
   if (e.type === 'goal') { crowd.react('ola'); shake(0.10, 0.35) }
   if (e.type === 'post' || e.type === 'crossbar') { shake(0.06, 0.2); juice.hitStop(60) }
   if (e.type === 'save') { juice.hitStop(60); crowd.react('oooh') }
@@ -166,7 +186,7 @@ function onShotEvent(e) {
 }
 // Dopo l'esito: replay laterale di 2 s, poi si torna dietro al tiratore. Le modalità (fase 7) ascoltano 'replayEnd'.
 function afterSettled() {
-  const finish = () => { shot.reset(); keeper?.reset(); kicker?.reset(); rig.followLook(null); rig.goTo('dietroTiratore'); hint.hidden = false; listeners.forEach((f) => f({ type: 'replayEnd' })) }
+  const finish = () => { hideEsito(game.ui); shot.reset(); keeper?.reset(); kicker?.reset(); rig.followLook(null); rig.goTo('dietroTiratore'); hint.hidden = false; listeners.forEach((f) => f({ type: 'replayEnd' })) }
   if (!replayPending) { finish(); return }
   replayPending = false
   setTimeout(() => juice.startReplay(() => setTimeout(finish, 300)), 500)
@@ -189,8 +209,8 @@ const ctx = {
     const was = role; role = r; input.setMode(r === 'keeper' ? 'keeper' : 'shooter')
     if (kit && (r === 'keeper') !== (was === 'keeper')) { if (r === 'keeper') setPair(byId(shooterId), keeperData()); else setPair(keeperData(), byId(shooterId)) }
     keeper?.setPlayable(r === 'keeper')
-    if (r === 'shooter') { hint.textContent = 'Trascina dal pallone'; hint.hidden = false; rig.goTo('dietroTiratore') }
-    else if (r === 'keeper') { hint.textContent = 'Trascina verso la zona in cui tuffarti'; hint.hidden = false; rig.goTo('dietroPortiere') }
+    if (r === 'shooter') { hint.textContent = 'Trascina dal pallone'; hint.hidden = false; rig.goTo('dietroTiratore', { instant: was === 'keeper' }) }
+    else if (r === 'keeper') { hint.textContent = 'Trascina verso la zona in cui tuffarti'; hint.hidden = false; rig.goTo('dietroPortiere', { instant: true }) }
     else hint.hidden = true
   },
   setDifficulty(d) { keeper?.setDifficulty(d) },
@@ -234,6 +254,65 @@ listeners.add((e) => {
 })
 systems.push({ update(dt) { if (mode?.tick && !mode.finished) mode.tick(dt, ctx) } })
 
+// ---------- flusso: onboarding → CHI TIRA? → modalità → partita → risultato ----------
+const menuBtn = document.createElement('button'); menuBtn.className = 'rg-btn rg-btn--ghost rg-menubtn'; menuBtn.setAttribute('aria-label', 'Menu'); menuBtn.textContent = '≡'; menuBtn.hidden = true
+document.getElementById('rg-ui').appendChild(menuBtn)
+let flow = 'boot', quitRequested = false
+async function runFlow() {
+  await kitReady
+  ctx.role('idle')
+  if (!save.get('onboarded', false)) { flow = 'onboarding'; ctx.role('shooter'); await onboarding(game.ui, () => input.ballOnScreen()); save.set('onboarded', true); ctx.role('idle') }
+  while (true) {
+    flow = 'chiTira'
+    const id = await chiTira(game.ui, ASSETS, { current: shooterId }); if (id) setShooter(id)
+    let choice = null
+    while (!choice) {
+      flow = 'modalita'
+      const r = await modalita(game.ui, { bossUnlocked: game.progress?.bossUnlocked?.() ?? false, level: game.progress?.level?.().n ?? 1 })
+      if (r.id === '__opzioni') { await opzioni(game.ui, settings, { onChange: applySettings, onReset: () => { save.reset(); toast(game.ui, 'Progressi azzerati') } }); continue }
+      if (r.id === '__sblocchi') { await sblocchi(game.ui, game.progress?.summaryForUi?.() || { unlocks: [], achievements: [], level: { n: 1, title: 'Esordiente' } }); continue }
+      if (r.id === '__chi') break
+      if (!r.id) continue
+      choice = r
+    }
+    if (!choice) continue
+    // partita
+    let again = true
+    while (again) {
+      flow = 'gioco'; quitRequested = false; menuBtn.hidden = false
+      const xpBefore = game.progress?.xp?.() ?? 0
+      const ended = new Promise((res) => { const fn = (e) => { if (e.type === 'modeEnd') { listeners.delete(fn); res(e) } }; listeners.add(fn) })
+      startMode(choice.id, choice.opts)
+      const e = await Promise.race([ended, new Promise((res) => { const iv = setInterval(() => { if (quitRequested) { clearInterval(iv); res(null) } }, 200) })])
+      menuBtn.hidden = true
+      if (!e) { mode = null; ctx.role('idle'); shot.reset(); keeper?.reset(); kicker?.reset(); hideEsito(game.ui); rig.goTo('dietroTiratore', { instant: true }); break }
+      flow = 'risultato'
+      const xpNow = game.progress?.xp?.() ?? 0
+      const lv = game.progress?.level?.() || { n: 1, title: 'Esordiente' }
+      const r = await risultato(game.ui, { title: titleFor(e), lines: linesFor(e), xpGained: xpNow - xpBefore, xp: xpNow, level: lv, next: game.progress?.next?.() || null, achievements: game.progress?.takeFresh?.() || [], shareText: shareFor(e) })
+      again = r === 'again'
+    }
+  }
+}
+menuBtn.addEventListener('click', async () => { const v = await overlayMenu(); if (v === 'esci') quitRequested = true })
+async function overlayMenu() {
+  const { overlay } = await import('./ui/screens/overlay.js')
+  const v = await overlay(game.ui, `<h2 class="rg-title">Pausa</h2><div class="rg-row"><button class="rg-btn rg-btn--primary" data-value="continua" aria-label="Continua">Continua</button><button class="rg-btn" data-value="opzioni" aria-label="Opzioni">Opzioni</button><button class="rg-btn rg-btn--ghost" data-value="esci" aria-label="Esci dalla partita">Esci</button></div>`, { label: 'Pausa', closable: true })
+  if (v === 'opzioni') { await opzioni(game.ui, settings, { onChange: applySettings, onReset: () => { save.reset(); toast(game.ui, 'Progressi azzerati') } }); return 'continua' }
+  return v
+}
+const NAME = { shootout: 'Shootout', boss: 'Boss: Ale in forma', sfidaAle: 'Sfida Ale', passAndPlay: 'Pass-and-play', skill: 'Skill' }
+function titleFor(e) { const s = e.summary; if (e.id === 'shootout' || e.id === 'boss') return s.winner === 'me' ? `Hai vinto ${s.me}–${s.ale}` : `Ale vince ${s.ale}–${s.me}`; if (e.id === 'sfidaAle') return `${s.goals} gol prima di tre parate`; if (e.id === 'skill') return `${s.score} punti`; if (e.id === 'passAndPlay') return `Vince ${s.leaderboard[0].name}`; return NAME[e.id] }
+function linesFor(e) { const s = e.summary; if (e.id === 'passAndPlay') return s.leaderboard.map((p, i) => `${i + 1}. ${p.name}: ${p.goals} gol, ${p.saves} parate`); if (e.id === 'sfidaAle') return [`${s.shots} tiri, ${s.goals} gol`]; if (e.id === 'skill') return [`${s.hits} bersagli su ${s.shots} tiri`]; if (e.id === 'shootout' || e.id === 'boss') return [s.suddenDeath ? 'Deciso al sudden death' : `${s.rounds} rigori a testa`]; return [] }
+function shareFor(e) {
+  const s = e.summary, who = byId(shooterId)?.nome || 'Io', url = __SITE_URL__.replace(/\/?$/, '/') + 'rigori/'
+  if (e.id === 'shootout' || e.id === 'boss') return `⚽ Rigori al Camp Nou\n${who} ${s.me}-${s.ale} Ale 🧤\n${s.winner === 'me' ? (s.suddenDeath ? 'Deciso al sudden death. Disonesti.' : 'Ale a casa. Disonesti.') : 'Ale ha parlato troppo, e aveva ragione.'}\n${url}`
+  if (e.id === 'sfidaAle') return `⚽ Rigori al Camp Nou\n${who}: ${s.goals} gol prima che Ale ne parasse tre 🧤\n${url}`
+  if (e.id === 'skill') return `⚽ Rigori al Camp Nou · Skill\n${who}: ${s.score} punti in 30 secondi\n${url}`
+  if (e.id === 'passAndPlay') return `⚽ Rigori al Camp Nou · classifica di serata\n${s.leaderboard.map((p, i) => `${i + 1}. ${p.name} ${p.goals + p.saves}`).join('\n')}\n${url}`
+  return url
+}
+
 // ---------- API interna ed export per QA ----------
 export const game = {
   THREE, scene, camera: rig.camera, rig, renderer: R.renderer, ball, goal, crowd, field, stadium, lights, fx, perf, quality, manager, ASSETS, systems, shot, input, timing, listeners,
@@ -241,18 +320,21 @@ export const game = {
   setTimeScale(v) { timeScale = v }, get timeScale() { return timeScale }, ui: document.getElementById('rg-ui'), reducedMotion, settings, juice
 }
 window.__rigori = {
-  ready: false, game,
+  ready: false, game, noFlow: new URLSearchParams(location.search).has('noflow'),
   // Tiro deterministico per la QA: aim = { x, y, power, curve }
   fire: (aim, timingPerfect = false, delay = 0) => { shot.fire(aim, { timingPerfect, delay }); if (delay) kicker?.windup(); else rig.followLook(ball.mesh) },
-  setShooter, shooter: () => shooterId,
+  setShooter, shooter: () => shooterId, flow: () => flow, settings, applySettings,
   kitReady, startMode, mode: () => mode, role: () => role, xpLog, ctx,
-  events, shotState: () => shot.state, lastResult: () => [...events].reverse().find((e) => e.type === 'result')?.result || null,
+  setPrecision: (v) => shot.setPrecision(v), events, shotState: () => shot.state, lastResult: () => [...events].reverse().find((e) => e.type === 'result')?.result || null,
   info: () => ({ fps: +perf.fps.toFixed(1), level: perf.level, quality: { ...quality }, frames, draws: R.renderer.info.render.calls, tris: R.renderer.info.render.triangles, camera: rig.current })
 }
 
+// LoadingManager.onLoad scatta a ogni svuotamento della coda (anche per i volti caricati dopo): parte una volta sola
 manager.onLoad = () => {
+  if (window.__rigori.ready) return
   const el = document.getElementById('rg-loading'); el.classList.add('rg-loading--out'); setTimeout(() => el.remove(), 500)
   window.__rigori.ready = true
+  if (!window.__rigori.noFlow) runFlow()
 }
 // Se non c'è nulla da caricare il manager non chiama onLoad da solo
 setTimeout(() => { if (!window.__rigori.ready) manager.onLoad() }, 4000)

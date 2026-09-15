@@ -3,6 +3,10 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js'
 import { clone as skeletonClone } from 'three/addons/utils/SkeletonUtils.js'
 import { jerseyTexture } from './textures.js'
+// Camera condivisa: serve per nascondere il volto quando il personaggio dà le spalle (lo sprite guarderebbe comunque l'obiettivo)
+let CAMERA = null
+export const setCamera = (c) => { CAMERA = c }
+const _fwd = new THREE.Vector3(), _toCam = new THREE.Vector3(), _hp = new THREE.Vector3()
 // Kit dei personaggi: un solo modello riggato (manichino Mixamo "Y Bot", in metri) + clip solo-animazione
 // dello stesso scheletro. Maglia = colore del materiale + pannelli (petto e schiena) con strisce e numero.
 const CLIP_FILES = {
@@ -70,7 +74,10 @@ export function makeCharacter(kit, { maglia, numero, faceTexture, faceScale = 0.
     setLean(x) { model.rotation.z = -x * 0.18 },
     update(dt) {
       mixer.update(dt)
-      if (faceSprite && head) { head.getWorldPosition(headPos); group.worldToLocal(headPos); faceSprite.position.set(headPos.x, headPos.y + faceLift, headPos.z) }
+      if (faceSprite && head) {
+        head.getWorldPosition(_hp); headPos.copy(_hp); group.worldToLocal(headPos); faceSprite.position.set(headPos.x, headPos.y + faceLift, headPos.z)
+        if (CAMERA) { model.getWorldDirection(_fwd); _toCam.copy(CAMERA.position).sub(_hp).normalize(); faceSprite.visible = _fwd.dot(_toCam) > -0.15 }
+      }
     }
   }
 }
