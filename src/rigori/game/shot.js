@@ -38,6 +38,8 @@ export function createShot({ ball, goal, keeper, onEvent, precision = 1 }) {
 
   return {
     get state() { return state }, get aim() { return aim }, get resolved() { return resolved },
+    // secondi di volo che mancano al piano della porta (Infinity se non in volo guidato)
+    get remaining() { return state === 'flying' && !free ? Math.max(0, (1 - t) * T) : Infinity },
     setPrecision(v) { prec = v }, setKeeper(k) { keeper = k },
     // timingPerfect: rilascio nella finestra centrale → dispersione ridotta
     fire(a, { timingPerfect = false } = {}) {

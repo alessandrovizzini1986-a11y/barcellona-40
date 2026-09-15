@@ -10,7 +10,7 @@ const DIFF = {
   normale: { pCol: 0.52, tell: 0.20, pRow: 0.62, reach: 0.95, delay: 0.08, speed: 1.0 },   // DA VERIFICARE
   boss:    { pCol: 0.78, tell: 0.06, pRow: 0.78, reach: 1.15, delay: 0.02, speed: 1.4 }    // +40% reattività, tell quasi assente
 }
-export function createKeeper(char, { difficulty = 'normale' } = {}) {
+export function createKeeper(char, { difficulty = 'normale', onDive } = {}) {
   const g = char.group
   g.position.set(0, 0, 0.55) // sulla linea, un passo avanti, rivolto verso il dischetto (+z)
   let state = 'idle', plan = null, t = 0, forced = null, diff = DIFF[difficulty] || DIFF.normale
@@ -26,6 +26,7 @@ export function createKeeper(char, { difficulty = 'normale' } = {}) {
     const col = zone % 3, row = zone < 3 ? 0 : 1
     const clip = row === 0 && col !== 1 ? 'high' : col === 0 ? 'diveL' : col === 2 ? 'diveR' : row === 0 ? 'block' : 'catch'
     char.play(clip, { fade: 0.06, timeScale: 1.7 * speed, from: CLIP_START[clip] || 0 })
+    onDive?.(zone, g.position)
     // le clip "high" non hanno direzione: specchio il modello per il lato sinistro
     char.model.scale.x = (row === 0 && col === 0) ? -1 : 1
     state = 'diving'

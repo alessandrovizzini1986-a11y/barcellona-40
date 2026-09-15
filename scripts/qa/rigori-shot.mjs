@@ -16,6 +16,8 @@ await p.waitForTimeout(+(opts.wait || 800))
 if (opts.tap) { const [x, y] = opts.tap.split(',').map(Number); await p.touchscreen.tap(x, y); await p.waitForTimeout(400) }
 if (opts.swipe) { const [x1, y1, x2, y2, ms] = opts.swipe.split(',').map(Number); const steps = 12; await p.mouse.move(x1, y1); await p.mouse.down(); for (let i = 1; i <= steps; i++) { await p.mouse.move(x1 + (x2 - x1) * i / steps, y1 + (y2 - y1) * i / steps); await p.waitForTimeout((ms || 240) / steps) } await p.mouse.up(); await p.waitForTimeout(+(opts.after || 2500)) }
 if (opts.eval) { try { console.log('eval →', JSON.stringify(await p.evaluate(opts.eval))) } catch (e) { errors.push('eval: ' + e.message) } }
+// --until=<espressione>: aspetta (max 20 s) che diventi vera, poi scatta. Serve a campionare sul tempo di gioco, non sui ms reali.
+if (opts.until) { try { await p.waitForFunction(opts.until, null, { timeout: 20000, polling: 30 }) } catch { errors.push('until: condizione mai vera: ' + opts.until) } }
 const info = await p.evaluate(() => (window.__rigori ? window.__rigori.info?.() : null)).catch(() => null)
 if (info) console.log('info →', JSON.stringify(info))
 await p.screenshot({ path: out })

@@ -17,6 +17,7 @@ import { createTiming } from './game/timing.js'
 import { createGhost } from './game/ghost.js'
 import { loadCharacterKit, makeCharacter, loadFace } from './scene/players.js'
 import { createKeeper } from './game/keeper.js'
+import { createJuice } from './game/juice.js'
 import { keeper as keeperData, faceOf } from './data/players.js'
 
 const root = document.getElementById('game')
@@ -81,6 +82,9 @@ function loop() {
 
 // ---------- tiro: input → mira → volo → esito ----------
 const timing = createTiming()
+// Opzione "riduci flash e shake" (fase 9) + prefers-reduced-motion: niente shake né particelle intense, lo slow-mo resta
+const settings = { reduceFx: reducedMotion }
+const juice = createJuice({ scene, rig, reduced: () => settings.reduceFx })
 const ghost = createGhost(scene)
 const events = []                      // ultimi eventi del tiro (per QA e per le modalità)
 const listeners = new Set()            // le modalità si iscrivono qui (fase 7)
@@ -91,7 +95,7 @@ const kitReady = loadCharacterKit(ASSETS, manager).then((k) => {
   kit = k
   const ale = keeperData()
   const aleChar = makeCharacter(kit, { maglia: ale.maglia, numero: ale.numero, faceTexture: loadFace(ASSETS, faceOf(ale), manager), faceScale: 0.5 })
-  keeper = createKeeper(aleChar, { difficulty: 'normale' })
+  keeper = createKeeper(aleChar, { difficulty: 'normale', onDive: (_z, at) => juice.dust(at) })
   scene.add(keeper.group); shot.setKeeper(keeper)
   systems.push({ update: (dt) => keeper.update(dt) })
   game.keeper = keeper; game.kit = kit
@@ -112,22 +116,36 @@ input.on('end', (g) => {
   rig.followLook(ball.mesh)
 })
 input.on('reject', () => { hint.hidden = false; hint.classList.remove('rg-hint--pulse'); void hint.offsetWidth; hint.classList.add('rg-hint--pulse') })
+const shake = (amp, dur) => { if (!settings.reduceFx) rig.shake(amp, dur) }
+let replayPending = false
 function onShotEvent(e) {
-  if (e.type === 'kick') { hint.hidden = true; keeper?.prepare({ aim: e.aim, timingPerfect: e.timingPerfect, power: e.aim.power }) }
-  if (e.type === 'result') keeper?.react(e.result)
-  if (e.type === 'goal') { crowd.react('ola'); rig.shake(0.10, 0.35) }
-  if (e.type === 'post' || e.type === 'crossbar') rig.shake(0.06, 0.2)
+  if (e.type === 'kick') { hint.hidden = true; juice.clearRecord(); replayPending = true; keeper?.prepare({ aim: e.aim, timingPerfect: e.timingPerfect, power: e.aim.power }) }
+  if (e.type === 'result') { juice.setSlow(false); keeper?.react(e.result) }
+  if (e.type === 'goal') { crowd.react('ola'); shake(0.10, 0.35) }
+  if (e.type === 'post' || e.type === 'crossbar') { shake(0.06, 0.2); juice.hitStop(60) }
+  if (e.type === 'save') { juice.hitStop(60); crowd.react('oooh') }
   if (e.type === 'miss') crowd.react('oooh')
-  if (e.type === 'result' && e.result === 'save') crowd.react('oooh')
-  if (e.type === 'settled') setTimeout(() => { shot.reset(); keeper?.reset(); rig.followLook(null); rig.goTo('dietroTiratore'); hint.hidden = false }, 900)
+  if (e.type === 'settled') afterSettled()
+}
+// Dopo l'esito: replay laterale di 2 s, poi si torna dietro al tiratore. Le modalità (fase 7) ascoltano 'replayEnd'.
+function afterSettled() {
+  const finish = () => { shot.reset(); keeper?.reset(); rig.followLook(null); rig.goTo('dietroTiratore'); hint.hidden = false; listeners.forEach((f) => f({ type: 'replayEnd' })) }
+  if (!replayPending) { finish(); return }
+  replayPending = false
+  setTimeout(() => juice.startReplay(() => setTimeout(finish, 300)), 500)
 }
 systems.push({ update(dt) { shot.update(dt); timing.update(dt); if (!timingEl.hidden) timingCur.style.left = (timing.value * 100) + '%' } })
+// Slow-motion ×0,3 negli ultimi 0,4 s prima dell'esito; registrazione della palla per il replay
+systems.push({ update(_dt, raw) {
+  if (shot.state === 'flying') { juice.recordBall(ball.mesh.position); juice.setSlow(shot.remaining < 0.4) }
+  timeScale = juice.update(raw, ball.mesh)
+} })
 
 // ---------- API interna ed export per QA ----------
 export const game = {
   THREE, scene, camera: rig.camera, rig, renderer: R.renderer, ball, goal, crowd, field, stadium, lights, fx, perf, quality, manager, ASSETS, systems, shot, input, timing, listeners,
   set timingEnabled(v) { timingEnabled = !!v }, get timingEnabled() { return timingEnabled },
-  setTimeScale(v) { timeScale = v }, get timeScale() { return timeScale }, ui: document.getElementById('rg-ui'), reducedMotion
+  setTimeScale(v) { timeScale = v }, get timeScale() { return timeScale }, ui: document.getElementById('rg-ui'), reducedMotion, settings, juice
 }
 window.__rigori = {
   ready: false, game,
