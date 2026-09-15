@@ -43,6 +43,15 @@ function toggleIn(key, id) {
   write(key, next)
   return next.includes(id)
 }
+// Idempotente: porta l'id allo stato richiesto, qualunque sia quello attuale.
+// È la primitiva giusta per le checkbox: si legge `checked`, non si inverte alla cieca.
+function setIn(key, id, on) {
+  const arr = read(key, [])
+  const has = arr.includes(id)
+  if (on && !has) write(key, [...arr, id])
+  else if (!on && has) write(key, arr.filter((x) => x !== id))
+  return !!on
+}
 
 // Base64 sicuro per UTF-8
 const b64e = (s) => btoa(unescape(encodeURIComponent(s)))
@@ -63,15 +72,18 @@ export const store = {
   get done() { return read('done', []) },
   isDone: (stopId) => read('done', []).includes(stopId),
   toggleDone: (stopId) => toggleIn('done', stopId),
+  setDone: (stopId, on) => setIn('done', stopId, on),
 
   get missions() { return read('missions', []) },
   isMissionDone: (id) => read('missions', []).includes(id),
   toggleMission: (id) => toggleIn('missions', id),
+  setMission: (id, on) => setIn('missions', id, on),
   completeMission(id) { const arr = read('missions', []); if (!arr.includes(id)) write('missions', [...arr, id]); return true },
 
   get checks() { return read('checks', []) },
   isChecked: (id) => read('checks', []).includes(id),
   toggleCheck: (id) => toggleIn('checks', id),
+  setCheck: (id, on) => setIn('checks', id, on),
 
   get scores() { return read('scores', {}) },
   setScore(person, data) { write('scores', { ...read('scores', {}), [person]: data }) },

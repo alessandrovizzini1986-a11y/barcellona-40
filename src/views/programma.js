@@ -34,6 +34,7 @@ export async function render(root, { person, sub, header }) {
     const b = e.target.closest('[data-day]')
     if (b) navigate('programma', b.dataset.day)
   })
-  bindCards(root, { person })
-  return () => {}
+  const ac = new AbortController()
+  bindCards(root, { signal: ac.signal })
+  return () => ac.abort()
 }

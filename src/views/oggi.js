@@ -75,6 +75,7 @@ export async function render(root, { person, header, params }) {
     if (person === 'ale') bindShareAlbum(root)
     const cd = root.querySelector('#cd')
     timers.push(setInterval(() => { cd.innerHTML = countdownHtml() }, 30_000))
+    const ac = new AbortController()
     root.addEventListener('change', (e) => {
       const cb = e.target.closest('input[data-prep]')
       if (!cb) return
@@ -82,8 +83,8 @@ export async function render(root, { person, header, params }) {
       store.set('prep', cb.checked ? [...new Set([...arr, cb.dataset.prep])] : arr.filter((x) => x !== cb.dataset.prep))
       root.querySelector('.section-title small').textContent = `${store.get('prep', []).length}/${PREP.length}`
       if (cb.checked && store.get('prep', []).length === PREP.length) toast('Checklist completa. Zero fatica, tutto gusto.')
-    })
-    return () => timers.forEach(clearInterval)
+    }, { signal: ac.signal })
+    return () => { ac.abort(); timers.forEach(clearInterval) }
   }
 
   if (ph === 'after') {
@@ -143,11 +144,7 @@ export async function render(root, { person, header, params }) {
         <div class="tile__label">Prossima</div>
         ${nxt ? `<div class="tile__big tnum">${nxt.time}</div><div><strong>${esc(nxt.title)}</strong></div><div class="faint">${nextIn(nxt)}</div><a class="btn btn--sm" href="#/programma/${nxt.dayKey}">${icon('list')} Programma</a>` : `<p class="muted">Nessun'altra tappa in programma per te.</p>`}
       </div>
-      <div class="tile">
-        <div class="tile__label">Progresso weekend</div>
-        ${ring(allDoneCount, mine.length, `${allDoneCount}/${mine.length}`, 'tappe', DAY_COLOR[key])}
-        <div class="faint" style="text-align:center">Oggi ${doneToday}/${todays.length}</div>
-      </div>
+      <div class="tile" id="progress">${progressHtml(allDoneCount, mine.length, doneToday, todays.length, DAY_COLOR[key])}</div>
       <div class="tile">
         <div class="tile__label">Riepilogo di oggi</div>
         <p class="faint">Il piano di ${DAY_LABEL[key].split(' ')[0].toLowerCase()} pronto per WhatsApp.</p>
@@ -172,9 +169,22 @@ export async function render(root, { person, header, params }) {
   root.innerHTML = html
   bindAlbum(root)
   bindSong(root)
-  bindCards(root, { person, onChange: () => { /* i contatori si aggiornano al prossimo render */ } })
+  const ac = new AbortController()
+  const progress = root.querySelector('#progress')
+  bindCards(root, { signal: ac.signal, onChange: () => {
+    // l'anello e il contatore di oggi si aggiornano subito, senza aspettare il prossimo render
+    const doneAll = mine.filter((s) => store.isDone(s.id)).length
+    const doneDay = todays.filter((s) => store.isDone(s.id)).length
+    if (progress) progress.innerHTML = progressHtml(doneAll, mine.length, doneDay, todays.length, DAY_COLOR[key])
+  } })
   root.querySelector('#copy')?.addEventListener('click', () => copyText(summaryText(person, key)))
-  return () => timers.forEach(clearInterval)
+  return () => { ac.abort(); timers.forEach(clearInterval) }
+}
+
+function progressHtml(doneAll, total, doneDay, totalDay, color) {
+  return `<div class="tile__label">Progresso weekend</div>
+    ${ring(doneAll, total, `${doneAll}/${total}`, 'tappe', color)}
+    <div class="faint" style="text-align:center">Oggi ${doneDay}/${totalDay}</div>`
 }
 
 function nextIn(stop) {

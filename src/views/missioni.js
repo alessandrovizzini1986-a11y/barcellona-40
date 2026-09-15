@@ -2,7 +2,7 @@
 import { missionsFor, people, personById, stopById } from '../data.js'
 import { store } from '../store.js'
 import { now, countdownTo, SPEEDRUN_DEADLINE, fmtClock } from '../time.js'
-import { xpFor, maxXpFor, levelFor, badgeStatus, summaryFor } from '../game.js'
+import { xpFor, maxXpFor, levelFor, badgeStatus, summaryFor, setMissionDone } from '../game.js'
 import { ring } from '../ui/ring.js'
 import { icon } from '../ui/icons.js'
 import { esc } from '../ui/html.js'
@@ -90,15 +90,19 @@ export async function render(root, { person, header }) {
   paint()
 
   const unlockedBefore = new Set(badgeStatus(person).filter((b) => b.unlocked).map((b) => b.id))
+  const ac = new AbortController()
   root.addEventListener('change', (e) => {
     const cb = e.target.closest('input[data-mission]')
     if (!cb) return
     const m = missionsFor(person).find((x) => x.id === cb.dataset.mission)
-    const on = store.toggleMission(m.id)
-    if (on) {
-      if (m.stopId && !store.isDone(m.stopId)) store.toggleDone(m.stopId)
+    if (!m) return
+    const on = cb.checked // la verità è la casella, non un toggle
+    const { changed } = setMissionDone(m.id, on) // sincronizza anche la tappa collegata, in entrambe le direzioni
+    if (on && changed) {
       confettiShort()
       toast(`+${m.xp} XP · Zero fatica, tutto gusto`)
+    } else if (!on && changed) {
+      toast(`Tolta: ${m.xp} XP in meno. Puoi rifarla quando vuoi.`)
     }
     paint()
     const after = badgeStatus(person).filter((b) => b.unlocked)
@@ -108,7 +112,7 @@ export async function render(root, { person, header }) {
       toast(`Badge sbloccato: ${fresh.map((b) => b.title).join(', ')}`)
       confettiBig()
     }
-  })
+  }, { signal: ac.signal })
   root.addEventListener('click', (e) => {
     if (e.target.closest('#export')) {
       const s = summaryFor(person)
@@ -130,7 +134,7 @@ export async function render(root, { person, header }) {
         }
       })
     }
-  })
+  }, { signal: ac.signal })
   if (person === 'monne') timers.push(setInterval(() => { root.querySelectorAll('[data-timer]').forEach((el) => { el.innerHTML = timerHtml() }) }, 1000))
-  return () => timers.forEach(clearInterval)
+  return () => { ac.abort(); timers.forEach(clearInterval) }
 }

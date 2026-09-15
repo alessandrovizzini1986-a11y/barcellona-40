@@ -4,6 +4,7 @@ import { badges as badgeHtml } from './badge.js'
 import { esc } from './html.js'
 import { badgesFor, fmtDist, fmtEur, mapsUrl, taxiUrl, TAXI_FALLBACK, missionByStop, hasCoords, DAY_COLOR } from '../data.js'
 import { store } from '../store.js'
+import { setStopDone } from '../game.js'
 import { toast } from './toast.js'
 import { short as confettiShort } from './confetti.js'
 
@@ -44,8 +45,10 @@ export function stopCard(stop, { person = null, isNow = false, nowLabel = 'adess
   </article>`
 }
 
-// Eventi delegati: animazione <details>, checkbox Fatto, fallback taxi
-export function bindCards(container, { person = null, onChange } = {}) {
+// Eventi delegati: animazione <details>, checkbox Fatto, fallback taxi.
+// `signal` viene dall'AbortController della vista: al cambio vista i listener spariscono.
+// Senza, si accumulavano su #app a ogni render e un tocco faceva più toggle.
+export function bindCards(container, { signal, onChange } = {}) {
   container.addEventListener('click', (e) => {
     const sum = e.target.closest('summary')
     if (sum && container.contains(sum)) {
@@ -66,24 +69,27 @@ export function bindCards(container, { person = null, onChange } = {}) {
       // Se Uber non si apre entro 1,5 s (nessuna app), proponi FREE NOW
       setTimeout(() => { if (document.visibilityState === 'visible' && taxi.dataset.fb !== '1') { taxi.dataset.fb = '1'; taxi.href = TAXI_FALLBACK; taxi.innerHTML = `${icon('taxi')} FREE NOW` } }, 1500)
     }
-  })
+  }, { signal })
   container.addEventListener('change', (e) => {
     const cb = e.target.closest('input[data-done]')
     if (!cb) return
     const id = cb.dataset.done
-    const nowDone = store.toggleDone(id)
-    const card = cb.closest('.card')
-    card?.classList.toggle('card--done', nowDone)
-    const mission = missionByStop(id)
-    if (nowDone && mission && (!person || mission.people.includes(person))) {
-      store.completeMission(mission.id)
+    const on = cb.checked // la verità è la casella, non un toggle
+    const { mission, changed } = setStopDone(id, on, store.person)
+    // Tutte le card della stessa tappa sulla pagina restano allineate
+    container.querySelectorAll(`.card[data-stop="${id}"]`).forEach((card) => {
+      card.classList.toggle('card--done', on)
+      const other = card.querySelector('input[data-done]')
+      if (other && other !== cb) other.checked = on
+    })
+    if (on && mission && changed) {
       confettiShort()
       toast(`+${mission.xp} XP · Zero fatica, tutto gusto`)
-    } else if (nowDone) {
+    } else if (on) {
       toast('Fatto. Avanti così.')
-    } else if (mission && store.isMissionDone(mission.id) && (!person || mission.people.includes(person))) {
-      store.toggleMission(mission.id)
+    } else if (mission && changed) {
+      toast(`Tolta: ${mission.xp} XP in meno. Puoi rifarla quando vuoi.`)
     }
-    onChange?.(id, nowDone)
-  })
+    onChange?.(id, on)
+  }, { signal })
 }

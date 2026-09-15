@@ -98,15 +98,16 @@ export async function render(root, { person, sub, header }) {
     location.replace(location.pathname + '?r=' + Date.now())
   })
   root.querySelector('#gam').addEventListener('change', (e) => { store.gamificationHidden = e.target.checked })
+  const ac = new AbortController()
   root.addEventListener('change', (e) => {
     const cb = e.target.closest('input[data-check]')
     if (!cb) return
-    store.toggleCheck(cb.dataset.check)
+    store.setCheck(cb.dataset.check, cb.checked) // idempotente: la verità è la casella
     const n = checks.filter((c) => !store.isChecked(c.id)).length
     root.querySelector('#sec-verifiche summary').innerHTML = `Da verificare (${n})${icon('chevron')}`
     const item = cb.closest('.list-item'); item.style.opacity = cb.checked ? '.6' : ''
     item.querySelector('span > span').style.textDecoration = cb.checked ? 'line-through' : ''
     if (n === 0) toast('Tutto verificato. Zero fatica, tutto gusto.')
-  })
-  return () => {}
+  }, { signal: ac.signal })
+  return () => ac.abort()
 }

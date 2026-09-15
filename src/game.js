@@ -1,5 +1,5 @@
 // Gamification: XP calcolato (mai salvato), livelli, badge
-import { missionsFor, levels, badgeDefs, stopById } from './data.js'
+import { missionsFor, levels, badgeDefs, stopById, missionByStop, missions } from './data.js'
 import { store } from './store.js'
 import { now, BIRTHDAY } from './time.js'
 
@@ -32,4 +32,24 @@ export function badgeStatus(person, d = now()) {
 
 export function summaryFor(person) {
   return { person, xp: xpFor(person), done: [...store.missions] }
+}
+
+// Tappa e missione collegata sono uno stato solo. Restituisce la missione toccata (se la persona
+// ne fa parte) e se il suo stato è cambiato davvero, così chi chiama mostra toast e coriandoli
+// solo alle transizioni reali.
+export function setStopDone(stopId, on, person = store.person) {
+  store.setDone(stopId, on)
+  const m = missionByStop(stopId)
+  if (!m || (person && !m.people.includes(person))) return { mission: null, changed: false }
+  const was = store.isMissionDone(m.id)
+  store.setMission(m.id, on)
+  return { mission: m, changed: was !== !!on }
+}
+export function setMissionDone(missionId, on) {
+  const m = missions.find((x) => x.id === missionId)
+  if (!m) return { mission: null, changed: false }
+  const was = store.isMissionDone(m.id)
+  store.setMission(m.id, on)
+  if (m.stopId) store.setDone(m.stopId, on)
+  return { mission: m, changed: was !== !!on }
 }

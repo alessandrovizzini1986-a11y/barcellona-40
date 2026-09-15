@@ -90,3 +90,12 @@
 - `public/canzone.html`: pagina ponte con l'Open Graph della papera (titolo, descrizione, `og:image` = poster) che porta subito a `#/info/canzone`. Il pulsante "Manda ai ragazzi" condivide questo URL, così su WhatsApp l'anteprima è la papera. Un router a hash non può avere Open Graph diversi per vista: è l'unico modo.
 - Il documento "canvas video in loop" citato nella richiesta non è mai arrivato in questa sessione: applicato lo schema standard più le precisazioni date.
 - Caricato anche `disonesti-canvas-9x16.mp4` (404x720): non era nella specifica, non è stato pubblicato.
+
+## Gamification affidabile
+- **Bug segnalato**: spuntando "Fatto" arrivavano gli XP, togliendo la spunta il titolo restava barrato con la casella vuota. Causa: `bindCards` e i listener `change` di Missioni, Info e Oggi si aggiungevano a `#app` a ogni render senza mai essere rimossi; `#app` sopravvive al cambio di vista, quindi dopo N navigazioni un tocco faceva N toggle. Con N pari lo stato tornava indietro mentre la casella restava dove l'aveva messa il dito; con N dispari i toast uscivano più volte.
+- Ogni vista registra ora i listener con un `AbortController` e li abortisce nel cleanup restituito al router: nessun accumulo.
+- Le checkbox scrivono lo stato che mostrano (`store.setDone / setMission / setCheck(id, on)`), mai un toggle: anche un doppio evento non può più sfalsare nulla.
+- Tappa e missione collegata sono uno stato solo, in entrambe le direzioni (`game.setStopDone`, `game.setMissionDone`): prima togliere una missione lasciava la tappa barrata. La missione si completa solo se la persona ne fa parte.
+- Toast e coriandoli solo alle transizioni reali; togliendo una spunta un toast discreto dice quanti XP se ne vanno.
+- In Oggi l'anello di progresso e il contatore del giorno si aggiornano al tocco. Tutte le card della stessa tappa sulla pagina restano allineate.
+- Prompt che ha guidato l'intervento in `docs/prompts/gamification-fix.md`. Nuova suite `scripts/qa/gamification.mjs`.

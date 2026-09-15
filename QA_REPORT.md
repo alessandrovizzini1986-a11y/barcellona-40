@@ -188,3 +188,20 @@ Suite dedicata: `node scripts/qa/canvas.mjs` → **26/26 verdi**. Le altre resta
 **Open Graph.** `canzone.html` è servita con `og:image` assoluto verso `media/disonesti-canvas-poster.jpg` (540x720). WhatsApp mostra le immagini verticali come miniatura quadrata accanto al testo, non come anteprima larga: per l'anteprima grande servirebbe un'immagine 1200x630. L'anteprima effettiva su WhatsApp non è verificabile da qui e va provata condividendo il link.
 
 **Riproduzione.** Come per l'inno, il Chromium di Playwright non decodifica H.264: l'autoplay è verificato come richiesta di rete e attributi, non come fotogrammi. Da provare sul telefono: il loop deve partire da solo, in silenzio, e stare fermo con "Riduci movimento" attivo.
+
+## 18. Gamification: spunta e togli coerenti
+Suite dedicata: `node scripts/qa/gamification.mjs` → **34/34 verdi**. Le altre restano verdi: e2e 45/45, album 66/66, canzone 71/71, canvas 26/26.
+
+**Bug riprodotto prima della correzione.** Titolo barrato con casella vuota: stato salvato e casella non coincidevano. I listener su `#app` si accumulavano a ogni cambio di vista e un tocco faceva più toggle.
+
+| Verifica | Esito |
+|---|---|
+| 2, 3 e 5 navigazioni tra le viste, poi una spunta: stato, `card--done`, casella e missione tutti on, un solo toast "+60 XP" | ✓ |
+| Stesse navigazioni, poi si toglie la spunta: tutti off, titolo non barrato, un solo toast, XP tornati a 0 | ✓ |
+| Render fresco dopo spunta e ritorno: card barrata e casella piena; dopo togli e ritorno: card pulita e casella vuota | ✓ |
+| Missione on → tappa on; missione off → tappa off; tappa on → missione spuntata, XP 60 | ✓ |
+| La missione segue la persona: Manuel spunta Olimpo e completa la sua m8 | ✓ |
+| Oggi: anello di progresso e contatore del giorno aggiornati al tocco | ✓ `0/18 → 1/18`, `Oggi 1/…` |
+| Info: dopo cinque navigazioni una verifica cambia di uno per tocco, contatore `(10) → (9)` | ✓ |
+| Missioni: dopo sette navigazioni una spunta vale esattamente i suoi XP, un solo toast | ✓ 50 XP |
+| Nessun errore JS in nessuno scenario | ✓ |
