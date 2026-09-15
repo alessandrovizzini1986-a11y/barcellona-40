@@ -6,7 +6,7 @@ export function createInput(el, { camera, getBallWorld, size, enabled = () => tr
   const listeners = { start: [], move: [], end: [], reject: [] }
   const on = (ev, fn) => { listeners[ev].push(fn); return () => { listeners[ev] = listeners[ev].filter((f) => f !== fn) } }
   const emit = (ev, d) => listeners[ev].forEach((f) => f(d))
-  let active = null
+  let active = null, mode = 'shooter' // 'shooter' | 'keeper'
   const v = new THREE.Vector3()
   const ballOnScreen = () => { v.copy(getBallWorld()); v.project(camera); return { x: (v.x + 1) / 2 * size.w, y: (1 - v.y) / 2 * size.h } }
   const analyze = (pts) => {
@@ -22,8 +22,8 @@ export function createInput(el, { camera, getBallWorld, size, enabled = () => tr
   }
   const down = (e) => {
     if (!enabled() || active) return
-    const b = ballOnScreen()
-    if (Math.hypot(e.clientX - b.x, e.clientY - b.y) > 70) { emit('reject', { x: e.clientX, y: e.clientY, ball: b }); return }
+    if (mode === 'keeper') { if (e.clientY < size.h * 0.45) return } // portiere: qualunque punto nella metà bassa
+    else { const b = ballOnScreen(); if (Math.hypot(e.clientX - b.x, e.clientY - b.y) > 70) { emit('reject', { x: e.clientX, y: e.clientY, ball: b }); return } }
     active = { id: e.pointerId, pts: [{ x: e.clientX, y: e.clientY, t: e.timeStamp }] }
     el.setPointerCapture?.(e.pointerId); e.preventDefault()
     emit('start', { x: e.clientX, y: e.clientY })
@@ -41,5 +41,5 @@ export function createInput(el, { camera, getBallWorld, size, enabled = () => tr
   }
   el.addEventListener('pointerdown', down); el.addEventListener('pointermove', move)
   el.addEventListener('pointerup', up); el.addEventListener('pointercancel', up)
-  return { on, ballOnScreen, get active() { return !!active }, dispose() { el.removeEventListener('pointerdown', down); el.removeEventListener('pointermove', move); el.removeEventListener('pointerup', up); el.removeEventListener('pointercancel', up) } }
+  return { on, ballOnScreen, get active() { return !!active }, setMode(m) { mode = m }, get mode() { return mode }, dispose() { el.removeEventListener('pointerdown', down); el.removeEventListener('pointermove', move); el.removeEventListener('pointerup', up); el.removeEventListener('pointercancel', up) } }
 }

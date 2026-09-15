@@ -14,7 +14,7 @@ export function createKeeper(char, { difficulty = 'normale', onDive } = {}) {
   const g = char.group
   g.position.set(0, 0, 0.55) // sulla linea, un passo avanti, rivolto verso il dischetto (+z)
   let state = 'idle', plan = null, t = 0, forced = null, diff = DIFF[difficulty] || DIFF.normale
-  let playable = false, playerDive = null
+  let playable = false, playerDive = null, passive = false
   const zoneX = (z) => [-1.9, 0, 1.9][z % 3]
   const idle = () => { state = 'idle'; char.play('keeperIdle', { loop: true, fade: 0.3 }) }
   idle()
@@ -37,12 +37,15 @@ export function createKeeper(char, { difficulty = 'normale', onDive } = {}) {
     setDifficulty(d) { difficulty = d; diff = DIFF[d] || DIFF.normale },
     force(zone) { forced = zone }, // QA: zona del tuffo forzata (null = IA)
     setPlayable(v) { playable = !!v },
+    setPassive(v) { passive = !!v; if (passive) { state = 'passive'; char.play('ready', { loop: true, fade: 0.3 }) } else idle() },
+    playerDiveZone() { return playerDive?.zone ?? null },
     // Tuffo comandato dal giocatore (modalità portiere): zona + istante
     playerDive(zone) { playerDive = { zone, at: performance.now() }; if (state !== 'diving') dive(zone, 1) },
     // Chiamata al calcio: il portiere legge il tell e decide dove buttarsi
     prepare({ aim, timingPerfect = false, power = 0.7 }) {
       const real = zoneOf(aim.x, aim.y)
-      plan = { real, power, pending: true, delay: diff.delay }
+      if (passive) { plan = null; return }
+      plan = { ...(plan || {}), real, power, pending: true, delay: diff.delay } // conserva un tuffo già iniziato (portiere giocabile)
       if (playable) return
       let zone
       if (forced != null) zone = forced
@@ -71,11 +74,12 @@ export function createKeeper(char, { difficulty = 'normale', onDive } = {}) {
       return { catch: catchIt, deflectX: Math.sign(ballPos.x - c.x || 1) * 2.2 }
     },
     react(result) {
+      if (passive) return
       if (result === 'goal') { state = 'beaten'; char.play('beaten', { fade: 0.2 }) }
       else if (result === 'miss' || result === 'post' || result === 'crossbar') { if (state === 'diving') state = 'missed' }
-      setTimeout(() => { plan = null; playerDive = null; g.position.x = 0; char.model.scale.x = 1; idle() }, 1800)
+      setTimeout(() => { if (passive) return; plan = null; playerDive = null; g.position.x = 0; char.model.scale.x = 1; idle() }, 1800)
     },
-    reset() { plan = null; playerDive = null; g.position.x = 0; char.model.scale.x = 1; idle() },
+    reset() { plan = null; playerDive = null; g.position.x = 0; char.model.scale.x = 1; if (!passive) idle() },
     update(dt) {
       char.update(dt)
       if (plan?.pending) {
@@ -85,7 +89,7 @@ export function createKeeper(char, { difficulty = 'normale', onDive } = {}) {
       if (state === 'diving' && plan) {
         plan.t = (plan.t || 0) + dt
         const k = Math.min(1, plan.t / 0.30)
-        g.position.x = THREE.MathUtils.lerp(plan.startX ?? 0, zoneX(plan.zone), k * k * (3 - 2 * k))
+        if (plan.zone != null) g.position.x = THREE.MathUtils.lerp(plan.startX ?? 0, zoneX(plan.zone), k * k * (3 - 2 * k))
       }
     }
   }

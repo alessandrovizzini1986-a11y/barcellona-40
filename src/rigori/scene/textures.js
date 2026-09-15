@@ -3,9 +3,9 @@ import * as THREE from 'three'
 function canvas(w, h) { const c = document.createElement('canvas'); c.width = w; c.height = h; return c }
 export function grassTexture() {
   const c = canvas(512, 512), g = c.getContext('2d')
-  for (let i = 0; i < 8; i++) { g.fillStyle = i % 2 ? '#2f7d3a' : '#347f3c'; g.fillRect(0, i * 64, 512, 64) }
+  for (let i = 0; i < 8; i++) { g.fillStyle = i % 2 ? '#2e8b45' : '#33994c'; g.fillRect(0, i * 64, 512, 64) }
   const img = g.getImageData(0, 0, 512, 512), d = img.data
-  for (let i = 0; i < d.length; i += 4) { const n = (Math.random() - .5) * 18; d[i] += n; d[i + 1] += n; d[i + 2] += n * .6 }
+  for (let i = 0; i < d.length; i += 4) { const n = (Math.random() - .5) * 5; d[i] += n; d[i + 1] += n; d[i + 2] += n * .6 }
   g.putImageData(img, 0, 0)
   const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(6, 9); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4
   return t
@@ -19,7 +19,7 @@ export function netTexture() {
 }
 export function seatsTexture() {
   const c = canvas(256, 64), g = c.getContext('2d')
-  const cols = ['#A50044', '#004D98', '#A50044', '#004D98']
+  const cols = ['#B3004A', '#0059B3', '#B3004A', '#0059B3']
   for (let i = 0; i < 4; i++) { g.fillStyle = cols[i]; g.fillRect(i * 64, 0, 64, 64) }
   g.fillStyle = 'rgba(0,0,0,.35)'; for (let x = 0; x < 256; x += 8) g.fillRect(x, 0, 2, 64)
   const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.colorSpace = THREE.SRGBColorSpace

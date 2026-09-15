@@ -33,17 +33,20 @@ export function createShot({ ball, goal, keeper, onEvent, precision = 1 }) {
   let prec = precision
   let state = 'idle' // idle | flying | done
   let curve = null, T = 0, t = 0, vel = new THREE.Vector3(), free = false, freeVel = new THREE.Vector3(), resolved = null
-  let aim = null, timing = 0
+  let aim = null, timing = 0, held = 0, windup = 0, pendingFire = null
   const emit = (type, data = {}) => onEvent?.({ ...data, type }) // il tipo dell'evento vince sui campi del payload
 
   return {
     get state() { return state }, get aim() { return aim }, get resolved() { return resolved },
     // secondi di volo che mancano al piano della porta (Infinity se non in volo guidato)
     get remaining() { return state === 'flying' && !free ? Math.max(0, (1 - t) * T) : Infinity },
+    get flying() { return state === 'flying' || state === 'held' },
+    get busy() { return state !== 'idle' },
     setPrecision(v) { prec = v }, setKeeper(k) { keeper = k },
     // timingPerfect: rilascio nella finestra centrale → dispersione ridotta
-    fire(a, { timingPerfect = false } = {}) {
+    fire(a, { timingPerfect = false, delay = 0 } = {}) {
       if (state !== 'idle') return
+      if (delay > 0) { state = 'windup'; windup = delay; pendingFire = { a, timingPerfect }; emit('windup', { aim: a, delay }); return }
       aim = { ...a }
       // dispersione: più forte il tiro, meno preciso; il timing perfetto la dimezza · DA VERIFICARE: entità
       const spread = (0.15 + Math.max(0, aim.power - 0.7) * 0.6) * (timingPerfect ? 0.5 : 1) * prec
@@ -53,8 +56,10 @@ export function createShot({ ball, goal, keeper, onEvent, precision = 1 }) {
       state = 'flying'
       emit('kick', { aim, timingPerfect })
     },
-    reset() { state = 'idle'; curve = null; resolved = null; aim = null; ball.reset() },
+    reset() { state = 'idle'; curve = null; resolved = null; aim = null; pendingFire = null; ball.reset() },
     update(dt) {
+      if (state === 'windup') { windup -= dt; if (windup <= 0) { state = 'idle'; const f = pendingFire; pendingFire = null; this.fire(f.a, { timingPerfect: f.timingPerfect }) } return }
+      if (state === 'held') { held -= dt; if (held <= 0) { state = 'done'; emit('settled', { result: 'save' }) } return }
       if (state !== 'flying') return
       const m = ball.mesh
       if (!free) {
@@ -68,7 +73,7 @@ export function createShot({ ball, goal, keeper, onEvent, precision = 1 }) {
         // Intervento del portiere sul piano della porta (o poco prima)
         if (keeper && !resolved && m.position.z < 0.9 && m.position.z > -0.2) {
           const hit = keeper.tryStop(m.position, aim)
-          if (hit) { resolved = 'save'; free = true; freeVel.copy(vel).multiplyScalar(-0.25); freeVel.x += hit.deflectX; freeVel.y = Math.abs(freeVel.y) * 0.4 + 1.2; emit('save', { point: m.position.clone(), catch: hit.catch }); if (hit.catch) { state = 'done'; emit('result', { result: 'save', catch: true }) } return }
+          if (hit) { resolved = 'save'; free = true; freeVel.copy(vel).multiplyScalar(-0.25); freeVel.x += hit.deflectX; freeVel.y = Math.abs(freeVel.y) * 0.4 + 1.2; emit('save', { point: m.position.clone(), catch: hit.catch }); if (hit.catch) { held = 0.9; state = 'held'; emit('result', { result: 'save', catch: true, point: m.position.clone() }) } return }
         }
         if (u >= 1 || m.position.z <= 0) {
           // sul piano della porta: palo, traversa, gol o fuori
@@ -80,16 +85,16 @@ export function createShot({ ball, goal, keeper, onEvent, precision = 1 }) {
           if (onPost || onBar) {
             resolved = onBar ? 'crossbar' : 'post'
             freeVel.copy(vel).multiplyScalar(0.45); if (onPost) freeVel.x *= -1; else freeVel.y = -Math.abs(freeVel.y) - 1; freeVel.z = Math.abs(freeVel.z) * 0.9
-            emit(resolved, { point: m.position.clone() }); emit('result', { result: resolved })
+            emit(resolved, { point: m.position.clone() }); emit('result', { result: resolved, point: m.position.clone() })
           } else if (inX && underBar) {
             resolved = 'goal'
             freeVel.copy(vel).multiplyScalar(0.55)
             const corner = Math.abs(x) > GOAL.w / 2 - 0.9 && y > GOAL.h - 0.7
-            emit('goal', { point: m.position.clone(), corner }); emit('result', { result: 'goal', corner })
+            emit('goal', { point: m.position.clone(), corner }); emit('result', { result: 'goal', corner, point: m.position.clone() })
           } else {
             resolved = 'miss'
             freeVel.copy(vel).multiplyScalar(0.8)
-            emit('miss', { point: m.position.clone() }); emit('result', { result: 'miss' })
+            emit('miss', { point: m.position.clone() }); emit('result', { result: 'miss', point: m.position.clone() })
           }
         }
         ball.update(dt)

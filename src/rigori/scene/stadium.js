@@ -5,15 +5,22 @@ export function createStadium() {
   const g = new THREE.Group()
   const seats = seatsTexture()
   const tierMat = new THREE.MeshStandardMaterial({ map: seats, roughness: .9 })
-  const concrete = new THREE.MeshStandardMaterial({ color: 0x2b2f36, roughness: .95 })
+  const concrete = new THREE.MeshStandardMaterial({ color: 0x3a3f55, roughness: .95 })
   // Le tribune: per ogni lato, 3 gradoni inclinati. Il campo è centrato su (0, 0, 30) [z da -30 a 90 per il rettangolo lungo]
   const cx = 0, cz = 30, halfW = 48, halfD = 62
   const tier = (w, d, x, z, rotY, i) => {
     const step = new THREE.Mesh(new THREE.BoxGeometry(w, 3.2 + i * 0.6, d), i === 3 ? concrete : tierMat)
     step.position.set(x, 1.6 + i * 3.2, z); step.rotation.y = rotY; g.add(step)
   }
+  const led = [new THREE.MeshBasicMaterial({ color: 0xE8552E }), new THREE.MeshBasicMaterial({ color: 0x2CA6A4 })]
+  const strip = (w, d, x, y, z, i) => { const m = new THREE.Mesh(new THREE.BoxGeometry(w, 0.18, d), led[i % 2]); m.position.set(x, y, z); g.add(m) }
   for (let i = 0; i < 4; i++) {
     const off = i * 7
+    const yTop = 3.2 + i * 3.2 + (3.2 + i * 0.6) / 2 - 0.05
+    strip(halfW * 2 + off * 2, 0.25, cx, yTop, cz - halfD - off + 3.5, i)
+    strip(halfW * 2 + off * 2, 0.25, cx, yTop, cz + halfD + off - 3.5, i + 1)
+    strip(0.25, halfD * 2 + off * 2, cx - halfW - off + 3.5, yTop, cz, i + 1)
+    strip(0.25, halfD * 2 + off * 2, cx + halfW + off - 3.5, yTop, cz, i)
     tier(halfW * 2 + off * 2, 7, cx, cz - halfD - off, 0, i)            // dietro la porta (fondo)
     tier(halfW * 2 + off * 2, 7, cx, cz + halfD + off, 0, i)            // lato opposto
     tier(7, halfD * 2 + off * 2, cx - halfW - off, cz, 0, i)            // sinistra
@@ -24,16 +31,16 @@ export function createStadium() {
   const pole = new THREE.MeshStandardMaterial({ color: 0x8a8f99, roughness: .6, metalness: .4 })
   const towers = []
   // Due torri dietro la porta restano nell'inquadratura del tiratore (portrait): il bagliore è parte della scena
-  for (const [x, z, h] of [[-11, -42, 28], [11, -42, 28], [-60, 100, 44], [60, 100, 44]]) {
+  for (const [x, z, h] of [[-17, -50, 30], [17, -50, 30], [-60, 100, 44], [60, 100, 44]]) {
     const p = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.8, h, 8), pole); p.position.set(x, h / 2, z); g.add(p)
-    const head = new THREE.Mesh(new THREE.BoxGeometry(6, 2.6, 1.0), lamp); head.position.set(x, h, z + (z < 30 ? 1.5 : -1.5)); head.lookAt(0, 0, 11); g.add(head); towers.push(head)
-    const halo = new THREE.Mesh(new THREE.PlaneGeometry(9, 5), new THREE.MeshBasicMaterial({ color: 0xfff3c4, transparent: true, opacity: .07, depthWrite: false })); halo.position.copy(head.position); halo.lookAt(0, 0, 11); g.add(halo)
+    const head = new THREE.Mesh(new THREE.BoxGeometry(3.6, 1.6, 0.8), lamp); head.position.set(x, h, z + (z < 30 ? 1.5 : -1.5)); head.lookAt(0, 0, 11); g.add(head); towers.push(head)
+    const halo = new THREE.Mesh(new THREE.PlaneGeometry(6, 3.4), new THREE.MeshBasicMaterial({ color: 0xfff3c4, transparent: true, opacity: .06, depthWrite: false })); halo.position.copy(head.position); halo.lookAt(0, 0, 11); g.add(halo)
   }
   // Cielo: sfera con gradiente notturno e stelle
   const skyGeo = new THREE.SphereGeometry(300, 24, 12)
   const skyMat = new THREE.ShaderMaterial({
     side: THREE.BackSide, depthWrite: false,
-    uniforms: { top: { value: new THREE.Color(0x03060f) }, bottom: { value: new THREE.Color(0x14233f) } },
+    uniforms: { top: { value: new THREE.Color(0x05081a) }, bottom: { value: new THREE.Color(0x1b2c5e) } },
     vertexShader: 'varying vec3 vP; void main(){ vP = position; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }',
     fragmentShader: 'uniform vec3 top; uniform vec3 bottom; varying vec3 vP; void main(){ float h = clamp(normalize(vP).y * 1.8 + 0.15, 0.0, 1.0); gl_FragColor = vec4(mix(bottom, top, h), 1.0); }'
   })

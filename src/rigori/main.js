@@ -18,7 +18,15 @@ import { createGhost } from './game/ghost.js'
 import { loadCharacterKit, makeCharacter, loadFace } from './scene/players.js'
 import { createKeeper } from './game/keeper.js'
 import { createJuice } from './game/juice.js'
-import { keeper as keeperData, faceOf } from './data/players.js'
+import { createShootout } from './game/modes/shootout.js'
+import { createSfidaAle } from './game/modes/sfidaAle.js'
+import { createPassAndPlay } from './game/modes/passAndPlay.js'
+import { createSkill } from './game/modes/skill.js'
+import { cpuAim, XP } from './game/modes/base.js'
+import { zoneOf } from './game/keeper.js'
+import { pickZone, handoff } from './ui/screens/passaggio.js'
+import { keeper as keeperData, faceOf, byId } from './data/players.js'
+import { createKicker, KICK_DELAY } from './game/kicker.js'
 
 const root = document.getElementById('game')
 const ASSETS = import.meta.env.BASE_URL.replace(/\/$/, '') + '/assets/rigori/'
@@ -33,6 +41,7 @@ root.innerHTML = `<div class="rg-loading" id="rg-loading" role="status" aria-liv
   <p class="rg-loading__tip">${TIPS[(Math.random() * TIPS.length) | 0]}</p>
 </div>
 <div class="rg-stage" id="rg-stage"></div>
+<div class="rg-vignette" aria-hidden="true"></div>
 <div class="rg-ui" id="rg-ui"></div>`
 const stage = document.getElementById('rg-stage')
 const manager = new THREE.LoadingManager()
@@ -42,7 +51,7 @@ manager.onProgress = (_u, loaded, total) => { const f = total ? loaded / total :
 // ---------- scena ----------
 const R = createRenderer(stage)
 const scene = new THREE.Scene()
-scene.fog = new THREE.Fog(0x0b1020, 90, 260)
+scene.fog = new THREE.Fog(0x0a0e22, 38, 170) // nebbia leggera scura: profondità (direzione visiva)
 const rig = createCameraRig(R.size.w / R.size.h)
 const lights = createLights(); scene.add(lights.group)
 const field = createField(); scene.add(field)
@@ -90,36 +99,64 @@ const events = []                      // ultimi eventi del tiro (per QA e per l
 const listeners = new Set()            // le modalità si iscrivono qui (fase 7)
 const shot = createShot({ ball, goal, keeper: null, onEvent: (e) => { events.push(e); listeners.forEach((f) => f(e)); onShotEvent(e) } })
 // Personaggi: kit caricato attraverso il manager (progresso reale), portiere sulla linea
-let kit = null, keeper = null
+// Due personaggi: Ale (portiere di casa) e il tiratore scelto. Nel ruolo portiere si scambiano:
+// Ale va sul dischetto e il tiratore scelto va in porta.
+let kit = null, keeper = null, kicker = null, shooterId = 'monne' // DA VERIFICARE: tiratore di partenza
+const chars = {}, controllers = {}
+const faces = {}
+const charFor = (p) => {
+  if (chars[p.id]) return chars[p.id]
+  faces[p.id] = faces[p.id] || loadFace(ASSETS, faceOf(p), manager)
+  chars[p.id] = makeCharacter(kit, { maglia: p.maglia, numero: p.numero, faceTexture: faces[p.id], faceScale: p.id === 'ale' ? 0.5 : 0.46 })
+  return chars[p.id]
+}
+function setPair(keeperP, kickerP) {
+  for (const c of Object.values(chars)) scene.remove(c.group)
+  const kc = charFor(keeperP), sc = charFor(kickerP)
+  const kKey = 'keeper:' + keeperP.id, sKey = 'kicker:' + kickerP.id
+  controllers[kKey] = controllers[kKey] || createKeeper(kc, { difficulty: keeper?.difficulty || 'normale', onDive: (_z, at) => juice.dust(at) })
+  controllers[sKey] = controllers[sKey] || createKicker(sc)
+  keeper = controllers[kKey]; kicker = controllers[sKey]
+  keeper.reset(); kicker.reset()
+  scene.add(kc.group); scene.add(sc.group)
+  shot.setKeeper(keeper); game.keeper = keeper; game.kicker = kicker
+}
 const kitReady = loadCharacterKit(ASSETS, manager).then((k) => {
-  kit = k
-  const ale = keeperData()
-  const aleChar = makeCharacter(kit, { maglia: ale.maglia, numero: ale.numero, faceTexture: loadFace(ASSETS, faceOf(ale), manager), faceScale: 0.5 })
-  keeper = createKeeper(aleChar, { difficulty: 'normale', onDive: (_z, at) => juice.dust(at) })
-  scene.add(keeper.group); shot.setKeeper(keeper)
-  systems.push({ update: (dt) => keeper.update(dt) })
-  game.keeper = keeper; game.kit = kit
+  kit = k; game.kit = kit
+  setPair(keeperData(), byId(shooterId))
+  systems.push({ update: (dt) => { keeper?.update(dt); kicker?.update(dt) } })
 }).catch((err) => { console.error('Personaggi non caricati:', err); game.loadError = String(err) })
+// Cambio tiratore (schermata CHI TIRA?, fase 9)
+function setShooter(id) { if (!byId(id) || !kit) return; shooterId = id; if (role === 'keeper') setPair(byId(shooterId), keeperData()); else setPair(keeperData(), byId(shooterId)) }
 const hud = document.createElement('div'); hud.className = 'rg-hud'; hud.innerHTML = `
   <div class="rg-timing" id="rg-timing" hidden aria-hidden="true"><i class="rg-timing__win"></i><b class="rg-timing__cur"></b></div>
   <div class="rg-hint" id="rg-hint">Trascina dal pallone</div>`
 document.getElementById('rg-ui').appendChild(hud)
 const timingEl = document.getElementById('rg-timing'), timingCur = timingEl.querySelector('.rg-timing__cur'), hint = document.getElementById('rg-hint')
 let timingEnabled = true               // opzione (fase 9); ON di default
-const input = createInput(stage, { camera: rig.camera, getBallWorld: () => ball.mesh.position, size: R.size, enabled: () => shot.state === 'idle' && window.__rigori.ready })
-input.on('start', () => { if (timingEnabled) { timing.start(); timingEl.hidden = false } hint.hidden = true })
-input.on('move', (g) => { if (g.ok) ghost.show(aimFromGesture(g, R.size)) })
+const input = createInput(stage, { camera: rig.camera, getBallWorld: () => ball.mesh.position, size: R.size, enabled: () => !shot.busy && window.__rigori.ready })
+input.on('start', () => { if (timingEnabled && input.mode === 'shooter') { timing.start(); timingEl.hidden = false } hint.hidden = true })
+input.on('move', (g) => { if (g.ok && input.mode === 'shooter') ghost.show(aimFromGesture(g, R.size)) })
 input.on('end', (g) => {
   ghost.hide(); timing.stop(); timingEl.hidden = true
+  if (input.mode === 'keeper') {
+    // portiere: direzione dello swipe → zona; il tempismo è tutto (troppo presto: la CPU cambia lato)
+    if (!g.ok || !keeper) return
+    const col = g.dx < -40 ? 0 : g.dx > 40 ? 2 : 1, row = -g.dy > 60 ? 0 : 1
+    keeper.playerDive(row * 3 + col); hint.hidden = true
+    return
+  }
   if (!g.ok) { hint.hidden = false; return }
-  shot.fire(aimFromGesture(g, R.size), { timingPerfect: timingEnabled && timing.perfect })
-  rig.followLook(ball.mesh)
+  shot.fire(aimFromGesture(g, R.size), { timingPerfect: timingEnabled && timing.perfect, delay: kicker ? KICK_DELAY : 0 })
+  kicker?.windup()
 })
 input.on('reject', () => { hint.hidden = false; hint.classList.remove('rg-hint--pulse'); void hint.offsetWidth; hint.classList.add('rg-hint--pulse') })
 const shake = (amp, dur) => { if (!settings.reduceFx) rig.shake(amp, dur) }
 let replayPending = false
 function onShotEvent(e) {
-  if (e.type === 'kick') { hint.hidden = true; juice.clearRecord(); replayPending = true; keeper?.prepare({ aim: e.aim, timingPerfect: e.timingPerfect, power: e.aim.power }) }
+  if (e.type === 'windup') hint.hidden = true
+  if (e.type === 'kick') { hint.hidden = true; juice.clearRecord(); replayPending = true; kicker?.onKick(); rig.followLook(ball.mesh); keeper?.prepare({ aim: e.aim, timingPerfect: e.timingPerfect, power: e.aim.power }) }
+  if (e.type === 'result') kicker?.react(e.result)
   if (e.type === 'result') { juice.setSlow(false); keeper?.react(e.result) }
   if (e.type === 'goal') { crowd.react('ola'); shake(0.10, 0.35) }
   if (e.type === 'post' || e.type === 'crossbar') { shake(0.06, 0.2); juice.hitStop(60) }
@@ -129,7 +166,7 @@ function onShotEvent(e) {
 }
 // Dopo l'esito: replay laterale di 2 s, poi si torna dietro al tiratore. Le modalità (fase 7) ascoltano 'replayEnd'.
 function afterSettled() {
-  const finish = () => { shot.reset(); keeper?.reset(); rig.followLook(null); rig.goTo('dietroTiratore'); hint.hidden = false; listeners.forEach((f) => f({ type: 'replayEnd' })) }
+  const finish = () => { shot.reset(); keeper?.reset(); kicker?.reset(); rig.followLook(null); rig.goTo('dietroTiratore'); hint.hidden = false; listeners.forEach((f) => f({ type: 'replayEnd' })) }
   if (!replayPending) { finish(); return }
   replayPending = false
   setTimeout(() => juice.startReplay(() => setTimeout(finish, 300)), 500)
@@ -141,6 +178,62 @@ systems.push({ update(_dt, raw) {
   timeScale = juice.update(raw, ball.mesh)
 } })
 
+// ---------- modalità ----------
+const MODES = { shootout: (o) => createShootout(o), boss: (o) => createShootout({ ...o, boss: true }), sfidaAle: (o) => createSfidaAle(o), passAndPlay: (o) => createPassAndPlay(o), skill: (o) => createSkill(o) }
+let mode = null, role = 'idle'
+const modeHud = document.createElement('div'); modeHud.className = 'rg-modehud'; modeHud.setAttribute('aria-live', 'polite'); document.getElementById('rg-ui').appendChild(modeHud)
+const target = new THREE.Mesh(new THREE.RingGeometry(0.42, 0.55, 32), new THREE.MeshBasicMaterial({ color: 0xF2B705, transparent: true, opacity: .9, side: THREE.DoubleSide, depthTest: false })); target.renderOrder = 8; target.visible = false; scene.add(target)
+const xpLog = []
+const ctx = {
+  role(r) {
+    const was = role; role = r; input.setMode(r === 'keeper' ? 'keeper' : 'shooter')
+    if (kit && (r === 'keeper') !== (was === 'keeper')) { if (r === 'keeper') setPair(byId(shooterId), keeperData()); else setPair(keeperData(), byId(shooterId)) }
+    keeper?.setPlayable(r === 'keeper')
+    if (r === 'shooter') { hint.textContent = 'Trascina dal pallone'; hint.hidden = false; rig.goTo('dietroTiratore') }
+    else if (r === 'keeper') { hint.textContent = 'Trascina verso la zona in cui tuffarti'; hint.hidden = false; rig.goTo('dietroPortiere') }
+    else hint.hidden = true
+  },
+  setDifficulty(d) { keeper?.setDifficulty(d) },
+  hud(t) { modeHud.textContent = t },
+  xp(kind) { const n = XP[kind] || 0; xpLog.push({ kind, n }); listeners.forEach((f) => f({ type: 'xp', kind, n })) },
+  forceKeeperZone(z) { keeper?.force(z) },
+  keeperPassive(on) { keeper?.setPassive(on) },
+  showTarget(t) { if (!t) { target.visible = false; return } target.position.set(t.x, t.y, 0.05); target.visible = true },
+  pickZone: (o) => pickZone(game.ui, o),
+  handoff: (name) => handoff(game.ui, name),
+  // Tiro della CPU (l'utente para): tell 200 ms prima (lato vero 60%, finta 40%; in Boss finta 15%), poi il calcio.
+  cpuShoot({ strength = 1 } = {}) {
+    const boss = keeper?.difficulty === 'boss'
+    const early = keeper?.playerDiveZone()
+    const aim = cpuAim({ avoidCol: early != null ? early % 3 : null, strength })
+    const feint = Math.random() < (boss ? 0.15 : 0.40)
+    const side = feint ? -Math.sign(aim.x || 1) : Math.sign(aim.x || 1)
+    listeners.forEach((f) => f({ type: 'tell', side, feint }))
+    kicker?.tell(side)
+    setTimeout(() => {
+      const late = keeper?.playerDiveZone()
+      const a = (late != null && early == null) ? cpuAim({ avoidCol: late % 3, strength }) : aim
+      shot.setPrecision(0.6); shot.fire(a, { timingPerfect: false, delay: kicker ? KICK_DELAY : 0 }); shot.setPrecision(1)
+      kicker?.windup()
+    }, 200)
+  }
+}
+function startMode(id, opts = {}) {
+  if (!MODES[id]) throw new Error('modalità sconosciuta: ' + id)
+  mode = MODES[id](opts); mode.start(ctx); mode.nextTurn(ctx)
+  listeners.forEach((f) => f({ type: 'modeStart', id }))
+  return mode
+}
+listeners.add((e) => {
+  if (!mode) return
+  if (e.type === 'result') mode.onResult(e, ctx)
+  if (e.type === 'replayEnd') {
+    if (mode.finished) { const summary = mode.summary(); const m = mode; mode = null; ctx.role('idle'); listeners.forEach((f) => f({ type: 'modeEnd', id: m.id, summary })) }
+    else mode.nextTurn(ctx)
+  }
+})
+systems.push({ update(dt) { if (mode?.tick && !mode.finished) mode.tick(dt, ctx) } })
+
 // ---------- API interna ed export per QA ----------
 export const game = {
   THREE, scene, camera: rig.camera, rig, renderer: R.renderer, ball, goal, crowd, field, stadium, lights, fx, perf, quality, manager, ASSETS, systems, shot, input, timing, listeners,
@@ -150,8 +243,9 @@ export const game = {
 window.__rigori = {
   ready: false, game,
   // Tiro deterministico per la QA: aim = { x, y, power, curve }
-  fire: (aim, timingPerfect = false) => { shot.fire(aim, { timingPerfect }); rig.followLook(ball.mesh) },
-  kitReady,
+  fire: (aim, timingPerfect = false, delay = 0) => { shot.fire(aim, { timingPerfect, delay }); if (delay) kicker?.windup(); else rig.followLook(ball.mesh) },
+  setShooter, shooter: () => shooterId,
+  kitReady, startMode, mode: () => mode, role: () => role, xpLog, ctx,
   events, shotState: () => shot.state, lastResult: () => [...events].reverse().find((e) => e.type === 'result')?.result || null,
   info: () => ({ fps: +perf.fps.toFixed(1), level: perf.level, quality: { ...quality }, frames, draws: R.renderer.info.render.calls, tris: R.renderer.info.render.triangles, camera: rig.current })
 }

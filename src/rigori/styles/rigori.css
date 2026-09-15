@@ -33,3 +33,19 @@ html,body{ margin:0; height:100%; background:var(--bg); color:var(--ink); font-f
 .rg-timing[hidden]{ display:none; }
 .rg-timing__win{ position:absolute; left:41%; width:18%; top:0; bottom:0; border-radius:7px; background:var(--acqua); }
 .rg-timing__cur{ position:absolute; top:-5px; width:6px; height:24px; margin-left:-3px; border-radius:3px; background:var(--giallo); box-shadow:0 0 0 2px var(--bg); }
+
+/* HUD della modalità e overlay */
+.rg-modehud{ position:absolute; top:calc(12px + env(safe-area-inset-top, 0px)); left:50%; transform:translateX(-50%); max-width:92vw; padding:8px 14px; border-radius:999px; background:color-mix(in srgb, var(--bg) 72%, transparent); color:var(--ink); font-weight:600; font-size:var(--fs-0); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.rg-modehud:empty{ display:none; }
+.rg-overlay{ position:absolute; inset:0; z-index:30; display:flex; align-items:center; justify-content:center; padding:var(--space-4); background:color-mix(in srgb, var(--bg) 88%, transparent); }
+.rg-panel{ width:100%; max-width:420px; display:flex; flex-direction:column; gap:var(--space-4); padding:var(--space-5); border-radius:var(--radius-l); background:var(--bg-2); border:1px solid color-mix(in srgb, var(--ink) 14%, transparent); }
+.rg-title{ margin:0; font-family:var(--font-display); font-weight:700; font-size:var(--fs-3); line-height:1.05; }
+.rg-sub{ margin:0; color:var(--ink-2); font-size:var(--fs-0); }
+.rg-btn{ display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:48px; padding:0 var(--space-4); border-radius:var(--radius-s); background:var(--bg-3); color:var(--ink); border:1px solid color-mix(in srgb, var(--ink) 20%, transparent); font:inherit; font-weight:600; cursor:pointer; -webkit-tap-highlight-color:transparent; }
+.rg-btn:focus-visible{ outline:3px solid var(--giallo); outline-offset:2px; }
+.rg-btn--primary{ background:var(--terracotta); border-color:transparent; color:#0E1116; }
+.rg-zones{ display:grid; grid-template-columns:repeat(3, 1fr); gap:var(--space-2); }
+.rg-zone{ min-height:56px; font-size:var(--fs-0); }
+
+/* Vignettatura */
+.rg-vignette{ position:absolute; inset:0; pointer-events:none; background:radial-gradient(ellipse at center 45%, transparent 48%, rgba(6,8,18,.55) 100%); }

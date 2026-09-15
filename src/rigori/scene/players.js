@@ -37,7 +37,10 @@ export function makeCharacter(kit, { maglia, numero, faceTexture, faceScale = 0.
   const actions = {}
   for (const [k, c] of Object.entries(kit.clips)) { const a = mixer.clipAction(c); a.clampWhenFinished = true; actions[k] = a }
   // Volto: sprite sull'osso della testa, sempre rivolto alla camera
-  const head = model.getObjectByName('mixamorig:Head'), spine = model.getObjectByName('mixamorig:Spine2')
+  // GLTFLoader sanifica i nomi dei nodi (toglie i due punti): "mixamorig:Head" diventa "mixamorigHead"
+  const bone = (n) => model.getObjectByName(n.replace(':', '')) || model.getObjectByName(n)
+  const head = bone('mixamorig:Head'), spine = bone('mixamorig:Spine2')
+  if (!head || !spine) console.warn('Ossa non trovate:', { head: !!head, spine: !!spine })
   // Il volto vive nello spazio mondo (non figlio dell'osso): segue la testa a ogni frame e non finisce mai dietro la mesh
   let faceSprite = null
   const headPos = new THREE.Vector3()
