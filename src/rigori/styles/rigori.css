@@ -88,7 +88,10 @@ html,body{ margin:0; height:100%; background:var(--bg); color:var(--ink); font-f
 .rg-ach{ display:flex; flex-wrap:wrap; gap:6px; }
 .rg-ach__item{ padding:6px 10px; border-radius:999px; background:color-mix(in srgb, var(--giallo) 20%, transparent); color:var(--giallo); font-weight:700; font-size:var(--fs-0); }
 .rg-unlocks{ margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:6px; }
-.rg-unlocks li{ display:flex; flex-direction:column; padding:8px 12px; border-radius:var(--radius-s); background:var(--bg-3); opacity:.6; }
+.rg-unlocks li{ display:flex; flex-direction:column; border-radius:var(--radius-s); background:var(--bg-3); opacity:.6; }
+.rg-unlock{ display:flex; flex-direction:column; width:100%; padding:8px 12px; border:0; background:none; color:inherit; font:inherit; text-align:left; border-radius:var(--radius-s); min-height:48px; }
+button.rg-unlock{ cursor:pointer; }
+.rg-unlocks li.eq{ outline:2px solid var(--acqua); }
 .rg-unlocks li.on{ opacity:1; }
 .rg-unlocks b{ font-size:var(--fs-1); }
 .rg-unlocks span{ color:var(--ink-2); font-size:var(--fs-0); }
@@ -123,3 +126,8 @@ html,body{ margin:0; height:100%; background:var(--bg); color:var(--ink); font-f
 @media (prefers-reduced-motion: reduce){ .rg-onb__arrow{ animation:none; } }
 /* Bottone menu in gioco */
 .rg-menubtn{ position:absolute; top:calc(10px + env(safe-area-inset-top, 0px)); left:10px; width:48px; height:48px; padding:0; border-radius:50%; }
+
+/* Loading: bottone 'Tocca per iniziare' (sblocco audio) */
+.rg-loading__tap{ margin-top:var(--space-4); min-width:200px; animation:rg-pulse 1.4s ease-in-out infinite; }
+@keyframes rg-pulse{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.04); } }
+@media (prefers-reduced-motion: reduce){ .rg-loading__tap{ animation:none; } }
