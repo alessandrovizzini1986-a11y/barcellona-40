@@ -154,7 +154,7 @@ function setPair(keeperP, kickerP) {
 const kitReady = loadCharacterKit(ASSETS, manager).then((k) => {
   kit = k; game.kit = kit
   setPair(keeperData(), byId(shooterId))
-  systems.push({ update: (dt) => { keeper?.update(dt); kicker?.update(dt) } })
+  systems.push({ update: (dt) => { keeper?.update(dt); kicker?.update(dt) } }) // dopo il sistema del tiro: applica al mixer la posa imposta dal record
 }).catch((err) => { console.error('Personaggi non caricati:', err); game.loadError = String(err) })
 // Cambio tiratore (schermata CHI TIRA?, fase 9)
 function setShooter(id) { if (!byId(id) || !kit) return; shooterId = id; if (role === 'keeper') setPair(byId(shooterId), keeperData()); else setPair(keeperData(), byId(shooterId)) }
@@ -174,7 +174,7 @@ input.on('end', (g) => {
     if (!g.ok || !keeper) return
     // la camera è dietro la porta e guarda verso il dischetto: la destra dello schermo è x<0 (colonna 0)
     const col = g.dx > 40 ? 0 : g.dx < -40 ? 2 : 1, row = -g.dy > 60 ? 0 : 1
-    keeper.playerDive(row * 3 + col); hint.hidden = true
+    shot.playerDive(row * 3 + col); hint.hidden = true
     return
   }
   if (!g.ok) { hint.hidden = false; return }
@@ -184,9 +184,12 @@ input.on('end', (g) => {
 input.on('reject', () => { hint.hidden = false; hint.classList.remove('rg-hint--pulse'); void hint.offsetWidth; hint.classList.add('rg-hint--pulse') })
 const shake = (amp, dur) => { if (!settings.reduceFx) rig.shake(amp, dur) }
 let replayPending = false
+// QA: traccia della posa a ogni frame disegnato del tiro (live e replay usano la stessa funzione di disegno)
+let trace = null
+shot.onFrame = (t) => { if (trace) trace.push({ t, ...window.__rigori.pose() }) }
 function onShotEvent(e) {
   if (e.type === 'windup') { hint.hidden = true; audio.play('step', { volume: .5 }) }
-  if (e.type === 'kick') { audio.play(e.aim.power > 0.95 ? 'kick2' : 'kick', { volume: 0.6 + Math.min(0.4, e.aim.power * 0.4) }); hint.hidden = true; juice.clearRecord(); replayPending = true; kicker?.onKick(); rig.followLook(ball.mesh); keeper?.prepare({ aim: e.aim, timingPerfect: e.timingPerfect, power: e.aim.power }) }
+  if (e.type === 'kick') { audio.play(e.aim.power > 0.95 ? 'kick2' : 'kick', { volume: 0.6 + Math.min(0.4, e.aim.power * 0.4) }); hint.hidden = true; replayPending = true; kicker?.onKick(); rig.followLook(ball.mesh) }
   if (e.type === 'result') kicker?.react(e.result)
   if (e.type === 'result') { juice.setSlow(false); keeper?.react(e.result); showEsito(game.ui, { result: e.result, corner: e.corner, taunt: game.tauntFor?.(e) || '' }); audio.duck(true); audio.vo(e.corner ? 'corner' : e.result) }
   if (e.type === 'goal') { crowd.react('ola'); shake(0.10, 0.35); audio.play('net', { volume: .8 }); audio.crowd('roar'); setTimeout(() => audio.crowd('clap'), 700); audio.vibrate([30, 40, 70]) }
@@ -197,15 +200,18 @@ function onShotEvent(e) {
 }
 // Dopo l'esito: replay laterale di 2 s, poi si torna dietro al tiratore. Le modalità (fase 7) ascoltano 'replayEnd'.
 function afterSettled() {
+  if (game.holdShot) return // QA: tiene il record vivo per i test di determinismo
   const finish = () => { audio.duck(false); hideEsito(game.ui); shot.reset(); keeper?.reset(); kicker?.reset(); rig.followLook(null); rig.goTo('dietroTiratore'); hint.hidden = false; listeners.forEach((f) => f({ type: 'replayEnd' })) }
   if (!replayPending) { finish(); return }
   replayPending = false
-  setTimeout(() => juice.startReplay(() => setTimeout(finish, 300)), 500)
+  const rec = shot.record
+  const from = Math.max(0, rec.contactTime - 0.55), to = Math.min(rec.duration, rec.contactTime + 0.45)
+  setTimeout(() => juice.startReplay({ from, to, speed: 0.3, render: (t) => shot.renderAt(t), onEnd: () => setTimeout(finish, 300) }), 500)
 }
 systems.push({ update(dt) { shot.update(dt); timing.update(dt); if (!timingEl.hidden) timingCur.style.left = (timing.value * 100) + '%' } })
 // Slow-motion ×0,3 negli ultimi 0,4 s prima dell'esito; registrazione della palla per il replay
 systems.push({ update(_dt, raw) {
-  if (shot.state === 'flying') { juice.recordBall(ball.mesh.position); juice.setSlow(shot.remaining < 0.4) }
+  if (shot.state === 'flying') juice.setSlow(shot.remaining < 0.4)
   timeScale = juice.update(raw, ball.mesh)
 } })
 
@@ -236,14 +242,14 @@ const ctx = {
   // Tiro della CPU (l'utente para): tell 200 ms prima (lato vero 60%, finta 40%; in Boss finta 15%), poi il calcio.
   cpuShoot({ strength = 1 } = {}) {
     const boss = keeper?.difficulty === 'boss'
-    const early = keeper?.playerDiveZone()
+    const early = shot.playerDiveZone()
     const aim = cpuAim({ avoidCol: early != null ? early % 3 : null, strength })
     const feint = Math.random() < (boss ? 0.15 : 0.40)
     const side = feint ? -Math.sign(aim.x || 1) : Math.sign(aim.x || 1)
     listeners.forEach((f) => f({ type: 'tell', side, feint }))
     kicker?.tell(side)
     setTimeout(() => {
-      const late = keeper?.playerDiveZone()
+      const late = shot.playerDiveZone()
       const a = (late != null && early == null) ? cpuAim({ avoidCol: late % 3, strength }) : aim
       shot.setPrecision(0.6); shot.fire(a, { timingPerfect: false, delay: kicker ? KICK_DELAY : 0 }); shot.setPrecision(1)
       kicker?.windup()
@@ -359,7 +365,18 @@ applyEquip()
 window.__rigori = {
   ready: false, game, noFlow: new URLSearchParams(location.search).has('noflow'),
   // Tiro deterministico per la QA: aim = { x, y, power, curve }
-  fire: (aim, timingPerfect = false, delay = 0) => { shot.fire(aim, { timingPerfect, delay }); if (delay) kicker?.windup(); else rig.followLook(ball.mesh) },
+  fire: (aim, timingPerfect = false, delay = 0, seed) => { shot.fire(aim, { timingPerfect, delay, seed }); if (delay) kicker?.windup(); else rig.followLook(ball.mesh) },
+  // Determinismo: record del tiro, disegno a un tempo qualsiasi, traccia della posa frame per frame
+  record: () => shot.record,
+  renderAt: (t) => shot.renderAt(t),
+  pose: () => ({ ball: ball.mesh.position.toArray().map((n) => +n.toFixed(4)), ballRot: +ball.mesh.rotation.x.toFixed(4), keeperX: +(keeper?.group.position.x ?? 0).toFixed(4), clip: keeper?.action?.getClip?.().name || null, clipTime: +(keeper?.action?.time ?? -1).toFixed(4) }),
+  trace: (on) => { trace = on ? [] : null; return trace },
+  traced: () => trace,
+  playerDive: (z) => shot.playerDive(z),
+  replay: ({ speed = 0.3, from, to } = {}) => new Promise((res) => {
+    const rec = shot.record; if (!rec) return res(false)
+    juice.startReplay({ from: from ?? Math.max(0, rec.contactTime - 0.55), to: to ?? Math.min(rec.duration, rec.contactTime + 0.45), speed, render: (t) => shot.renderAt(t), onEnd: () => res(true) })
+  }),
   setShooter, shooter: () => shooterId, flow: () => flow, settings, applySettings,
   kitReady, startMode, mode: () => mode, role: () => role, xpLog, ctx, chars, rig, keeper: () => keeper, kicker: () => kicker, get frames() { return frames },
   setPrecision: (v) => shot.setPrecision(v), audio, events, shotState: () => shot.state, lastResult: () => [...events].reverse().find((e) => e.type === 'result')?.result || null,

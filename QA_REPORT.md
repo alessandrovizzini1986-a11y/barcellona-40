@@ -151,6 +151,44 @@ Difetti trovati rileggendo il diff e corretti, ciascuno con un controllo automat
 | `guida.html` e `sala-giochi.html` del sito precedente linkano `rigori.html`, che la build non emetteva più | `rigori.html` di raccordo verso `rigori/` con link al classic | `dist/rigori.html` presente |
 | Codice morto (`setCamera`, `loadFace`, `faceSprite`), opzioni duplicate, titoli duplicati | rimossi; `openOptions()`; titoli da `MODES_INFO` | build ok |
 
+## Tiro deterministico e portiere sincronizzato (`rigori-determinismo.mjs`)
+
+**Sintomo segnalato**: dal vivo il portiere non si tuffava, nel primo replay sì, nel secondo no.
+
+**Cause trovate nel codice**, tutte e tre reali:
+1. Il portiere si animava su `dt` **scalato**: lo slow-motion (×0,3) rallentava il tuffo proprio nell'ultimo tratto di
+   volo, e durante il replay la scala del tempo era 0, quindi il mixer era fermo.
+2. Il replay **risimulava**: ripercorreva un elenco di posizioni della sola palla, registrate durante il volo. Il
+   portiere non ne faceva parte, e la reazione dopo l'esito (con un `setTimeout` da 1,8 s in tempo reale) lo rimetteva
+   in piedi in mezzo al replay.
+3. Il mixer non veniva azzerato fra una passata e l'altra: alla seconda l'azione era già finita e non ripartiva.
+
+**Rifacimento**: il tiro è un record immutabile. Al calcio, con un seme, si decidono dispersione, traiettoria, zona e
+ritardo di reazione del portiere ed esito; il volo libero dopo l'impatto è simulato subito e campionato a 1/120 s.
+Esiste una sola funzione di disegno, `renderShotAt(record, t)`: il gioco dal vivo la chiama con t che avanza al ritmo
+della partita, il replay con t che avanza a 0,3×. Il tuffo è "scrubbato" (`action.paused`, `action.time` imposto) e la
+finestra dell'animazione è riscalata perché il portiere arrivi nella zona **esattamente all'impatto**: così è sempre
+visibile e sempre in tempo. L'esito nel record decide suono, sfottò, punteggio e particelle; nessun altro pezzo di
+codice lo può cambiare.
+
+| Criterio di accettazione | Esito |
+|--------------------------|-------|
+| Il tuffo parte prima dell'impatto in 20/20 tiri a seme fisso | ✅ |
+| La clip del tuffo avanza (tuffo visibile) in 20/20 tiri | ✅ |
+| Il portiere si sposta lateralmente in tutte le zone non centrali (16/16) | ✅ |
+| Stessa posa a ogni istante prima, dopo tre replay e dopo un quarto | ✅ |
+| Il replay non chiama `Math.random` | ✅ (0 chiamate) |
+| Il replay non chiama la decisione del portiere | ✅ (0 chiamate) |
+| Ogni replay riparte dalla stessa posa iniziale (mixer azzerato) | ✅ |
+| Palla dal vivo e ricalcolata: identica in tutti i 62 frame | ✅ |
+| Portiere dal vivo e ricalcolato: identico fino all'impatto | ✅ |
+| Replay ricalcolato agli stessi istanti: stessa posa (35 frame) | ✅ |
+
+Dopo l'impatto il portiere passa all'animazione di reazione (esultanza o delusione), che non fa parte del tiro: è
+l'unico tratto in cui la posa dal vivo e quella del replay divergono, per scelta.
+
+Screenshot: `v2-tuffo-basso-dx.png` (allungo pieno, palla sui guanti, dalla camera del replay).
+
 ## Cose non verificabili qui (da fare sul telefono)
 
 - fps reali su Chrome Android e Safari iOS, e soglie di degradazione (45/55 fps)

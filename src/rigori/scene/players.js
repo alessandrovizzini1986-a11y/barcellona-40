@@ -43,13 +43,25 @@ export function makeCharacter(kit, { maglia, numero, faceUrl = null, glove = fal
   let current = null
   return {
     group, model, mixer, actions, big, shadow,
+    get currentAction() { return current },
     play(name, { loop = false, fade = 0.15, timeScale = 1, from = 0 } = {}) {
       const a = actions[name]; if (!a) return null
-      a.reset(); a.setLoop(loop ? THREE.LoopRepeat : THREE.LoopOnce, loop ? Infinity : 1); a.timeScale = timeScale; a.time = from; a.enabled = true
+      a.reset(); a.setLoop(loop ? THREE.LoopRepeat : THREE.LoopOnce, loop ? Infinity : 1); a.timeScale = timeScale; a.time = from; a.enabled = true; a.paused = false
       if (current && current !== a) { current.crossFadeTo(a, fade, false) }
       a.fadeIn(fade).play(); current = a
       return a
     },
+    // Posa a un tempo preciso della clip ("scrubbing"): l'azione resta in pausa e il tempo lo impone chi chiama.
+    // Serve alla timeline unica del tiro: la stessa t dà la stessa posa dal vivo e in ogni replay, quante volte si vuole.
+    scrub(name, time) {
+      const a = actions[name]; if (!a) return null
+      if (current !== a) { mixer.stopAllAction(); a.reset(); a.play(); current = a }
+      a.enabled = true; a.setEffectiveWeight(1); a.setEffectiveTimeScale(1); a.paused = true
+      a.time = THREE.MathUtils.clamp(time, 0, a.getClip().duration - 1e-4)
+      return a
+    },
+    // Azzera il mixer: la prossima clip riparte da zero (senza questo, alla seconda esecuzione l'azione è già finita)
+    stopAll() { mixer.stopAllAction(); current = null },
     // inclinazione del busto (tell del tiratore): x in [-1, 1]
     setLean(x) { model.rotation.z = -x * 0.18 },
     update(dt) {

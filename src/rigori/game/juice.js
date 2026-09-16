@@ -14,8 +14,6 @@ export function createJuice({ scene, rig, game, reduced = () => false }) {
   const spawn = (p, v, color, ttl) => { const i = head; head = (head + 1) % MAX; pos.set([p.x, p.y, p.z], i * 3); vel.set([v.x, v.y, v.z], i * 3); life[i] = ttl; col.set([color.r, color.g, color.b], i * 3) }
   // ---- stato del tempo ----
   let hitStop = 0, slow = false, replay = null, replayCam = 'lateraleReplay'
-  const record = []                       // posizioni della palla durante il volo, per il replay
-  const tmp = new THREE.Vector3()
   return {
     // Coriandoli (vittoria, gol decisivo): dall'alto, colori del sito
     confetti(n = 220, origin = new THREE.Vector3(0, 6, 4)) {
@@ -31,11 +29,14 @@ export function createJuice({ scene, rig, game, reduced = () => false }) {
     // Hit-stop di 60 ms su palo e guanti
     hitStop(ms = 60) { hitStop = ms / 1000 },
     setSlow(on) { slow = on },
-    recordBall(p) { record.push(p.clone()) },
-    clearRecord() { record.length = 0 },
-    // Replay laterale di 2 s: la palla ripercorre le posizioni registrate dalla camera laterale
+    // Replay: NON risimula niente. Riesegue il record del tiro chiamando `render(t)` con t che avanza
+    // a velocità ridotta, da un'altra camera. Stessa funzione di disegno del gioco dal vivo.
     setReplayCamera(name) { replayCam = name || 'lateraleReplay' },
-    startReplay(onEnd) { if (record.length < 4) { onEnd?.(); return } replay = { t: 0, dur: 2, onEnd }; rig.followLook(null); rig.goTo(replayCam, { instant: true }) },
+    startReplay({ from = 0, to = 0, speed = 0.3, render, onEnd } = {}) {
+      if (!render || to <= from) { onEnd?.(); return }
+      replay = { t: from, to, speed, render, onEnd }
+      rig.followLook(null); rig.goTo(replayCam, { instant: true })
+    },
     get replaying() { return !!replay },
     // Restituisce la scala del tempo da applicare al gioco in questo frame
     update(raw, ballMesh) {
@@ -53,13 +54,11 @@ export function createJuice({ scene, rig, game, reduced = () => false }) {
       if (any) { geo.attributes.position.needsUpdate = true; geo.attributes.color.needsUpdate = true }
       // replay
       if (replay) {
-        replay.t += raw
-        const u = Math.min(1, replay.t / replay.dur)
-        const idx = u * (record.length - 1), i0 = Math.floor(idx), i1 = Math.min(record.length - 1, i0 + 1)
-        tmp.copy(record[i0]).lerp(record[i1], idx - i0); ballMesh.position.copy(tmp)
+        replay.t = Math.min(replay.to, replay.t + raw * replay.speed)
+        replay.render(replay.t)
         rig.followLook(ballMesh)
-        if (u >= 1) { const cb = replay.onEnd; replay = null; rig.followLook(null); cb?.() }
-        return 0 // durante il replay il gioco è fermo
+        if (replay.t >= replay.to) { const cb = replay.onEnd; replay = null; rig.followLook(null); cb?.() }
+        return 0 // durante il replay il tempo di gioco è fermo: avanza solo il replay
       }
       if (hitStop > 0) { hitStop -= raw; return 0 }
       return slow ? 0.3 : 1

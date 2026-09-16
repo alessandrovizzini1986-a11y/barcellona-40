@@ -33,7 +33,7 @@ await p.waitForFunction(() => window.__rigori.shotState() === 'flying', null, { 
 // swipe verso destra durante il volo → colonna 0 (x<0), riga bassa
 await p.mouse.move(190, 600); await p.mouse.down(); for (let i = 1; i <= 8; i++) { await p.mouse.move(190 + i * 15, 600 + i * 4); await p.waitForTimeout(20) } await p.mouse.up()
 await p.waitForTimeout(200)
-const dive = await p.evaluate(() => ({ zone: window.__rigori.keeper().playerDiveZone(), state: window.__rigori.keeper().state }))
+const dive = await p.evaluate(() => ({ zone: window.__rigori.game.shot.playerDiveZone(), state: window.__rigori.keeper().state }))
 check(dive.zone === 3, 'swipe a destra durante il volo → tuffo basso a x<0 (zona 3), ottenuto: ' + JSON.stringify(dive))
 await waitEv('replayEnd')
 // 4) difficoltà di partita: Boss dopo uno Shootout normale applica 'boss' anche al portiere riusato
