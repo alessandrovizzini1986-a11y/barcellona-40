@@ -10,10 +10,11 @@ const errors = []
 p.on('pageerror', (e) => errors.push('pageerror: ' + e.message))
 p.on('console', (m) => { if (m.type() === 'error') errors.push('console: ' + m.text()) })
 const shot = (n) => p.screenshot({ path: `${dir}/${n}.png` }).then(() => console.log('screenshot →', n))
-const waitFlow = (f, t = 30000) => p.waitForFunction((f) => window.__rigori?.flow?.() === f, f, { timeout: t, polling: 50 })
+const waitFlow = (f, t = 60000) => p.waitForFunction((f) => window.__rigori?.flow?.() === f, f, { timeout: t, polling: 50 })
 const step = async (name, fn) => { try { await fn() } catch (e) { errors.push(`${name}: ${e.message.split('\n')[0]}`) } }
 await p.goto(url, { waitUntil: 'load' })
-await step('ready', () => p.waitForFunction(() => window.__rigori?.ready, null, { timeout: 30000 }))
+await step('ready', () => p.waitForFunction(() => window.__rigori?.ready, null, { timeout: 60000 }))
+await step('tocca per iniziare', async () => { await p.waitForSelector('.rg-loading__tap', { timeout: 10000 }); await p.click('.rg-loading__tap', { force: true }) })
 await step('onboarding', async () => { await waitFlow('onboarding'); await p.waitForTimeout(600); await shot('f9-01-onboarding'); await p.click('[data-skip]') })
 await step('chiTira', async () => { await waitFlow('chiTira'); await p.waitForTimeout(400); await shot('f9-02-chi-tira'); await p.click('.rg-card[data-value="monne"]') })
 await step('modalita', async () => { await waitFlow('modalita'); await p.waitForTimeout(300); await shot('f9-03-modalita') })

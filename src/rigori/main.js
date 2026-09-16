@@ -35,6 +35,7 @@ import { risultato } from './ui/screens/risultato.js'
 import { opzioni } from './ui/screens/opzioni.js'
 import { sblocchi } from './ui/screens/sblocchi.js'
 import { onboarding } from './ui/screens/onboarding.js'
+import { overlay } from './ui/screens/overlay.js'
 import { toast } from './ui/components/toast.js'
 import { save } from './core/save.js'
 import { setCamera } from './scene/players.js'
@@ -306,7 +307,6 @@ async function runFlow() {
 }
 menuBtn.addEventListener('click', async () => { const v = await overlayMenu(); if (v === 'esci') quitRequested = true })
 async function overlayMenu() {
-  const { overlay } = await import('./ui/screens/overlay.js')
   const v = await overlay(game.ui, `<h2 class="rg-title">Pausa</h2><div class="rg-row"><button class="rg-btn rg-btn--primary" data-value="continua" aria-label="Continua">Continua</button><button class="rg-btn" data-value="opzioni" aria-label="Opzioni">Opzioni</button><button class="rg-btn rg-btn--ghost" data-value="esci" aria-label="Esci dalla partita">Esci</button></div>`, { label: 'Pausa', closable: true })
   if (v === 'opzioni') { await opzioni(game.ui, settings, { onChange: applySettings, onReset: () => { save.reset(); toast(game.ui, 'Progressi azzerati'); setTimeout(() => location.reload(), 700) } }); return 'continua' }
   return v
