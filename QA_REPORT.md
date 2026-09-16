@@ -18,7 +18,7 @@ le voci che richiedono un dispositivo sono marcate **DA VERIFICARE sul telefono*
 | 5 | Audio parte al primo tap su iOS; musica in ducking durante l'esito | ✅ / ⚠️ | `rigori-audio.mjs`: contesto `running` dopo "Tocca per iniziare", `ducked=true` durante l'esito, `false` dopo il replay. iOS reale **DA VERIFICARE**; i tre brani mancano (silenzio, avviso in console) |
 | 6 | Tiro: swipe dritto, curvo, forte (traversa), timing perfetto → comportamenti distinti | ✅ | Fase 4 (harness): mira da gesto, curva da deviazione, potenza > 0,95 che sale; `rigori-progress.mjs`: potenza 1,15 al centro-alto → `crossbar` |
 | 7 | Parata: tell leggibile in normale, quasi assente in Boss | ✅ | evento `tell` 200 ms prima del calcio, finta 40 % (normale) / 15 % (Boss), reattività Boss +40 % (`keeper.js` DIFF.boss) |
-| 8 | Tutte e 5 le modalità completabili senza errori console | ✅ | Shootout: `rigori-flow.mjs` fino a Risultato; Sfida Ale e Skill: `rigori-audio.mjs` / fase 7; Pass-and-play: `rigori-passplay.mjs`; Boss = Shootout con `boss=true` (stessa macchina a stati, sbloccato al livello 5) |
+| 8 | Tutte e 5 le modalità completabili senza errori console | ✅ | Shootout: `rigori-flow.mjs`; Skill, Sfida Ale e Boss (con 900 XP seminati, voce sbloccata): `rigori-modes.mjs`; Pass-and-play: `rigori-passplay.mjs`. Tutte fino alla schermata Risultato, zero errori console |
 | 9 | Pass-and-play a 4 con nomi Ale/Monne/Giulio/Manuel | ✅ | `rigori-passplay.mjs`: vedi sotto |
 | 10 | XP in `b40:v1:rigori:*`; nessuna chiave del sito sovrascritta | ✅ | `rigori-progress.mjs`: `b40:v1:rigori:xp = 25` dopo un incrocio; `b40:v1:person` e `b40:v1:done` intatte |
 | 11 | Condivisione WhatsApp con testo corretto | ✅ | link `https://wa.me/?text=…` nel Risultato, testo con nome, punteggio e URL del gioco (vedi sotto) |
@@ -99,6 +99,41 @@ whatsapp → ⚽ Rigori al Camp Nou · classifica di serata / 1. Ale 3 / 2. Monn
 OK pass-and-play (24 tiri)
 EXIT 0
 ```
+
+## Modalità dal flusso reale (`rigori-modes.mjs`)
+
+Boss visibile e attivo al livello 5; Skill 30 s con mira sul bersaglio (27 punti, 13/13, +190 XP); Sfida Ale con Ale forzato al centro-basso (tre parate); Boss perso 0–3 in tre turni. Screenshot `f13-modalita-boss.png`, `f13-skill-risultato.png`, `f13-sfidaAle-risultato.png`, `f13-boss-risultato.png`.
+
+```
+Boss sbloccato al livello 5: true
+[skill] hud → 30 s · 0 punti · bersaglio 2
+[skill] hud → Tempo! 24 punti
+[skill] risultato → 27 punti | 13 bersagli su 13 tiri | Classifica: 1. Monne 27 punti | +190 | XP | Leggenda | 1090 XP · 310 al prossimo | Manda ai ragazzi | Rigioca | Menu (13 tiri)
+[sfidaAle] hud → Gol 0 · Parate di Ale 0/3
+[sfidaAle] hud → Gol 0 · Parate di Ale 1/3
+[sfidaAle] hud → Gol 0 · Parate di Ale 2/3
+[sfidaAle] hud → Fine: 0 gol in 3 tiri
+[sfidaAle] risultato → 0 gol prima di tre parate | 3 tiri, 0 gol | Classifica: 1. Monne 0 gol | +0 | XP | Leggenda | 1090 XP · 310 al prossimo | Manda ai ragazzi | Rigioca | Menu (3 tiri)
+[boss] hud → Rigore 1 di 5 · Tu 0 – 0 Ale · Tiri tu
+[boss] hud → Rigore 1 di 5 · Tu 0 – 0 Ale · Para tu
+[boss] hud → Rigore 2 di 5 · Tu 0 – 1 Ale · Tiri tu
+[boss] hud → Rigore 2 di 5 · Tu 0 – 1 Ale · Para tu
+[boss] hud → Rigore 3 di 5 · Tu 0 – 2 Ale · Tiri tu
+[boss] hud → Rigore 3 di 5 · Tu 0 – 2 Ale · Para tu
+[boss] hud → Ale vince 3–0
+[boss] risultato → Ale vince 3–0 | 3 rigori a testa | Classifica: 1. Monne Perso 0–3 | +0 | XP | Leggenda | 1090 XP · 310 al prossimo | Manda ai ragazzi | Rigioca | Menu (3 tiri)
+OK modalità
+EXIT 0
+```
+
+## Ruolo portiere e reduced-motion (verifiche aggiuntive)
+
+| Controllo | Esito | Nota |
+|-----------|-------|------|
+| Vista portiere con pali e traversa nel quadro, portiere rivolto al dischetto | ✅ | `v1-portiere-io.png`; preset `dietroPortiere` arretrato con fov 74, rete visibile solo dal davanti |
+| Cambio ruolo tiratore ↔ portiere ripetuto: posizioni e orientamento corretti | ✅ | prima del fix il personaggio riusato restava ruotato di 180° e, dal secondo giro, sul dischetto |
+| Tuffo verso la zona giusta (clip diveL/diveR misurate: erano invertite) | ✅ | `v1-tuffo-basso-sx.png`; fianchi a x=−3,27 per la zona basso-sinistra |
+| `prefers-reduced-motion`: riduci flash e shake attivo, bloom spento, pubblico 3 200 | ✅ | contesto Playwright con `reducedMotion: 'reduce'` |
 
 ## Cose non verificabili qui (da fare sul telefono)
 

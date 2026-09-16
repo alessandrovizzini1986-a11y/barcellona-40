@@ -13,7 +13,8 @@ export function createGoal() {
   const back = (x, z) => { const m = new THREE.Mesh(new THREE.CylinderGeometry(GOAL.post * .6, GOAL.post * .6, GOAL.depth, 10), white); m.rotation.x = Math.PI / 2; m.position.set(x, 0.05, -GOAL.depth / 2); g.add(m) }
   back(-GOAL.w / 2); back(GOAL.w / 2)
   const tex = netTexture()
-  const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, side: THREE.DoubleSide, depthWrite: false, opacity: .6 })
+  // FrontSide: il fondo si vede dal campo, i lati dall'interno, il tetto da sotto; da dietro la porta la rete non copre la vista
+  const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, side: THREE.FrontSide, depthWrite: false, opacity: .6 })
   const panels = []
   const panel = (w, h, segsW, segsH, setup) => {
     const geo = new THREE.PlaneGeometry(w, h, segsW, segsH)

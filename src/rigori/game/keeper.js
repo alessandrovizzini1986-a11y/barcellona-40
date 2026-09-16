@@ -24,7 +24,8 @@ export function createKeeper(char, { difficulty = 'normale', onDive } = {}) {
   const dive = (zone, speed = 1) => {
     plan = { ...plan, zone, target: zoneCenter(zone), startX: g.position.x, t: 0, speed }
     const col = zone % 3, row = zone < 3 ? 0 : 1
-    const clip = row === 0 && col !== 1 ? 'high' : col === 0 ? 'diveL' : col === 2 ? 'diveR' : row === 0 ? 'block' : 'catch'
+    // Misurato: la clip diveL sposta i fianchi verso +x (la sinistra del portiere, che guarda +z); la zona col 0 sta a x<0
+    const clip = row === 0 && col !== 1 ? 'high' : col === 0 ? 'diveR' : col === 2 ? 'diveL' : row === 0 ? 'block' : 'catch'
     char.play(clip, { fade: 0.06, timeScale: 1.7 * speed, from: CLIP_START[clip] || 0 })
     onDive?.(zone, g.position)
     // le clip "high" non hanno direzione: specchio il modello per il lato sinistro

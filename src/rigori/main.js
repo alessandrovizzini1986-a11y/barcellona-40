@@ -147,6 +147,8 @@ function setPair(keeperP, kickerP) {
   controllers[sKey] = controllers[sKey] || createKicker(sc)
   keeper = controllers[kKey]; kicker = controllers[sKey]
   keeper.reset(); kicker.reset(); if (game.progress) applyEquip()
+  // Lo stesso personaggio passa da tiratore a portiere e viceversa: il portiere torna sulla linea, rivolto al dischetto
+  kc.group.position.set(0, 0, 0.55); kc.group.rotation.set(0, 0, 0); kc.model.scale.x = 1
   scene.add(kc.group); scene.add(sc.group)
   shot.setKeeper(keeper); game.keeper = keeper; game.kicker = kicker
 }
@@ -350,7 +352,7 @@ window.__rigori = {
   // Tiro deterministico per la QA: aim = { x, y, power, curve }
   fire: (aim, timingPerfect = false, delay = 0) => { shot.fire(aim, { timingPerfect, delay }); if (delay) kicker?.windup(); else rig.followLook(ball.mesh) },
   setShooter, shooter: () => shooterId, flow: () => flow, settings, applySettings,
-  kitReady, startMode, mode: () => mode, role: () => role, xpLog, ctx, chars, rig, get frames() { return frames },
+  kitReady, startMode, mode: () => mode, role: () => role, xpLog, ctx, chars, rig, keeper: () => keeper, kicker: () => kicker, get frames() { return frames },
   setPrecision: (v) => shot.setPrecision(v), audio, events, shotState: () => shot.state, lastResult: () => [...events].reverse().find((e) => e.type === 'result')?.result || null,
   info: () => ({ fps: +perf.fps.toFixed(1), level: perf.level, quality: { ...quality }, frames, draws: R.renderer.info.render.calls, tris: R.renderer.info.render.triangles, camera: rig.current })
 }

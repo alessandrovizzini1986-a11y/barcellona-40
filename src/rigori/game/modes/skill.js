@@ -14,7 +14,7 @@ export function createSkill({ seconds = 30 } = {}) {
     onResult(res, ctx) {
       this.shots++
       if (res.result === 'goal' && res.point && Math.hypot(res.point.x - this.target.x, res.point.y - this.target.y) < 0.7) { this.hits++; this.score += this.target.pts; ctx.xp(this.target.zone < 3 && this.target.zone !== 1 ? 'corner' : 'goal') }
-      if (!this.finished) this.pick(ctx)
+      if (!this.finished) this.pick(ctx); else ctx.hud(`Tempo! ${this.score} punti`) // il tiro partito allo scadere conta: l'HUD lo mostra
     },
     summary() { return { score: this.score, shots: this.shots, hits: this.hits } }
   })
