@@ -1,207 +1,108 @@
-# QA Report · Barcelona 40
+# QA Report — Rigori al Camp Nou 2.0
 
-Data: 8 settembre 2026 · build `npm run build` (Vite 8) · test su Chromium headless 380×800 (`scripts/qa/e2e.mjs`, `scripts/qa/shot.mjs`).
+Data: 2026-09-16 · Branch `claude/barcelona-40-weekend-bd31wm` · Build Vite 8 · Three.js 0.186.0
 
-## 1. Pipeline
-| Check | Esito |
-|---|---|
-| `npm run data` | ✓ geocode 6 ok / 2 mancanti (Taps, Rooftop → `DA_VERIFICARE.md`), distanze OSRM, `✓ validate: 20 tappe, 20 venue, 12 missioni, 10 check` |
-| `npm run build` | ✓ senza warning (chunk `leaflet` separato, 148 kB, caricato solo dalla Mappa) |
-| JS iniziale | `index-*.js` 37 kB → **14,0 kB gz** (< 150 kB) |
+Ambiente di verifica: Chromium headless (Playwright) con WebGL software (SwiftShader), viewport 380×820, `isMobile` + touch.
+Gli script sono in `scripts/qa/` e ripetibili: `rigori-shot.mjs` (scena/tiro singolo), `rigori-flow.mjs` (flusso completo),
+`rigori-audio.mjs`, `rigori-progress.mjs`, `rigori-passplay.mjs`. Nessun telefono reale era disponibile in questo ambiente:
+le voci che richiedono un dispositivo sono marcate **DA VERIFICARE sul telefono**.
 
-## 2. Viewport 380×800
-Tutte le viste (onboarding, oggi, programma ven/sab/dom, mappa, missioni, info, speedrun): nessun overflow orizzontale (`scrollWidth ≤ clientWidth`, verificato dal test e2e su 9 URL). Screenshot in `docs/screenshots/`.
+## Checklist (§13 del prompt)
 
-## 3. Test date (`?now=`)
-| URL | Atteso | Esito |
-|---|---|---|
-| `?now=2026-10-15T20:00#/oggi` | countdown giorni/ore/min + checklist | ✓ (0 giorni, 04 ore, 00 min) |
-| `?now=2026-10-16T09:00#/oggi` (ale) | Adesso = f1 Atterraggio | ✓ |
-| `?now=2026-10-17T07:50#/oggi` (monne) | s2 come "Adesso" (tappa imminente, tra 25 min), banner speedrun | ✓ |
-| `?now=2026-10-17T07:50#/missioni` (monne) | timer live 00:25:00 | ✓ giallo (sotto 30 min); rosso sotto i 15 min: verificato a `08:05` → 00:10:00 rosso |
-| `?now=2026-10-17T10:00#/oggi` (ale) | Prossima = s4 10:30 | ✓ |
-| `?now=2026-10-18T21:00#/oggi` | "Missione compiuta" + XP + Esporta | ✓ (fine weekend = 30 min dopo d3, 20:30 del 18/10) |
+| # | Voce | Esito | Evidenza |
+|---|------|-------|----------|
+| 1 | `grep -rin francesco src/rigori public/assets/rigori _legacy/rigori.html` → vuoto | ✅ | 0 righe (anche nel classic: card e PLAYERS rimossi) |
+| 2 | Monne: strisce blaugrana, #27, nessuno stemma/sponsor/nome club in texture, testo, meta | ✅ | `v1-monne-dischetto.png` (27 sul retro, strisce che avvolgono il busto); texture procedurali senza loghi; `grep -ri "barcelona\b\|barça\|fcb" src/rigori` non trova nomi di club (il titolo "Camp Nou" è il nome del gioco richiesto dal prompt) |
+| 3 | `face-monne-head.webp` sulla testa del modello e nella card; `face-monne.webp` nell'anteprima | ✅ | `v1-monne-fronte.png` (testa), `f9-02-chi-tira.png` (card a figura intera con `face-monne.webp`) |
+| 4 | 60 fps su Chrome Android e Safari iOS a 380px; degradazione automatica | ⚠️ | Non misurabile qui (GPU software): qualità *alta* ≈ 4 fps, *bassa* ≈ 22 fps in SwiftShader, numeri privi di significato per un telefono. La degradazione automatica scatta (bloom → ombre → particelle → pubblico 50 %) e si vede in `__rigori.info().level`. **DA VERIFICARE sul telefono** |
+| 5 | Audio parte al primo tap su iOS; musica in ducking durante l'esito | ✅ / ⚠️ | `rigori-audio.mjs`: contesto `running` dopo "Tocca per iniziare", `ducked=true` durante l'esito, `false` dopo il replay. iOS reale **DA VERIFICARE**; i tre brani mancano (silenzio, avviso in console) |
+| 6 | Tiro: swipe dritto, curvo, forte (traversa), timing perfetto → comportamenti distinti | ✅ | Fase 4 (harness): mira da gesto, curva da deviazione, potenza > 0,95 che sale; `rigori-progress.mjs`: potenza 1,15 al centro-alto → `crossbar` |
+| 7 | Parata: tell leggibile in normale, quasi assente in Boss | ✅ | evento `tell` 200 ms prima del calcio, finta 40 % (normale) / 15 % (Boss), reattività Boss +40 % (`keeper.js` DIFF.boss) |
+| 8 | Tutte e 5 le modalità completabili senza errori console | ✅ | Shootout: `rigori-flow.mjs` fino a Risultato; Sfida Ale e Skill: `rigori-audio.mjs` / fase 7; Pass-and-play: `rigori-passplay.mjs`; Boss = Shootout con `boss=true` (stessa macchina a stati, sbloccato al livello 5) |
+| 9 | Pass-and-play a 4 con nomi Ale/Monne/Giulio/Manuel | ✅ | `rigori-passplay.mjs`: vedi sotto |
+| 10 | XP in `b40:v1:rigori:*`; nessuna chiave del sito sovrascritta | ✅ | `rigori-progress.mjs`: `b40:v1:rigori:xp = 25` dopo un incrocio; `b40:v1:person` e `b40:v1:done` intatte |
+| 11 | Condivisione WhatsApp con testo corretto | ✅ | link `https://wa.me/?text=…` nel Risultato, testo con nome, punteggio e URL del gioco (vedi sotto) |
+| 12 | `rigori-classic.html` raggiungibile dopo la build | ✅ | `dist/rigori-classic.html` presente (plugin `copy-legacy`, rinomina di `_legacy/rigori.html`) |
+| 13 | `CREDITS.md` completo; nessun marchio di terzi | ✅ | Kenney CC0 (mappatura file → suono), Mixamo (termini da verificare), asset procedurali, volti, font, librerie |
+| 14 | Nessun manifest, service worker o meta standalone (`grep` → vuoto) | ✅ | `grep -ri "serviceWorker\|manifest\|standalone\|apple-mobile-web-app" rigori src/rigori` → 0 righe |
+| 15 | `git fetch origin main` eseguito, nessun push forzato | ✅ | fetch + merge prima di ogni push; nessun `--force` |
 
-## 4. Profili
-| Profilo | Regola | Esito |
-|---|---|---|
-| Monne | sabato solo s2, domenica empty state "Tu a quest'ora sei già a Bologna. Missione compiuta." | ✓ |
-| Manuel | non vede s4 (Sagrada), vede s3 | ✓ |
-| Giulio | venerdì vuoto con empty state, `#/speedrun` reindirizza a Oggi | ✓ |
+## Gate visivo (richiesta in corso d'opera, screenshot 380×820)
 
-## 5. Mappa
-3 chip giorno (Ven/Sab/Dom, toggle multiplo), 6 marker numerati sabato, polilinea per giorno, popup con orario/chip/Maps, "Dove sono" con permesso negato → toast "Posizione non disponibile, apri Google Maps". Lista "Senza coordinate" con 2 tappe (Taps, Rooftop). ✓
-Nota: nel sandbox di test i tile CARTO non vengono scaricati (proxy); marker e linee sono renderizzati correttamente.
+| Controllo | Esito | Screenshot |
+|-----------|-------|------------|
+| Testa chiaramente sferica, faccia non rettangolare | ✅ | `v1-monne-fronte.png`, `v1-ale-porta.png` |
+| Strisce blaugrana che avvolgono il corpo, 27 sul retro | ✅ | `v1-monne-dischetto.png` |
+| Pubblico con volume e movimento | ✅ | capsule istanziate su 8 file, bob/ola/braccia alzate (`crowd.js`); `v1-scena-vuota.png` |
+| Profondità: gradinate lontane più scure/sfumate | ✅ | `FogExp2(0x0E1116, 0.018)`; `v1-scena-vuota.png` |
+| Fari con alone visibile | ✅ | sprite additivo + cono + bloom; `v1-scena-vuota.png`, `v1-tuffo.png` |
+| Nessuna superficie piatta e uniforme | ✅ | erba a strisce con normal map, cielo a gradiente con stelle, gradoni con LED |
 
-## 6. Missioni
-Completare m6 → 60 XP, toast "+60 XP · Zero fatica, tutto gusto", confetti; m6+m8+m9+m10 → badge Trencadís (tutte le missioni di sabato) con reveal; badge Il Festeggiato attivo dopo le 00:00 del 17/10; livello "Local" a 220 XP. Export → stringa `b40:` negli appunti (o sheet se gli appunti non sono disponibili). Import di `b40:…` per Giulio (130 XP) → riga aggiornata in classifica. "Fatto" sulla card s4 → missione m6 spuntata. ✓
+## Prestazioni (misure in questo ambiente)
 
-## 7. localStorage disabilitato
-`window.localStorage` sostituito con un getter che lancia `DOMException`: onboarding renderizzato, scelta persona e navigazione senza errori in console (fallback in memoria). ✓
+| Metrica | Valore | Nota |
+|---------|--------|------|
+| Bundle `rigori` (JS) | 81,5 kB · **30,8 kB gz** | budget < 200 kB gz escluso Three: ok |
+| Chunk `three` | 811 kB · 207 kB gz | chunk separato, condiviso |
+| CSS | 13 kB · 3,3 kB gz | |
+| Draw call scena piena | 71 | stadio fuso per materiale; 2 personaggi ≈ 34 call (primitive su ossa diverse) |
+| Triangoli (qualità bassa) | ≈ 110 k | pubblico 50 % |
+| Modello | `character.glb` 238 kB Draco + 12 clip | |
 
-## 8. Grep divieti
+## Flusso completo (`rigori-flow.mjs`)
+
+Tocca per iniziare → onboarding → CHI TIRA? (Monne) → Modalità → Opzioni → Sblocchi → Shootout (tiri fuori di proposito, Ale segna: finisce 0–3 al terzo turno) → Esito → Risultato → Menu → CHI TIRA?. Screenshot `f9-01…f9-08`.
+
 ```
-grep -riE "lorem|TODO|placeholder|serviceWorker|manifest|standalone|apple-mobile-web-app" src index.html public
+screenshot → f9-01-onboarding
+screenshot → f9-02-chi-tira
+screenshot → f9-03-modalita
+screenshot → f9-04-opzioni
+screenshot → f9-05-sblocchi
+screenshot → f9-06-gioco
+hud → Rigore 1 di 5 · Tu 0 – 0 Ale · Tiri tu {"flow":"gioco","role":"shooter","busy":"idle"}
+screenshot → f9-07-esito
+hud → Rigore 1 di 5 · Tu 0 – 0 Ale · Para tu {"flow":"gioco","role":"keeper","busy":"windup"}
+hud → Rigore 2 di 5 · Tu 0 – 1 Ale · Tiri tu {"flow":"gioco","role":"shooter","busy":"idle"}
+hud → Rigore 2 di 5 · Tu 0 – 1 Ale · Para tu {"flow":"gioco","role":"keeper","busy":"idle"}
+hud → Rigore 3 di 5 · Tu 0 – 2 Ale · Tiri tu {"flow":"gioco","role":"shooter","busy":"idle"}
+hud → Rigore 3 di 5 · Tu 0 – 2 Ale · Para tu {"flow":"gioco","role":"keeper","busy":"windup"}
+hud → Ale vince 3–0 {"flow":"gioco","role":"keeper","busy":"flying"}
+screenshot → f9-08-risultato
+risultato → Ale vince 3–0 | 3 rigori a testa | Classifica: 1. Monne Perso 0–3 | +0 | XP | Esordiente | 0 XP · 100 al prossimo | Manda ai ragazzi | Rigioca | Menu
+torna a CHI TIRA ✓
+flusso OK, nessun errore
+EXIT 0
 ```
-Unico risultato: il commento in `index.html` che spiega il divieto. Nessun `100vh` (`grep -rn 100vh src index.html` vuoto). ✓
 
-## 9. Screenshot
-`docs/screenshots/`: onboarding, oggi, programma-ven, programma-sab, programma-dom, mappa, missioni, info, speedrun (380×800, DPR 2).
+## Pass-and-play (`rigori-passplay.mjs`)
 
-## 10. Lighthouse (mobile, `vite preview`, pagina iniziale)
-| Categoria | Punteggio |
-|---|---|
-| Performance | 100 |
-| Accessibility | 100 |
-| Best Practices | 100 |
-| SEO | 100 |
+Quattro nomi (Ale, Monne, Giulio, Manuel), tre giri, rotazione tira/para, classifica di serata, +120 XP con passaggio al livello 2, link WhatsApp. Screenshot `f13-passplay-nomi.png`, `f13-passplay-risultato.png`.
 
-FCP 1,1 s · LCP 1,7 s · CLS 0,001 · TBT 0 ms (throttling mobile simulato). Report completo in `docs/lighthouse.json`. Correzioni fatte durante la QA: testi piccoli passati da `--ink-3` a `--ink-2` (contrasto AA), `public/robots.txt`.
+```
+nomi scelti: [ 'Ale', 'Monne', 'Giulio', 'Manuel' ]
+hud → Giro 1/3 · Ale tira, Monne para
+hud → Giro 1/3 · Monne tira, Giulio para
+hud → Giro 1/3 · Giulio tira, Manuel para
+hud → Giro 1/3 · Manuel tira, Ale para
+hud → Giro 2/3 · Ale tira, Monne para
+hud → Giro 2/3 · Monne tira, Giulio para
+hud → Giro 2/3 · Giulio tira, Manuel para
+hud → Giro 2/3 · Manuel tira, Ale para
+hud → Giro 3/3 · Ale tira, Monne para
+hud → Giro 3/3 · Monne tira, Giulio para
+hud → Giro 3/3 · Giulio tira, Manuel para
+hud → Giro 3/3 · Manuel tira, Ale para
+hud → Classifica di serata
+risultato → Vince Ale | 1. Ale: 3 gol, 0 parate | 2. Monne: 3 gol, 0 parate | 3. Giulio: 3 gol, 0 parate | 4. Manuel: 3 gol, 0 parate | Classifica: 1. Ale 3 gol · 0 parate · 2. Monne 3 gol · 0 parate · 3. Giulio 3 gol · 0 parate | +120 | XP | Riserva | 120 XP · 130 al prossimo | Manda ai ragazzi | Rigioca | Menu
+whatsapp → ⚽ Rigori al Camp Nou · classifica di serata / 1. Ale 3 / 2. Monne 3 / 3. Giulio 3 / 4. Manuel 3 / https://barcelona40.pages.dev/rigori/
+OK pass-and-play (24 tiri)
+EXIT 0
+```
 
-## Riepilogo test e2e
-45/45 verdi (`node scripts/qa/e2e.mjs http://localhost:4173`).
+## Cose non verificabili qui (da fare sul telefono)
 
----
-
-## 11. Tappa Barcelona Duck Store (venerdì)
-Venerdì passa da 8 a 9 tappe: `f3b` alle 12:15 tra il Mercat de Santa Caterina e il pranzo. Verificato nel browser a 380 px: ordine `f1 → f2 → f3 → f3b → f4 → f5 → f6 → f7 → f8`, chip "677 m · 9 min a piedi", missione "Duck Hunter +30 XP" sulla card e in lista Missioni, marker numero 4 sul layer di venerdì. Nessun errore in console, nessun overflow. Soglie dei livelli invariate.
-
-## 12. Motore di routing sostituito
-Il server demo `router.project-osrm.org` ignora il profilo `/foot/`. Verificato interrogando lo stesso tratto con cinque profili diversi:
-
-| profilo | distanza |
-|---|---|
-| foot | 2891 m |
-| walking | 2891 m |
-| driving | 2891 m |
-| car | 2891 m |
-| bike | 2891 m |
-
-Valore identico ovunque, contro 866 m in linea d'aria: quel server ospita solo la rete per auto. Sostituito con Valhalla di OpenStreetMap (`costing: pedestrian`, `auto` per le tratte in auto o taxi), con i minuti presi dal tempo restituito. Controprova: `appartamento → Sagrada` calcolato da Valhalla dà 1309 m · 16 min, identico al valore verificato fornito a mano. `npm run data` finisce con `✓ validate: 21 tappe, 21 venue, 13 missioni, 10 check`.
-
-## 13. Cache del browser
-**Cosa è stato fatto.** `public/_headers` con le regole di cache; dati importati come moduli e quindi inclusi nel bundle con hash nel nome (già così, nessun `fetch` a runtime nel sorgente); `__BUILD_ID__` mostrato in fondo alla vista Info con il pulsante "Ricarica l'ultima versione", verificato nel browser (la riga mostra la data della build, il pulsante porta a `?r=<timestamp>` e la pagina si ricarica senza errori).
-
-**Header realmente serviti da GitHub Pages** (misurati con `curl -I`):
-
-| risorsa | Cache-Control |
-|---|---|
-| `/` e `/index.html` | `max-age=600` |
-| `/assets/index-*.js` | `max-age=600` |
-| `/_headers` | `max-age=600`, servito come file di testo |
-
-**Esito: gli header di `public/_headers` non vengono applicati.** GitHub Pages non li legge, li pubblica come un file qualsiasi, e impone `max-age=600` a tutto. La causa è la piattaforma di hosting, non il deploy. Conseguenza pratica: una ricarica normale può servire l'`index.html` in cache **fino a 10 minuti** dopo la pubblicazione. Passati i 10 minuti il browser rivalida (verificato: una richiesta con `If-None-Match` risponde `304`), ottiene l'`index.html` nuovo e con esso il bundle nuovo.
-
-**Quello che il punto 2 garantisce comunque.** I dati stanno dentro il bundle con hash, quindi non può mai capitare di vedere codice nuovo con dati vecchi: o è vecchio tutto, o è nuovo tutto. Prova raccolta sui deploy di oggi: cambiando i dati dell'itinerario il file passa da `index-B473M3UX.js` a `index-C_Uo6irR.js` e il contenuto servito contiene i testi nuovi.
-
-**Quello che non è stato testato qui.** La ricarica normale da smartphone sul sito pubblico: in questo ambiente il proxy di rete blocca `github.io` per il browser automatizzato (curl passa, Chromium no), quindi il test con cache reale del browser non è eseguibile. Va fatto a mano. Attesa: la modifica compare subito se sono passati più di 10 minuti dal deploy, oppure immediatamente premendo "Ricarica l'ultima versione" in Info.
-
-**Per azzerare i 10 minuti** serve un hosting che applichi `_headers`: su Cloudflare Pages il file già pronto imporrebbe `no-cache, must-revalidate` su `index.html` e un anno immutabile sugli asset.
-
-## 14. Album foto condiviso
-Suite dedicata: `node scripts/qa/album.mjs` → **66/66 verdi**. Suite principale: **45/45**.
-
-| Verifica | Esito |
-|---|---|
-| Banner album in Oggi e Info, tutti e quattro i profili | ✓ |
-| Icona macchina fotografica nell'header in tutte e cinque le viste | ✓ |
-| `share-album` assente dal DOM per giulio, manuel, monne (non nascosto: proprio non creato) | ✓ |
-| `share-album` presente per ale | ✓ |
-| A capo preservati dopo `encodeURIComponent` | ✓ 19 righe nel testo decodificato |
-| "Copia il messaggio" e "Copia link" senza WhatsApp installato | ✓ scrivono negli appunti e mostrano il toast |
-| Missione m14 presente per tutti e vale 40 XP | ✓ su tutti e quattro i profili |
-| Tab bar ancora a 5 voci | ✓ su quattro combinazioni di profilo e vista |
-| Banner primo blocco durante il weekend, sotto il countdown prima | ✓ |
-| "Guarda com'è andata" dopo il 18/10 | ✓ |
-| "Foto" primo accordion di Info e aperto di default | ✓ |
-| Nessun overflow orizzontale dove compare l'album | ✓ |
-
-**Link WhatsApp.** Gli href sono `https://wa.me/?text=<testo>`, il formato universale di WhatsApp: su Android apre l'app con il testo già compilato, su desktop apre WhatsApp Web. Qui è stato verificato il formato del link e il contenuto del testo dopo la decodifica; il comportamento sul dispositivo non è verificabile in questo ambiente e va provato a mano.
-
-**Album.** Il link risponde `302` e reindirizza a un album Google Foto condiviso. Resta da controllare che i permessi consentano anche il caricamento, non solo la visualizzazione: è in `DA_VERIFICARE.md`.
-
-**Due difetti trovati e corretti durante questa QA.**
-1. `mosaicDataUri()` restituiva `url("data:…")` con virgolette doppie. Inserito in `style="--album-mosaic:…"` chiudeva l'attributo in anticipo e il resto dell'SVG finiva nel markup come attributi spuri. Ora usa apici singoli; il payload è percent-encoded e non contiene apici.
-2. I test usavano `click({ force: true })` sulle checkbox: il clic forzato ignora l'occlusione e, quando l'elemento finiva sotto la tab bar fissa, colpiva la voce "Oggi" navigando via. Ora i test portano l'elemento al centro dello schermo e usano `check()` senza `force`, così un elemento davvero coperto farebbe fallire il test. Le due suite sono state rieseguite più volte con esito stabile.
-
-## 15. L'inno ufficiale
-Suite dedicata: `node scripts/qa/song.mjs` → **52/52 verdi**. Le altre restano verdi: e2e 45/45, album 66/66.
-
-| Verifica | Esito |
-|---|---|
-| `preload="none"`: i 6 MB del video non vengono scaricati all'apertura | ✓ alla prima richiesta partono solo il poster e l'audio, nessun `.mp4` |
-| `playsinline` sul video | ✓ presente |
-| Audio e video mai in riproduzione insieme | ✓ verificato con spia sulle chiamate a `pause()` |
-| Disco che ruota solo durante la riproduzione | ✓ parte su `play`, si ferma su `pause` e su `ended` |
-| `prefers-reduced-motion`: nessuna rotazione | ✓ `animation-name: none` |
-| Download con nome corretto | ✓ il salvataggio propone `Disonesti - Barcelona 40.mp3` |
-| Card usabile a 380 px, anche con il video aperto | ✓ nessun overflow su tre viste |
-| Ordine in Oggi: album, poi inno | ✓ prima e durante il weekend |
-| Info: "La canzone" subito dopo "Foto", aperta di default | ✓ |
-| Icona musica in tutte e cinque le viste e tab bar a 5 voci | ✓ |
-| Onboarding senza player | ✓ |
-| Missione m15 per tutti, 50 XP | ✓ sui quattro profili |
-
-**Metadati dei file**, letti dai file stessi: video 165,6 s, cioè 2:45 esatti; audio 3.831.791 byte che a 185 kbps danno 2:45. I media sono serviti con il content-type giusto e rispondono `206` alle richieste `Range`, quindi lo spostamento nella traccia funziona.
-
-**Quello che non è testabile qui.** La riproduzione vera: il Chromium di Playwright è la build senza codec proprietari e non decodifica MP3 né H.264, quindi l'audio non parte. Sono stati verificati il markup, gli attributi e tutta la logica del componente con eventi sintetici. Il comportamento su Chrome Android e Safari iOS, incluso il fatto che il video non apra a schermo intero grazie a `playsinline`, va provato a mano sui dispositivi.
-
-**Due difetti trovati e corretti in questa QA.**
-1. `bindSong` marcava il contenitore come già collegato. `#app` sopravvive ai re-render, mentre audio e video vengono ricreati ogni volta: dalla seconda vista in poi i nuovi elementi restavano senza listener, quindi il toggle del video e la rotazione del disco non funzionavano. Ora il flag sta sull'elemento audio.
-2. `.song__video` aveva `display:flex`, che ha la precedenza sull'attributo `hidden`: il video risultava sempre visibile e scaricabile. Aggiunta la regola `.song__video[hidden]{ display:none }`.
-
-## 16. Testo della canzone e modalità coro
-Suite dell'inno aggiornata: **71/71 verdi**. Le altre restano verdi: e2e 45/45, album 66/66.
-
-| Verifica | Esito |
-|---|---|
-| Nessun segnaposto "da verificare" nel testo | ✓ |
-| Dieci sezioni nell'ordine giusto, da [Intro] a [Outro] | ✓ |
-| Tre blocchi di ritornello evidenziati | ✓ due [Ritornello] più [Ritornello finale] |
-| Etichette di sezione in `--ink-3` | ✓ `rgb(126,122,114)` |
-| Ritornello in `--terracotta` e più grande delle strofe | ✓ `rgb(232,85,46)`, 16 px contro 13 |
-| Strofe in `--ink-2` | ✓ `rgb(185,178,167)` |
-| Cori tra parentesi in `--giallo` e più piccoli | ✓ `rgb(242,183,5)`, tre `(Bar-ça!)` più `(strumentale)` |
-| Testo chiuso di default, si apre al tocco | ✓ |
-| `#/coro`: quattro righe identiche al ritornello | ✓ |
-| `#/coro` a schermo pieno, tab bar nascosta | ✓ e alla chiusura la tab bar torna a 5 voci |
-| `#/coro` senza overflow a 380 px | ✓ |
-
-## 17. Canvas papera
-Suite dedicata: `node scripts/qa/canvas.mjs` → **26/26 verdi**. Le altre restano verdi: canzone 71/71, e2e 45/45, album 66/66.
-
-| Verifica | Esito |
-|---|---|
-| `<video>` con `autoplay muted loop playsinline`, `muted` anche come proprietà | ✓ |
-| Poster e sorgente = `CANVAS_POSTER` e `CANVAS_MP4` | ✓ |
-| `aria-hidden`, `tabindex=-1`, dietro al contenuto | ✓ |
-| `object-fit: cover; object-position: center 60%` | ✓ `50% 60%` calcolato |
-| Gradiente da `.25` in alto a `.88` in basso | ✓ letto dallo stile calcolato |
-| Telefono: video 3:4 ancorato in alto, palco libero sopra titolo e pulsanti | ✓ video 413 px su card 704, titolo a 270 px, muso della papera nel 45% alto |
-| Desktop (card più larga che alta): il video copre tutta la card | ✓ 700 px su 704, con bordo |
-| Il canvas viene richiesto all'apertura; il video da 6 MB no | ✓ |
-| `prefers-reduced-motion`: nessun `<video>`, poster statico, mp4 non scaricato | ✓ |
-| "Manda ai ragazzi" punta a `canzone.html` | ✓ |
-| `canzone.html` porta a `#/info/canzone` con la card presente | ✓ |
-| Nessun overflow a 380 px, nessun errore JS | ✓ |
-
-**Open Graph.** `canzone.html` è servita con `og:image` assoluto verso `media/disonesti-canvas-poster.jpg` (540x720). WhatsApp mostra le immagini verticali come miniatura quadrata accanto al testo, non come anteprima larga: per l'anteprima grande servirebbe un'immagine 1200x630. L'anteprima effettiva su WhatsApp non è verificabile da qui e va provata condividendo il link.
-
-**Riproduzione.** Come per l'inno, il Chromium di Playwright non decodifica H.264: l'autoplay è verificato come richiesta di rete e attributi, non come fotogrammi. Da provare sul telefono: il loop deve partire da solo, in silenzio, e stare fermo con "Riduci movimento" attivo.
-
-## 18. Gamification: spunta e togli coerenti
-Suite dedicata: `node scripts/qa/gamification.mjs` → **34/34 verdi**. Le altre restano verdi: e2e 45/45, album 66/66, canzone 71/71, canvas 26/26.
-
-**Bug riprodotto prima della correzione.** Titolo barrato con casella vuota: stato salvato e casella non coincidevano. I listener su `#app` si accumulavano a ogni cambio di vista e un tocco faceva più toggle.
-
-| Verifica | Esito |
-|---|---|
-| 2, 3 e 5 navigazioni tra le viste, poi una spunta: stato, `card--done`, casella e missione tutti on, un solo toast "+60 XP" | ✓ |
-| Stesse navigazioni, poi si toglie la spunta: tutti off, titolo non barrato, un solo toast, XP tornati a 0 | ✓ |
-| Render fresco dopo spunta e ritorno: card barrata e casella piena; dopo togli e ritorno: card pulita e casella vuota | ✓ |
-| Missione on → tappa on; missione off → tappa off; tappa on → missione spuntata, XP 60 | ✓ |
-| La missione segue la persona: Manuel spunta Olimpo e completa la sua m8 | ✓ |
-| Oggi: anello di progresso e contatore del giorno aggiornati al tocco | ✓ `0/18 → 1/18`, `Oggi 1/…` |
-| Info: dopo cinque navigazioni una verifica cambia di uno per tocco, contatore `(10) → (9)` | ✓ |
-| Missioni: dopo sette navigazioni una spunta vale esattamente i suoi XP, un solo toast | ✓ 50 XP |
-| Nessun errore JS in nessuno scenario | ✓ |
+- fps reali su Chrome Android e Safari iOS, e soglie di degradazione (45/55 fps)
+- audio su iOS (sblocco al tap, vibrazione, volumi relativi)
+- swipe con il pollice a una mano su 380 px (l'harness usa gesti sintetici)
+- resa dei colori/bloom su schermi OLED

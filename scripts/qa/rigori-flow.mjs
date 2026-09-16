@@ -30,7 +30,7 @@ await step('shootout', async () => {
     if (st.flow === 'risultato') break
     const hud = await p.evaluate(() => document.querySelector('.rg-modehud')?.textContent); if (hud !== globalThis._h) { globalThis._h = hud; console.log('hud →', hud, JSON.stringify(st)) }
     if (st.role === 'shooter' && st.busy === 'idle') {
-      await p.evaluate(() => window.__rigori.fire({ x: 3.0, y: 1.9, power: 1.0, curve: 0 }, true, 0.5))
+      await p.evaluate(() => window.__rigori.fire({ x: 5.0, y: 1.2, power: 1.0, curve: 0 }, true, 0.5)) // fuori di proposito: lo shootout finisce in tre turni (Ale segna sempre contro il portiere passivo della QA)
       if (!esitoShot) { await p.waitForSelector('.rg-esito', { timeout: 15000 }).catch(() => {}); await p.waitForTimeout(150); await shot('f9-07-esito'); esitoShot = true }
     }
     await p.waitForTimeout(1500)
