@@ -16,6 +16,9 @@ import { createShot, aimFromGesture } from './game/shot.js'
 import { createTiming } from './game/timing.js'
 import { createGhost } from './game/ghost.js'
 import { loadCharacterKit, makeCharacter } from './scene/players.js'
+import { createAudio } from './core/audio.js'
+import { createProgress } from './game/progress.js'
+import { taunt } from './data/taunts.js'
 import { createKeeper } from './game/keeper.js'
 import { createJuice } from './game/juice.js'
 import { createShootout } from './game/modes/shootout.js'
@@ -49,6 +52,7 @@ root.innerHTML = `<div class="rg-loading" id="rg-loading" role="status" aria-liv
   <div class="rg-loading__bar"><i id="rg-loading-fill"></i></div>
   <div class="rg-loading__pct" id="rg-loading-pct">0%</div>
   <p class="rg-loading__tip">${TIPS[(Math.random() * TIPS.length) | 0]}</p>
+  <button class="rg-btn rg-btn--primary rg-loading__tap" hidden aria-label="Tocca per iniziare">Tocca per iniziare</button>
 </div>
 <div class="rg-stage" id="rg-stage"></div>
 <div class="rg-vignette" aria-hidden="true"></div>
@@ -86,7 +90,9 @@ let timingEnabled = true               // opzione (fase 9); ON di default
 // Opzione "riduci flash e shake" (fase 9) + prefers-reduced-motion: niente shake né particelle intense, lo slow-mo resta
 const settings = Object.assign({ audio: true, music: true, vibration: true, reduceFx: reducedMotion, timing: true, quality: 'auto' }, save.get('settings', {}))
 if (new URLSearchParams(location.search).get('q')) settings.quality = new URLSearchParams(location.search).get('q') // QA: ?q=alta|bassa|auto
+const audio = createAudio(ASSETS, settings)
 function applySettings() {
+  audio.apply()
   timingEnabled = settings.timing !== false
   perf.lock(settings.quality !== 'auto')
   if (settings.quality === 'bassa') { quality.bloom = false; quality.shadows = false; quality.particles = false; quality.crowd = 0.5 }
@@ -120,6 +126,7 @@ const juice = createJuice({ scene, rig, reduced: () => settings.reduceFx })
 const ghost = createGhost(scene)
 const events = []                      // ultimi eventi del tiro (per QA e per le modalità)
 const listeners = new Set()            // le modalità si iscrivono qui (fase 7)
+listeners.add((e) => { if (e.type === 'replayEnd' || e.type === 'modeStart' || e.type === 'modeEnd' || e.type === 'xp' || e.type === 'tell') events.push(e) }) // QA: anche gli eventi non del tiro finiscono nel registro
 const shot = createShot({ ball, goal, keeper: null, onEvent: (e) => { events.push(e); listeners.forEach((f) => f(e)); onShotEvent(e) } })
 // Personaggi: kit caricato attraverso il manager (progresso reale), portiere sulla linea
 // Due personaggi: Ale (portiere di casa) e il tiratore scelto. Nel ruolo portiere si scambiano:
@@ -135,10 +142,10 @@ function setPair(keeperP, kickerP) {
   for (const c of Object.values(chars)) scene.remove(c.group)
   const kc = charFor(keeperP), sc = charFor(kickerP)
   const kKey = 'keeper:' + keeperP.id, sKey = 'kicker:' + kickerP.id
-  controllers[kKey] = controllers[kKey] || createKeeper(kc, { difficulty: keeper?.difficulty || 'normale', onDive: (_z, at) => juice.dust(at) })
+  controllers[kKey] = controllers[kKey] || createKeeper(kc, { difficulty: keeper?.difficulty || 'normale', onDive: (_z, at) => { juice.dust(at); audio.play('dive', { volume: .6 }) } })
   controllers[sKey] = controllers[sKey] || createKicker(sc)
   keeper = controllers[kKey]; kicker = controllers[sKey]
-  keeper.reset(); kicker.reset()
+  keeper.reset(); kicker.reset(); if (game.progress) applyEquip()
   scene.add(kc.group); scene.add(sc.group)
   shot.setKeeper(keeper); game.keeper = keeper; game.kicker = kicker
 }
@@ -174,19 +181,19 @@ input.on('reject', () => { hint.hidden = false; hint.classList.remove('rg-hint--
 const shake = (amp, dur) => { if (!settings.reduceFx) rig.shake(amp, dur) }
 let replayPending = false
 function onShotEvent(e) {
-  if (e.type === 'windup') hint.hidden = true
-  if (e.type === 'kick') { hint.hidden = true; juice.clearRecord(); replayPending = true; kicker?.onKick(); rig.followLook(ball.mesh); keeper?.prepare({ aim: e.aim, timingPerfect: e.timingPerfect, power: e.aim.power }) }
+  if (e.type === 'windup') { hint.hidden = true; audio.play('step', { volume: .5 }) }
+  if (e.type === 'kick') { audio.play(e.aim.power > 0.95 ? 'kick2' : 'kick', { volume: 0.6 + Math.min(0.4, e.aim.power * 0.4) }); hint.hidden = true; juice.clearRecord(); replayPending = true; kicker?.onKick(); rig.followLook(ball.mesh); keeper?.prepare({ aim: e.aim, timingPerfect: e.timingPerfect, power: e.aim.power }) }
   if (e.type === 'result') kicker?.react(e.result)
-  if (e.type === 'result') { juice.setSlow(false); keeper?.react(e.result); showEsito(game.ui, { result: e.result, corner: e.corner, taunt: game.tauntFor?.(e) || '' }) }
-  if (e.type === 'goal') { crowd.react('ola'); shake(0.10, 0.35) }
-  if (e.type === 'post' || e.type === 'crossbar') { shake(0.06, 0.2); juice.hitStop(60) }
-  if (e.type === 'save') { juice.hitStop(60); crowd.react('oooh') }
-  if (e.type === 'miss') crowd.react('oooh')
+  if (e.type === 'result') { juice.setSlow(false); keeper?.react(e.result); showEsito(game.ui, { result: e.result, corner: e.corner, taunt: game.tauntFor?.(e) || '' }); audio.duck(true); audio.vo(e.corner ? 'corner' : e.result) }
+  if (e.type === 'goal') { crowd.react('ola'); shake(0.10, 0.35); audio.play('net', { volume: .8 }); audio.crowd('roar'); setTimeout(() => audio.crowd('clap'), 700); audio.vibrate([30, 40, 70]) }
+  if (e.type === 'post' || e.type === 'crossbar') { shake(0.06, 0.2); juice.hitStop(60); audio.play(e.type, { volume: .9 }); audio.vibrate(50) }
+  if (e.type === 'save') { juice.hitStop(60); crowd.react('oooh'); audio.play('glove', { volume: .9 }); audio.crowd('oooh'); audio.vibrate(40) }
+  if (e.type === 'miss') { crowd.react('oooh'); audio.crowd('oooh') }
   if (e.type === 'settled') afterSettled()
 }
 // Dopo l'esito: replay laterale di 2 s, poi si torna dietro al tiratore. Le modalità (fase 7) ascoltano 'replayEnd'.
 function afterSettled() {
-  const finish = () => { hideEsito(game.ui); shot.reset(); keeper?.reset(); kicker?.reset(); rig.followLook(null); rig.goTo('dietroTiratore'); hint.hidden = false; listeners.forEach((f) => f({ type: 'replayEnd' })) }
+  const finish = () => { audio.duck(false); hideEsito(game.ui); shot.reset(); keeper?.reset(); kicker?.reset(); rig.followLook(null); rig.goTo('dietroTiratore'); hint.hidden = false; listeners.forEach((f) => f({ type: 'replayEnd' })) }
   if (!replayPending) { finish(); return }
   replayPending = false
   setTimeout(() => juice.startReplay(() => setTimeout(finish, 300)), 500)
@@ -209,6 +216,7 @@ const ctx = {
     const was = role; role = r; input.setMode(r === 'keeper' ? 'keeper' : 'shooter')
     if (kit && (r === 'keeper') !== (was === 'keeper')) { if (r === 'keeper') setPair(byId(shooterId), keeperData()); else setPair(keeperData(), byId(shooterId)) }
     keeper?.setPlayable(r === 'keeper')
+    if (mode && r !== 'idle' && r !== was) { audio.whistle(); if (r === 'shooter') toast(game.ui, taunt('preTiro', shooterId, game.progress?.unlocked('taunt:extra')), 2600) }
     if (r === 'shooter') { hint.textContent = 'Trascina dal pallone'; hint.hidden = false; rig.goTo('dietroTiratore', { instant: was === 'keeper' }) }
     else if (r === 'keeper') { hint.textContent = 'Trascina verso la zona in cui tuffarti'; hint.hidden = false; rig.goTo('dietroPortiere', { instant: true }) }
     else hint.hidden = true
@@ -255,6 +263,7 @@ listeners.add((e) => {
 systems.push({ update(dt) { if (mode?.tick && !mode.finished) mode.tick(dt, ctx) } })
 
 // ---------- flusso: onboarding → CHI TIRA? → modalità → partita → risultato ----------
+document.getElementById('rg-ui').addEventListener('click', (e) => { const b = e.target.closest('button, a'); if (!b) return; audio.play(b.classList.contains('rg-btn--primary') ? 'confirm' : b.dataset.value === '__close' || b.dataset.back != null ? 'back' : 'click', { volume: .5 }) })
 const menuBtn = document.createElement('button'); menuBtn.className = 'rg-btn rg-btn--ghost rg-menubtn'; menuBtn.setAttribute('aria-label', 'Menu'); menuBtn.textContent = '≡'; menuBtn.hidden = true
 document.getElementById('rg-ui').appendChild(menuBtn)
 let flow = 'boot', quitRequested = false
@@ -263,14 +272,14 @@ async function runFlow() {
   ctx.role('idle')
   if (!save.get('onboarded', false)) { flow = 'onboarding'; ctx.role('shooter'); await onboarding(game.ui, () => input.ballOnScreen()); save.set('onboarded', true); ctx.role('idle') }
   while (true) {
-    flow = 'chiTira'
+    flow = 'chiTira'; audio.playMusic('inno')
     const id = await chiTira(game.ui, ASSETS, { current: shooterId }); if (id) setShooter(id)
     let choice = null
     while (!choice) {
       flow = 'modalita'
       const r = await modalita(game.ui, { bossUnlocked: game.progress?.bossUnlocked?.() ?? false, level: game.progress?.level?.().n ?? 1 })
-      if (r.id === '__opzioni') { await opzioni(game.ui, settings, { onChange: applySettings, onReset: () => { save.reset(); toast(game.ui, 'Progressi azzerati') } }); continue }
-      if (r.id === '__sblocchi') { await sblocchi(game.ui, game.progress?.summaryForUi?.() || { unlocks: [], achievements: [], level: { n: 1, title: 'Esordiente' } }); continue }
+      if (r.id === '__opzioni') { await opzioni(game.ui, settings, { onChange: applySettings, onReset: () => { save.reset(); toast(game.ui, 'Progressi azzerati'); setTimeout(() => location.reload(), 700) } }); continue }
+      if (r.id === '__sblocchi') { await sblocchi(game.ui, game.progress.summaryForUi(), { onEquip: (kind, id) => { if (game.progress.setEquip(kind, id)) { applyEquip(); return game.progress.summaryForUi() } audio.play('error', { volume: .5 }); return null } }); continue }
       if (r.id === '__chi') break
       if (!r.id) continue
       choice = r
@@ -279,7 +288,7 @@ async function runFlow() {
     // partita
     let again = true
     while (again) {
-      flow = 'gioco'; quitRequested = false; menuBtn.hidden = false
+      flow = 'gioco'; quitRequested = false; menuBtn.hidden = false; audio.playMusic('tensione')
       const xpBefore = game.progress?.xp?.() ?? 0
       const ended = new Promise((res) => { const fn = (e) => { if (e.type === 'modeEnd') { listeners.delete(fn); res(e) } }; listeners.add(fn) })
       startMode(choice.id, choice.opts)
@@ -287,6 +296,7 @@ async function runFlow() {
       menuBtn.hidden = true
       if (!e) { mode = null; ctx.role('idle'); shot.reset(); keeper?.reset(); kicker?.reset(); hideEsito(game.ui); rig.goTo('dietroTiratore', { instant: true }); break }
       flow = 'risultato'
+      if (e.summary?.winner === 'me' || (e.id !== 'shootout' && e.id !== 'boss')) audio.playMusic('vittoria', { loop: false }); else audio.playMusic('inno')
       const xpNow = game.progress?.xp?.() ?? 0
       const lv = game.progress?.level?.() || { n: 1, title: 'Esordiente' }
       const r = await risultato(game.ui, { title: titleFor(e), lines: linesFor(e), xpGained: xpNow - xpBefore, xp: xpNow, level: lv, next: game.progress?.next?.() || null, achievements: game.progress?.takeFresh?.() || [], shareText: shareFor(e) })
@@ -298,12 +308,13 @@ menuBtn.addEventListener('click', async () => { const v = await overlayMenu(); i
 async function overlayMenu() {
   const { overlay } = await import('./ui/screens/overlay.js')
   const v = await overlay(game.ui, `<h2 class="rg-title">Pausa</h2><div class="rg-row"><button class="rg-btn rg-btn--primary" data-value="continua" aria-label="Continua">Continua</button><button class="rg-btn" data-value="opzioni" aria-label="Opzioni">Opzioni</button><button class="rg-btn rg-btn--ghost" data-value="esci" aria-label="Esci dalla partita">Esci</button></div>`, { label: 'Pausa', closable: true })
-  if (v === 'opzioni') { await opzioni(game.ui, settings, { onChange: applySettings, onReset: () => { save.reset(); toast(game.ui, 'Progressi azzerati') } }); return 'continua' }
+  if (v === 'opzioni') { await opzioni(game.ui, settings, { onChange: applySettings, onReset: () => { save.reset(); toast(game.ui, 'Progressi azzerati'); setTimeout(() => location.reload(), 700) } }); return 'continua' }
   return v
 }
 const NAME = { shootout: 'Shootout', boss: 'Boss: Ale in forma', sfidaAle: 'Sfida Ale', passAndPlay: 'Pass-and-play', skill: 'Skill' }
 function titleFor(e) { const s = e.summary; if (e.id === 'shootout' || e.id === 'boss') return s.winner === 'me' ? `Hai vinto ${s.me}–${s.ale}` : `Ale vince ${s.ale}–${s.me}`; if (e.id === 'sfidaAle') return `${s.goals} gol prima di tre parate`; if (e.id === 'skill') return `${s.score} punti`; if (e.id === 'passAndPlay') return `Vince ${s.leaderboard[0].name}`; return NAME[e.id] }
-function linesFor(e) { const s = e.summary; if (e.id === 'passAndPlay') return s.leaderboard.map((p, i) => `${i + 1}. ${p.name}: ${p.goals} gol, ${p.saves} parate`); if (e.id === 'sfidaAle') return [`${s.shots} tiri, ${s.goals} gol`]; if (e.id === 'skill') return [`${s.hits} bersagli su ${s.shots} tiri`]; if (e.id === 'shootout' || e.id === 'boss') return [s.suddenDeath ? 'Deciso al sudden death' : `${s.rounds} rigori a testa`]; return [] }
+function linesFor(e) { const b = game.progress.board(e.id).slice(0, 3); const top = b.length ? [`Classifica: ${b.map((x, i) => `${i + 1}. ${x.name} ${x.label}`).join(' · ')}`] : []; return [...linesBase(e), ...top] }
+function linesBase(e) { const s = e.summary; if (e.id === 'passAndPlay') return s.leaderboard.map((p, i) => `${i + 1}. ${p.name}: ${p.goals} gol, ${p.saves} parate`); if (e.id === 'sfidaAle') return [`${s.shots} tiri, ${s.goals} gol`]; if (e.id === 'skill') return [`${s.hits} bersagli su ${s.shots} tiri`]; if (e.id === 'shootout' || e.id === 'boss') return [s.suddenDeath ? 'Deciso al sudden death' : `${s.rounds} rigori a testa`]; return [] }
 function shareFor(e) {
   const s = e.summary, who = byId(shooterId)?.nome || 'Io', url = __SITE_URL__.replace(/\/?$/, '/') + 'rigori/'
   if (e.id === 'shootout' || e.id === 'boss') return `⚽ Rigori al Camp Nou\n${who} ${s.me}-${s.ale} Ale 🧤\n${s.winner === 'me' ? (s.suddenDeath ? 'Deciso al sudden death. Disonesti.' : 'Ale a casa. Disonesti.') : 'Ale ha parlato troppo, e aveva ragione.'}\n${url}`
@@ -319,22 +330,42 @@ export const game = {
   set timingEnabled(v) { timingEnabled = !!v }, get timingEnabled() { return timingEnabled },
   setTimeScale(v) { timeScale = v }, get timeScale() { return timeScale }, ui: document.getElementById('rg-ui'), reducedMotion, settings, juice
 }
+// ---------- progressione, sfottò, equipaggiamento ----------
+game.progress = createProgress({
+  save, listeners, role: () => role, shooterName: () => byId(shooterId)?.nome || 'Io',
+  onLevelUp: (lv) => { audio.play('levelup', { volume: .7 }); toast(game.ui, `Livello ${lv.n}: ${lv.title}`, 3000) },
+  onUnlock: (u) => { audio.play('unlock', { volume: .6 }); toast(game.ui, `Sbloccato: ${u.title}`, 3000) },
+  onAchievement: (a) => { audio.play('unlock', { volume: .6 }); toast(game.ui, `🏆 ${a.title}`, 3000) }
+})
+const tauntChar = () => (role === 'keeper' ? 'ale' : shooterId)
+game.tauntFor = (e) => taunt(e.result === 'goal' ? 'postGol' : 'postParata', tauntChar(), game.progress.unlocked('taunt:extra'))
+function applyEquip() {
+  ball.setSkin(game.progress.equipped('pallone'))
+  kicker?.setCelebration((game.progress.equipped('celebrazione') || 'celeb:salto').replace('celeb:', ''))
+  juice.setReplayCamera({ 'cam:drone': 'drone', 'cam:dischetto': 'dischetto' }[game.progress.equipped('camera')] || 'lateraleReplay')
+}
+applyEquip()
 window.__rigori = {
   ready: false, game, noFlow: new URLSearchParams(location.search).has('noflow'),
   // Tiro deterministico per la QA: aim = { x, y, power, curve }
   fire: (aim, timingPerfect = false, delay = 0) => { shot.fire(aim, { timingPerfect, delay }); if (delay) kicker?.windup(); else rig.followLook(ball.mesh) },
   setShooter, shooter: () => shooterId, flow: () => flow, settings, applySettings,
   kitReady, startMode, mode: () => mode, role: () => role, xpLog, ctx, chars, rig, get frames() { return frames },
-  setPrecision: (v) => shot.setPrecision(v), events, shotState: () => shot.state, lastResult: () => [...events].reverse().find((e) => e.type === 'result')?.result || null,
+  setPrecision: (v) => shot.setPrecision(v), audio, events, shotState: () => shot.state, lastResult: () => [...events].reverse().find((e) => e.type === 'result')?.result || null,
   info: () => ({ fps: +perf.fps.toFixed(1), level: perf.level, quality: { ...quality }, frames, draws: R.renderer.info.render.calls, tris: R.renderer.info.render.triangles, camera: rig.current })
 }
 
 // LoadingManager.onLoad scatta a ogni svuotamento della coda (anche per i volti caricati dopo): parte una volta sola
 manager.onLoad = () => {
   if (window.__rigori.ready) return
-  const el = document.getElementById('rg-loading'); el.classList.add('rg-loading--out'); setTimeout(() => el.remove(), 500)
   window.__rigori.ready = true
-  if (!window.__rigori.noFlow) runFlow()
+  const el = document.getElementById('rg-loading')
+  const go = () => { el.classList.add('rg-loading--out'); setTimeout(() => el.remove(), 500); if (!window.__rigori.noFlow) runFlow() }
+  // "Tocca per iniziare": il primo tocco sblocca l'AudioContext (iOS lo richiede dentro un gesto utente)
+  const tap = el.querySelector('.rg-loading__tap'); tap.hidden = false; el.querySelector('.rg-loading__bar').hidden = true; el.querySelector('.rg-loading__pct').hidden = true
+  const start = (ev) => { ev?.preventDefault?.(); el.removeEventListener('pointerdown', start); el.removeEventListener('keydown', start); audio.unlock(); go() }
+  el.addEventListener('pointerdown', start); el.addEventListener('keydown', (ev) => { if (ev.key === 'Enter' || ev.key === ' ') start(ev) }); tap.focus()
+  if (window.__rigori.noFlow) { document.addEventListener('pointerdown', () => audio.unlock(), { once: true }); start() }
 }
 // Se non c'è nulla da caricare il manager non chiama onLoad da solo
 setTimeout(() => { if (!window.__rigori.ready) manager.onLoad() }, 4000)

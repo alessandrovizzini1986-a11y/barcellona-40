@@ -99,3 +99,21 @@ export function glowTexture() {
   const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace
   return t
 }
+// Pallone trencadís: tessere di ceramica irregolari (Voronoi grezzo) nei colori del sito, fughe chiare
+export function mosaicBallTexture() {
+  const S = 512, c = canvas(S, S), g = c.getContext('2d')
+  const cols = ['#E8552E', '#2CA6A4', '#F2B705', '#3D5A80', '#F2E9DE', '#A50044', '#004D98']
+  const seeds = Array.from({ length: 90 }, () => ({ x: Math.random() * S, y: Math.random() * S, c: cols[(Math.random() * cols.length) | 0] }))
+  const img = g.createImageData(S, S), d = img.data
+  for (let y = 0; y < S; y++) for (let x = 0; x < S; x++) {
+    let b1 = 1e9, b2 = 1e9, col = '#fff'
+    for (const s of seeds) { const dx = Math.min(Math.abs(x - s.x), S - Math.abs(x - s.x)), dy = y - s.y; const dd = dx * dx + dy * dy; if (dd < b1) { b2 = b1; b1 = dd; col = s.c } else if (dd < b2) b2 = dd }
+    const edge = Math.sqrt(b2) - Math.sqrt(b1) < 3.5
+    const i = (y * S + x) * 4
+    if (edge) { d[i] = 236; d[i + 1] = 232; d[i + 2] = 224 } else { d[i] = parseInt(col.slice(1, 3), 16); d[i + 1] = parseInt(col.slice(3, 5), 16); d[i + 2] = parseInt(col.slice(5, 7), 16) }
+    d[i + 3] = 255
+  }
+  g.putImageData(img, 0, 0)
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4
+  return t
+}

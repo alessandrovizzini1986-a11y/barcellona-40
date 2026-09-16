@@ -13,7 +13,7 @@ export function createJuice({ scene, rig, game, reduced = () => false }) {
   let head = 0
   const spawn = (p, v, color, ttl) => { const i = head; head = (head + 1) % MAX; pos.set([p.x, p.y, p.z], i * 3); vel.set([v.x, v.y, v.z], i * 3); life[i] = ttl; col.set([color.r, color.g, color.b], i * 3) }
   // ---- stato del tempo ----
-  let hitStop = 0, slow = false, replay = null
+  let hitStop = 0, slow = false, replay = null, replayCam = 'lateraleReplay'
   const record = []                       // posizioni della palla durante il volo, per il replay
   const tmp = new THREE.Vector3()
   return {
@@ -34,7 +34,8 @@ export function createJuice({ scene, rig, game, reduced = () => false }) {
     recordBall(p) { record.push(p.clone()) },
     clearRecord() { record.length = 0 },
     // Replay laterale di 2 s: la palla ripercorre le posizioni registrate dalla camera laterale
-    startReplay(onEnd) { if (record.length < 4) { onEnd?.(); return } replay = { t: 0, dur: 2, onEnd }; rig.followLook(null); rig.goTo('lateraleReplay', { instant: true }) },
+    setReplayCamera(name) { replayCam = name || 'lateraleReplay' },
+    startReplay(onEnd) { if (record.length < 4) { onEnd?.(); return } replay = { t: 0, dur: 2, onEnd }; rig.followLook(null); rig.goTo(replayCam, { instant: true }) },
     get replaying() { return !!replay },
     // Restituisce la scala del tempo da applicare al gioco in questo frame
     update(raw, ballMesh) {
