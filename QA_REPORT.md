@@ -135,6 +135,22 @@ EXIT 0
 | Tuffo verso la zona giusta (clip diveL/diveR misurate: erano invertite) | ✅ | `v1-tuffo-basso-sx.png`; fianchi a x=−3,27 per la zona basso-sinistra |
 | `prefers-reduced-motion`: riduci flash e shake attivo, bloom spento, pubblico 3 200 | ✅ | contesto Playwright con `reducedMotion: 'reduce'` |
 
+## Revisione del codice (seconda passata, `rigori-review.mjs`)
+
+Difetti trovati rileggendo il diff e corretti, ciascuno con un controllo automatico:
+
+| Difetto | Correzione | Controllo |
+|---------|------------|-----------|
+| Una parata di respinta (non presa) non emetteva `result`: la modalità non contava la parata e il turno si ripeteva | `shot.js` emette `result: save` anche sulla respinta, poi la palla rotola libera | respinta a potenza 0,95 → `saves = 1` in Sfida Ale |
+| Da portiere l'input era spento appena la CPU iniziava la rincorsa: impossibile reagire al tell | input attivo in `windup`/`flying` finché l'esito non è deciso | swipe durante il volo → `playerDive` accettato |
+| Swipe del portiere specchiato: la camera dietro la porta guarda +z, la destra dello schermo è x<0 | mappatura invertita | swipe a destra → zona 3 (basso, x<0) |
+| Skill: tempo scaduto a palla ferma lasciava la partita appesa | fine modalità anche dal tick quando la palla è ferma | `timeLeft = 1,2 s` senza tirare → `modeEnd` |
+| Uscita dalla partita e fine modalità non azzeravano passività, zona forzata e bersaglio | `endMode()` e uscita ripuliscono lo stato | dopo Skill il portiere non è passivo |
+| Difficoltà legata al controller in cache: Boss dopo uno Shootout normale usava il portiere "normale" | difficoltà a livello di partita, riapplicata a ogni cambio coppia | portiere riusato in Boss → `boss` |
+| `?q=` finiva salvato nelle impostazioni del telefono | override solo per la visita | `settings.quality` resta `auto` |
+| `guida.html` e `sala-giochi.html` del sito precedente linkano `rigori.html`, che la build non emetteva più | `rigori.html` di raccordo verso `rigori/` con link al classic | `dist/rigori.html` presente |
+| Codice morto (`setCamera`, `loadFace`, `faceSprite`), opzioni duplicate, titoli duplicati | rimossi; `openOptions()`; titoli da `MODES_INFO` | build ok |
+
 ## Cose non verificabili qui (da fare sul telefono)
 
 - fps reali su Chrome Android e Safari iOS, e soglie di degradazione (45/55 fps)

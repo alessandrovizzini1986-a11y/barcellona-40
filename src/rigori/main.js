@@ -29,7 +29,7 @@ import { cpuAim, XP } from './game/modes/base.js'
 import { zoneOf } from './game/keeper.js'
 import { pickZone, handoff } from './ui/screens/passaggio.js'
 import { chiTira } from './ui/screens/chiTira.js'
-import { modalita } from './ui/screens/modalita.js'
+import { modalita, MODES_INFO } from './ui/screens/modalita.js'
 import { showEsito, hideEsito } from './ui/screens/esito.js'
 import { risultato } from './ui/screens/risultato.js'
 import { opzioni } from './ui/screens/opzioni.js'
@@ -38,7 +38,6 @@ import { onboarding } from './ui/screens/onboarding.js'
 import { overlay } from './ui/screens/overlay.js'
 import { toast } from './ui/components/toast.js'
 import { save } from './core/save.js'
-import { setCamera } from './scene/players.js'
 import { keeper as keeperData, faceOf, byId } from './data/players.js'
 import { createKicker, KICK_DELAY } from './game/kicker.js'
 
@@ -68,7 +67,6 @@ const R = createRenderer(stage)
 const scene = new THREE.Scene()
 scene.fog = new THREE.FogExp2(0x0E1116, 0.018) // la profondità arriva da qui (direzione visiva)
 const rig = createCameraRig(R.size.w / R.size.h)
-setCamera(rig.camera)
 const stadium = createStadium(); scene.add(stadium.group)
 const lights = createLights({ towerPositions: stadium.lightPos, aim: stadium.aim }); scene.add(lights.group)
 const field = createField(); scene.add(field)
@@ -90,14 +88,15 @@ applyQuality()
 let timingEnabled = true               // opzione (fase 9); ON di default
 // Opzione "riduci flash e shake" (fase 9) + prefers-reduced-motion: niente shake né particelle intense, lo slow-mo resta
 const settings = Object.assign({ audio: true, music: true, vibration: true, reduceFx: reducedMotion, timing: true, quality: 'auto' }, save.get('settings', {}))
-if (new URLSearchParams(location.search).get('q')) settings.quality = new URLSearchParams(location.search).get('q') // QA: ?q=alta|bassa|auto
+const qOverride = new URLSearchParams(location.search).get('q') // QA: ?q=alta|bassa|auto, solo per questa visita (non viene salvato)
 const audio = createAudio(ASSETS, settings)
 function applySettings() {
   audio.apply()
   timingEnabled = settings.timing !== false
-  perf.lock(settings.quality !== 'auto')
-  if (settings.quality === 'bassa') { quality.bloom = false; quality.shadows = false; quality.particles = false; quality.crowd = 0.5 }
-  else if (settings.quality === 'alta') { quality.bloom = !reducedMotion; quality.shadows = true; quality.particles = true; quality.crowd = 1 }
+  const q = qOverride || settings.quality
+  perf.lock(q !== 'auto')
+  if (q === 'bassa') { quality.bloom = false; quality.shadows = false; quality.particles = false; quality.crowd = 0.5 }
+  else if (q === 'alta') { quality.bloom = !reducedMotion; quality.shadows = true; quality.particles = true; quality.crowd = 1 }
   applyQuality()
   save.set('settings', settings)
 }
@@ -146,7 +145,7 @@ function setPair(keeperP, kickerP) {
   controllers[kKey] = controllers[kKey] || createKeeper(kc, { difficulty: keeper?.difficulty || 'normale', onDive: (_z, at) => { juice.dust(at); audio.play('dive', { volume: .6 }) } })
   controllers[sKey] = controllers[sKey] || createKicker(sc)
   keeper = controllers[kKey]; kicker = controllers[sKey]
-  keeper.reset(); kicker.reset(); if (game.progress) applyEquip()
+  keeper.setDifficulty(difficulty); keeper.reset(); kicker.reset(); if (game.progress) applyEquip()
   // Lo stesso personaggio passa da tiratore a portiere e viceversa: il portiere torna sulla linea, rivolto al dischetto
   kc.group.position.set(0, 0, 0.55); kc.group.rotation.set(0, 0, 0); kc.model.scale.x = 1
   scene.add(kc.group); scene.add(sc.group)
@@ -164,7 +163,8 @@ const hud = document.createElement('div'); hud.className = 'rg-hud'; hud.innerHT
   <div class="rg-hint" id="rg-hint">Trascina dal pallone</div>`
 document.getElementById('rg-ui').appendChild(hud)
 const timingEl = document.getElementById('rg-timing'), timingCur = timingEl.querySelector('.rg-timing__cur'), hint = document.getElementById('rg-hint')
-const input = createInput(stage, { camera: rig.camera, getBallWorld: () => ball.mesh.position, size: R.size, enabled: () => !shot.busy && window.__rigori.ready })
+// Tiratore: solo a palla ferma. Portiere: anche durante rincorsa e volo (deve reagire al tell), non a esito già deciso
+const input = createInput(stage, { camera: rig.camera, getBallWorld: () => ball.mesh.position, size: R.size, enabled: () => window.__rigori.ready && (input.mode === 'keeper' ? (shot.state === 'idle' || shot.state === 'windup' || shot.state === 'flying') && !shot.resolved : !shot.busy) })
 input.on('start', () => { if (timingEnabled && input.mode === 'shooter') { timing.start(); timingEl.hidden = false } hint.hidden = true })
 input.on('move', (g) => { if (g.ok && input.mode === 'shooter') ghost.show(aimFromGesture(g, R.size)) })
 input.on('end', (g) => {
@@ -172,7 +172,8 @@ input.on('end', (g) => {
   if (input.mode === 'keeper') {
     // portiere: direzione dello swipe → zona; il tempismo è tutto (troppo presto: la CPU cambia lato)
     if (!g.ok || !keeper) return
-    const col = g.dx < -40 ? 0 : g.dx > 40 ? 2 : 1, row = -g.dy > 60 ? 0 : 1
+    // la camera è dietro la porta e guarda verso il dischetto: la destra dello schermo è x<0 (colonna 0)
+    const col = g.dx > 40 ? 0 : g.dx < -40 ? 2 : 1, row = -g.dy > 60 ? 0 : 1
     keeper.playerDive(row * 3 + col); hint.hidden = true
     return
   }
@@ -210,7 +211,7 @@ systems.push({ update(_dt, raw) {
 
 // ---------- modalità ----------
 const MODES = { shootout: (o) => createShootout(o), boss: (o) => createShootout({ ...o, boss: true }), sfidaAle: (o) => createSfidaAle(o), passAndPlay: (o) => createPassAndPlay(o), skill: (o) => createSkill(o) }
-let mode = null, role = 'idle'
+let mode = null, role = 'idle', difficulty = 'normale' // la difficoltà è della partita, non del singolo controller (che viene riusato)
 const modeHud = document.createElement('div'); modeHud.className = 'rg-modehud'; modeHud.setAttribute('aria-live', 'polite'); document.getElementById('rg-ui').appendChild(modeHud)
 const target = new THREE.Mesh(new THREE.RingGeometry(0.42, 0.55, 32), new THREE.MeshBasicMaterial({ color: 0xF2B705, transparent: true, opacity: .9, side: THREE.DoubleSide, depthTest: false })); target.renderOrder = 8; target.visible = false; scene.add(target)
 const xpLog = []
@@ -224,7 +225,7 @@ const ctx = {
     else if (r === 'keeper') { hint.textContent = 'Trascina verso la zona in cui tuffarti'; hint.hidden = false; rig.goTo('dietroPortiere', { instant: true }) }
     else hint.hidden = true
   },
-  setDifficulty(d) { keeper?.setDifficulty(d) },
+  setDifficulty(d) { difficulty = d; keeper?.setDifficulty(d) },
   hud(t) { modeHud.textContent = t },
   xp(kind) { const n = XP[kind] || 0; xpLog.push({ kind, n }); listeners.forEach((f) => f({ type: 'xp', kind, n })) },
   forceKeeperZone(z) { keeper?.force(z) },
@@ -255,21 +256,30 @@ function startMode(id, opts = {}) {
   listeners.forEach((f) => f({ type: 'modeStart', id }))
   return mode
 }
+// Fine modalità: stato della partita azzerato (passività, zona forzata, bersaglio), poi 'modeEnd'
+function endMode() {
+  const summary = mode.summary(); const m = mode; mode = null
+  ctx.keeperPassive(false); ctx.forceKeeperZone(null); ctx.showTarget(null); ctx.role('idle')
+  listeners.forEach((f) => f({ type: 'modeEnd', id: m.id, summary }))
+}
 listeners.add((e) => {
   if (!mode) return
   if (e.type === 'result') mode.onResult(e, ctx)
-  if (e.type === 'replayEnd') {
-    if (mode.finished) { const summary = mode.summary(); const m = mode; mode = null; ctx.role('idle'); listeners.forEach((f) => f({ type: 'modeEnd', id: m.id, summary })) }
-    else mode.nextTurn(ctx)
-  }
+  if (e.type === 'replayEnd') { if (mode.finished) endMode(); else mode.nextTurn(ctx) }
 })
-systems.push({ update(dt) { if (mode?.tick && !mode.finished) mode.tick(dt, ctx) } })
+systems.push({ update(dt) {
+  if (!mode?.tick || mode.finished) return
+  mode.tick(dt, ctx)
+  // il tempo può scadere a palla ferma (Skill): non arriverebbe nessun 'replayEnd'
+  if (mode.finished && shot.state === 'idle') endMode()
+} })
 
 // ---------- flusso: onboarding → CHI TIRA? → modalità → partita → risultato ----------
 document.getElementById('rg-ui').addEventListener('click', (e) => { const b = e.target.closest('button, a'); if (!b) return; audio.play(b.classList.contains('rg-btn--primary') ? 'confirm' : b.dataset.value === '__close' || b.dataset.back != null ? 'back' : 'click', { volume: .5 }) })
 const menuBtn = document.createElement('button'); menuBtn.className = 'rg-btn rg-btn--ghost rg-menubtn'; menuBtn.setAttribute('aria-label', 'Menu'); menuBtn.textContent = '≡'; menuBtn.hidden = true
 document.getElementById('rg-ui').appendChild(menuBtn)
 let flow = 'boot', quitRequested = false
+const openOptions = () => opzioni(game.ui, settings, { onChange: applySettings, onReset: () => { save.reset(); toast(game.ui, 'Progressi azzerati'); setTimeout(() => location.reload(), 700) } })
 async function runFlow() {
   await kitReady
   ctx.role('idle')
@@ -281,7 +291,7 @@ async function runFlow() {
     while (!choice) {
       flow = 'modalita'
       const r = await modalita(game.ui, { bossUnlocked: game.progress?.bossUnlocked?.() ?? false, level: game.progress?.level?.().n ?? 1 })
-      if (r.id === '__opzioni') { await opzioni(game.ui, settings, { onChange: applySettings, onReset: () => { save.reset(); toast(game.ui, 'Progressi azzerati'); setTimeout(() => location.reload(), 700) } }); continue }
+      if (r.id === '__opzioni') { await openOptions(); continue }
       if (r.id === '__sblocchi') { await sblocchi(game.ui, game.progress.summaryForUi(), { onEquip: (kind, id) => { if (game.progress.setEquip(kind, id)) { applyEquip(); return game.progress.summaryForUi() } audio.play('error', { volume: .5 }); return null } }); continue }
       if (r.id === '__chi') break
       if (!r.id) continue
@@ -297,7 +307,7 @@ async function runFlow() {
       startMode(choice.id, choice.opts)
       const e = await Promise.race([ended, new Promise((res) => { const iv = setInterval(() => { if (quitRequested) { clearInterval(iv); res(null) } }, 200) })])
       menuBtn.hidden = true
-      if (!e) { mode = null; ctx.role('idle'); shot.reset(); keeper?.reset(); kicker?.reset(); hideEsito(game.ui); rig.goTo('dietroTiratore', { instant: true }); break }
+      if (!e) { mode = null; ctx.keeperPassive(false); ctx.forceKeeperZone(null); ctx.showTarget(null); ctx.role('idle'); shot.reset(); keeper?.reset(); kicker?.reset(); hideEsito(game.ui); rig.goTo('dietroTiratore', { instant: true }); break }
       flow = 'risultato'
       if (e.summary?.winner === 'me' || (e.id !== 'shootout' && e.id !== 'boss')) audio.playMusic('vittoria', { loop: false }); else audio.playMusic('inno')
       const xpNow = game.progress?.xp?.() ?? 0
@@ -310,11 +320,10 @@ async function runFlow() {
 menuBtn.addEventListener('click', async () => { const v = await overlayMenu(); if (v === 'esci') quitRequested = true })
 async function overlayMenu() {
   const v = await overlay(game.ui, `<h2 class="rg-title">Pausa</h2><div class="rg-row"><button class="rg-btn rg-btn--primary" data-value="continua" aria-label="Continua">Continua</button><button class="rg-btn" data-value="opzioni" aria-label="Opzioni">Opzioni</button><button class="rg-btn rg-btn--ghost" data-value="esci" aria-label="Esci dalla partita">Esci</button></div>`, { label: 'Pausa', closable: true })
-  if (v === 'opzioni') { await opzioni(game.ui, settings, { onChange: applySettings, onReset: () => { save.reset(); toast(game.ui, 'Progressi azzerati'); setTimeout(() => location.reload(), 700) } }); return 'continua' }
+  if (v === 'opzioni') { await openOptions(); return 'continua' }
   return v
 }
-const NAME = { shootout: 'Shootout', boss: 'Boss: Ale in forma', sfidaAle: 'Sfida Ale', passAndPlay: 'Pass-and-play', skill: 'Skill' }
-function titleFor(e) { const s = e.summary; if (e.id === 'shootout' || e.id === 'boss') return s.winner === 'me' ? `Hai vinto ${s.me}–${s.ale}` : `Ale vince ${s.ale}–${s.me}`; if (e.id === 'sfidaAle') return `${s.goals} gol prima di tre parate`; if (e.id === 'skill') return `${s.score} punti`; if (e.id === 'passAndPlay') return `Vince ${s.leaderboard[0].name}`; return NAME[e.id] }
+function titleFor(e) { const s = e.summary; if (e.id === 'shootout' || e.id === 'boss') return s.winner === 'me' ? `Hai vinto ${s.me}–${s.ale}` : `Ale vince ${s.ale}–${s.me}`; if (e.id === 'sfidaAle') return `${s.goals} gol prima di tre parate`; if (e.id === 'skill') return `${s.score} punti`; if (e.id === 'passAndPlay') return `Vince ${s.leaderboard[0].name}`; return MODES_INFO.find((m) => m.id === e.id)?.title || e.id }
 function linesFor(e) { const b = game.progress.board(e.id).slice(0, 3); const top = b.length ? [`Classifica: ${b.map((x, i) => `${i + 1}. ${x.name} ${x.label}`).join(' · ')}`] : []; return [...linesBase(e), ...top] }
 function linesBase(e) { const s = e.summary; if (e.id === 'passAndPlay') return s.leaderboard.map((p, i) => `${i + 1}. ${p.name}: ${p.goals} gol, ${p.saves} parate`); if (e.id === 'sfidaAle') return [`${s.shots} tiri, ${s.goals} gol`]; if (e.id === 'skill') return [`${s.hits} bersagli su ${s.shots} tiri`]; if (e.id === 'shootout' || e.id === 'boss') return [s.suddenDeath ? 'Deciso al sudden death' : `${s.rounds} rigori a testa`]; return [] }
 function shareFor(e) {

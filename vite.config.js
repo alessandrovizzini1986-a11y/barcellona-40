@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite'
-import { cpSync, existsSync, mkdirSync, readdirSync, statSync, copyFileSync } from 'node:fs'
+import { cpSync, existsSync, mkdirSync, readdirSync, statSync, copyFileSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 
 // File di root del sito precedente che NON vanno ripubblicati:
@@ -35,7 +35,9 @@ function copyLegacy() {
         }
       }
       walk(src, out, 0)
-      console.log(`[copy-legacy] ${copied} file dal sito precedente, ${skipped} saltati`)
+      // I link del sito precedente (guida, sala giochi) puntano a rigori.html: pagina di raccordo verso il gioco nuovo
+      writeFileSync(path.join(out, 'rigori.html'), '<!doctype html><html lang="it"><head><meta charset="utf-8"><meta http-equiv="refresh" content="0; url=rigori/"><title>Rigori al Camp Nou</title></head><body><p>Il gioco si è spostato: <a href="rigori/">Rigori al Camp Nou 2.0</a> · <a href="rigori-classic.html">versione classica</a></p></body></html>')
+      console.log(`[copy-legacy] ${copied} file dal sito precedente, ${skipped} saltati, rigori.html di raccordo`)
     }
   }
 }

@@ -73,7 +73,7 @@ export function createShot({ ball, goal, keeper, onEvent, precision = 1 }) {
         // Intervento del portiere sul piano della porta (o poco prima)
         if (keeper && !resolved && m.position.z < 0.9 && m.position.z > -0.2) {
           const hit = keeper.tryStop(m.position, aim)
-          if (hit) { resolved = 'save'; free = true; freeVel.copy(vel).multiplyScalar(-0.25); freeVel.x += hit.deflectX; freeVel.y = Math.abs(freeVel.y) * 0.4 + 1.2; emit('save', { point: m.position.clone(), catch: hit.catch }); if (hit.catch) { held = 0.9; state = 'held'; emit('result', { result: 'save', catch: true, point: m.position.clone() }) } return }
+          if (hit) { resolved = 'save'; free = true; freeVel.copy(vel).multiplyScalar(-0.25); freeVel.x += hit.deflectX; freeVel.y = Math.abs(freeVel.y) * 0.4 + 1.2; emit('save', { point: m.position.clone(), catch: hit.catch }); emit('result', { result: 'save', catch: hit.catch, point: m.position.clone() }); if (hit.catch) { held = 0.9; state = 'held' } return } // anche la respinta è un esito: le modalità contano la parata, poi la palla rotola libera fino a 'settled'
         }
         if (u >= 1 || m.position.z <= 0) {
           // sul piano della porta: palo, traversa, gol o fuori

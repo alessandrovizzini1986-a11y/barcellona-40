@@ -4,9 +4,6 @@ import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js'
 import { clone as skeletonClone } from 'three/addons/utils/SkeletonUtils.js'
 import { buildBigHead } from './bighead.js'
 import { blobShadowTexture } from './textures.js'
-// Camera condivisa (compatibilità con il bootstrap; il big head non ha più sprite da orientare)
-let CAMERA = null
-export const setCamera = (c) => { CAMERA = c }
 // Kit dei personaggi: un solo modello riggato (manichino Mixamo "Y Bot", in metri) + clip solo-animazione
 // dello stesso scheletro. Il manichino è INVISIBILE: fa solo da scheletro per le primitive del big head.
 export const BODY_SCALE = 0.7                // corpo piccolo, testa enorme (≈ 40 % dell'altezza)
@@ -25,9 +22,6 @@ export async function loadCharacterKit(ASSETS, manager) {
   await Promise.all(Object.entries(CLIP_FILES).map(async ([k, f]) => { const g = await load(f); const c = g.animations[0]; if (c) { c.name = k; clips[k] = c } }))
   base.scene.traverse((o) => { if (o.isMesh) { o.visible = false; o.castShadow = false; o.receiveShadow = false; o.frustumCulled = false } })
   return { base: base.scene, clips }
-}
-export function loadFace(ASSETS, path, manager) {
-  const t = new THREE.TextureLoader(manager).load(ASSETS + path); t.colorSpace = THREE.SRGBColorSpace; return t
 }
 // maglia/numero → corpo; faceUrl → foto sull'emisfero frontale della testa; glove → guantoni (portiere)
 export function makeCharacter(kit, { maglia, numero, faceUrl = null, glove = false, manager = undefined }) {
@@ -48,7 +42,7 @@ export function makeCharacter(kit, { maglia, numero, faceUrl = null, glove = fal
   const _hp = new THREE.Vector3(); let hipsBase = null
   let current = null
   return {
-    group, model, mixer, actions, big, shadow, faceSprite: null,
+    group, model, mixer, actions, big, shadow,
     play(name, { loop = false, fade = 0.15, timeScale = 1, from = 0 } = {}) {
       const a = actions[name]; if (!a) return null
       a.reset(); a.setLoop(loop ? THREE.LoopRepeat : THREE.LoopOnce, loop ? Infinity : 1); a.timeScale = timeScale; a.time = from; a.enabled = true
