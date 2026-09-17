@@ -1,6 +1,6 @@
 {
  "v": 2,
- "aggiornato": "2026-09-14T19:36:07.399121Z",
+ "aggiornato": "2026-09-17T18:35:54.046046Z",
  "scheda": {
   "giorni": [
    {
@@ -282,8 +282,8 @@
       "gruppo": "gambe",
       "rec": 40,
       "recTxt": "30–45\" tra le gambe",
-      "note": "Ultima serie a ripetizioni massime.",
-      "desc": "Ultima serie a ripetizioni massime.",
+      "note": "Ultima serie a ripetizioni massime. Braccia distese in avanti e busto leggermente inclinato avanti; piede dritto, non allungare troppo la gamba dietro; peso sempre sul centro del piede.",
+      "desc": "Ultima serie a ripetizioni massime. Braccia distese in avanti e busto leggermente inclinato avanti; piede dritto, non allungare troppo la gamba dietro; peso sempre sul centro del piede.",
       "tipo": "carico",
       "perMano": true,
       "assist": false,
@@ -957,6 +957,159 @@
    },
    "warmOpen": false,
    "pt": true
+  },
+  {
+   "id": "2026-09-17-od58v0q",
+   "data": "2026-09-17",
+   "giorno": "A",
+   "settimana": 3,
+   "chiusa": true,
+   "inizio": 1789666369325,
+   "fine": 1789669768738,
+   "esercizi": {
+    "leg-press": [
+     {
+      "kg": 70,
+      "reps": 12,
+      "fatta": true
+     },
+     {
+      "kg": 80,
+      "reps": 10,
+      "fatta": true
+     },
+     {
+      "kg": 90,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 100,
+      "reps": 6,
+      "fatta": true
+     }
+    ],
+    "pull-up-ass": [
+     {
+      "kg": -60,
+      "reps": 10,
+      "fatta": true
+     },
+     {
+      "kg": -60,
+      "reps": 10,
+      "fatta": true
+     },
+     {
+      "kg": -60,
+      "reps": 10,
+      "fatta": true
+     },
+     {
+      "kg": -60,
+      "reps": 10,
+      "fatta": true
+     }
+    ],
+    "leg-extension": [
+     {
+      "kg": 25,
+      "reps": 10,
+      "fatta": true
+     },
+     {
+      "kg": 25,
+      "reps": 10,
+      "fatta": true
+     },
+     {
+      "kg": 25,
+      "reps": 10,
+      "fatta": true
+     }
+    ],
+    "pulley-triangolo": [
+     {
+      "kg": 25,
+      "reps": 12,
+      "fatta": true
+     },
+     {
+      "kg": 25,
+      "reps": 12,
+      "fatta": true
+     },
+     {
+      "kg": 25,
+      "reps": 12,
+      "fatta": true
+     }
+    ],
+    "chest-press": [
+     {
+      "kg": 40,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": 35,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 35,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 30,
+      "reps": 10,
+      "fatta": true
+     }
+    ],
+    "push-down": [
+     {
+      "kg": 15,
+      "reps": 10,
+      "fatta": true
+     },
+     {
+      "kg": 15,
+      "reps": 10,
+      "fatta": true
+     },
+     {
+      "kg": 15,
+      "reps": 10,
+      "fatta": true
+     }
+    ],
+    "plank": [
+     {
+      "kg": 0,
+      "reps": 35,
+      "fatta": true
+     },
+     {
+      "kg": 0,
+      "reps": 35,
+      "fatta": true
+     },
+     {
+      "kg": 0,
+      "reps": 35,
+      "fatta": true
+     }
+    ]
+   },
+   "warm": {
+    "w0": true,
+    "w1": true,
+    "stretch": true
+   },
+   "luogoId": "hkfbbse",
+   "luogoNome": "Mcfit",
+   "warmOpen": false
   }
  ],
  "luoghi": [
