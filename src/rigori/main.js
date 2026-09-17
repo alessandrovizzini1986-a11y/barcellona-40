@@ -425,8 +425,9 @@ window.__rigori = {
     return g ? +g.distanceTo(bersaglio).toFixed(4) : null
   },
   ruoli: () => shot.ruoli, camereReplay,
-  // QA: gonfiore massimo toccato dalla rete dall'ultimo impulso, in metri
+  // QA: gonfiore massimo toccato dalla rete dall'ultimo impulso, in metri (azzerabile fra un tiro e l'altro)
   reteAmpiezza: () => goal.ampiezzaMax?.() ?? null,
+  reteRiposo: () => goal.riposo?.(),
   replay: ({ speed = 0.3, from, to } = {}) => new Promise((res) => {
     const rec = shot.record; if (!rec) return res(false)
     juice.startReplay({ from: from ?? Math.max(0, rec.contactTime - 0.55), to: to ?? Math.min(rec.duration, rec.contactTime + 0.45), speed, render: (t) => shot.renderAt(t), onEnd: () => res(true) })
