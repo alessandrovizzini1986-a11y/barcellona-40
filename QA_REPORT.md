@@ -405,6 +405,96 @@ Due controlli che fallivano erano sbagliati **loro**, non il gioco: il primo att
 record ancora aperto e non nel disegno); il secondo cercava ancora la vecchia dicitura "Hai segnato" nell'HUD del
 replay, che ora nomina chi ha tirato leggendolo dal record.
 
+## Quattro correzioni (rete, slow-mo, card giocatore, barra tempismo)
+
+### 1. La rete non si gonfiava: due cause vere
+
+Log di diagnosi a `t_hit` (tiro a potenza piena, `reteDiagnostica()`), **prima** del fix:
+
+```
+v impatto 24,9 m/s · v alla rete 22,3 m/s · punto mondo [2.796, 0.603, -1.814]
+pannello 0 (fondo)  locale [2.796, -0.617, 0.186]  nodi nel raggio  4 / 171 mobili  peso max 0,288
+pannello 1 (fianco) locale [0.814, -0.617, 6.456]  nodi nel raggio  0 / 81
+pannello 2 (fianco) locale [-0.814, -0.617, 0.864] nodi nel raggio  0 / 81
+pannello 3 (tetto)  locale [2.796, -0.814, 1.837]  nodi nel raggio  0 / 81
+ampiezza nei 0,5 s successivi: 0 · 0 · 0 · 0 · 0 · 0 · 0 · 0 · 0 · 0,3176 (attiva solo dopo 500 ms)
+```
+
+Ipotesi verificate una per una:
+
+| Ipotesi | Verdetto |
+|---|---|
+| (a) impulso in coordinate mondo contro nodi in coordinate locali | **No**: il punto locale cade dentro il pannello di fondo, a 0,186 m dal suo piano |
+| (b) manca `position.needsUpdate` | **No**, c'è. Mancava però l'aggiornamento della sfera di contenimento: la geometria si deforma e il culling la calcola a riposo |
+| (c) cloth aggiornato solo nel loop dal vivo | **Sì**: `goal.update(dt)` riceveva il `dt` **scalato**. Durante i replay `timeScale = 0`, quindi il tessuto restava congelato; in slow-motion andava a un terzo |
+| (d) nodi tutti ancorati | **No**: 171 mobili sul fondo |
+| **(e) raggio d'impulso più stretto della maglia** | **Sì**: con la griglia dimezzata (qualità bassa) 0,4 m prendevano **4 nodi su 171**, cioè una punta su un vertice invece di una tasca |
+
+**Correzioni**: il raggio d'influenza è `max(0,4 m; 2,5 maglie)`, così copre sempre una tasca vera a qualunque
+suddivisione (il picco resta `0,05 + 0,012 · v`, cambia solo la larghezza); i pannelli hanno `frustumCulled = false`;
+il tessuto è mosso da `raw`, il tempo reale, e non dal tempo di gioco.
+
+Dopo il fix, stesso tiro:
+
+| | prima | dopo |
+|---|---|---|
+| Nodi nel raggio (qualità piena) | 4 | **25** |
+| Nodi nel raggio (qualità dimezzata) | 4 | **22** |
+| Gonfiore a 22,3 m/s | 0,318 m (su un vertice) | 0,318 m (su una tasca) |
+| Tessuto durante i replay | fermo | animato |
+
+Screenshot a `t_hit + 0,15 s`: `v4-rete-tasca.png` (da dietro-fuori, la maglia sporge e la palla è dentro la
+deformazione), `v4-rete-profilo.png` (di profilo), `v4-rete-gonfia-piena.png` (dalla camera di gioco).
+
+**Da sapere**: il massimo raggiungibile in partita è **0,32 m**, non 0,41 m. La formula è quella chiesta, ma la
+velocità che conta è quella con cui la palla **tocca la rete**: partendo a 30 m/s, dopo 13 m di volo e 1,8 m dentro
+la gabbia ne restano ~22. Per avere 0,41 m servirebbe usare la velocità al calcio invece di quella all'impatto: dimmi
+tu quale preferisci.
+
+### 2. Slow-motion solo nel replay
+
+`main.js` metteva `juice.setSlow(shot.remaining < 0.4)`: siccome il volo dura 0,4-0,75 s, **quasi tutto il tiro dal
+vivo girava a ×0,3**. Rimosso insieme a tutto il meccanismo `slow` in `juice.js`. Dal vivo `juice.update()` torna
+sempre 1; l'unica eccezione è l'hit-stop di 60 ms su palo, traversa e guanti. Il ×0,3 resta solo dentro
+`startReplay`, cioè nei due replay.
+
+Effetto collaterale utile: la rete si gonfia ora **83 ms dopo il contatto** invece di ~500 ms.
+
+### 3. Card di conferma del giocatore
+
+Toccare un volto in "Chi tira?" non avvia più la partita: apre `ui/screens/giocatore.js` a schermo intero, con
+entrata a scorrimento dal basso di 220 ms.
+
+- volto grande (132 px), nome, numero sulla maglia del personaggio
+- **due dritte** del giocatore e **due sull'avversario in porta**, da `tips:[...]` in `data/players.js`
+- statistiche a cinque tacche (potenza, precisione, effetto), da `stats:{...}`
+- **VAI** (giallo, 56 px) avvia · **Cambia** torna alla scelta
+
+Screenshot: `v4-card-monne.png`, `v4-card-mario.png`. Verificato: "Cambia" riporta a `chiTira`, "VAI" porta a
+`modalita` e imposta il tiratore scelto.
+
+L'animazione d'entrata fa **solo** lo scorrimento, senza dissolvenza: partendo da `opacity: 0`, su un dispositivo
+lento (qui, headless a 13 fps) la card resta invisibile finché l'animazione non recupera. Misurato: a 300 ms
+l'opacità era ancora 0.
+
+### 4. Il pallino giallo è la barra del tempismo
+
+Non era un residuo di debug né un indicatore di mira: è il cursore di `rg-timing`, che esisteva già come barra con
+zona centrale in `--acqua`. Mancava che si spiegasse. Ora:
+
+- etichetta **TEMPISMO** sopra la barra, in `--fs-0`
+- traccia più alta (16 px) con la zona centrale evidenziata e il cursore giallo che oscilla
+- al rilascio **dentro** la zona: lampeggio della barra e scritta **+ PRECISIONE** (650 ms); fuori zona, niente
+- onboarding del primo tiro: "Trascina dal pallone e rilascia quando il cursore è nella zona verde"
+- in Opzioni la voce si chiama ora "Barra del tempismo" (era "Timing bar"), sempre attiva per impostazione predefinita
+
+Screenshot: `v4-tempismo-barra.png` (durante il trascinamento), `v4-tempismo-ok.png` (lampeggio al rilascio in zona,
+rilasciato a 0,411 con finestra 0,41-0,59).
+
+**C'è un secondo pallino giallo**, ma solo al primo avvio: la freccia animata dell'onboarding
+(`rg-onb__arrow`), che parte dal pallone e mima lo swipe. Non è un residuo, è il suggerimento del tutorial, e
+sparisce dopo il primo tiro. Se era quello a darti fastidio, dimmelo e lo tolgo.
+
 ## Cose non verificabili qui (da fare sul telefono)
 
 - fps reali su Chrome Android e Safari iOS, e soglie di degradazione (45/55 fps)

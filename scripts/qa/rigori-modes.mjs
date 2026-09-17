@@ -8,7 +8,7 @@ p.on('pageerror', (e) => errors.push('pageerror: ' + e.message)); p.on('console'
 await p.addInitScript(() => { try { localStorage.setItem('b40:v1:rigori:onboarded', 'true'); localStorage.setItem('b40:v1:rigori:xp', '900') } catch {} })
 await p.goto(url, { waitUntil: 'load' })
 await p.waitForFunction(() => window.__rigori?.ready, null, { timeout: 60000 }); await p.click('.rg-loading__tap', { force: true })
-await p.waitForFunction(() => window.__rigori.flow() === 'chiTira'); await p.click('.rg-card[data-value="monne"]')
+await p.waitForFunction(() => window.__rigori.flow() === 'chiTira'); await p.click('.rg-card[data-value="monne"]'); await p.waitForFunction(() => window.__rigori.flow() === 'giocatore'); await p.click('[data-value="vai"]')
 await p.waitForFunction(() => window.__rigori.flow() === 'modalita')
 const bossOn = await p.evaluate(() => !document.querySelector('.rg-mode[data-value="boss"]').disabled); console.log('Boss sbloccato al livello 5:', bossOn); if (!bossOn) errors.push('Boss bloccato con 900 XP')
 await p.screenshot({ path: 'docs/rigori/screenshots/f13-modalita-boss.png' })
@@ -25,7 +25,7 @@ async function playUntilResult(name, chooseAim, budget = 300000) {
   await p.waitForFunction(() => window.__rigori.flow() === 'risultato', null, { timeout: 60000 }); await p.waitForTimeout(400)
   await p.screenshot({ path: `docs/rigori/screenshots/f13-${name}-risultato.png` })
   console.log(`[${name}] risultato → ${await p.evaluate(() => document.querySelector('.rg-panel')?.innerText.replace(/\n+/g, ' | ').slice(0, 220))} (${shots} tiri)`)
-  await p.click('[data-value="menu"]'); await p.waitForFunction(() => window.__rigori.flow() === 'chiTira'); await p.click('.rg-card[data-value="monne"]'); await p.waitForFunction(() => window.__rigori.flow() === 'modalita')
+  await p.click('[data-value="menu"]'); await p.waitForFunction(() => window.__rigori.flow() === 'chiTira'); await p.click('.rg-card[data-value="monne"]'); await p.waitForFunction(() => window.__rigori.flow() === 'giocatore'); await p.click('[data-value="vai"]'); await p.waitForFunction(() => window.__rigori.flow() === 'modalita')
 }
 // Skill: mira al bersaglio corrente
 await p.click('.rg-mode[data-value="skill"]'); await p.waitForFunction(() => window.__rigori.flow() === 'gioco'); await p.waitForTimeout(800)

@@ -9,7 +9,9 @@ const FINESTRA = 1.5      // il cloth vive solo 1,5 s dall'impulso: fuori da lì
 const SMORZ = 0.92        // smorzamento verlet: la rete è corda bagnata, non una molla
 const GRAVITA = 0.5       // debole: dà un filo di cedimento al tessuto senza farlo colare in 1,5 s
 const RICHIAMO = 0.03     // richiamo verso il riposo: a fine finestra la rete è già piatta, così il rientro non fa scatto
-const RAGGIO = 0.4        // raggio d'influenza dell'impulso, in metri
+const RAGGIO = 0.4        // raggio d'influenza dell'impulso, in metri (tasca larga quanto un pallone)
+const NODI_MIN = 2.5      // ...ma mai meno di 2,5 maglie: con la griglia dimezzata 0,4 m prendeva 4 nodi su 171,
+                          // cioè una punta su un vertice invece di una tasca. Il picco resta `amp`: cambia la larghezza.
 const ITER = 2            // due passate di vincoli bastano: le maglie sono piccole e lo smorzamento alto
 const MAGLIA = 0.12       // lato della maglia in metri: fissa il repeat della texture, non la suddivisione
 export function createGoal() {
@@ -44,6 +46,7 @@ export function createGoal() {
     if (p.mesh.geometry) p.mesh.geometry.dispose()
     p.mesh.geometry = geo
     p.sw = sw; p.sh = sh; p.dx = p.w / sw; p.dy = p.h / sh
+    p.raggio = Math.max(RAGGIO, NODI_MIN * Math.max(p.dx, p.dy))
     p.pos = geo.attributes.position.array            // lavoro direttamente sull'attributo: niente copie a ogni frame
     p.rest = p.pos.slice(); p.prev = p.pos.slice()
     p.fissi = new Uint8Array(geo.attributes.position.count)
@@ -53,7 +56,8 @@ export function createGoal() {
   for (const d of definizioni) {
     const m = new THREE.Mesh(new THREE.BufferGeometry(), mat.clone())
     m.material.map = tex.clone(); m.material.map.needsUpdate = true; m.material.map.repeat.set(d.w / MAGLIA, d.h / MAGLIA)
-    d.set(m); g.add(m)
+    d.set(m); m.frustumCulled = false // la geometria si deforma: la sfera di contenimento calcolata a riposo non vale più
+    g.add(m)
     const p = { ...d, mesh: m }
     // verso di gonfiaggio: la normale locale +z puntata via dal centro della gabbia, così ogni pannello si gonfia verso fuori
     tmp.set(0, 0, 1).applyQuaternion(m.quaternion)
@@ -67,7 +71,7 @@ export function createGoal() {
   const peso = (p, i, q) => {
     const k = i * 3, dx = p.rest[k] - q.x, dy = p.rest[k + 1] - q.y, dz = p.rest[k + 2] - q.z
     const d = Math.sqrt(dx * dx + dy * dy + dz * dz)
-    return d >= RAGGIO ? 0 : 0.5 * (1 + Math.cos(Math.PI * d / RAGGIO))
+    return d >= p.raggio ? 0 : 0.5 * (1 + Math.cos(Math.PI * d / p.raggio))
   }
   // Un vincolo di distanza: il nodo fisso non si muove, l'altro si prende tutta la correzione
   const vincolo = (p, a, b, len) => {
@@ -167,6 +171,28 @@ export function createGoal() {
     },
     // Spostamento massimo toccato dai nodi dall'ultimo impulso, in metri
     ampiezzaMax() { return Math.sqrt(ampMax) },
+    // Diagnostica (QA): dove cade l'impulso nelle coordinate locali di ogni pannello e quanti nodi mobili
+    // ci sono dentro il raggio d'influenza. Se qui esce zero ovunque, l'impulso non può gonfiare niente.
+    diagnostica(punto) {
+      g.updateMatrixWorld(true)
+      return panels.map((p, i) => {
+        local.copy(punto); p.mesh.worldToLocal(local)
+        let dentro = 0, wmax = 0
+        for (let k = 0; k < p.fissi.length; k++) {
+          if (p.fissi[k]) continue
+          const w = peso(p, k, local); if (w > 0) dentro++
+          if (w > wmax) wmax = w
+        }
+        let spostamento = 0
+        for (let k = 0; k < p.fissi.length; k++) {
+          const j = k * 3
+          const d = Math.hypot(p.pos[j] - p.rest[j], p.pos[j + 1] - p.rest[j + 1], p.pos[j + 2] - p.rest[j + 2])
+          if (d > spostamento) spostamento = d
+        }
+        return { pannello: i, locale: [+local.x.toFixed(3), +local.y.toFixed(3), +local.z.toFixed(3)], nodiNelRaggio: dentro, mobili: p.fissi.length - p.fissi.reduce((a, b) => a + b, 0), peso: +wmax.toFixed(3), spostamentoOra: +spostamento.toFixed(4) }
+      })
+    },
+    get attivo() { return attivo },
     riposo() { fermo(); ampMax = 0 }
   }
 }

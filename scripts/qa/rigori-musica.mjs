@@ -32,7 +32,7 @@ check(durate['inno.mp3'].durata > 45 && durate['inno.mp3'].durata < 120, 'inno f
 check(durate['tensione.mp3'].durata >= 15 && durate['tensione.mp3'].durata <= 40, 'tensione fra 15 e 40 s: ' + durate['tensione.mp3'].durata)
 check(Object.values(durate).every((d) => d.silenzioTesta < 0.06), 'nessuna traccia inizia con un buco di silenzio')
 // partita: tensione + stinger sopra, con ducking
-await p.click('.rg-card[data-value="monne"]'); await p.waitForFunction(() => window.__rigori.flow() === 'modalita')
+await p.click('.rg-card[data-value="monne"]'); await p.waitForFunction(() => window.__rigori.flow() === 'giocatore'); await p.click('[data-value="vai"]'); await p.waitForFunction(() => window.__rigori.flow() === 'modalita')
 await p.click('.rg-mode[data-value="shootout"]'); await p.waitForFunction(() => window.__rigori.flow() === 'gioco'); await p.waitForTimeout(800)
 check(await p.evaluate(() => window.__rigori.audio.musicName) === 'tensione', 'in partita suona tensione')
 const prima = await p.evaluate(() => window.__rigori.audio.musicGain)

@@ -1,6 +1,7 @@
 import * as THREE from 'three'
-// "Juice": hit-stop, slow-motion prima dell'esito, replay laterale, particelle (coriandoli, polvere).
-// Con "riduci flash e shake" o prefers-reduced-motion: niente shake né particelle intense; lo slow-mo resta.
+// "Juice": hit-stop, replay, particelle (coriandoli, polvere).
+// Dal vivo il tempo di gioco scorre a velocità 1: l'unico fermo è l'hit-stop di 60 ms su palo e guanti.
+// Il rallentatore ×0,3 vive solo dentro startReplay. Con "riduci flash e shake": niente shake né particelle intense.
 export function createJuice({ scene, rig, game, reduced = () => false }) {
   // ---- particelle: un solo Points riusato, con velocità per particella ----
   const MAX = 600
@@ -13,7 +14,7 @@ export function createJuice({ scene, rig, game, reduced = () => false }) {
   let head = 0
   const spawn = (p, v, color, ttl) => { const i = head; head = (head + 1) % MAX; pos.set([p.x, p.y, p.z], i * 3); vel.set([v.x, v.y, v.z], i * 3); life[i] = ttl; col.set([color.r, color.g, color.b], i * 3) }
   // ---- stato del tempo ----
-  let hitStop = 0, slow = false, replay = null, replayCam = 'lateraleReplay'
+  let hitStop = 0, replay = null, replayCam = 'lateraleReplay'
   return {
     // Coriandoli (vittoria, gol decisivo): dall'alto, colori del sito
     confetti(n = 220, origin = new THREE.Vector3(0, 6, 4)) {
@@ -26,9 +27,8 @@ export function createJuice({ scene, rig, game, reduced = () => false }) {
       const c = new THREE.Color(0xa89f8a)
       for (let i = 0; i < n; i++) spawn(at.clone().add(new THREE.Vector3((Math.random() - .5) * .4, 0.05, (Math.random() - .5) * .4)), new THREE.Vector3((Math.random() - .5) * 1.6, Math.random() * 1.4, (Math.random() - .5) * 1.6), c, 0.5 + Math.random() * 0.4)
     },
-    // Hit-stop di 60 ms su palo e guanti
+    // Hit-stop di 60 ms su palo e guanti: l'unico rallentamento ammesso dal vivo
     hitStop(ms = 60) { hitStop = ms / 1000 },
-    setSlow(on) { slow = on },
     // Replay: NON risimula niente. Riesegue il record del tiro chiamando `render(t)` con t che avanza
     // a velocità ridotta, da un'altra camera. Stessa funzione di disegno del gioco dal vivo.
     setReplayCamera(name) { replayCam = name || 'lateraleReplay' },
@@ -62,7 +62,7 @@ export function createJuice({ scene, rig, game, reduced = () => false }) {
         return 0 // durante il replay il tempo di gioco è fermo: avanza solo il replay
       }
       if (hitStop > 0) { hitStop -= raw; return 0 }
-      return slow ? 0.3 : 1
+      return 1                                    // niente rallentatore dal vivo: il tiro va a velocità reale
     }
   }
 }

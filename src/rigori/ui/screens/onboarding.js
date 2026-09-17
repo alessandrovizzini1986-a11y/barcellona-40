@@ -3,7 +3,7 @@ export function onboarding(ui, ballOnScreen) {
   return new Promise((resolve) => {
     const el = document.createElement('div'); el.className = 'rg-onb'
     const b = ballOnScreen()
-    el.innerHTML = `<div class="rg-onb__arrow" style="left:${b.x}px;top:${b.y}px" aria-hidden="true"></div><div class="rg-onb__text"><b>Trascina dal pallone</b><span>Verso l'angolo che vuoi. Più lungo, più forte. Curva il gesto per curvare il tiro.</span></div><button class="rg-btn rg-btn--ghost rg-onb__skip" data-skip aria-label="Salta il tutorial">Salta</button>`
+    el.innerHTML = `<div class="rg-onb__arrow" style="left:${b.x}px;top:${b.y}px" aria-hidden="true"></div><div class="rg-onb__text"><b>Trascina dal pallone e rilascia quando il cursore è nella zona verde</b><span>Verso l'angolo che vuoi: più lungo, più forte, e curva il gesto per curvare il tiro. La barra <em>Tempismo</em> è sotto la palla: prenderla in pieno vale precisione.</span></div><button class="rg-btn rg-btn--ghost rg-onb__skip" data-skip aria-label="Salta il tutorial">Salta</button>`
     const done = () => { if (el.isConnected) el.remove(); resolve() }
     el.addEventListener('click', (e) => { if (e.target.closest('[data-skip]')) done() })
     ui.appendChild(el)

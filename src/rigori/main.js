@@ -29,6 +29,7 @@ import { cpuAim, XP } from './game/modes/base.js'
 import { zoneOf, zoneCenter } from './game/keeper.js'
 import { pickZone, handoff } from './ui/screens/passaggio.js'
 import { chiTira } from './ui/screens/chiTira.js'
+import { giocatore } from './ui/screens/giocatore.js'
 import { modalita, MODES_INFO } from './ui/screens/modalita.js'
 import { showEsito, hideEsito } from './ui/screens/esito.js'
 import { risultato } from './ui/screens/risultato.js'
@@ -86,7 +87,7 @@ const perf = createPerf({
 })
 applyQuality()
 let timingEnabled = true               // opzione (fase 9); ON di default
-// Opzione "riduci flash e shake" (fase 9) + prefers-reduced-motion: niente shake né particelle intense, lo slow-mo resta
+// Opzione "riduci flash e shake" (fase 9) + prefers-reduced-motion: niente shake né particelle intense
 const settings = Object.assign({ audio: true, music: true, vibration: true, reduceFx: reducedMotion, timing: true, quality: 'auto' }, save.get('settings', {}))
 const qOverride = new URLSearchParams(location.search).get('q') // QA: ?q=alta|bassa|auto, solo per questa visita (non viene salvato)
 const audio = createAudio(ASSETS, settings)
@@ -115,7 +116,7 @@ function loop() {
   const raw = Math.min(timer.getDelta(), 0.05)
   const dt = raw * timeScale
   perf.tick(raw)
-  crowd.update(dt); goal.update(dt); ball.update(dt); rig.update(raw)
+  crowd.update(dt); goal.update(raw); ball.update(dt); rig.update(raw) // la rete va a tempo reale: nei replay il tempo di gioco è fermo, ma il tessuto deve muoversi
   for (const s of systems) s.update(dt, raw)
   fx.render(); frames++
 }
@@ -159,16 +160,27 @@ const kitReady = loadCharacterKit(ASSETS, manager).then((k) => {
 // Cambio tiratore (schermata CHI TIRA?, fase 9)
 function setShooter(id) { if (!byId(id) || !kit) return; shooterId = id; if (role === 'keeper') setPair(byId(shooterId), keeperData()); else setPair(keeperData(), byId(shooterId)) }
 const hud = document.createElement('div'); hud.className = 'rg-hud'; hud.innerHTML = `
-  <div class="rg-timing" id="rg-timing" hidden aria-hidden="true"><i class="rg-timing__win"></i><b class="rg-timing__cur"></b></div>
+  <div class="rg-timing" id="rg-timing" hidden aria-hidden="true"><span class="rg-timing__label">Tempismo</span><span class="rg-timing__track"><i class="rg-timing__win"></i><b class="rg-timing__cur"></b></span><span class="rg-timing__ok">+ PRECISIONE</span></div>
   <div class="rg-hint" id="rg-hint">Trascina dal pallone</div>`
 document.getElementById('rg-ui').appendChild(hud)
 const timingEl = document.getElementById('rg-timing'), timingCur = timingEl.querySelector('.rg-timing__cur'), hint = document.getElementById('rg-hint')
+// Chiusura della barra del tempismo: se il rilascio è dentro la zona la barra lampeggia e dice "+ PRECISIONE",
+// e resta a schermo il tempo di farsi leggere; fuori zona sparisce e basta, senza premi di consolazione.
+let tTempismo = null
+const chiudiTempismo = (perfetto) => {
+  clearTimeout(tTempismo); timingEl.classList.remove('rg-timing--ok')
+  if (!perfetto) { timingEl.hidden = true; return }
+  void timingEl.offsetWidth; timingEl.classList.add('rg-timing--ok')
+  tTempismo = setTimeout(() => { timingEl.hidden = true; timingEl.classList.remove('rg-timing--ok') }, 650)
+}
 // Tiratore: solo a palla ferma. Portiere: anche durante rincorsa e volo (deve reagire al tell), non a esito già deciso
 const input = createInput(stage, { camera: rig.camera, getBallWorld: () => ball.mesh.position, size: R.size, enabled: () => window.__rigori.ready && (input.mode === 'keeper' ? (shot.state === 'idle' || shot.state === 'windup' || shot.state === 'flying') && !shot.resolved : !shot.busy) })
 input.on('start', () => { if (timingEnabled && input.mode === 'shooter') { timing.start(); timingEl.hidden = false } hint.hidden = true })
 input.on('move', (g) => { if (g.ok && input.mode === 'shooter') ghost.show(aimFromGesture(g, R.size)) })
 input.on('end', (g) => {
-  ghost.hide(); timing.stop(); timingEl.hidden = true
+  ghost.hide(); timing.stop()
+  const tempismoOk = timingEnabled && input.mode === 'shooter' && g.ok && timing.perfect
+  chiudiTempismo(tempismoOk)
   if (input.mode === 'keeper') {
     // portiere: direzione dello swipe → zona; il tempismo è tutto (troppo presto: la CPU cambia lato)
     if (!g.ok || !keeper) return
@@ -178,7 +190,7 @@ input.on('end', (g) => {
     return
   }
   if (!g.ok) { hint.hidden = false; return }
-  shot.fire(aimFromGesture(g, R.size), { timingPerfect: timingEnabled && timing.perfect, delay: kicker ? KICK_DELAY : 0 })
+  shot.fire(aimFromGesture(g, R.size), { timingPerfect: tempismoOk, delay: kicker ? KICK_DELAY : 0 })
   kicker?.windup()
 })
 input.on('reject', () => { hint.hidden = false; hint.classList.remove('rg-hint--pulse'); void hint.offsetWidth; hint.classList.add('rg-hint--pulse') })
@@ -195,7 +207,7 @@ function onShotEvent(e) {
   if (e.type === 'windup') { hint.hidden = true; audio.play('step', { volume: .5 }) }
   if (e.type === 'kick') { clearEsitoTimers(); audio.play(e.aim.power > 0.95 ? 'kick2' : 'kick', { volume: 0.6 + Math.min(0.4, e.aim.power * 0.4) }); hint.hidden = true; replayPending = true; kicker?.onKick(); rig.followLook(ball.mesh) }
   if (e.type === 'result') kicker?.react(e.result)
-  if (e.type === 'result') { esitoLock = true; juice.setSlow(false); keeper?.react(e.result); const rec = shot.record; showEsito(game.ui, { outcome: rec.outcome, corner: rec.corner, shooterId: rec.ruoli.tiratore.id, taunt: game.tauntFor(rec) }); audio.duck(true); audio.vo(rec.corner ? 'corner' : rec.outcome) }
+  if (e.type === 'result') { esitoLock = true; keeper?.react(e.result); const rec = shot.record; showEsito(game.ui, { outcome: rec.outcome, corner: rec.corner, shooterId: rec.ruoli.tiratore.id, taunt: game.tauntFor(rec) }); audio.duck(true); audio.vo(rec.corner ? 'corner' : rec.outcome) }
   if (e.type === 'goal') { crowd.react('ola'); shake(0.10, 0.35); audio.sting('gol'); audio.play('net', { volume: .8 }); audio.crowd('roar'); setTimeout(() => audio.crowd('clap'), 700); audio.vibrate([30, 40, 70]) }
   if (e.type === 'post' || e.type === 'crossbar') { shake(0.06, 0.2); juice.hitStop(60); audio.play(e.type, { volume: .9 }); audio.vibrate(50) }
   if (e.type === 'save') { juice.hitStop(60); crowd.react('oooh'); audio.sting('parata'); audio.play('glove', { volume: .9 }); audio.crowd('oooh'); audio.vibrate(40) }
@@ -233,11 +245,10 @@ function afterSettled() {
   }), 500)
 }
 systems.push({ update(dt) { shot.update(dt); timing.update(dt); if (!timingEl.hidden) timingCur.style.left = (timing.value * 100) + '%' } })
-// Slow-motion ×0,3 negli ultimi 0,4 s prima dell'esito; registrazione della palla per il replay
-systems.push({ update(_dt, raw) {
-  if (shot.state === 'flying') juice.setSlow(shot.remaining < 0.4)
-  timeScale = juice.update(raw, ball.mesh)
-} })
+// Dal vivo il tiro va a velocità reale dall'inizio alla fine: il volo dura quello che dice la fisica
+// (0,4-0,75 s) e il giocatore deve sentirlo. L'unico fermo-immagine ammesso è l'hit-stop di 60 ms su palo
+// e guanti. Il rallentatore ×0,3 esiste solo nei due replay, dove lo applica startReplay.
+systems.push({ update(_dt, raw) { timeScale = juice.update(raw, ball.mesh) } })
 
 // ---------- modalità ----------
 const MODES = { shootout: (o) => createShootout(o), boss: (o) => createShootout({ ...o, boss: true }), sfidaAle: (o) => createSfidaAle(o), passAndPlay: (o) => createPassAndPlay(o), skill: (o) => createSkill(o) }
@@ -327,8 +338,15 @@ async function runFlow() {
   ctx.role('idle')
   if (!save.get('onboarded', false)) { flow = 'onboarding'; ctx.role('shooter'); await onboarding(game.ui, () => input.ballOnScreen()); save.set('onboarded', true); ctx.role('idle') }
   while (true) {
-    flow = 'chiTira'; audio.playMusic('inno')
-    const id = await chiTira(game.ui, ASSETS, { current: shooterId }); if (id) setShooter(id)
+    // Chi tira? → card di conferma. Toccare un volto NON avvia la partita: apre la card con dritte,
+    // statistiche e il bottone VAI. "Cambia" riporta alla scelta.
+    for (let scelto = false; !scelto;) {
+      flow = 'chiTira'; audio.playMusic('inno')
+      const id = await chiTira(game.ui, ASSETS, { current: shooterId })
+      if (!id) { scelto = true; break }
+      flow = 'giocatore'
+      if (await giocatore(game.ui, ASSETS, id) === 'vai') { setShooter(id); scelto = true }
+    }
     let choice = null
     while (!choice) {
       flow = 'modalita'
@@ -428,6 +446,8 @@ window.__rigori = {
   // QA: gonfiore massimo toccato dalla rete dall'ultimo impulso, in metri (azzerabile fra un tiro e l'altro)
   reteAmpiezza: () => goal.ampiezzaMax?.() ?? null,
   reteRiposo: () => goal.riposo?.(),
+  reteDiagnostica: (punto) => goal.diagnostica?.(punto || shot.record?.netPunch?.punto || new THREE.Vector3()),
+  reteAttiva: () => goal.attivo,
   replay: ({ speed = 0.3, from, to } = {}) => new Promise((res) => {
     const rec = shot.record; if (!rec) return res(false)
     juice.startReplay({ from: from ?? Math.max(0, rec.contactTime - 0.55), to: to ?? Math.min(rec.duration, rec.contactTime + 0.45), speed, render: (t) => shot.renderAt(t), onEnd: () => res(true) })

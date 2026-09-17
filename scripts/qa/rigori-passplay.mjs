@@ -8,7 +8,7 @@ p.on('pageerror', (e) => errors.push('pageerror: ' + e.message)); p.on('console'
 await p.addInitScript(() => { try { localStorage.setItem('b40:v1:rigori:onboarded', 'true') } catch {} })
 await p.goto(url, { waitUntil: 'load' })
 await p.waitForFunction(() => window.__rigori?.ready, null, { timeout: 60000 }); await p.click('.rg-loading__tap', { force: true })
-await p.waitForFunction(() => window.__rigori.flow() === 'chiTira'); await p.click('.rg-card[data-value="monne"]')
+await p.waitForFunction(() => window.__rigori.flow() === 'chiTira'); await p.click('.rg-card[data-value="monne"]'); await p.waitForFunction(() => window.__rigori.flow() === 'giocatore'); await p.click('[data-value="vai"]')
 await p.waitForFunction(() => window.__rigori.flow() === 'modalita'); await p.click('.rg-mode[data-value="passAndPlay"]')
 await p.waitForSelector('[data-name="Manuel"]'); await p.click('[data-name="Giulio"]'); await p.click('[data-name="Manuel"]')
 console.log('nomi scelti:', await p.evaluate(() => [...document.querySelectorAll('.rg-name--on')].map((e) => e.textContent)))
