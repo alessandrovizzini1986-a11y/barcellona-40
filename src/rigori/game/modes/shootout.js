@@ -3,11 +3,22 @@ import { makeMode, XP } from './base.js'
 export function createShootout({ difficulty = 'normale', boss = false } = {}) {
   const m = makeMode({
     id: boss ? 'boss' : 'shootout', title: boss ? 'Boss: Ale in forma' : 'Shootout',
-    me: 0, ale: 0, round: 0, turn: 'me', history: [], suddenDeath: false, winner: null,
-    start(ctx) { ctx.setDifficulty(boss ? 'boss' : difficulty); this.round = 1; this.turn = 'me'; this.hud(ctx) },
-    hud(ctx) { ctx.hud(`${this.suddenDeath ? 'Sudden death' : 'Rigore ' + this.round + ' di 5'} · Tu ${this.me} – ${this.ale} Ale · ${this.turn === 'me' ? 'Tiri tu' : 'Para tu'}`) },
+    me: 0, ale: 0, round: 0, turn: 'me', avanza: false, history: [], suddenDeath: false, winner: null,
+    start(ctx) { ctx.setDifficulty(boss ? 'boss' : difficulty); this.round = 1; this.turn = 'me'; this.avanza = false; this.hud(ctx) },
+    intestazione() { return this.suddenDeath ? 'Sudden death' : 'Rigore ' + this.round + ' di 5' },
+    hud(ctx) { ctx.hud(`${this.intestazione()} · Tu ${this.me} – ${this.ale} Ale · ${this.turn === 'me' ? 'Tiri tu' : 'Para tu'}`) },
+    // HUD durante esito e replay: punteggio già aggiornato e che cosa è appena successo, nel turno DEL TIRO
+    hudEsito(ctx, res) {
+      const mio = this.turn === 'me'
+      const cosa = res.result === 'goal' ? (mio ? 'Hai segnato' : 'Ale ha segnato')
+        : res.result === 'save' ? (mio ? 'Parata di Ale' : 'Hai parato')
+          : res.result === 'miss' ? (mio ? 'Fuori' : 'Ale ha sbagliato') : res.result === 'crossbar' ? 'Traversa' : 'Palo'
+      ctx.hud(`${this.intestazione()} · Tu ${this.me} – ${this.ale} Ale · ${cosa}`)
+    },
     nextTurn(ctx) {
       if (this.finished) return
+      // il turno avanza qui, a replay finito: durante esito e replay resta quello del tiro appena visto
+      if (this.avanza) { this.avanza = false; this.passaTurno(ctx); if (this.finished) return }
       this.hud(ctx)
       if (this.turn === 'me') ctx.role('shooter')
       else { ctx.role('keeper'); ctx.cpuShoot({ strength: boss ? 1.1 : 1 }) }
@@ -17,7 +28,10 @@ export function createShootout({ difficulty = 'normale', boss = false } = {}) {
       if (this.turn === 'me') { if (goal) { this.me++; ctx.xp(res.corner ? 'corner' : 'goal') } }
       else { if (goal) this.ale++; else if (res.result === 'save') ctx.xp('save') }
       this.history.push({ who: this.turn, result: res.result })
-      // fine turno: dopo la coppia di tiri si valuta
+      this.hudEsito(ctx, res)
+      this.avanza = true
+    },
+    passaTurno(ctx) {
       if (this.turn === 'me') { this.turn = 'ale'; return }
       this.turn = 'me'
       const left = 5 - this.round

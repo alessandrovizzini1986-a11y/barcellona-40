@@ -11,6 +11,7 @@ export function createSfidaAle({ difficulty = 'normale' } = {}) {
       if (res.result === 'goal') { this.goals++; ctx.xp(res.corner ? 'corner' : 'goal') }
       else if (res.result === 'save') this.saves++
       if (this.saves >= 3) { this.finished = true; ctx.hud(`Fine: ${this.goals} gol in ${this.shots} tiri`) }
+      else this.hud(ctx) // il conteggio si vede subito, non dopo il replay
     },
     summary() { return { goals: this.goals, shots: this.shots, saves: this.saves } }
   })

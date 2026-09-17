@@ -42,7 +42,7 @@ export function buildCurve(aim) {
 // ---------------------------------------------------------------- record
 // Costruisce il record. Il portiere CPU decide qui; con il portiere giocabile la zona non è ancora nota
 // (la sceglie il giocatore durante il volo) e il record viene chiuso da `sealShotRecord` al gesto o all'impatto.
-export function buildShotRecord({ aim: raw, timingPerfect = false, precision = 1, keeper = null, seed = newSeed() }) {
+export function buildShotRecord({ aim: raw, timingPerfect = false, precision = 1, keeper = null, seed = newSeed(), shooter = { id: null, byUser: true } }) {
   const rnd = makeRng(seed)
   const aim = { ...raw }
   // dispersione: più forte il tiro, meno preciso; il timing perfetto la dimezza · DA VERIFICARE: entità
@@ -53,6 +53,7 @@ export function buildShotRecord({ aim: raw, timingPerfect = false, precision = 1
   const flightTime = flightTimeFor(aim.power)
   const rec = {
     seed, aim, timingPerfect, curve, flightTime,
+    shooter: { ...shooter },                 // chi ha tirato: il cartello e lo sfottò leggono da qui, non dallo stato del turno
     contactTime: flightTime,                 // istante in cui la palla arriva sul piano della porta
     lengths: curve.getLengths(48),           // per la rotazione della palla, uguale a ogni passata
     keeper: keeper ? keeper.decide({ aim, timingPerfect, rnd }) : null,
@@ -158,6 +159,7 @@ export function createShot({ ball, goal, keeper, onEvent, precision = 1 }) {
   let prec = precision
   let state = 'idle'      // idle | windup | live | done
   let rec = null, t = 0, windup = 0, pendingFire = null, pendingZone = null
+  let shooter = { id: null, byUser: true }
   let announced = false, punched = false, lastT = 0
   let onFrame = null // QA: gancio sulla posa disegnata, per i test di determinismo
   const emit = (type, data = {}) => onEvent?.({ ...data, type }) // il tipo dell'evento vince sui campi del payload
@@ -189,11 +191,12 @@ export function createShot({ ball, goal, keeper, onEvent, precision = 1 }) {
     get busy() { return state !== 'idle' },
     get time() { return t },
     setPrecision(v) { prec = v }, setKeeper(k) { keeper = k },
+    setShooterInfo(s) { shooter = { id: s?.id ?? null, byUser: s?.byUser !== false } },
     // timingPerfect: rilascio nella finestra centrale → dispersione ridotta. seed: per i test deterministici.
     fire(a, { timingPerfect = false, delay = 0, seed } = {}) {
       if (state !== 'idle') return null
       if (delay > 0) { state = 'windup'; windup = delay; pendingFire = { a, timingPerfect, seed }; emit('windup', { aim: a, delay }); return null }
-      rec = buildShotRecord({ aim: a, timingPerfect, precision: prec, keeper, seed: seed === undefined ? newSeed() : seed })
+      rec = buildShotRecord({ aim: a, timingPerfect, precision: prec, keeper, seed: seed === undefined ? newSeed() : seed, shooter })
       // tuffo già scelto durante la rincorsa: entra nel record come reazione immediata
       if (pendingZone != null && rec.keeper?.mode === 'player') { rec.keeper = keeper.playerDecision(pendingZone, 0); sealShotRecord(rec, keeper) }
       pendingZone = null

@@ -16,6 +16,16 @@ export const TAUNTS = {
     mario: ['Il veterano non sbaglia. Mai.', 'Mario: gol numero mille, più o meno.', 'Ale: "Mario, sei del \'86 come me. Ah no."'],
     ale: ['Ale segna e para. Dice lui.', 'Il portiere goleador. Insopportabile.', 'Ale: "L\'avevo detto dove tiravo."']
   },
+  // Quando a parare sei tu: Ale tira. Sono situazioni opposte alle due sopra e richiedono frasi proprie,
+  // altrimenti a un gol subito esce una battuta da gol fatto.
+  postGolSubito: {
+    base: ['Ale segna e lo racconterà per anni.', 'Gol di Ale. Preparati al monologo.', 'Dentro. Ale allarga le braccia come se avesse inventato il calcio.', 'Ale ha segnato e ha già scritto sul gruppo.', 'Palla dentro. Ale ti guarda e non dice niente: peggio.', 'Gol subito. Ale ora parla per venti minuti.', 'Ale esulta da solo. Come sempre.', 'Dentro. Ale: "Te l\'avevo detto dove tiravo."'],
+    ale: ['Ale segna a se stesso, in un certo senso. Serata strana.', 'Il portiere che segna al portiere. Roba da quarantenni.']
+  },
+  postParataTua: {
+    base: ['Parata. Ale non parla più.', 'Presa. Ale cerca una scusa, la troverà.', 'Respinta. Ale guarda l\'erba come se fosse colpa sua.', 'L\'hai presa. Godi, dura poco.', 'Parata tua. Ale dice che era un tiro di prova.', 'Muro. Ale ammutolito per tre secondi netti.', 'Gliel\'hai tolta dal sette. Diglielo.', 'Parata. Ora tocca a te parlare troppo.'],
+    ale: ['Ale parato da Ale. La serata è ufficialmente strana.']
+  },
   postParata: {
     base: ['Ale para. E ora lo racconta a tutti.', 'Parata. Ale la ricorderà per anni.', 'Muro. Ale chiede applausi, non li avrà.', 'Ale ci arriva. Non chiedergli come.', 'Presa. Ale: "Facile."', 'Parata. Ale ha già scritto sul gruppo.', 'Respinta. Ale si allunga, per una volta.', 'Ale para: la serata è finita, dice lui.'],
     monne: ['Monne, gli occhiali non ti hanno aiutato.', 'Troppo veloce la rincorsa, troppo lento il tiro.', 'Ale: "Monne, ti ho letto dagli occhiali."'],
@@ -24,6 +34,7 @@ export const TAUNTS = {
     ale: ['Ale parato da Ale. Serata strana.', 'Il portiere sbaglia da tiratore. Equilibrio.', 'Ale: "Me lo sono parato da solo, in un certo senso."']
   }
 }
+// kind: 'preTiro' | 'postGol' | 'postParata' (tira l'utente) · 'postGolSubito' | 'postParataTua' (para l'utente)
 export function taunt(kind, characterId = null, extra = false) {
   const set = TAUNTS[kind]; if (!set) return ''
   const pool = [...set.base, ...(extra && characterId && set[characterId] ? set[characterId] : [])]

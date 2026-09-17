@@ -189,6 +189,49 @@ l'unico tratto in cui la posa dal vivo e quella del replay divergono, per scelta
 
 Screenshot: `v2-tuffo-basso-dx.png` (allungo pieno, palla sui guanti, dalla camera del replay).
 
+## Cartello, sfottò e turno (`tests/shot.test.js`)
+
+**Sintomo segnalato**: esito diverso fra i due replay dello stesso tiro (PARATA poi GOL), HUD che passa da "Para tu"
+a "Tiri tu" con il punteggio ancora 0-0.
+
+**Che cosa ho trovato, riproducendo la sequenza** (log di due turni di Shootout, un campione a ogni cambiamento):
+
+| t | HUD | cartello | sfottò | punteggio reale |
+|---|-----|----------|--------|-----------------|
+| 6,9 s | Tu **0 – 0** Ale · Tiri tu | GOL | "La rete si gonfia, Ale si sgonfia." | me 1, ale 0 |
+| 19,2 s | Tu 1 – 0 Ale · Para tu | — | — | me 1, ale 0 |
+| 26,0 s | Tu **1 – 0** Ale · Para tu | GOL | "Gol. Disonesti, direbbe Ale." | me 1, ale **1** |
+
+Due difetti veri, nessuno dei quali è un ricalcolo dell'esito:
+
+1. **L'HUD era indietro di un turno intero.** Il punteggio veniva riscritto solo in `nextTurn`, che parte a replay
+   finito: per tutta la durata del cartello e del replay si leggeva il punteggio *precedente* al tiro appena visto.
+   Due tiri consecutivi con lo stesso punteggio a schermo sembrano due replay dello stesso tiro.
+2. **Lo sfottò era quello sbagliato nel ruolo di portiere.** Era scelto dal solo esito: a un gol subito usciva una
+   battuta da gol fatto ("Ale ha parlato troppo"), con l'HUD che diceva "Para tu".
+
+**L'esito invece non è mai cambiato**: nel log `record.outcome` resta `goal` dall'istante del calcio fino alla fine
+del replay. Non esiste alcun test di collisione a runtime: il test lo verifica per grep su tutto `src/rigori/`.
+
+**Correzioni**
+- L'HUD si aggiorna all'esito e durante esito e replay descrive **il turno del tiro** con il punteggio già aggiornato
+  ("Rigore 1 di 5 · Tu 1 – 0 Ale · Hai segnato"). Il turno avanza solo in `nextTurn`, a replay finito.
+- Il cartello riceve solo campi del record (esito, incrocio, chi tirava) e non legge più nessuno stato globale.
+- Lo sfottò si sceglie da `record.shooter`: due nuovi gruppi di frasi per quando a parare sei tu (gol subito e
+  parata tua), otto ciascuno.
+- Sequenza esito + replay bloccante: nessun evento può far avanzare il turno finché non è conclusa, e i timer del
+  replay sono annullati a ogni nuovo calcio.
+
+| Test (`node --test tests/shot.test.js`) | Esito |
+|---|---|
+| Nessun passo di disegno cambia l'esito (1/60 e 1/240) | ✅ |
+| 50 semi diversi: esito stabile a passo 1/60, 1/240 e 1/30, su più passate | ✅ |
+| Nessun `intersectsBox`/`intersectsSphere`/`distanceTo` in tutto `src/rigori` | ✅ |
+| `renderShotAt` non contiene `Math.random`, `evaluate(`, `decide(`, assegnazioni di esito | ✅ |
+| `rec.outcome` assegnato solo dentro `sealShotRecord` | ✅ |
+| 50 tiri: il cartello dice sempre l'esito del record, dal vivo e nei due replay | ✅ |
+| Il turno e l'HUD non cambiano durante la sequenza esito + replay | ✅ |
+
 ## Cose non verificabili qui (da fare sul telefono)
 
 - fps reali su Chrome Android e Safari iOS, e soglie di degradazione (45/55 fps)

@@ -184,14 +184,18 @@ input.on('end', (g) => {
 input.on('reject', () => { hint.hidden = false; hint.classList.remove('rg-hint--pulse'); void hint.offsetWidth; hint.classList.add('rg-hint--pulse') })
 const shake = (amp, dur) => { if (!settings.reduceFx) rig.shake(amp, dur) }
 let replayPending = false
+// Sequenza esito + replay: finché non è finita nessuno fa avanzare il turno. I timer sono tenuti per nome
+// così un nuovo tiro non può lasciarne indietro uno che farebbe partire un secondo replay.
+let esitoLock = false, tReplay = null, tFinish = null
+const clearEsitoTimers = () => { clearTimeout(tReplay); clearTimeout(tFinish); tReplay = tFinish = null }
 // QA: traccia della posa a ogni frame disegnato del tiro (live e replay usano la stessa funzione di disegno)
 let trace = null
 shot.onFrame = (t) => { if (trace) trace.push({ t, ...window.__rigori.pose() }) }
 function onShotEvent(e) {
   if (e.type === 'windup') { hint.hidden = true; audio.play('step', { volume: .5 }) }
-  if (e.type === 'kick') { audio.play(e.aim.power > 0.95 ? 'kick2' : 'kick', { volume: 0.6 + Math.min(0.4, e.aim.power * 0.4) }); hint.hidden = true; replayPending = true; kicker?.onKick(); rig.followLook(ball.mesh) }
+  if (e.type === 'kick') { clearEsitoTimers(); audio.play(e.aim.power > 0.95 ? 'kick2' : 'kick', { volume: 0.6 + Math.min(0.4, e.aim.power * 0.4) }); hint.hidden = true; replayPending = true; kicker?.onKick(); rig.followLook(ball.mesh) }
   if (e.type === 'result') kicker?.react(e.result)
-  if (e.type === 'result') { juice.setSlow(false); keeper?.react(e.result); showEsito(game.ui, { result: e.result, corner: e.corner, taunt: game.tauntFor?.(e) || '' }); audio.duck(true); audio.vo(e.corner ? 'corner' : e.result) }
+  if (e.type === 'result') { esitoLock = true; juice.setSlow(false); keeper?.react(e.result); const rec = shot.record; showEsito(game.ui, { outcome: rec.outcome, corner: rec.corner, shooterId: rec.shooter.id, taunt: game.tauntFor(rec) }); audio.duck(true); audio.vo(rec.corner ? 'corner' : rec.outcome) }
   if (e.type === 'goal') { crowd.react('ola'); shake(0.10, 0.35); audio.play('net', { volume: .8 }); audio.crowd('roar'); setTimeout(() => audio.crowd('clap'), 700); audio.vibrate([30, 40, 70]) }
   if (e.type === 'post' || e.type === 'crossbar') { shake(0.06, 0.2); juice.hitStop(60); audio.play(e.type, { volume: .9 }); audio.vibrate(50) }
   if (e.type === 'save') { juice.hitStop(60); crowd.react('oooh'); audio.play('glove', { volume: .9 }); audio.crowd('oooh'); audio.vibrate(40) }
@@ -201,12 +205,12 @@ function onShotEvent(e) {
 // Dopo l'esito: replay laterale di 2 s, poi si torna dietro al tiratore. Le modalità (fase 7) ascoltano 'replayEnd'.
 function afterSettled() {
   if (game.holdShot) return // QA: tiene il record vivo per i test di determinismo
-  const finish = () => { audio.duck(false); hideEsito(game.ui); shot.reset(); keeper?.reset(); kicker?.reset(); rig.followLook(null); rig.goTo('dietroTiratore'); hint.hidden = false; listeners.forEach((f) => f({ type: 'replayEnd' })) }
+  const finish = () => { audio.duck(false); hideEsito(game.ui); shot.reset(); keeper?.reset(); kicker?.reset(); rig.followLook(null); rig.goTo('dietroTiratore'); hint.hidden = false; esitoLock = false; listeners.forEach((f) => f({ type: 'replayEnd' })) }
   if (!replayPending) { finish(); return }
   replayPending = false
   const rec = shot.record
   const from = Math.max(0, rec.contactTime - 0.55), to = Math.min(rec.duration, rec.contactTime + 0.45)
-  setTimeout(() => juice.startReplay({ from, to, speed: 0.3, render: (t) => shot.renderAt(t), onEnd: () => setTimeout(finish, 300) }), 500)
+  tReplay = setTimeout(() => juice.startReplay({ from, to, speed: 0.3, render: (t) => shot.renderAt(t), onEnd: () => { tFinish = setTimeout(finish, 300) } }), 500)
 }
 systems.push({ update(dt) { shot.update(dt); timing.update(dt); if (!timingEl.hidden) timingCur.style.left = (timing.value * 100) + '%' } })
 // Slow-motion ×0,3 negli ultimi 0,4 s prima dell'esito; registrazione della palla per il replay
@@ -226,6 +230,8 @@ const ctx = {
     const was = role; role = r; input.setMode(r === 'keeper' ? 'keeper' : 'shooter')
     if (kit && (r === 'keeper') !== (was === 'keeper')) { if (r === 'keeper') setPair(byId(shooterId), keeperData()); else setPair(keeperData(), byId(shooterId)) }
     keeper?.setPlayable(r === 'keeper')
+    // da qui in poi il prossimo tiro sa di chi è: nel ruolo portiere tira Ale, altrimenti il tiratore scelto
+    shot.setShooterInfo(r === 'keeper' ? { id: 'ale', byUser: false } : { id: shooterId, byUser: true })
     if (mode && r !== 'idle' && r !== was) { audio.whistle(); if (r === 'shooter') toast(game.ui, taunt('preTiro', shooterId, game.progress?.unlocked('taunt:extra')), 2600) }
     if (r === 'shooter') { hint.textContent = 'Trascina dal pallone'; hint.hidden = false; rig.goTo('dietroTiratore', { instant: was === 'keeper' }) }
     else if (r === 'keeper') { hint.textContent = 'Trascina verso la zona in cui tuffarti'; hint.hidden = false; rig.goTo('dietroPortiere', { instant: true }) }
@@ -271,13 +277,13 @@ function endMode() {
 listeners.add((e) => {
   if (!mode) return
   if (e.type === 'result') mode.onResult(e, ctx)
-  if (e.type === 'replayEnd') { if (mode.finished) endMode(); else mode.nextTurn(ctx) }
+  if (e.type === 'replayEnd') { if (esitoLock) return; if (!mode.finished) mode.nextTurn(ctx); if (mode?.finished) endMode() }
 })
 systems.push({ update(dt) {
   if (!mode?.tick || mode.finished) return
   mode.tick(dt, ctx)
   // il tempo può scadere a palla ferma (Skill): non arriverebbe nessun 'replayEnd'
-  if (mode.finished && shot.state === 'idle') endMode()
+  if (mode.finished && shot.state === 'idle' && !esitoLock) endMode() // mai durante esito o replay
 } })
 
 // ---------- flusso: onboarding → CHI TIRA? → modalità → partita → risultato ----------
@@ -313,7 +319,7 @@ async function runFlow() {
       startMode(choice.id, choice.opts)
       const e = await Promise.race([ended, new Promise((res) => { const iv = setInterval(() => { if (quitRequested) { clearInterval(iv); res(null) } }, 200) })])
       menuBtn.hidden = true
-      if (!e) { mode = null; ctx.keeperPassive(false); ctx.forceKeeperZone(null); ctx.showTarget(null); ctx.role('idle'); shot.reset(); keeper?.reset(); kicker?.reset(); hideEsito(game.ui); rig.goTo('dietroTiratore', { instant: true }); break }
+      if (!e) { mode = null; clearEsitoTimers(); esitoLock = false; ctx.keeperPassive(false); ctx.forceKeeperZone(null); ctx.showTarget(null); ctx.role('idle'); shot.reset(); keeper?.reset(); kicker?.reset(); hideEsito(game.ui); rig.goTo('dietroTiratore', { instant: true }); break }
       flow = 'risultato'
       if (e.summary?.winner === 'me' || (e.id !== 'shootout' && e.id !== 'boss')) audio.playMusic('vittoria', { loop: false }); else audio.playMusic('inno')
       const xpNow = game.progress?.xp?.() ?? 0
@@ -354,8 +360,13 @@ game.progress = createProgress({
   onUnlock: (u) => { audio.play('unlock', { volume: .6 }); toast(game.ui, `Sbloccato: ${u.title}`, 3000) },
   onAchievement: (a) => { audio.play('unlock', { volume: .6 }); toast(game.ui, `🏆 ${a.title}`, 3000) }
 })
-const tauntChar = () => (role === 'keeper' ? 'ale' : shooterId)
-game.tauntFor = (e) => taunt(e.result === 'goal' ? 'postGol' : 'postParata', tauntChar(), game.progress.unlocked('taunt:extra'))
+// Lo sfottò dipende da chi ha tirato (dal record) e dall'esito, mai dal turno corrente: a gol subito
+// da portiere deve uscire una battuta da gol subito, non da gol fatto.
+game.tauntFor = (rec) => {
+  const extra = game.progress.unlocked('taunt:extra'), gol = rec.outcome === 'goal'
+  const kind = rec.shooter.byUser ? (gol ? 'postGol' : 'postParata') : (gol ? 'postGolSubito' : 'postParataTua')
+  return taunt(kind, rec.shooter.id, extra)
+}
 function applyEquip() {
   ball.setSkin(game.progress.equipped('pallone'))
   kicker?.setCelebration((game.progress.equipped('celebrazione') || 'celeb:salto').replace('celeb:', ''))
@@ -379,7 +390,7 @@ window.__rigori = {
   }),
   setShooter, shooter: () => shooterId, flow: () => flow, settings, applySettings,
   kitReady, startMode, mode: () => mode, role: () => role, xpLog, ctx, chars, rig, keeper: () => keeper, kicker: () => kicker, get frames() { return frames },
-  setPrecision: (v) => shot.setPrecision(v), audio, events, shotState: () => shot.state, lastResult: () => [...events].reverse().find((e) => e.type === 'result')?.result || null,
+  setPrecision: (v) => shot.setPrecision(v), audio, events, get esitoLocked() { return esitoLock }, shotState: () => shot.state, lastResult: () => [...events].reverse().find((e) => e.type === 'result')?.result || null,
   info: () => ({ fps: +perf.fps.toFixed(1), level: perf.level, quality: { ...quality }, frames, draws: R.renderer.info.render.calls, tris: R.renderer.info.render.triangles, camera: rig.current })
 }
 
