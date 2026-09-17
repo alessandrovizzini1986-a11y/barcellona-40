@@ -147,15 +147,21 @@ async function assicuraBrowser() {
   const ctx = await browser.newContext({ viewport: { width: 380, height: 820 } })
   page = await ctx.newPage()
   await page.goto(`http://localhost:${PORT}/rigori/?noflow=1&q=bassa`, { waitUntil: 'load' })
+  await pronto()
+  return page
+}
+// Vite può ricaricare la pagina una volta sola, quando al primo avvio riottimizza le dipendenze: il contesto
+// viene distrutto e i test successivi troverebbero __rigori non ancora pronto. Prima di ogni test in browser
+// si aspetta che il gioco sia pronto, invece di dare per scontato che il contesto sia ancora quello di prima.
+async function pronto() {
   await page.waitForFunction(() => window.__rigori?.ready, null, { timeout: 60000 })
   await page.evaluate(() => window.__rigori.kitReady)
-  return page
 }
 after(async () => { await browser?.close(); server?.kill('SIGTERM') })
 
 describe('cartello e turno', () => {
   test('50 tiri: il cartello dice sempre l\'esito del record, dal vivo e nei due replay', async () => {
-    await assicuraBrowser()
+    await assicuraBrowser(); await pronto()
     if (process.env.RIGORI_TRACCIA) console.error('  preparazione')
     await gioco(() => { window.__rigori.game.holdShot = true; window.__rigori.setPrecision(0.4) })
     if (process.env.RIGORI_TRACCIA) console.error('  pronto')
@@ -187,7 +193,7 @@ describe('cartello e turno', () => {
   }, { timeout: 600000 })
 
   test('le parate hanno contatto vero: guanto o corpo entro 0,25 m', async () => {
-    await assicuraBrowser()
+    await assicuraBrowser(); await pronto()
     const r = await gioco(async () => {
       const R = window.__rigori
       R.game.holdShot = true; R.setPrecision(0)
@@ -218,7 +224,7 @@ describe('cartello e turno', () => {
   }, { timeout: 600000 })
 
   test('i ruoli vengono dal turno: da portiere tira l\'altro', async () => {
-    await assicuraBrowser()
+    await assicuraBrowser(); await pronto()
     const r = await gioco(async () => {
       const R = window.__rigori
       R.game.holdShot = true; R.setPrecision(0)
@@ -248,7 +254,7 @@ describe('cartello e turno', () => {
   }, { timeout: 300000 })
 
   test('il turno non cambia durante la sequenza esito + replay', async () => {
-    await assicuraBrowser()
+    await assicuraBrowser(); await pronto()
     const esito = await gioco(async () => {
       const R = window.__rigori
       R.game.holdShot = false
