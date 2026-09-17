@@ -17,7 +17,7 @@ export function createPassAndPlay({ names = ['Ale', 'Monne'], rounds = 3 } = {})
       if (this.phase === 'pick') {
         ctx.role('idle')
         ctx.pickZone({ who: this.keeperP.name, hidden: true }).then((zone) => { this.keeperZone = zone; this.phase = 'shoot'; ctx.handoff(this.shooter.name).then(() => this.nextTurn(ctx)) })
-      } else { ctx.forceKeeperZone(this.keeperZone); ctx.role('shooter') }
+      } else { ctx.forceKeeperZone(this.keeperZone); ctx.role('shooter'); ctx.setRuoli({ tiratore: { id: null, nome: this.shooter.name, utente: true }, portiere: { id: null, nome: this.keeperP.name, utente: false } }) }
     },
     onResult(res, ctx) {
       if (res.result === 'goal') { this.shooter.goals++; ctx.xp(res.corner ? 'corner' : 'goal') }

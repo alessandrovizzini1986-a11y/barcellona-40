@@ -32,10 +32,11 @@ export function createJuice({ scene, rig, game, reduced = () => false }) {
     // Replay: NON risimula niente. Riesegue il record del tiro chiamando `render(t)` con t che avanza
     // a velocità ridotta, da un'altra camera. Stessa funzione di disegno del gioco dal vivo.
     setReplayCamera(name) { replayCam = name || 'lateraleReplay' },
-    startReplay({ from = 0, to = 0, speed = 0.3, render, onEnd } = {}) {
+    startReplay({ from = 0, to = 0, speed = 0.3, render, onEnd, camera = null, segui = false } = {}) {
       if (!render || to <= from) { onEnd?.(); return }
-      replay = { t: from, to, speed, render, onEnd }
-      rig.followLook(null); rig.goTo(replayCam, { instant: true })
+      replay = { t: from, to, speed, render, onEnd, segui }
+      rig.followLook(null)
+      if (camera) rig.goToPoint({ ...camera, instant: true }); else rig.goTo(replayCam, { instant: true })
     },
     get replaying() { return !!replay },
     // Restituisce la scala del tempo da applicare al gioco in questo frame
@@ -56,7 +57,7 @@ export function createJuice({ scene, rig, game, reduced = () => false }) {
       if (replay) {
         replay.t = Math.min(replay.to, replay.t + raw * replay.speed)
         replay.render(replay.t)
-        rig.followLook(ballMesh)
+        if (replay.segui) rig.followLook(ballMesh)
         if (replay.t >= replay.to) { const cb = replay.onEnd; replay = null; rig.followLook(null); cb?.() }
         return 0 // durante il replay il tempo di gioco è fermo: avanza solo il replay
       }

@@ -26,6 +26,13 @@ export function createCameraRig(aspect) {
       target.pos.fromArray(p.pos); target.look.fromArray(p.look); target.fov = p.fov || 58
       if (instant) { pos.copy(target.pos); look.copy(target.look); camera.fov = target.fov; camera.updateProjectionMatrix() }
     },
+    // Camera libera: posizione e punto d'interesse calcolati sul tiro (usata dai replay)
+    goToPoint({ pos: pp, look: ll, fov = 58, instant = false, speed: sp = 4 } = {}) {
+      rig.current = 'libera'; speed = sp
+      target.pos.set(pp[0], pp[1], pp[2]); target.fov = fov
+      if (ll) target.look.set(ll[0], ll[1], ll[2])
+      if (instant) { pos.copy(target.pos); if (ll) look.copy(target.look); camera.fov = fov; camera.updateProjectionMatrix() }
+    },
     // Segue un oggetto (la palla) con lo sguardo, senza spostarsi
     followLook(obj) { follow = obj },
     shake(amp = 0.12, dur = 0.35) { shake.t = 0; shake.dur = dur; shake.amp = amp },

@@ -31,7 +31,7 @@ export function buildBigHead(model, { maglia, numero, glove = false, skin = SKIN
     sleeve: flat(primary), shorts: flat('#1B2A4A'), sock: flat(secondary), shoe: flat('#15161A', { roughness: .5 }),
     glove: flat('#F2E9DE', { roughness: .7 })
   }
-  const parts = []
+  const parts = [], mani = {} // i guanti servono al portiere per sapere dove ha le mani
   // Busto: capsula corta e tozza tra i fianchi e il collo, attaccata a Spine1. La texture gira attorno (u=0,25 davanti).
   const hips = localOf(B.Spine1, B.Hips), neck = localOf(B.Spine1, B.Neck)
   const torso = capsule(B.Spine1, hips, neck, 0.20, M.jersey, { start: -0.15, end: 0.92, radial: 24, caps: 6 })
@@ -59,7 +59,7 @@ export function buildBigHead(model, { maglia, numero, glove = false, skin = SKIN
     parts.push(capsule(arm, new THREE.Vector3(), localOf(arm, fore), 0.065, M.sleeve, { start: -0.1, end: 1 }))
     parts.push(capsule(fore, new THREE.Vector3(), localOf(fore, hand), 0.05, M.skin))
     const h = new THREE.Mesh(new THREE.SphereGeometry(glove ? 0.12 : 0.07, glove ? 14 : 10, glove ? 10 : 8), glove ? M.glove : M.skin)
-    h.position.copy(localOf(hand, fore)).multiplyScalar(-0.12); hand.add(h); parts.push(h)
+    h.position.copy(localOf(hand, fore)).multiplyScalar(-0.12); hand.add(h); parts.push(h); mani[s] = h
     // Gambe: pantaloncino sulla metà alta della coscia, coscia pelle, calzettone sullo stinco, scarpa nera
     const up = B[s + 'UpLeg'], leg = B[s + 'Leg'], foot = B[s + 'Foot'], toe = B[s + 'ToeBase']
     const knee = localOf(up, leg)
@@ -77,5 +77,5 @@ export function buildBigHead(model, { maglia, numero, glove = false, skin = SKIN
     _d.copy(_mq).slerp(_bq, 0.3)
     head.quaternion.copy(_bq.invert().multiply(_d))
   }
-  return { parts, head, materials: M, setFace: (img) => ht.draw(img), update }
+  return { parts, head, mani, materials: M, setFace: (img) => ht.draw(img), update }
 }

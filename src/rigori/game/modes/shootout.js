@@ -9,10 +9,10 @@ export function createShootout({ difficulty = 'normale', boss = false } = {}) {
     hud(ctx) { ctx.hud(`${this.intestazione()} · Tu ${this.me} – ${this.ale} Ale · ${this.turn === 'me' ? 'Tiri tu' : 'Para tu'}`) },
     // HUD durante esito e replay: punteggio già aggiornato e che cosa è appena successo, nel turno DEL TIRO
     hudEsito(ctx, res) {
-      const mio = this.turn === 'me'
-      const cosa = res.result === 'goal' ? (mio ? 'Hai segnato' : 'Ale ha segnato')
-        : res.result === 'save' ? (mio ? 'Parata di Ale' : 'Hai parato')
-          : res.result === 'miss' ? (mio ? 'Fuori' : 'Ale ha sbagliato') : res.result === 'crossbar' ? 'Traversa' : 'Palo'
+      // i nomi arrivano dal record del tiro: nel turno da portiere il tiratore è l'altro
+      const t = res.ruoli?.tiratore?.nome || 'Chi tira', p = res.ruoli?.portiere?.nome || 'Il portiere'
+      const cosa = res.result === 'goal' ? `Gol di ${t}` : res.result === 'save' ? `Parata di ${p}`
+        : res.result === 'miss' ? `${t} fuori` : res.result === 'crossbar' ? 'Traversa' : 'Palo'
       ctx.hud(`${this.intestazione()} · Tu ${this.me} – ${this.ale} Ale · ${cosa}`)
     },
     nextTurn(ctx) {

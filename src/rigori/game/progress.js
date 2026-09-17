@@ -24,7 +24,8 @@ export function createProgress({ save, listeners, role, shooterName, onLevelUp, 
     if (e.type === 'kick') cur.lastKick = e.aim
     if (e.type === 'crossbar') award('traversa')
     if (e.type === 'result') {
-      const r = role()
+      // chi ha tirato lo dice il record dell'evento, non lo stato del turno (che intanto può essere avanzato)
+      const r = e.ruoli ? (e.ruoli.tiratore.utente ? 'shooter' : 'keeper') : role()
       if (r === 'shooter') {
         cur.myShots++
         if (e.result === 'goal') {

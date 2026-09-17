@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { buildCurve } from './shot.js'
+import { traiettoriaPrevista } from './shot.js'
 // Traiettoria fantasma durante il drag: linea tratteggiata sui punti della Bézier
 export function createGhost(scene) {
   const geo = new THREE.BufferGeometry().setFromPoints(Array.from({ length: 24 }, () => new THREE.Vector3()))
@@ -9,7 +9,7 @@ export function createGhost(scene) {
   marker.visible = false; marker.renderOrder = 6; scene.add(marker)
   return {
     show(aim) {
-      const c = buildCurve(aim); const pts = c.getPoints(23)
+      const pts = traiettoriaPrevista(aim, 24)
       geo.setFromPoints(pts); line.computeLineDistances(); line.visible = true
       marker.position.set(aim.x, aim.y, 0.02); marker.visible = true
     },

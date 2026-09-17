@@ -2,21 +2,32 @@ import * as THREE from 'three'
 import { GOAL } from '../scene/net.js'
 import { BALL_R } from './ball.js'
 import { makeRng, newSeed } from '../core/rng.js'
-// IL TIRO È UN RECORD IMMUTABILE.
+// IL TIRO È UN RECORD IMMUTABILE, LA PALLA È INTEGRATA CON LA FISICA.
 //
-// Al momento del calcio si costruisce un ShotRecord con un seme: dispersione, traiettoria, decisione del portiere
-// ed esito vengono decisi TUTTI lì, con quel seme. Dopo, nessuno estrae più numeri casuali e nessuno "guarda dove
-// è finita la palla" per decidere cos'è successo. Il volo libero dopo l'impatto è simulato subito e campionato.
-//
-// Esiste una sola funzione di disegno, `renderShotAt(record, t)`: dato il tempo trascorso dal calcio posiziona
-// palla e portiere. Il gioco dal vivo la chiama con t che avanza al ritmo della partita; il replay la chiama con
-// t che avanza a velocità ridotta, da un'altra camera. Stesso record, stessa immagine, quante volte si vuole.
+// Al calcio si costruisce uno ShotRecord con un seme: dispersione, velocità iniziale, rotazione, decisione
+// del portiere ed esito vengono decisi TUTTI lì. La traiettoria non è una curva disegnata a mano ma
+// un'integrazione di Eulero semi-implicito a passo fisso (1/120 s) con gravità, resistenza quadratica ed
+// effetto Magnus. L'integrazione avviene UNA VOLTA SOLA, alla creazione del record, e i campioni restano
+// nel record: il gioco dal vivo e i replay rileggono gli stessi numeri, quindi non possono divergere.
+// (Ri-integrare a ogni passata darebbe lo stesso risultato ma costerebbe CPU e lascerebbe aperta la porta
+// a differenze fra una passata e l'altra: conservare i campioni è la garanzia più forte.)
+export const FISICA = {
+  g: 9.81,          // gravità
+  drag: 0.0045,     // resistenza quadratica: a = -k |v| v (pallone da calcio)
+  magnus: 0.0048,   // a = k (ω × v); tarato perché la curva massima sposti ~0,8 m sugli 11 m
+  spinMax: 60,      // rad/s alla curvatura massima dello swipe (≈ 9,5 giri al secondo)
+  spinDecay: 0.6,   // la rotazione si smorza in volo (al secondo)
+  dt: 1 / 120,
+  vMin: 15, vMax: 30,          // m/s: 54–108 km/h, dal tiro piazzato alla botta
+  restituzione: 0.6,           // rimbalzo su palo e traversa
+  dragRete: 8,                 // dentro la rete la palla frena di brutto
+  durataMax: 3.2,
+  presa: 0.9        // la palla presa resta nei guanti prima di dichiarare il tiro concluso
+}
 const SPOT = new THREE.Vector3(0, BALL_R, 11)
-const P0 = new THREE.Vector3(), P1 = new THREE.Vector3(), P2 = new THREE.Vector3(), P3 = new THREE.Vector3()
-const _a = new THREE.Vector3(), _b = new THREE.Vector3()
-const FREE_STEP = 1 / 120, FREE_MAX = 3.2, HOLD = 0.9 // presa: la palla resta ferma nei guanti prima di 'settled'
+const _a = new THREE.Vector3(), _b = new THREE.Vector3(), _q = new THREE.Quaternion(), _q2 = new THREE.Quaternion()
 
-// Da un gesto (px) a un bersaglio sul piano della porta (m). DA VERIFICARE: fattori di scala scelti da me.
+// Da un gesto (px) a un bersaglio sul piano della porta (m) + potenza + curva. DA VERIFICARE: scale mie.
 export function aimFromGesture(g, size) {
   const x = (g.dx / (size.w * 0.50)) * (GOAL.w / 2 + 0.9)
   const up = -g.dy
@@ -26,131 +37,216 @@ export function aimFromGesture(g, size) {
   if (power > 0.95) y += (power - 0.95) * 4 // il tiro "sale"
   return { x, y, power, curve: g.curve }
 }
-// Tempo di volo 0,55–0,85 s in base alla potenza (da prompt). Il minimo lascia al portiere il tempo di tuffarsi.
-export function flightTimeFor(power) { return 0.85 - ((THREE.MathUtils.clamp(power, 0.35, 1.2) - 0.35) / (1.2 - 0.35)) * 0.30 }
+// Velocità iniziale in m/s dalla potenza del gesto: piazzato lento 15, botta 30
+export const velocitaDa = (power) => FISICA.vMin + THREE.MathUtils.clamp((power - 0.35) / 0.85, 0, 1) * (FISICA.vMax - FISICA.vMin)
 
-// Punti della Bézier per la traiettoria fantasma e per il volo
-export function buildCurve(aim) {
-  P0.copy(SPOT)
-  P3.set(aim.x, aim.y, 0)
-  const lift = Math.max(0.6, aim.y * 0.55 + 0.4)
-  P1.set(P0.x + aim.curve * 2.2, P0.y + lift, P0.z - 3.4)
-  P2.set(P3.x + aim.curve * 2.4, P3.y + lift * 0.45, P3.z + 3.2)
-  return new THREE.CubicBezierCurve3(P0.clone(), P1.clone(), P2.clone(), P3.clone())
+// Un passo di Eulero semi-implicito: prima la velocità, poi la posizione.
+function passo(p, v, spin, dt, dragExtra = 0) {
+  const vel = v.length()
+  _a.set(0, -FISICA.g, 0)
+  if (vel > 1e-4) _a.addScaledVector(v, -(FISICA.drag + dragExtra) * vel)
+  _b.copy(spin).cross(v).multiplyScalar(FISICA.magnus)
+  _a.add(_b)
+  v.addScaledVector(_a, dt)
+  p.addScaledVector(v, dt)
+  spin.multiplyScalar(1 - FISICA.spinDecay * dt)
+}
+// Integra dal dischetto finché la palla non attraversa il piano della porta (z = 0).
+function volaAllaPorta(dir, velocita, spin0, maxT = 2) {
+  const p = SPOT.clone(), v = dir.clone().multiplyScalar(velocita), spin = spin0.clone()
+  const prev = p.clone()
+  let t = 0, prevZ = p.z
+  while (t < maxT) {
+    prev.copy(p); prevZ = p.z
+    passo(p, v, spin, FISICA.dt)
+    t += FISICA.dt
+    if (p.z <= 0) {
+      const k = prevZ === p.z ? 0 : prevZ / (prevZ - p.z) // punto esatto di attraversamento
+      return { punto: prev.clone().lerp(p, k), tempo: t - FISICA.dt * (1 - k), v: v.clone(), spin: spin.clone() }
+    }
+  }
+  return { punto: p.clone(), tempo: t, v: v.clone(), spin: spin.clone(), fuoriTempo: true }
+}
+// Direzione di lancio che porta la palla sul bersaglio, tenendo conto di gravità, resistenza e Magnus.
+// Punto fisso: si mira a un bersaglio virtuale corretto dall'errore; converge in pochi giri.
+function miraVerso(bersaglio, velocita, spin) {
+  const virtuale = bersaglio.clone()
+  let esito = null
+  for (let i = 0; i < 10; i++) {
+    esito = volaAllaPorta(virtuale.clone().sub(SPOT).normalize(), velocita, spin)
+    const errX = bersaglio.x - esito.punto.x, errY = bersaglio.y - esito.punto.y
+    if (Math.abs(errX) < 0.002 && Math.abs(errY) < 0.002) break
+    virtuale.x += errX; virtuale.y += errY
+  }
+  return { dir: virtuale.clone().sub(SPOT).normalize(), esito }
+}
+
+// Anteprima della traiettoria per la linea di mira: stessa fisica, senza dispersione e senza portiere.
+export function traiettoriaPrevista(aim, punti = 24) {
+  const velocita = velocitaDa(aim.power)
+  const spin = new THREE.Vector3(-Math.abs(aim.curve) * FISICA.spinMax * 0.25, THREE.MathUtils.clamp(aim.curve, -1, 1) * FISICA.spinMax, 0)
+  const { dir, esito } = miraVerso(new THREE.Vector3(aim.x, aim.y, 0), velocita, spin)
+  const p = SPOT.clone(), v = dir.clone().multiplyScalar(velocita), sp = spin.clone()
+  const out = [p.clone()]
+  const passiTot = Math.max(1, Math.round(esito.tempo / FISICA.dt))
+  const ogni = Math.max(1, Math.floor(passiTot / (punti - 1)))
+  for (let i = 1; i <= passiTot; i++) { passo(p, v, sp, FISICA.dt); if (i % ogni === 0 || i === passiTot) out.push(p.clone()) }
+  return out
+}
+
+// Posizione della palla a un istante, ri-integrando dal dischetto: serve prima che la traiettoria sia campionata.
+function posizioneA(rec, t) {
+  const p = SPOT.clone(), v = rec.dir.clone().multiplyScalar(rec.velocita), spin = rec.spin.clone()
+  const n = Math.max(0, Math.round(t / FISICA.dt))
+  for (let i = 0; i < n; i++) passo(p, v, spin, FISICA.dt)
+  return p
+}
+// Istante in cui la palla passa più vicino a un punto (le mani del portiere), nel volo prima della linea.
+function passaggioPiuVicino(rec, punto) {
+  const p = SPOT.clone(), v = rec.dir.clone().multiplyScalar(rec.velocita), spin = rec.spin.clone()
+  let best = { t: rec.contactTime, p: rec.contact.clone(), d: Infinity }
+  const n = Math.max(1, Math.round(rec.contactTime / FISICA.dt))
+  for (let i = 1; i <= n; i++) {
+    passo(p, v, spin, FISICA.dt)
+    const d = p.distanceTo(punto)
+    if (d < best.d) best = { t: i * FISICA.dt, p: p.clone(), d }
+  }
+  return best
 }
 
 // ---------------------------------------------------------------- record
-// Costruisce il record. Il portiere CPU decide qui; con il portiere giocabile la zona non è ancora nota
-// (la sceglie il giocatore durante il volo) e il record viene chiuso da `sealShotRecord` al gesto o all'impatto.
-export function buildShotRecord({ aim: raw, timingPerfect = false, precision = 1, keeper = null, seed = newSeed(), shooter = { id: null, byUser: true } }) {
+// `ruoli` = { tiratore: {id, nome}, portiere: {id, nome} }, presi dal turno: nel record non c'è nessun nome fisso.
+export function buildShotRecord({ aim: raw, timingPerfect = false, precision = 1, keeper = null, seed = newSeed(), ruoli = {} }) {
   const rnd = makeRng(seed)
   const aim = { ...raw }
   // dispersione: più forte il tiro, meno preciso; il timing perfetto la dimezza · DA VERIFICARE: entità
   const spread = (0.15 + Math.max(0, aim.power - 0.7) * 0.6) * (timingPerfect ? 0.5 : 1) * precision
   aim.x += (rnd() - .5) * spread
   aim.y = Math.max(0.12, aim.y + (rnd() - .5) * spread * 0.6)
-  const curve = buildCurve(aim)
-  const flightTime = flightTimeFor(aim.power)
+  const velocita = velocitaDa(aim.power)
+  // la curva dello swipe diventa rotazione attorno a y (curva orizzontale) più un po' di retroeffetto
+  const spin = new THREE.Vector3(-Math.abs(aim.curve) * FISICA.spinMax * 0.25, THREE.MathUtils.clamp(aim.curve, -1, 1) * FISICA.spinMax, 0)
+  const { dir, esito } = miraVerso(new THREE.Vector3(aim.x, aim.y, 0), velocita, spin)
   const rec = {
-    seed, aim, timingPerfect, curve, flightTime,
-    shooter: { ...shooter },                 // chi ha tirato: il cartello e lo sfottò leggono da qui, non dallo stato del turno
-    contactTime: flightTime,                 // istante in cui la palla arriva sul piano della porta
-    lengths: curve.getLengths(48),           // per la rotazione della palla, uguale a ogni passata
-    keeper: keeper ? keeper.decide({ aim, timingPerfect, rnd }) : null,
-    outcome: null, corner: false, catch: false,
-    contact: new THREE.Vector3(aim.x, aim.y, 0),
-    free: null, netPunch: null, duration: flightTime, sealed: false
+    seed, aim, timingPerfect, rnd,
+    velocita, dir: dir.clone(), spin: spin.clone(),
+    contact: esito.punto.clone(),      // dove la palla attraversa il piano della porta
+    contactTime: esito.tempo,          // quando (s dal calcio)
+    vImpatto: esito.v.length(),
+    ruoli: { tiratore: { ...ruoli.tiratore }, portiere: { ...ruoli.portiere } },
+    keeper: keeper ? keeper.decide({ aim, timingPerfect, rnd, contactTime: esito.tempo }) : null,
+    outcome: null, corner: false, catch: false, guanto: null,
+    traiettoria: null, netPunch: null, duration: esito.tempo, sealed: false
   }
   if (!rec.keeper || rec.keeper.mode !== 'player') sealShotRecord(rec, keeper)
   return rec
 }
-// Chiude il record: esito, volo libero campionato, durata. Da qui in poi il record non cambia più.
+// Chiude il record: esito, traiettoria completa campionata, durata. Da qui in poi il record non cambia più.
 export function sealShotRecord(rec, keeper) {
   if (rec.sealed) return rec
   rec.sealed = true
-  const aim = rec.aim
-  const hit = keeper && rec.keeper ? keeper.evaluate({ aim, decision: rec.keeper, contactTime: rec.contactTime }) : null
-  // velocità all'arrivo, dalla derivata della Bézier (niente stato accumulato: stessa curva, stessa velocità)
-  const vel = _a.copy(rec.curve.getPoint(1)).sub(_b.copy(rec.curve.getPoint(0.98))).divideScalar(0.02 * rec.flightTime)
-  const freeVel = new THREE.Vector3()
-  if (hit) {
-    rec.outcome = 'save'; rec.catch = !!hit.catch
-    freeVel.copy(vel).multiplyScalar(-0.25); freeVel.x += hit.deflectX; freeVel.y = Math.abs(freeVel.y) * 0.4 + 1.2
-  } else {
-    const x = aim.x, y = aim.y
-    const inX = Math.abs(x) < GOAL.w / 2 - BALL_R, underBar = y < GOAL.h - BALL_R
-    const onPost = Math.abs(Math.abs(x) - GOAL.w / 2) <= BALL_R + GOAL.post && y < GOAL.h + GOAL.post
-    const onBar = Math.abs(y - (GOAL.h + GOAL.post)) <= BALL_R + GOAL.post && Math.abs(x) < GOAL.w / 2 + GOAL.post
-    if (onPost || onBar) {
-      rec.outcome = onBar ? 'crossbar' : 'post'
-      freeVel.copy(vel).multiplyScalar(0.45); if (onPost) freeVel.x *= -1; else freeVel.y = -Math.abs(freeVel.y) - 1; freeVel.z = Math.abs(freeVel.z) * 0.9
-    } else if (inX && underBar) {
-      rec.outcome = 'goal'
-      rec.corner = Math.abs(x) > GOAL.w / 2 - 0.9 && y > GOAL.h - 0.7
-      freeVel.copy(vel).multiplyScalar(0.55)
+  // Prima si decide se è parata (lo dice la portata del tuffo), poi la posa si adatta: se para, il guanto
+  // arriva sulla palla; se non para, resta lontano. L'esito comanda la posa, mai il contrario.
+  const hit = keeper && rec.keeper ? keeper.evaluate({ aim: rec.aim, decision: rec.keeper, contactTime: rec.contactTime, punto: rec.contact }) : null
+  // Il portiere sta 0,55 m davanti alla linea: la parata avviene dove la palla gli passa più vicino alle mani,
+  // non sulla linea di porta. Due giri bastano a far convergere istante e posa (la posa dipende dall'istante).
+  rec.tRisoluzione = rec.contactTime
+  if (keeper && rec.keeper?.zone != null) {
+    if (hit) {
+      let t = rec.contactTime, punto = rec.contact.clone()
+      for (let i = 0; i < 3; i++) {
+        const naturale = keeper.guantoNaturale(rec.keeper, t, rec.contactTime)
+        if (!naturale) break
+        const vicino = passaggioPiuVicino(rec, naturale)
+        t = vicino.t; punto = vicino.p
+      }
+      rec.tRisoluzione = t
+      rec.puntoGuanto = punto.clone()
+      hit.guanto = keeper.pianificaTuffo(rec.keeper, punto, t, { prende: true })
     } else {
-      rec.outcome = 'miss'
-      freeVel.copy(vel).multiplyScalar(0.8)
+      keeper.pianificaTuffo(rec.keeper, posizioneA(rec, rec.contactTime * 0.92), rec.contactTime, { prende: false })
     }
   }
-  rec.free = simulateFree(rec, freeVel)
-  rec.duration = rec.contactTime + rec.free.dur
+  const x = rec.contact.x, y = rec.contact.y
+  const dentroX = Math.abs(x) < GOAL.w / 2 - BALL_R, sottoTraversa = y < GOAL.h - BALL_R
+  const suPalo = Math.abs(Math.abs(x) - GOAL.w / 2) <= BALL_R + GOAL.post && y < GOAL.h + GOAL.post
+  const suTraversa = Math.abs(y - (GOAL.h + GOAL.post)) <= BALL_R + GOAL.post && Math.abs(x) < GOAL.w / 2 + GOAL.post
+  if (hit) { rec.outcome = 'save'; rec.catch = !!hit.catch; rec.guanto = hit.guanto.clone() }
+  else if (suPalo || suTraversa) rec.outcome = suTraversa ? 'crossbar' : 'post'
+  else if (dentroX && sottoTraversa) { rec.outcome = 'goal'; rec.corner = Math.abs(x) > GOAL.w / 2 - 0.9 && y > GOAL.h - 0.7 }
+  else rec.outcome = 'miss'
+  rec.traiettoria = simula(rec)
+  rec.duration = rec.traiettoria.dur
   return rec
 }
-// Volo libero dopo l'impatto: gravità, rete che frena, rimbalzo a terra. Simulato una volta, a passo fisso,
-// e campionato: il replay non risimula niente, rilegge questi numeri.
-function simulateFree(rec, v0) {
-  const p = rec.contact.clone(), v = v0.clone()
-  const pos = [], rot = []
-  let rotX = -2.2 * rec.lengths[rec.lengths.length - 1], t = 0
-  const push = () => { pos.push(p.x, p.y, p.z); rot.push(rotX) }
-  push()
-  if (rec.catch) { // presa: la palla resta nei guanti
-    const n = Math.round(HOLD / FREE_STEP)
-    for (let i = 0; i < n; i++) push()
-    return { pos: new Float32Array(pos), rot: new Float32Array(rot), dur: HOLD, step: FREE_STEP }
-  }
-  while (t < FREE_MAX) {
-    v.y -= 9.8 * FREE_STEP
-    p.addScaledVector(v, FREE_STEP)
-    if (rec.outcome === 'goal' && p.z < -GOAL.depth + BALL_R) {
-      p.z = -GOAL.depth + BALL_R
-      if (v.z < 0) { if (!rec.netPunch) rec.netPunch = { t: rec.contactTime + t, point: p.clone(), strength: Math.min(1, v.length() / 8) }; v.z *= -0.15; v.x *= 0.3; v.y *= 0.3 }
+// Integrazione completa: volo fino all'impatto, poi la conseguenza dell'esito. Campionata a passo fisso.
+function simula(rec) {
+  // Il passo viene aggiustato di pochissimo perché l'istante dell'impatto cada ESATTAMENTE su un campione:
+  // così a t = contactTime la palla disegnata è nel punto d'impatto, senza errore di interpolazione.
+  const tRis = rec.tRisoluzione ?? rec.contactTime
+  const N = Math.max(1, Math.round(tRis / FISICA.dt))
+  const dt = tRis / N
+  const p = SPOT.clone(), v = rec.dir.clone().multiplyScalar(rec.velocita), spin = rec.spin.clone()
+  const rot = new THREE.Quaternion(), asse = new THREE.Vector3()
+  const pos = [], quat = []
+  const campiona = () => { pos.push(p.x, p.y, p.z); quat.push(rot.x, rot.y, rot.z, rot.w) }
+  const ruota = (dt) => { const w = spin.length(); if (w > 1e-4) { asse.copy(spin).divideScalar(w); rot.premultiply(_q2.setFromAxisAngle(asse, w * dt)) } }
+  campiona()
+  let t = 0, risolto = false, dentroRete = false
+  while (t < FISICA.durataMax) {
+    passo(p, v, spin, dt, dentroRete ? FISICA.dragRete : 0)
+    ruota(dt)
+    t += dt
+    if (!risolto && t >= tRis - dt * 1e-6) {
+      risolto = true
+      p.copy(rec.outcome === 'save' && rec.puntoGuanto ? rec.puntoGuanto : rec.contact)
+      if (rec.outcome === 'save') {
+        // la palla rimbalza DAL guanto: velocità riflessa attorno alla normale guanto→palla
+        _a.copy(p).sub(rec.guanto)
+        if (_a.lengthSq() < 1e-6) _a.set(Math.sign(rec.contact.x) || 1, 0.3, 1)
+        _a.normalize()
+        v.addScaledVector(_a, -2 * v.dot(_a)).multiplyScalar(0.35)
+        if (v.y < 0.5) v.y = 0.5 + Math.abs(v.y) * 0.3 // il guanto alza sempre un po' la palla
+        if (v.z < 0.5) v.z = 0.5 + Math.abs(v.z) * 0.5 // e la rimanda verso il campo, mai dentro il portiere
+        spin.multiplyScalar(0.3)
+        if (rec.catch) { v.set(0, 0, 0); spin.set(0, 0, 0) }
+      } else if (rec.outcome === 'post' || rec.outcome === 'crossbar') {
+        const e = FISICA.restituzione * (0.9 + rec.rnd() * 0.2) // un filo di casualità, dal seme
+        if (rec.outcome === 'post') { v.x = -v.x * e; v.z = Math.abs(v.z) * e } else { v.y = -Math.abs(v.y) * e; v.z = Math.abs(v.z) * e }
+        v.multiplyScalar(0.85)
+      } else if (rec.outcome === 'goal') v.multiplyScalar(0.9)
+    }
+    if (rec.outcome === 'goal' && !dentroRete && p.z < -GOAL.depth + BALL_R * 2) {
+      dentroRete = true
+      if (!rec.netPunch) rec.netPunch = { t, punto: p.clone(), velocita: v.length() }
     }
     if (p.y < BALL_R) { p.y = BALL_R; v.y = Math.abs(v.y) * 0.35; v.x *= 0.8; v.z *= 0.8 }
-    v.multiplyScalar(1 - 0.8 * FREE_STEP)
-    rotX -= v.length() * FREE_STEP * 2
-    t += FREE_STEP
-    push()
-    if (v.lengthSq() < 0.02 || p.z < -12 || p.z > 30 || Math.abs(p.x) > 20) break
+    campiona()
+    // sulla presa la palla resta ferma nei guanti: si continua a campionare per far durare la posa
+    if (rec.catch && t < tRis + FISICA.presa) continue
+    if (risolto && (v.lengthSq() < 0.05 || p.z < -GOAL.depth - 3 || p.z > 26 || Math.abs(p.x) > 18)) break
   }
-  return { pos: new Float32Array(pos), rot: new Float32Array(rot), dur: t, step: FREE_STEP }
+  return { pos: new Float32Array(pos), quat: new Float32Array(quat), dur: t, step: dt, indiceContatto: N }
 }
 
 // ---------------------------------------------------------------- disegno
 // UNICA funzione di disegno del tiro. Pura rispetto al record: nessuna decisione, nessun caso, nessun random.
 export function renderShotAt(rec, t, { ball, keeper, live = true }) {
-  const m = ball.mesh
-  if (t <= rec.contactTime) {
-    const u = rec.flightTime > 0 ? THREE.MathUtils.clamp(t / rec.flightTime, 0, 1) : 1
-    rec.curve.getPoint(u, m.position)
-    const L = rec.lengths, i = THREE.MathUtils.clamp(u * (L.length - 1), 0, L.length - 1)
-    const i0 = Math.floor(i), i1 = Math.min(L.length - 1, i0 + 1)
-    m.rotation.x = -2.2 * THREE.MathUtils.lerp(L[i0], L[i1], i - i0)
-    m.rotation.y = rec.aim.curve * t * 6
-  } else if (rec.free) {
-    const f = rec.free
-    const n = f.rot.length
-    const i = THREE.MathUtils.clamp((t - rec.contactTime) / f.step, 0, n - 1)
+  const m = ball.mesh, tr = rec.traiettoria
+  if (tr) {
+    const n = tr.quat.length / 4
+    const i = THREE.MathUtils.clamp(t / tr.step, 0, n - 1)
     const i0 = Math.floor(i), i1 = Math.min(n - 1, i0 + 1), k = i - i0
     m.position.set(
-      THREE.MathUtils.lerp(f.pos[i0 * 3], f.pos[i1 * 3], k),
-      THREE.MathUtils.lerp(f.pos[i0 * 3 + 1], f.pos[i1 * 3 + 1], k),
-      THREE.MathUtils.lerp(f.pos[i0 * 3 + 2], f.pos[i1 * 3 + 2], k)
+      THREE.MathUtils.lerp(tr.pos[i0 * 3], tr.pos[i1 * 3], k),
+      THREE.MathUtils.lerp(tr.pos[i0 * 3 + 1], tr.pos[i1 * 3 + 1], k),
+      THREE.MathUtils.lerp(tr.pos[i0 * 3 + 2], tr.pos[i1 * 3 + 2], k)
     )
-    m.rotation.x = THREE.MathUtils.lerp(f.rot[i0], f.rot[i1], k)
+    _q.set(tr.quat[i0 * 4], tr.quat[i0 * 4 + 1], tr.quat[i0 * 4 + 2], tr.quat[i0 * 4 + 3])
+    _q2.set(tr.quat[i1 * 4], tr.quat[i1 * 4 + 1], tr.quat[i1 * 4 + 2], tr.quat[i1 * 4 + 3])
+    m.quaternion.copy(_q).slerp(_q2, k)
   }
-  keeper?.renderAt(rec.keeper, t, rec.contactTime, live)
+  keeper?.renderAt(rec.keeper, t, rec.tRisoluzione ?? rec.contactTime, live)
   ball.update(0)
 }
 
@@ -159,16 +255,19 @@ export function createShot({ ball, goal, keeper, onEvent, precision = 1 }) {
   let prec = precision
   let state = 'idle'      // idle | windup | live | done
   let rec = null, t = 0, windup = 0, pendingFire = null, pendingZone = null
-  let shooter = { id: null, byUser: true }
+  let ruoli = { tiratore: { id: null, nome: 'Tu', utente: true }, portiere: { id: null, nome: 'Il portiere', utente: false } }
   let announced = false, punched = false, lastT = 0
   let onFrame = null // QA: gancio sulla posa disegnata, per i test di determinismo
-  const emit = (type, data = {}) => onEvent?.({ ...data, type }) // il tipo dell'evento vince sui campi del payload
+  const emit = (type, data = {}) => onEvent?.({ ...data, type })
   const draw = (at, live = true) => {
     if (!rec) return
     if (at < lastT) punched = false // t torna indietro = nuova passata (replay): la rete può gonfiarsi di nuovo
     lastT = at
     renderShotAt(rec, at, { ball, keeper, live })
-    if (rec.netPunch && !punched && at >= rec.netPunch.t) { punched = true; goal.punch(rec.netPunch.point, rec.netPunch.strength) }
+    if (rec.netPunch && !punched && at >= rec.netPunch.t) {
+      punched = true
+      if (goal.impulso) goal.impulso(rec.netPunch.punto, rec.netPunch.velocita); else goal.punch?.(rec.netPunch.punto, 1)
+    }
     onFrame?.(at)
   }
   // Esito: lo dice il record, una volta sola. Nessun altro pezzo di codice lo può cambiare.
@@ -179,34 +278,32 @@ export function createShot({ ball, goal, keeper, onEvent, precision = 1 }) {
     if (rec.outcome === 'save') emit('save', { point: p, catch: rec.catch })
     else if (rec.outcome === 'goal') emit('goal', { point: p, corner: rec.corner })
     else emit(rec.outcome, { point: p })
-    emit('result', { result: rec.outcome, corner: rec.corner, catch: rec.catch, point: p })
+    emit('result', { result: rec.outcome, corner: rec.corner, catch: rec.catch, point: p, velocita: rec.vImpatto, ruoli: rec.ruoli })
   }
   return {
     get state() { return state === 'live' ? 'flying' : state }, get aim() { return rec?.aim || null },
     get resolved() { return announced ? rec?.outcome || null : null },
     get record() { return rec },
-    // secondi che mancano all'impatto (per lo slow-motion)
-    get remaining() { return state === 'live' && !announced ? Math.max(0, rec.contactTime - t) : Infinity },
+    get remaining() { return state === 'live' && !announced ? Math.max(0, (rec.tRisoluzione ?? rec.contactTime) - t) : Infinity },
     get flying() { return state === 'live' },
     get busy() { return state !== 'idle' },
     get time() { return t },
     setPrecision(v) { prec = v }, setKeeper(k) { keeper = k },
-    setShooterInfo(s) { shooter = { id: s?.id ?? null, byUser: s?.byUser !== false } },
-    // timingPerfect: rilascio nella finestra centrale → dispersione ridotta. seed: per i test deterministici.
+    // Ruoli del turno: finiscono nel record, e da lì li leggono HUD, sfottò, punteggio e XP.
+    setRuoli(r) { ruoli = { tiratore: { ...r.tiratore }, portiere: { ...r.portiere } } },
+    get ruoli() { return ruoli },
     fire(a, { timingPerfect = false, delay = 0, seed } = {}) {
       if (state !== 'idle') return null
       if (delay > 0) { state = 'windup'; windup = delay; pendingFire = { a, timingPerfect, seed }; emit('windup', { aim: a, delay }); return null }
-      rec = buildShotRecord({ aim: a, timingPerfect, precision: prec, keeper, seed: seed === undefined ? newSeed() : seed, shooter })
-      // tuffo già scelto durante la rincorsa: entra nel record come reazione immediata
+      rec = buildShotRecord({ aim: a, timingPerfect, precision: prec, keeper, seed: seed === undefined ? newSeed() : seed, ruoli })
       if (pendingZone != null && rec.keeper?.mode === 'player') { rec.keeper = keeper.playerDecision(pendingZone, 0); sealShotRecord(rec, keeper) }
       pendingZone = null
       t = 0; lastT = 0; announced = false; punched = false
       state = 'live'
       draw(0)
-      emit('kick', { aim: rec.aim, timingPerfect, seed: rec.seed, record: rec })
+      emit('kick', { aim: rec.aim, timingPerfect, seed: rec.seed, record: rec, velocita: rec.velocita })
       return rec
     },
-    // Tuffo del giocatore (modalità portiere): completa e chiude il record all'istante del gesto
     playerDive(zone) {
       if (state === 'windup') { pendingZone = zone; return true } // tuffo anticipato, durante la rincorsa
       if (state !== 'live' || !rec || rec.sealed || !keeper) return false
@@ -216,7 +313,6 @@ export function createShot({ ball, goal, keeper, onEvent, precision = 1 }) {
     },
     playerDiveZone() { return rec?.keeper?.zone ?? pendingZone ?? null },
     set onFrame(f) { onFrame = f }, get onFrame() { return onFrame },
-    // Ri-esecuzione del record da un'altra camera: stessa funzione di disegno, nessuna decisione, nessun evento
     renderAt(at) { draw(at, false) }, // ri-esecuzione: nessun effetto casuale, nessuna decisione
     reset() { state = 'idle'; rec = null; announced = false; punched = false; t = 0; lastT = 0; pendingFire = null; pendingZone = null; ball.reset() },
     update(dt) {
@@ -227,10 +323,9 @@ export function createShot({ ball, goal, keeper, onEvent, precision = 1 }) {
       }
       if (state !== 'live') return
       t += dt
-      // con il portiere giocabile il record si chiude all'impatto, anche se il giocatore non si è tuffato
       if (!rec.sealed && t >= rec.contactTime) sealShotRecord(rec, keeper)
       draw(t)
-      if (rec.sealed && t >= rec.contactTime) announce()
+      if (rec.sealed && t >= (rec.tRisoluzione ?? rec.contactTime)) announce()
       if (rec.sealed && t >= rec.duration) { state = 'done'; emit('settled', { result: rec.outcome }) }
     }
   }

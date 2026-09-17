@@ -18,7 +18,7 @@ import { createGhost } from './game/ghost.js'
 import { loadCharacterKit, makeCharacter } from './scene/players.js'
 import { createAudio } from './core/audio.js'
 import { createProgress } from './game/progress.js'
-import { taunt } from './data/taunts.js'
+import { taunt, gruppoPerEsito } from './data/taunts.js'
 import { createKeeper } from './game/keeper.js'
 import { createJuice } from './game/juice.js'
 import { createShootout } from './game/modes/shootout.js'
@@ -26,7 +26,7 @@ import { createSfidaAle } from './game/modes/sfidaAle.js'
 import { createPassAndPlay } from './game/modes/passAndPlay.js'
 import { createSkill } from './game/modes/skill.js'
 import { cpuAim, XP } from './game/modes/base.js'
-import { zoneOf } from './game/keeper.js'
+import { zoneOf, zoneCenter } from './game/keeper.js'
 import { pickZone, handoff } from './ui/screens/passaggio.js'
 import { chiTira } from './ui/screens/chiTira.js'
 import { modalita, MODES_INFO } from './ui/screens/modalita.js'
@@ -79,7 +79,7 @@ const fx = createPostFx(R.renderer, scene, rig.camera, R.size)
 // Qualità: auto (degrada da sola), bassa, alta · DA VERIFICARE: soglie da provare su telefono vero
 const quality = { bloom: !reducedMotion, shadows: true, particles: true, crowd: 1 }
 const cssVignette = document.querySelector('.rg-vignette')
-const applyQuality = () => { fx.setEnabled(quality.bloom); cssVignette.hidden = fx.enabled /* la vignettatura la fa lo shader; in fallback resta quella CSS */; R.setShadows(quality.shadows); lights.setShadows(quality.shadows); crowd.setDensity(quality.crowd) }
+const applyQuality = () => { goal.setQualita?.(quality.particles ? 1 : 0.5); fx.setEnabled(quality.bloom); cssVignette.hidden = fx.enabled /* la vignettatura la fa lo shader; in fallback resta quella CSS */; R.setShadows(quality.shadows); lights.setShadows(quality.shadows); crowd.setDensity(quality.crowd) }
 const perf = createPerf({
   onDegrade: (step) => { if (step === 'bloom') quality.bloom = false; if (step === 'shadows') quality.shadows = false; if (step === 'particles') quality.particles = false; if (step === 'crowd') quality.crowd = 0.5; applyQuality() },
   onRestore: (step) => { if (step === 'crowd') quality.crowd = 1; if (step === 'particles') quality.particles = true; if (step === 'shadows') quality.shadows = true; if (step === 'bloom') quality.bloom = !reducedMotion; applyQuality() }
@@ -186,7 +186,7 @@ const shake = (amp, dur) => { if (!settings.reduceFx) rig.shake(amp, dur) }
 let replayPending = false
 // Sequenza esito + replay: finché non è finita nessuno fa avanzare il turno. I timer sono tenuti per nome
 // così un nuovo tiro non può lasciarne indietro uno che farebbe partire un secondo replay.
-let esitoLock = false, tReplay = null, tFinish = null
+let esitoLock = false, tReplay = null, tFinish = null, replayCamUnlock = false
 const clearEsitoTimers = () => { clearTimeout(tReplay); clearTimeout(tFinish); tReplay = tFinish = null }
 // QA: traccia della posa a ogni frame disegnato del tiro (live e replay usano la stessa funzione di disegno)
 let trace = null
@@ -195,22 +195,42 @@ function onShotEvent(e) {
   if (e.type === 'windup') { hint.hidden = true; audio.play('step', { volume: .5 }) }
   if (e.type === 'kick') { clearEsitoTimers(); audio.play(e.aim.power > 0.95 ? 'kick2' : 'kick', { volume: 0.6 + Math.min(0.4, e.aim.power * 0.4) }); hint.hidden = true; replayPending = true; kicker?.onKick(); rig.followLook(ball.mesh) }
   if (e.type === 'result') kicker?.react(e.result)
-  if (e.type === 'result') { esitoLock = true; juice.setSlow(false); keeper?.react(e.result); const rec = shot.record; showEsito(game.ui, { outcome: rec.outcome, corner: rec.corner, shooterId: rec.shooter.id, taunt: game.tauntFor(rec) }); audio.duck(true); audio.vo(rec.corner ? 'corner' : rec.outcome) }
+  if (e.type === 'result') { esitoLock = true; juice.setSlow(false); keeper?.react(e.result); const rec = shot.record; showEsito(game.ui, { outcome: rec.outcome, corner: rec.corner, shooterId: rec.ruoli.tiratore.id, taunt: game.tauntFor(rec) }); audio.duck(true); audio.vo(rec.corner ? 'corner' : rec.outcome) }
   if (e.type === 'goal') { crowd.react('ola'); shake(0.10, 0.35); audio.sting('gol'); audio.play('net', { volume: .8 }); audio.crowd('roar'); setTimeout(() => audio.crowd('clap'), 700); audio.vibrate([30, 40, 70]) }
   if (e.type === 'post' || e.type === 'crossbar') { shake(0.06, 0.2); juice.hitStop(60); audio.play(e.type, { volume: .9 }); audio.vibrate(50) }
   if (e.type === 'save') { juice.hitStop(60); crowd.react('oooh'); audio.sting('parata'); audio.play('glove', { volume: .9 }); audio.crowd('oooh'); audio.vibrate(40) }
   if (e.type === 'miss') { crowd.react('oooh'); audio.crowd('oooh') }
   if (e.type === 'settled') afterSettled()
 }
-// Dopo l'esito: replay laterale di 2 s, poi si torna dietro al tiratore. Le modalità (fase 7) ascoltano 'replayEnd'.
+// Dopo l'esito: due replay con camere diverse, poi si torna dietro al tiratore. Le modalità ascoltano 'replayEnd'.
+// Nessuna delle due sta dietro la porta: si vedono sempre la palla, il portiere e almeno un volto.
+export function camereReplay(rec) {
+  const lato = Math.sign(rec.contact.x) || 1
+  // Si inquadra il punto medio fra dove finisce la palla e dove arriva il portiere: in ritratto il campo
+  // visivo orizzontale è stretto (poco più di un terzo del verticale), quindi si mira a ciò che conta.
+  const k = rec.keeper?.zone != null ? zoneCenter(rec.keeper.zone) : { x: 0, y: 1 }
+  const mx = (rec.contact.x + k.x) / 2, my = Math.max(0.8, (rec.contact.y + k.y) / 2)
+  return [
+    // 1) laterale bassa: 1,2 m da terra, 8 m dal dischetto, sul lato del tiro; palla e portiere in campo
+    { pos: [lato * 8, 1.2, 5.5], look: [mx, my, 0.6], fov: 70, segui: false },
+    // 2) frontale 3/4 dal lato del tiratore, dietro la palla: segue la palla e il portiere guarda in camera
+    { pos: [lato * 3.0, 1.55, 11.5], look: [mx, my, 0.6], fov: 58, segui: true }
+  ]
+}
 function afterSettled() {
-  if (game.holdShot) return // QA: tiene il record vivo per i test di determinismo
+  if (game.holdShot) { esitoLock = false; return } // QA: tiene il record vivo per i test
   const finish = () => { audio.duck(false); hideEsito(game.ui); shot.reset(); keeper?.reset(); kicker?.reset(); rig.followLook(null); rig.goTo('dietroTiratore'); hint.hidden = false; esitoLock = false; listeners.forEach((f) => f({ type: 'replayEnd' })) }
   if (!replayPending) { finish(); return }
   replayPending = false
   const rec = shot.record
-  const from = Math.max(0, rec.contactTime - 0.55), to = Math.min(rec.duration, rec.contactTime + 0.45)
-  tReplay = setTimeout(() => juice.startReplay({ from, to, speed: 0.3, render: (t) => shot.renderAt(t), onEnd: () => { tFinish = setTimeout(finish, 300) } }), 500)
+  const from = Math.max(0, rec.contactTime - 0.55), to = Math.min(rec.duration, rec.contactTime + 0.5)
+  const [cam1, cam2] = camereReplay(rec)
+  // la camera sbloccata (drone, dischetto) sostituisce la prima; la seconda resta la frontale
+  const primaCam = replayCamUnlock ? null : cam1
+  const passata = (camera, segui, poi) => juice.startReplay({ from, to, speed: 0.3, render: (t) => shot.renderAt(t), camera, segui, onEnd: poi })
+  tReplay = setTimeout(() => passata(primaCam, cam1.segui, () => {
+    tFinish = setTimeout(() => passata(cam2, cam2.segui, () => { tFinish = setTimeout(finish, 300) }), 250)
+  }), 500)
 }
 systems.push({ update(dt) { shot.update(dt); timing.update(dt); if (!timingEl.hidden) timingCur.style.left = (timing.value * 100) + '%' } })
 // Slow-motion ×0,3 negli ultimi 0,4 s prima dell'esito; registrazione della palla per il replay
@@ -221,6 +241,14 @@ systems.push({ update(_dt, raw) {
 
 // ---------- modalità ----------
 const MODES = { shootout: (o) => createShootout(o), boss: (o) => createShootout({ ...o, boss: true }), sfidaAle: (o) => createSfidaAle(o), passAndPlay: (o) => createPassAndPlay(o), skill: (o) => createSkill(o) }
+// Chi tira e chi para in questo turno: nel ruolo portiere tira Ale, altrimenti tira il giocatore scelto.
+// Nessun file di interfaccia conosce il nome 'Ale': lo legge da qui, attraverso il record del tiro.
+function ruoliDalTurno(r) {
+  const io = byId(shooterId) || { id: shooterId, nome: 'Tu' }, ale = keeperData()
+  return r === 'keeper'
+    ? { tiratore: { id: ale.id, nome: ale.nome, utente: false }, portiere: { id: io.id, nome: io.nome, utente: true } }
+    : { tiratore: { id: io.id, nome: io.nome, utente: true }, portiere: { id: ale.id, nome: ale.nome, utente: false } }
+}
 let mode = null, role = 'idle', difficulty = 'normale' // la difficoltà è della partita, non del singolo controller (che viene riusato)
 const modeHud = document.createElement('div'); modeHud.className = 'rg-modehud'; modeHud.setAttribute('aria-live', 'polite'); document.getElementById('rg-ui').appendChild(modeHud)
 const target = new THREE.Mesh(new THREE.RingGeometry(0.42, 0.55, 32), new THREE.MeshBasicMaterial({ color: 0xF2B705, transparent: true, opacity: .9, side: THREE.DoubleSide, depthTest: false })); target.renderOrder = 8; target.visible = false; scene.add(target)
@@ -230,14 +258,16 @@ const ctx = {
     const was = role; role = r; input.setMode(r === 'keeper' ? 'keeper' : 'shooter')
     if (kit && (r === 'keeper') !== (was === 'keeper')) { if (r === 'keeper') setPair(byId(shooterId), keeperData()); else setPair(keeperData(), byId(shooterId)) }
     keeper?.setPlayable(r === 'keeper')
-    // da qui in poi il prossimo tiro sa di chi è: nel ruolo portiere tira Ale, altrimenti il tiratore scelto
-    shot.setShooterInfo(r === 'keeper' ? { id: 'ale', byUser: false } : { id: shooterId, byUser: true })
-    if (mode && r !== 'idle' && r !== was) { audio.whistle(); if (r === 'shooter') toast(game.ui, taunt('preTiro', shooterId, game.progress?.unlocked('taunt:extra')), 2600) }
+    // Ruoli del turno: chi tira e chi para finiscono nel record, e da lì li leggono HUD, sfottò, punteggio e XP.
+    if (r !== 'idle') ctx.setRuoli(ruoliDalTurno(r))
+    if (mode && r !== 'idle' && r !== was) { audio.whistle(); const ru = shot.ruoli; toast(game.ui, taunt('preTiro', { nomi: { tiratore: ru.tiratore.nome, portiere: ru.portiere.nome }, ids: { tiratore: ru.tiratore.id, portiere: ru.portiere.id }, extra: game.progress?.unlocked('taunt:extra') }), 2600) }
     if (r === 'shooter') { hint.textContent = 'Trascina dal pallone'; hint.hidden = false; rig.goTo('dietroTiratore', { instant: was === 'keeper' }) }
     else if (r === 'keeper') { hint.textContent = 'Trascina verso la zona in cui tuffarti'; hint.hidden = false; rig.goTo('dietroPortiere', { instant: true }) }
     else hint.hidden = true
   },
   setDifficulty(d) { difficulty = d; keeper?.setDifficulty(d) },
+  // Le modalità con più persone (pass-and-play) impongono i propri nomi; le altre usano il turno.
+  setRuoli(r) { shot.setRuoli(r) },
   hud(t) { modeHud.textContent = t },
   xp(kind) { const n = XP[kind] || 0; xpLog.push({ kind, n }); listeners.forEach((f) => f({ type: 'xp', kind, n })) },
   forceKeeperZone(z) { keeper?.force(z) },
@@ -363,15 +393,16 @@ game.progress = createProgress({
 })
 // Lo sfottò dipende da chi ha tirato (dal record) e dall'esito, mai dal turno corrente: a gol subito
 // da portiere deve uscire una battuta da gol subito, non da gol fatto.
-game.tauntFor = (rec) => {
-  const extra = game.progress.unlocked('taunt:extra'), gol = rec.outcome === 'goal'
-  const kind = rec.shooter.byUser ? (gol ? 'postGol' : 'postParata') : (gol ? 'postGolSubito' : 'postParataTua')
-  return taunt(kind, rec.shooter.id, extra)
-}
+game.tauntFor = (rec, kind) => taunt(kind || gruppoPerEsito(rec.outcome), {
+  nomi: { tiratore: rec.ruoli.tiratore.nome, portiere: rec.ruoli.portiere.nome },
+  ids: { tiratore: rec.ruoli.tiratore.id, portiere: rec.ruoli.portiere.id },
+  extra: game.progress.unlocked('taunt:extra')
+})
 function applyEquip() {
   ball.setSkin(game.progress.equipped('pallone'))
   kicker?.setCelebration((game.progress.equipped('celebrazione') || 'celeb:salto').replace('celeb:', ''))
-  juice.setReplayCamera({ 'cam:drone': 'drone', 'cam:dischetto': 'dischetto' }[game.progress.equipped('camera')] || 'lateraleReplay')
+  const cam = { 'cam:drone': 'drone', 'cam:dischetto': 'dischetto' }[game.progress.equipped('camera')]
+  replayCamUnlock = !!cam; juice.setReplayCamera(cam || 'lateraleReplay')
 }
 applyEquip()
 window.__rigori = {
@@ -385,6 +416,17 @@ window.__rigori = {
   trace: (on) => { trace = on ? [] : null; return trace },
   traced: () => trace,
   playerDive: (z) => shot.playerDive(z),
+  // QA: distanza fra guanto e palla all'istante dell'impatto, con la posa del record
+  distanzaGuanto: () => {
+    const r = shot.record
+    if (!r || !keeper || r.keeper?.zone == null) return null
+    const t = r.tRisoluzione ?? r.contactTime, bersaglio = r.puntoGuanto || r.contact
+    const g = keeper.guantoA(r.keeper, t, t, bersaglio)
+    return g ? +g.distanceTo(bersaglio).toFixed(4) : null
+  },
+  ruoli: () => shot.ruoli, camereReplay,
+  // QA: gonfiore massimo toccato dalla rete dall'ultimo impulso, in metri
+  reteAmpiezza: () => goal.ampiezzaMax?.() ?? null,
   replay: ({ speed = 0.3, from, to } = {}) => new Promise((res) => {
     const rec = shot.record; if (!rec) return res(false)
     juice.startReplay({ from: from ?? Math.max(0, rec.contactTime - 0.55), to: to ?? Math.min(rec.duration, rec.contactTime + 0.45), speed, render: (t) => shot.renderAt(t), onEnd: () => res(true) })
