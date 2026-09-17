@@ -68,16 +68,24 @@ describe('nessuna decisione durante il disegno', () => {
     const vietati = /intersectsBox|intersectsSphere|intersectSphere|containsPoint|intersectObject/
     const colpevoli = sorgenti.filter((f) => vietati.test(readFileSync(f, 'utf8')))
     assert.deepEqual(colpevoli, [], 'collisioni a runtime trovate in: ' + colpevoli.join(', '))
-    // Le misure di distanza sono ammesse solo dove NON decidono l'esito: pianificazione della posa e QA.
-    const ammesse = ['guantoVicino', 'pianificaTuffo', 'guantoA', 'distanzaGuanto']
+    // Le misure di distanza sono ammesse solo dove NON decidono l'esito durante il disegno: sono la ricerca
+    // del punto di contatto (a record ancora aperto), la pianificazione della posa e i ganci di QA.
+    // Ogni misura deve stare dentro una di queste funzioni, riconosciuta risalendo all'intestazione più vicina.
+    const ammesse = new Set(['guantoVicino', 'pianificaTuffo', 'guantoA', 'distanzaGuanto', 'passaggioPiuVicino'])
+    const misure = []
     for (const f of sorgenti) {
-      const testo = readFileSync(f, 'utf8')
-      for (const riga of testo.split('\n')) {
-        if (!/\.distanceTo\(|distanceToSquared/.test(riga)) continue
-        const dentro = ammesse.some((n) => testo.slice(0, testo.indexOf(riga)).lastIndexOf(n) > testo.slice(0, testo.indexOf(riga)).lastIndexOf('renderAt'))
-        assert.ok(dentro, `misura di distanza fuori dalla pianificazione, in ${f}: ${riga.trim().slice(0, 80)}`)
+      let dentro = '(modulo)'
+      for (const riga of readFileSync(f, 'utf8').split('\n')) {
+        const m = riga.match(/^\s*(?:export\s+)?(?:async\s+)?function\s+(\w+)/) ||
+          riga.match(/^\s*(?:export\s+)?(?:const|let)\s+(\w+)\s*=\s*(?:async\s*)?(?:\(|function)/) ||
+          riga.match(/^\s*(\w+)\s*\([^)]*\)\s*\{\s*$/) || riga.match(/^\s*(\w+):\s*\(/)
+        if (m && !['for', 'if', 'while', 'switch', 'catch', 'return'].includes(m[1])) dentro = m[1]
+        if (/\.distanceTo\(|distanceToSquared/.test(riga)) misure.push({ f, dentro, riga: riga.trim().slice(0, 80) })
       }
     }
+    const fuori = misure.filter((x) => !ammesse.has(x.dentro))
+    assert.deepEqual(fuori, [], 'misure di distanza fuori dalla pianificazione: ' + JSON.stringify(fuori))
+    assert.ok(misure.length >= 3, 'le misure ammesse ci sono ancora tutte (trovate ' + misure.length + ')')
   })
   test('il disegno non misura distanze né interseca nulla', () => {
     const shot = readFileSync('src/rigori/game/shot.js', 'utf8')
@@ -257,7 +265,8 @@ describe('cartello e turno', () => {
     assert.equal(hud.length, 1, 'l\'HUD è cambiato durante il replay: ' + JSON.stringify(hud))
     assert.ok(esito.campioni.every((c) => c.locked), 'il blocco è rimasto attivo per tutto il replay')
     // l'HUD durante il replay mostra il turno del tiro, con il punteggio già aggiornato
-    assert.ok(/Hai segnato|Parata di Ale|Fuori|Traversa|Palo/.test(hud[0]), 'HUD del replay: ' + hud[0])
+    // l'HUD nomina chi ha tirato e chi ha parato, presi dal record: "Gol di Monne", "Parata di Ale", ...
+    assert.ok(/Gol di \S+|Parata di \S+|\S+ fuori|Traversa|Palo/.test(hud[0]), 'HUD del replay: ' + hud[0])
     console.log('    HUD durante il replay:', hud[0], '· turno', turni[0])
   }, { timeout: 300000 })
 })
