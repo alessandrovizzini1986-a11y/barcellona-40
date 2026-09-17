@@ -1,4 +1,5 @@
 import * as THREE from 'three'
+import { verificaParata, RAGGIO_CAPSULA } from './copertura.js'
 import { GOAL } from '../scene/net.js'
 import { BALL_R } from './ball.js'
 import { makeRng, newSeed } from '../core/rng.js'
@@ -101,6 +102,14 @@ function posizioneA(rec, t) {
   for (let i = 0; i < n; i++) passo(p, v, spin, FISICA.dt)
   return p
 }
+// Volo libero campionato a passo fisso, prima che l'esito sia deciso: è su questo che si misura se il
+// portiere ci arriva. Nessuna scorciatoia: sono le stesse posizioni che poi si vedono a schermo.
+export function voloLibero(rec, tMax, dt = 1 / 240) {
+  const p = SPOT.clone(), v = rec.dir.clone().multiplyScalar(rec.velocita), spin = rec.spin.clone()
+  const punti = [p.clone()]
+  for (let t = dt; t <= tMax + 1e-9; t += dt) { passo(p, v, spin, dt); punti.push(p.clone()) }
+  return { punti, dt }
+}
 // Istante in cui la palla passa più vicino a un punto (le mani del portiere), nel volo prima della linea.
 function passaggioPiuVicino(rec, punto) {
   const p = SPOT.clone(), v = rec.dir.clone().multiplyScalar(rec.velocita), spin = rec.spin.clone()
@@ -147,31 +156,25 @@ export function sealShotRecord(rec, keeper) {
   rec.sealed = true
   // Prima si decide se è parata (lo dice la portata del tuffo), poi la posa si adatta: se para, il guanto
   // arriva sulla palla; se non para, resta lontano. L'esito comanda la posa, mai il contrario.
-  const hit = keeper && rec.keeper ? keeper.evaluate({ aim: rec.aim, decision: rec.keeper, contactTime: rec.contactTime, punto: rec.contact }) : null
-  // Il portiere sta 0,55 m davanti alla linea: la parata avviene dove la palla gli passa più vicino alle mani,
-  // non sulla linea di porta. Due giri bastano a far convergere istante e posa (la posa dipende dall'istante).
-  rec.tRisoluzione = rec.contactTime
-  if (keeper && rec.keeper?.zone != null) {
-    if (hit) {
-      let t = rec.contactTime, punto = rec.contact.clone()
-      for (let i = 0; i < 3; i++) {
-        const naturale = keeper.guantoNaturale(rec.keeper, t, rec.contactTime)
-        if (!naturale) break
-        const vicino = passaggioPiuVicino(rec, naturale)
-        t = vicino.t; punto = vicino.p
-      }
-      rec.tRisoluzione = t
-      rec.puntoGuanto = punto.clone()
-      hit.guanto = keeper.pianificaTuffo(rec.keeper, punto, t, { prende: true })
-    } else {
-      keeper.pianificaTuffo(rec.keeper, posizioneA(rec, rec.contactTime * 0.92), rec.contactTime, { prende: false })
-    }
-  }
+  // ESITO DALLA GEOMETRIA REALE: si campiona il volo libero e si guarda se passa dentro la capsula
+  // guanto→spalla della direzione scelta, misurata sul modello, mentre il tuffo è almeno al 60 %.
+  // Nessuna zona astratta, nessuna probabilità: se il guanto non ci arriva, è gol.
+  rec.volo = voloLibero(rec, rec.contactTime)
+  const prova = rec.keeper?.zone != null
+    ? verificaParata({ zona: rec.keeper.zone, tDive: rec.keeper.reactionDelay ?? 0, volo: rec.volo, tMax: rec.contactTime })
+    : null
+  rec.distanzaGuanto = prova ? +prova.distanza.toFixed(4) : null
+  const hit = prova?.parata ? prova : null
+  // La parata avviene dove la palla passa dentro la capsula, non sulla linea di porta: il portiere sta
+  // 0,55 m davanti e nel tuffo si porta ancora più avanti.
+  rec.tRisoluzione = hit ? hit.t : rec.contactTime
+  if (hit) { rec.puntoGuanto = hit.punto.clone(); rec.guantoLato = hit.guanto; rec.guanto = hit.capsula.clone() }
   const x = rec.contact.x, y = rec.contact.y
   const dentroX = Math.abs(x) < GOAL.w / 2 - BALL_R, sottoTraversa = y < GOAL.h - BALL_R
   const suPalo = Math.abs(Math.abs(x) - GOAL.w / 2) <= BALL_R + GOAL.post && y < GOAL.h + GOAL.post
   const suTraversa = Math.abs(y - (GOAL.h + GOAL.post)) <= BALL_R + GOAL.post && Math.abs(x) < GOAL.w / 2 + GOAL.post
-  if (hit) { rec.outcome = 'save'; rec.catch = !!hit.catch; rec.guanto = hit.guanto.clone() }
+  // presa se la palla è lenta e passa in pieno nel guanto, altrimenti respinta
+  if (hit) { rec.outcome = 'save'; rec.catch = rec.aim.power < 0.8 && hit.distanza < RAGGIO_CAPSULA * 0.5 }
   else if (suPalo || suTraversa) rec.outcome = suTraversa ? 'crossbar' : 'post'
   else if (dentroX && sottoTraversa) { rec.outcome = 'goal'; rec.corner = Math.abs(x) > GOAL.w / 2 - 0.9 && y > GOAL.h - 0.7 }
   else rec.outcome = 'miss'

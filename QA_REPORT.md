@@ -495,6 +495,117 @@ rilasciato a 0,411 con finestra 0,41-0,59).
 (`rg-onb__arrow`), che parte dal pallone e mima lo swipe. Non è un residuo, è il suggerimento del tutorial, e
 sparisce dopo il primo tiro. Se era quello a darti fastidio, dimmelo e lo tolgo.
 
+## Esito dalla raggiungibilità geometrica (`tests/keeper-reach.test.js`)
+
+**Avevi ragione sulla causa.** Non era la posa: era la zona. Il vecchio `evaluate` confrontava il punto
+d'impatto con il centro di una zona astratta e una "portata" numerica (`reach`), e dichiarava parata palle che
+nessuna posa del portiere può toccare. La correzione della posa a runtime serviva solo a nascondere quel
+difetto, e quando non ce la faceva si vedeva il portiere levitare o sdraiarsi a 2,5 m dalla palla.
+
+### Quanto arriva davvero il portiere (misurato sul modello)
+
+`npm run reach` posiziona il portiere lungo il tuffo di ognuna delle sei direzioni e legge dal modello la
+posizione mondo di guanti, spalle, anche e piedi. Genera `src/rigori/data/reach.js`, che è l'unica sorgente
+della zona coperta: quei numeri non si scrivono a mano.
+
+| Direzione | Clip | |x| massimo | y massimo |
+|---|---|---|---|
+| alto sx | diveL | 2,29 m | 1,47 m |
+| alto centro | high | 0,44 m | 1,77 m |
+| alto dx | diveL specchiata | 2,29 m | 1,47 m |
+| basso sx | diveL | 2,29 m | 1,06 m |
+| basso centro | catch | 0,47 m | 0,59 m |
+| basso dx | diveL specchiata | 2,29 m | 1,06 m |
+
+Due cose emerse dalla misura, che spiegano i falsi positivi:
+
+1. **I guanti non superavano 1,05 m** in nessun tuffo laterale: gli angoli alti (centro zona a y = 1,75 m) erano
+   irraggiungibili *per costruzione*, e ogni "parata" là sopra era finta. Ho aggiunto un arco verticale **fisso**
+   di 0,45 m alle due direzioni alte laterali — è una proprietà della posa, identica a ogni tiro, non insegue
+   niente — e il reach sale a 1,47 m. Parte e finisce con i piedi a terra.
+2. **Nel tuffo i guanti stanno a z = 1,1–1,7 m**, cioè più di un metro *davanti* alla linea di porta. Confrontare
+   il punto d'impatto sulla linea con la posizione del portiere era sbagliato in partenza: ora si confronta la
+   traiettoria della palla con le capsule, nello spazio e nel tempo.
+
+### La regola nuova
+
+`sealShotRecord` campiona il volo libero a 1/240 s e cerca il passaggio più vicino alle capsule della direzione
+scelta. È parata **solo se** la distanza scende sotto 0,25 m **mentre il tuffo è almeno al 60 %**. Nient'altro:
+niente probabilità, niente bonus di difficoltà, niente correzione della posa. `pianificaTuffo`, l'offset della
+radice e il `setLean` d'inseguimento sono stati eliminati; un test lo verifica per grep.
+
+Le capsule sono sei per posa: guanto→spalla, spalla→anca e anca→piede per lato. Il portiere para anche col corpo,
+e quelle sono parti vere del modello, misurate come le altre.
+
+### Gate a 200 tiri
+
+| Direzione | Tiri | Parate | Distanza media | Distanza massima |
+|---|---|---|---|---|
+| alto sx | 31 | 0 | — | — |
+| alto centro | 35 | 1 | 0,206 m | 0,206 m |
+| alto dx | 34 | 2 | 0,075 m | 0,117 m |
+| basso sx | 33 | 0 | — | — |
+| basso centro | 35 | 1 | 0,205 m | 0,205 m |
+| basso dx | 32 | 0 | — | — |
+
+- **(a)** ogni parata ha contatto vero: massimo **0,206 m**, sotto i 0,25 m richiesti ✅
+- **(b)** nessun gol con la palla dentro la capsula a tuffo arrivato ✅ (un solo gol ha la palla passata vicino
+  al guanto *prima* che il tuffo fosse al 60 %: lì il portiere non c'era ancora, ed è giusto che sia gol)
+- il gate gira con `npm test` e `npm run test:gate`
+
+### Il punto che devi decidere: le parate sono il 3,4 %
+
+Con la geometria vera il portiere para **3 volte su 88 tiri nello specchio**. Ho provato le due leve che mi hai
+lasciato, e **non spostano niente**:
+
+| Leva | Parate |
+|---|---|
+| Durata del tuffo 0,45 s (iniziale) | 0,6 % |
+| Durata del tuffo **0,30 s** | 3,4 % |
+| Durata del tuffo 0,22 s | 2,3 % |
+| Durata del tuffo 0,16 s | 2,3 % |
+| Reazione al minimo (0,18–0,24 s anche in normale) | 2,3 % |
+
+Il motivo è che **il limite è spaziale, non temporale**: le capsule del portiere, corpo compreso, spazzano circa
+1,5 m² dei 17,9 m² dello specchio. Più veloce non copre più area; anzi oltre una certa velocità il guanto è già
+passato quando arriva la palla. Tenendo la durata a 0,30 s e la reazione documentata (0,22–0,30 s) si ottiene il
+massimo possibile, 3,4 %.
+
+Per arrivare al 20 % servirebbe che il portiere **coprisse più porta**, e le strade sono due, nessuna delle quali
+posso prendere da solo perché cambiano il gioco:
+
+1. **Clip di tuffo con allungo vero.** Le clip attuali sono tuffi corti: a braccio teso il guanto arriva a 2,29 m
+   dal centro e 1,47 m d'altezza, su una porta larga 7,32 e alta 2,44. Un tuffo da portiere vero coprirebbe il
+   doppio. Serve una clip nuova, non una riga di codice.
+2. **Raggio della capsula più grande di 0,25 m.** È la strada che mi hai vietato, e ha senso vietarla: 0,25 m è
+   già la somma dei raggi di palla (0,11) e guanto (0,12), cioè il contatto fisico.
+
+Nel frattempo il gioco è *corretto*: quando dice parata, la palla è davvero sul guanto.
+
+### La tabella corrisponde a quello che si vede
+
+Il rischio di un esito calcolato su una tabella è che la tabella e la posa disegnata divergano. Verificato sui
+quattro semi degli screenshot, ricalcolando la distanza punto-segmento sulle posizioni mondo della posa
+**effettivamente disegnata**:
+
+| Seme | Distanza dalla tabella | Distanza sulla posa disegnata | Segmento | Scarto |
+|---|---|---|---|---|
+| 1042 | 0,0498 m | 0,0492 m | guanto→spalla sx | −0,6 mm |
+| 1119 | 0,2302 m | 0,2180 m | guanto→spalla dx | −12,2 mm |
+| 1133 | 0,2180 m | 0,2121 m | spalla→anca dx | −5,9 mm |
+| 1203 | 0,2428 m | 0,2442 m | guanto→spalla sx | +1,4 mm |
+
+Lo scarto massimo è **1,2 cm**, ed è l'interpolazione lineare fra i 13 campioni della tabella. Il gate misura
+quindi la geometria che si vede, non un modello parallelo.
+
+Screenshot: `v5-parata-1.png` … `v5-parata-4.png` (0,05 · 0,23 · 0,22 · 0,24 m).
+
+**Da dire con onestà su questi screenshot**: a 0,24 m di distanza dalla capsula la palla *sfiora*, non è
+"visibilmente a contatto" come chiedevi. Con il raggio 0,25 m che mi hai dato è inevitabile: 0,25 m è il contatto
+fra palla (raggio 0,11) e guanto (0,12), ma sul braccio, che ha raggio 0,06, la stessa distanza lascia 8 cm d'aria.
+Se vuoi che si veda il contatto in tutti i casi, il raggio va a 0,18 m — e le parate scendono ancora. Inoltre la
+testa gigante dello stile "big head" copre spesso il punto di contatto quando la camera è vicina.
+
 ## Cose non verificabili qui (da fare sul telefono)
 
 - fps reali su Chrome Android e Safari iOS, e soglie di degradazione (45/55 fps)

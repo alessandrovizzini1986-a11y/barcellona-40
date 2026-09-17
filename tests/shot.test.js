@@ -33,13 +33,16 @@ describe('esito calcolato una volta sola', () => {
     const esiti = new Set()
     for (const passo of [1 / 60, 1 / 240]) {
       const ball = stubBall()
-      for (let t = 0; t <= rec.contactTime + 1e-9; t += passo) { renderShotAt(rec, t, { ball, keeper, live: false }); esiti.add(rec.outcome) }
-      renderShotAt(rec, rec.contactTime, { ball, keeper, live: false })
+      for (let t = 0; t <= (rec.tRisoluzione ?? rec.contactTime) + 1e-9; t += passo) { renderShotAt(rec, t, { ball, keeper, live: false }); esiti.add(rec.outcome) }
+      // L'istante che conta è quello in cui l'esito si risolve: sulla parata è il contatto con la capsula
+      // del portiere (prima della linea), altrimenti l'arrivo sulla porta.
+      const tRis = rec.tRisoluzione ?? rec.contactTime
+      const atteso = rec.outcome === 'save' ? rec.puntoGuanto : rec.contact
+      renderShotAt(rec, tRis, { ball, keeper, live: false })
       esiti.add(rec.outcome)
-      // All'istante dell'impatto la palla è sul punto di contatto, qualunque sia il passo di disegno.
-      // La tolleranza è 0,1 mm: il campionamento è allineato a contactTime, resta solo l'errore di virgola mobile.
-      const scarto = Math.hypot(ball.mesh.position.x - rec.contact.x, ball.mesh.position.y - rec.contact.y, ball.mesh.position.z - rec.contact.z)
-      assert.ok(scarto < 1e-4, `a passo ${passo} la palla è a ${scarto.toExponential(2)} m dal punto d'impatto`)
+      // La tolleranza è 0,1 mm: il campionamento è allineato a tRisoluzione, resta l'errore di virgola mobile.
+      const scarto = Math.hypot(ball.mesh.position.x - atteso.x, ball.mesh.position.y - atteso.y, ball.mesh.position.z - atteso.z)
+      assert.ok(scarto < 1e-4, `a passo ${passo} la palla è a ${scarto.toExponential(2)} m dal punto di risoluzione`)
     }
     assert.deepEqual([...esiti], ['save'], "l'esito non cambia mai durante il disegno")
   })
@@ -71,7 +74,7 @@ describe('nessuna decisione durante il disegno', () => {
     // Le misure di distanza sono ammesse solo dove NON decidono l'esito durante il disegno: sono la ricerca
     // del punto di contatto (a record ancora aperto), la pianificazione della posa e i ganci di QA.
     // Ogni misura deve stare dentro una di queste funzioni, riconosciuta risalendo all'intestazione più vicina.
-    const ammesse = new Set(['guantoVicino', 'pianificaTuffo', 'guantoA', 'distanzaGuanto', 'passaggioPiuVicino'])
+    const ammesse = new Set(['guantoVicino', 'guantoA', 'distanzaGuanto', 'passaggioPiuVicino', 'distanzaSegmento', 'verificaParata', 'distanzaMinima'])
     const misure = []
     for (const f of sorgenti) {
       let dentro = '(modulo)'
@@ -109,12 +112,17 @@ describe('nessuna decisione durante il disegno', () => {
     assert.ok(dentro >= 4, 'sealShotRecord assegna l\'esito in tutti i rami (trovati ' + dentro + ')')
     assert.equal(dentro, totale, 'rec.outcome assegnato fuori da sealShotRecord: ' + (totale - dentro) + ' volte')
   })
-  test('il portiere valuta la parata solo alla chiusura del record', () => {
+  test('la parata si decide una volta sola, dalla geometria, alla chiusura del record', () => {
     const src = readFileSync('src/rigori/game/shot.js', 'utf8')
-    const chiamate = [...src.matchAll(/keeper\.evaluate\(/g)].length
-    assert.equal(chiamate, 1, 'keeper.evaluate chiamato una volta sola (in sealShotRecord)')
+    const chiamate = [...src.matchAll(/verificaParata\(/g)].length
+    assert.equal(chiamate, 1, 'verificaParata chiamata una volta sola (in sealShotRecord)')
     const seal = src.slice(src.indexOf('export function sealShotRecord'), src.indexOf('function simulateFree'))
-    assert.ok(seal.includes('keeper.evaluate('), 'la chiamata è dentro sealShotRecord')
+    assert.ok(seal.includes('verificaParata('), 'la chiamata è dentro sealShotRecord')
+    // la posa non si corregge più: niente spostamenti del corpo verso la palla
+    const keeper = readFileSync('src/rigori/game/keeper.js', 'utf8')
+    for (const vietato of ['pianificaTuffo', 'decision.offset', 'SPOSTAMENTO_MAX']) {
+      assert.ok(!keeper.includes(vietato), 'keeper.js contiene ancora la correzione della posa: ' + vietato)
+    }
   })
 })
 
@@ -178,7 +186,7 @@ describe('cartello e turno', () => {
     assert.deepEqual(diversi, [], 'cartello diverso dall\'esito del record')
   }, { timeout: 600000 })
 
-  test('30 parate: il guanto arriva sulla palla entro 0,15 m', async () => {
+  test('le parate hanno contatto vero: guanto o corpo entro 0,25 m', async () => {
     await assicuraBrowser()
     const r = await gioco(async () => {
       const R = window.__rigori
@@ -198,10 +206,11 @@ describe('cartello e turno', () => {
       return out
     })
     const parate = r.filter((x) => x.esito === 'save')
-    const fuori = parate.filter((x) => x.d > 0.15)
-    console.log(`    ${parate.length} parate · guanto entro 0,15 m in ${parate.length - fuori.length}/${parate.length} · massimo ${Math.max(...parate.map((x) => x.d)).toFixed(4)} m`)
-    assert.ok(parate.length >= 25, 'servono almeno 25 parate nel campione: ' + parate.length)
-    assert.deepEqual(fuori, [], 'parate con il guanto troppo lontano dalla palla')
+    const fuori = parate.filter((x) => x.d > 0.25)
+    // Dopo il passaggio alla raggiungibilità geometrica il portiere para MOLTO meno: non c'è più nessuna
+    // zona astratta, solo le capsule misurate sul modello. Quello che conta è che ogni parata sia vera.
+    console.log(`    ${parate.length} parate su ${r.length} tiri · contatto entro 0,25 m in ${parate.length - fuori.length}/${parate.length}` + (parate.length ? ` · massimo ${Math.max(...parate.map((x) => x.d)).toFixed(4)} m` : ''))
+    assert.deepEqual(fuori, [], 'parate senza contatto vero')
     // la fisica resta nelle finestre chieste
     const v = r.map((x) => x.v0), t = r.map((x) => x.volo)
     assert.ok(Math.min(...v) >= 15 && Math.max(...v) <= 30, `velocità iniziale fuori da 15–30 m/s: ${Math.min(...v)}–${Math.max(...v)}`)

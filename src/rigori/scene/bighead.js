@@ -77,5 +77,6 @@ export function buildBigHead(model, { maglia, numero, glove = false, skin = SKIN
     _d.copy(_mq).slerp(_bq, 0.3)
     head.quaternion.copy(_bq.invert().multiply(_d))
   }
-  return { parts, head, mani, materials: M, setFace: (img) => ht.draw(img), update }
+  // `ossa` serve all'IK delle braccia del portiere, `piedi` ai controlli che i piedi restino a terra
+  return { parts, head, mani, ossa: B, piedi: { Left: B.LeftToeBase || B.LeftFoot, Right: B.RightToeBase || B.RightFoot }, materials: M, setFace: (img) => ht.draw(img), update }
 }

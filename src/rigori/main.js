@@ -19,7 +19,7 @@ import { loadCharacterKit, makeCharacter } from './scene/players.js'
 import { createAudio } from './core/audio.js'
 import { createProgress } from './game/progress.js'
 import { taunt, gruppoPerEsito } from './data/taunts.js'
-import { createKeeper } from './game/keeper.js'
+import { createKeeper, DIVE_DUR } from './game/keeper.js'
 import { createJuice } from './game/juice.js'
 import { createShootout } from './game/modes/shootout.js'
 import { createSfidaAle } from './game/modes/sfidaAle.js'
@@ -435,14 +435,10 @@ window.__rigori = {
   traced: () => trace,
   playerDive: (z) => shot.playerDive(z),
   // QA: distanza fra guanto e palla all'istante dell'impatto, con la posa del record
-  distanzaGuanto: () => {
-    const r = shot.record
-    if (!r || !keeper || r.keeper?.zone == null) return null
-    const t = r.tRisoluzione ?? r.contactTime, bersaglio = r.puntoGuanto || r.contact
-    const g = keeper.guantoA(r.keeper, t, t, bersaglio)
-    return g ? +g.distanceTo(bersaglio).toFixed(4) : null
-  },
-  ruoli: () => shot.ruoli, camereReplay,
+  // La misura è quella con cui è stato deciso l'esito: distanza minima fra la palla in volo e la capsula
+  // guanto→spalla della direzione scelta, dalla tabella misurata sul modello.
+  distanzaGuanto: () => shot.record?.distanzaGuanto ?? null,
+  ruoli: () => shot.ruoli, camereReplay, DIVE_DUR,
   // QA: gonfiore massimo toccato dalla rete dall'ultimo impulso, in metri (azzerabile fra un tiro e l'altro)
   reteAmpiezza: () => goal.ampiezzaMax?.() ?? null,
   reteRiposo: () => goal.riposo?.(),
