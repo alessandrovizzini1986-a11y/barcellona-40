@@ -382,6 +382,29 @@ percorrere 1,8 m fino al fondo della gabbia, e al rallentatore ci mette mezzo se
 subito dopo l'esito leggeva zero. Non era un difetto del tessuto (l'impulso e l'ampiezza erano giusti): era la
 misura a essere prematura. Lo script ora aspetta l'impulso e azzera la misura fra un tiro e l'altro.
 
+### Regressione completa
+
+`node --test tests/shot.test.js` — 10 test su 10, nessun fallimento (220 s in questo ambiente, con Chromium
+su SwiftShader).
+
+| Test | Esito |
+|---|---|
+| Nessun passo di disegno cambia l'esito (1/60 e 1/240) | ✅ |
+| 50 semi diversi: esito stabile a passo 1/60, 1/240 e 1/30 | ✅ |
+| Nessun `intersects*` in `src/rigori`, e ogni `distanceTo` dentro una funzione di pianificazione o di QA | ✅ |
+| `renderShotAt` senza `Math.random`, decisioni o assegnazioni di esito | ✅ |
+| `rec.outcome` assegnato solo dentro `sealShotRecord`; `keeper.evaluate` chiamato una volta sola | ✅ |
+| Il cartello dice sempre l'esito del record, dal vivo e nei due replay | ✅ 12/12 |
+| 30 parate: guanto entro 0,15 m | ✅ 30/30, massimo 0,0171 m |
+| I ruoli vengono dal turno, anche da portiere | ✅ |
+| Turno e HUD fermi durante esito e replay | ✅ ("Rigore 1 di 5 · Tu 1 – 0 Ale · Gol di Monne") |
+| Partita completa 5 rigori + sudden death (`rigori-partita.mjs`) | ✅ 12 tiri, 5–4 |
+
+Due controlli che fallivano erano sbagliati **loro**, non il gioco: il primo attribuiva la misura di distanza alla
+`const` o al `for` più vicini invece che alla funzione che la contiene (bocciava `passaggioPiuVicino`, che gira a
+record ancora aperto e non nel disegno); il secondo cercava ancora la vecchia dicitura "Hai segnato" nell'HUD del
+replay, che ora nomina chi ha tirato leggendolo dal record.
+
 ## Cose non verificabili qui (da fare sul telefono)
 
 - fps reali su Chrome Android e Safari iOS, e soglie di degradazione (45/55 fps)
