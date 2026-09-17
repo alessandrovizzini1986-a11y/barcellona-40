@@ -1522,7 +1522,7 @@ function renderWorkout(){
         const inCorso=q&&q.modo==='plank'&&q.exId===e.id;
         return '<div class="plankrow"><button class="btn pri" data-a="plank" data-i="'+idx+'" data-sec="'+(t.rip||30)+'">'+
           (inCorso?'■ Ferma il plank':'▶ Avvia serie '+(idx+1)+' · '+(t.rip||30)+'\"')+'</button>'+
-          '<span class="muted">Parte il countdown: a fine tempo vibra e segna la serie da sola.</span></div>';
+          '<span class="muted">Parte il countdown: a fine tempo vibra e segna la serie da sola.'+('wakeLock' in navigator?' Lo schermo resta acceso.':'')+'</span></div>';
       })():'')+
       (e.tipo!=='rt'?'<div class="tgline">Target settimana '+SETT+' · '+targetTxt(e)+'</div>':'')+
       (hasLast?'<div class="lastrow"><b>Ultima volta</b> · '+arr.map((_,i)=>{const u=ultimaSerie(e.id,i);return u&&u.kg!=null?(u.kg+'×'+(u.reps??'—')):'—';}).join('  ·  ')+(pr!=null?'   ·   <b>record</b> '+pr+' kg':'')+
@@ -1566,10 +1566,12 @@ function gestisciClick(e){
     if(aRT==='rtplay'){
       if(d.start){d.sec=(d.sec||0)+Math.floor((Date.now()-d.start)/1000);d.start=null;buzz(HAP.tap);}
       else{d.start=Date.now();if(!s.inizio)s.inizio=Date.now();buzz(HAP.serie);}
+      salva();schermoAcceso(!!d.start);
     }
     if(aRT==='rtplus'||aRT==='rtminus'){d.reps=Math.max(0,(d.reps||0)+(aRT==='rtplus'?5:-5));buzz(HAP.step);}
     if(aRT==='rtstop'){
       if(d.start){d.sec=(d.sec||0)+Math.floor((Date.now()-d.start)/1000);d.start=null;}
+      schermoAcceso(false);
       if(!d.reps)d.reps=targetRT(SETT,def);
       buzz(d.sec&&d.sec<def.rtLimite?HAP.pr:HAP.esercizio);
       if(d.sec&&d.sec<def.rtLimite)festa('⚡','SOTTO GLI 8 MINUTI',HAP.pr,40);
@@ -1861,16 +1863,35 @@ $('#focusHost').addEventListener('input',e=>gestisciInput(e));
 /* ========================= TIMER ========================= */
 /* usa l'istante di FINE, non un contatore: resta corretto anche se lo
    schermo si blocca o ricarichi la pagina */
+/* ---- SCHERMO ACCESO: durante il plank e il cronometro dei push up il
+   telefono sta a terra e nessuno lo tocca; senza questo si spegne a metà
+   serie. Wake Lock API: si chiede quando serve, si lascia quando no. ---- */
+let wl=null;
+async function schermoAcceso(on){
+  if(!('wakeLock' in navigator))return;
+  try{
+    if(on&&!wl){wl=await navigator.wakeLock.request('screen');wl.addEventListener('release',()=>{wl=null;});}
+    else if(!on&&wl){const w=wl;wl=null;await w.release();}
+  }catch(e){wl=null;}
+}
+function serveSchermo(){
+  let t=null;try{t=JSON.parse(localStorage.getItem(K_TIMER)||'null');}catch(e){}
+  if(t&&t.modo==='plank')return true;
+  const s=sessioneCorrente();
+  return !!(s&&s.rt&&Object.values(s.rt).some(d=>d&&d.start));
+}
 let timerInt=null;
 /* extra: {modo:'plank',exId,idx} → a fine countdown la serie si spunta da sola */
 function avviaTimer(sec,label,extra){
   localStorage.setItem(K_TIMER,JSON.stringify(Object.assign({fine:Date.now()+sec*1000,tot:sec,label},extra||{})));
   tickTimer();if(!timerInt)timerInt=setInterval(tickTimer,500);
+  schermoAcceso(serveSchermo());
 }
 function stopTimer(){
   localStorage.removeItem(K_TIMER);
   if(timerInt){clearInterval(timerInt);timerInt=null;}
   $('#timerbar').hidden=true;
+  schermoAcceso(serveSchermo());
 }
 function tickTimer(){
   let t=null;try{t=JSON.parse(localStorage.getItem(K_TIMER)||'null');}catch(e){}
@@ -2443,6 +2464,7 @@ document.addEventListener('visibilitychange',()=>{
     if(localStorage.getItem(K_TIMER)&&!timerInt)timerInt=setInterval(tickTimer,500);
     if(!RTint&&document.querySelector('[data-rt]'))RTint=setInterval(tickRT,1000);
     aggiornaContesto();tickTimer();tickRT();
+    if(!TRAINER)schermoAcceso(serveSchermo());
   }
 });
 tickTimer();if(localStorage.getItem(K_TIMER))timerInt=setInterval(tickTimer,500);
