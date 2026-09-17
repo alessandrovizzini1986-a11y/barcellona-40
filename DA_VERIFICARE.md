@@ -62,10 +62,21 @@ Regola del prompt: tutto ciò che non è specificato va marcato `// DA VERIFICAR
 - **Texture erba e cielo (ambientCG, Poly Haven)**: non integrate, procedurali per lo stesso motivo. L'API di Poly Haven risponde: si può aggiungere una texture CC0 in un secondo momento.
 - **Suoni di folla e fischio**: nei pacchetti Kenney CC0 scaricabili senza chiave API non esistono boato, "oooh", applausi né fischio dell'arbitro; Freesound richiede un account. Sono **sintetizzati a runtime** con la Web Audio API. Da sostituire con registrazioni CC0 se vuoi più realismo (Freesound, filtro CC0, poi riga in `CREDITS.md`).
 - **Effetti Kenney scelti**: mappatura file → suono in `CREDITS.md`. Le scelte (quale "impact" per il calcio, quale per il palo) sono mie, da ascoltare sul telefono.
-- **Musica**: `public/assets/rigori/audio/music/inno.mp3`, `tensione.mp3`, `vittoria.mp3` mancano. Finché mancano il gioco resta in silenzio, senza musica sintetica. Prompt suggeriti per Suno:
-  - Inno: `Epic football stadium anthem, triumphant brass and big drums, Mediterranean, uplifting, 120 bpm, crowd energy, cinematic, instrumental`
-  - Tensione: `Tense pre-penalty suspense loop, low sustained strings, heartbeat percussion, rising tension, seamless loop, minimal, instrumental`
-  - Vittoria: `Short 5-second victory sting, celebratory brass fanfare, joyful, punchy ending, instrumental`
+- **Musica: scelta fatta a misura, non a orecchio.** In questo ambiente non c'è modo di ascoltare: ho scelto
+  confrontando durata, BPM stimato, livello e pulizia della giunzione del loop (`scripts/audio/analizza.mjs`).
+  **Da ascoltare sul telefono prima della festa**, soprattutto il carattere di `tensione` (è un ambient cupo) e
+  i tre stinger. La catena è ripetibile: `node scripts/audio/musica.mjs`.
+
+  | Ruolo | Scelta | Misure | Scartati e perché |
+  |---|---|---|---|
+  | `inno` | *Cynic Battle Loop* (Ferk, CC0) | 92 s, BPM stimato 144, giunzione 0,4 dB | *Determined Pursuit* (108 s ma giunzione 5,4 dB e BPM 161); *Übermensch Main Menu* (35 s, sotto il minimo di 45, BPM 66); *Epic March Loop* (43,6 s e giunzione 13,3 dB, scalino udibile) |
+  | `tensione` | *Ancient caverns* (congusbongus, CC0) | BPM stimato 86 (nella finestra 70–100), giunzione 0,7 dB, ridotto a 28 s | *Darkest Hour* (96 s, giunzione 27,8 dB); *Deep Space Array* (104 s, giunzione 41 dB, 8 s di silenzio in coda); *Post Apocalyptic Wastelands* (324 s, giunzione 66 dB); *Dark Place* (giunzione ottima ma BPM 144, fuori finestra); *Searching* (silenzio a entrambi i capi, BPM 172) |
+  | stinger | Kenney *Music Jingles* | 1,3–1,6 s | **Il pack non ha nulla di 3–6 s come chiesto: il jingle più lungo è 1,76 s.** Gli stinger sono quindi brevi; se servono più lunghi vanno presi altrove |
+
+  Il BPM è stimato con un'autocorrelazione grezza dell'energia: può sbagliare di un fattore 2. `inno` a 144
+  stimati è appena sopra la finestra 100–140 chiesta, ma è l'unico candidato con giunzione quasi perfetta.
+- **Formato**: MP3 (Safari su iOS non riproduce Ogg Vorbis in modo affidabile). Il silenzio di codifica del
+  MP3 è saltato con `loopStart`/`loopEnd` calcolati dal buffer decodificato, così il loop non ha buchi.
 - **Telecronaca** (opzionale): file in `public/assets/rigori/audio/vo/`; finché mancano, solo testo a schermo. ElevenLabs con voce italiana, se vuoi.
 - **Stile big head** (rifacimento visivo richiesto in corso d'opera): raggio testa 0,32 m, pelle #C8956D, strisce 512×512, fog `FogExp2(0x0E1116, 0.018)`, bloom 0,4/0,6/0,85, vignetta 35 %, ACES 1,1 sono le indicazioni date; **miei** e da verificare sul telefono: scala del corpo 0,7 (per avere la testa ≈ 40 % dell'altezza), spessori delle capsule, 6 400 spettatori e 1 800 telefoni (costo CPU/GPU su telefoni vecchi: la degradazione automatica abbassa il pubblico al 50 %), intensità dei fari (3 800 cd) e degli accenti (140 cd), auto-illuminazione dei volti (0,28) e schiarimento automatico delle foto scure.
 - **Audio, volumi e sintesi**: i volumi relativi (effetti 0,9, musica 0,7, ducking a 0,28) e i suoni sintetizzati (fischio a 2 650 Hz, boato, "oooh", applausi) sono scelti a orecchio in un ambiente senza altoparlanti: da provare sul telefono. Il fischio parte a ogni cambio di turno dentro una modalità.

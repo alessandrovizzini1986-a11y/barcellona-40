@@ -2,12 +2,14 @@
 // durante l'esito. Effetti da file (Kenney CC0, vedi CREDITS.md), fischio/boato/oooh/applausi sintetizzati.
 // Musica: tre file forniti dall'utente; finché mancano, silenzio (nessun sostituto sintetico). DA VERIFICARE: volumi a orecchio.
 const SFX = { kick: 'kick.ogg', kick2: 'kick2.ogg', post: 'post.ogg', crossbar: 'crossbar.ogg', net: 'net.ogg', glove: 'glove.ogg', dive: 'dive.ogg', step: 'step.ogg', click: 'ui_click.ogg', confirm: 'ui_confirm.ogg', back: 'ui_back.ogg', error: 'ui_error.ogg', unlock: 'unlock.ogg', levelup: 'levelup.ogg' }
-const MUSIC = { inno: 'inno.mp3', tensione: 'tensione.mp3', vittoria: 'vittoria.mp3' }
+// Loop di sottofondo e stinger brevi: gli stinger suonano SOPRA il loop, che intanto viene abbassato.
+const MUSIC = { inno: 'inno.mp3', tensione: 'tensione.mp3' }
+const STINGER = { gol: 'gol.mp3', parata: 'parata.mp3', vittoria: 'vittoria.mp3' }
 const VO = { goal: 'gol.mp3', save: 'parata.mp3', miss: 'fuori.mp3', post: 'palo.mp3', crossbar: 'traversa.mp3', corner: 'incrocio.mp3' }
 const MAX_VOICES = 8
 export function createAudio(ASSETS, settings) {
-  let ctx = null, master = null, sfxGain = null, musicGain = null, voGain = null
-  const buffers = new Map(), missing = new Set(), voices = []
+  let ctx = null, master = null, sfxGain = null, musicGain = null, voGain = null, stingGain = null
+  const buffers = new Map(), missing = new Set(), voices = [], stingati = []
   let music = null, musicName = null, ducked = false, unlocked = false
   const AC = window.AudioContext || window.webkitAudioContext
   const ensure = () => {
@@ -17,6 +19,7 @@ export function createAudio(ASSETS, settings) {
     sfxGain = ctx.createGain(); sfxGain.connect(master)
     musicGain = ctx.createGain(); musicGain.connect(master)
     voGain = ctx.createGain(); voGain.connect(master)
+    stingGain = ctx.createGain(); stingGain.connect(master)
     apply()
     return true
   }
@@ -24,6 +27,7 @@ export function createAudio(ASSETS, settings) {
     if (!ctx) return
     sfxGain.gain.value = settings.audio === false ? 0 : 0.9
     voGain.gain.value = settings.audio === false ? 0 : 1
+    stingGain.gain.value = settings.music === false ? 0 : 0.9
     musicGain.gain.setTargetAtTime(settings.music === false ? 0 : (ducked ? 0.28 : 0.7), ctx.currentTime, 0.08)
   }
   // Sblocco: da chiamare dentro un gesto utente (iOS). Ritorna una promessa che si risolve quando il contesto gira.
@@ -93,8 +97,26 @@ export function createAudio(ASSETS, settings) {
     stopMusic(); musicName = name // prenotazione: se nel frattempo viene chiesta un'altra traccia, questa non parte
     const b = await load(ASSETS + 'audio/music/' + MUSIC[name]); if (!b) { if (musicName === name) musicName = null; if (!missing.has('log:' + name)) { missing.add('log:' + name); console.info(`[rigori] musica "${name}" assente: silenzio (DA VERIFICARE)`) } return }
     if (musicName !== name) return
-    const s = ctx.createBufferSource(); s.buffer = b; s.loop = loop; s.connect(musicGain); s.start(); music = s; musicName = name
+    const s = ctx.createBufferSource(); s.buffer = b; s.loop = loop; s.connect(musicGain)
+    // Un MP3 porta silenzio di codifica in testa e in coda: senza saltarlo il loop avrebbe un buco a ogni giro.
+    if (loop) { const { inizio, fine } = bordi(b); s.loopStart = inizio; s.loopEnd = fine; s.start(0, inizio) } else s.start()
+    music = s; musicName = name
     s.onended = () => { if (music === s) { music = null; musicName = null } }
+  }
+  // Primo e ultimo campione udibile: serve a impostare loopStart/loopEnd
+  const bordi = (buffer) => {
+    const d = buffer.getChannelData(0), n = d.length, soglia = 0.0015
+    let a = 0, b = n - 1
+    while (a < n - 1 && Math.abs(d[a]) < soglia) a++
+    while (b > a + 1 && Math.abs(d[b]) < soglia) b--
+    return { inizio: a / buffer.sampleRate, fine: (b + 1) / buffer.sampleRate }
+  }
+  // Stinger: sopra la musica, su un canale proprio. Non interrompe il loop, che resta abbassato dal ducking.
+  const sting = async (name) => {
+    if (!ctx || !unlocked || settings.music === false || !STINGER[name]) return
+    const b = await load(ASSETS + 'audio/music/' + STINGER[name])
+    if (!b) { if (!missing.has('log:' + name)) { missing.add('log:' + name); console.info(`[rigori] stinger "${name}" assente`) } return }
+    const s = ctx.createBufferSource(); s.buffer = b; s.connect(stingGain); s.start(); stingati.push({ name, t: ctx.currentTime })
   }
   const stopMusic = () => { if (music) { try { music.stop() } catch { /* già ferma */ } } music = null; musicName = null }
   const duck = (on) => { ducked = !!on; apply() }
@@ -105,5 +127,5 @@ export function createAudio(ASSETS, settings) {
     const s = ctx.createBufferSource(); s.buffer = b; s.connect(voGain); s.start()
   }
   const vibrate = (pattern) => { if (settings.vibration !== false && navigator.vibrate) { try { navigator.vibrate(pattern) } catch { /* non supportato */ } } }
-  return { unlock, play, whistle, crowd, playMusic, stopMusic, duck, vo, vibrate, apply, get unlocked() { return unlocked }, get ducked() { return ducked }, get context() { return ctx } }
+  return { unlock, play, whistle, crowd, playMusic, stopMusic, sting, duck, vo, vibrate, apply, get unlocked() { return unlocked }, get ducked() { return ducked }, get musicName() { return musicName }, get stingati() { return stingati }, get musicGain() { return musicGain?.gain.value ?? null }, get context() { return ctx } }
 }

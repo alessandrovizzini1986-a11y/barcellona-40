@@ -20,7 +20,20 @@ Fonte: Kenney, https://kenney.nl · Licenza: Creative Commons Zero (CC0) 1.0, ht
 Fischio dell'arbitro, boato del gol, "oooh" della parata e applausi sono sintetizzati a runtime con la Web Audio API (`src/rigori/core/audio.js`, funzioni `whistle` e `crowd`): nei pacchetti CC0 scaricabili senza chiave API non c'erano suoni di folla, e Freesound richiede un account. Vedi `DA_VERIFICARE.md` per sostituirli con registrazioni CC0.
 
 ## Audio · musica
-`audio/music/inno.mp3`, `tensione.mp3`, `vittoria.mp3`: da fornire (vedi `DA_VERIFICARE.md`). Finché mancano, silenzio.
+Tutte le tracce sono **CC0** (pubblico dominio), rielaborate con `scripts/audio/musica.mjs` (taglio, anello,
+normalizzazione a -14 LUFS, MP3). L'attribuzione non è dovuta per CC0 ma è doverosa.
+
+| File del gioco | Opera originale | Autore | Licenza | Origine |
+|---|---|---|---|---|
+| `audio/music/inno.mp3` | *Cynic Battle Loop* | Ferk | CC0 | https://opengameart.org/content/cynic-battle-loop |
+| `audio/music/tensione.mp3` | *Ancient caverns (horror ambient loop)* | congusbongus | CC0 | https://opengameart.org/content/ancient-caverns-horror-ambient-loop |
+| `audio/music/gol.mp3` | *Music Jingles* → `jingles_STEEL07.ogg` | Kenney Vleugels | CC0 | https://kenney.nl/assets/music-jingles |
+| `audio/music/parata.mp3` | *Music Jingles* → `jingles_STEEL03.ogg` | Kenney Vleugels | CC0 | https://kenney.nl/assets/music-jingles |
+| `audio/music/vittoria.mp3` | *Music Jingles* → `jingles_PIZZI07.ogg` | Kenney Vleugels | CC0 | https://kenney.nl/assets/music-jingles |
+
+Interventi: `inno` è il loop originale normalizzato; `tensione` è un anello di 28 s ricavato dal tratto
+10–38 s con dissolvenza incrociata di 1,5 s sulla propria testa, così il giro si richiude senza scalino;
+gli stinger hanno il silenzio di coda tagliato. Tutto a -14 LUFS, MP3 96 kbps (loop) e 128 kbps (stinger).
 
 ## Modelli 3D
 - `models/character.glb` (manichino riggato, **invisibile**: serve solo da scheletro per le animazioni; il personaggio visibile è costruito a runtime con primitive Three.js attaccate alle ossa, stile "big head", vedi `src/rigori/scene/bighead.js`), `models/kicker_kick_full.glb` e tutte le clip `keeper_*.glb`, `kicker_*.glb`: provengono dal gioco precedente di questo stesso progetto (`_legacy/assets/keeper.glb`, `kicker.glb`, `gk_*.glb`, `keeper_*.glb`, `kicker_*.glb`), ricompressi con Draco (`@gltf-transform/cli`). Le clip di animazione portano il nome `mixamo.com`: sono animazioni Mixamo (Adobe). Le condizioni d'uso correnti di Mixamo vanno verificate e annotate qui: vedi `DA_VERIFICARE.md`.

@@ -196,9 +196,9 @@ function onShotEvent(e) {
   if (e.type === 'kick') { clearEsitoTimers(); audio.play(e.aim.power > 0.95 ? 'kick2' : 'kick', { volume: 0.6 + Math.min(0.4, e.aim.power * 0.4) }); hint.hidden = true; replayPending = true; kicker?.onKick(); rig.followLook(ball.mesh) }
   if (e.type === 'result') kicker?.react(e.result)
   if (e.type === 'result') { esitoLock = true; juice.setSlow(false); keeper?.react(e.result); const rec = shot.record; showEsito(game.ui, { outcome: rec.outcome, corner: rec.corner, shooterId: rec.shooter.id, taunt: game.tauntFor(rec) }); audio.duck(true); audio.vo(rec.corner ? 'corner' : rec.outcome) }
-  if (e.type === 'goal') { crowd.react('ola'); shake(0.10, 0.35); audio.play('net', { volume: .8 }); audio.crowd('roar'); setTimeout(() => audio.crowd('clap'), 700); audio.vibrate([30, 40, 70]) }
+  if (e.type === 'goal') { crowd.react('ola'); shake(0.10, 0.35); audio.sting('gol'); audio.play('net', { volume: .8 }); audio.crowd('roar'); setTimeout(() => audio.crowd('clap'), 700); audio.vibrate([30, 40, 70]) }
   if (e.type === 'post' || e.type === 'crossbar') { shake(0.06, 0.2); juice.hitStop(60); audio.play(e.type, { volume: .9 }); audio.vibrate(50) }
-  if (e.type === 'save') { juice.hitStop(60); crowd.react('oooh'); audio.play('glove', { volume: .9 }); audio.crowd('oooh'); audio.vibrate(40) }
+  if (e.type === 'save') { juice.hitStop(60); crowd.react('oooh'); audio.sting('parata'); audio.play('glove', { volume: .9 }); audio.crowd('oooh'); audio.vibrate(40) }
   if (e.type === 'miss') { crowd.react('oooh'); audio.crowd('oooh') }
   if (e.type === 'settled') afterSettled()
 }
@@ -321,7 +321,8 @@ async function runFlow() {
       menuBtn.hidden = true
       if (!e) { mode = null; clearEsitoTimers(); esitoLock = false; ctx.keeperPassive(false); ctx.forceKeeperZone(null); ctx.showTarget(null); ctx.role('idle'); shot.reset(); keeper?.reset(); kicker?.reset(); hideEsito(game.ui); rig.goTo('dietroTiratore', { instant: true }); break }
       flow = 'risultato'
-      if (e.summary?.winner === 'me' || (e.id !== 'shootout' && e.id !== 'boss')) audio.playMusic('vittoria', { loop: false }); else audio.playMusic('inno')
+      audio.playMusic('inno')
+      if (e.summary?.winner === 'me' || (e.id !== 'shootout' && e.id !== 'boss')) audio.sting('vittoria')
       const xpNow = game.progress?.xp?.() ?? 0
       const lv = game.progress?.level?.() || { n: 1, title: 'Esordiente' }
       const r = await risultato(game.ui, { title: titleFor(e), lines: linesFor(e), xpGained: xpNow - xpBefore, xp: xpNow, level: lv, next: game.progress?.next?.() || null, achievements: game.progress?.takeFresh?.() || [], shareText: shareFor(e) })
