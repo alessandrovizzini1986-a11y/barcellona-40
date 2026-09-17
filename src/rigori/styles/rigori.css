@@ -165,3 +165,7 @@ button.rg-unlock{ cursor:pointer; }
 .rg-tips--avv li{ color:var(--ink-2); }
 .rg-player__actions{ margin-top:var(--space-2); }
 .rg-btn--giallo{ min-height:56px; flex:2 1 60%; background:var(--giallo); color:#0E1116; border-color:transparent; font-family:var(--font-display); font-size:var(--fs-2); letter-spacing:.02em; }
+
+/* SALTA: sopra ogni altro elemento, in basso a destra, durante esito e replay */
+.rg-skip{ position:absolute; right:12px; bottom:calc(14px + var(--safe-b)); z-index:40; min-height:48px; min-width:48px; padding:0 18px; opacity:.85; background:color-mix(in srgb, var(--bg) 72%, transparent); font-family:var(--font-display); letter-spacing:.06em; }
+.rg-skip[hidden]{ display:none; }

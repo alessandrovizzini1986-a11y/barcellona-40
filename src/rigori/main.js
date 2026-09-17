@@ -88,7 +88,7 @@ const perf = createPerf({
 applyQuality()
 let timingEnabled = true               // opzione (fase 9); ON di default
 // Opzione "riduci flash e shake" (fase 9) + prefers-reduced-motion: niente shake né particelle intense
-const settings = Object.assign({ audio: true, music: true, vibration: true, reduceFx: reducedMotion, timing: true, quality: 'auto' }, save.get('settings', {}))
+const settings = Object.assign({ audio: true, music: true, vibration: true, reduceFx: reducedMotion, timing: true, quality: 'auto', skipReplay: save.get('skipReplay', false) }, save.get('settings', {}))
 const qOverride = new URLSearchParams(location.search).get('q') // QA: ?q=alta|bassa|auto, solo per questa visita (non viene salvato)
 const audio = createAudio(ASSETS, settings)
 function applySettings() {
@@ -100,6 +100,7 @@ function applySettings() {
   else if (q === 'alta') { quality.bloom = !reducedMotion; quality.shadows = true; quality.particles = true; quality.crowd = 1 }
   applyQuality()
   save.set('settings', settings)
+  save.set('skipReplay', !!settings.skipReplay) // chiave sua, come chiesto: b40:v1:rigori:skipReplay
 }
 applySettings()
 
@@ -174,7 +175,7 @@ const chiudiTempismo = (perfetto) => {
   tTempismo = setTimeout(() => { timingEl.hidden = true; timingEl.classList.remove('rg-timing--ok') }, 650)
 }
 // Tiratore: solo a palla ferma. Portiere: anche durante rincorsa e volo (deve reagire al tell), non a esito già deciso
-const input = createInput(stage, { camera: rig.camera, getBallWorld: () => ball.mesh.position, size: R.size, enabled: () => window.__rigori.ready && (input.mode === 'keeper' ? (shot.state === 'idle' || shot.state === 'windup' || shot.state === 'flying') && !shot.resolved : !shot.busy) })
+const input = createInput(stage, { camera: rig.camera, getBallWorld: () => ball.mesh.position, size: R.size, enabled: () => window.__rigori.ready && !esitoLock && (input.mode === 'keeper' ? (shot.state === 'idle' || shot.state === 'windup' || shot.state === 'flying') && !shot.resolved : !shot.busy) })
 input.on('start', () => { if (timingEnabled && input.mode === 'shooter') { timing.start(); timingEl.hidden = false } hint.hidden = true })
 input.on('move', (g) => { if (g.ok && input.mode === 'shooter') ghost.show(aimFromGesture(g, R.size)) })
 input.on('end', (g) => {
@@ -199,6 +200,9 @@ let replayPending = false
 // Sequenza esito + replay: finché non è finita nessuno fa avanzare il turno. I timer sono tenuti per nome
 // così un nuovo tiro non può lasciarne indietro uno che farebbe partire un secondo replay.
 let esitoLock = false, tReplay = null, tFinish = null, replayCamUnlock = false
+// sequenzaConsumata: la sequenza esito → replay1 → replay2 → turno successivo si chiude UNA volta sola.
+// Serve a ignorare i callback che arrivano dopo un salto, così il turno non avanza due volte.
+let sequenzaConsumata = false, esitoDa = 0
 const clearEsitoTimers = () => { clearTimeout(tReplay); clearTimeout(tFinish); tReplay = tFinish = null }
 // QA: traccia della posa a ogni frame disegnato del tiro (live e replay usano la stessa funzione di disegno)
 let trace = null
@@ -207,7 +211,7 @@ function onShotEvent(e) {
   if (e.type === 'windup') { hint.hidden = true; audio.play('step', { volume: .5 }) }
   if (e.type === 'kick') { clearEsitoTimers(); audio.play(e.aim.power > 0.95 ? 'kick2' : 'kick', { volume: 0.6 + Math.min(0.4, e.aim.power * 0.4) }); hint.hidden = true; replayPending = true; kicker?.onKick(); rig.followLook(ball.mesh) }
   if (e.type === 'result') kicker?.react(e.result)
-  if (e.type === 'result') { esitoLock = true; keeper?.react(e.result); const rec = shot.record; showEsito(game.ui, { outcome: rec.outcome, corner: rec.corner, shooterId: rec.ruoli.tiratore.id, taunt: game.tauntFor(rec) }); audio.duck(true); audio.vo(rec.corner ? 'corner' : rec.outcome) }
+  if (e.type === 'result') { esitoLock = true; sequenzaConsumata = false; esitoDa = performance.now(); skipBtn.hidden = false; keeper?.react(e.result); const rec = shot.record; showEsito(game.ui, { outcome: rec.outcome, corner: rec.corner, shooterId: rec.ruoli.tiratore.id, taunt: game.tauntFor(rec) }); audio.duck(true); audio.vo(rec.corner ? 'corner' : rec.outcome) }
   if (e.type === 'goal') { crowd.react('ola'); shake(0.10, 0.35); audio.sting('gol'); audio.play('net', { volume: .8 }); audio.crowd('roar'); setTimeout(() => audio.crowd('clap'), 700); audio.vibrate([30, 40, 70]) }
   if (e.type === 'post' || e.type === 'crossbar') { shake(0.06, 0.2); juice.hitStop(60); audio.play(e.type, { volume: .9 }); audio.vibrate(50) }
   if (e.type === 'save') { juice.hitStop(60); crowd.react('oooh'); audio.sting('parata'); audio.play('glove', { volume: .9 }); audio.crowd('oooh'); audio.vibrate(40) }
@@ -229,10 +233,30 @@ export function camereReplay(rec) {
     { pos: [lato * 3.0, 1.55, 11.5], look: [mx, my, 0.6], fov: 58, segui: true }
   ]
 }
+// Chiusura della sequenza esito → replay → turno successivo. Passa UNA volta sola: i callback dei replay che
+// arrivano dopo un salto trovano sequenzaConsumata a true e non fanno nulla. Saltare non cambia nulla del
+// risultato, perché punteggio, XP, traguardi e sfottò sono già stati applicati all'evento 'result'.
+function chiudiSequenza() {
+  if (sequenzaConsumata) return
+  sequenzaConsumata = true
+  clearEsitoTimers(); juice.stopReplay()
+  skipBtn.hidden = true
+  audio.duck(false); hideEsito(game.ui); shot.reset(); keeper?.reset(); kicker?.reset()
+  rig.followLook(null); rig.goTo('dietroTiratore'); hint.hidden = false; esitoLock = false
+  listeners.forEach((f) => f({ type: 'replayEnd' }))
+}
+// Salto: il cartello deve essere stato a schermo almeno RITARDO_SALTO, così non lo si salta col dito del tiro.
+function saltaSequenza() {
+  if (!esitoLock || sequenzaConsumata || game.holdShot) return false
+  if (performance.now() - esitoDa < RITARDO_SALTO) return false
+  audio.stopSting(150)
+  chiudiSequenza()
+  return true
+}
 function afterSettled() {
   if (game.holdShot) { esitoLock = false; return } // QA: tiene il record vivo per i test
-  const finish = () => { audio.duck(false); hideEsito(game.ui); shot.reset(); keeper?.reset(); kicker?.reset(); rig.followLook(null); rig.goTo('dietroTiratore'); hint.hidden = false; esitoLock = false; listeners.forEach((f) => f({ type: 'replayEnd' })) }
-  if (!replayPending) { finish(); return }
+  const finish = chiudiSequenza
+  if (!replayPending || settings.skipReplay) { tFinish = setTimeout(finish, settings.skipReplay ? 900 : 0); return }
   replayPending = false
   const rec = shot.record
   const from = Math.max(0, rec.contactTime - 0.55), to = Math.min(rec.duration, rec.contactTime + 0.5)
@@ -331,6 +355,16 @@ systems.push({ update(dt) {
 document.getElementById('rg-ui').addEventListener('click', (e) => { const b = e.target.closest('button, a'); if (!b) return; audio.play(b.classList.contains('rg-btn--primary') ? 'confirm' : b.dataset.value === '__close' || b.dataset.back != null ? 'back' : 'click', { volume: .5 }) })
 const menuBtn = document.createElement('button'); menuBtn.className = 'rg-btn rg-btn--ghost rg-menubtn'; menuBtn.setAttribute('aria-label', 'Menu'); menuBtn.textContent = '≡'; menuBtn.hidden = true
 document.getElementById('rg-ui').appendChild(menuBtn)
+// SALTA: durante esito e replay, in basso a destra e sopra tutto. Anche un tocco in qualunque punto salta,
+// ma solo dopo che il cartello è stato a schermo almeno 400 ms: altrimenti il dito che ha appena tirato
+// salterebbe l'esito senza che si sia potuto leggere.
+const RITARDO_SALTO = 400
+const skipBtn = document.createElement('button'); skipBtn.className = 'rg-btn rg-btn--ghost rg-skip'; skipBtn.textContent = 'SALTA ▸'
+skipBtn.setAttribute('aria-label', 'Salta il replay'); skipBtn.hidden = true
+document.getElementById('rg-ui').appendChild(skipBtn)
+skipBtn.addEventListener('click', (e) => { e.stopPropagation(); saltaSequenza() })
+document.getElementById('rg-ui').addEventListener('pointerdown', (e) => { if (esitoLock && !e.target.closest('.rg-overlay')) saltaSequenza() })
+stage.addEventListener('pointerdown', () => { if (esitoLock) saltaSequenza() }, true)
 let flow = 'boot', quitRequested = false
 const openOptions = () => opzioni(game.ui, settings, { onChange: applySettings, onReset: () => { save.reset(); toast(game.ui, 'Progressi azzerati'); setTimeout(() => location.reload(), 700) } })
 async function runFlow() {
@@ -439,6 +473,9 @@ window.__rigori = {
   // guanto→spalla della direzione scelta, dalla tabella misurata sul modello.
   distanzaGuanto: () => shot.record?.distanzaGuanto ?? null,
   ruoli: () => shot.ruoli, camereReplay, DIVE_DUR,
+  // QA: salta la sequenza esito+replay come farebbe un tocco. Torna false se il salto non è accettato
+  // (sequenza già chiusa, oppure il cartello è a schermo da meno di 400 ms).
+  salta: () => saltaSequenza(), get sequenzaConsumata() { return sequenzaConsumata }, get ritardoSalto() { return RITARDO_SALTO },
   // QA: gonfiore massimo toccato dalla rete dall'ultimo impulso, in metri (azzerabile fra un tiro e l'altro)
   reteAmpiezza: () => goal.ampiezzaMax?.() ?? null,
   reteRiposo: () => goal.riposo?.(),

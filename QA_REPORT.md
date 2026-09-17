@@ -606,6 +606,34 @@ fra palla (raggio 0,11) e guanto (0,12), ma sul braccio, che ha raggio 0,06, la 
 Se vuoi che si veda il contatto in tutti i casi, il raggio va a 0,18 m — e le parate scendono ancora. Inoltre la
 testa gigante dello stile "big head" copre spesso il punto di contatto quando la camera è vicina.
 
+## Replay saltabile
+
+- Pulsante **SALTA ▸** in basso a destra (48 px, ghost, opacità 0,85, `z-index` sopra tutto), visibile da quando
+  compare il cartello fino alla fine del replay.
+- **Un tocco in qualunque punto** salta lo stesso. L'input di gioco è spento per tutta la sequenza
+  (`enabled: () => ... && !esitoLock`), così il dito che salta non fa partire il tiro dopo.
+- Il salto è accettato solo dopo **400 ms** dal cartello: serve a non saltare l'esito col dito che ha appena tirato.
+- Il salto annulla i timer della catena esito → replay 1 → replay 2 → turno, ferma il replay in corso e taglia gli
+  stinger con dissolvenza di 150 ms (`audio.stopSting`). Un flag `sequenzaConsumata` fa passare la chiusura una
+  volta sola: i callback dei replay che arrivano dopo non fanno nulla.
+- Opzione **"Salta replay automaticamente"**, spenta di default, ricordata in `b40:v1:rigori:skipReplay`.
+
+**Test** (`node scripts/qa/rigori-salto.mjs`): due partite con lo stesso `Math.random` seminato, una vista per
+intero e una saltata al primo fotogramma utile. 8 tiri, 8 salti:
+
+| Confronto | Esito |
+|---|---|
+| Turni, ruoli ed esiti | ✅ identici |
+| Punteggio finale | ✅ identico |
+| XP | ✅ identici |
+| Traguardi | ✅ identici |
+| Nessun turno saltato o doppio | ✅ (8 tiri in tutte e due) |
+
+Una differenza c'è, e va detta: **il seme dei tiri di Ale cambia**. I semi escono da `Math.random`, che il
+replay consuma anche per le particelle; saltando, i tiri successivi della CPU partono da un seme diverso. Non
+fa parte del risultato — punteggio, XP e traguardi restano identici, e nel campione anche tutti gli esiti — ma
+significa che una partita saltata non è bit-a-bit la stessa di una vista per intero.
+
 ## Cose non verificabili qui (da fare sul telefono)
 
 - fps reali su Chrome Android e Safari iOS, e soglie di degradazione (45/55 fps)

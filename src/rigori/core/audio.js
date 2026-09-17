@@ -9,7 +9,7 @@ const VO = { goal: 'gol.mp3', save: 'parata.mp3', miss: 'fuori.mp3', post: 'palo
 const MAX_VOICES = 8
 export function createAudio(ASSETS, settings) {
   let ctx = null, master = null, sfxGain = null, musicGain = null, voGain = null, stingGain = null
-  const buffers = new Map(), missing = new Set(), voices = [], stingati = []
+  const buffers = new Map(), missing = new Set(), voices = [], stingati = [], vivi = []
   let music = null, musicName = null, ducked = false, unlocked = false
   const AC = window.AudioContext || window.webkitAudioContext
   const ensure = () => {
@@ -117,6 +117,19 @@ export function createAudio(ASSETS, settings) {
     const b = await load(ASSETS + 'audio/music/' + STINGER[name])
     if (!b) { if (!missing.has('log:' + name)) { missing.add('log:' + name); console.info(`[rigori] stinger "${name}" assente`) } return }
     const s = ctx.createBufferSource(); s.buffer = b; s.connect(stingGain); s.start(); stingati.push({ name, t: ctx.currentTime })
+    vivi.push(s); s.onended = () => { const i = vivi.indexOf(s); if (i >= 0) vivi.splice(i, 1) }
+  }
+  // Taglia gli stinger in corso con una dissolvenza breve: serve quando si salta il replay, perché il
+  // suono del gol non deve continuare mentre si è già al tiro dopo.
+  const stopSting = (ms = 150) => {
+    if (!ctx || !vivi.length) return
+    const fine = ctx.currentTime + ms / 1000
+    stingGain.gain.cancelScheduledValues(ctx.currentTime)
+    stingGain.gain.setValueAtTime(stingGain.gain.value, ctx.currentTime)
+    stingGain.gain.linearRampToValueAtTime(0.0001, fine)
+    for (const s of vivi.slice()) { try { s.stop(fine) } catch { /* già finita */ } }
+    vivi.length = 0
+    setTimeout(apply, ms + 20) // riporta il canale al volume normale per il prossimo stinger
   }
   const stopMusic = () => { if (music) { try { music.stop() } catch { /* già ferma */ } } music = null; musicName = null }
   const duck = (on) => { ducked = !!on; apply() }
@@ -127,5 +140,5 @@ export function createAudio(ASSETS, settings) {
     const s = ctx.createBufferSource(); s.buffer = b; s.connect(voGain); s.start()
   }
   const vibrate = (pattern) => { if (settings.vibration !== false && navigator.vibrate) { try { navigator.vibrate(pattern) } catch { /* non supportato */ } } }
-  return { unlock, play, whistle, crowd, playMusic, stopMusic, sting, duck, vo, vibrate, apply, get unlocked() { return unlocked }, get ducked() { return ducked }, get musicName() { return musicName }, get stingati() { return stingati }, get musicGain() { return musicGain?.gain.value ?? null }, get context() { return ctx } }
+  return { unlock, play, whistle, crowd, playMusic, stopMusic, sting, stopSting, duck, vo, vibrate, apply, get unlocked() { return unlocked }, get ducked() { return ducked }, get musicName() { return musicName }, get stingati() { return stingati }, get musicGain() { return musicGain?.gain.value ?? null }, get context() { return ctx } }
 }

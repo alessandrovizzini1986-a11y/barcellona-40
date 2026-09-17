@@ -39,6 +39,8 @@ export function createJuice({ scene, rig, game, reduced = () => false }) {
       if (camera) rig.goToPoint({ ...camera, instant: true }); else rig.goTo(replayCam, { instant: true })
     },
     get replaying() { return !!replay },
+    // Interrompe il replay in corso SENZA chiamare onEnd: chi salta decide lui cosa fare dopo
+    stopReplay() { const c = !!replay; replay = null; rig.followLook(null); return c },
     // Restituisce la scala del tempo da applicare al gioco in questo frame
     update(raw, ballMesh) {
       // particelle
