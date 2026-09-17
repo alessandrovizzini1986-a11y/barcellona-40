@@ -2,6 +2,7 @@
 import { people, personById, checks, stopById } from '../data.js'
 import { store } from '../store.js'
 import { icon } from '../ui/icons.js'
+import { URL_GIOCO, URL_GIOCO_CLASSICO } from '../rigoriLink.js'
 import { esc } from '../ui/html.js'
 import { toast } from '../ui/toast.js'
 import { navigate } from '../router.js'
@@ -25,6 +26,12 @@ export async function render(root, { person, sub, header }) {
     ${sec('canzone', 'La canzone', `
       <p>Scaricala prima di partire: in aereo e in taxi la rete non c'è e il ritornello serve subito.</p>
       ${songCard()}`, !openId || openId === 'canzone')}
+    ${sec('extra', 'Extra', `
+      <p>Il gioco dei rigori sta dentro questo sito: si apre nella stessa scheda e il tasto indietro riporta qui.</p>
+      <ul class="list">
+        <li class="row"><a class="row__main" href="${URL_GIOCO}" aria-label="Apri Rigori al Camp Nou">${icon('goal')} <b>Rigori al Camp Nou</b><span class="faint">Cinque rigori contro Ale</span></a></li>
+        <li class="row"><a class="row__main" href="${URL_GIOCO_CLASSICO}" aria-label="Apri la versione classica dei rigori">${icon('trophy')} <b>Rigori, versione classica</b><span class="faint">Il gioco precedente, lasciato dov'era</span></a></li>
+      </ul>`, openId === 'extra')}
     ${sec('apt', 'Appartamento', `
       <p><strong>Aparthotel Nàpols – Abapart</strong><br>Carrer de Nàpols 116, Eixample</p>
       <ul>

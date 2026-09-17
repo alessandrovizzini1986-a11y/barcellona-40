@@ -20,6 +20,7 @@ import { createAudio } from './core/audio.js'
 import { createProgress } from './game/progress.js'
 import { taunt, gruppoPerEsito } from './data/taunts.js'
 import { createKeeper, DIVE_DUR } from './game/keeper.js'
+import { catturaImmagine, condividiFile, linkWhatsApp, tipoVideoSupportato, registraReplay } from './core/condividi.js'
 import { createJuice } from './game/juice.js'
 import { createShootout } from './game/modes/shootout.js'
 import { createSfidaAle } from './game/modes/sfidaAle.js'
@@ -211,7 +212,7 @@ function onShotEvent(e) {
   if (e.type === 'windup') { hint.hidden = true; audio.play('step', { volume: .5 }) }
   if (e.type === 'kick') { clearEsitoTimers(); audio.play(e.aim.power > 0.95 ? 'kick2' : 'kick', { volume: 0.6 + Math.min(0.4, e.aim.power * 0.4) }); hint.hidden = true; replayPending = true; kicker?.onKick(); rig.followLook(ball.mesh) }
   if (e.type === 'result') kicker?.react(e.result)
-  if (e.type === 'result') { esitoLock = true; sequenzaConsumata = false; esitoDa = performance.now(); skipBtn.hidden = false; keeper?.react(e.result); const rec = shot.record; showEsito(game.ui, { outcome: rec.outcome, corner: rec.corner, shooterId: rec.ruoli.tiratore.id, taunt: game.tauntFor(rec) }); audio.duck(true); audio.vo(rec.corner ? 'corner' : rec.outcome) }
+  if (e.type === 'result') { esitoLock = true; sequenzaConsumata = false; esitoDa = performance.now(); skipBtn.hidden = false; keeper?.react(e.result); const rec = shot.record; const sfotto = game.tauntFor(rec); rec.sfotto = sfotto; ultimoTiro = rec; showEsito(game.ui, { outcome: rec.outcome, corner: rec.corner, shooterId: rec.ruoli.tiratore.id, taunt: sfotto }); audio.duck(true); audio.vo(rec.corner ? 'corner' : rec.outcome) }
   if (e.type === 'goal') { crowd.react('ola'); shake(0.10, 0.35); audio.sting('gol'); audio.play('net', { volume: .8 }); audio.crowd('roar'); setTimeout(() => audio.crowd('clap'), 700); audio.vibrate([30, 40, 70]) }
   if (e.type === 'post' || e.type === 'crossbar') { shake(0.06, 0.2); juice.hitStop(60); audio.play(e.type, { volume: .9 }); audio.vibrate(50) }
   if (e.type === 'save') { juice.hitStop(60); crowd.react('oooh'); audio.sting('parata'); audio.play('glove', { volume: .9 }); audio.crowd('oooh'); audio.vibrate(40) }
@@ -236,9 +237,40 @@ export function camereReplay(rec) {
 // Chiusura della sequenza esito → replay → turno successivo. Passa UNA volta sola: i callback dei replay che
 // arrivano dopo un salto trovano sequenzaConsumata a true e non fanno nulla. Saltare non cambia nulla del
 // risultato, perché punteggio, XP, traguardi e sfottò sono già stati applicati all'evento 'result'.
+// Dati dell'ultimo tiro, per la condivisione: nomi dal record, non dallo stato del turno.
+let ultimoTiro = null, videoReplay = null, fileVideo = null
+const PAROLE = { goal: 'GOL', save: 'PARATA', post: 'PALO', crossbar: 'TRAVERSA', miss: 'FUORI' }
+function datiCondivisione() {
+  const rec = ultimoTiro
+  if (!rec) return null
+  const m = mode
+  return {
+    esito: rec.outcome,
+    titolo: rec.corner ? 'INCROCIO' : (PAROLE[rec.outcome] || rec.outcome),
+    punteggio: m && m.me != null ? `Tu ${m.me} – ${m.ale} Ale` : '',
+    sfida: `${rec.ruoli.tiratore.nome} tira · ${rec.ruoli.portiere.nome} para`,
+    sfotto: rec.sfotto || ''
+  }
+}
+async function condividiMomento() {
+  const d = datiCondivisione(); if (!d) return
+  try {
+    const file = await catturaImmagine(R.renderer.domElement, d, () => fx.render())
+    const testo = `${d.titolo} · ${d.sfida}${d.punteggio ? ' · ' + d.punteggio : ''} — rigori al camp nou`
+    const esito = await condividiFile(file, testo, { onFallback: () => {
+      toast(game.ui, 'Immagine salvata, allegala in chat', 3200)
+      window.open(linkWhatsApp(testo), '_blank', 'noopener')
+    } })
+    if (esito === 'share') toast(game.ui, 'Condivisa')
+  } catch (e) {
+    console.warn('condivisione non riuscita:', e)
+    toast(game.ui, 'Non sono riuscito a catturare l\'immagine')
+  }
+}
 function chiudiSequenza() {
   if (sequenzaConsumata) return
   sequenzaConsumata = true
+  if (videoReplay) { const v = videoReplay; videoReplay = null; v.ferma().then((f) => { fileVideo = f }).catch(() => { fileVideo = null }) }
   clearEsitoTimers(); juice.stopReplay()
   skipBtn.hidden = true
   audio.duck(false); hideEsito(game.ui); shot.reset(); keeper?.reset(); kicker?.reset()
@@ -264,6 +296,9 @@ function afterSettled() {
   // la camera sbloccata (drone, dischetto) sostituisce la prima; la seconda resta la frontale
   const primaCam = replayCamUnlock ? null : cam1
   const passata = (camera, segui, poi) => juice.startReplay({ from, to, speed: 0.3, render: (t) => shot.renderAt(t), camera, segui, onEnd: poi })
+  // Video del replay: si registra MENTRE il replay gira, non si riesegue. Solo dove MediaRecorder funziona.
+  fileVideo = null
+  if (tipoVideoSupportato()) { try { videoReplay = registraReplay(R.renderer.domElement, { durataMax: 6000 }) } catch { videoReplay = null } }
   tReplay = setTimeout(() => passata(primaCam, cam1.segui, () => {
     tFinish = setTimeout(() => passata(cam2, cam2.segui, () => { tFinish = setTimeout(finish, 300) }), 250)
   }), 500)
@@ -363,9 +398,28 @@ const skipBtn = document.createElement('button'); skipBtn.className = 'rg-btn rg
 skipBtn.setAttribute('aria-label', 'Salta il replay'); skipBtn.hidden = true
 document.getElementById('rg-ui').appendChild(skipBtn)
 skipBtn.addEventListener('click', (e) => { e.stopPropagation(); saltaSequenza() })
-document.getElementById('rg-ui').addEventListener('pointerdown', (e) => { if (esitoLock && !e.target.closest('.rg-overlay')) saltaSequenza() })
+document.getElementById('rg-ui').addEventListener('click', async (e) => {
+  if (e.target.closest('[data-share]')) { e.stopPropagation(); condividiMomento(); return }
+  if (e.target.closest('[data-share-video]')) { e.stopPropagation(); condividiVideo(); return }
+  if (e.target.closest('[data-copy]')) {
+    e.stopPropagation()
+    const d = datiCondivisione()
+    const testo = d ? `${d.titolo} · ${d.sfida}${d.punteggio ? ' · ' + d.punteggio : ''} — rigori al camp nou` : 'rigori al camp nou · barcelona 40'
+    try { await navigator.clipboard.writeText(testo); toast(game.ui, 'Risultato copiato') } catch { toast(game.ui, 'Non sono riuscito a copiare') }
+  }
+})
+async function condividiVideo() {
+  if (!fileVideo) { toast(game.ui, 'Video non disponibile'); return }
+  const d = datiCondivisione()
+  const testo = d ? `${d.titolo} · ${d.sfida} — rigori al camp nou` : 'rigori al camp nou'
+  const esito = await condividiFile(fileVideo, testo, { onFallback: () => toast(game.ui, 'Video salvato, allegalo in chat', 3200) })
+  if (esito === 'share') toast(game.ui, 'Condiviso')
+}
+document.getElementById('rg-ui').addEventListener('pointerdown', (e) => { if (esitoLock && !e.target.closest('.rg-overlay, [data-share]')) saltaSequenza() })
 stage.addEventListener('pointerdown', () => { if (esitoLock) saltaSequenza() }, true)
 let flow = 'boot', quitRequested = false
+// Il gioco vive dentro il sito: /rigori/ sta sotto la stessa base. Link nella stessa scheda, non _blank.
+const SITO = new URL('../#/oggi', location.href).href
 const openOptions = () => opzioni(game.ui, settings, { onChange: applySettings, onReset: () => { save.reset(); toast(game.ui, 'Progressi azzerati'); setTimeout(() => location.reload(), 700) } })
 async function runFlow() {
   await kitReady
@@ -407,14 +461,14 @@ async function runFlow() {
       if (e.summary?.winner === 'me' || (e.id !== 'shootout' && e.id !== 'boss')) audio.sting('vittoria')
       const xpNow = game.progress?.xp?.() ?? 0
       const lv = game.progress?.level?.() || { n: 1, title: 'Esordiente' }
-      const r = await risultato(game.ui, { title: titleFor(e), lines: linesFor(e), xpGained: xpNow - xpBefore, xp: xpNow, level: lv, next: game.progress?.next?.() || null, achievements: game.progress?.takeFresh?.() || [], shareText: shareFor(e) })
+      const r = await risultato(game.ui, { title: titleFor(e), lines: linesFor(e), xpGained: xpNow - xpBefore, xp: xpNow, level: lv, next: game.progress?.next?.() || null, achievements: game.progress?.takeFresh?.() || [], shareText: shareFor(e), sito: SITO, video: !!fileVideo })
       again = r === 'again'
     }
   }
 }
 menuBtn.addEventListener('click', async () => { const v = await overlayMenu(); if (v === 'esci') quitRequested = true })
 async function overlayMenu() {
-  const v = await overlay(game.ui, `<h2 class="rg-title">Pausa</h2><div class="rg-row"><button class="rg-btn rg-btn--primary" data-value="continua" aria-label="Continua">Continua</button><button class="rg-btn" data-value="opzioni" aria-label="Opzioni">Opzioni</button><button class="rg-btn rg-btn--ghost" data-value="esci" aria-label="Esci dalla partita">Esci</button></div>`, { label: 'Pausa', closable: true })
+  const v = await overlay(game.ui, `<h2 class="rg-title">Pausa</h2><div class="rg-row"><a class="rg-btn rg-btn--ghost" href="${SITO}" aria-label="Torna al programma del weekend" style="flex:1 0 100%">← Torna al programma</a><button class="rg-btn rg-btn--primary" data-value="continua" aria-label="Continua">Continua</button><button class="rg-btn" data-value="opzioni" aria-label="Opzioni">Opzioni</button><button class="rg-btn rg-btn--ghost" data-value="esci" aria-label="Esci dalla partita">Esci</button></div>`, { label: 'Pausa', closable: true })
   if (v === 'opzioni') { await openOptions(); return 'continua' }
   return v
 }

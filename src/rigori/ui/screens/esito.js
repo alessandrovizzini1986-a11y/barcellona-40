@@ -8,7 +8,8 @@ export function showEsito(ui, { outcome, corner = false, shooterId = null, taunt
   const el = document.createElement('div'); el.className = `rg-esito rg-esito--${outcome}`
   el.setAttribute('role', 'status'); el.setAttribute('aria-live', 'assertive')
   if (shooterId) el.dataset.shooter = shooterId
-  el.innerHTML = `<b>${corner ? 'INCROCIO' : (WORD[outcome] || outcome)}</b>${taunt ? `<span>${esc(taunt)}</span>` : ''}`
+  el.innerHTML = `<b>${corner ? 'INCROCIO' : (WORD[outcome] || outcome)}</b>${taunt ? `<span>${esc(taunt)}</span>` : ''}` +
+    `<button class="rg-btn rg-btn--ghost rg-esito__share" data-share aria-label="Condividi questo momento">Condividi</button>`
   ui.appendChild(el)
 }
 export function hideEsito(ui) { ui.querySelectorAll('.rg-esito').forEach((e) => e.remove()) }

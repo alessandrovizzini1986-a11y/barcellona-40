@@ -29,8 +29,9 @@ import Share2 from 'lucide/dist/esm/icons/share-2.mjs'
 import Disc3 from 'lucide/dist/esm/icons/disc-3.mjs'
 import Music from 'lucide/dist/esm/icons/music.mjs'
 import MessageCircle from 'lucide/dist/esm/icons/message-circle.mjs'
+import Goal from 'lucide/dist/esm/icons/goal.mjs'
 
-const ICONS = { sun: Sun, list: List, map: MapIcon, trophy: Trophy, info: Info, 'map-pin': MapPin, taxi: CarTaxiFront, train: TrainFront, copy: Copy, check: Check, alarm: AlarmClock, locate: Locate, alert: TriangleAlert, chevron: ChevronDown, walk: Footprints, zap: Zap, download: Download, upload: Upload, sparkles: Sparkles, user: User, phone: Phone, clock: Clock, x: X, refresh: RefreshCw, camera: Camera, whatsapp: MessageCircle, share: Share2, disc: Disc3, music: Music }
+const ICONS = { sun: Sun, list: List, map: MapIcon, trophy: Trophy, info: Info, 'map-pin': MapPin, taxi: CarTaxiFront, train: TrainFront, copy: Copy, check: Check, alarm: AlarmClock, locate: Locate, alert: TriangleAlert, chevron: ChevronDown, walk: Footprints, zap: Zap, download: Download, upload: Upload, sparkles: Sparkles, user: User, phone: Phone, clock: Clock, x: X, refresh: RefreshCw, camera: Camera, whatsapp: MessageCircle, share: Share2, disc: Disc3, music: Music, goal: Goal }
 
 export function icon(name, attrs = {}) {
   const node = ICONS[name]

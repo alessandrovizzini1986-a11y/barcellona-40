@@ -169,3 +169,6 @@ button.rg-unlock{ cursor:pointer; }
 /* SALTA: sopra ogni altro elemento, in basso a destra, durante esito e replay */
 .rg-skip{ position:absolute; right:12px; bottom:calc(14px + var(--safe-b)); z-index:40; min-height:48px; min-width:48px; padding:0 18px; opacity:.85; background:color-mix(in srgb, var(--bg) 72%, transparent); font-family:var(--font-display); letter-spacing:.06em; }
 .rg-skip[hidden]{ display:none; }
+
+/* Condividi sul cartello dell'esito: il cartello non prende tocchi, il bottone sì */
+.rg-esito__share{ pointer-events:auto; margin-top:var(--space-2); min-height:44px; padding:0 16px; opacity:.9; background:color-mix(in srgb, var(--bg) 72%, transparent); }

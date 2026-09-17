@@ -46,8 +46,19 @@ export function createProgress({ save, listeners, role, shooterName, onLevelUp, 
         if (cur.myGoals >= 5 && cur.myShots === 5) award('cinque')
       }
       board(cur.id, s)
+      aggiornaStats(s)
       cur = null
     }
+  }
+  // Statistiche viste dal sito (b40:v1:rigori:stats): gol, parate, partite e record. Sola scrittura qui,
+  // sola lettura di là: il gioco non tocca nessuna chiave del sito.
+  const statsDefault = { gol: 0, parate: 0, partite: 0, record: 0, vittorie: 0 }
+  const aggiornaStats = (s) => {
+    const st = Object.assign({}, statsDefault, save.get('stats', {}))
+    st.gol += cur.myGoals; st.parate += cur.keeperSaves; st.partite += 1
+    if (s.winner === 'me') st.vittorie += 1
+    if (cur.myGoals > st.record) st.record = cur.myGoals
+    save.set('stats', st)
   }
   listeners.add(onEvent)
   // Classifica locale per modalità: b40:v1:rigori:board:<modo>, dieci voci
@@ -71,6 +82,7 @@ export function createProgress({ save, listeners, role, shooterName, onLevelUp, 
     equipped: (kind) => equip[kind],
     setEquip(kind, id) { if (!unlocked(id)) return false; equip[kind] = id; save.set('equip', equip); return true },
     board: (id) => save.get(boardKey(id), []),
+    stats: () => Object.assign({}, statsDefault, save.get('stats', {})),
     takeFresh() { const out = fresh.slice(); fresh.length = 0; return out },
     summaryForUi() {
       const lv = levelFor(xp)

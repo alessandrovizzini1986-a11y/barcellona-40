@@ -634,6 +634,54 @@ replay consuma anche per le particelle; saltando, i tiri successivi della CPU pa
 fa parte del risultato — punteggio, XP e traguardi restano identici, e nel campione anche tutti gli esiti — ma
 significa che una partita saltata non è bit-a-bit la stessa di una vista per intero.
 
+## Condivisione del replay e collegamento col sito
+
+### Condivisione immagine (A1)
+
+Pulsante **Condividi** sul cartello dell'esito e **Condividi immagine** nella schermata risultato. Il canvas del
+gioco viene catturato (`preserveDrawingBuffer: true` sul renderer, più un render forzato prima dello scatto) e
+ricomposto su un canvas 2D da **1080×1920 PNG**: punteggio in alto, chi tira e chi para, l'esito grande nel
+colore giusto, lo sfottò e la firma "rigori al camp nou · barcelona 40".
+
+Verificato in Chromium: file `rigori-camp-nou.png`, **1080×1920**, 1,4 MB. Screenshot: `v6-condivisione.png`.
+
+Con `navigator.canShare({files})` si apre lo sheet nativo; altrimenti si scarica il file, si apre `wa.me` col
+testo e compare il toast "Immagine salvata, allegala in chat".
+
+### Video del replay (A2)
+
+Si registra **mentre il replay gira**, non lo si riesegue: `canvas.captureStream(30)` + `MediaRecorder` a
+2,5 Mbps, massimo 6 s, senza audio. Il tipo si sceglie fra `video/mp4;codecs=avc1`, `video/mp4`,
+`video/webm;codecs=vp9`, `video/webm`; se nessuno è supportato il pulsante **non compare**. In più, un blob sotto
+i **10 kB** viene buttato via: è il caso di Safari iOS, che dichiara il supporto e poi produce un file vuoto.
+In Chromium il tipo scelto è `video/mp4`.
+
+Se entrambe falliscono resta **Copia risultato**, che mette il testo negli appunti.
+
+### Collegamento sito ↔ gioco (B)
+
+| Verifica | Risultato |
+|---|---|
+| Card in cima a Missioni | "Rigori al Camp Nou · Cinque rigori contro Ale. Vinci e ti porti gli XP. · Il tuo record: 5 gol · 420 XP · GIOCA" |
+| Il pulsante GIOCA apre nella stessa scheda | `href="rigori/"`, nessun `target` ✅ |
+| Info → Extra | link a `rigori/` e `rigori-classic.html` ✅ |
+| Menu del gioco, prima voce | "← Torna al programma" → `#/oggi`, stessa scheda ✅ |
+| Schermata risultato | pulsante ghost "Torna al sito" ✅ |
+| Tasto indietro | il gioco non usa `history.pushState`: il back del browser torna al sito ✅ |
+
+**XP condivisi (B3)**: il gioco scrive `b40:v1:rigori:xp` e `b40:v1:rigori:stats` (gol, parate, partite, record,
+vittorie). Il sito li legge in sola lettura da `src/rigoriLink.js` e li somma al totale del profilo con un
+cambio: **1 XP del sito ogni 20 del gioco, massimo 50**, così il gioco non scavalca le missioni vere. Misurato:
+
+| XP nel gioco | Bonus sul profilo | Totale profilo |
+|---|---|---|
+| 0 | 0 | 0 su 460 |
+| 420 | 21 | 21 su 460 |
+| 5000 | 50 (tetto) | 50 su 460 |
+
+Nessuna chiave del sito viene sovrascritta dal gioco, e nessuna chiave del gioco dal sito. Se il profilo non è
+ancora stato scelto il gioco funziona lo stesso: gli XP restano salvati e si vedono al primo profilo selezionato.
+
 ## Cose non verificabili qui (da fare sul telefono)
 
 - fps reali su Chrome Android e Safari iOS, e soglie di degradazione (45/55 fps)

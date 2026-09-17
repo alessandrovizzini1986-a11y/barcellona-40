@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 // WebGLRenderer con pixel ratio limitato a 2, resize, ombre solo dove servono, hook di qualità
 export function createRenderer(container) {
-  const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance', alpha: false })
+  const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance', alpha: false, preserveDrawingBuffer: true }) // preserveDrawingBuffer: serve a catturare il canvas per la condivisione
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2))
   renderer.outputColorSpace = THREE.SRGBColorSpace
   renderer.toneMapping = THREE.ACESFilmicToneMapping

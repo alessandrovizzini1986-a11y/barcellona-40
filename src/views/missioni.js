@@ -11,7 +11,23 @@ import { openSheet } from '../ui/sheet.js'
 import { short as confettiShort, big as confettiBig } from '../ui/confetti.js'
 import { copyText } from './oggi.js'
 import { PHOTO_ALBUM } from '../store.js'
+import { URL_GIOCO, rigoriXp, rigoriStats, haGiocato } from '../rigoriLink.js'
 
+// Card del gioco dei rigori: sta in cima alle missioni perché è l'unica cosa del weekend a cui si gioca.
+// Gli XP arrivano da b40:v1:rigori:xp, scritti dal gioco; qui si leggono e basta.
+function cardRigori() {
+  const xp = rigoriXp(), st = rigoriStats()
+  const record = haGiocato() ? `<div class="rigori-card__record">Il tuo record: ${st.record} gol · ${xp} XP</div>` : ''
+  return `<section class="card rigori-card" aria-labelledby="rigori-t">
+    <div class="rigori-card__icon">${icon('goal')}</div>
+    <div class="grow">
+      <h2 class="rigori-card__title" id="rigori-t">Rigori al Camp Nou</h2>
+      <p class="rigori-card__sub">Cinque rigori contro Ale. Vinci e ti porti gli XP.</p>
+      ${record}
+    </div>
+    <a class="btn btn--acqua rigori-card__cta" href="${URL_GIOCO}" aria-label="Gioca a Rigori al Camp Nou">GIOCA</a>
+  </section>`
+}
 function timerHtml() {
   const c = countdownTo(SPEEDRUN_DEADLINE)
   // verde > 30 min, giallo tra 30 e 15 min, rosso sotto i 15 min
@@ -74,6 +90,7 @@ export async function render(root, { person, header }) {
           <div class="xp-head__next">${lv.next ? `${lv.toNext} XP a “${esc(lv.next.title)}”` : 'Livello massimo. Leggenda.'}</div>
         </div>
       </div>
+      ${cardRigori()}
       <h2 class="section-title">Le tue missioni <small>${missionsFor(person).filter((m) => store.isMissionDone(m.id)).length}/${missionsFor(person).length}</small></h2>
       <ul class="stack" id="missions">${missionsFor(person).map((m) => missionItem(m, person)).join('')}</ul>
       <h2 class="section-title">Badge</h2>
