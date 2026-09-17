@@ -232,6 +232,156 @@ del replay. Non esiste alcun test di collisione a runtime: il test lo verifica p
 | 50 tiri: il cartello dice sempre l'esito del record, dal vivo e nei due replay | ✅ |
 | Il turno e l'HUD non cambiano durante la sequenza esito + replay | ✅ |
 
+## Quattro bug + fisica (`tests/shot.test.js`, `docs/rigori/screenshots/v3-*.png`)
+
+### 1. I ruoli vengono dal turno
+
+`ShotRecord.ruoli = { tiratore: { id, nome, utente }, portiere: { id, nome, utente } }` è compilato al calcio da
+`ruoliDalTurno(role)`: nel turno "Tiri tu" tira il giocatore scelto e para Ale, nel turno "Para tu" tira Ale e para
+il giocatore scelto. HUD, sfottò, cartello, punteggio, traguardi e XP leggono **solo** quei due campi.
+
+- `taunts.js` non contiene più nessun nome: ogni frase è un modello con `{tiratore}` e `{portiere}`, riempito con i
+  nomi del record. Le varianti per personaggio sono indicizzate separatamente su tiratore e portiere.
+- `esito.js` riceve `shooterId` dal record; `hud.js`/`shootout.js` costruiscono la riga da `res.ruoli`.
+- `progress.js` decide chi ha tirato da `e.ruoli.tiratore.utente`, non dallo stato del turno (che intanto può
+  essere già avanzato).
+
+Verifica automatica (`i ruoli vengono dal turno`):
+
+```
+{"tira":{"tiratore":"Monne","portiere":"Ale","utente":true},
+ "para":{"tiratore":"Ale","portiere":"Monne","utente":false}}
+```
+
+### 2. Il portiere tocca la palla
+
+L'esito resta analitico e deciso una volta sola in `sealShotRecord`. La posa è pianificata **dopo** l'esito:
+
+- la parata si risolve al piano del portiere (`tRisoluzione`), non sulla linea di porta: il portiere sta 0,55 m
+  davanti, quindi il punto di contatto della palla con il guanto è il passaggio più vicino alla mano, non l'impatto
+  sulla porta;
+- `pianificaTuffo` sposta la radice del portiere verso la palla (al massimo 2,80 m) e inclina il busto, rifinendo
+  l'offset in tre passate **attraverso la stessa `renderAt` del disegno**, così l'inclinazione entra nella misura;
+- sulla parata la palla rimbalza sul guanto: velocità riflessa attorno alla normale guanto→palla, ×0,35, poi gravità;
+- sul gol il portiere arriva in ritardo o dalla parte sbagliata e viene allontanato di almeno 0,32 m dalla
+  traiettoria: la palla non lo attraversa mai.
+
+Misura su 30 parate con seme fisso (test `30 parate`): **30/30 entro 0,15 m**, massimo **0,0171 m**, media 0,0026 m.
+
+### 3. Camere dei replay
+
+`camereReplay(record)` (esportata e verificabile) dà due camere, entrambe **davanti** alla porta:
+
+| Replay | Posizione | Punto inquadrato | FOV | Segue la palla |
+|---|---|---|---|---|
+| 1 — laterale bassa | `[lato·8, 1.2, 5.5]` | punto medio fra palla e zona del portiere | 70° | no |
+| 2 — frontale 3/4 | `[lato·3, 1.55, 11.5]` | idem | 58° | sì |
+
+`lato` è il segno della x del contatto: la laterale sta sempre dalla parte del tiro. Nessuna camera dietro la porta
+rivolta al campo. In ritratto (380×820) il campo visivo orizzontale è poco più di un terzo del verticale: per questo
+si inquadra il punto medio fra palla e portiere e non la sola palla, altrimenti il portiere resta fuori.
+
+### 4. Rete sempre visibile
+
+`MeshBasicMaterial` con `side: DoubleSide`, `transparent`, `opacity 0.7`, `depthWrite: false`; maglia con texture
+alpha (lo spessore del filo è nella texture, così non si assottiglia con la distanza). Fondo 40×20, fianchi e tetto
+20×20.
+
+| Inquadratura | Screenshot | Rete visibile |
+|---|---|---|
+| Replay 1 (laterale bassa) | `v3-rete-replay1-laterale.png` | ✅ |
+| Replay 2 (frontale 3/4) | `v3-rete-replay2-frontale.png` | ✅ |
+| Dietro il tiratore (camera di gioco) | `v3-rete-dietro-tiratore.png` | ✅ |
+| Dietro la porta (solo per la prova del DoubleSide) | `v3-rete-dietro-portiere.png` | ✅ |
+
+### 5. Fisica della palla
+
+Bézier eliminata. Integrazione semi-implicita di Eulero a passo fisso, deterministica dal seme:
+
+| Grandezza | Valore |
+|---|---|
+| Passo | 1/120 s fisso |
+| Velocità iniziale | 15–30 m/s (`velocitaDa(power)`) |
+| Gravità | 9,81 m/s² |
+| Resistenza quadratica | k = 0,0045 |
+| Magnus | k_m = 0,0048, spin max 60 rad/s, decadimento 0,6 |
+| Curva massima | deviazione laterale **0,62–0,92 m su 11 m** rispetto alla direzione di lancio (0,77 m a potenza 0,7) |
+| Restituzione su palo/traversa | 0,6 ± scarto dal seme |
+| Ritardo di reazione del portiere | 0,18–0,32 s secondo difficoltà |
+
+La direzione di lancio è risolta da `miraVerso` con un punto fisso (10 iterazioni, tolleranza 2 mm): si spara *verso*
+il bersaglio tenendo conto di gravità, resistenza e Magnus, invece di curvare a posteriori. La traiettoria è
+campionata una volta sola e salvata nel record insieme alle rotazioni, così `renderShotAt` è pura interpolazione.
+
+Misure sul campione di 30 tiri: v0 **16,8–28,4 m/s**, tempo di volo **0,408–0,741 s** (finestre chieste: 15–30 m/s,
+0,40–0,75 s).
+
+### 6. Rete che si gonfia
+
+Tessuto Verlet a passo fisso 1/60, smorzamento 0,92, gravità debole, due passate di vincoli di distanza; i bordi su
+pali, traversa e terreno sono ancoraggi. L'impulso agisce entro 0,4 m dal punto d'impatto con ampiezza
+`0,05 + 0,012 · v_impatto`, normalizzata sul nodo più vicino.
+
+| Velocità d'impatto | Gonfiore misurato (`ampiezzaMax()`) |
+|---|---|
+| 15 m/s | 0,2300 m |
+| 30 m/s | 0,4100 m |
+
+Il cloth vive solo 1,5 s dall'impulso: fuori da quella finestra `update` esce subito e non costa nulla. Sotto i
+45 fps `perf.js` chiama `setQualita(0.5)` e la suddivisione si dimezza (2184 → 594 vertici mobili). Nella rete la
+palla ha resistenza ×8 e si ferma entro 0,6 s.
+
+### Partita completa: 5 rigori + sudden death
+
+`node scripts/qa/rigori-partita.mjs` gioca uno Shootout intero e stampa il registro qui sotto mentre gioca. I tiri
+del giocatore li decide lo script (precisione 0 e zona del portiere forzata) perché la serie arrivi in parità al
+quinto rigore e si veda il sudden death; **i tiri di Ale sono quelli della CPU**, con la sua mira e il suo scarto, e
+i tuffi del giocatore-portiere sono alla cieca, decisi alla rincorsa come in partita. Prima passata, nessun
+tentativo scartato.
+
+| # | Round | Tira | Para | Esito | v0 m/s | Volo s | v impatto | Guanto m | Rete m | Punteggio | Sfottò |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| 1 | 1 | monne | ale | goal | 18.5 | 0.661 | 16.7 | — | 0.23 | 1-0 | Ale: "L'avevo detto dove tirava." Certo. |
+| 2 | 1 | ale | monne | goal | 23.8 | 0.491 | 22.4 | — | 0.291 | 1-1 | Monne non l'ha vista. Il riflesso degli occhiali. |
+| 3 | 2 | monne | ale | goal | 22.8 | 0.528 | 20.9 | — | 0.274 | 2-1 | Monne segna e Ale guarda. |
+| 4 | 2 | ale | monne | goal | 23.2 | 0.49 | 22 | — | 0.286 | 2-2 | Ale segna e para. Dice lui. |
+| 5 | 3 | monne | ale | goal | 18.5 | 0.643 | 16.7 | — | 0.23 | 3-2 | Gol con gli occhiali da sole. Stile. |
+| 6 | 3 | ale | monne | save | 27.1 | 0.433 | 25.6 | 0.0009 | — | 3-2 | Monne ci arriva. Non chiedergli come. |
+| 7 | 4 | monne | ale | save | 22.8 | 0.528 | 20.9 | 0.0031 | — | 3-2 | Troppo veloce la rincorsa, troppo lento il tiro. |
+| 8 | 4 | ale | monne | goal | 22.7 | 0.53 | 20.7 | — | 0.272 | 3-3 | Gol. Disonesti, direbbe Monne. |
+| 9 | 5 | monne | ale | goal | 18.5 | 0.661 | 16.7 | — | 0.23 | 4-3 | Ale: "L'avevo detto dove tirava." Certo. |
+| 10 | 5 | ale | monne | goal | 21.5 | 0.543 | 20.3 | — | 0.269 | 4-4 | Ale segna e Monne guarda. |
+| 11 | SD | monne | ale | goal | 22.8 | 0.514 | 20.9 | — | 0.274 | 5-4 | Angolo giusto, portiere sbagliato. |
+| 12 | SD | ale | monne | save | 21.8 | 0.537 | 20.6 | 0.0001 | — | 5-4 | Monne para. E ora lo racconta a tutti. |
+
+**Finale: Tu 5 – 4 Ale · vince il giocatore · sesto round · sudden death.**
+
+Colonne: `v0` velocità al calcio, `v impatto` velocità all'arrivo, `Guanto` distanza guanto-palla all'istante del
+contatto, `Rete` gonfiore massimo della rete sul gol. Il registro dice, riga per riga, che:
+
+- **i ruoli seguono il turno**: nei tiri dispari tira Monne e para Ale, nei pari tira Ale e para Monne, e lo sfottò
+  nomina sempre i due ruoli giusti (tiro 2: "Monne non l'ha vista", con Monne portiere; tiro 12: "Monne para");
+- **la fisica sta nelle finestre**: v0 fra 18,5 e 27,1 m/s, tempo di volo fra 0,433 e 0,661 s;
+- **il portiere tocca sempre la palla** quando para: 0,0009 m, 0,0031 m e 0,0001 m, tutte ben sotto i 0,15 m;
+- **la rete si gonfia in proporzione all'urto**: da 0,230 m sul tiro più lento (16,7 m/s sulla linea) a 0,291 m sul
+  più forte (22,4 m/s). L'ampiezza è `0,05 + 0,012 · v` dove `v` è la velocità *quando la palla tocca la rete*,
+  cioè dopo altri 1,8 m dentro la gabbia: sul tiro 1 sono 15,0 m/s, e infatti la misura dà 0,2299 m.
+
+| Controllo dello script | Esito |
+|---|---|
+| Ruoli del record coerenti col turno in tutti i 12 tiri | ✅ |
+| v0 dentro 15–30 m/s in tutti i tiri | ✅ |
+| Tempo di volo dentro 0,40–0,75 s in tutti i tiri | ✅ |
+| Guanto entro 0,15 m dalla palla su tutte le parate | ✅ |
+| Gonfiore della rete in scala su tutti i gol | ✅ |
+| Sfottò presente a ogni esito | ✅ |
+| La serie arriva al sudden death e si chiude con un vincitore | ✅ (5–4 al sesto round) |
+
+**Una cosa trovata scrivendo questo test**: la rete si gonfia *dopo* l'annuncio dell'esito — la palla deve ancora
+percorrere 1,8 m fino al fondo della gabbia, e al rallentatore ci mette mezzo secondo. Una misura a tempo fisso
+subito dopo l'esito leggeva zero. Non era un difetto del tessuto (l'impulso e l'ampiezza erano giusti): era la
+misura a essere prematura. Lo script ora aspetta l'impulso e azzera la misura fra un tiro e l'altro.
+
 ## Cose non verificabili qui (da fare sul telefono)
 
 - fps reali su Chrome Android e Safari iOS, e soglie di degradazione (45/55 fps)
