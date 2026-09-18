@@ -2,7 +2,14 @@ import * as THREE from 'three'
 import { netTexture } from './textures.js'
 // Porta 7,32 × 2,44. La rete è un tessuto verlet: i bordi che toccano pali, traversa e terreno sono fissi,
 // l'impatto della palla gonfia i nodi vicini e i vincoli di distanza la riportano a riposo.
-export const GOAL = { w: 7.32, h: 2.44, depth: 2.0, post: 0.06 }
+// PORTA IN SCALA COI PERSONAGGI, non regolamentare. I "big head" sono alti ~1,5 m equivalenti: contro una
+// porta da 7,32 × 2,44 il portiere non copriva fisicamente lo specchio e ogni tiro laterale era gol, per
+// geometria e non per taratura. Qui è 4,60 × 1,90, cioè il portiere in piedi occupa circa un terzo della
+// larghezza e in tuffo arriva vicino al palo. Tutto il resto (zone, mira, camere, campo) deriva da qui.
+// 4,40 × 1,82: partito da 4,60 come da indicazione, ridotto di un passo perché a 4,60 i gol erano il 70,5 %,
+// cioè al limite della fascia chiesta (60-70 %); a 4,40 sono il 62,5 %. La misura è in QA_REPORT.md.
+export const GOAL = { w: 4.40, h: 1.82, depth: 1.40, post: 0.10 }
+export const DISCHETTO = 8.5 // distanza del dischetto dalla linea di porta, in metri
 const PASSO = 1 / 60      // passo fisso: il gonfiore non deve dipendere dal frame rate
 const MAX_PASSI = 4       // dopo un blocco lungo si scarta il tempo arretrato invece di recuperarlo tutto
 const FINESTRA = 1.5      // il cloth vive solo 1,5 s dall'impulso: fuori da lì la rete è ferma e non costa nulla
@@ -34,10 +41,10 @@ export function createGoal() {
   let qual = 1, attivo = false, tempo = 0, acc = 0, ampMax = 0
   // Suddivisione piena: il fondo prende la palla quasi sempre ed è il più largo, quindi ha la griglia più fitta
   const definizioni = [
-    { w: GOAL.w, h: GOAL.h, sw0: 40, sh0: 20, set: (m) => { m.position.set(0, GOAL.h / 2, -GOAL.depth) } },
-    { w: GOAL.depth, h: GOAL.h, sw0: 20, sh0: 20, set: (m) => { m.rotation.y = Math.PI / 2; m.position.set(-GOAL.w / 2, GOAL.h / 2, -GOAL.depth / 2) } },
-    { w: GOAL.depth, h: GOAL.h, sw0: 20, sh0: 20, set: (m) => { m.rotation.y = -Math.PI / 2; m.position.set(GOAL.w / 2, GOAL.h / 2, -GOAL.depth / 2) } },
-    { w: GOAL.w, h: GOAL.depth, sw0: 20, sh0: 20, set: (m) => { m.rotation.x = Math.PI / 2; m.position.set(0, GOAL.h, -GOAL.depth / 2) } }
+    { w: GOAL.w, h: GOAL.h, sw0: 26, sh0: 16, set: (m) => { m.position.set(0, GOAL.h / 2, -GOAL.depth) } },
+    { w: GOAL.depth, h: GOAL.h, sw0: 12, sh0: 16, set: (m) => { m.rotation.y = Math.PI / 2; m.position.set(-GOAL.w / 2, GOAL.h / 2, -GOAL.depth / 2) } },
+    { w: GOAL.depth, h: GOAL.h, sw0: 12, sh0: 16, set: (m) => { m.rotation.y = -Math.PI / 2; m.position.set(GOAL.w / 2, GOAL.h / 2, -GOAL.depth / 2) } },
+    { w: GOAL.w, h: GOAL.depth, sw0: 26, sh0: 12, set: (m) => { m.rotation.x = Math.PI / 2; m.position.set(0, GOAL.h, -GOAL.depth / 2) } }
   ]
   // (Ri)costruisce geometria e stato del cloth di un pannello: l'unico punto in cui si alloca
   const costruisci = (p) => {

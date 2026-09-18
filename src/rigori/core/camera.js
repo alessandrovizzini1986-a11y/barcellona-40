@@ -1,15 +1,17 @@
 import * as THREE from 'three'
-// Rig di camera con preset e interpolazione. Il gol sta sul piano z=0, il dischetto a z=11.
+// Rig di camera con preset e interpolazione. La porta sta sul piano z=0, il dischetto a z=DISCHETTO (8,5 m).
 // DA VERIFICARE: posizioni dei preset scelte a occhio per un portrait 9:16.
 export const PRESETS = {
-  dietroTiratore:  { pos: [0, 2.6, 17.5],  look: [0, 1.2, 0] },
-  dietroPortiere:  { pos: [0, 4.2, -10.5], look: [0, 0.9, 6], fov: 74 }, // abbastanza indietro da tenere i pali nel quadro portrait
-  lateraleReplay:  { pos: [-9.5, 1.6, 4.5], look: [0, 1.1, 1.5] },
-  drone:           { pos: [0, 14, 12],     look: [0, 0.5, 2] },
-  dischetto:       { pos: [0.35, 0.35, 11.6], look: [0, 1.3, 0] },
+  // Le camere seguono la porta in scala (4,60 × 1,90) e il dischetto a 8,5 m: più basse e più vicine
+  // di quelle di prima, altrimenti la porta resterebbe un francobollo in fondo al campo.
+  dietroTiratore:  { pos: [0, 1.95, 13.6], look: [0, 0.95, 0] },
+  dietroPortiere:  { pos: [0, 3.1, -7.4],  look: [0, 0.75, 5], fov: 74 }, // abbastanza indietro da tenere i pali nel quadro portrait
+  lateraleReplay:  { pos: [-6.4, 1.3, 3.5], look: [0, 0.9, 1.2] },
+  drone:           { pos: [0, 10.5, 9.5],  look: [0, 0.5, 1.6] },
+  dischetto:       { pos: [0.3, 0.32, 9.1], look: [0, 1.0, 0] },
   // primi piani (QA visivo e schermate): portiere in porta, tiratore sul dischetto
   primoPianoPortiere: { pos: [1.0, 1.35, 3.6], look: [0, 1.0, 0.55] },
-  primoPianoTiratore: { pos: [0.2, 1.25, 9.9], look: [0.55, 1.0, 12.7] }
+  primoPianoTiratore: { pos: [0.2, 1.2, 7.6], look: [0.5, 0.95, 10.0] }
 }
 export function createCameraRig(aspect) {
   const camera = new THREE.PerspectiveCamera(58, aspect, 0.1, 400)

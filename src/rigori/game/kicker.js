@@ -1,9 +1,10 @@
 import * as THREE from 'three'
+import { DISCHETTO } from '../scene/net.js'
 // Tiratore: stesso manichino del portiere, di spalle alla camera, rincorsa e calcio sincronizzati col volo.
 // Le clip Mixamo: idle (10,5 s), corsa in place (0,83 s), calcio (1,5 s, contatto piede-palla a ~0,62 s come nel legacy).
 // DA VERIFICARE: posizioni di attesa e di calcio a occhio.
 const STANCE = new THREE.Vector3(0.55, 0, 12.7)   // dove aspetta, in diagonale
-const PLANT = new THREE.Vector3(0.18, 0, 11.32)   // piede d'appoggio accanto al pallone
+const PLANT = new THREE.Vector3(0.18, 0, DISCHETTO + 0.32)   // piede d'appoggio accanto al pallone
 const KICK_FROM = 0.37, KICK_CONTACT = 0.62        // s nella clip
 export const KICK_DELAY = 0.5                      // s dal gesto al distacco della palla (rincorsa 0,25 + calcio 0,25)
 export function createKicker(char) {

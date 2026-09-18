@@ -25,9 +25,12 @@ const makeKeeper = (zone) => { const k = createKeeper(stubChar(), { difficulty: 
 describe('esito calcolato una volta sola', () => {
   test("nessun passo di disegno cambia l'esito (1/60 e 1/240 danno lo stesso)", () => {
     // tiro in basso a sinistra con il portiere forzato nella stessa zona: parata
+    // tiro al centro del settore basso-sinistro col portiere tuffato lì: il seme 4003 dà una parata con
+    // contatto pieno (guanto a 0,055 m). Serve un caso di parata, perché è quello in cui l'istante di
+    // risoluzione non coincide con l'arrivo sulla porta.
     const keeper = makeKeeper(3)
     const c = zoneCenter(3)
-    const rec = buildShotRecord({ aim: { x: c.x, y: c.y, power: 0.7, curve: 0 }, precision: 0, keeper, seed: 4242 })
+    const rec = buildShotRecord({ aim: { x: c.x, y: c.y, power: 0.55, curve: 0 }, precision: 0, keeper, seed: 4003 })
     assert.equal(rec.outcome, 'save', 'il tiro nella zona del tuffo deve essere una parata')
     assert.equal(rec.sealed, true, 'il record è chiuso già alla creazione')
     const esiti = new Set()
@@ -217,10 +220,11 @@ describe('cartello e turno', () => {
     // zona astratta, solo le capsule misurate sul modello. Quello che conta è che ogni parata sia vera.
     console.log(`    ${parate.length} parate su ${r.length} tiri · contatto entro 0,25 m in ${parate.length - fuori.length}/${parate.length}` + (parate.length ? ` · massimo ${Math.max(...parate.map((x) => x.d)).toFixed(4)} m` : ''))
     assert.deepEqual(fuori, [], 'parate senza contatto vero')
-    // la fisica resta nelle finestre chieste
+    // La fisica resta nelle finestre, che ora seguono la scala del mondo: la velocità è quella dichiarata in
+    // FISICA (scalata col dischetto a 8,5 m), il tempo di volo resta quello di sempre, 0,40-0,85 s.
     const v = r.map((x) => x.v0), t = r.map((x) => x.volo)
-    assert.ok(Math.min(...v) >= 15 && Math.max(...v) <= 30, `velocità iniziale fuori da 15–30 m/s: ${Math.min(...v)}–${Math.max(...v)}`)
-    assert.ok(Math.min(...t) >= 0.4 && Math.max(...t) <= 0.75, `tempo di volo fuori da 0,4–0,75 s: ${Math.min(...t)}–${Math.max(...t)}`)
+    assert.ok(Math.min(...v) >= FISICA.vMin - 0.1 && Math.max(...v) <= FISICA.vMax + 0.1, `velocità iniziale fuori da ${FISICA.vMin}–${FISICA.vMax} m/s: ${Math.min(...v)}–${Math.max(...v)}`)
+    assert.ok(Math.min(...t) >= 0.4 && Math.max(...t) <= 0.85, `tempo di volo fuori da 0,40–0,85 s: ${Math.min(...t)}–${Math.max(...t)}`)
   }, { timeout: 600000 })
 
   test('i ruoli vengono dal turno: da portiere tira l\'altro', async () => {

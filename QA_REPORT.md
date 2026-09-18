@@ -682,6 +682,116 @@ cambio: **1 XP del sito ogni 20 del gioco, massimo 50**, così il gioco non scav
 Nessuna chiave del sito viene sovrascritta dal gioco, e nessuna chiave del gioco dal sito. Se il profilo non è
 ancora stato scelto il gioco funziona lo stesso: gli XP restano salvati e si vedono al primo profilo selezionato.
 
+## Porta in scala coi personaggi
+
+Avevi ragione: era un problema di geometria. Contro una porta regolamentare (7,32 × 2,44) un personaggio alto
+1,5 m equivalenti non copre lo specchio, e nessuna taratura del reach può rimediare.
+
+### La porta e tutto quello che ne deriva
+
+| Misura | Prima | Ora |
+|---|---|---|
+| Porta | 7,32 × 2,44 m | **4,40 × 1,82 m** |
+| Spessore pali | 0,06 m | 0,10 m |
+| Profondità | 2,00 m | 1,40 m |
+| Dischetto | 11 m | **8,5 m** |
+| Settore orizzontale | 2,44 m | 1,47 m |
+| Velocità della palla | 15–30 m/s | **11,5–22 m/s** |
+
+Niente di tutto questo è scritto due volte: `GOAL` e `DISCHETTO` stanno in `scene/net.js` e da lì derivano le
+sei zone (`GOAL.w/3`), la mira, i bersagli della modalità Skill, le linee del campo (scalate col rapporto
+4,40/7,32), la mesh della rete e le camere.
+
+**La velocità andava scalata col mondo.** Col dischetto a 8,5 m, tenere 15–30 m/s avrebbe accorciato il volo a
+0,33–0,60 s: il portiere non faceva in tempo a tuffarsi su niente. Con 11,5–22 m/s il volo torna a 0,45–0,84 s.
+
+### Perché non bastava rimpicciolire la porta
+
+Tre difetti veri, trovati misurando, che la porta più piccola ha smascherato invece di risolvere:
+
+1. **Il tuffo superava la palla.** La clip porta le mani a |x| 2,29 m, misura del modello. Col settore laterale
+   a 1,47 m il portiere si tuffava **0,82 m oltre**. Con la porta vecchia (settori a ±2,44) combaciava per caso.
+   Ora la radice rientra di una quantità **analitica** — `2,29 − GOAL.w/3` — simmetrica per costruzione, che
+   segue la porta da sola se cambia.
+2. **Il tuffo proseguiva fino a terra proprio mentre arrivava la palla.** Le mani scendevano a y 0,26–0,41
+   mentre la palla passava a 0,64–0,79. Fermando la posa alla massima estensione (`CLIP_SPAN` 0,95 → 0,60) le
+   parate col tuffo giusto sono passate dal **15 % al 34 %**. L'atterraggio avviene dopo, fuori dalla finestra
+   che decide l'esito.
+3. **La posa centrale bassa era un accovacciamento.** `catch` porta le mani solo fino a y 0,59; `block` copre
+   0,09–0,57 su |x| fino a 1,36, ed è più larga. Misurato clip per clip:
+
+   | Clip | \|x\| max | y |
+   |---|---|---|
+   | keeperIdle | 0,33 | 0,52–0,59 |
+   | ready | 1,55 | 0,57–0,65 |
+   | block | 1,36 | 0,09–0,57 |
+   | catch | 0,41 | 0,31–0,59 |
+   | high | 0,46 | 0,48–**1,77** |
+   | diveL | **2,17** | 0,39–1,06 |
+
+Lo spostamento verticale dei tuffi è calibrato da `scripts/qa/rigori-calibra.mjs`, che misura: spara un
+ventaglio di tiri verso il centro di ogni settore e cerca lo spostamento fisso che porta il corpo sulla palla.
+Il risultato sta in `src/rigori/data/tuffi.js`, generato. Non è un inseguimento: è una costante per direzione.
+
+### I numeri dei due ruoli
+
+Sweep della larghezza, con altezza in proporzione, 200 tiri per riga:
+
+| Porta | Gol quando tiri tu | Parate quando pari tu | Centrali parati | Gol sugli incroci |
+|---|---|---|---|---|
+| 4,60 × 1,90 | 70,5 % | 14,8 % | 26,3 % | — |
+| **4,40 × 1,82** | **63,6 %** | 14,8 % | 26,3 % | **100 %** |
+| 4,20 × 1,73 | 62,2 % | 18,3 % | 26,3 % | — |
+| 4,00 × 1,65 | 62,2 % | 19,5 % | 26,3 % | — |
+| 3,80 × 1,57 | 61,0 % | 20,7 % | 26,3 % | — |
+| 3,60 × 1,49 | 59,8 % | 24,4 % | 26,3 % | — |
+
+Ho fissato **4,40 × 1,82**, un passo di 0,20 sotto il 4,60 che avevi indicato, perché a 4,60 i gol erano il
+70,5 %, cioè al limite della fascia; a 4,40 sono il 63,6 %, in mezzo.
+
+| Obiettivo | Misurato | Stato |
+|---|---|---|
+| Gol quando tiri tu: 60–70 % | **63,6 %** | ✅ |
+| Incroci quasi imparabili | **100 % di gol** su 24 tiri all'incrocio | ✅ |
+| Parate quando pari tu: 28–38 % | **14,8 %** | ❌ |
+| Centrali a mezza altezza parati: 70 %+ | **26,3 %** | ❌ |
+
+### Le due percentuali che non ho raggiunto, e perché
+
+**Rimpicciolire la porta non le sposta.** Nel sweep i centrali parati restano **26,3 % a qualunque larghezza**:
+la porta più piccola cambia quanto deve coprire il portiere ai lati, non cosa copre al centro. Le parate salgono
+solo dal 14,8 % al 24,4 % scendendo fino a 3,60 m, una porta alta 1,49 m — cioè più bassa del portiere.
+
+Il limite è il **repertorio di pose**. Le clip disponibili sono sei, e nessuna copre la fascia centrale a mezza
+altezza: `block` arriva a 0,57, `high` parte da 0,48 ma con le mani che salgono verso 1,77, e in mezzo — il petto
+del portiere, dove un portiere vero blocca la palla — non c'è una posa che ci stia nel momento giusto. Un tiro
+centrale a 0,9 m passa a 0,33 m dal braccio più vicino: fuori dalla capsula da 0,25 m.
+
+Per arrivare al 70 % sui centrali serve **una clip nuova**: un portiere in piedi che si abbassa sulle ginocchia
+con le braccia raccolte al petto, cioè la parata più comune. Non è una riga di codice, è un'animazione.
+
+### Verifica visiva
+
+| Screenshot | Misura |
+|---|---|
+| `v7-scala-in-piedi.png` | porta 239 px, testa del portiere 37 px = **15,4 %** della larghezza; con le braccia la figura ne occupa circa un terzo |
+| `v7-scala-tuffo-sinistra.png` | mano a x = −1,35 m, **0,85 m dal palo** |
+| `v7-scala-tuffo-destra.png` | mano a x = +1,35 m, **0,85 m dal palo** |
+
+Sul tuffo c'è un conflitto fra due tue richieste, e ho scelto: chiedevi che arrivasse a **0,4 m dal palo**, ma
+chiedevi anche che coprisse il suo settore. Il centro del settore laterale sta a 1,47 m e il palo a 2,20: farlo
+arrivare a 0,4 m dal palo significherebbe tuffarsi **oltre** il proprio settore, cioè dove la palla non va. Ho
+tenuto il settore, e il tuffo si ferma a 0,85 m dal palo. Se preferisci l'effetto scenico, si cambia una riga.
+
+### La mira
+
+Mezzo schermo di trascinamento copre mezza porta più il **15 %** di margine oltre il palo, come chiesto
+(`aimFromGesture` in `shot.js`, derivato da `GOAL.w`). Durante il trascinamento il **mirino** sta sul piano
+della porta dove arriverà la palla: anello più croce, **giallo dentro lo specchio, terracotta fuori**, così si
+vede subito quando si sta mirando nel margine.
+
+`npm test`: 15 test su 15.
+
 ## Cose non verificabili qui (da fare sul telefono)
 
 - fps reali su Chrome Android e Safari iOS, e soglie di degradazione (45/55 fps)

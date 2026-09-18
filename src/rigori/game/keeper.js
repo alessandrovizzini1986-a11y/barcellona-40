@@ -1,5 +1,7 @@
 import * as THREE from 'three'
 import { DIVE_DUR } from './copertura.js'
+import { GOAL } from '../scene/net.js'
+import { TUFFI } from '../data/tuffi.js'
 // Portiere: 6 zone (alto/basso × sx/centro/dx), lettura del tell, tuffi, difficoltà per modalità.
 //
 // TIMELINE UNICA: durante un rigore il portiere non si anima da solo. La decisione (zona, ritardo di reazione,
@@ -12,8 +14,11 @@ import { DIVE_DUR } from './copertura.js'
 // solo se la palla passa dentro quella zona e il tuffo è già almeno al 60 %. Se il guanto non ci arriva, è gol,
 // e non c'è nulla da aggiustare a runtime.
 export const ZONES = ['altoSx', 'altoCentro', 'altoDx', 'bassoSx', 'bassoCentro', 'bassoDx']
-export const zoneOf = (x, y) => (y > 1.15 ? 0 : 3) + (x < -1.22 ? 0 : x > 1.22 ? 2 : 1)
-export const zoneCenter = (z) => ({ x: [-2.4, 0, 2.4][z % 3], y: z < 3 ? 1.75 : 0.6 })
+// Le sei direzioni escono dalle misure della porta, non da numeri scritti a mano: tre settori orizzontali
+// larghi GOAL.w/3 (1,53 m con la porta in scala) e due fasce d'altezza. Se la porta cambia, cambiano da sole.
+const COL = GOAL.w / 6            // mezzo settore: il confine fra centro e laterali
+export const zoneOf = (x, y) => (y > GOAL.h * 0.47 ? 0 : 3) + (x < -COL ? 0 : x > COL ? 2 : 1)
+export const zoneCenter = (z) => ({ x: [-GOAL.w / 3, 0, GOAL.w / 3][z % 3], y: GOAL.h * (z < 3 ? 0.72 : 0.25) })
 // reazione: secondi dal calcio all'inizio del tuffo (da prompt: 0,18–0,32 s, più bassa in Boss)
 const DIFF = {
   facile:  { pCol: 0.40, tell: 0.15, pRow: 0.55, reach: 0.85, react: [0.26, 0.32] },
@@ -22,24 +27,41 @@ const DIFF = {
 }
 // Le clip Mixamo hanno una lunga preparazione: si entra a clip già avviata e si mostra solo la parte utile.
 const CLIP_START = { diveL: 0.55, diveR: 0.55, block: 0.35, catch: 0.30, high: 0.50 }
-const CLIP_SPAN = 0.95 // secondi di clip mostrati, riscalati sulla durata del tuffo
+const CLIP_SPAN = 0.60 // quanto della clip si mostra: si ferma alla massima estensione, non fino a terra.
+// Con 0,95 il tuffo proseguiva verso il suolo proprio mentre arrivava la palla e le mani cadevano: le parate
+// col tuffo giusto erano il 15 %, con 0,60 sono il 34 %. L'atterraggio lo fa react(), dopo l'esito.
 // DURATA DEL TUFFO: costante, non più stirata fino all'impatto. Il portiere parte a t_dive e arriva a
 // t_dive + DIVE_DUR, punto. Se la palla passa prima, non c'è. La difficoltà si tara qui e su reactionDelay,
 // mai allargando la zona coperta (vedi data/reach.js).
 export { DIVE_DUR }
-// Arco verticale FISSO delle direzioni alte laterali: la clip di tuffo porta i guanti solo a y = 1,05 m,
-// e senza questo le due zone alte ai lati sarebbero irraggiungibili per costruzione. Non insegue la palla:
-// è una proprietà della posa, identica a ogni tiro, e parte e finisce con i piedi a terra.
-export const ARCO_ALTO = 0.45
-const arcoDi = (zone) => (zone === 0 || zone === 2) ? ARCO_ALTO : 0
-export const alzataA = (zone, u) => arcoDi(zone) * Math.sin(Math.PI * THREE.MathUtils.clamp(u, 0, 1))
-// Misurato clip per clip (guanto a fine tuffo, corpo al centro): diveL porta le mani a x ≈ -2,28, diveR solo
-// a +1,77, high e block restano sotto x = 1,2. Quindi per tutti e quattro gli angoli si usa diveL, specchiata
-// per il lato destro: è l'unica che arriva davvero in fondo. Al centro restano high (alto) e catch (basso).
+// Misurato clip per clip, mani in coordinate mondo lungo tutta la posa:
+//   keeperIdle |x| 0,33  y 0,52-0,59      ready |x| 1,55  y 0,57-0,65
+//   block      |x| 1,36  y 0,09-0,57      catch |x| 0,41  y 0,31-0,59
+//   high       |x| 0,46  y 0,48-1,77      diveL |x| 2,17  y 0,39-1,06
+// Da qui la scelta: ai lati solo diveL arriva davvero in fondo, specchiata per il lato destro. Al centro
+// `high` copre la fascia alta fino a 1,77 e `block` quella bassa, più larga di `catch`.
 const posaPerZona = (zone) => {
   const col = zone % 3, row = zone < 3 ? 0 : 1
-  if (col === 1) return { clip: row === 0 ? 'high' : 'catch', mirror: 1 }
+  if (col === 1) return { clip: row === 0 ? 'high' : 'block', mirror: 1 }
   return { clip: 'diveL', mirror: col === 0 ? 1 : -1 }
+}
+// SPOSTAMENTO DELLA RADICE PER DIREZIONE, calibrato una volta sola e salvato in data/tuffi.js.
+// Le clip Mixamo non sono state fatte per questa porta: il tuffo laterale butta le mani a |x| 2,29 m (il
+// settore laterale sta a 1,53) e a fine tuffo le fa scendere a y 0,26-0,41, mentre la palla passa più in alto.
+// Per ogni direzione si sposta la radice di una quantità FISSA, la stessa a ogni tiro, che non guarda dove va
+// il tiro: sulla X per non superare il settore, sulla Y (solo nei tuffi) per incontrare la palla dove passa.
+// La calibrazione la fa scripts/qa/rigori-calibra.mjs misurando, non a occhio.
+const CULMINE = 0.8 // il culmine cade a 4/5 del tuffo: è lì che arriva la palla
+const profilo = (u) => { const x = THREE.MathUtils.clamp(u, 0, 1); const k = x <= CULMINE ? x / CULMINE : 1 - (x - CULMINE) / (1 - CULMINE); return k * k * (3 - 2 * k) }
+export const alzataA = (zone, u) => (TUFFI[zone]?.y || 0) * profilo(u)
+// Il rientro NON è tarato a mano: è la differenza fra dove la clip porta le mani (misurata, 2,29 m dal
+// centro) e dove sta il centro del settore laterale (GOAL.w/3). Così è simmetrico per costruzione e segue
+// la porta: se la porta cambia larghezza, il tuffo si riposiziona da solo, senza ricalibrare niente.
+const ALLUNGO_CLIP = 2.29
+export const rientroDi = (zone, u = 1) => {
+  const col = zone % 3
+  if (col === 1) return 0
+  return (ALLUNGO_CLIP - GOAL.w / 3) * (col === 0 ? 1 : -1) * THREE.MathUtils.clamp(u, 0, 1)
 }
 const _v = new THREE.Vector3(), _w = new THREE.Vector3()
 export function createKeeper(char, { difficulty = 'normale', onDive } = {}) {
@@ -61,7 +83,7 @@ export function createKeeper(char, { difficulty = 'normale', onDive } = {}) {
   // correzione verso la palla, nessun inseguimento. Se il guanto non ci arriva, l'esito è gol.
   const posaA = (decision, t) => {
     const u = avanzamento(decision, t)
-    g.position.set(decision.startX ?? 0, alzataA(decision.zone, u), 0.55)
+    g.position.set((decision.startX ?? 0) + rientroDi(decision.zone, u), alzataA(decision.zone, u), 0.55)
     char.model.scale.x = decision.mirror ?? 1
     char.scrub(decision.clip, (CLIP_START[decision.clip] || 0) + u * CLIP_SPAN)
     char.mixer.update(0)
@@ -128,12 +150,17 @@ export function createKeeper(char, { difficulty = 'normale', onDive } = {}) {
       if (driven !== decision) { driven = decision; dustDone = false; state = 'diving'; char.stopAll() }
       const start = decision.reactionDelay
       const u = avanzamento(decision, t)
+      // ATTERRAGGIO: finito il tuffo la clip prosegue fino a terra e l'alzata rientra. Sta FUORI dalla
+      // finestra che decide l'esito (u resta a 1 lì dentro), quindi non cambia la zona coperta: serve solo
+      // perché a replay finito il portiere non resti sospeso a mezz'aria.
+      const dopo = Math.max(0, t - (start + DIVE_DUR))
+      const caduta = THREE.MathUtils.clamp(1 - dopo / 0.30, 0, 1)
       // La radice si muove solo lungo l'arco verticale della direzione (zero per le direzioni basse):
       // nessuno spostamento verso la palla, nessuna correzione. La posa è quella della direzione, sempre.
-      g.position.set(decision.startX ?? 0, alzataA(decision.zone, u), 0.55)
+      g.position.set((decision.startX ?? 0) + rientroDi(decision.zone, u), alzataA(decision.zone, u) * caduta, 0.55)
       char.model.scale.x = decision.mirror ?? 1
       char.setLean(0)
-      char.scrub(decision.clip, (CLIP_START[decision.clip] || 0) + u * CLIP_SPAN)
+      char.scrub(decision.clip, (CLIP_START[decision.clip] || 0) + u * CLIP_SPAN + Math.min(0.5, dopo))
       if (live && !dustDone && t >= start) { dustDone = true; onDive?.(decision.zone, g.position) }
     },
     react(result) {

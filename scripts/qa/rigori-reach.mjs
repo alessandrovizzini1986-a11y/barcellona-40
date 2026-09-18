@@ -19,6 +19,9 @@ const dati = await p.evaluate(async (N) => {
   const w = (o) => { const v = new THREE.Vector3(); o.getWorldPosition(v); return [+v.x.toFixed(4), +v.y.toFixed(4), +v.z.toFixed(4)] }
   const out = []
   for (let zona = 0; zona < 6; zona++) {
+    // azzerare prima di ogni direzione: playerDecision cattura startX dalla posizione corrente, e senza
+    // questo la misura di una direzione partirebbe da dove l'ha lasciata la precedente
+    k.reset(); char.update(0); k.group.updateMatrixWorld(true)
     const dec = { ...k.playerDecision(zona, 0), reactionDelay: 0 }
     const campioni = []
     for (let i = 0; i <= N; i++) {

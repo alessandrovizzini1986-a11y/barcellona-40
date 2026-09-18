@@ -1,4 +1,5 @@
 import * as THREE from 'three'
+import { DISCHETTO } from '../scene/net.js'
 import { mosaicBallTexture } from '../scene/textures.js'
 // Pallone: sfera con la texture del progetto (pentagoni, senza marchi). La fisica del tiro arriva in shot.js.
 export const BALL_R = 0.11
@@ -6,9 +7,9 @@ export function createBall(texture) {
   const mat = new THREE.MeshStandardMaterial({ map: texture || null, color: texture ? 0xffffff : 0xf2e9de, roughness: .45, metalness: 0 })
   const mesh = new THREE.Mesh(new THREE.SphereGeometry(BALL_R, 28, 20), mat)
   mesh.castShadow = true
-  mesh.position.set(0, BALL_R, 11)
+  mesh.position.set(0, BALL_R, DISCHETTO)
   const shadow = new THREE.Mesh(new THREE.CircleGeometry(BALL_R * 1.3, 16), new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: .35, depthWrite: false }))
-  shadow.rotation.x = -Math.PI / 2; shadow.position.set(0, 0.014, 11)
+  shadow.rotation.x = -Math.PI / 2; shadow.position.set(0, 0.014, DISCHETTO)
   let mosaic = null
   return {
     mesh, shadow,
@@ -19,7 +20,7 @@ export function createBall(texture) {
       else { mat.map = texture || null; mat.color.set(texture ? 0xffffff : 0xf2e9de); mat.metalness = 0; mat.roughness = .45 }
       mat.needsUpdate = true
     },
-    reset() { mesh.position.set(0, BALL_R, 11); mesh.rotation.set(0, 0, 0); shadow.position.set(0, 0.014, 11); shadow.scale.setScalar(1) },
+    reset() { mesh.position.set(0, BALL_R, DISCHETTO); mesh.rotation.set(0, 0, 0); shadow.position.set(0, 0.014, DISCHETTO); shadow.scale.setScalar(1) },
     update() { shadow.position.set(mesh.position.x, 0.014, mesh.position.z); const s = Math.max(0.3, 1 - (mesh.position.y - BALL_R) * 0.35); shadow.scale.setScalar(s); shadow.material.opacity = 0.35 * s }
   }
 }

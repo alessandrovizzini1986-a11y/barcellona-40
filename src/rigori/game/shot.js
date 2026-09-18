@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import { verificaParata, RAGGIO_CAPSULA } from './copertura.js'
-import { GOAL } from '../scene/net.js'
+import { GOAL, DISCHETTO } from '../scene/net.js'
 import { BALL_R } from './ball.js'
 import { makeRng, newSeed } from '../core/rng.js'
 // IL TIRO È UN RECORD IMMUTABILE, LA PALLA È INTEGRATA CON LA FISICA.
@@ -15,24 +15,29 @@ import { makeRng, newSeed } from '../core/rng.js'
 export const FISICA = {
   g: 9.81,          // gravità
   drag: 0.0045,     // resistenza quadratica: a = -k |v| v (pallone da calcio)
-  magnus: 0.0048,   // a = k (ω × v); tarato perché la curva massima sposti ~0,8 m sugli 11 m
+  magnus: 0.0048,   // a = k (ω × v); tarato sulla distanza del dischetto
   spinMax: 60,      // rad/s alla curvatura massima dello swipe (≈ 9,5 giri al secondo)
   spinDecay: 0.6,   // la rotazione si smorza in volo (al secondo)
   dt: 1 / 120,
-  vMin: 15, vMax: 30,          // m/s: 54–108 km/h, dal tiro piazzato alla botta
+  // Velocità in scala col mondo: col dischetto a 8,5 m invece di 11, tenere 15-30 m/s avrebbe accorciato il
+  // volo a 0,33-0,60 s e il portiere non avrebbe fatto in tempo a tuffarsi su niente. Con 11,5-22 m/s il volo
+  // torna nella finestra 0,40-0,75 s e il tiro si legge come prima.
+  vMin: 11.5, vMax: 22,        // m/s: 41–79 km/h, dal tiro piazzato alla botta
   restituzione: 0.6,           // rimbalzo su palo e traversa
   dragRete: 8,                 // dentro la rete la palla frena di brutto
   durataMax: 3.2,
   presa: 0.9        // la palla presa resta nei guanti prima di dichiarare il tiro concluso
 }
-const SPOT = new THREE.Vector3(0, BALL_R, 11)
+const SPOT = new THREE.Vector3(0, BALL_R, DISCHETTO)
 const _a = new THREE.Vector3(), _b = new THREE.Vector3(), _q = new THREE.Quaternion(), _q2 = new THREE.Quaternion()
 
 // Da un gesto (px) a un bersaglio sul piano della porta (m) + potenza + curva. DA VERIFICARE: scale mie.
 export function aimFromGesture(g, size) {
-  const x = (g.dx / (size.w * 0.50)) * (GOAL.w / 2 + 0.9)
+  // Mezzo schermo di trascinamento = mezza porta più il 15 % di margine fuori: con la porta in scala la
+  // mira conta, e serve risoluzione. Il margine è quello che permette di sbagliare, non un'area utile.
+  const x = (g.dx / (size.w * 0.50)) * (GOAL.w / 2 * 1.15)
   const up = -g.dy
-  let y = Math.max(0.12, (up / (size.h * 0.55)) * (GOAL.h + 0.5))
+  let y = Math.max(0.12, (up / (size.h * 0.55)) * (GOAL.h * 1.15))
   const speedBonus = Math.min(0.3, g.speed / 6000)
   let power = Math.min(1.2, Math.max(0.35, 0.35 + (g.len / (size.h * 0.45)) * 0.6 + speedBonus))
   if (power > 0.95) y += (power - 0.95) * 4 // il tiro "sale"
@@ -176,7 +181,7 @@ export function sealShotRecord(rec, keeper) {
   // presa se la palla è lenta e passa in pieno nel guanto, altrimenti respinta
   if (hit) { rec.outcome = 'save'; rec.catch = rec.aim.power < 0.8 && hit.distanza < RAGGIO_CAPSULA * 0.5 }
   else if (suPalo || suTraversa) rec.outcome = suTraversa ? 'crossbar' : 'post'
-  else if (dentroX && sottoTraversa) { rec.outcome = 'goal'; rec.corner = Math.abs(x) > GOAL.w / 2 - 0.9 && y > GOAL.h - 0.7 }
+  else if (dentroX && sottoTraversa) { rec.outcome = 'goal'; rec.corner = Math.abs(x) > GOAL.w / 2 - 0.55 && y > GOAL.h - 0.45 }
   else rec.outcome = 'miss'
   rec.traiettoria = simula(rec)
   rec.duration = rec.traiettoria.dur

@@ -7,7 +7,7 @@ import { createPerf } from './core/perf.js'
 import { createField } from './scene/field.js'
 import { createStadium } from './scene/stadium.js'
 import { createCrowd } from './scene/crowd.js'
-import { createGoal } from './scene/net.js'
+import { createGoal, GOAL, DISCHETTO } from './scene/net.js'
 import { createLights } from './scene/lights.js'
 import { createPostFx } from './scene/postfx.js'
 import { createBall } from './game/ball.js'
@@ -228,10 +228,10 @@ export function camereReplay(rec) {
   const k = rec.keeper?.zone != null ? zoneCenter(rec.keeper.zone) : { x: 0, y: 1 }
   const mx = (rec.contact.x + k.x) / 2, my = Math.max(0.8, (rec.contact.y + k.y) / 2)
   return [
-    // 1) laterale bassa: 1,2 m da terra, 8 m dal dischetto, sul lato del tiro; palla e portiere in campo
-    { pos: [lato * 8, 1.2, 5.5], look: [mx, my, 0.6], fov: 70, segui: false },
+    // 1) laterale bassa: 1,1 m da terra, sul lato del tiro; palla e portiere in campo
+    { pos: [lato * 5.2, 1.1, 4.0], look: [mx, my, 0.5], fov: 70, segui: false },
     // 2) frontale 3/4 dal lato del tiratore, dietro la palla: segue la palla e il portiere guarda in camera
-    { pos: [lato * 3.0, 1.55, 11.5], look: [mx, my, 0.6], fov: 58, segui: true }
+    { pos: [lato * 2.2, 1.35, 9.0], look: [mx, my, 0.5], fov: 58, segui: true }
   ]
 }
 // Chiusura della sequenza esito → replay → turno successivo. Passa UNA volta sola: i callback dei replay che
@@ -526,7 +526,7 @@ window.__rigori = {
   // La misura è quella con cui è stato deciso l'esito: distanza minima fra la palla in volo e la capsula
   // guanto→spalla della direzione scelta, dalla tabella misurata sul modello.
   distanzaGuanto: () => shot.record?.distanzaGuanto ?? null,
-  ruoli: () => shot.ruoli, camereReplay, DIVE_DUR,
+  ruoli: () => shot.ruoli, camereReplay, DIVE_DUR, GOAL, DISCHETTO,
   // QA: salta la sequenza esito+replay come farebbe un tocco. Torna false se il salto non è accettato
   // (sequenza già chiusa, oppure il cartello è a schermo da meno di 400 ms).
   salta: () => saltaSequenza(), get sequenzaConsumata() { return sequenzaConsumata }, get ritardoSalto() { return RITARDO_SALTO },
