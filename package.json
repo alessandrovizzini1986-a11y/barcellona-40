@@ -10,6 +10,7 @@
     "test": "node --test tests/keeper-reach.test.js tests/shot.test.js",
     "test:gate": "node --test tests/keeper-reach.test.js",
     "reach": "node scripts/qa/rigori-reach.mjs",
+    "og:rigori": "node scripts/qa/og-rigori.mjs",
     "data": "node scripts/geocode.mjs && node scripts/distances.mjs && node scripts/validate.mjs",
     "validate": "node scripts/validate.mjs"
   },

@@ -42,13 +42,25 @@ function copyLegacy() {
   }
 }
 
+// URL assoluto del sito pubblicato. Le anteprime social (WhatsApp, Telegram) accettano SOLO URL assoluti in
+// https: un path relativo in og:image è la causa più comune di anteprima vuota. Da qui escono sia le costanti
+// del codice sia i meta delle pagine, che li ricevono con il segnaposto %SITE_URL%.
+const SITE_URL = (process.env.SITE_URL || 'https://alessandrovizzini1986-a11y.github.io/barcellona-40/').replace(/\/?$/, '/')
+// Sostituisce %SITE_URL% negli HTML: così og:image e og:url sono assoluti senza scriverli a mano in ogni pagina.
+function metaAssoluti() {
+  return {
+    name: 'meta-assoluti',
+    transformIndexHtml: { order: 'pre', handler: (html) => html.replaceAll('%SITE_URL%', SITE_URL) }
+  }
+}
+
 export default defineConfig({
   base: process.env.BASE_PATH || '/',
-  plugins: [copyLegacy()],
+  plugins: [copyLegacy(), metaAssoluti()],
   // Data e ora della build, mostrata in fondo alla vista Info
   define: {
     __BUILD_ID__: JSON.stringify(new Date().toISOString().slice(0, 16).replace('T', ' ')),
-    __SITE_URL__: JSON.stringify(process.env.SITE_URL || 'https://barcelona40.pages.dev')
+    __SITE_URL__: JSON.stringify(SITE_URL)
   },
   build: {
     target: 'es2022',

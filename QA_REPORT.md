@@ -792,6 +792,61 @@ vede subito quando si sta mirando nel margine.
 
 `npm test`: 15 test su 15.
 
+## Anteprima social (Open Graph)
+
+Il link del gioco non mostrava niente su WhatsApp perché `og:image` puntava a `og-rigori.jpg` nella radice del
+sito, **un file che non esisteva**, e mancavano `og:url`, `og:site_name` e `twitter:card`.
+
+### Immagine
+
+`npm run og:rigori` (`scripts/qa/og-rigori.mjs`) la genera in due passaggi:
+
+1. fotografa la **scena vera del gioco** a 1200×630, camera dietro il tiratore, porta e portiere in quadro,
+   HUD rimosso;
+2. la compone in un modello HTML con titolo in Clash Display, sottotitolo, i quattro volti in basso e la barra
+   coi colori del sito, ed esporta in JPEG scendendo di qualità finché sta sotto i 290 kB.
+
+Risultato: `public/assets/rigori/og-rigori.jpg`, **1200×630, 124 kB** (limite 300 kB), JPEG baseline verificato.
+
+Uno screenshot grezzo non andava bene, come dicevi: in miniatura l'HUD è illeggibile. Il testo è dimensionato
+per leggersi a 200 px di larghezza (titolo 96 px su 1200, cioè 16 px a quella scala).
+
+**Una cosa che non sono riuscito a mettere**: i fari accesi. Ho provato tre inquadrature; alzando la camera
+abbastanza da inquadrarli, il volto del portiere finisce in ombra e non si riconosce più. A 200 px conta più la
+faccia dei fari, e che sia notte si legge dal cielo stellato e dalle gradinate illuminate. Le tre prove sono in
+`scripts/qa/og-rigori.mjs`, basta cambiare una riga.
+
+### Meta tag
+
+`og:image` e `og:url` sono **assoluti e in https**, costruiti da una costante sola: `SITE_URL` in
+`vite.config.js`, che un plugin (`meta-assoluti`) sostituisce al posto di `%SITE_URL%` negli HTML. Così non
+esiste modo di scrivere per sbaglio un path relativo, che è la causa più comune di anteprima vuota.
+
+| Pagina | og:url | og:image |
+|---|---|---|
+| Gioco | `…/barcellona-40/rigori/` | `…/barcellona-40/assets/rigori/og-rigori.jpg` |
+| Sito | `…/barcellona-40/` | `…/barcellona-40/og.png` |
+
+Il valore predefinito di `SITE_URL` in `vite.config.js` era rimasto a `barcelona40.pages.dev`: una build locale
+avrebbe prodotto anteprime che puntavano a un dominio sbagliato. Ora è quello vero, e il workflow lo passa lo stesso.
+
+**Per il sito ho tenuto `og.png`** invece di creare `og-sito.jpg`: quell'immagine esiste già, è 1200×630 e
+153 kB, ed è nei link già condivisi. Rinominarla vorrebbe dire far puntare a un 404 le anteprime che qualcuno ha
+in chat. Ho aggiunto i meta che mancavano (`og:url`, `og:site_name`, `og:image:type`, `og:image:alt`) e ho
+aggiornato titolo e descrizione con i testi che hai dato.
+
+### Verifica
+
+| Controllo | Esito |
+|---|---|
+| Tutti i tag presenti nel build, con URL assoluti | ✅ |
+| Immagine nel build, JPEG valido 1200×630 | ✅ 127 467 byte |
+| Sotto i 300 kB | ✅ 124 kB |
+| `npm test` dopo le modifiche | ✅ 15 su 15 |
+
+**Cache di WhatsApp**: l'anteprima è memorizzata per URL. Per vedere subito quella nuova va condiviso il link
+con `?v=2` la prima volta.
+
 ## Cose non verificabili qui (da fare sul telefono)
 
 - fps reali su Chrome Android e Safari iOS, e soglie di degradazione (45/55 fps)
