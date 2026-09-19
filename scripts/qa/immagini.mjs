@@ -12,20 +12,20 @@ const ok = (n, c, x = '') => { out.push(c); if (!c) process.exitCode = 1; consol
 const DIR = 'public/assets/tappe'
 const file = readdirSync(DIR)
 const webp = file.filter((f) => f.endsWith('.webp')), svg = file.filter((f) => f.endsWith('.svg'))
-ok('17 foto WebP: 16 da Commons più una privata', webp.length === 17, webp.length + '')
+ok('15 foto WebP: 14 da Commons più una privata', webp.length === 15, webp.length + '')
 ok('9 card stilizzate SVG', svg.length === 9, svg.length + '')
 const misure = []
 for (const f of webp) { const m = await sharp(`${DIR}/${f}`).metadata(); misure.push(`${f} ${m.width}×${m.height} ${m.format}`) ; ok(`${f} è 800×450 WebP`, m.width === 800 && m.height === 450 && m.format === 'webp', `${m.width}×${m.height} ${m.format}`) }
 const kb = file.reduce((n, f) => n + statSync(`${DIR}/${f}`).size, 0) / 1024
-// Il tetto era 1,2 MB; con la foto di El Mirador non ci si sta. Tolte `sarria.webp` e `pobleespanyol.webp`,
-// che non sono assegnate a nessuna tappa, si torna sotto: vedi DA_VERIFICARE.md.
-ok('cartella sotto 1,4 MB', kb < 1434, `${(kb / 1024).toFixed(2)} MB`)
+// Tetto rimesso a 1,2 MB: tolte `sarria.webp` e `pobleespanyol.webp`, che non erano assegnate a
+// nessuna tappa, la cartella ci rientra anche con la foto di El Mirador.
+ok('cartella sotto 1,2 MB', kb < 1229, `${(kb / 1024).toFixed(2)} MB`)
 
 // ---- crediti ----
 const crediti = JSON.parse(readFileSync('data/foto-tappe.json', 'utf8'))
 const privateFile = new Set((crediti.private || []).map((f) => `${f.id}.webp`))
 const cred = readFileSync('CREDITS.md', 'utf8')
-ok('crediti per tutte e 16 le foto di Commons', crediti.foto.length === 16 && crediti.scartate.length === 0)
+ok('crediti per tutte e 14 le foto di Commons', crediti.foto.length === 14 && crediti.scartate.length === 0)
 ok('la foto privata è dichiarata e fuori dai crediti Commons', crediti.private?.length === 1 && crediti.private[0].id === 'elmirador' && !crediti.foto.some((f) => f.id === 'elmirador'))
 ok('ogni foto ha autore, licenza e pagina Commons', crediti.foto.every((f) => f.autore && f.licenza && (f.pagina || '').startsWith('https://commons.wikimedia.org/wiki/File:')))
 ok('licenze tutte libere', crediti.foto.every((f) => /^(cc0|cc by|public domain|pd)/i.test(f.licenza)), [...new Set(crediti.foto.map((f) => f.licenza))].join(', '))

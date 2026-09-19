@@ -907,10 +907,11 @@
      "timeStatus": "verificato",
      "venueId": "bunkers",
      "title": "Bunkers del Carmel — MUHBA Turó de la Rovira",
-     "why": "Si resta per il tramonto: alle 19:07 il sole se ne va e la città si accende.",
+     "why": "Si resta per la città che si accende: dalle 18:50 in poi l'Eixample e la Sagrada si colorano.",
      "details": [
       "Il belvedere è uno spazio ad accesso libero: nessun orario, nessun biglietto",
-      "Tramonto alle 19:07. La luce migliore comincia alle 18:31.",
+      "Il sole sparisce dietro Collserola verso le 18:50, il tramonto astronomico è alle 19:07.",
+      "Da qui si guarda a est: lo spettacolo è la città che si accende, non il sole. Dura fino alle 19:36 circa.",
       "Spazi museali (bunker della guerra civile) da ottobre a maggio: mer/ven/sab/dom 10:00–14:00, ultimo ingresso 13:30",
       "4,6 su 17.545 recensioni",
       "Tel +34 932 56 21 22"
@@ -934,6 +935,7 @@
      "durataMin": 210,
      "avviso": "Il belvedere è sempre aperto e gratuito. La parte museale sui bunker chiude alle 14:00, quindi domenica la trovate chiusa: si sale per la vista.",
      "detailsStimati": [
+      "Le 18:50 dipendono dall'altezza della cresta di Collserola vista da qui (2,2°-2,6°): quota e distanza della cresta sono approssimate, il tramonto delle 19:07 invece è calcolato.",
       "Prenota il taxi dall'app mentre sei ancora in cima: qui sopra non ne passano. L'auto ci mette qualche minuto a salire.",
       "Se l'app non trova nessuno: scendi a piedi verso Carrer de Marià Labèrnia e richiama da lì."
      ]

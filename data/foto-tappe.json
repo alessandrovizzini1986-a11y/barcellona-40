@@ -123,17 +123,6 @@
       "kb": 58
     },
     {
-      "id": "pobleespanyol",
-      "file": "assets/tappe/pobleespanyol.webp",
-      "tappa": "La Terrrazza · Poble Espanyol",
-      "titolo": "File:004 Poble Espanyol (Barcelona), plaça Major i glorieta.jpg",
-      "autore": "Enric",
-      "licenza": "CC BY-SA 4.0",
-      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-      "pagina": "https://commons.wikimedia.org/wiki/File:004_Poble_Espanyol_(Barcelona),_pla%C3%A7a_Major_i_glorieta.jpg",
-      "kb": 74
-    },
-    {
       "id": "apolo",
       "file": "assets/tappe/apolo.webp",
       "tappa": "Sala Apolo",
@@ -143,17 +132,6 @@
       "licenzaUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
       "pagina": "https://commons.wikimedia.org/wiki/File:Gatibu_a_la_Sala_Apolo_de_Barcelona_20251101_02.jpg",
       "kb": 13
-    },
-    {
-      "id": "sarria",
-      "file": "assets/tappe/sarria.webp",
-      "tappa": "Sarrià",
-      "titolo": "File:Carrer Major de Sarrià (Barcelona) 01.jpg",
-      "autore": "Joe Mabel",
-      "licenza": "CC BY-SA 4.0",
-      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-      "pagina": "https://commons.wikimedia.org/wiki/File:Carrer_Major_de_Sarri%C3%A0_(Barcelona)_01.jpg",
-      "kb": 67
     },
     {
       "id": "bunkers",
