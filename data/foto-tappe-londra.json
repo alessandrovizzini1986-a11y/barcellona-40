@@ -1,0 +1,263 @@
+{
+  "fonte": "Wikimedia Commons",
+  "foto": [
+    {
+      "id": "blq",
+      "file": "assets/tappe/londra/blq.webp",
+      "tappa": "Aeroporto di Bologna",
+      "titolo": "File:Bologna Guglielmo Marconi Airport Terminal.jpg",
+      "autore": "Threecharlie",
+      "licenza": "CC BY-SA 3.0",
+      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Bologna_Guglielmo_Marconi_Airport_Terminal.jpg",
+      "kb": 35
+    },
+    {
+      "id": "ba",
+      "file": "assets/tappe/londra/ba.webp",
+      "tappa": "Volo British Airways",
+      "titolo": "File:Airbus A319-131 G-EUPL British Airways (6990563152).jpg",
+      "autore": "Alan Wilson",
+      "licenza": "CC BY-SA 2.0",
+      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Airbus_A319-131_G-EUPL_British_Airways_(6990563152).jpg",
+      "kb": 17
+    },
+    {
+      "id": "lhr",
+      "file": "assets/tappe/londra/lhr.webp",
+      "tappa": "Arrivo a Heathrow",
+      "titolo": "File:Terminal 5 at London Heathrow Airport, 2008.jpg",
+      "autore": "Warren Rohner",
+      "licenza": "CC BY-SA 2.0",
+      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Terminal_5_at_London_Heathrow_Airport,_2008.jpg",
+      "kb": 43
+    },
+    {
+      "id": "bakerloo",
+      "file": "assets/tappe/londra/bakerloo.webp",
+      "tappa": "Linea Bakerloo",
+      "titolo": "File:Edgware Road-Bakerloo Line-Northbound.jpg",
+      "autore": "Chris McKenna (Thryduulf)",
+      "licenza": "CC BY-SA 4.0",
+      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Edgware_Road-Bakerloo_Line-Northbound.jpg",
+      "kb": 53
+    },
+    {
+      "id": "southbank",
+      "file": "assets/tappe/londra/southbank.webp",
+      "tappa": "Southbank Centre",
+      "titolo": "File:Yellow steps at the Southbank Centre, London - geograph.org.uk - 7261180.jpg",
+      "autore": "Robin Stott",
+      "licenza": "CC BY-SA 2.0",
+      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Yellow_steps_at_the_Southbank_Centre,_London_-_geograph.org.uk_-_7261180.jpg",
+      "kb": 70
+    },
+    {
+      "id": "sealife",
+      "file": "assets/tappe/londra/sealife.webp",
+      "tappa": "SEA LIFE London Aquarium",
+      "titolo": "File:Underwater Walk of Sea Life London Aquarium.jpg",
+      "autore": "ʘx",
+      "licenza": "CC BY-SA 4.0",
+      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Underwater_Walk_of_Sea_Life_London_Aquarium.jpg",
+      "kb": 31
+    },
+    {
+      "id": "eye",
+      "file": "assets/tappe/londra/eye.webp",
+      "tappa": "London Eye",
+      "titolo": "File:London Eye by Day.jpg",
+      "autore": "Danbu14",
+      "licenza": "CC BY-SA 3.0",
+      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:London_Eye_by_Day.jpg",
+      "kb": 52
+    },
+    {
+      "id": "lina",
+      "file": "assets/tappe/londra/lina.webp",
+      "tappa": "Lina Stores",
+      "titolo": "File:Lina Stores, Soho, W1.jpg",
+      "autore": "Ewan-M",
+      "licenza": "CC BY-SA 2.0",
+      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Lina_Stores,_Soho,_W1.jpg",
+      "kb": 69
+    },
+    {
+      "id": "soho",
+      "file": "assets/tappe/londra/soho.webp",
+      "tappa": "Soho",
+      "titolo": "File:Dean Street - Old Compton Street corner.JPG",
+      "autore": "Philafrenzy",
+      "licenza": "CC BY-SA 4.0",
+      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Dean_Street_-_Old_Compton_Street_corner.JPG",
+      "kb": 74
+    },
+    {
+      "id": "trafalgar",
+      "file": "assets/tappe/londra/trafalgar.webp",
+      "tappa": "Trafalgar Square",
+      "titolo": "File:Trafalgar Square, London 2 - Jun 2009.jpg",
+      "autore": "Diliff",
+      "licenza": "CC BY-SA 3.0",
+      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Trafalgar_Square,_London_2_-_Jun_2009.jpg",
+      "kb": 70
+    },
+    {
+      "id": "horseguards",
+      "file": "assets/tappe/londra/horseguards.webp",
+      "tappa": "Horse Guards Parade",
+      "titolo": "File:London , Westminster - Horse Guards Parade - geograph.org.uk - 2546769.jpg",
+      "autore": "Lewis Clarke",
+      "licenza": "CC BY-SA 2.0",
+      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:London_,_Westminster_-_Horse_Guards_Parade_-_geograph.org.uk_-_2546769.jpg",
+      "kb": 46
+    },
+    {
+      "id": "bigben",
+      "file": "assets/tappe/londra/bigben.webp",
+      "tappa": "Big Ben e Parlamento",
+      "titolo": "File:Palace of Westminster and Elizabeth Tower 20250522.jpg",
+      "autore": "Domob",
+      "licenza": "CC BY-SA 4.0",
+      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Palace_of_Westminster_and_Elizabeth_Tower_20250522.jpg",
+      "kb": 44
+    },
+    {
+      "id": "stjames",
+      "file": "assets/tappe/londra/stjames.webp",
+      "tappa": "St James's Park",
+      "titolo": "File:St James's Park Lake – East from the Blue Bridge - 2012-10-06.jpg",
+      "autore": "Colin",
+      "licenza": "CC BY-SA 3.0",
+      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:St_James%27s_Park_Lake_%E2%80%93_East_from_the_Blue_Bridge_-_2012-10-06.jpg",
+      "kb": 69
+    },
+    {
+      "id": "buckingham",
+      "file": "assets/tappe/londra/buckingham.webp",
+      "tappa": "Buckingham Palace",
+      "titolo": "File:Buckingham Palace from gardens, London, UK - Diliff.jpg",
+      "autore": "Diliff",
+      "licenza": "CC BY-SA 3.0",
+      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Buckingham_Palace_from_gardens,_London,_UK_-_Diliff.jpg",
+      "kb": 93
+    },
+    {
+      "id": "greenpark",
+      "file": "assets/tappe/londra/greenpark.webp",
+      "tappa": "Green Park",
+      "titolo": "File:View from Green Park towards Victoria Memorial.jpg",
+      "autore": "LondonHistoryatHome",
+      "licenza": "CC BY-SA 4.0",
+      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:View_from_Green_Park_towards_Victoria_Memorial.jpg",
+      "kb": 101,
+      "qualita": 70
+    },
+    {
+      "id": "harrods",
+      "file": "assets/tappe/londra/harrods.webp",
+      "tappa": "Harrods",
+      "titolo": "File:Harrods Knightsbridge exterior Christmas decorations in November 2022.jpg",
+      "autore": "Editor5807",
+      "licenza": "CC BY-SA 4.0",
+      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Harrods_Knightsbridge_exterior_Christmas_decorations_in_November_2022.jpg",
+      "kb": 82,
+      "qualita": 70
+    },
+    {
+      "id": "nhm",
+      "file": "assets/tappe/londra/nhm.webp",
+      "tappa": "Natural History Museum",
+      "titolo": "File:Natural History Museum London Jan 2006.jpg",
+      "autore": "Diliff",
+      "licenza": "CC BY-SA 3.0",
+      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Natural_History_Museum_London_Jan_2006.jpg",
+      "kb": 66
+    },
+    {
+      "id": "covent",
+      "file": "assets/tappe/londra/covent.webp",
+      "tappa": "Covent Garden",
+      "titolo": "File:London, Covent Garden -- 2016 -- 4878.jpg",
+      "autore": "Dietmar Rabich",
+      "licenza": "CC BY-SA 4.0",
+      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:London,_Covent_Garden_--_2016_--_4878.jpg",
+      "kb": 87,
+      "qualita": 70
+    },
+    {
+      "id": "lhr_dep",
+      "file": "assets/tappe/londra/lhr_dep.webp",
+      "tappa": "Partenza da Heathrow",
+      "titolo": "File:Departures Terminal 5, London Heathrow Airport (33215594911).jpg",
+      "autore": "Andrew Milligan sumo",
+      "licenza": "CC BY 2.0",
+      "licenzaUrl": "https://creativecommons.org/licenses/by/2.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Departures_Terminal_5,_London_Heathrow_Airport_(33215594911).jpg",
+      "kb": 65
+    },
+    {
+      "id": "blq_arr",
+      "file": "assets/tappe/londra/blq_arr.webp",
+      "tappa": "Atterraggio a Bologna",
+      "titolo": "File:Bologna Guglielmo Marconi Airport aerial.jpg",
+      "autore": "Ex13",
+      "licenza": "CC BY-SA 3.0",
+      "licenzaUrl": "http://creativecommons.org/licenses/by-sa/3.0/",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Bologna_Guglielmo_Marconi_Airport_aerial.jpg",
+      "kb": 41
+    },
+    {
+      "id": "carnaby",
+      "file": "assets/tappe/londra/carnaby.webp",
+      "tappa": "Luci di Carnaby Street",
+      "titolo": "File:Carnaby Street Christmas Lights 2019 - geograph.org.uk - 6329567.jpg",
+      "autore": "Christine Matthews",
+      "licenza": "CC BY-SA 2.0",
+      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Carnaby_Street_Christmas_Lights_2019_-_geograph.org.uk_-_6329567.jpg",
+      "kb": 94
+    },
+    {
+      "id": "regent",
+      "file": "assets/tappe/londra/regent.webp",
+      "tappa": "Luci di Regent Street",
+      "titolo": "File:Regent Street Christmas Lights 2016 - geograph.org.uk - 5233956.jpg",
+      "autore": "Oast House Archive",
+      "licenza": "CC BY-SA 2.0",
+      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Regent_Street_Christmas_Lights_2016_-_geograph.org.uk_-_5233956.jpg",
+      "kb": 85
+    },
+    {
+      "id": "nhm_balena",
+      "file": "assets/tappe/londra/nhm_balena.webp",
+      "tappa": "Hintze Hall (per Olly)",
+      "titolo": "File:Hintze Hall, Natural History Museum, London - 4.jpg",
+      "autore": "APK",
+      "licenza": "CC BY 4.0",
+      "licenzaUrl": "https://creativecommons.org/licenses/by/4.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Hintze_Hall,_Natural_History_Museum,_London_-_4.jpg",
+      "kb": 111,
+      "qualita": 70
+    }
+  ],
+  "scartate": []
+}
