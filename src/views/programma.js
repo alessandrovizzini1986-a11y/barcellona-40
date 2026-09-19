@@ -1,6 +1,6 @@
 // Programma: segmented Ven/Sab/Dom + timeline filtrata per persona
 import { stopsForDay, personById, DAY_COLOR, days } from '../data.js'
-import { stopCard, bindCards } from '../ui/card.js'
+import { stopCard, bindCards, haFoto } from '../ui/card.js'
 import { dayKey, currentStop } from '../time.js'
 import { esc } from '../ui/html.js'
 import { navigate } from '../router.js'
@@ -24,7 +24,9 @@ export async function render(root, { person, sub, header }) {
   // I passi del viaggio (sveglia, parcheggio, volo) si mescolano alle tappe in ordine di orario:
   // sono card normali della stessa timeline, non un blocco a parte.
   const passi = stepCards(key, person)
-  const righe = [...stops.map((s) => ({ at: s.at, html: stopCard(s, { person, isNow: cur?.id === s.id }) })), ...passi]
+  // la prima foto della pagina si carica subito, le altre in lazy
+  const prima = stops.findIndex(haFoto)
+  const righe = [...stops.map((s, i) => ({ at: s.at, html: stopCard(s, { person, isNow: cur?.id === s.id, eager: i === prima }) })), ...passi]
     .sort((a, b) => a.at - b.at)
   root.innerHTML = header('Il programma, tappa per tappa') + `<section class="view">
     <div class="seg" role="tablist" aria-label="Giorno">

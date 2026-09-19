@@ -1,0 +1,71 @@
+{
+  "fonte": "Wikimedia Commons",
+  "foto": [
+    {
+      "id": "ciutadella",
+      "file": "assets/tappe/ciutadella.webp",
+      "titolo": "File:Barcelona Parc Ciutadella cascada.jpg",
+      "autore": "Isiwal",
+      "licenza": "CC BY-SA 3.0",
+      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Barcelona_Parc_Ciutadella_cascada.jpg",
+      "originale": "https://upload.wikimedia.org/wikipedia/commons/7/7d/Barcelona_Parc_Ciutadella_cascada.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "kb": 101
+    },
+    {
+      "id": "santamaria",
+      "file": "assets/tappe/santamaria.webp",
+      "titolo": "File:Basilica de Santa Maria del Mar, 14th century (1) (30393970184).jpg",
+      "autore": "Richard Mortel from Riyadh, Saudi Arabia",
+      "licenza": "CC BY 2.0",
+      "licenzaUrl": "https://creativecommons.org/licenses/by/2.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Basilica_de_Santa_Maria_del_Mar,_14th_century_(1)_(30393970184).jpg",
+      "originale": "https://upload.wikimedia.org/wikipedia/commons/4/4c/Basilica_de_Santa_Maria_del_Mar%2C_14th_century_%281%29_%2830393970184%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "kb": 65
+    },
+    {
+      "id": "montcada",
+      "file": "assets/tappe/montcada.webp",
+      "titolo": "File:Carrer Montcada- Museu Picasso.jpg",
+      "autore": "Kippelboy",
+      "licenza": "CC BY-SA 3.0 es",
+      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/3.0/es/deed.en",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Carrer_Montcada-_Museu_Picasso.jpg",
+      "originale": "https://upload.wikimedia.org/wikipedia/commons/b/b1/Carrer_Montcada-_Museu_Picasso.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "kb": 90
+    },
+    {
+      "id": "pontbisbe",
+      "file": "assets/tappe/pontbisbe.webp",
+      "titolo": "File:Barrio gótico 13.jpg",
+      "autore": "Felvalen",
+      "licenza": "CC BY-SA 4.0",
+      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Barrio_g%C3%B3tico_13.jpg",
+      "originale": "https://upload.wikimedia.org/wikipedia/commons/e/ec/Barrio_g%C3%B3tico_13.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "kb": 91
+    },
+    {
+      "id": "santfelip",
+      "file": "assets/tappe/santfelip.webp",
+      "titolo": "File:San Felip Neri Square in Barcelona.jpg",
+      "autore": "Justraveling.com",
+      "licenza": "CC BY-SA 4.0",
+      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:San_Felip_Neri_Square_in_Barcelona.jpg",
+      "originale": "https://upload.wikimedia.org/wikipedia/commons/a/a0/San_Felip_Neri_Square_in_Barcelona.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "kb": 117
+    },
+    {
+      "id": "santacaterina",
+      "file": "assets/tappe/santacaterina.webp",
+      "titolo": "File:Market Roof (5832285437) (2).jpg",
+      "autore": "Tony Hisgett from Birmingham, UK",
+      "licenza": "CC BY 2.0",
+      "licenzaUrl": "https://creativecommons.org/licenses/by/2.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Market_Roof_(5832285437)_(2).jpg",
+      "originale": "https://upload.wikimedia.org/wikipedia/commons/3/3d/Market_Roof_%285832285437%29_%282%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "kb": 51
+    }
+  ]
+}

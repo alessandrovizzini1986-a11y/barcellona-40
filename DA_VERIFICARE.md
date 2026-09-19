@@ -7,9 +7,6 @@ Generato in parte dagli script dati (`npm run data`). Le sezioni tra marker veng
 <!-- geocoding:start -->
 - **Enoteca Taps Sagrada Família** (`taps`): coordinate mancanti, errore rete: Nominatim HTTP 429. Query: "Enoteca Taps Sagrada Família, Barcelona"
 - **Rooftop Garden – El Palace Barcelona** (`rooftop`): coordinate mancanti, errore rete: Nominatim HTTP 429. Query: "Rooftop Garden – El Palace Barcelona, Barcelona"
-- **Parc de la Ciutadella** (`ciutadella`): coordinate automatiche da Nominatim (41.388416, 2.1862546), da controllare sul posto
-- **Mercat de Santa Caterina – Xarcuteria Debón** (`santacaterina`): coordinate automatiche da Nominatim (41.3863594, 2.1781611), da controllare sul posto
-- **Chao Pescao** (`chaopescao`): coordinate automatiche da Nominatim (41.3861408, 2.1840991), da controllare sul posto
 - **Bodega Biarritz 1881** (`biarritz`): coordinate automatiche da Nominatim (41.3792173, 2.1770987), da controllare sul posto
 - **Can Fisher** (`canfisher`): coordinate automatiche da Nominatim (41.3946058, 2.2062439), da controllare sul posto
 - **Bunkers del Carmel** (`bunkers`): coordinate automatiche da Nominatim (41.4193923, 2.1616974), da controllare sul posto
@@ -18,9 +15,9 @@ Generato in parte dagli script dati (`npm run data`). Le sezioni tra marker veng
 ## distanze
 
 <!-- distanze:start -->
-- f6 ← f5: distanza non calcolata (coordinate mancanti). Tappa marcata `da_verificare`.
-- f7 ← f6: distanza non calcolata (coordinate mancanti). Tappa marcata `da_verificare`.
-- f8 ← f7: distanza non calcolata (coordinate mancanti). Tappa marcata `da_verificare`.
+- f12 ← f11: distanza non calcolata (coordinate mancanti). Tappa marcata `da_verificare`.
+- f13 ← f12: distanza non calcolata (coordinate mancanti). Tappa marcata `da_verificare`.
+- f14 ← f13: distanza non calcolata (coordinate mancanti). Tappa marcata `da_verificare`.
 <!-- distanze:end -->
 
 ## Voci aperte (da `data/checks.json`, spuntabili nella sezione Info → Da verificare)
@@ -33,7 +30,7 @@ Generato in parte dagli script dati (`npm run data`). Le sezioni tra marker veng
 - c7 · Programma notturno Sala Apolo sabato 17 (interferenza Soundhood a 89 m)
 - c8 · SOUNDIT Plaza / Happy Techno Open Air: esistono? orari? (Resident Advisor)
 - c9 · Civico esatto Braseria Sarrià e Rooftop Garden El Palace
-- c10 · Coordinate geocodificate automaticamente (vedi sezione geocoding)
+- c10 · Coordinate geocodificate automaticamente: Biarritz, Can Fisher, Bunkers (vedi sezione geocoding)
 
 ## Altri dati mancanti o non verificati
 
@@ -41,13 +38,15 @@ Generato in parte dagli script dati (`npm run data`). Le sezioni tra marker veng
 - **Album Google Foto: verificare i permessi di caricamento.** Il link risponde 302 e porta a un album condiviso, ma resta da controllare che l'impostazione "Consenti ad altri di aggiungere foto" sia attiva, altrimenti gli altri possono solo guardare. Da controllare aprendo il link in una finestra anonima.
 
 - **Distanze a piedi: motore di routing sostituito.** Il server demo `router.project-osrm.org` ignora il profilo `/foot/` e restituisce sempre percorsi stradali per auto (verificato: `/foot/` e `/driving/` danno risultati identici), quindi gonfiava ogni distanza a piedi. Ora `scripts/distances.mjs` usa Valhalla di OpenStreetMap con costing `pedestrian` (`auto` per le tratte in auto o taxi) e prende i minuti dal tempo restituito da Valhalla, non più da una conversione a 5 km/h. Restano stime su dati OpenStreetMap, non rilievi sul posto.
-- **La tappa f4 si chiama "Chao Pescao" nei dati, ma la correzione sulle distanze la chiamava "Bar Joan".** Il nome del locale non è stato cambiato, perché non era richiesto: se il pranzo di venerdì si sposta da Chao Pescao a Bar Joan servono nome, indirizzo e coordinate del nuovo locale.
+- **Bar Joan: coordinate prese dal mercato.** Il locale è dentro il Mercat de Santa Caterina e non ha coordinate proprie: sulla mappa il suo marker sta sopra quello del mercato. Stessa cosa per `f10` e `f11`, che sono entrambi all'appartamento.
 - **Distanze non calcolate**: `f5→f6`, `f6→f7`, `f7→f8`, perché Enoteca Taps e Rooftop Garden El Palace non hanno coordinate. Le tappe sono marcate `da_verificare`.
 
 - Numero volo di Giulio (atterraggio 07:40 confermato) e di Manuel (09:45).
 - Voli di ritorno di Giulio e Manuel: la tappa `d3` resta `da_verificare` e continua a dire le 20:00. Quella di Alessandro non lo è più: FR5220 delle 23:05, con il percorso completo in `data/viaggio.json`.
 - Enoteca Taps Sagrada Família e Rooftop Garden El Palace: nessuna coordinata (Nominatim non le trova); le tappe f6/f7 sono `da_verificare` e sulla mappa compaiono nella lista "Senza coordinate". Inserire `lat`/`lng` a mano in `data/venues.json` con `verified:true`.
-- Distanze f5→f6→f7→f8 non calcolate per lo stesso motivo.
+- Distanze f11→f12→f13→f14 non calcolate per lo stesso motivo.
+- **Orari della mattina di venerdì**: sono quelli decisi da te, non ricavati da un calcolo. Le distanze e i minuti a piedi invece sono verificati (Valhalla, profilo pedonale) e portano il badge `verificato`.
+- **Foto delle tappe**: scelte a mano su Wikimedia Commons fra i risultati con licenza libera, orizzontali e diurni. Duck Store e Bar Joan non hanno foto libere: il primo ha una paperella disegnata, il secondo niente. Elenco completo con autori e licenze in `CREDITS.md`.
 - Bodega Biarritz 1881: Nominatim restituisce "Bodega Biarritz, Carrer d'en Rull" (Gòtic). Controllare che sia il locale giusto.
 - Coordinate `verified:true` del prompt (appartamento, aeroporto, Sagrada, Olimpo, Braseria, Apolo, Monumental, Terrrazza, mercati) non sono state toccate.
 - Il sito precedente era installabile con un service worker (`_legacy/sw.js`): chi lo aveva aperto vedrà il nuovo sito alla seconda visita, quando il browser rimuove il vecchio worker (404 su `sw.js`).

@@ -17,13 +17,6 @@ import { PHOTO_ALBUM } from '../store.js'
 import { timelineViaggio, bindViaggio } from '../ui/viaggio.js'
 
 const DAY_LABEL = { ven: 'Venerdì 16', sab: 'Sabato 17', dom: 'Domenica 18' }
-const PREP = [
-  ['p1', 'Documento con foto (serve alla Sagrada)'],
-  ['p2', 'Auricolari per l\'audioguida'],
-  ['p3', 'eSIM installata sul WiFi di casa'],
-  ['p4', 'Prenotazione Braseria Sarrià portata a 2'],
-  ['p5', 'Biglietto Sagrada nell\'app ufficiale']
-]
 
 export function summaryText(person, key) {
   const stops = stopsForDay(person, key)
@@ -53,7 +46,6 @@ export async function render(root, { person, header, params }) {
   let html = ''
 
   if (ph === 'before') {
-    const prep = new Set(store.get('prep', []))
     html = header('Manca poco. Tutto è già deciso.') + `<section class="view">
       <div class="hero" aria-live="off">
         <div class="hero__label">Si parte venerdì 16 ottobre</div>
@@ -62,10 +54,6 @@ export async function render(root, { person, header, params }) {
       </div>
       ${albumBanner({ line: 'Ogni foto che carichi finisce nello stesso posto. Stasera riguardate tutto insieme.' })}
       ${songCard({ line: 'Due minuti e quarantacinque. Dopo il terzo ascolto il ritornello non esce più.' })}
-      <h2 class="section-title">Checklist pre-partenza <small>${prep.size}/${PREP.length}</small></h2>
-      <div class="stack checklist">
-        ${PREP.map(([id, t]) => `<label class="check list-item"><input type="checkbox" data-prep="${id}" ${prep.has(id) ? 'checked' : ''}><span>${esc(t)}</span></label>`).join('')}
-      </div>
       ${person === 'ale' ? `<h2 class="section-title">Manda l'album ai ragazzi</h2>${shareAlbum()}` : ''}
       ${person === 'monne' ? speedBanner() : ''}
       ${isOverridden() ? `<p class="faint">Data simulata: ${now().toLocaleString('it-IT')}</p>` : ''}
@@ -76,16 +64,7 @@ export async function render(root, { person, header, params }) {
     if (person === 'ale') bindShareAlbum(root)
     const cd = root.querySelector('#cd')
     timers.push(setInterval(() => { cd.innerHTML = countdownHtml() }, 30_000))
-    const ac = new AbortController()
-    root.addEventListener('change', (e) => {
-      const cb = e.target.closest('input[data-prep]')
-      if (!cb) return
-      const arr = store.get('prep', [])
-      store.set('prep', cb.checked ? [...new Set([...arr, cb.dataset.prep])] : arr.filter((x) => x !== cb.dataset.prep))
-      root.querySelector('.section-title small').textContent = `${store.get('prep', []).length}/${PREP.length}`
-      if (cb.checked && store.get('prep', []).length === PREP.length) toast('Checklist completa. Zero fatica, tutto gusto.')
-    }, { signal: ac.signal })
-    return () => { ac.abort(); timers.forEach(clearInterval) }
+    return () => timers.forEach(clearInterval)
   }
 
   if (ph === 'after') {
@@ -140,7 +119,7 @@ export async function render(root, { person, header, params }) {
     <div class="bento">
       <div class="tile tile--accent span-2" style="--day:${DAY_COLOR[key]}">
         <div class="tile__label">Adesso</div>
-        ${cur ? stopCard(cur, { person, isNow: true, nowLabel: imminent ? nextIn(cur) : 'adesso' }) : `<p class="muted">${monneGone ? 'Tu a quest\'ora sei già a Bologna. Missione compiuta.' : 'La prima tappa di oggi non è ancora iniziata. Respira, c\'è tempo.'}</p>`}
+        ${cur ? stopCard(cur, { person, isNow: true, nowLabel: imminent ? nextIn(cur) : 'adesso', eager: true }) : `<p class="muted">${monneGone ? 'Tu a quest\'ora sei già a Bologna. Missione compiuta.' : 'La prima tappa di oggi non è ancora iniziata. Respira, c\'è tempo.'}</p>`}
       </div>
       <div class="tile">
         <div class="tile__label">Prossima</div>

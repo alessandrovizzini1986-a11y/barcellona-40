@@ -2,7 +2,7 @@
 import { readJson } from './_shared.mjs'
 import { existsSync, statSync } from 'node:fs'
 
-const ALLOWED_PRICES = [430, 26, 60, 25, 12, 39, 28.5, 22.5, 7.5, 2.9, 3.9, 6, 8.5, 31.15, 65]
+const ALLOWED_PRICES = [430, 26, 60, 25, 16, 12, 39, 28.5, 22.5, 7.5, 2.9, 3.9, 6, 8.5, 31.15, 65]
 const it = readJson('itinerary.json')
 const { venues } = readJson('venues.json')
 const { people } = readJson('people.json')
@@ -33,7 +33,7 @@ for (const m of missions) if (m.stopId != null && !stopIds.has(m.stopId)) errors
 for (const m of missions) for (const p of m.people) if (!personIds.has(p)) errors.push(`missione ${m.id}: persona "${p}" sconosciuta`)
 for (const c of checks) if (c.stopId != null && !stopIds.has(c.stopId)) errors.push(`check ${c.id}: stopId "${c.stopId}" inesistente`)
 for (const c of checks) if (!personIds.has(c.who)) errors.push(`check ${c.id}: persona "${c.who}" sconosciuta`)
-for (const p of people) for (const s of p.skips) if (!stopIds.has(s) && s !== 'f9') errors.push(`persona ${p.id}: skip "${s}" inesistente`)
+for (const p of people) for (const s of p.skips) if (!stopIds.has(s)) errors.push(`persona ${p.id}: skip "${s}" inesistente`)
 
 // Viaggio: voli, parcheggio, lounge e i due percorsi. Il QR del parcheggio deve esistere ed essere un PNG:
 // è l'unica cosa che alla colonnina non può mancare.

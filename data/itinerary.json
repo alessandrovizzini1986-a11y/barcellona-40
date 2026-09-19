@@ -37,19 +37,20 @@
     },
     {
      "id": "f2",
-     "time": "10:00",
-     "timeStatus": "stimato",
+     "time": "09:30",
+     "timeStatus": "verificato",
      "venueId": "ciutadella",
      "title": "Parc de la Ciutadella",
-     "why": "Prima passeggiata, ritmo lento, Barcellona che si sveglia.",
-     "details": [],
+     "why": "Cascada Monumental e il mammut. Gratis, entri e esci quando vuoi.",
+     "details": [
+      "Dall'aeroporto: Aerobus A2 fino a Plaça Catalunya, oppure taxi"
+     ],
      "people": [
       "ale",
       "monne"
      ],
      "badges": [
-      "stimato",
-      "geocoded"
+      "verificato"
      ],
      "actions": {
       "maps": true,
@@ -62,41 +63,113 @@
     },
     {
      "id": "f3",
-     "time": "11:30",
-     "timeStatus": "stimato",
-     "venueId": "santacaterina",
-     "title": "Mercat de Santa Caterina · jamón da Debón",
-     "why": "Il jamón per il bocadillo di sabato si compra qui.",
+     "time": "10:15",
+     "timeStatus": "verificato",
+     "venueId": "santamaria",
+     "title": "Basílica de Santa Maria del Mar",
+     "why": "Gotico catalano. Guardala da fuori, in piazza, poi il Passeig del Born.",
      "details": [
-      "Xarcuteria Debón: 5.0 su 246 recensioni",
-      "Va in frigo in appartamento alle 15:00"
+      "4,7 su 40.513 recensioni"
      ],
      "people": [
       "ale",
       "monne"
      ],
      "badges": [
-      "stimato",
-      "geocoded"
+      "verificato"
      ],
      "actions": {
       "maps": true,
       "taxi": false,
       "metro": null
      },
-     "distFromPrevM": 1107,
-     "minFromPrev": 14
+     "distFromPrevM": 841,
+     "minFromPrev": 10
     },
     {
-     "id": "f3b",
-     "time": "12:15",
-     "timeStatus": "stimato",
+     "id": "f4",
+     "time": "10:35",
+     "timeStatus": "verificato",
+     "venueId": "montcada",
+     "title": "Carrer de Montcada",
+     "why": "Palazzi gotici dei mercanti, cortili e scalinate aperte. La via è lo spettacolo, non serve entrare.",
+     "details": [
+      "4,6 su 64 recensioni"
+     ],
+     "people": [
+      "ale",
+      "monne"
+     ],
+     "badges": [
+      "verificato"
+     ],
+     "actions": {
+      "maps": true,
+      "taxi": false,
+      "metro": null
+     },
+     "distFromPrevM": 239,
+     "minFromPrev": 4
+    },
+    {
+     "id": "f5",
+     "time": "11:00",
+     "timeStatus": "verificato",
+     "venueId": "pontbisbe",
+     "title": "Pont del Bisbe",
+     "why": "Costruito nel 1928, sembra medievale. Guarda sotto il ponte: c'è un teschio con un pugnale.",
+     "details": [
+      "Si passa dalla Cattedrale",
+      "4,7 su 2.069 recensioni"
+     ],
+     "people": [
+      "ale",
+      "monne"
+     ],
+     "badges": [
+      "verificato"
+     ],
+     "actions": {
+      "maps": true,
+      "taxi": false,
+      "metro": null
+     },
+     "distFromPrevM": 854,
+     "minFromPrev": 11
+    },
+    {
+     "id": "f6",
+     "time": "11:15",
+     "timeStatus": "verificato",
+     "venueId": "santfelip",
+     "title": "Plaça de Sant Felip Neri",
+     "why": "I muri portano ancora i segni delle schegge del 1938. Due minuti di silenzio in mezzo al Gòtic.",
+     "details": [],
+     "people": [
+      "ale",
+      "monne"
+     ],
+     "badges": [
+      "verificato"
+     ],
+     "actions": {
+      "maps": true,
+      "taxi": false,
+      "metro": null
+     },
+     "distFromPrevM": 185,
+     "minFromPrev": 2
+    },
+    {
+     "id": "f7",
+     "time": "11:30",
+     "timeStatus": "verificato",
      "venueId": "duckstore",
      "title": "Barcelona Duck Store · la paperella per Olly",
-     "why": "Tredici minuti dal mercato, dentro e fuori in dieci. Centinaia di paperelle, una sola torna a casa.",
+     "why": "La paperella per Olly. Dentro e fuori in dieci minuti.",
      "details": [
       "Carrer dels Banys Nous 1, Barri Gòtic",
-      "4,4 su 108 recensioni",
+      "4,4 su 110 recensioni",
       "Venerdì aperto 10:30–20:30",
       "Souvenir per Olly"
      ],
@@ -112,35 +185,96 @@
       "taxi": false,
       "metro": null
      },
-     "distFromPrevM": 677,
-     "minFromPrev": 9
+     "distFromPrevM": 130,
+     "minFromPrev": 2
     },
     {
-     "id": "f4",
-     "time": "13:00",
-     "timeStatus": "stimato",
-     "venueId": "chaopescao",
-     "title": "Pranzo · Chao Pescao",
-     "why": "Pesce, semplice, vicino.",
-     "details": [],
+     "id": "f8",
+     "time": "12:15",
+     "timeStatus": "verificato",
+     "venueId": "santacaterina",
+     "title": "Mercat de Santa Caterina · jamón da Debón",
+     "why": "Tetto ondulato di Miralles in ceramica colorata, ispirato alla frutta dei mercati. Jamón da Debón per domani.",
+     "details": [
+      "Tetto di Enric Miralles e Benedetta Tagliabue",
+      "Xarcuteria Debón: 5.0 su 246 recensioni",
+      "4,4 su 18.408 recensioni",
+      "Venerdì aperto 07:30–20:00",
+      "Il jamón va in frigo in appartamento alle 15:00"
+     ],
      "people": [
       "ale",
       "monne"
      ],
      "badges": [
-      "stimato",
-      "geocoded"
+      "verificato"
      ],
      "actions": {
       "maps": true,
       "taxi": false,
       "metro": null
      },
-     "distFromPrevM": 729,
-     "minFromPrev": 9
+     "distFromPrevM": 677,
+     "minFromPrev": 8
     },
     {
-     "id": "f5",
+     "id": "f9",
+     "time": "13:00",
+     "timeStatus": "verificato",
+     "venueId": "barjoan",
+     "title": "Pranzo · Bar Joan",
+     "why": "Qui mangiano i locali. Tre portate, bevanda e pane.",
+     "details": [
+      "Dentro il Mercat de Santa Caterina",
+      "4,6 su 1.480 recensioni",
+      "ATTENZIONE: chiude alle 15:30"
+     ],
+     "people": [
+      "ale",
+      "monne"
+     ],
+     "badges": [
+      "verificato"
+     ],
+     "actions": {
+      "maps": true,
+      "taxi": false,
+      "metro": null
+     },
+     "distFromPrevM": 0,
+     "minFromPrev": null,
+     "prices": [
+      {
+       "label": "Menù del giorno",
+       "eur": 16
+      }
+     ]
+    },
+    {
+     "id": "f10",
+     "time": "14:00",
+     "timeStatus": "verificato",
+     "venueId": "apt",
+     "title": "Verso l'appartamento",
+     "why": "Diciassette minuti a piedi dal mercato a casa, con il jamón in mano.",
+     "details": [],
+     "people": [
+      "ale",
+      "monne"
+     ],
+     "badges": [
+      "verificato"
+     ],
+     "actions": {
+      "maps": true,
+      "taxi": false,
+      "metro": null
+     },
+     "distFromPrevM": 1351,
+     "minFromPrev": 17
+    },
+    {
+     "id": "f11",
      "time": "15:00",
      "timeStatus": "verificato",
      "venueId": "apt",
@@ -171,11 +305,11 @@
       "taxi": false,
       "metro": null
      },
-     "distFromPrevM": 1279,
-     "minFromPrev": 16
+     "distFromPrevM": 0,
+     "minFromPrev": null
     },
     {
-     "id": "f6",
+     "id": "f12",
      "time": "16:30",
      "timeStatus": "verificato",
      "venueId": "taps",
@@ -197,7 +331,7 @@
      }
     },
     {
-     "id": "f7",
+     "id": "f13",
      "time": "18:00",
      "timeStatus": "stimato",
      "venueId": "rooftop",
@@ -233,7 +367,7 @@
      }
     },
     {
-     "id": "f8",
+     "id": "f14",
      "time": "20:30",
      "timeStatus": "stimato",
      "venueId": "braseria",

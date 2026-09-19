@@ -46,31 +46,6 @@ export async function render(root, { person, sub, header }) {
         <li>Sovrapprezzo 3° ospite sabato notte (€65 + tassa): da chiarire in reception</li>
       </ul>
       <a class="btn" href="https://www.google.com/maps/dir/?api=1&destination=41.395437,2.179608&travelmode=walking" target="_blank" rel="noopener">${icon('map-pin')} Apri in Maps</a>`)}
-    ${sec('doc', 'Documenti', `
-      <ul>
-        <li>Spagna = UE/Schengen: passaporto e visto non necessari</li>
-        <li>La Sagrada Família richiede un <strong>documento con foto</strong>: il biglietto non è cedibile</li>
-      </ul>`)}
-    ${sec('esim', 'eSIM', `
-      <div class="table-wrap"><table class="table">
-        <thead><tr><th>Operatore</th><th>Voto</th><th>Recensioni</th><th>Piani</th></tr></thead>
-        <tbody>
-          <tr><td>Holafly</td><td>4.76</td><td>23.845</td><td>dati illimitati</td></tr>
-          <tr><td>Airalo</td><td>4.66</td><td>21.780</td><td>1 GB/3 gg · 3 GB/3 gg</td></tr>
-          <tr><td>Saily</td><td>4.75</td><td>6.850</td><td>–</td></tr>
-        </tbody>
-      </table></div>
-      <p>Sono eSIM <strong>solo dati</strong>: WhatsApp resta sul numero italiano. Installala sul WiFi di casa prima di partire.</p>`)}
-    ${sec('rules', 'Regole anti-mal di testa', `
-      <ul>
-        <li>Un bicchiere d'acqua per ogni calice (1:1)</li>
-        <li>Niente digestivi</li>
-        <li>Mezza bottiglia è il formato giusto: Bai Gorri ½ L</li>
-        <li>Sabato alle 10:30 sei alla Sagrada: la sera prima chiudi presto</li>
-      </ul>`)}
-    ${sec('num', 'Numeri utili', `
-      <p><strong>Emergenze (UE): 112</strong></p>
-      <a class="btn" href="tel:112">${icon('phone')} Chiama 112</a>`)}
     ${sec('profilo', 'Profilo', `
       <div class="field"><label for="person">Chi sei</label>
         <select class="input" id="person">${people.map((x) => `<option value="${x.id}" ${x.id === person ? 'selected' : ''}>${esc(x.name)} · ${esc(x.role)}</option>`).join('')}</select></div>

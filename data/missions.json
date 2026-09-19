@@ -20,7 +20,7 @@
  "missions": [
   {
    "id": "m1",
-   "stopId": "f3",
+   "stopId": "f8",
    "title": "Jamón Hunter",
    "desc": "Jamón comprato da Debón",
    "xp": 30,
@@ -31,7 +31,7 @@
   },
   {
    "id": "m2",
-   "stopId": "f7",
+   "stopId": "f13",
    "title": "Rooftop Society",
    "desc": "Bottiglia di Corpinnat al tramonto",
    "xp": 40,
@@ -42,7 +42,7 @@
   },
   {
    "id": "m3",
-   "stopId": "f8",
+   "stopId": "f14",
    "title": "Brasa Legend",
    "desc": "Entrecot o costilla a Braseria Sarrià",
    "xp": 50,
@@ -157,7 +157,7 @@
   },
   {
    "id": "m13",
-   "stopId": "f3b",
+   "stopId": "f7",
    "title": "Duck Hunter",
    "desc": "La paperella per Olly è nello zaino",
    "xp": 30,

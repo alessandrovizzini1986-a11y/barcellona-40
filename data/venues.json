@@ -95,32 +95,19 @@
   "ciutadella": {
    "name": "Parc de la Ciutadella",
    "addr": "Passeig de Picasso 21, Barcelona",
-   "lat": 41.388416,
-   "lng": 2.1862546,
-   "verified": false,
-   "geocoded": true,
-   "geocodedFrom": "Parc de la Ciutadella, 21, Ciutat Vella, Barcelona, Barcelonès, Barcelona, Catalunya, 08003, Espanya"
+   "lat": 41.388123,
+   "lng": 2.1860152,
+   "verified": true
   },
   "santacaterina": {
-   "name": "Mercat de Santa Caterina – Xarcuteria Debón",
+   "name": "Mercat de Santa Caterina",
    "addr": "Av. de Francesc Cambó 16, Barcelona",
-   "lat": 41.3863594,
-   "lng": 2.1781611,
-   "verified": false,
-   "rating": 5,
-   "reviews": 246,
-   "geocoded": true,
-   "geocodedFrom": "16, Avinguda de Francesc Cambó, Santa Caterina, Sant Pere, Santa Caterina i la Ribera, Ciutat Vella, Barcelona, Barcelonès, Barcelona, Catalunya, 08003, Espanya",
-   "geocodedBy": "indirizzo"
-  },
-  "chaopescao": {
-   "name": "Chao Pescao",
-   "addr": "Barcelona",
-   "lat": 41.3861408,
-   "lng": 2.1840991,
-   "verified": false,
-   "geocoded": true,
-   "geocodedFrom": "Chao Pescao, 1, Passatge Mercantil, la Ribera, Sant Pere, Santa Caterina i la Ribera, Ciutat Vella, Barcelona, Barcelonès, Barcelona, Catalunya, 08003, Espanya"
+   "lat": 41.3863611,
+   "lng": 2.1781566,
+   "verified": true,
+   "rating": 4.4,
+   "reviews": 18408,
+   "hours": "ven 07:30–20:00"
   },
   "taps": {
    "name": "Enoteca Taps Sagrada Família",
@@ -173,8 +160,53 @@
    "lng": 2.1753751,
    "verified": true,
    "rating": 4.4,
-   "reviews": 108,
+   "reviews": 110,
    "hours": "ven 10:30–20:30 · sab 11:00–20:00 · dom 11:00–15:00 e 16:00–20:00"
+  },
+  "santamaria": {
+   "name": "Basílica de Santa Maria del Mar",
+   "addr": "Plaça de Santa Maria 1, La Ribera",
+   "lat": 41.3838871,
+   "lng": 2.1820711,
+   "verified": true,
+   "rating": 4.7,
+   "reviews": 40513
+  },
+  "montcada": {
+   "name": "Carrer de Montcada",
+   "addr": "La Ribera, Barcelona",
+   "lat": 41.3850135,
+   "lng": 2.1810493,
+   "verified": true,
+   "rating": 4.6,
+   "reviews": 64
+  },
+  "pontbisbe": {
+   "name": "Pont del Bisbe",
+   "addr": "Carrer del Bisbe, Barri Gòtic",
+   "lat": 41.383302,
+   "lng": 2.1764228,
+   "verified": true,
+   "rating": 4.7,
+   "reviews": 2069
+  },
+  "santfelip": {
+   "name": "Plaça de Sant Felip Neri",
+   "addr": "Barri Gòtic, Barcelona",
+   "lat": 41.383452,
+   "lng": 2.1750541,
+   "verified": true
+  },
+  "barjoan": {
+   "name": "Bar Joan",
+   "addr": "Dentro il Mercat de Santa Caterina",
+   "lat": 41.3863611,
+   "lng": 2.1781566,
+   "verified": true,
+   "rating": 4.6,
+   "reviews": 1480,
+   "hours": "chiude alle 15:30",
+   "note": "Coordinate del mercato: il bar è al suo interno"
   }
  }
 }

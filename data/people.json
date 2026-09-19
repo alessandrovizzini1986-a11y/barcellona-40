@@ -11,10 +11,10 @@
     { "id":"giulio", "name":"Giulio", "role":"Self check-in ninja", "color":"--blu",
       "arrival":{"date":"2026-10-17","time":"07:40","flight":null,"status":"da_verificare","note":"Orario atterraggio confermato, numero volo da inserire"},
       "departure":{"date":"2026-10-18","time":null,"flight":null,"status":"da_verificare"},
-      "nights":["2026-10-17"], "skips":["f1","f2","f3","f4","f5","f6","f7","f8","f9","s2","s3"] },
+      "nights":["2026-10-17"], "skips":["f1","f2","f3","f4","f5","f6","f7","f8","f9","f10","f11","f12","f13","f14","s2","s3"] },
     { "id":"manuel", "name":"Manuel", "role":"Primo al vermut", "color":"--acqua",
       "arrival":{"date":"2026-10-17","time":"09:45","flight":null,"status":"da_verificare"},
       "departure":{"date":"2026-10-18","time":null,"flight":null,"status":"da_verificare"},
-      "nights":["2026-10-17"], "skips":["f1","f2","f3","f4","f5","f6","f7","f8","f9","s1","s2","s4"] }
+      "nights":["2026-10-17"], "skips":["f1","f2","f3","f4","f5","f6","f7","f8","f9","f10","f11","f12","f13","f14","s1","s2","s4"] }
   ]
 }
