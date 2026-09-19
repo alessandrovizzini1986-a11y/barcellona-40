@@ -193,6 +193,26 @@
   .tcard__credito{padding:10px 16px 14px;font-size:11px;color:#79839a;line-height:1.35}
   .tcard__credito a{color:inherit}
 
+  /* biglietti: il riquadro del barcode resta bianco, serve contrasto per lo scanner */
+  .tk-when{display:flex;gap:10px;margin-top:4px}
+  .tk-when > div{flex:1;background:rgba(212,169,78,.08);border:1px solid var(--line-gold);border-radius:12px;
+    padding:10px 12px;text-align:center}
+  .tk-when .k{display:block;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700}
+  .tk-when .v{display:block;font-family:"Playfair Display",serif;font-weight:700;font-size:17px;margin-top:3px;color:var(--gold-soft)}
+  .tk{margin-top:16px}
+  .tk figcaption{font-size:13px;font-weight:700;color:var(--gold-soft);margin-bottom:7px}
+  .tk figcaption small{font-weight:500;color:var(--muted);font-size:11.5px;margin-left:6px}
+  .tk-box{background:#fff;border-radius:12px;padding:14px 10px 10px;text-align:center;
+    box-shadow:0 6px 18px -10px rgba(0,0,0,.8)}
+  .tk-svg{display:block;width:100%;max-width:330px;height:auto;margin:0 auto}
+  .tk-num{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13.5px;font-weight:700;
+    color:#000;letter-spacing:.06em;margin-top:6px;font-variant-numeric:tabular-nums}
+  .tk-fallback{font-size:11.5px;color:#444;line-height:1.4;margin-top:6px}
+  .tk-box.reso .tk-fallback{display:none}
+  .tk-note{margin-top:16px;font-size:12.5px;line-height:1.55;color:#ffb3ac;
+    background:rgba(200,54,43,.1);border:1px solid rgba(200,54,43,.35);border-radius:12px;padding:11px 13px}
+  .tk-order{margin-top:10px;font-size:11px;color:var(--muted);text-align:center}
+
   /* mappa */
   #map{height:420px;border-radius:18px;border:1px solid var(--line-gold);box-shadow:var(--shadow-card);
     margin-top:14px;background:var(--night-1);z-index:0}
@@ -641,12 +661,13 @@
         <article class="tcard">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/nhm.webp" width="800" height="450" alt="La facciata in terracotta del Natural History Museum, con le torri e il portale ad arco" loading="lazy" decoding="async">
-            <span class="tcard__ora">16:00</span>
+            <span class="tcard__ora">16:30</span>
           </div>
           <div class="tcard__body">
             <h4>Natural History Museum</h4>
-            <p>Dieci minuti a piedi da Harrods. Ingresso gratuito, chiude alle 17:50 con ultimo ingresso alle 17:30.</p>
+            <p>Dieci minuti a piedi da Harrods. I tre biglietti sono già presi, con ingresso a fascia oraria alle 16:30: non si entra prima. Il museo chiude alle 17:50.</p>
             <a class="gmap" href="https://www.google.com/maps/search/?api=1&amp;query=Natural%20History%20Museum%20London" target="_blank" rel="noopener">📍 Apri in Google Maps</a>
+            <a class="gmap" href="#biglietti">🎟️ I biglietti</a>
           </div>
           <p class="tcard__credito">foto: <a href="https://commons.wikimedia.org/wiki/File:Natural_History_Museum_London_Jan_2006.jpg" target="_blank" rel="noopener">Diliff / CC BY-SA 3.0</a></p>
         </article>
@@ -754,7 +775,7 @@
         <li><span class="hp-t">12:45</span><span class="hp-d">Buckingham Palace</span></li>
         <li><span class="hp-t">13:15</span><span class="hp-d">Green Park</span></li>
         <li><span class="hp-t">14:30</span><span class="hp-d">Harrods</span></li>
-        <li><span class="hp-t">16:00</span><span class="hp-d">Natural History Museum</span></li>
+        <li><span class="hp-t">16:30</span><span class="hp-d">Natural History Museum · ingresso a fascia oraria</span></li>
         <li><span class="hp-t">18:00</span><span class="hp-d">Luci di Regent Street</span></li>
       </ul>
     </div>
@@ -773,6 +794,50 @@
       <div class="hp-note warn">⚠️ Lina Stores la domenica chiude alle 18:00 — la spesa va fatta al rientro dal London Eye, entro le 17:30-17:45. Piano B: Whole Foods a Piccadilly Circus, aperto fino alle 18:00 di domenica e sulla via del rientro.</div>
       <div class="hp-note info">ℹ️ Il check-in è self-service con chiave digitale Clevio, senza orario limite: non serve rientrare alle 15:00 in punto, si fa alle 18:00 tornando da Southbank.</div>
       <div class="hp-note info">ℹ️ Orari proposti, non prenotati: gli unici vincoli fissi sono i voli (BA547 alle 07:00 e BA546 alle 18:10, entrambi dal Terminal 5) e il check-out delle 10:30.</div>
+    </div>
+  </section>
+
+  <!-- ============ BIGLIETTI ============ -->
+  <section id="biglietti">
+    <div class="eyebrow">Biglietti</div>
+    <h2>🎟️ Natural History Museum</h2>
+    <p class="sub2">Tre ingressi già acquistati. All’entrata si scansionano direttamente dallo schermo del telefono.</p>
+
+    <div class="card">
+      <div class="tk-when">
+        <div><span class="k">Data</span><span class="v">lunedì 16 nov</span></div>
+        <div><span class="k">Ingresso</span><span class="v">16:30</span></div>
+      </div>
+
+      <figure class="tk">
+        <figcaption>Adulto 1 <small>Adult · Free</small></figcaption>
+        <div class="tk-box">
+          <svg class="tk-svg" id="ticket-1" role="img" aria-label="Codice a barre del biglietto 1001401807011726169"></svg>
+          <p class="tk-num">1001401807011726169</p>
+          <p class="tk-fallback">Barcode non caricato: mostra questo numero all’ingresso.</p>
+        </div>
+      </figure>
+
+      <figure class="tk">
+        <figcaption>Adulto 2 <small>Adult · Free</small></figcaption>
+        <div class="tk-box">
+          <svg class="tk-svg" id="ticket-2" role="img" aria-label="Codice a barre del biglietto 1001401807011726170"></svg>
+          <p class="tk-num">1001401807011726170</p>
+          <p class="tk-fallback">Barcode non caricato: mostra questo numero all’ingresso.</p>
+        </div>
+      </figure>
+
+      <figure class="tk">
+        <figcaption>Bambina (Olly) <small>Child · Free</small></figcaption>
+        <div class="tk-box">
+          <svg class="tk-svg" id="ticket-3" role="img" aria-label="Codice a barre del biglietto 1001401807011726171"></svg>
+          <p class="tk-num">1001401807011726171</p>
+          <p class="tk-fallback">Barcode non caricato: mostra questo numero all’ingresso.</p>
+        </div>
+      </figure>
+
+      <p class="tk-note">⏰ Ingresso a fascia oraria — non presentarsi prima delle 16:30. Museo aperto 10:00–17:50, ultimi ingressi in galleria verso le 17:30.</p>
+      <p class="tk-order">Order ID 7800197 · South Kensington Admission, Natural History Museum</p>
     </div>
   </section>
 
@@ -969,7 +1034,33 @@
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
   integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.12.3/JsBarcode.all.min.js"
+  integrity="sha512-nMnXAGKzA0wZ4YsriudrdnAKSFYXwdCvSt1Auwz6q7XXtSRoRcMVud13Q1LnQnobA2hRhLtHUv9tbVR5pyStPw=="
+  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
+  /* ====== biglietti del Natural History Museum: barcode CODE128 veri, da scansionare ======
+     Se la libreria non arriva (niente rete al museo), sotto resta il numero scritto: la biglietteria
+     lo può battere a mano. Per questo il numero è nell'HTML e non generato dal barcode. */
+  (function(){
+    var BIGLIETTI = [
+      ['#ticket-1', '1001401807011726169'],
+      ['#ticket-2', '1001401807011726170'],
+      ['#ticket-3', '1001401807011726171']
+    ];
+    if (typeof JsBarcode !== 'function') return;
+    BIGLIETTI.forEach(function(b){
+      var el = document.querySelector(b[0]);
+      if (!el) return;
+      try {
+        JsBarcode(el, b[1], {
+          format: 'CODE128', background: '#ffffff', lineColor: '#000000',
+          width: 2, height: 60, margin: 6, displayValue: false,
+          valid: function(ok){ if (ok) el.closest('.tk-box').classList.add('reso'); }
+        });
+      } catch (e) { /* resta il numero scritto sotto */ }
+    });
+  })();
+
   /* ====== neve leggera nell'hero (rispetta reduced-motion) ====== */
   (function(){
     if(window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches) return;
