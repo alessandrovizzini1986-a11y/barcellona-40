@@ -133,9 +133,24 @@
   details.acc{background:linear-gradient(180deg,var(--night-1),var(--night-2));border:1px solid var(--line);
     border-radius:18px;box-shadow:var(--shadow-card);margin-top:14px;overflow:hidden}
   details.acc[open]{border-color:var(--line-gold)}
-  details.acc summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:13px;padding:16px 18px;
+  details.acc summary{list-style:none;cursor:pointer;display:block;padding:16px 18px;
     -webkit-tap-highlight-color:transparent}
   details.acc summary::-webkit-details-marker{display:none}
+  .srow{display:flex;align-items:center;gap:13px}
+
+  /* meteo del giorno: sta nel summary, quindi resta visibile anche a giornata chiusa */
+  .meteo{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;margin-top:11px;padding-top:10px;
+    border-top:1px dashed var(--line);font-size:12.5px;color:var(--muted)}
+  .meteo b{color:var(--ink);font-weight:700}
+  .meteo .mt{display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+  .meteo .ico{font-size:15px}
+  .meteo .pioggia{font-weight:800;font-size:14px;font-variant-numeric:tabular-nums}
+  .meteo .pioggia.bassa{color:#8fe0b6}
+  .meteo .pioggia.media{color:var(--gold-soft)}
+  .meteo .pioggia.alta{color:#ff9d94}
+  .meteo .sole{margin-left:auto;font-variant-numeric:tabular-nums}
+  .meteo-fonte{flex-basis:100%;font-size:10.5px;font-style:italic;color:#79839a;margin-top:-2px}
+  @media(max-width:380px){.meteo .sole{margin-left:0}}
   .daynum{flex:none;width:46px;height:46px;border-radius:13px;display:flex;flex-direction:column;align-items:center;justify-content:center;
     font-family:"Playfair Display",serif;font-weight:700;font-size:19px;line-height:1;border:1px solid var(--line-gold)}
   .daynum small{font-family:system-ui,sans-serif;font-weight:600;font-size:8.5px;letter-spacing:.1em;margin-top:2px;opacity:.8}
@@ -432,9 +447,17 @@
 
     <details class="acc dom" open>
       <summary>
-        <span class="daynum">15<small>DOM</small></span>
-        <span class="dtit"><h3>Southbank</h3><p>Arrivo, acquario e ruota al tramonto</p></span>
-        <span class="chev">▼</span>
+        <span class="srow">
+          <span class="daynum">15<small>DOM</small></span>
+          <span class="dtit"><h3>Southbank</h3><p>Arrivo, acquario e ruota al tramonto</p></span>
+          <span class="chev">▼</span>
+        </span>
+        <span class="meteo" data-giorno="2026-11-15">
+          <span class="mt"><span class="ico">🌤️</span> <b>13°</b> / 8°</span>
+          <span class="mt">pioggia <span class="pioggia media">30%</span></span>
+          <span class="mt sole">↑ 07:18 · ↓ 16:12</span>
+          <span class="meteo-fonte">media degli ultimi 10 anni, non una previsione</span>
+        </span>
       </summary>
       <div class="dbody">
         <article class="tcard">
@@ -558,9 +581,17 @@
 
     <details class="acc lun">
       <summary>
-        <span class="daynum">16<small>LUN</small></span>
-        <span class="dtit"><h3>Royal walk e museo</h3><p>Quasi tutto a piedi, una sola tratta in metro</p></span>
-        <span class="chev">▼</span>
+        <span class="srow">
+          <span class="daynum">16<small>LUN</small></span>
+          <span class="dtit"><h3>Royal walk e museo</h3><p>Quasi tutto a piedi, una sola tratta in metro</p></span>
+          <span class="chev">▼</span>
+        </span>
+        <span class="meteo" data-giorno="2026-11-16">
+          <span class="mt"><span class="ico">🌤️</span> <b>11°</b> / 7°</span>
+          <span class="mt">pioggia <span class="pioggia media">40%</span></span>
+          <span class="mt sole">↑ 07:19 · ↓ 16:10</span>
+          <span class="meteo-fonte">media degli ultimi 10 anni, non una previsione</span>
+        </span>
       </summary>
       <div class="dbody">
         <article class="tcard">
@@ -689,9 +720,17 @@
 
     <details class="acc mar">
       <summary>
-        <span class="daynum">17<small>MAR</small></span>
-        <span class="dtit"><h3>Covent Garden e rientro</h3><p>Mattina leggera, poi Heathrow</p></span>
-        <span class="chev">▼</span>
+        <span class="srow">
+          <span class="daynum">17<small>MAR</small></span>
+          <span class="dtit"><h3>Covent Garden e rientro</h3><p>Mattina leggera, poi Heathrow</p></span>
+          <span class="chev">▼</span>
+        </span>
+        <span class="meteo" data-giorno="2026-11-17">
+          <span class="mt"><span class="ico">🌤️</span> <b>11°</b> / 6°</span>
+          <span class="mt">pioggia <span class="pioggia media">30%</span></span>
+          <span class="mt sole">↑ 07:21 · ↓ 16:09</span>
+          <span class="meteo-fonte">media degli ultimi 10 anni, non una previsione</span>
+        </span>
       </summary>
       <div class="dbody">
         <article class="tcard">
@@ -719,14 +758,36 @@
         </article>
         <article class="tcard">
           <div class="tcard__foto">
+            <img src="assets/tappe/londra/bakerloo.webp" width="800" height="450" alt="Una banchina della metropolitana di Londra con il treno fermo e il cartello della stazione" loading="lazy" decoding="async">
+            <span class="tcard__ora">15:15</span>
+          </div>
+          <div class="tcard__body">
+            <h4>Partenza per Heathrow</h4>
+            <p>Entro le 15:15–15:30, limite per stare larghi. Gli zaini sono già con voi dal check-out, quindi si parte da dove siete: Piccadilly line diretta da Piccadilly Circus o da Covent Garden con un cambio.</p>
+          </div>
+          <p class="tcard__credito">foto: <a href="https://commons.wikimedia.org/wiki/File:Edgware_Road-Bakerloo_Line-Northbound.jpg" target="_blank" rel="noopener">Chris McKenna (Thryduulf) / CC BY-SA 4.0</a></p>
+        </article>
+        <article class="tcard">
+          <div class="tcard__foto">
             <img src="assets/tappe/londra/lhr_dep.webp" width="800" height="450" alt="La sala partenze del Terminal 5 di Heathrow, con i tabelloni e le sedute" loading="lazy" decoding="async">
             <span class="tcard__ora">16:10</span>
           </div>
           <div class="tcard__body">
             <h4>Heathrow, Terminal 5 · BA546</h4>
-            <p>Uscita da casa entro le 15:15–15:30, Piccadilly line diretta da Piccadilly Circus: circa 50 minuti.</p>
+            <p>Circa 50 minuti di metro dal centro. Check-in, controlli e gate: il volo parte dal Terminal 5.</p>
           </div>
           <p class="tcard__credito">foto: <a href="https://commons.wikimedia.org/wiki/File:Departures_Terminal_5,_London_Heathrow_Airport_(33215594911).jpg" target="_blank" rel="noopener">Andrew Milligan sumo / CC BY 2.0</a></p>
+        </article>
+        <article class="tcard">
+          <div class="tcard__foto">
+            <img src="assets/tappe/londra/ba.webp" width="800" height="450" alt="Un Airbus A320neo in livrea British Airways in volo, con il carrello già fuori" loading="lazy" decoding="async">
+            <span class="tcard__ora">18:10</span>
+          </div>
+          <div class="tcard__body">
+            <h4>Volo BA546</h4>
+            <p>LHR → BLQ su Airbus A320: 2 ore e 15 di volo. In Italia si riporta avanti l’orologio di un’ora.</p>
+          </div>
+          <p class="tcard__credito">foto: <a href="https://commons.wikimedia.org/wiki/File:20251011_British_Airways_G-TTNN_EGLL.jpg" target="_blank" rel="noopener">Alex Noble / CC0</a></p>
         </article>
         <article class="tcard">
           <div class="tcard__foto">
@@ -735,7 +796,7 @@
           </div>
           <div class="tcard__body">
             <h4>Atterraggio a Bologna</h4>
-            <p>Volo BA546 delle 18:10 su Airbus A320: 2 ore e 15, si arriva alle 21:25.</p>
+            <p>Si atterra al Marconi alle 21:25, ora italiana.</p>
           </div>
           <p class="tcard__credito">foto: <a href="https://commons.wikimedia.org/wiki/File:Bologna_Guglielmo_Marconi_Airport_aerial.jpg" target="_blank" rel="noopener">Ex13 / CC BY-SA 3.0</a></p>
         </article>
@@ -786,7 +847,9 @@
       <ul class="hp-tl">
         <li><span class="hp-t">10:30</span><span class="hp-d">Check-out, zaini in spalla</span></li>
         <li><span class="hp-t">11:00</span><span class="hp-d">Covent Garden</span></li>
+        <li><span class="hp-t">15:15</span><span class="hp-d">Partenza per Heathrow</span></li>
         <li><span class="hp-t">16:10</span><span class="hp-d">Heathrow, Terminal 5</span></li>
+        <li><span class="hp-t">18:10</span><span class="hp-d">Volo BA546, LHR → BLQ</span></li>
         <li><span class="hp-t">21:25</span><span class="hp-d">Atterraggio a Bologna</span></li>
       </ul>
     </div>
@@ -1040,6 +1103,45 @@
   integrity="sha512-nMnXAGKzA0wZ4YsriudrdnAKSFYXwdCvSt1Auwz6q7XXtSRoRcMVud13Q1LnQnobA2hRhLtHUv9tbVR5pyStPw=="
   crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
+  /* ====== meteo dei tre giorni ======
+     In pagina ci sono le medie 2015-2024 (Open-Meteo archive) con alba e tramonto calcolati: si vedono
+     subito, anche senza rete. Open-Meteo dà previsioni solo entro ~16 giorni, quindi da lontano la
+     chiamata torna un errore e le medie restano. Riprovando a ogni caricamento, avvicinandosi al viaggio
+     la pagina passa da sola alla previsione vera. Nessuna chiave, nessun dato salvato. */
+  (function(){
+    var giorni = document.querySelectorAll('.meteo[data-giorno]');
+    if (!giorni.length || !window.fetch) return;
+    var date = Array.prototype.map.call(giorni, function(el){ return el.dataset.giorno; }).sort();
+    var url = 'https://api.open-meteo.com/v1/forecast?latitude=51.5129&longitude=-0.1364'
+      + '&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max'
+      + '&timezone=Europe/London&start_date=' + date[0] + '&end_date=' + date[date.length - 1];
+
+    var icona = function(p){ return p < 30 ? '☀️' : p < 60 ? '🌤️' : p < 80 ? '☁️' : '🌧️'; };
+    var livello = function(p){ return p < 30 ? 'bassa' : p <= 60 ? 'media' : 'alta'; };
+    var MESI = ['gennaio','febbraio','marzo','aprile','maggio','giugno','luglio','agosto','settembre','ottobre','novembre','dicembre'];
+
+    fetch(url).then(function(r){ return r.ok ? r.json() : null; }).then(function(d){
+      if (!d || d.error || !d.daily || !d.daily.time) return;   // troppo in anticipo: restano le medie
+      var oggi = new Date();
+      var quando = oggi.getDate() + ' ' + MESI[oggi.getMonth()] + ' ' + oggi.getFullYear();
+      Array.prototype.forEach.call(giorni, function(el){
+        var i = d.daily.time.indexOf(el.dataset.giorno);
+        if (i < 0) return;
+        var tmax = d.daily.temperature_2m_max[i], tmin = d.daily.temperature_2m_min[i];
+        var pio = d.daily.precipitation_probability_max[i];
+        if (tmax == null || tmin == null || pio == null) return;
+        tmax = Math.round(tmax); tmin = Math.round(tmin); pio = Math.round(pio);
+        el.querySelector('.ico').textContent = icona(pio);
+        el.querySelector('b').textContent = tmax + '°';
+        el.querySelector('b').nextSibling.textContent = ' / ' + tmin + '°';
+        var p = el.querySelector('.pioggia');
+        p.textContent = pio + '%';
+        p.className = 'pioggia ' + livello(pio);
+        el.querySelector('.meteo-fonte').textContent = 'previsione Open-Meteo, aggiornata al ' + quando;
+      });
+    }).catch(function(){ /* niente rete: restano le medie */ });
+  })();
+
   /* ====== biglietti del Natural History Museum: barcode CODE128 veri, da scansionare ======
      Se la libreria non arriva (niente rete al museo), sotto resta il numero scritto: la biglietteria
      lo può battere a mano. Per questo il numero è nell'HTML e non generato dal barcode. */
