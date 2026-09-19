@@ -37,6 +37,15 @@ for (const day of it.days) {
     else if (seenS2 && stop.people.includes('monne')) errors.push(`${stop.id}: Monne è già partito (tappa dopo s2)`)
   }
 }
+// Percorsi di mezza giornata: link verificati a mano, tappe esistenti, modo dichiarato
+for (const day of it.days) {
+  for (const pc of day.percorsi || []) {
+    if (!/^https:\/\/www\.google\.com\/maps\/dir\/\?api=1&origin=[-\d.]+,[-\d.]+&destination=[-\d.]+,[-\d.]+&travelmode=(walking|transit)(&waypoints=[-\d.,|]+)?$/.test(pc.url)) errors.push(`percorso ${pc.id}: link non valido`)
+    if (!pc.url.includes(`travelmode=${pc.mode}`)) errors.push(`percorso ${pc.id}: mode "${pc.mode}" diverso dal travelmode del link`)
+    if (!pc.label) errors.push(`percorso ${pc.id}: manca l'etichetta`)
+    for (const id of pc.stops) if (!day.stops.some((s) => s.id === id)) errors.push(`percorso ${pc.id}: tappa "${id}" inesistente in ${day.label}`)
+  }
+}
 for (const m of missions) if (m.stopId != null && !stopIds.has(m.stopId)) errors.push(`missione ${m.id}: stopId "${m.stopId}" inesistente`)
 for (const m of missions) for (const p of m.people) if (!personIds.has(p)) errors.push(`missione ${m.id}: persona "${p}" sconosciuta`)
 for (const c of checks) if (c.stopId != null && !stopIds.has(c.stopId)) errors.push(`check ${c.id}: stopId "${c.stopId}" inesistente`)
@@ -82,4 +91,5 @@ if (errors.length) {
   process.exit(1)
 }
 const svgCard = readdirSync('public/assets/tappe').filter((f) => f.endsWith('.svg')).length
-console.log(`✓ validate: ${fotoIds.size} foto, ${svgCard} card stilizzate, ${stopIds.size} tappe, ${Object.keys(venues).length} venue, ${missions.length} missioni, ${checks.length} check, ${viaggio.voli.length} voli, ${Object.values(viaggio.timeline).reduce((n, t) => n + t.step.length, 0)} passi di viaggio. Tutto ok.`)
+const nPercorsi = it.days.reduce((n, d) => n + (d.percorsi?.length || 0), 0)
+console.log(`✓ validate: ${nPercorsi} percorsi, ${fotoIds.size} foto, ${svgCard} card stilizzate, ${stopIds.size} tappe, ${Object.keys(venues).length} venue, ${missions.length} missioni, ${checks.length} check, ${viaggio.voli.length} voli, ${Object.values(viaggio.timeline).reduce((n, t) => n + t.step.length, 0)} passi di viaggio. Tutto ok.`)

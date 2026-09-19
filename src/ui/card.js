@@ -2,7 +2,7 @@
 import { icon } from './icons.js'
 import { badges as badgeHtml } from './badge.js'
 import { esc } from './html.js'
-import { badgesFor, fmtDist, fmtEur, mapsUrl, taxiUrl, TAXI_FALLBACK, missionByStop, hasCoords, DAY_COLOR, durataDi } from '../data.js'
+import { badgesFor, fmtDist, fmtEur, mapsUrl, taxiUrl, TAXI_FALLBACK, missionByStop, hasCoords, DAY_COLOR, durataDi, totaleTratta } from '../data.js'
 import { fmtMinutes } from '../time.js'
 import { store } from '../store.js'
 import fotoTappe from '../../data/foto-tappe.json'
@@ -71,6 +71,20 @@ export function distChip(stop) {
   const d = fmtDist(stop.distFromPrevM)
   if (auto) return `<span class="chip">${icon('taxi')} ${d}${stop.minFromPrev != null ? ` · ${stop.minFromPrev} min` : ' · taxi'}</span>`
   return `<span class="chip">${icon('walk')} ${d}${stop.minFromPrev != null ? ` · ${stop.minFromPrev} min a piedi` : ''}</span>`
+}
+
+// Percorso di mezza giornata: apre Google Maps con tutte le tappe in fila. Il totale non è quello di
+// Google, è la somma dei tratti delle nostre tappe: se i due numeri divergono, il nostro è verificabile.
+export function percorsoLink(percorso, list) {
+  const t = totaleTratta(percorso, list)
+  const piedi = percorso.mode === 'walking'
+  const totale = piedi && t.m ? `${fmtDist(t.m)} · ${fmtMinutes(t.min)} a piedi` : 'Mezzi pubblici'
+  const nota = t.fuoriPercorso.length ? ` · ${t.fuoriPercorso[0]} non è nel percorso` : ''
+  return `<a class="btn btn--ghost btn--block percorso" href="${esc(percorso.url)}" target="_blank" rel="noopener"
+    data-percorso="${esc(percorso.id)}" aria-label="Apri su Google Maps il percorso ${esc(percorso.label)}, ${esc(totale)}">
+    ${icon(piedi ? 'route' : 'train')}
+    <span class="percorso__txt"><b>Apri il percorso su Maps</b><small>${esc(percorso.label)} · ${esc(totale)}${esc(nota)}</small></span>
+  </a>`
 }
 
 // Quanto si sta in una tappa: è un dato, non il buco fra due orari

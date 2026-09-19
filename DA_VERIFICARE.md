@@ -5,18 +5,13 @@ Generato in parte dagli script dati (`npm run data`). Le sezioni tra marker veng
 ## geocoding
 
 <!-- geocoding:start -->
-- **Enoteca Taps Sagrada Família** (`taps`): coordinate mancanti, errore rete: Nominatim HTTP 429. Query: "Enoteca Taps Sagrada Família, Barcelona"
-- **Rooftop Garden – El Palace Barcelona** (`rooftop`): coordinate mancanti, errore rete: Nominatim HTTP 429. Query: "Rooftop Garden – El Palace Barcelona, Barcelona"
 - **Bodega Biarritz 1881** (`biarritz`): coordinate automatiche da Nominatim (41.3792173, 2.1770987), da controllare sul posto
-- **Bunkers del Carmel** (`bunkers`): coordinate automatiche da Nominatim (41.4193923, 2.1616974), da controllare sul posto
 <!-- geocoding:end -->
 
 ## distanze
 
 <!-- distanze:start -->
-- f12 ← f11: distanza non calcolata (coordinate mancanti). Tappa marcata `da_verificare`.
-- f13 ← f12: distanza non calcolata (coordinate mancanti). Tappa marcata `da_verificare`.
-- f14 ← f13: distanza non calcolata (coordinate mancanti). Tappa marcata `da_verificare`.
+Nessuna: tutte le tappe hanno le coordinate e la distanza dalla precedente.
 <!-- distanze:end -->
 
 ## Voci aperte (da `data/checks.json`, spuntabili nella sezione Info → Da verificare)
@@ -29,7 +24,7 @@ Generato in parte dagli script dati (`npm run data`). Le sezioni tra marker veng
 - c7 · Programma notturno Sala Apolo sabato 17 (interferenza Soundhood a 89 m)
 - c8 · SOUNDIT Plaza / Happy Techno Open Air: esistono? orari? (Resident Advisor)
 - c9 · Civico esatto Braseria Sarrià e Rooftop Garden El Palace
-- c10 · Coordinate geocodificate automaticamente: Biarritz e Bunkers (vedi sezione geocoding)
+- c10 · Coordinate geocodificate automaticamente: Bodega Biarritz (vedi sezione geocoding)
 
 ## Altri dati mancanti o non verificati
 
@@ -42,8 +37,9 @@ Generato in parte dagli script dati (`npm run data`). Le sezioni tra marker veng
 
 - Numero volo di Giulio (atterraggio 07:40 confermato) e di Manuel (09:45).
 - Voli di ritorno di Giulio e Manuel: la tappa `d3` resta `da_verificare` e continua a dire le 20:00. Quella di Alessandro non lo è più: FR5220 delle 23:05, con il percorso completo in `data/viaggio.json`.
-- Enoteca Taps Sagrada Família e Rooftop Garden El Palace: nessuna coordinata (Nominatim non le trova); le tappe f6/f7 sono `da_verificare` e sulla mappa compaiono nella lista "Senza coordinate". Inserire `lat`/`lng` a mano in `data/venues.json` con `verified:true`.
-- Distanze f11→f12→f13→f14 non calcolate per lo stesso motivo.
+- **Coordinate di El Palace prese dal link del percorso**: il link "venerdì pomeriggio" che mi hai dato ha come destinazione 41.3915035, 2.1715182, e l'ho usato per il venue `rooftop`, che prima non aveva coordinate. Adesso sta sulla mappa e la distanza Taps → El Palace (2.099 m, 25 min) è calcolata. Se quel punto non è il Rooftop Garden, va corretto lì.
+- **Braseria Sarrià, distanza**: 4.580 m e 15 min sono la strada in auto secondo Valhalla, non il percorso dei mezzi. Il tuo link dice 4,3 km: è un altro itinerario, non un errore.
+- **Bar Joan e il mercato**: il link del percorso di venerdì mattina finisce a 41.386162, 2.1786073, che è a una trentina di metri dalle coordinate del mercato nei nostri dati (41.3863611, 2.1781566). Nessuna conseguenza pratica, ma sono due punti leggermente diversi.
 - **Orari della mattina di venerdì**: sono quelli decisi da te, non ricavati da un calcolo. Le distanze, i minuti a piedi e le durate delle soste invece sono dati, e il sito li somma da solo.
 - **Il margine della mattina è 11 minuti, non 20.** Con soste 3h45 e cammino 54 min la finestra 09:30–14:20 (4h50) lascia 11 minuti. L'avviso sul sito mostra il numero calcolato, non quello scritto a mano. In modalità pioggia il margine è **zero**: soste 3h55 + cammino 55 min riempiono esattamente la finestra, e si arriva all'appartamento alle 14:20 in punto.
 - **Modalità pioggia: si accende a mano.** Non c'è nessuna previsione meteo collegata, e non c'è nessuna API del tempo nel sito: il toggle lo accendi tu guardando fuori dalla finestra.
@@ -54,7 +50,8 @@ Generato in parte dagli script dati (`npm run data`). Le sezioni tra marker veng
 - **La Terrrazza**: la tappa `s7` usa `monumental.webp`. `pobleespanyol.webp` è scaricata e disponibile se il pomeriggio si sposta là: è il complesso che ospita il locale, del club non esiste foto libera.
 - **`sarria.webp`** è scaricata ma non assegnata a nessuna tappa: è l'alternativa alla card stilizzata della Braseria, se un giorno la preferisci.
 - **La cartella delle immagini è a 1,28 MB, sopra il tetto di 1,2 che avevi messo.** Con la foto di El Mirador non ci si sta più. `sarria.webp` e `pobleespanyol.webp` non sono assegnate a nessuna tappa e pesano 141 kB: buttandole si torna a 1,14 MB. Finché restano, il controllo in `scripts/qa/immagini.mjs` è a 1,4 MB.
-- **El Mirador, distanza dalla tappa precedente**: non calcolata. Il gruppo arriva da dove ha dormito, non c'è un percorso verificato da misurare, quindi la card non mostra nessun chip di distanza. I 632 m · 12 min verso i Bunkers invece ci sono, sulla tappa dei Bunkers.
+- **El Mirador, distanza**: ora c'è, presa dall'appartamento come dice il tuo link del percorso: 4.961 m e 18 min in auto secondo Valhalla (il tuo link dice 6 km coi mezzi, che è un altro itinerario). Sulla card è marcata come tratta in auto, non a piedi.
+- **El Mirador → Bunkers**: restano i tuoi 632 m · 12 min. Valhalla con le coordinate nuove dei Bunkers dice 613 m · 11 min: differenza da nulla, ho tenuto i tuoi numeri perché sono quelli verificati.
 - **La foto di El Mirador è privata**, di un amico di Alessandro, usata con permesso. Non è su Commons e non ha licenza libera: non sta nella tabella dei crediti e sotto la card non compare nessuna attribuzione. Se un giorno il sito diventa pubblico sul serio, chiedere conferma all'autore.
 - **Tappe di arrivo di Giulio e Manuel** (`s1`, `s3`): non erano nell'elenco delle immagini. Hanno l'immagine del posto dove arrivano, appartamento e Olimpo.
 - Bodega Biarritz 1881: Nominatim restituisce "Bodega Biarritz, Carrer d'en Rull" (Gòtic). Controllare che sia il locale giusto.

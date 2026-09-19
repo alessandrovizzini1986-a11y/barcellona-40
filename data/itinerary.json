@@ -403,23 +403,28 @@
      "time": "16:30",
      "timeStatus": "verificato",
      "venueId": "taps",
-     "title": "Enoteca Taps · una bollicina",
+     "title": "Taps Sagrada Familia · una bollicina",
      "why": "Riapre alle 16:30. Primo brindisi, senza fretta.",
-     "details": [],
+     "details": [
+      "Enoteca, non bar: si compra la bottiglia. Riapre alle 16:30.",
+      "Carrer de Provença 474 · 4,7 su 122 recensioni",
+      "Tel +34 938 09 85 83"
+     ],
      "people": [
       "ale",
       "monne"
      ],
      "badges": [
-      "verificato",
-      "da_verificare"
+      "verificato"
      ],
      "actions": {
       "maps": true,
       "taxi": false,
       "metro": null
      },
-     "img": "taps.svg"
+     "img": "taps.svg",
+     "distFromPrevM": 1536,
+     "minFromPrev": 19
     },
     {
      "id": "f14",
@@ -456,7 +461,9 @@
       "taxi": false,
       "metro": null
      },
-     "img": "elpalace.webp"
+     "img": "elpalace.webp",
+     "distFromPrevM": 2099,
+     "minFromPrev": 25
     },
     {
      "id": "f15",
@@ -499,7 +506,50 @@
       "taxi": true,
       "metro": "FGC → Sarrià"
      },
-     "img": "braseria.svg"
+     "img": "braseria.svg",
+     "distFromPrevM": 4580,
+     "minFromPrev": 15,
+     "distMode": "auto"
+    }
+   ],
+   "percorsi": [
+    {
+     "id": "ven-mattina",
+     "label": "Ciutadella → Bar Joan",
+     "mode": "walking",
+     "url": "https://www.google.com/maps/dir/?api=1&origin=41.388123,2.1860152&destination=41.386162,2.1786073&travelmode=walking&waypoints=41.3838871,2.1820711|41.3850135,2.1810493|41.383302,2.1764228|41.383452,2.1750541|41.3819198,2.1753751",
+     "stops": [
+      "f2",
+      "f3",
+      "f4",
+      "f5",
+      "f6",
+      "f7",
+      "f8",
+      "f9",
+      "f10"
+     ]
+    },
+    {
+     "id": "ven-pomeriggio",
+     "label": "Mercato → appartamento → Taps → El Palace",
+     "mode": "walking",
+     "url": "https://www.google.com/maps/dir/?api=1&origin=41.386162,2.1786073&destination=41.3915035,2.1715182&travelmode=walking&waypoints=41.395437,2.179608|41.4054703,2.1759774",
+     "stops": [
+      "f11",
+      "f12",
+      "f13",
+      "f14"
+     ]
+    },
+    {
+     "id": "ven-cena",
+     "label": "El Palace → Braseria Sarrià",
+     "mode": "transit",
+     "url": "https://www.google.com/maps/dir/?api=1&origin=41.3915035,2.1715182&destination=41.3925995,2.1344166&travelmode=transit",
+     "stops": [
+      "f15"
+     ]
     }
    ]
   },
@@ -783,6 +833,28 @@
      "distMode": "taxi",
      "img": "apolo.webp"
     }
+   ],
+   "percorsi": [
+    {
+     "id": "sab-mattina",
+     "label": "Appartamento → Sagrada Família → Olimpo",
+     "mode": "walking",
+     "url": "https://www.google.com/maps/dir/?api=1&origin=41.395437,2.179608&destination=41.4066347,2.1799385&travelmode=walking&waypoints=41.4039406,2.1751597",
+     "stops": [
+      "s4",
+      "s5"
+     ]
+    },
+    {
+     "id": "sab-sera",
+     "label": "Appartamento → Biarritz → Sala Apolo",
+     "mode": "walking",
+     "url": "https://www.google.com/maps/dir/?api=1&origin=41.395437,2.179608&destination=41.3744026,2.1695739&travelmode=walking&waypoints=41.3791891,2.1770567",
+     "stops": [
+      "s8",
+      "s9"
+     ]
+    }
    ]
   },
   {
@@ -809,7 +881,8 @@
       "Tapas e cucina di quartiere, prezzi onesti",
       "Una recensione cita il filetto di manzo a €3,90",
       "Chiude alle 17:00",
-      "Tel +34 931 64 20 22"
+      "Tel +34 931 64 20 22",
+      "Dall'appartamento sono circa 5 km: mezzi o taxi, non è una passeggiata"
      ],
      "people": [
       "ale",
@@ -824,25 +897,29 @@
       "taxi": true,
       "metro": null
      },
-     "distFromPrevM": null,
-     "minFromPrev": null
+     "distFromPrevM": 4961,
+     "minFromPrev": 18,
+     "distMode": "auto"
     },
     {
      "id": "d2",
      "time": "16:00",
      "timeStatus": "verificato",
      "venueId": "bunkers",
-     "title": "Bunkers del Carmel · 16:00–19:00",
-     "why": "La città tutta insieme, dall'alto, prima di tornare.",
-     "details": [],
+     "title": "Bunkers del Carmel — MUHBA Turó de la Rovira",
+     "why": "La città tutta insieme, dall'alto, prima di tornare. Si entra alle 16:00.",
+     "details": [
+      "Orario ufficiale: mercoledì, venerdì, sabato e domenica 16:00–19:00",
+      "4,6 su 17.545 recensioni",
+      "Tel +34 932 56 21 22"
+     ],
      "people": [
       "ale",
       "giulio",
       "manuel"
      ],
      "badges": [
-      "verificato",
-      "geocoded"
+      "verificato"
      ],
      "actions": {
       "maps": true,
@@ -851,7 +928,9 @@
      },
      "distFromPrevM": 632,
      "minFromPrev": 12,
-     "img": "bunkers.webp"
+     "img": "bunkers.webp",
+     "durataMin": 180,
+     "avviso": "Aprono alle 16:00, non prima. Da El Mirador sono dodici minuti in salita: se finisci di pranzare alle 15:00, prenditela comoda o fermati al bar."
     },
     {
      "id": "d3",
@@ -881,6 +960,35 @@
      "minFromPrev": 36,
      "distMode": "auto",
      "img": "bcn_t2.webp"
+    }
+   ],
+   "percorsi": [
+    {
+     "id": "dom-mattina",
+     "label": "Appartamento → El Mirador",
+     "mode": "transit",
+     "url": "https://www.google.com/maps/dir/?api=1&origin=41.395437,2.179608&destination=41.4169774,2.1589342&travelmode=transit",
+     "stops": [
+      "d1"
+     ]
+    },
+    {
+     "id": "dom-pomeriggio",
+     "label": "El Mirador → Bunkers del Carmel",
+     "mode": "walking",
+     "url": "https://www.google.com/maps/dir/?api=1&origin=41.4169774,2.1589342&destination=41.4193003,2.1618259&travelmode=walking",
+     "stops": [
+      "d2"
+     ]
+    },
+    {
+     "id": "dom-rientro",
+     "label": "Bunkers → Terminal 2",
+     "mode": "transit",
+     "url": "https://www.google.com/maps/dir/?api=1&origin=41.4193003,2.1618259&destination=41.3033401,2.076845&travelmode=transit",
+     "stops": [
+      "d3"
+     ]
     }
    ]
   }

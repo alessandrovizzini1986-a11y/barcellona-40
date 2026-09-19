@@ -110,21 +110,23 @@
    "hours": "ven 07:30–20:00"
   },
   "taps": {
-   "name": "Enoteca Taps Sagrada Família",
-   "addr": "Barcelona",
-   "lat": null,
-   "lng": null,
-   "verified": false,
-   "hours": "riapre 16:30",
-   "geocoded": false
+   "name": "Taps Sagrada Familia",
+   "addr": "Carrer de Provença 474, Eixample",
+   "lat": 41.4054703,
+   "lng": 2.1759774,
+   "verified": true,
+   "rating": 4.7,
+   "reviews": 122,
+   "hours": "lun-sab 10:00–14:00 e 16:30–20:30 · dom chiuso",
+   "phone": "+34 938 09 85 83"
   },
   "rooftop": {
    "name": "Rooftop Garden – El Palace Barcelona",
    "addr": "Gran Via de les Corts Catalanes 668, Barcelona",
-   "lat": null,
-   "lng": null,
-   "verified": false,
-   "geocoded": false
+   "lat": 41.3915035,
+   "lng": 2.1715182,
+   "verified": true,
+   "note": "Coordinate dal link del percorso di venerdì pomeriggio"
   },
   "biarritz": {
    "name": "Bodega Biarritz 1881",
@@ -136,13 +138,15 @@
    "geocodedFrom": "Bodega Biarritz, Carrer d'en Rull, la Mercè, el Gòtic, Ciutat Vella, Barcelona, Barcelonès, Barcelona, Catalunya, 08002, Espanya"
   },
   "bunkers": {
-   "name": "Bunkers del Carmel",
-   "addr": "Carrer de Marià Labèrnia, Barcelona",
-   "lat": 41.4193923,
-   "lng": 2.1616974,
-   "verified": false,
-   "geocoded": true,
-   "geocodedFrom": "Bateries antiaèries i barraques del Carmel, Carrer de Marià Labèrnia, Can Baró, Horta-Guinardó, Barcelona, Barcelonès, Barcelona, Catalunya, 08032, Espanya"
+   "name": "Bunkers del Carmel — MUHBA Turó de la Rovira",
+   "addr": "Carrer de Marià Labèrnia s/n, Horta-Guinardó",
+   "lat": 41.4193003,
+   "lng": 2.1618259,
+   "verified": true,
+   "rating": 4.6,
+   "reviews": 17545,
+   "hours": "mer, ven, sab, dom 16:00–19:00 · lun, mar, gio chiuso",
+   "phone": "+34 932 56 21 22"
   },
   "duckstore": {
    "name": "Barcelona Duck Store",

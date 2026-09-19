@@ -1,8 +1,8 @@
 // Vista Oggi: countdown prima del weekend, bento durante, "Missione compiuta" dopo
 import { now, phase, countdownTo, WEEKEND_START, dayKey, minutesUntil, fmtMinutes, currentStop, nextStop, isOverridden } from '../time.js'
-import { stopsFor, stopsForDay, personById, checks, fmtDist, DAY_COLOR, missionsFor } from '../data.js'
+import { stopsFor, stopsForDay, personById, checks, fmtDist, DAY_COLOR, missionsFor, percorsiDi } from '../data.js'
 import { store } from '../store.js'
-import { stopCard, bindCards } from '../ui/card.js'
+import { stopCard, bindCards, percorsoLink } from '../ui/card.js'
 import { ring } from '../ui/ring.js'
 import { icon } from '../ui/icons.js'
 import { esc } from '../ui/html.js'
@@ -119,7 +119,7 @@ export async function render(root, { person, header, params }) {
     <div class="bento">
       <div class="tile tile--accent span-2" style="--day:${DAY_COLOR[key]}">
         <div class="tile__label">Adesso</div>
-        ${cur ? stopCard(cur, { person, isNow: true, nowLabel: imminent ? nextIn(cur) : 'adesso', eager: true }) : `<p class="muted">${monneGone ? 'Tu a quest\'ora sei già a Bologna. Missione compiuta.' : 'La prima tappa di oggi non è ancora iniziata. Respira, c\'è tempo.'}</p>`}
+        ${cur ? stopCard(cur, { person, isNow: true, nowLabel: imminent ? nextIn(cur) : 'adesso', eager: true }) + percorsoOra(cur, key, todays) : `<p class="muted">${monneGone ? 'Tu a quest\'ora sei già a Bologna. Missione compiuta.' : 'La prima tappa di oggi non è ancora iniziata. Respira, c\'è tempo.'}</p>`}
       </div>
       <div class="tile">
         <div class="tile__label">Prossima</div>
@@ -161,6 +161,12 @@ export async function render(root, { person, header, params }) {
   } })
   root.querySelector('#copy')?.addEventListener('click', () => copyText(summaryText(person, key)))
   return () => { ac.abort(); timers.forEach(clearInterval) }
+}
+
+// Il percorso della mezza giornata in corso: quello del blocco in cui cade la tappa di adesso
+function percorsoOra(cur, key, todays) {
+  const pc = percorsiDi(key).find((p) => p.stops.includes(cur.id))
+  return pc ? percorsoLink(pc, todays) : ''
 }
 
 function progressHtml(doneAll, total, doneDay, totalDay, color) {

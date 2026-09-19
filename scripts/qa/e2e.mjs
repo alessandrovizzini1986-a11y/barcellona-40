@@ -61,7 +61,8 @@ const text = (p, sel) => p.locator(sel).first().textContent().then((t) => (t || 
   ok('mappa: popup con Maps', (await p.locator('.leaflet-popup .btn').count()) >= 1)
   await p.locator('#locate').click(); await p.waitForTimeout(800)
   ok('mappa: geolocalizzazione negata → toast', (await text(p, '.toast')).includes('Posizione non disponibile'))
-  ok('mappa: lista senza coordinate', (await p.locator('.map-legend .list-item').count()) === 2)
+  // Taps e El Palace ora hanno le coordinate: nessuna tappa resta fuori dalla mappa
+  ok('mappa: nessuna tappa senza coordinate', (await p.locator('.map-legend .list-item').count()) === 0)
   await ctx.close() }
 
 // 6. Missioni

@@ -1,9 +1,9 @@
 // Programma: segmented Ven/Sab/Dom + timeline filtrata per persona
-import { stopsForDay, personById, DAY_COLOR, days, contoDelGiorno, piove } from '../data.js'
+import { stopsForDay, personById, DAY_COLOR, days, contoDelGiorno, piove, percorsiDi } from '../data.js'
 import { store } from '../store.js'
 import { icon } from '../ui/icons.js'
 import { fmtMinutes } from '../time.js'
-import { stopCard, bindCards, haFoto } from '../ui/card.js'
+import { stopCard, bindCards, haFoto, percorsoLink } from '../ui/card.js'
 import { dayKey, currentStop } from '../time.js'
 import { esc } from '../ui/html.js'
 import { navigate } from '../router.js'
@@ -49,8 +49,15 @@ export async function render(root, { person, sub, header }) {
   const passi = stepCards(key, person)
   // la prima foto della pagina si carica subito, le altre in lazy
   const prima = stops.findIndex(haFoto)
-  const righe = [...stops.map((s, i) => ({ at: s.at, html: stopCard(s, { person, isNow: cur?.id === s.id, eager: i === prima }) })), ...passi]
+  const righe = [...stops.map((s, i) => ({ at: s.at, id: s.id, html: stopCard(s, { person, isNow: cur?.id === s.id, eager: i === prima }) })), ...passi]
     .sort((a, b) => a.at - b.at)
+  // Il pulsante del percorso va in cima al suo blocco: si aggancia alla prima tappa del blocco
+  // che questa persona vede davvero (chi salta la mattina non deve vedere il percorso della mattina).
+  const ancore = new Map()
+  for (const pc of percorsiDi(key)) {
+    const primaDelBlocco = stops.find((s) => pc.stops.includes(s.id))
+    if (primaDelBlocco) ancore.set(primaDelBlocco.id, percorsoLink(pc, stops))
+  }
   root.innerHTML = header('Il programma, tappa per tappa') + `<section class="view">
     <div class="seg" role="tablist" aria-label="Giorno">
       ${KEYS.map((k) => `<button role="tab" aria-selected="${k === key}" data-day="${k}" style="--sc:${DAY_COLOR[k]}">${LABEL[k]}</button>`).join('')}
@@ -62,7 +69,7 @@ export async function render(root, { person, sub, header }) {
     ${key === 'ven' ? toggleP(piove()) : ''}
     ${key === 'ven' && piove() ? `<div class="avviso">${icon('alert')}<span>Modalità pioggia: una sola tappa scoperta invece di sei. Montcada, Pont del Bisbe e Sant Felip Neri sono vicoli stretti, si cammina quasi sempre riparati.</span></div>` : ''}
     ${avvisoConto(stops, key)}
-    ${righe.length ? `<ol class="timeline" style="--dc:${DAY_COLOR[key]}">${righe.map((r) => `<li>${r.html}</li>`).join('')}</ol>` : `<div class="empty">${emptyState(person, key)}</div>`}
+    ${righe.length ? `<ol class="timeline" style="--dc:${DAY_COLOR[key]}">${righe.map((r) => `${r.id && ancore.has(r.id) ? `<li class="timeline__percorso">${ancore.get(r.id)}</li>` : ''}<li>${r.html}</li>`).join('')}</ol>` : `<div class="empty">${emptyState(person, key)}</div>`}
   </section>`
   root.querySelector('#piove')?.addEventListener('change', (e) => {
     store.piove = e.target.checked // la preferenza resta sul telefono

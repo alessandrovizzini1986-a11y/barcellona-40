@@ -67,10 +67,35 @@ export function contoDelGiorno(giorno) {
   const catena = giorno.slice(i0, i1 + 1)
   const dopo = giorno[i1 + 1] || null
   const soste = catena.reduce((n, s) => n + durataDi(s), 0)
-  // il primo arrivo non si conta: alla Ciutadella ci si arriva dall'aeroporto, non a piedi
-  const cammino = catena.slice(1).reduce((n, s) => n + (s.minFromPrev || 0), 0) + (dopo?.minFromPrev || 0)
+  // Si contano solo i tratti a piedi: il primo arrivo non si conta (alla Ciutadella ci si arriva
+  // dall'aeroporto) e nemmeno i tratti in auto o taxi, che nel "cammino" non ci stanno.
+  const aPiedi = (s) => s && s.distMode !== 'auto' && s.distMode !== 'taxi' ? (s.minFromPrev || 0) : 0
+  const cammino = catena.slice(1).reduce((n, s) => n + aPiedi(s), 0) + aPiedi(dopo)
   const finestra = dopo ? Math.round((dopo.at - catena[0].at) / 60000) : soste + cammino
   return { inizio: catena[0].time, fine: dopo ? dopo.time : null, soste, cammino, finestra, margine: finestra - soste - cammino, tappe: catena.length }
+}
+
+// PERCORSI DI MEZZA GIORNATA. I link di Google Maps sono costruiti e verificati a mano e stanno in
+// data/itinerary.json come stringhe: non si rigenerano dalle coordinate, perché una virgola fuori posto
+// in un waypoint manda il percorso da un'altra parte senza che nessuno se ne accorga.
+export const percorsiDi = (dayKey) => days.find((d) => DAY_KEY[d.date] === dayKey)?.percorsi || []
+// Totale del blocco, sommato dalle tappe vere: i tratti a piedi per i percorsi a piedi, quelli in auto
+// o taxi per i percorsi coi mezzi (dove il tempo di Google non è il nostro e non lo si finge).
+export function totaleTratta(percorso, list) {
+  const dentro = list.filter((s) => percorso.stops.includes(s.id))
+  const aPiedi = (s) => s.distMode !== 'auto' && s.distMode !== 'taxi'
+  const tratti = dentro.filter((s) => s.distFromPrevM != null && (percorso.mode === 'walking' ? aPiedi(s) : !aPiedi(s)))
+  // Tappe che cadono dentro la finestra del blocco ma non sono nel link: succede in modalità pioggia,
+  // dove entra El Born. Meglio dirlo sul pulsante che lasciarlo scoprire a Maps.
+  const fuori = dentro.length
+    ? list.filter((s) => !percorso.stops.includes(s.id) && s.at > dentro[0].at && s.at < dentro[dentro.length - 1].at)
+    : []
+  return {
+    m: tratti.reduce((n, s) => n + s.distFromPrevM, 0),
+    min: tratti.reduce((n, s) => n + (s.minFromPrev || 0), 0),
+    tappe: dentro.length,
+    fuoriPercorso: fuori.map((s) => s.venue?.name || s.title)
+  }
 }
 
 export const stopById = (id) => stops.find((s) => s.id === id) || null

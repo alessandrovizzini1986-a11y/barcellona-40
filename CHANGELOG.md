@@ -149,3 +149,12 @@
 - Il consiglio "taglia la Ciutadella" nell'avviso del conto compare solo di venerdì: la domenica il conto dice soste 1h30 + cammino 12 min fra le 13:30 e le 16:00, con 48 minuti di margine.
 - `scripts/qa/immagini.mjs` sale a 67 controlli: fra i nuovi, che l'attribuzione compaia sotto le foto di Commons e **non** sotto quella privata.
 - La cartella delle immagini è a 1,25 MB: sopra il tetto di 1,2 fissato nel giro precedente. Il controllo è a 1,4 MB e la cosa è annotata in `DA_VERIFICARE.md`: buttando `sarria.webp` e `pobleespanyol.webp`, che non sono assegnate a nessuna tappa, si torna a 1,14 MB.
+
+## Coordinate Taps, orario dei Bunkers, percorsi su Maps
+- **Taps Sagrada Familia**: nome, indirizzo (Carrer de Provença 474) e coordinate verificate al posto di quelle che non c'erano. La tappa perde il badge `da_verificare`, prende la distanza vera dall'appartamento (1.536 m · 19 min, Valhalla pedonale) e il dettaglio "Enoteca, non bar: si compra la bottiglia. Riapre alle 16:30."
+- **Bunkers del Carmel — MUHBA Turó de la Rovira**: non è un belvedere sempre aperto. Orario ufficiale mer/ven/sab/dom 16:00–19:00, coordinate verificate, tre ore di sosta (`durataMin` 180) e avviso giallo sulla card: "Aprono alle 16:00, non prima."
+- **Coordinate di El Palace** prese dal link del percorso di venerdì pomeriggio: il venue `rooftop` non ne aveva. Da lì la distanza Taps → El Palace (2.099 m · 25 min) e quella El Palace → Braseria (4.580 m · 15 min in auto). Ora **nessuna tappa resta fuori dalla mappa**: la lista "Senza coordinate" è vuota.
+- **Otto percorsi di mezza giornata** in `data/itinerary.json`, campo `percorsi` a livello di giornata, con `url`, `label`, `mode` e le tappe che coprono. I link sono copiati alla lettera: `npm run validate` controlla la forma e `scripts/qa/percorsi.mjs` li confronta uno a uno con le stringhe originali, così se qualcuno li "ripulisce" il test cade.
+- **Pulsante "Apri il percorso su Maps"** in cima a ogni blocco nel Programma e nella card "Adesso" della vista Oggi, con icona `route` per i percorsi a piedi e `train-front` per quelli coi mezzi. Accanto, il totale sommato dalle tappe: chilometri e minuti a piedi per i percorsi pedonali, "Mezzi pubblici" per gli altri, dove il tempo di Google non è il nostro e non lo si finge. In modalità pioggia il pulsante avverte che El Born non è nel link.
+- Chi quella mezza giornata non c'è non vede il pulsante: l'ancoraggio è sulla prima tappa del blocco che quella persona vede davvero.
+- Nuova suite `scripts/qa/percorsi.mjs` (46 controlli).
