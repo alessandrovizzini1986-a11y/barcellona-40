@@ -99,7 +99,7 @@ for (const hops of [2, 3, 5]) {
   for (const h of ['info', 'oggi', 'info', 'missioni', 'info/verifiche']) await go(p, h) // l'ultimo apre l'accordion delle verifiche
   await tick(p, 'input[data-check="c3"]', true)
   ok('verifica c3 on', await p.evaluate(() => JSON.parse(localStorage.getItem('b40:v1:checks')).includes('c3')))
-  ok('contatore verifiche sceso a 9', (await p.locator('#sec-verifiche summary').textContent()).includes('(9)'))
+  ok('contatore verifiche sceso a 8', (await p.locator('#sec-verifiche summary').textContent()).includes('(8)'))
   await tick(p, 'input[data-check="c3"]', false)
   ok('verifica c3 off', await p.evaluate(() => !JSON.parse(localStorage.getItem('b40:v1:checks')).includes('c3')))
   await ctx.close()

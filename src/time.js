@@ -1,8 +1,10 @@
 // "Adesso", countdown e tappa corrente. Override per i test: ?now=2026-10-17T07:50 (query string,
 // anche dopo l'hash: #/oggi?now=...). Gli orari del piano sono ora locale di Barcellona (stesso fuso dell'Italia).
 export const WEEKEND_START = new Date(2026, 9, 16, 0, 0, 0)
-// Fine del weekend: 30 minuti dopo l'ultima tappa (d3, rientro 20:00 del 18/10, orario da verificare)
-export const WEEKEND_END = new Date(2026, 9, 18, 20, 30, 0)
+// Fine del weekend: 30 minuti dopo l'ultimo passo del viaggio di ritorno (ritiro auto al P2 all'01:10
+// di lunedì 19, dalla prenotazione 2932537). Prima era il 18 alle 20:30, con d3 ancora da verificare:
+// il volo delle 23:05 avrebbe chiuso il weekend mentre Alessandro era ancora in lounge.
+export const WEEKEND_END = new Date(2026, 9, 19, 1, 40, 0)
 export const BIRTHDAY = new Date(2026, 9, 17, 0, 0, 0)
 export const SPEEDRUN_DEADLINE = new Date(2026, 9, 17, 8, 15, 0)
 
@@ -52,9 +54,11 @@ export function countdownTo(target, from = now()) {
 }
 
 // Giorno del weekend per una data: 'ven' | 'sab' | 'dom' | null
+// Prima delle 04:00 si appartiene ancora alla sera prima, come per stopDate: l'Apolo delle 00:15 è sabato
+// notte e l'atterraggio delle 00:50 è ancora domenica. Il venerdì mattina resta venerdì (niente giorno -1).
 export function dayKey(d = now()) {
   if (phase(d) !== 'during') return null
-  return ['ven', 'sab', 'dom'][d.getDate() - 16] || null
+  return ['ven', 'sab', 'dom'][Math.max(0, d.getDate() - 16 - (d.getHours() < 4 ? 1 : 0))] || null
 }
 export function todayIso(d = now()) {
   const k = dayKey(d)

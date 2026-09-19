@@ -36,7 +36,10 @@ const text = (p, sel) => p.locator(sel).first().textContent().then((t) => (t || 
 { const { p, ctx } = await open('monne', '/?now=2026-10-17T07:50#/missioni'); const cls = await p.locator('.mission__timer').first().getAttribute('class'); ok('07:50 timer giallo (25 min)', cls.includes('warm'), cls); await ctx.close() }
 { const { p, ctx } = await open('monne', '/?now=2026-10-17T08:05#/missioni'); const cls = await p.locator('.mission__timer').first().getAttribute('class'); ok('08:05 timer rosso (10 min)', cls.includes('hot'), cls); ok('timer valore', (await text(p, '.mission__timer')) === '00:10:00'); await ctx.close() }
 { const { p, ctx } = await open('ale', '/?now=2026-10-17T10:00#/oggi'); ok('17/10 10:00 ale: prossima = s4 10:30', (await text(p, '.tile:nth-child(2) .tile__big')) === '10:30'); await ctx.close() }
-{ const { p, ctx } = await open('ale', '/?now=2026-10-18T21:00#/oggi'); ok('18/10 21:00: missione compiuta', (await p.locator('h2:has-text("Missione compiuta")').count()) === 1); await ctx.close() }
+// Il weekend finisce col ritiro dell'auto al P2 (01:10 di lunedì), non col tramonto di domenica:
+// alle 21:00 Alessandro è ancora in lounge a Barcellona.
+{ const { p, ctx } = await open('ale', '/?now=2026-10-18T21:00#/oggi'); ok('18/10 21:00: weekend ancora in corso', (await p.locator('h2:has-text("Missione compiuta")').count()) === 0 && (await p.locator('.viaggio-oggi').count()) === 1); await ctx.close() }
+{ const { p, ctx } = await open('ale', '/?now=2026-10-19T02:00#/oggi'); ok('19/10 02:00: missione compiuta', (await p.locator('h2:has-text("Missione compiuta")').count()) === 1); await ctx.close() }
 
 // 4. Profili
 { const { p, ctx } = await open('monne', '/#/programma/sab'); const ids = await p.locator('.card').evaluateAll((els) => els.map((e) => e.dataset.stop)); ok('Monne sabato: solo s2', ids.join() === 's2', ids.join()); await ctx.close() }

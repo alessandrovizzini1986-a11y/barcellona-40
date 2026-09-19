@@ -25,8 +25,7 @@ Generato in parte dagli script dati (`npm run data`). Le sezioni tra marker veng
 
 ## Voci aperte (da `data/checks.json`, spuntabili nella sezione Info → Da verificare)
 
-- c1 · Volo di andata di Alessandro: numero e orario (probabile FR2097 06:20→08:05)
-- c2 · Voli di ritorno domenica 18: Alessandro, Giulio, Manuel
+- c2 · Voli di ritorno domenica 18 di Giulio e Manuel (Alessandro: FR5220 delle 23:05, verificato)
 - c3 · Braseria Sarrià: portare la prenotazione a 2 coperti
 - c4 · Hotel: il prezzo €430 include già il 3° adulto? Aliquota tassa di soggiorno? Quando si paga il sovrapprezzo?
 - c5 · Hotel: cancellare la richiesta di letto extra per il 4° ospite di sabato (non serve più)
@@ -46,6 +45,7 @@ Generato in parte dagli script dati (`npm run data`). Le sezioni tra marker veng
 - **Distanze non calcolate**: `f5→f6`, `f6→f7`, `f7→f8`, perché Enoteca Taps e Rooftop Garden El Palace non hanno coordinate. Le tappe sono marcate `da_verificare`.
 
 - Numero volo di Giulio (atterraggio 07:40 confermato) e di Manuel (09:45).
+- Voli di ritorno di Giulio e Manuel: la tappa `d3` resta `da_verificare` e continua a dire le 20:00. Quella di Alessandro non lo è più: FR5220 delle 23:05, con il percorso completo in `data/viaggio.json`.
 - Enoteca Taps Sagrada Família e Rooftop Garden El Palace: nessuna coordinata (Nominatim non le trova); le tappe f6/f7 sono `da_verificare` e sulla mappa compaiono nella lista "Senza coordinate". Inserire `lat`/`lng` a mano in `data/venues.json` con `verified:true`.
 - Distanze f5→f6→f7→f8 non calcolate per lo stesso motivo.
 - Bodega Biarritz 1881: Nominatim restituisce "Bodega Biarritz, Carrer d'en Rull" (Gòtic). Controllare che sia il locale giusto.

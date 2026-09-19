@@ -87,3 +87,54 @@
 .rigori-card__cta{ flex:none; }
 .btn--acqua{ background:var(--acqua); color:#0E1116; border-color:transparent; font-weight:700; letter-spacing:.04em; }
 @media (max-width:360px){ .rigori-card{ flex-wrap:wrap; } .rigori-card__cta{ width:100%; } }
+
+/* Viaggio: voli, parcheggio col QR, lounge, checklist */
+.viaggio{ display:flex; flex-direction:column; gap:var(--space-3); }
+.card--viaggio{ --dc:var(--blu); }
+.card--viaggio .card__head{ flex-direction:row; align-items:flex-start; gap:var(--space-3); }
+.viaggio-ic{ flex:none; width:40px; height:40px; display:grid; place-items:center; border-radius:12px; background:color-mix(in srgb, var(--dc) 20%, transparent); color:var(--dc); }
+.viaggio-ic svg{ width:22px; height:22px; }
+.card--viaggio .card__time{ min-width:58px; }
+.card--step{ padding:var(--space-3) var(--space-4); }
+.card--step-key{ border-color:color-mix(in srgb, var(--giallo) 55%, transparent); }
+.viaggio-note{ display:flex; flex-direction:column; gap:var(--space-1); color:var(--ink-2); font-size:var(--fs-0); }
+.viaggio-note li{ padding-left:var(--space-4); position:relative; }
+.viaggio-note li::before{ content:""; position:absolute; left:0; top:.55em; width:6px; height:6px; border-radius:2px; background:var(--dc); transform:rotate(12deg); }
+.chip--ok{ color:var(--acqua); background:color-mix(in srgb, var(--acqua) 16%, transparent); }
+
+/* Avviso in evidenza (giallo) */
+.avviso{ display:flex; align-items:flex-start; gap:var(--space-3); padding:var(--space-3) var(--space-4); border-radius:var(--radius-s); background:color-mix(in srgb, var(--giallo) 14%, var(--bg-2)); border:1px solid color-mix(in srgb, var(--giallo) 45%, transparent); color:var(--ink); font-size:var(--fs-0); line-height:1.45; }
+.avviso svg{ width:20px; height:20px; flex:none; color:var(--giallo); }
+.avviso--forte{ font-weight:600; border-width:2px; }
+
+/* QR del parcheggio nella card: già grande, sfondo bianco, mai interpolato */
+.qr-box{ display:flex; flex-direction:column; align-items:center; gap:var(--space-2); align-self:center; padding:var(--space-3); border-radius:var(--radius-m); background:#fff; border:1px solid var(--line-2); cursor:pointer; }
+.qr-box:active{ transform:scale(.99); }
+.qr-img{ display:block; width:min(72vw, 260px); height:auto; aspect-ratio:1; image-rendering:pixelated; }
+.qr-box__cta{ display:inline-flex; align-items:center; gap:6px; font-size:var(--fs-0); font-weight:700; color:#0E1116; }
+.qr-box__cta svg{ width:16px; height:16px; }
+.qr-cap{ text-align:center; font-weight:700; font-size:var(--fs-0); letter-spacing:.02em; }
+
+/* QR a schermo pieno: sfondo bianco, QR al massimo, didascalia sempre sotto */
+.qr-full{ position:fixed; inset:0; z-index:1000; background:#fff; color:#0E1116; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:var(--space-3); padding:var(--space-4); padding-bottom:calc(var(--space-4) + var(--safe-b)); }
+.qr-full img{ display:block; width:min(92vw, 78vh); height:auto; aspect-ratio:1; image-rendering:pixelated; }
+.qr-full__cap{ font-weight:700; font-size:16px; text-align:center; color:#0E1116; }
+.qr-full__hint{ font-size:13px; text-align:center; color:#4A4740; max-width:34ch; }
+.qr-full__x{ position:absolute; top:var(--space-3); right:var(--space-3); width:44px; height:44px; display:grid; place-items:center; border-radius:999px; background:#EFE8DD; color:#0E1116; }
+.qr-full__x svg{ width:22px; height:22px; }
+:root.qr-open{ overflow:hidden; }
+
+/* Timeline compatta del viaggio, in cima a Oggi */
+.viaggio-oggi{ display:flex; flex-direction:column; gap:var(--space-3); padding:var(--space-4); border-radius:var(--radius-m); background:var(--bg-2); border:1px solid var(--line); border-left:4px solid var(--blu); }
+.viaggio-tl{ display:flex; flex-direction:column; gap:var(--space-1); }
+.viaggio-step{ display:flex; align-items:flex-start; gap:var(--space-3); min-height:44px; padding:var(--space-2) var(--space-2); border-radius:var(--radius-s); }
+.viaggio-step time{ flex:none; min-width:48px; font-family:var(--font-display); font-weight:700; color:var(--blu); }
+.viaggio-step__ic{ flex:none; width:24px; color:var(--ink-2); display:grid; place-items:center; }
+.viaggio-step__ic svg{ width:18px; height:18px; }
+.viaggio-step b{ font-weight:600; }
+.viaggio-step.is-past{ opacity:.5; }
+.viaggio-step.is-now{ background:color-mix(in srgb, var(--blu) 18%, transparent); }
+.viaggio-step.is-now time{ color:var(--ink); }
+.viaggio-step.is-key b{ color:var(--giallo); }
+.viaggio-check .is-done{ text-decoration:line-through; color:var(--ink-2); }
+@media (max-width:360px){ .viaggio-step time{ min-width:42px; } .card--viaggio .card__time{ min-width:50px; } }

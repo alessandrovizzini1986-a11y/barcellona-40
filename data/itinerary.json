@@ -616,9 +616,10 @@
      "timeStatus": "da_verificare",
      "venueId": "bcnT2",
      "title": "Rientro a Bologna",
-     "why": "Orari dei voli di ritorno da confermare.",
+     "why": "Alessandro parte alle 23:05; per Giulio e Manuel gli orari sono ancora da confermare.",
      "details": [
-      "Alessandro, Giulio, Manuel: numero volo e orario da inserire"
+      "Alessandro: FR5220 delle 23:05, T2. Si stacca dal gruppo alle 19:15, il viaggio completo è nella sezione Viaggio",
+      "Giulio e Manuel: numero volo e orario da inserire"
      ],
      "people": [
       "ale",

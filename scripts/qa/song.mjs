@@ -36,8 +36,8 @@ async function open(person, path, opts = {}) {
 }
 {
   const { p, ctx } = await open('monne', '/#/info')
-  const ids = await p.evaluate(() => [...document.querySelectorAll('.acc details')].map((d) => d.id))
-  ok('Info: "La canzone" subito dopo "Foto"', ids[0] === 'sec-foto' && ids[1] === 'sec-canzone', ids.slice(0, 3).join(','))
+  const ids = await p.evaluate(() => [...document.querySelectorAll('.acc > details')].map((d) => d.id))
+  ok('Info: "La canzone" subito dopo "Foto"', ids[1] === 'sec-foto' && ids[2] === 'sec-canzone', ids.slice(0, 3).join(','))
   ok('"La canzone" aperta di default', await p.evaluate(() => document.querySelector('#sec-canzone').open))
   await ctx.close()
 }

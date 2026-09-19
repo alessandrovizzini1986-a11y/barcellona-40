@@ -14,6 +14,7 @@ import { albumBanner, bindAlbum } from '../ui/album.js'
 import { songCard, bindSong } from '../ui/song.js'
 import { shareAlbum, bindShareAlbum } from '../ui/share-album.js'
 import { PHOTO_ALBUM } from '../store.js'
+import { timelineViaggio, bindViaggio } from '../ui/viaggio.js'
 
 const DAY_LABEL = { ven: 'Venerdì 16', sab: 'Sabato 17', dom: 'Domenica 18' }
 const PREP = [
@@ -132,6 +133,7 @@ export async function render(root, { person, header, params }) {
   const monneGone = person === 'monne' && now() > mine[mine.length - 1]?.at
 
   html = header(`${DAY_LABEL[key]} · ${p.name}`) + `<section class="view">
+    ${timelineViaggio(key, person)}
     ${albumBanner({ line: 'Ogni foto che carichi finisce nello stesso posto. Stasera riguardate tutto insieme.' })}
     ${songCard({ line: 'Due minuti e quarantacinque. Dopo il terzo ascolto il ritornello non esce più.' })}
     ${person === 'monne' && !monneGone ? speedBanner() : ''}
@@ -170,6 +172,7 @@ export async function render(root, { person, header, params }) {
   bindAlbum(root)
   bindSong(root)
   const ac = new AbortController()
+  bindViaggio(root, { signal: ac.signal })
   const progress = root.querySelector('#progress')
   bindCards(root, { signal: ac.signal, onChange: () => {
     // l'anello e il contatore di oggi si aggiornano subito, senza aspettare il prossimo render

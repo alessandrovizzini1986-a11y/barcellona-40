@@ -99,3 +99,14 @@
 - Toast e coriandoli solo alle transizioni reali; togliendo una spunta un toast discreto dice quanti XP se ne vanno.
 - In Oggi l'anello di progresso e il contatore del giorno si aggiornano al tocco. Tutte le card della stessa tappa sulla pagina restano allineate.
 - Prompt che ha guidato l'intervento in `docs/prompts/gamification-fix.md`. Nuova suite `scripts/qa/gamification.mjs`.
+
+## Viaggio: voli, parcheggio con QR, lounge e checklist
+- `data/viaggio.json`: due voli di Alessandro (FR2097 andata, FR5220 ritorno, prenotazione TZWSXS) più il ritorno di Monne, parcheggio P2 di Bologna (prenotazione 2932537, €51,00, pagato), Sala VIP Canudas al T2 e le due timeline (venerdì 7 passi, domenica 11). Tutto `verificato`: viene dalle schermate di prenotazione, niente stime.
+- `public/assets/viaggio/qr-parcheggio-p2.png`: il PNG fornito, 1024×1024, copiato in `dist/` byte per byte (sta in `public/`, quindi la build non lo ricomprime). Contenuto decodificato e confermato: `$BLQ2932537LGT@`.
+- Card del parcheggio: QR da 251 px già nella card su fondo bianco, un tocco lo porta a schermo pieno (fondo bianco, 348 px su un telefono da 380, `image-rendering: pixelated`, mai ingrandito oltre la sorgente), Wake Lock e `requestFullscreen` con try/catch e ripresa al rientro dal background. Sotto il QR resta sempre "P2 · codice 2932537 · Alessandro Vizzini". Lo screenshot del QR a schermo pieno è stato riletto da un decodificatore: torna la stringa giusta.
+- La lounge compare solo sul ritorno. All'andata nessuna lounge, da nessuna parte.
+- Vista Info: "Viaggio" è il primo accordion, aperto. Vista Oggi: il 16 e il 18 la timeline del viaggio sta in cima, col passo in corso evidenziato. Vista Programma: i passi entrano nella timeline del giorno come card normali, in ordine di orario, con le icone `plane-takeoff` / `plane-landing` / `car`; atterraggio del venerdì e fine Bunkers non vengono duplicati, perché sono già tappe.
+- Checklist del bagaglio a mano in `b40:v1:checklist:viaggio`, solo per il profilo `ale`: per gli altri non è nel DOM, insieme al QR e alla lounge.
+- `WEEKEND_END` spostato dal 18 alle 20:30 al 19 all'01:40, 30 minuti dopo il ritiro dell'auto al P2: col volo delle 23:05 il sito dichiarava "Missione compiuta" mentre Alessandro era ancora in lounge. `dayKey` ora fa appartenere le ore prima delle 04:00 alla sera precedente, come già faceva `stopDate` (l'Apolo delle 00:15 è sabato notte, l'atterraggio delle 00:50 è ancora domenica); il venerdì mattina resta venerdì.
+- Volo di andata di Alessandro ora verificato in `data/people.json` (prenotazione TZWSXS, stesso volo di Monne) e ritorno compilato: il check `c1` è chiuso, `c2` resta aperto solo per Giulio e Manuel.
+- `scripts/validate.mjs` controlla anche `viaggio.json`: orari, badge, persone, sequenza dei passi, esistenza e peso del PNG del QR, didascalia che riporta il codice. Nuova suite `scripts/qa/viaggio.mjs` (46 controlli).

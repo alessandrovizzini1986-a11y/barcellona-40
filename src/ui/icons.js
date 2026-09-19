@@ -30,8 +30,19 @@ import Disc3 from 'lucide/dist/esm/icons/disc-3.mjs'
 import Music from 'lucide/dist/esm/icons/music.mjs'
 import MessageCircle from 'lucide/dist/esm/icons/message-circle.mjs'
 import Goal from 'lucide/dist/esm/icons/goal.mjs'
+import PlaneTakeoff from 'lucide/dist/esm/icons/plane-takeoff.mjs'
+import PlaneLanding from 'lucide/dist/esm/icons/plane-landing.mjs'
+import Car from 'lucide/dist/esm/icons/car.mjs'
+import Bus from 'lucide/dist/esm/icons/bus.mjs'
+import Luggage from 'lucide/dist/esm/icons/luggage.mjs'
+import Coffee from 'lucide/dist/esm/icons/coffee.mjs'
+import DoorOpen from 'lucide/dist/esm/icons/door-open.mjs'
+import ShowerHead from 'lucide/dist/esm/icons/shower-head.mjs'
+import Utensils from 'lucide/dist/esm/icons/utensils.mjs'
+import QrCode from 'lucide/dist/esm/icons/qr-code.mjs'
+import Maximize from 'lucide/dist/esm/icons/maximize.mjs'
 
-const ICONS = { sun: Sun, list: List, map: MapIcon, trophy: Trophy, info: Info, 'map-pin': MapPin, taxi: CarTaxiFront, train: TrainFront, copy: Copy, check: Check, alarm: AlarmClock, locate: Locate, alert: TriangleAlert, chevron: ChevronDown, walk: Footprints, zap: Zap, download: Download, upload: Upload, sparkles: Sparkles, user: User, phone: Phone, clock: Clock, x: X, refresh: RefreshCw, camera: Camera, whatsapp: MessageCircle, share: Share2, disc: Disc3, music: Music, goal: Goal }
+const ICONS = { sun: Sun, list: List, map: MapIcon, trophy: Trophy, info: Info, 'map-pin': MapPin, taxi: CarTaxiFront, train: TrainFront, copy: Copy, check: Check, alarm: AlarmClock, locate: Locate, alert: TriangleAlert, chevron: ChevronDown, walk: Footprints, zap: Zap, download: Download, upload: Upload, sparkles: Sparkles, user: User, phone: Phone, clock: Clock, x: X, refresh: RefreshCw, camera: Camera, whatsapp: MessageCircle, share: Share2, disc: Disc3, music: Music, goal: Goal, 'plane-takeoff': PlaneTakeoff, 'plane-landing': PlaneLanding, car: Car, bus: Bus, luggage: Luggage, coffee: Coffee, 'door-open': DoorOpen, shower: ShowerHead, utensils: Utensils, qr: QrCode, maximize: Maximize }
 
 export function icon(name, attrs = {}) {
   const node = ICONS[name]

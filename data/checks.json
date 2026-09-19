@@ -1,6 +1,5 @@
 { "checks":[
- {"id":"c1","stopId":"f1","who":"ale","text":"Volo di andata di Alessandro: numero e orario (probabile FR2097 06:20→08:05)"},
- {"id":"c2","stopId":"d3","who":"ale","text":"Voli di ritorno domenica 18: Alessandro, Giulio, Manuel"},
+ {"id":"c2","stopId":"d3","who":"ale","text":"Voli di ritorno domenica 18 di Giulio e Manuel (Alessandro: FR5220 delle 23:05, verificato)"},
  {"id":"c3","stopId":"f8","who":"ale","text":"Braseria Sarrià: portare la prenotazione a 2 coperti"},
  {"id":"c4","stopId":"f5","who":"ale","text":"Hotel: il prezzo €430 include già il 3° adulto? Aliquota tassa di soggiorno? Quando si paga il sovrapprezzo?"},
  {"id":"c5","stopId":"f5","who":"ale","text":"Hotel: cancellare la richiesta di letto extra per il 4° ospite di sabato (non serve più)"},

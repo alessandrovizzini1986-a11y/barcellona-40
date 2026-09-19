@@ -118,14 +118,18 @@ for (const [person, path] of [['ale', '/#/oggi'], ['monne', '/#/info'], ['giulio
   await ctx.close()
 }
 {
-  const { p, ctx } = await open('ale', '/?now=2026-10-18T21:00#/oggi')
+  // il weekend finisce col ritiro dell'auto al P2, all'01:10 di lunedì
+  const { p, ctx } = await open('ale', '/?now=2026-10-19T02:00#/oggi')
   ok('dopo il weekend: "Guarda com\'è andata"', (await p.locator(`a[href="${ALBUM}"]:has-text("Guarda com")`).count()) === 1)
   await ctx.close()
 }
-// Info: "Foto" primo accordion, aperto
+// Info: "Viaggio" primo accordion, "Foto" subito dopo, entrambi aperti
 {
   const { p, ctx } = await open('ale', '/#/info')
-  ok('Foto è il primo accordion', await p.evaluate(() => document.querySelector('.acc details').id === 'sec-foto'))
+  ok('Viaggio è il primo accordion, Foto il secondo', await p.evaluate(() => {
+    const ids = [...document.querySelectorAll('.acc > details')].map((d) => d.id)
+    return ids[0] === 'sec-viaggio' && ids[1] === 'sec-foto'
+  }))
   ok('Foto aperto di default', await p.evaluate(() => document.querySelector('#sec-foto').open))
   await ctx.close()
 }

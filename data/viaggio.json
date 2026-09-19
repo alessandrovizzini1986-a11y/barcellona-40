@@ -1,0 +1,328 @@
+{
+  "fonte": "Schermate di prenotazione di Alessandro: voli Ryanair TZWSXS, parcheggio Bologna 2932537, scheda Sala VIP Canudas. Nessun orario stimato.",
+  "voli": [
+    {
+      "id": "andata",
+      "tipo": "andata",
+      "titolo": "Andata · BLQ → BCN",
+      "data": "2026-10-16",
+      "giorno": "ven",
+      "volo": "FR2097",
+      "da": "BLQ",
+      "a": "BCN",
+      "partenza": "06:20",
+      "arrivo": "08:05",
+      "durata": "1h45",
+      "prenotazione": "TZWSXS",
+      "intestatario": "Alessandro Vizzini",
+      "persone": [
+        "ale",
+        "monne"
+      ],
+      "copy": "Parti col buio e alle 08:05 hai già la giornata intera davanti.",
+      "note": [
+        "Stesso volo di Monne: la sua prenotazione è Y6R6KD"
+      ],
+      "badges": [
+        "verificato"
+      ]
+    },
+    {
+      "id": "ritorno",
+      "tipo": "ritorno",
+      "titolo": "Ritorno · BCN → BLQ",
+      "data": "2026-10-18",
+      "giorno": "dom",
+      "volo": "FR5220",
+      "da": "BCN",
+      "a": "BLQ",
+      "partenza": "23:05",
+      "arrivo": "00:50",
+      "arrivoNota": "atterra lunedì 19",
+      "prenotazione": "TZWSXS",
+      "intestatario": "Alessandro Vizzini",
+      "persone": [
+        "ale"
+      ],
+      "copy": "Atterri all'una di notte, ma l'auto ti aspetta al P2 fino alle quattro.",
+      "note": [],
+      "badges": [
+        "verificato"
+      ]
+    },
+    {
+      "id": "ritorno-monne",
+      "tipo": "ritorno",
+      "titolo": "Ritorno di Monne · BCN → BLQ",
+      "data": "2026-10-17",
+      "giorno": "sab",
+      "volo": "FR5220",
+      "da": "BCN",
+      "a": "BLQ",
+      "partenza": "10:20",
+      "arrivo": "12:05",
+      "prenotazione": "Y6R6KD",
+      "intestatario": "Monne",
+      "persone": [
+        "monne"
+      ],
+      "copy": "Ventisei ore a Barcellona e alle 12:05 sei di nuovo a Bologna.",
+      "note": [],
+      "badges": [
+        "verificato"
+      ]
+    }
+  ],
+  "parcheggio": {
+    "nome": "Parcheggio P2 · Aeroporto di Bologna",
+    "posto": "P2",
+    "prenotazione": "2932537",
+    "prezzo": "€51,00",
+    "stato": "PAGATO",
+    "entrata": "16/10/26 ore 04:00",
+    "uscita": "19/10/26 ore 04:00",
+    "intestatario": "Alessandro Vizzini",
+    "qr": "assets/viaggio/qr-parcheggio-p2.png",
+    "didascalia": "P2 · codice 2932537 · Alessandro Vizzini",
+    "copy": "Il QR è qui. Alla colonnina, due tap e sei dentro.",
+    "accesso": [
+      "Avvicina il QR al lettore della colonnina, a circa 10 cm",
+      "Aspetta che la colonnina emetta il biglietto",
+      "Ritira il biglietto",
+      "Aspetta che si alzi la sbarra"
+    ],
+    "persone": [
+      "ale"
+    ],
+    "badges": [
+      "verificato"
+    ]
+  },
+  "lounge": {
+    "nome": "Sala VIP Canudas",
+    "dove": "Barcellona T2, vicino al Gate U",
+    "quando": "Solo al ritorno, domenica 18",
+    "orari": "06:00–23:00 tutti i giorni",
+    "voto": "3,1/5",
+    "recensioni": 410,
+    "telefono": "+34 913 21 10 00",
+    "servizi": [
+      "Docce confermate",
+      "Quiet room"
+    ],
+    "avvertenze": [
+      "Interno caldo, intorno ai 27 °C",
+      "Bevande non sempre fredde",
+      "Coda dopo le 08:00"
+    ],
+    "avviso": "Canudas chiude alle 23:00: entra entro le 20:30 o rischi di non trovare la doccia libera.",
+    "copy": "Quattro ore di attesa diventano una doccia calda e una cena seduto.",
+    "persone": [
+      "ale"
+    ],
+    "badges": [
+      "verificato"
+    ]
+  },
+  "timeline": {
+    "ven": {
+      "giorno": "ven",
+      "data": "2026-10-16",
+      "titolo": "Andata · da casa al gate",
+      "sottotitolo": "Sveglia alle 3:30, atterraggio alle 8:05",
+      "nota": "Doccia a casa prima di partire.",
+      "persone": [
+        "ale"
+      ],
+      "badges": [
+        "verificato"
+      ],
+      "step": [
+        {
+          "id": "v1",
+          "ora": "03:30",
+          "titolo": "Sveglia",
+          "icona": "alarm",
+          "dettaglio": "Doccia a casa prima di partire."
+        },
+        {
+          "id": "v2",
+          "ora": "04:00",
+          "titolo": "Ingresso P2 col QR",
+          "icona": "car",
+          "dettaglio": "Il parcheggio apre alle 04:00.",
+          "riferimento": "parcheggio"
+        },
+        {
+          "id": "v3",
+          "ora": "04:20",
+          "titolo": "Navetta al terminal",
+          "icona": "bus"
+        },
+        {
+          "id": "v4",
+          "ora": "04:40",
+          "titolo": "Check-in e controlli",
+          "icona": "luggage"
+        },
+        {
+          "id": "v5",
+          "ora": "05:30",
+          "titolo": "Colazione in area gate",
+          "icona": "coffee"
+        },
+        {
+          "id": "v6",
+          "ora": "06:20",
+          "titolo": "FR2097 decolla",
+          "icona": "plane-takeoff",
+          "riferimento": "andata"
+        },
+        {
+          "id": "v7",
+          "ora": "08:05",
+          "titolo": "Atterraggio BCN",
+          "icona": "plane-landing",
+          "inProgramma": false
+        }
+      ]
+    },
+    "dom": {
+      "giorno": "dom",
+      "data": "2026-10-18",
+      "titolo": "Ritorno · dai Bunkers a casa",
+      "sottotitolo": "Doccia e cena in lounge, poi il volo delle 23:05",
+      "avviso": "Canudas chiude alle 23:00: entra entro le 20:30 o rischi di non trovare la doccia libera.",
+      "persone": [
+        "ale"
+      ],
+      "badges": [
+        "verificato"
+      ],
+      "step": [
+        {
+          "id": "d1",
+          "ora": "19:00",
+          "titolo": "Fine Bunkers del Carmel",
+          "icona": "clock",
+          "inProgramma": false
+        },
+        {
+          "id": "d2",
+          "ora": "19:15",
+          "titolo": "Taxi verso il T2",
+          "icona": "taxi",
+          "dettaglio": "Circa 30-35 minuti."
+        },
+        {
+          "id": "d3",
+          "ora": "19:50",
+          "titolo": "Arrivo T2, check-in e sicurezza",
+          "icona": "luggage"
+        },
+        {
+          "id": "d4",
+          "ora": "20:20",
+          "titolo": "Ingresso Canudas",
+          "icona": "door-open",
+          "dettaglio": "Chiedi subito la doccia al banco.",
+          "riferimento": "lounge",
+          "evidenza": true
+        },
+        {
+          "id": "d5",
+          "ora": "20:30",
+          "titolo": "Doccia e cambio completo",
+          "icona": "shower"
+        },
+        {
+          "id": "d6",
+          "ora": "21:00",
+          "titolo": "Cena al buffet",
+          "icona": "utensils"
+        },
+        {
+          "id": "d7",
+          "ora": "22:20",
+          "titolo": "Uscita lounge",
+          "icona": "door-open"
+        },
+        {
+          "id": "d8",
+          "ora": "22:35",
+          "titolo": "Gate",
+          "icona": "luggage"
+        },
+        {
+          "id": "d9",
+          "ora": "23:05",
+          "titolo": "FR5220 decolla",
+          "icona": "plane-takeoff",
+          "riferimento": "ritorno"
+        },
+        {
+          "id": "d10",
+          "ora": "00:50",
+          "titolo": "Atterraggio BLQ",
+          "icona": "plane-landing",
+          "dettaglio": "Lunedì 19.",
+          "giornoDopo": true
+        },
+        {
+          "id": "d11",
+          "ora": "01:10",
+          "titolo": "Ritiro auto al P2",
+          "icona": "car",
+          "dettaglio": "L'uscita è coperta fino alle 04:00.",
+          "riferimento": "parcheggio",
+          "giornoDopo": true
+        }
+      ]
+    }
+  },
+  "checklist": {
+    "chiave": "checklist:viaggio",
+    "titolo": "Bagaglio a mano",
+    "persone": [
+      "ale"
+    ],
+    "voci": [
+      {
+        "id": "b1",
+        "testo": "Cambio completo pulito",
+        "nota": "In una busta separata"
+      },
+      {
+        "id": "b2",
+        "testo": "Accappatoio"
+      },
+      {
+        "id": "b3",
+        "testo": "Bagnoschiuma e shampoo",
+        "nota": "Max 100 ml, nella busta trasparente da 1 litro: altrimenti te li sequestrano ai controlli"
+      },
+      {
+        "id": "b4",
+        "testo": "Ciabatte"
+      },
+      {
+        "id": "b5",
+        "testo": "Asciugamano piccolo per i capelli"
+      },
+      {
+        "id": "b6",
+        "testo": "Auricolari",
+        "nota": "Audioguida della Sagrada Família"
+      },
+      {
+        "id": "b7",
+        "testo": "Documento con foto",
+        "nota": "Obbligatorio alla Sagrada"
+      },
+      {
+        "id": "b8",
+        "testo": "eSIM installata prima di partire, sul WiFi di casa"
+      }
+    ]
+  }
+}
