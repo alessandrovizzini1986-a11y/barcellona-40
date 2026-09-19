@@ -907,9 +907,10 @@
      "timeStatus": "verificato",
      "venueId": "bunkers",
      "title": "Bunkers del Carmel — MUHBA Turó de la Rovira",
-     "why": "La città tutta insieme, dall'alto, prima di tornare. Si resta fino al tramonto.",
+     "why": "Si resta per il tramonto: alle 19:07 il sole se ne va e la città si accende.",
      "details": [
       "Il belvedere è uno spazio ad accesso libero: nessun orario, nessun biglietto",
+      "Tramonto alle 19:07. La luce migliore comincia alle 18:31.",
       "Spazi museali (bunker della guerra civile) da ottobre a maggio: mer/ven/sab/dom 10:00–14:00, ultimo ingresso 13:30",
       "4,6 su 17.545 recensioni",
       "Tel +34 932 56 21 22"
@@ -930,8 +931,12 @@
      "distFromPrevM": 632,
      "minFromPrev": 12,
      "img": "bunkers.webp",
-     "durataMin": 180,
-     "avviso": "Il belvedere è sempre aperto e gratuito. La parte museale sui bunker chiude alle 14:00, quindi domenica la trovate chiusa: si sale per la vista."
+     "durataMin": 210,
+     "avviso": "Il belvedere è sempre aperto e gratuito. La parte museale sui bunker chiude alle 14:00, quindi domenica la trovate chiusa: si sale per la vista.",
+     "detailsStimati": [
+      "Prenota il taxi dall'app mentre sei ancora in cima: qui sopra non ne passano. L'auto ci mette qualche minuto a salire.",
+      "Se l'app non trova nessuno: scendi a piedi verso Carrer de Marià Labèrnia e richiama da lì."
+     ]
     },
     {
      "id": "d3",
@@ -941,7 +946,7 @@
      "title": "Rientro a Bologna",
      "why": "Alessandro parte alle 23:05; per Giulio e Manuel gli orari sono ancora da confermare.",
      "details": [
-      "Alessandro: FR5220 delle 23:05, T2. Si stacca dal gruppo alle 19:15, il viaggio completo è nella sezione Viaggio",
+      "Alessandro: FR5220 delle 23:05, T2. Si stacca dal gruppo alle 19:30, il viaggio completo è nella sezione Viaggio",
       "Giulio e Manuel: numero volo e orario da inserire"
      ],
      "people": [

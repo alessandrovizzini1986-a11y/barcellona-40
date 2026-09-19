@@ -1,6 +1,6 @@
 // Card tappa: orario, titolo, "perché", chip distanza/prezzi, badge, azioni, dettagli, checkbox "Fatto"
 import { icon } from './icons.js'
-import { badges as badgeHtml } from './badge.js'
+import { badge, badges as badgeHtml } from './badge.js'
 import { esc } from './html.js'
 import { badgesFor, fmtDist, fmtEur, mapsUrl, taxiUrl, TAXI_FALLBACK, missionByStop, hasCoords, DAY_COLOR, durataDi, totaleTratta } from '../data.js'
 import { fmtMinutes } from '../time.js'
@@ -102,6 +102,10 @@ export function stopCard(stop, { person = null, isNow = false, nowLabel = 'adess
   // Alcuni venue hanno il voto senza il numero di recensioni: si mostra quello che c'è, senza inventare
   const voto = v?.rating ? `<span class="chip">★ ${String(v.rating).replace('.', ',')}${v.reviews ? ` · ${v.reviews.toLocaleString('it-IT')}` : ''}</span>` : ''
   const details = (stop.details || []).map((d) => `<li class="${/ATTENZIONE|NON confermato|da verificare|da chiarire/i.test(d) ? 'alert' : ''}">${esc(d)}</li>`).join('')
+  // Consigli nostri, non dati confermati: stanno nello stesso pannello ma sotto il badge "stimato",
+  // così chi legge sa che è un ragionamento sulla zona e non un orario o un numero verificato.
+  const stimati = (stop.detailsStimati || []).map((d) => `<li>${esc(d)}</li>`).join('')
+  const bloccoStimati = stimati ? `<div class="card__stimati"><p class="card__stimati-tit">${badge('stimato')}<span>ragionamento nostro, non un dato confermato</span></p><ul>${stimati}</ul></div>` : ''
   const acts = []
   if (stop.actions?.maps) acts.push(`<a class="btn" href="${mapsUrl(stop)}" target="_blank" rel="noopener">${icon('map-pin')} Maps</a>`)
   if (stop.actions?.taxi) acts.push(`<a class="btn" href="${taxiUrl(stop)}" data-taxi target="_blank" rel="noopener" title="Uber; in alternativa FREE NOW">${icon('taxi')} Taxi</a>`)
@@ -126,7 +130,7 @@ export function stopCard(stop, { person = null, isNow = false, nowLabel = 'adess
     <div class="chips">${distChip(stop)}${durataChip(stop)}${voto}${prices}${badgeHtml(badgesFor(stop), reveal)}</div>
     ${stop.avviso ? `<div class="avviso">${icon('alert')}<span>${esc(stop.avviso)}</span></div>` : ''}
     ${acts.length ? `<div class="actions">${acts.join('')}</div>` : ''}
-    ${details ? `<details><summary><span>Dettagli</span>${icon('chevron')}</summary><div class="card__more"><div><ul>${details}</ul></div></div></details>` : ''}
+    ${details || bloccoStimati ? `<details><summary><span>Dettagli</span>${icon('chevron')}</summary><div class="card__more"><div>${details ? `<ul>${details}</ul>` : ''}${bloccoStimati}</div></div></details>` : ''}
     ${showCheck ? `<label class="check"><input type="checkbox" data-done="${stop.id}" ${done ? 'checked' : ''} aria-label="Fatto: ${esc(stop.title)}"><span>Fatto</span>${missionMine ? `<span class="check__xp">+${mission.xp} XP · ${esc(mission.title)}</span>` : ''}</label>` : ''}
     ${attribuzione(stop)}
   </article>`

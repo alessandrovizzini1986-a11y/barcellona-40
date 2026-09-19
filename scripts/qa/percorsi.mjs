@@ -32,8 +32,20 @@ ok('Bunkers: nome MUHBA e orario vero (belvedere libero, museo fino alle 14)', v
 ok('Bunkers: coordinate verificate', venues.bunkers.verified === true && venues.bunkers.lat === 41.4193003 && !venues.bunkers.geocoded)
 ok('Bunkers: avviso sul belvedere libero e sul museo chiuso', /belvedere è sempre aperto e gratuito/.test(stops.d2.avviso || '') && /chiude alle 14:00/.test(stops.d2.avviso || ''))
 ok('Bunkers: niente più finestra 16:00–19:00 come vincolo', !/16:00[–-]19:00/.test(JSON.stringify(stops.d2)))
-ok('domenica invariata: si sale alle 16:00 e si resta fino al tramonto', stops.d2.durataMin === 180 && stops.d2.time === '16:00' && stops.d1.time === '13:30')
+ok('domenica: si sale alle 16:00 e si scende dopo il tramonto (210 min)', stops.d2.durataMin === 210 && stops.d2.time === '16:00' && stops.d1.time === '13:30')
 ok('domenica: nessun arrivo ai Bunkers alle 15:15', !JSON.stringify(it.days[2]).includes('15:15'))
+
+// ---- tramonto ----
+const viaggio = JSON.parse(readFileSync('data/viaggio.json', 'utf8'))
+const dom = viaggio.timeline.dom
+const passo = (id) => dom.step.find((x) => x.id === id)
+ok('Bunkers: il tramonto è un dato nei dettagli', stops.d2.details.some((d) => d.includes('19:07') && d.includes('18:31')), stops.d2.details.join(' | '))
+ok('Bunkers: il "perché" parla del tramonto', /tramonto/i.test(stops.d2.why), stops.d2.why)
+ok('Bunkers: il consiglio sul taxi è marcato stimato, non un dettaglio verificato', stops.d2.detailsStimati?.length === 2 && stops.d2.detailsStimati.every((d) => !stops.d2.details.includes(d)))
+ok('Bunkers: nessun consiglio sul taxi fra i dettagli verificati', !stops.d2.details.some((d) => /prenota il taxi/i.test(d)))
+ok('domenica: si scende alle 19:30, non alle 19:00', passo('d1').ora === '19:30' && /19:07/.test(passo('d1').dettaglio || ''), `${passo('d1').ora} · ${passo('d1').dettaglio}`)
+ok('domenica: taxi 19:30 e arrivo T2 20:05', passo('d2').ora === '19:30' && passo('d3').ora === '20:05')
+ok('domenica: Canudas alle 20:20 invariato', dom.step.some((x) => x.ora === '20:20' && /Canudas/.test(x.titolo)))
 
 // ---- link ----
 ok('otto percorsi in tutto', percorsi.length === 8, String(percorsi.length))
@@ -97,6 +109,20 @@ for (const [giorno, attesi] of [['ven', ['ven-mattina', 'ven-pomeriggio', 'ven-c
 {
   const { p, ctx } = await vista('giulio', '/#/programma/ven')
   ok('Giulio, che venerdì non c\'è, non vede i percorsi del venerdì', await p.locator('.percorso').count() === 0)
+  await ctx.close()
+}
+// Il consiglio stimato compare nella card, separato dai dati verificati
+{
+  const { p, ctx } = await vista('ale', '/#/programma/dom')
+  const card = p.locator('.card[data-stop="d2"]').first()
+  await card.locator('summary').click()
+  await p.waitForTimeout(400)
+  const html = await card.innerHTML()
+  ok('card Bunkers · il tramonto sta fra i dettagli verificati', /Tramonto alle 19:07/.test(html))
+  ok('card Bunkers · blocco dei consigli stimati presente', await card.locator('.card__stimati').count() === 1)
+  ok('card Bunkers · il blocco porta il badge "stimato"', /badge--stimato/.test(await card.locator('.card__stimati').innerHTML()))
+  ok('card Bunkers · il taxi sta nel blocco stimato, non nell\'elenco verificato', /Prenota il taxi/.test(await card.locator('.card__stimati').innerHTML()) && !/Prenota il taxi/.test(await card.locator('.card__more > div > ul').first().innerHTML()))
+  ok('card Bunkers · niente overflow orizzontale', await p.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth))
   await ctx.close()
 }
 await b.close()
