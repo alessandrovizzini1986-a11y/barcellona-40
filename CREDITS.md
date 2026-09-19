@@ -53,26 +53,46 @@ gli stinger hanno il silenzio di coda tagliato. Tutto a -14 LUFS, MP3 96 kbps (l
 
 Le foto di Google Places **non** sono utilizzabili: l'attribuzione è per singolo autore e non sono
 ripubblicabili su un sito. Queste vengono tutte da Wikimedia Commons, con licenza libera verificata nel campo
-`extmetadata` prima dello scaricamento (`scripts/foto-tappe.mjs`, `npm run foto`). Ridimensionate a 800 px di
-larghezza e convertite in WebP q80 con ffmpeg. L'attribuzione è **visibile sulla card**, sotto il contenuto,
-con link alla pagina Commons del file.
+`extmetadata` prima di salvare il file (`scripts/fetch-photos.mjs`, `npm run foto`). Ritagliate a 16:9,
+ridimensionate a 800×450 e convertite in WebP q80 con sharp. L'attribuzione è **visibile sulla card**, sotto
+il contenuto, con link alla pagina Commons del file.
+
+<!-- foto:start -->
 
 | Tappa | File nel sito | Autore | Licenza | Originale su Commons |
 |---|---|---|---|---|
-| f2 · Parc de la Ciutadella | `public/assets/tappe/ciutadella.webp` | Isiwal | [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0) | [Barcelona Parc Ciutadella cascada.jpg](https://commons.wikimedia.org/wiki/File:Barcelona_Parc_Ciutadella_cascada.jpg) |
-| f3 · Basílica de Santa Maria del Mar | `public/assets/tappe/santamaria.webp` | Richard Mortel from Riyadh, Saudi Arabia | [CC BY 2.0](https://creativecommons.org/licenses/by/2.0) | [Basilica de Santa Maria del Mar, 14th century (1) (30393970184).jpg](https://commons.wikimedia.org/wiki/File:Basilica_de_Santa_Maria_del_Mar,_14th_century_(1)_(30393970184).jpg) |
-| f4 · Carrer de Montcada | `public/assets/tappe/montcada.webp` | Kippelboy | [CC BY-SA 3.0 es](https://creativecommons.org/licenses/by-sa/3.0/es/deed.en) | [Carrer Montcada- Museu Picasso.jpg](https://commons.wikimedia.org/wiki/File:Carrer_Montcada-_Museu_Picasso.jpg) |
-| f5 · Pont del Bisbe | `public/assets/tappe/pontbisbe.webp` | Felvalen | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | [Barrio gótico 13.jpg](https://commons.wikimedia.org/wiki/File:Barrio_g%C3%B3tico_13.jpg) |
-| f6 · Plaça de Sant Felip Neri | `public/assets/tappe/santfelip.webp` | Justraveling.com | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | [San Felip Neri Square in Barcelona.jpg](https://commons.wikimedia.org/wiki/File:San_Felip_Neri_Square_in_Barcelona.jpg) |
-| f8 · Mercat de Santa Caterina | `public/assets/tappe/santacaterina.webp` | Tony Hisgett from Birmingham, UK | [CC BY 2.0](https://creativecommons.org/licenses/by/2.0) | [Market Roof (5832285437) (2).jpg](https://commons.wikimedia.org/wiki/File:Market_Roof_(5832285437)_(2).jpg) |
+| Aeroporto di Bologna | `public/assets/tappe/blq.webp` | Threecharlie | [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0) | [Bologna Guglielmo Marconi Airport Terminal.jpg](https://commons.wikimedia.org/wiki/File:Bologna_Guglielmo_Marconi_Airport_Terminal.jpg) |
+| Barcellona T2 | `public/assets/tappe/bcn_t2.webp` | Azulino | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | [Terminal 2A Aeropuerto Barcelona-El Prat.jpg](https://commons.wikimedia.org/wiki/File:Terminal_2A_Aeropuerto_Barcelona-El_Prat.jpg) |
+| Parc de la Ciutadella | `public/assets/tappe/ciutadella.webp` | azxzcukl55 | [CC0](http://creativecommons.org/publicdomain/zero/1.0/deed.en) | [Fountains at Cascada Monumental (32730873275).jpg](https://commons.wikimedia.org/wiki/File:Fountains_at_Cascada_Monumental_(32730873275).jpg) |
+| Basílica de Santa Maria del Mar | `public/assets/tappe/santamaria.webp` | Enric | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | [01 Santa Maria del Mar (Barcelona).jpg](https://commons.wikimedia.org/wiki/File:01_Santa_Maria_del_Mar_(Barcelona).jpg) |
+| Carrer de Montcada | `public/assets/tappe/montcada.webp` | Andrei Dan Suciu | [CC BY 3.0](https://creativecommons.org/licenses/by/3.0) | [Placeta de Montcada, Barcelona - panoramio.jpg](https://commons.wikimedia.org/wiki/File:Placeta_de_Montcada,_Barcelona_-_panoramio.jpg) |
+| Pont del Bisbe | `public/assets/tappe/pontbisbe.webp` | trolvag | [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0) | [PONT del CARRER del BISBE - panoramio.jpg](https://commons.wikimedia.org/wiki/File:PONT_del_CARRER_del_BISBE_-_panoramio.jpg) |
+| Plaça de Sant Felip Neri | `public/assets/tappe/santfelip.webp` | Justraveling.com | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | [San Felip Neri Square in Barcelona.jpg](https://commons.wikimedia.org/wiki/File:San_Felip_Neri_Square_in_Barcelona.jpg) |
+| Mercat de Santa Caterina | `public/assets/tappe/santacaterina.webp` | Fred Romero | [CC BY 2.0](https://creativecommons.org/licenses/by/2.0) | [Barcelona - Mercat de Santa Caterina.jpg](https://commons.wikimedia.org/wiki/File:Barcelona_-_Mercat_de_Santa_Caterina.jpg) |
+| Rooftop Garden · El Palace | `public/assets/tappe/elpalace.webp` | Almusaiti from Barcelona, España | [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0) | [El Palace Hotel in Barcelona.jpg](https://commons.wikimedia.org/wiki/File:El_Palace_Hotel_in_Barcelona.jpg) |
+| Sagrada Família | `public/assets/tappe/sagrada.webp` | Jopparn | [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0) | [Sagrada Família 2010.JPG](https://commons.wikimedia.org/wiki/File:Sagrada_Fam%C3%ADlia_2010.JPG) |
+| Plaza Monumental | `public/assets/tappe/monumental.webp` | Yair Haklai | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | [La Monumental-Barcelona.jpg](https://commons.wikimedia.org/wiki/File:La_Monumental-Barcelona.jpg) |
+| La Terrrazza · Poble Espanyol | `public/assets/tappe/pobleespanyol.webp` | Enric | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | [004 Poble Espanyol (Barcelona), plaça Major i glorieta.jpg](https://commons.wikimedia.org/wiki/File:004_Poble_Espanyol_(Barcelona),_pla%C3%A7a_Major_i_glorieta.jpg) |
+| Sala Apolo | `public/assets/tappe/apolo.webp` | Aniol | [CC0](http://creativecommons.org/publicdomain/zero/1.0/deed.en) | [Gatibu a la Sala Apolo de Barcelona 20251101 02.jpg](https://commons.wikimedia.org/wiki/File:Gatibu_a_la_Sala_Apolo_de_Barcelona_20251101_02.jpg) |
+| Sarrià | `public/assets/tappe/sarria.webp` | Joe Mabel | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | [Carrer Major de Sarrià (Barcelona) 01.jpg](https://commons.wikimedia.org/wiki/File:Carrer_Major_de_Sarri%C3%A0_(Barcelona)_01.jpg) |
+| Bunkers del Carmel | `public/assets/tappe/bunkers.webp` | Alexey Komarov | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | [Barcelona, View from Bunkers del Carmel.jpg](https://commons.wikimedia.org/wiki/File:Barcelona,_View_from_Bunkers_del_Carmel.jpg) |
 
-Due tappe restano senza foto, di proposito:
-- **f7 · Barcelona Duck Store**: negozio privato, su Commons non c'è niente di libero. Al posto della foto c'è una paperella disegnata in SVG dentro `src/ui/card.js` (originale del progetto).
-- **f9 · Bar Joan**: stessa ragione, e nessuna paperella: la card resta senza immagine.
+Ultimo aggiornamento: `npm run foto` · 15 foto, 977 kB in tutto.
+
+<!-- foto:end -->
 
 Le licenze CC BY e CC BY-SA obbligano a citare autore e licenza e a linkare l'originale: è quello che fa la
-riga "foto: autore / licenza" sotto ogni card. Le foto non sono state ritagliate né modificate, solo
-ridimensionate e ricompresse.
+riga "foto: autore / licenza" sotto ogni card. Le foto sono state ritagliate a 16:9 e ridimensionate a
+800×450, niente altro.
+
+## Card stilizzate (originali del progetto)
+
+I luoghi senza una foto libera su Commons hanno una card disegnata: mosaico trencadís seedato, vignettatura e
+un'icona in stile Lucide, generata da `scripts/gen-cards.mjs` (`npm run cards`). Sono grafica originale di
+questo progetto: nessuna attribuzione dovuta, e infatti sotto queste card non compare nessuna riga di credito.
+
+`parcheggio.svg` · `duckstore.svg` · `barjoan.svg` · `apt.svg` · `taps.svg` · `braseria.svg` · `olimpo.svg` ·
+`biarritz.svg` · `canfisher.svg` · `canudas.svg`
 
 ## Font
 - Clash Display (Fontshare, licenza Fontshare Free Font) e Inter (SIL OFL): già usati dal sito, self-hosted in `public/fonts/`.

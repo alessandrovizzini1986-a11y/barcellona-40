@@ -9,35 +9,58 @@ import { setStopDone } from '../game.js'
 import { toast } from './toast.js'
 import { short as confettiShort } from './confetti.js'
 
-// Foto delle tappe: Wikimedia Commons, licenza libera, attribuzione sempre visibile sotto la card.
+// Immagini delle tappe. Il file da mostrare sta nel dato (`img` in data/itinerary.json e data/viaggio.json):
+// `.webp` = foto vera da Wikimedia Commons, con attribuzione obbligatoria sotto la card;
+// `.svg` = card stilizzata generata da scripts/gen-cards.mjs, grafica originale del progetto, niente crediti.
 // Le foto di Google Places non si possono ripubblicare: vedi CREDITS.md.
-const FOTO = Object.fromEntries(fotoTappe.foto.map((f) => [f.id, f]))
-const BASE = import.meta.env.BASE_URL.replace(/\/$/, '') + '/'
-// Il Duck Store è un negozio privato: nessuna foto libera, ci va una paperella disegnata qui.
-const PAPERELLA = `<svg class="paperella" viewBox="0 0 64 48" aria-hidden="true" focusable="false">
-  <path d="M6 34c0-6 6-10 13-10h10c7 0 12-4 12-10 0-5 4-9 9-9s9 4 9 9c0 4-2 7-5 9l-3 2c1 9-6 17-16 17H20C12 42 6 39 6 34z" fill="#F2B705"/>
-  <circle cx="47" cy="13" r="2" fill="#0E1116"/>
-  <path d="M55 15l7 2-7 3z" fill="#E8552E"/>
-  <path d="M10 42h30c-3 3-8 4-14 4s-12-1-16-4z" fill="#E8552E"/>
-</svg>`
+const CREDITI = Object.fromEntries(fotoTappe.foto.map((f) => [`${f.id}.webp`, f]))
+const BASE = import.meta.env.BASE_URL.replace(/\/$/, '') + '/assets/tappe/'
+// Testo alternativo, uno per immagine: descrive cosa si vede, non ripete il titolo della card
+const ALT = {
+  'blq.webp': 'Il terminal dell\'aeroporto di Bologna visto dal piazzale',
+  'bcn_t2.webp': 'La facciata del Terminal 2 dell\'aeroporto di Barcellona',
+  'ciutadella.webp': 'Le fontane della Cascada Monumental al Parc de la Ciutadella',
+  'santamaria.webp': 'La facciata illuminata della Basílica de Santa Maria del Mar, con il rosone e le due torri',
+  'montcada.webp': 'La stradina della Placeta de Montcada, nel Born, con i balconi e la palma',
+  'pontbisbe.webp': 'Il ponte gotico di Carrer del Bisbe visto dalla strada',
+  'santfelip.webp': 'La fontana e la chiesa di Plaça de Sant Felip Neri',
+  'santacaterina.webp': 'Il tetto ondulato e colorato del Mercat de Santa Caterina',
+  'elpalace.webp': 'La facciata dell\'hotel El Palace',
+  'sagrada.webp': 'Le torri della Sagrada Família viste dal basso',
+  'monumental.webp': 'La Plaza Monumental, l\'ex arena di Barcellona',
+  'pobleespanyol.webp': 'La plaça Major del Poble Espanyol',
+  'apolo.webp': 'Un concerto alla Sala Apolo',
+  'sarria.webp': 'Il Carrer Major de Sarrià',
+  'bunkers.webp': 'La vista su Barcellona dai Bunkers del Carmel',
+  'parcheggio.svg': 'Illustrazione del parcheggio P2 di Bologna',
+  'duckstore.svg': 'Illustrazione del Barcelona Duck Store',
+  'barjoan.svg': 'Illustrazione del Bar Joan',
+  'apt.svg': 'Illustrazione dell\'appartamento di Carrer de Nàpols',
+  'taps.svg': 'Illustrazione dell\'Enoteca Taps',
+  'braseria.svg': 'Illustrazione della Braseria Sarrià',
+  'olimpo.svg': 'Illustrazione della Vermutería Olimpo',
+  'biarritz.svg': 'Illustrazione della Bodega Biarritz 1881',
+  'canfisher.svg': 'Illustrazione di Can Fisher',
+  'canudas.svg': 'Illustrazione della Sala VIP Canudas'
+}
+export const haFoto = (stop) => !!stop.img
 
-export const haFoto = (stop) => !!FOTO[stop.venueId] || stop.venueId === 'duckstore'
-// Blocco foto in cima alla card: 16:9, orario in sovrimpressione, fallback al mosaico se manca o non carica
-function fotoBlocco(stop, eager) {
-  const f = FOTO[stop.venueId]
-  const ora = `<span class="card__foto-time tnum">${stop.timeStatus === 'stimato' ? '~' : ''}${esc(stop.time)}</span>`
-  if (stop.venueId === 'duckstore') return `<div class="card__foto card__foto--icona">${PAPERELLA}${ora}</div>`
-  if (!f) return ''
-  return `<div class="card__foto">
-    <img src="${BASE}${f.file}" width="800" height="450" alt="${esc(stop.venue?.name || stop.title)}" ${eager ? '' : 'loading="lazy" '}decoding="async">
-    ${ora}
+// Blocco immagine in cima alla card: 16:9, orario in sovrimpressione, mosaico se il file non carica
+export function immagineCard(img, etichetta, { eager = false, classe = '' } = {}) {
+  if (!img) return ''
+  return `<div class="card__foto ${classe}">
+    <img src="${BASE}${esc(img)}" width="800" height="450" alt="${esc(ALT[img] || etichetta || '')}" ${eager ? '' : 'loading="lazy" '}decoding="async">
+    ${etichetta ? `<span class="card__foto-time tnum">${esc(etichetta)}</span>` : ''}
   </div>`
 }
-function attribuzione(stop) {
-  const f = FOTO[stop.venueId]
+// L'attribuzione è dovuta solo per le foto: le card stilizzate sono nostre
+export function creditoImmagine(img) {
+  const f = CREDITI[img]
   if (!f) return ''
   return `<p class="card__credito">foto: <a href="${esc(f.pagina)}" target="_blank" rel="noopener">${esc(f.autore || 'autore ignoto')} / ${esc(f.licenza)}</a></p>`
 }
+const fotoBlocco = (stop, eager) => immagineCard(stop.img, `${stop.timeStatus === 'stimato' ? '~' : ''}${stop.time}`, { eager })
+const attribuzione = (stop) => creditoImmagine(stop.img)
 
 export function distChip(stop) {
   if (stop.distFromPrevM == null) return ''

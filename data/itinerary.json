@@ -33,7 +33,8 @@
       "metro": null
      },
      "distFromPrevM": null,
-     "minFromPrev": null
+     "minFromPrev": null,
+     "img": "bcn_t2.webp"
     },
     {
      "id": "f2",
@@ -59,7 +60,8 @@
      },
      "distFromPrevM": 15504,
      "minFromPrev": 28,
-     "distMode": "auto"
+     "distMode": "auto",
+     "img": "ciutadella.webp"
     },
     {
      "id": "f3",
@@ -84,7 +86,8 @@
       "metro": null
      },
      "distFromPrevM": 841,
-     "minFromPrev": 10
+     "minFromPrev": 10,
+     "img": "santamaria.webp"
     },
     {
      "id": "f4",
@@ -109,7 +112,8 @@
       "metro": null
      },
      "distFromPrevM": 239,
-     "minFromPrev": 4
+     "minFromPrev": 4,
+     "img": "montcada.webp"
     },
     {
      "id": "f5",
@@ -135,7 +139,8 @@
       "metro": null
      },
      "distFromPrevM": 854,
-     "minFromPrev": 11
+     "minFromPrev": 11,
+     "img": "pontbisbe.webp"
     },
     {
      "id": "f6",
@@ -158,7 +163,8 @@
       "metro": null
      },
      "distFromPrevM": 185,
-     "minFromPrev": 2
+     "minFromPrev": 2,
+     "img": "santfelip.webp"
     },
     {
      "id": "f7",
@@ -186,7 +192,8 @@
       "metro": null
      },
      "distFromPrevM": 130,
-     "minFromPrev": 2
+     "minFromPrev": 2,
+     "img": "duckstore.svg"
     },
     {
      "id": "f8",
@@ -215,7 +222,8 @@
       "metro": null
      },
      "distFromPrevM": 677,
-     "minFromPrev": 8
+     "minFromPrev": 8,
+     "img": "santacaterina.webp"
     },
     {
      "id": "f9",
@@ -248,7 +256,8 @@
        "label": "Menù del giorno",
        "eur": 16
       }
-     ]
+     ],
+     "img": "barjoan.svg"
     },
     {
      "id": "f10",
@@ -271,7 +280,8 @@
       "metro": null
      },
      "distFromPrevM": 1351,
-     "minFromPrev": 17
+     "minFromPrev": 17,
+     "img": "apt.svg"
     },
     {
      "id": "f11",
@@ -306,7 +316,8 @@
       "metro": null
      },
      "distFromPrevM": 0,
-     "minFromPrev": null
+     "minFromPrev": null,
+     "img": "apt.svg"
     },
     {
      "id": "f12",
@@ -328,7 +339,8 @@
       "maps": true,
       "taxi": false,
       "metro": null
-     }
+     },
+     "img": "taps.svg"
     },
     {
      "id": "f13",
@@ -364,7 +376,8 @@
       "maps": true,
       "taxi": false,
       "metro": null
-     }
+     },
+     "img": "elpalace.webp"
     },
     {
      "id": "f14",
@@ -406,7 +419,8 @@
       "maps": true,
       "taxi": true,
       "metro": "FGC → Sarrià"
-     }
+     },
+     "img": "braseria.svg"
     }
    ]
   },
@@ -444,7 +458,8 @@
       "metro": null
      },
      "distFromPrevM": null,
-     "minFromPrev": null
+     "minFromPrev": null,
+     "img": "apt.svg"
     },
     {
      "id": "s2",
@@ -471,7 +486,8 @@
      },
      "distFromPrevM": 17100,
      "minFromPrev": 24,
-     "distMode": "auto"
+     "distMode": "auto",
+     "img": "bcn_t2.webp"
     },
     {
      "id": "s3",
@@ -496,7 +512,8 @@
       "metro": null
      },
      "distFromPrevM": null,
-     "minFromPrev": null
+     "minFromPrev": null,
+     "img": "olimpo.svg"
     },
     {
      "id": "s4",
@@ -531,7 +548,8 @@
       "metro": null
      },
      "distFromPrevM": 1309,
-     "minFromPrev": 16
+     "minFromPrev": 16,
+     "img": "sagrada.webp"
     },
     {
      "id": "s5",
@@ -573,7 +591,8 @@
       "metro": null
      },
      "distFromPrevM": 527,
-     "minFromPrev": 7
+     "minFromPrev": 7,
+     "img": "olimpo.svg"
     },
     {
      "id": "s6",
@@ -597,7 +616,8 @@
       "metro": null
      },
      "distFromPrevM": 1726,
-     "minFromPrev": 21
+     "minFromPrev": 21,
+     "img": "apt.svg"
     },
     {
      "id": "s7",
@@ -625,7 +645,8 @@
       "metro": null
      },
      "distFromPrevM": 672,
-     "minFromPrev": 8
+     "minFromPrev": 8,
+     "img": "monumental.webp"
     },
     {
      "id": "s8",
@@ -652,7 +673,8 @@
       "metro": null
      },
      "distFromPrevM": 2823,
-     "minFromPrev": 34
+     "minFromPrev": 34,
+     "img": "biarritz.svg"
     },
     {
      "id": "s9",
@@ -679,7 +701,8 @@
      },
      "distFromPrevM": 3500,
      "minFromPrev": 12,
-     "distMode": "taxi"
+     "distMode": "taxi",
+     "img": "apolo.webp"
     }
    ]
   },
@@ -716,7 +739,8 @@
       "metro": null
      },
      "distFromPrevM": null,
-     "minFromPrev": null
+     "minFromPrev": null,
+     "img": "canfisher.svg"
     },
     {
      "id": "d2",
@@ -742,7 +766,8 @@
      },
      "distFromPrevM": 5631,
      "minFromPrev": 17,
-     "distMode": "auto"
+     "distMode": "auto",
+     "img": "bunkers.webp"
     },
     {
      "id": "d3",
@@ -770,7 +795,8 @@
      },
      "distFromPrevM": 22684,
      "minFromPrev": 36,
-     "distMode": "auto"
+     "distMode": "auto",
+     "img": "bcn_t2.webp"
     }
    ]
   }

@@ -13,7 +13,8 @@
     "og:rigori": "node scripts/qa/og-rigori.mjs",
     "data": "node scripts/geocode.mjs && node scripts/distances.mjs && node scripts/validate.mjs",
     "validate": "node scripts/validate.mjs",
-    "foto": "node scripts/foto-tappe.mjs"
+    "foto": "node scripts/fetch-photos.mjs",
+    "cards": "node scripts/gen-cards.mjs"
   },
   "dependencies": {
     "@fontsource-variable/inter": "^5.3.0",
@@ -26,6 +27,7 @@
     "@gltf-transform/cli": "^4.5.0",
     "ffmpeg-static": "^5.3.0",
     "playwright-core": "^1.63.0",
+    "sharp": "^0.35.4",
     "vite": "^8.2.2"
   }
 }

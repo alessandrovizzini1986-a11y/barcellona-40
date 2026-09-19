@@ -121,3 +121,12 @@
 - **Voto e recensioni** del posto diventano un chip sulla card, quando il dato c'è.
 - Il nome del posto non si ripete più sotto il titolo quando è già nel titolo.
 - Nuova suite `scripts/qa/venerdi.mjs` (36 controlli): sequenza, foto, attribuzioni, fallback al mosaico, sezioni Info rimosse, marker e percorso della mappa, peso della pagina.
+
+## Immagini per tutte le tappe
+- **15 foto da Wikimedia Commons** (`scripts/fetch-photos.mjs`, `npm run foto`): scaricate a 1600 px, ritagliate 16:9 con bias verticale dove serve (Sagrada 0,10, Santa Maria 0,15, El Palace 0,25, Monumental 0,35, altrimenti centrato), ridimensionate a 800×450 e convertite in WebP q80 con sharp. La licenza si legge da `extmetadata` **prima** di salvare: se non è CC0/CC BY/CC BY-SA/pubblico dominio il file non viene usato. Autori e licenze corrispondono uno a uno all'elenco atteso.
+- Commons risponde 429 se lo si martella: lo script fa una richiesta alla volta, con pausa di 0,7 s e ritentativi a 2-4-8-16 s. Al primo giro tre foto erano saltate proprio per questo.
+- **10 card stilizzate** (`scripts/gen-cards.mjs`, `npm run cards`): SVG 800×450 con mosaico trencadís seedato (PRNG con seme diverso per card, celle da 50 px, colore d'accento in doppia copia nell'urna), vignettatura radiale e icona in stile Lucide. Grafica originale: nessuna attribuzione dovuta, e infatti sotto queste card non compare nessun credito.
+- **Ogni tappa dei tre giorni ha il campo `img`**, più i due voli, il parcheggio e la lounge in `data/viaggio.json`. `npm run validate` ora fallisce se una tappa non ha l'immagine, se il file non esiste o se una `.webp` non ha i crediti.
+- **Card**: immagine 16:9 in cima, orario in `--font-display` sopra un gradiente da `rgba(14,17,22,.9)`, `loading="lazy"` su tutte tranne la prima della vista, `alt` descrittivo in italiano uno per immagine, fallback al mosaico se il file non arriva. L'attribuzione compare solo sotto le foto.
+- Cartella `public/assets/tappe/`: 25 file, 1,10 MB in tutto. La pagina più pesante (venerdì, 14 immagini) sta a 0,85 MB.
+- Nuova suite `scripts/qa/immagini.mjs` (61 controlli): misure dei file, licenze, crediti in CREDITS.md, campo `img` su ogni tappa, attribuzioni presenti solo dove dovute, lazy loading, 16:9, peso, fallback.

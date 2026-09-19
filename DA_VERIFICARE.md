@@ -46,7 +46,12 @@ Generato in parte dagli script dati (`npm run data`). Le sezioni tra marker veng
 - Enoteca Taps Sagrada Família e Rooftop Garden El Palace: nessuna coordinata (Nominatim non le trova); le tappe f6/f7 sono `da_verificare` e sulla mappa compaiono nella lista "Senza coordinate". Inserire `lat`/`lng` a mano in `data/venues.json` con `verified:true`.
 - Distanze f11→f12→f13→f14 non calcolate per lo stesso motivo.
 - **Orari della mattina di venerdì**: sono quelli decisi da te, non ricavati da un calcolo. Le distanze e i minuti a piedi invece sono verificati (Valhalla, profilo pedonale) e portano il badge `verificato`.
-- **Foto delle tappe**: scelte a mano su Wikimedia Commons fra i risultati con licenza libera, orizzontali e diurni. Duck Store e Bar Joan non hanno foto libere: il primo ha una paperella disegnata, il secondo niente. Elenco completo con autori e licenze in `CREDITS.md`.
+- **Immagini delle tappe**: 15 foto da Wikimedia Commons (licenza verificata nel campo `extmetadata` prima di salvare il file) e 10 card stilizzate generate da noi per i luoghi che su Commons non hanno niente di libero. Elenco completo con autori e licenze in `CREDITS.md`. Nessuna foto di Google Places, da nessuna parte: l'attribuzione è per singolo autore e non sono ripubblicabili.
+- **Santa Maria del Mar: la foto è notturna.** È l'unica facciata con licenza libera. Nella card si legge bene (rosone e torri illuminati), ma è l'unica immagine del sito scattata di notte: se stona, al suo posto va una card stilizzata.
+- **Sala Apolo**: la foto è un concerto visto dall'interno, non la facciata. Rende l'atmosfera, che è il punto.
+- **La Terrrazza**: la tappa `s7` usa `monumental.webp`. `pobleespanyol.webp` è scaricata e disponibile se il pomeriggio si sposta là: è il complesso che ospita il locale, del club non esiste foto libera.
+- **`sarria.webp`** è scaricata ma non assegnata a nessuna tappa: è l'alternativa alla card stilizzata della Braseria, se un giorno la preferisci.
+- **Tappe di arrivo di Giulio e Manuel** (`s1`, `s3`): non erano nell'elenco delle immagini. Hanno l'immagine del posto dove arrivano, appartamento e Olimpo.
 - Bodega Biarritz 1881: Nominatim restituisce "Bodega Biarritz, Carrer d'en Rull" (Gòtic). Controllare che sia il locale giusto.
 - Coordinate `verified:true` del prompt (appartamento, aeroporto, Sagrada, Olimpo, Braseria, Apolo, Monumental, Terrrazza, mercati) non sono state toccate.
 - Il sito precedente era installabile con un service worker (`_legacy/sw.js`): chi lo aveva aperto vedrà il nuovo sito alla seconda visita, quando il browser rimuove il vecchio worker (404 su `sw.js`).

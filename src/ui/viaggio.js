@@ -4,6 +4,7 @@ import viaggio from '../../data/viaggio.json'
 import { store } from '../store.js'
 import { icon } from './icons.js'
 import { badges as badgeHtml } from './badge.js'
+import { immagineCard, creditoImmagine } from './card.js'
 import { esc } from './html.js'
 import { now } from '../time.js'
 
@@ -30,9 +31,9 @@ function dataStep(key, step) {
 // ---------- Card ----------
 export function cardVolo(v) {
   const rit = v.tipo === 'ritorno'
-  return `<article class="card card--viaggio" data-volo="${esc(v.id)}">
+  return `<article class="card card--viaggio card--conFoto" data-volo="${esc(v.id)}">
+    ${immagineCard(v.img, v.partenza)}
     <div class="card__head">
-      <div class="card__time tnum">${esc(v.partenza)}</div>
       <div class="grow">
         <h3 class="card__title">${esc(v.titolo)}</h3>
         <div class="card__venue">${esc(v.volo)} · arrivo ${esc(v.arrivo)}${v.arrivoNota ? ` (${esc(v.arrivoNota)})` : ''}</div>
@@ -46,14 +47,15 @@ export function cardVolo(v) {
       ${badgeHtml(v.badges)}
     </div>
     ${(v.note || []).length ? `<ul class="viaggio-note">${v.note.map((n) => `<li>${esc(n)}</li>`).join('')}</ul>` : ''}
+    ${creditoImmagine(v.img)}
   </article>`
 }
 
 export function cardParcheggio() {
   const p = parcheggio
-  return `<article class="card card--viaggio card--qr">
+  return `<article class="card card--viaggio card--qr card--conFoto">
+    ${immagineCard(p.img, p.posto)}
     <div class="card__head">
-      <div class="card__time tnum">${esc(p.posto)}</div>
       <div class="grow">
         <h3 class="card__title">${esc(p.nome)}</h3>
         <div class="card__venue">Entrata ${esc(p.entrata)} · Uscita ${esc(p.uscita)}</div>
@@ -79,9 +81,9 @@ export function cardParcheggio() {
 
 export function cardLounge() {
   const l = lounge
-  return `<article class="card card--viaggio">
+  return `<article class="card card--viaggio card--conFoto">
+    ${immagineCard(l.img, '20:20')}
     <div class="card__head">
-      <div class="card__time tnum">20:20</div>
       <div class="grow">
         <h3 class="card__title">${esc(l.nome)}</h3>
         <div class="card__venue">${esc(l.dove)} · ${esc(l.quando)}</div>

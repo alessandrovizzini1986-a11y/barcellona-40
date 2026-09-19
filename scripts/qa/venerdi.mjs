@@ -41,44 +41,14 @@ const overflow = (p) => p.evaluate(() => document.documentElement.scrollWidth - 
   ok('niente overflow a 380px', await overflow(p) === 0, String(await overflow(p)))
   ok('nessun errore JS', errs.length === 0, errs.join(' | '))
 
-  // 2. Foto e attribuzione
-  const foto = await p.evaluate(() => [...document.querySelectorAll('.card[data-stop]')].map((c) => ({
-    id: c.dataset.stop,
-    img: c.querySelector('.card__foto img')?.getAttribute('src') || null,
-    nat: c.querySelector('.card__foto img')?.naturalWidth || 0,
-    lazy: c.querySelector('.card__foto img')?.getAttribute('loading') || null,
-    ratio: c.querySelector('.card__foto') ? +(c.querySelector('.card__foto').getBoundingClientRect().width / c.querySelector('.card__foto').getBoundingClientRect().height).toFixed(2) : null,
-    credito: c.querySelector('.card__credito')?.textContent.trim() || null,
-    link: c.querySelector('.card__credito a')?.href || null,
-    icona: !!c.querySelector('.card__foto--icona')
-  })))
-  const conFoto = foto.filter((f) => f.img)
-  ok('sei foto nel venerdì', conFoto.length === 6, conFoto.map((f) => f.id).join(' '))
-  ok('tutte caricate a 800 px', conFoto.every((f) => f.nat === 800), conFoto.map((f) => f.nat).join(' '))
-  ok('tutte in 16:9', conFoto.every((f) => Math.abs(f.ratio - 16 / 9) < 0.05), conFoto.map((f) => f.ratio).join(' '))
-  ok('ogni foto ha autore e licenza', conFoto.every((f) => /^foto: .+ \/ .+/.test(f.credito || '')), conFoto[0]?.credito || '')
-  ok('ogni attribuzione linka a Commons', conFoto.every((f) => (f.link || '').startsWith('https://commons.wikimedia.org/wiki/File:')), conFoto[0]?.link || '')
-  ok('solo la prima foto non è lazy', conFoto[0].lazy === null && conFoto.slice(1).every((f) => f.lazy === 'lazy'), conFoto.map((f) => f.lazy).join(' '))
-  ok('Duck Store: paperella disegnata, nessuna foto', foto.find((f) => f.id === 'f7')?.icona === true && !foto.find((f) => f.id === 'f7').img)
-  ok('Bar Joan: nessuna foto e nessuna attribuzione', !foto.find((f) => f.id === 'f9')?.img && !foto.find((f) => f.id === 'f9')?.credito)
+  // 2. Immagini: qui solo il minimo, il resto lo controlla scripts/qa/immagini.mjs
+  const img = await p.evaluate(() => [...document.querySelectorAll('.card[data-stop]')].map((c) => [c.dataset.stop, c.querySelector('.card__foto img')?.getAttribute('src').split('/').pop() || null]))
+  ok('ogni tappa del venerdì ha la sua immagine', img.every(([, src]) => !!src), img.filter(([, s2]) => !s2).map(([id]) => id).join(' '))
+  ok('Duck Store e Bar Joan hanno la card stilizzata', img.find(([id]) => id === 'f7')?.[1] === 'duckstore.svg' && img.find(([id]) => id === 'f9')?.[1] === 'barjoan.svg')
   ok('orario sopra la foto', (await p.locator('.card[data-stop="f3"] .card__foto-time').innerText()) === '10:15')
   const peso = await p.evaluate(() => performance.getEntriesByType('resource').reduce((n, r) => n + (r.encodedBodySize || 0), 0))
   ok('pagina sotto i 2 MB', peso < 2_000_000, `${(peso / 1024 / 1024).toFixed(2)} MB`)
   await p.screenshot({ path: '/tmp/venerdi-programma.png', fullPage: true })
-  await ctx.close()
-}
-
-// 3. Fallback al mosaico se la foto non carica
-{
-  const { p, ctx } = await apri('ale', '/#/programma/ven')
-  await p.route('**/assets/tappe/*.webp', (r) => r.abort())
-  await p.reload({ waitUntil: 'networkidle' })
-  await p.waitForTimeout(1200)
-  await fotoPronte(p).catch(() => {})
-  await p.waitForTimeout(600)
-  const vuoti = await p.locator('.card__foto--vuoto').count()
-  ok('foto non caricate → riquadro col mosaico', vuoti >= 1, `${vuoti} riquadri`)
-  ok('niente immagini rotte a schermo', await p.locator('.card__foto img').count() === 0)
   await ctx.close()
 }
 

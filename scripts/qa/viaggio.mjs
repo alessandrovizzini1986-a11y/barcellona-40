@@ -63,7 +63,8 @@ const overflow = (p) => p.evaluate(() => document.documentElement.scrollWidth - 
 // 2. Programma: i passi entrano nella timeline del giorno, in ordine
 {
   const { p, ctx, errs } = await apri('ale', '/#/programma/ven')
-  const orari = await p.locator('.timeline .card__time').allInnerTexts()
+  // l'orario sta in .card__time sulle card senza immagine e in .card__foto-time su quelle con l'immagine
+  const orari = await p.locator('.timeline .card__time, .timeline .card__foto-time').allInnerTexts()
   // il testo dell'orario può portarsi dietro la tilde dello "stimato" e l'etichetta del giorno dopo
   const puliti = orari.map((t) => (t.match(/\d{2}:\d{2}/) || [''])[0])
   const ordinati = [...puliti].sort()
@@ -78,7 +79,7 @@ const overflow = (p) => p.evaluate(() => document.documentElement.scrollWidth - 
   ok('16/10 04:30 · il passo attivo è la navetta delle 04:20', (await m.p.locator('.viaggio-step.is-now time').innerText().catch(() => '')) === '04:20')
   ok('16/10 04:30 · i passi già fatti restano spenti', await m.p.locator('.viaggio-step.is-past').count() === 2)
   const d = await apri('ale', '/#/programma/dom', ctx)
-  const oDom = (await d.p.locator('.timeline .card__time').allInnerTexts()).map((t) => (t.match(/\d{2}:\d{2}/) || [''])[0])
+  const oDom = (await d.p.locator('.timeline .card__time, .timeline .card__foto-time').allInnerTexts()).map((t) => (t.match(/\d{2}:\d{2}/) || [''])[0])
   ok('programma dom · fine Bunkers non duplicata (19:00 assente)', !oDom.includes('19:00'), oDom.join(' '))
   ok('programma dom · contiene 23:05 e 01:10', oDom.includes('23:05') && oDom.includes('01:10'), oDom.join(' '))
   await d.p.screenshot({ path: '/tmp/viaggio-programma-dom.png', fullPage: true })

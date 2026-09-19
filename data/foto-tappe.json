@@ -2,70 +2,170 @@
   "fonte": "Wikimedia Commons",
   "foto": [
     {
-      "id": "ciutadella",
-      "file": "assets/tappe/ciutadella.webp",
-      "titolo": "File:Barcelona Parc Ciutadella cascada.jpg",
-      "autore": "Isiwal",
+      "id": "blq",
+      "file": "assets/tappe/blq.webp",
+      "tappa": "Aeroporto di Bologna",
+      "titolo": "File:Bologna Guglielmo Marconi Airport Terminal.jpg",
+      "autore": "Threecharlie",
       "licenza": "CC BY-SA 3.0",
       "licenzaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-      "pagina": "https://commons.wikimedia.org/wiki/File:Barcelona_Parc_Ciutadella_cascada.jpg",
-      "originale": "https://upload.wikimedia.org/wikipedia/commons/7/7d/Barcelona_Parc_Ciutadella_cascada.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-      "kb": 101
+      "pagina": "https://commons.wikimedia.org/wiki/File:Bologna_Guglielmo_Marconi_Airport_Terminal.jpg",
+      "kb": 35
+    },
+    {
+      "id": "bcn_t2",
+      "file": "assets/tappe/bcn_t2.webp",
+      "tappa": "Barcellona T2",
+      "titolo": "File:Terminal 2A Aeropuerto Barcelona-El Prat.jpg",
+      "autore": "Azulino",
+      "licenza": "CC BY-SA 4.0",
+      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Terminal_2A_Aeropuerto_Barcelona-El_Prat.jpg",
+      "kb": 41
+    },
+    {
+      "id": "ciutadella",
+      "file": "assets/tappe/ciutadella.webp",
+      "tappa": "Parc de la Ciutadella",
+      "titolo": "File:Fountains at Cascada Monumental (32730873275).jpg",
+      "autore": "azxzcukl55",
+      "licenza": "CC0",
+      "licenzaUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Fountains_at_Cascada_Monumental_(32730873275).jpg",
+      "kb": 87
     },
     {
       "id": "santamaria",
       "file": "assets/tappe/santamaria.webp",
-      "titolo": "File:Basilica de Santa Maria del Mar, 14th century (1) (30393970184).jpg",
-      "autore": "Richard Mortel from Riyadh, Saudi Arabia",
-      "licenza": "CC BY 2.0",
-      "licenzaUrl": "https://creativecommons.org/licenses/by/2.0",
-      "pagina": "https://commons.wikimedia.org/wiki/File:Basilica_de_Santa_Maria_del_Mar,_14th_century_(1)_(30393970184).jpg",
-      "originale": "https://upload.wikimedia.org/wikipedia/commons/4/4c/Basilica_de_Santa_Maria_del_Mar%2C_14th_century_%281%29_%2830393970184%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-      "kb": 65
+      "tappa": "Basílica de Santa Maria del Mar",
+      "titolo": "File:01 Santa Maria del Mar (Barcelona).jpg",
+      "autore": "Enric",
+      "licenza": "CC BY-SA 4.0",
+      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:01_Santa_Maria_del_Mar_(Barcelona).jpg",
+      "kb": 40
     },
     {
       "id": "montcada",
       "file": "assets/tappe/montcada.webp",
-      "titolo": "File:Carrer Montcada- Museu Picasso.jpg",
-      "autore": "Kippelboy",
-      "licenza": "CC BY-SA 3.0 es",
-      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/3.0/es/deed.en",
-      "pagina": "https://commons.wikimedia.org/wiki/File:Carrer_Montcada-_Museu_Picasso.jpg",
-      "originale": "https://upload.wikimedia.org/wikipedia/commons/b/b1/Carrer_Montcada-_Museu_Picasso.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-      "kb": 90
+      "tappa": "Carrer de Montcada",
+      "titolo": "File:Placeta de Montcada, Barcelona - panoramio.jpg",
+      "autore": "Andrei Dan Suciu",
+      "licenza": "CC BY 3.0",
+      "licenzaUrl": "https://creativecommons.org/licenses/by/3.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Placeta_de_Montcada,_Barcelona_-_panoramio.jpg",
+      "kb": 122
     },
     {
       "id": "pontbisbe",
       "file": "assets/tappe/pontbisbe.webp",
-      "titolo": "File:Barrio gótico 13.jpg",
-      "autore": "Felvalen",
-      "licenza": "CC BY-SA 4.0",
-      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-      "pagina": "https://commons.wikimedia.org/wiki/File:Barrio_g%C3%B3tico_13.jpg",
-      "originale": "https://upload.wikimedia.org/wikipedia/commons/e/ec/Barrio_g%C3%B3tico_13.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-      "kb": 91
+      "tappa": "Pont del Bisbe",
+      "titolo": "File:PONT del CARRER del BISBE - panoramio.jpg",
+      "autore": "trolvag",
+      "licenza": "CC BY-SA 3.0",
+      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:PONT_del_CARRER_del_BISBE_-_panoramio.jpg",
+      "kb": 84
     },
     {
       "id": "santfelip",
       "file": "assets/tappe/santfelip.webp",
+      "tappa": "Plaça de Sant Felip Neri",
       "titolo": "File:San Felip Neri Square in Barcelona.jpg",
       "autore": "Justraveling.com",
       "licenza": "CC BY-SA 4.0",
       "licenzaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
       "pagina": "https://commons.wikimedia.org/wiki/File:San_Felip_Neri_Square_in_Barcelona.jpg",
-      "originale": "https://upload.wikimedia.org/wikipedia/commons/a/a0/San_Felip_Neri_Square_in_Barcelona.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-      "kb": 117
+      "kb": 93
     },
     {
       "id": "santacaterina",
       "file": "assets/tappe/santacaterina.webp",
-      "titolo": "File:Market Roof (5832285437) (2).jpg",
-      "autore": "Tony Hisgett from Birmingham, UK",
+      "tappa": "Mercat de Santa Caterina",
+      "titolo": "File:Barcelona - Mercat de Santa Caterina.jpg",
+      "autore": "Fred Romero",
       "licenza": "CC BY 2.0",
       "licenzaUrl": "https://creativecommons.org/licenses/by/2.0",
-      "pagina": "https://commons.wikimedia.org/wiki/File:Market_Roof_(5832285437)_(2).jpg",
-      "originale": "https://upload.wikimedia.org/wikipedia/commons/3/3d/Market_Roof_%285832285437%29_%282%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Barcelona_-_Mercat_de_Santa_Caterina.jpg",
+      "kb": 65
+    },
+    {
+      "id": "elpalace",
+      "file": "assets/tappe/elpalace.webp",
+      "tappa": "Rooftop Garden · El Palace",
+      "titolo": "File:El Palace Hotel in Barcelona.jpg",
+      "autore": "Almusaiti from Barcelona, España",
+      "licenza": "CC BY-SA 2.0",
+      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:El_Palace_Hotel_in_Barcelona.jpg",
+      "kb": 67
+    },
+    {
+      "id": "sagrada",
+      "file": "assets/tappe/sagrada.webp",
+      "tappa": "Sagrada Família",
+      "titolo": "File:Sagrada Família 2010.JPG",
+      "autore": "Jopparn",
+      "licenza": "CC BY-SA 3.0",
+      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Sagrada_Fam%C3%ADlia_2010.JPG",
       "kb": 51
+    },
+    {
+      "id": "monumental",
+      "file": "assets/tappe/monumental.webp",
+      "tappa": "Plaza Monumental",
+      "titolo": "File:La Monumental-Barcelona.jpg",
+      "autore": "Yair Haklai",
+      "licenza": "CC BY-SA 4.0",
+      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:La_Monumental-Barcelona.jpg",
+      "kb": 58
+    },
+    {
+      "id": "pobleespanyol",
+      "file": "assets/tappe/pobleespanyol.webp",
+      "tappa": "La Terrrazza · Poble Espanyol",
+      "titolo": "File:004 Poble Espanyol (Barcelona), plaça Major i glorieta.jpg",
+      "autore": "Enric",
+      "licenza": "CC BY-SA 4.0",
+      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:004_Poble_Espanyol_(Barcelona),_pla%C3%A7a_Major_i_glorieta.jpg",
+      "kb": 74
+    },
+    {
+      "id": "apolo",
+      "file": "assets/tappe/apolo.webp",
+      "tappa": "Sala Apolo",
+      "titolo": "File:Gatibu a la Sala Apolo de Barcelona 20251101 02.jpg",
+      "autore": "Aniol",
+      "licenza": "CC0",
+      "licenzaUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Gatibu_a_la_Sala_Apolo_de_Barcelona_20251101_02.jpg",
+      "kb": 13
+    },
+    {
+      "id": "sarria",
+      "file": "assets/tappe/sarria.webp",
+      "tappa": "Sarrià",
+      "titolo": "File:Carrer Major de Sarrià (Barcelona) 01.jpg",
+      "autore": "Joe Mabel",
+      "licenza": "CC BY-SA 4.0",
+      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Carrer_Major_de_Sarri%C3%A0_(Barcelona)_01.jpg",
+      "kb": 67
+    },
+    {
+      "id": "bunkers",
+      "file": "assets/tappe/bunkers.webp",
+      "tappa": "Bunkers del Carmel",
+      "titolo": "File:Barcelona, View from Bunkers del Carmel.jpg",
+      "autore": "Alexey Komarov",
+      "licenza": "CC BY-SA 4.0",
+      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Barcelona,_View_from_Bunkers_del_Carmel.jpg",
+      "kb": 80
     }
-  ]
+  ],
+  "scartate": []
 }

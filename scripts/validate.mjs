@@ -1,6 +1,6 @@
 // Validazione dati: esce con codice 1 se qualcosa non torna.
 import { readJson } from './_shared.mjs'
-import { existsSync, statSync } from 'node:fs'
+import { existsSync, statSync, readdirSync } from 'node:fs'
 
 const ALLOWED_PRICES = [430, 26, 60, 25, 16, 12, 39, 28.5, 22.5, 7.5, 2.9, 3.9, 6, 8.5, 31.15, 65]
 const it = readJson('itinerary.json')
@@ -9,6 +9,7 @@ const { people } = readJson('people.json')
 const { missions } = readJson('missions.json')
 const { checks } = readJson('checks.json')
 const viaggio = readJson('viaggio.json')
+const fotoIds = new Set(readJson('foto-tappe.json').foto.map((f) => `${f.id}.webp`))
 const errors = []
 const personIds = new Set(people.map((p) => p.id))
 const stopIds = new Set()
@@ -25,6 +26,11 @@ for (const day of it.days) {
     for (const p of stop.people || []) if (!personIds.has(p)) errors.push(`${stop.id}: persona "${p}" sconosciuta`)
     if (!/^\d{2}:\d{2}$/.test(stop.time)) errors.push(`${stop.id}: orario "${stop.time}" non valido`)
     if (!['verificato', 'stimato', 'da_verificare'].includes(stop.timeStatus)) errors.push(`${stop.id}: timeStatus "${stop.timeStatus}" non valido`)
+    // Ogni tappa ha la sua immagine, e il file deve esistere davvero: .webp = foto da Commons (con
+    // crediti), .svg = card stilizzata generata da scripts/gen-cards.mjs
+    if (!stop.img) errors.push(`${stop.id}: manca il campo "img"`)
+    else if (!existsSync('public/assets/tappe/' + stop.img)) errors.push(`${stop.id}: immagine "${stop.img}" inesistente`)
+    else if (stop.img.endsWith('.webp') && !fotoIds.has(stop.img)) errors.push(`${stop.id}: foto "${stop.img}" senza crediti in data/foto-tappe.json`)
     if (stop.id === 's2') seenS2 = true
     else if (seenS2 && stop.people.includes('monne')) errors.push(`${stop.id}: Monne è già partito (tappa dopo s2)`)
   }
@@ -44,6 +50,10 @@ for (const v of viaggio.voli) {
   if (!oraOk(v.partenza) || !oraOk(v.arrivo)) errors.push(`volo ${v.id}: orari "${v.partenza}"/"${v.arrivo}" non validi`)
   for (const b of v.badges || []) if (!BADGE_OK.includes(b)) errors.push(`volo ${v.id}: badge "${b}" non valido`)
   for (const p of v.persone || []) if (!personIds.has(p)) errors.push(`volo ${v.id}: persona "${p}" sconosciuta`)
+}
+for (const [nome, o] of [['parcheggio', viaggio.parcheggio], ['lounge', viaggio.lounge], ...viaggio.voli.map((v) => [`volo ${v.id}`, v])]) {
+  if (!o.img) errors.push(`${nome}: manca il campo "img"`)
+  else if (!existsSync('public/assets/tappe/' + o.img)) errors.push(`${nome}: immagine "${o.img}" inesistente`)
 }
 const qr = 'public/' + viaggio.parcheggio.qr
 if (!existsSync(qr)) errors.push(`parcheggio: QR mancante (${qr})`)
@@ -69,4 +79,5 @@ if (errors.length) {
   for (const e of errors) console.error('  - ' + e)
   process.exit(1)
 }
-console.log(`✓ validate: ${stopIds.size} tappe, ${Object.keys(venues).length} venue, ${missions.length} missioni, ${checks.length} check, ${viaggio.voli.length} voli, ${Object.values(viaggio.timeline).reduce((n, t) => n + t.step.length, 0)} passi di viaggio. Tutto ok.`)
+const svgCard = readdirSync('public/assets/tappe').filter((f) => f.endsWith('.svg')).length
+console.log(`✓ validate: ${fotoIds.size} foto, ${svgCard} card stilizzate, ${stopIds.size} tappe, ${Object.keys(venues).length} venue, ${missions.length} missioni, ${checks.length} check, ${viaggio.voli.length} voli, ${Object.values(viaggio.timeline).reduce((n, t) => n + t.step.length, 0)} passi di viaggio. Tutto ok.`)

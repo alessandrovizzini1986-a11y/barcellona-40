@@ -25,7 +25,8 @@
       ],
       "badges": [
         "verificato"
-      ]
+      ],
+      "img": "blq.webp"
     },
     {
       "id": "ritorno",
@@ -48,7 +49,8 @@
       "note": [],
       "badges": [
         "verificato"
-      ]
+      ],
+      "img": "bcn_t2.webp"
     },
     {
       "id": "ritorno-monne",
@@ -70,7 +72,8 @@
       "note": [],
       "badges": [
         "verificato"
-      ]
+      ],
+      "img": "bcn_t2.webp"
     }
   ],
   "parcheggio": {
@@ -96,7 +99,8 @@
     ],
     "badges": [
       "verificato"
-    ]
+    ],
+    "img": "parcheggio.svg"
   },
   "lounge": {
     "nome": "Sala VIP Canudas",
@@ -122,7 +126,8 @@
     ],
     "badges": [
       "verificato"
-    ]
+    ],
+    "img": "canudas.svg"
   },
   "timeline": {
     "ven": {
