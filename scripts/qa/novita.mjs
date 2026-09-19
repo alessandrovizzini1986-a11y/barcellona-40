@@ -1,7 +1,8 @@
 // QA delle novità: chi rientra deve vedere solo quello che è uscito dopo l'ultima volta, e una volta
 // sola. Chi apre il sito per la prima volta non deve vedere la cronologia di cose che non ha mai visto.
 import { chromium } from 'playwright-core'
-import { readFileSync } from 'node:fs'
+import { readFileSync, writeFileSync, unlinkSync, existsSync } from 'node:fs'
+import { serveAvviso, fileToccati, avvisa, CHANGELOG, MESSAGGIO } from '../changelog-check.mjs'
 const base = process.argv[2] || 'http://localhost:4173'
 const exe = process.env.CHROME_PATH || '/opt/pw-browsers/chromium-1194/chrome-linux/chrome'
 const out = []
@@ -151,6 +152,40 @@ for (const chi of ['giulio', 'manuel', 'monne']) {
   await ctx.close()
 }
 
+// 8b. Il pulsante resta fisso in fondo, sempre: niente soglie, niente casi limite
+{
+  const ctx = await b.newContext({ viewport: { width: 380, height: 700 }, isMobile: true, hasTouch: true })
+  const p = await ctx.newPage()
+  await p.goto(base + '/')
+  await p.evaluate(() => { localStorage.clear(); localStorage.setItem('b40:v1:person', JSON.stringify('ale')) })
+  await p.evaluate((v) => localStorage.setItem('b40:v1:lastSeenVersion', String(v)), ultima - 8)
+  await p.goto(base + '/#/oggi')
+  await p.reload({ waitUntil: 'networkidle' })
+  await p.waitForTimeout(700)
+  const stato = () => p.evaluate(() => {
+    const sh = document.querySelector('.sheet'), a = document.querySelector('.sheet__azione .btn')
+    const r = a.getBoundingClientRect()
+    return { entry: document.querySelectorAll('.sheet .novita__entry').length, scrollabile: sh.scrollHeight > sh.clientHeight,
+      visibile: r.top >= 0 && r.bottom <= innerHeight && r.height > 20, bottom: Math.round(r.bottom), viewport: innerHeight }
+  })
+  const inCima = await stato()
+  ok('otto entry su uno schermo da 380×700: il pannello scorre', inCima.entry === 8 && inCima.scrollabile, `${inCima.entry} entry`)
+  ok('"Ho capito" visibile con il pannello in cima', inCima.visibile, `bottom ${inCima.bottom} su ${inCima.viewport}`)
+  await p.locator('.sheet').evaluate((sh) => sh.scrollTo(0, sh.scrollHeight / 2))
+  await p.waitForTimeout(200)
+  const aMeta = await stato()
+  ok('"Ho capito" visibile a metà scorrimento', aMeta.visibile && aMeta.bottom === inCima.bottom, `bottom ${aMeta.bottom}`)
+  await p.locator('.sheet').evaluate((sh) => sh.scrollTo(0, sh.scrollHeight))
+  await p.waitForTimeout(200)
+  const inFondo = await stato()
+  ok('"Ho capito" visibile in fondo, sempre nello stesso posto', inFondo.visibile && inFondo.bottom === inCima.bottom, `bottom ${inFondo.bottom}`)
+  ok('il pulsante è cliccabile dov\'è', await p.locator('.sheet__azione .btn').isEnabled() && await p.evaluate(() => {
+    const r = document.querySelector('.sheet__azione .btn').getBoundingClientRect()
+    return document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2)?.closest('.sheet__azione') !== null
+  }))
+  await ctx.close()
+}
+
 // 9. Cache: i dati stanno nel bundle con l'hash, non in un file scaricato a parte
 {
   const { p, ctx } = await apri({ storage: { 'b40:v1:person': '"ale"', 'b40:v1:lastSeenVersion': String(ultima) } })
@@ -160,4 +195,28 @@ for (const chi of ['giulio', 'manuel', 'monne']) {
   await ctx.close()
 }
 await b.close()
+
+// 10. Il promemoria del changelog: avvisa e basta, non blocca niente
+ok('avviso: dati toccati senza changelog', serveAvviso(['data/itinerary.json', 'src/main.js']) === true)
+ok('niente avviso: c\'è anche il changelog', serveAvviso(['data/itinerary.json', CHANGELOG]) === false)
+ok('niente avviso: solo test e documenti', serveAvviso(['scripts/qa/novita.mjs', 'README.md', 'CHANGELOG.md']) === false)
+ok('niente avviso: niente da segnalare', serveAvviso([]) === false)
+{
+  // prova vera: si crea un file dentro data/ e si guarda se l'avviso esce davvero
+  const tmp = 'data/.qa-promemoria.tmp'
+  writeFileSync(tmp, 'file di prova del QA\n')
+  try {
+    const files = fileToccati()
+    ok('git vede il file nuovo sotto data/', files.includes(tmp), files.slice(0, 3).join(' '))
+    // qui il changelog è toccato davvero (lo sto aggiornando mentre scrivo questa funzione),
+    // quindi si toglie dall'elenco per simulare chi se lo dimentica
+    const senzaChangelog = files.filter((f) => f !== CHANGELOG)
+    let righe = []
+    const uscito = avvisa((r) => righe.push(r), senzaChangelog)
+    ok('col file nuovo e senza changelog, l\'avviso esce col testo giusto', uscito === true && righe[0] === MESSAGGIO, righe[0] || '(niente)')
+    ok('col changelog aggiornato l\'avviso non esce', avvisa(() => {}, files) === false)
+    ok('l\'avviso non fa fallire niente: torna solo true o false', typeof uscito === 'boolean')
+  } finally { if (existsSync(tmp)) unlinkSync(tmp) }
+  ok('il file di prova è stato rimosso', !existsSync('data/.qa-promemoria.tmp'))
+}
 console.log(`\n${out.filter(Boolean).length}/${out.length} controlli passati`)

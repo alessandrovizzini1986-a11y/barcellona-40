@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite'
 import { cpSync, existsSync, mkdirSync, readdirSync, statSync, copyFileSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
+import { avvisa } from './scripts/changelog-check.mjs'
 
 // File di root del sito precedente che NON vanno ripubblicati:
 // - index.html: la home è quella nuova
@@ -54,9 +55,15 @@ function metaAssoluti() {
   }
 }
 
+// Promemoria, non controllo: se la build tocca dati o codice del sito senza una entry nel changelog,
+// lo dice e basta. Chi rientra deve poter vedere cosa è cambiato, ma un refactor non è una novità.
+function promemoriaChangelog() {
+  return { name: 'promemoria-changelog', apply: 'build', closeBundle() { avvisa() } }
+}
+
 export default defineConfig({
   base: process.env.BASE_PATH || '/',
-  plugins: [copyLegacy(), metaAssoluti()],
+  plugins: [copyLegacy(), metaAssoluti(), promemoriaChangelog()],
   // Data e ora della build, mostrata in fondo alla vista Info
   define: {
     __BUILD_ID__: JSON.stringify(new Date().toISOString().slice(0, 16).replace('T', ' ')),

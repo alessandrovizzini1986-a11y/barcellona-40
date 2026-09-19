@@ -22,7 +22,10 @@ export function apriNovita() {
     title: 'Cosa è cambiato',
     body: `<p class="muted">${esc(conteggio(nuove.length))}</p>
       <div class="novita">${nuove.map((e) => entryHtml(e)).join('')}</div>
-      <button class="btn btn--acqua btn--block" data-close>Ho capito</button>`,
+      <div class="sheet__azione"><button class="btn btn--acqua btn--block" data-close>Ho capito</button></div>`,
+    // il pulsante resta incollato in fondo sempre, non solo quando le entry sono tante: una soglia
+    // sarebbe un caso limite in più da testare e un comportamento che cambia sotto gli occhi
+    onOpen: (sheet) => sheet.classList.add('sheet--azione'),
     onClose: segnaLette
   })
 }

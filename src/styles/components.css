@@ -68,6 +68,11 @@
 .check input:focus-visible{ outline:3px solid var(--day); outline-offset:2px; }
 .check__xp{ margin-left:auto; color:var(--ink-2); font-variant-numeric:tabular-nums; }
 
+/* Pannello con un'azione fissa in fondo: il contenuto scorre sotto, il pulsante no */
+.sheet--azione{ padding-bottom:0; }
+.sheet__azione{ position:sticky; bottom:0; margin-top:auto; padding:var(--space-3) 0 calc(var(--space-3) + env(safe-area-inset-bottom, 0px)); background:var(--bg-2); }
+.sheet__azione::before{ content:""; position:absolute; left:0; right:0; bottom:100%; height:var(--space-5); background:linear-gradient(180deg, transparent, var(--bg-2)); pointer-events:none; }
+
 /* Badge */
 .badge{ display:inline-flex; align-items:center; gap:4px; min-height:22px; padding:1px 8px; border-radius:6px; font-size:12px; font-weight:700; letter-spacing:.03em; text-transform:uppercase; line-height:1.4; }
 .badge svg{ width:12px; height:12px; }

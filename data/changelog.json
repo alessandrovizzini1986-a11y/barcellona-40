@@ -1,6 +1,15 @@
 {
   "entries": [
     {
+      "v": 10,
+      "data": "2026-09-19",
+      "titolo": "Il pannello delle novità si legge meglio",
+      "voci": [
+        "Il pulsante \"Ho capito\" resta fisso in fondo, anche con tanti aggiornamenti da leggere",
+        "Il sito ricorda a chi lo aggiorna di scrivere cosa è cambiato"
+      ]
+    },
+    {
       "v": 9,
       "data": "2026-09-19",
       "titolo": "Bunkers: il belvedere è sempre aperto",
