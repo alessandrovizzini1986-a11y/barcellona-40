@@ -16,12 +16,12 @@
       "id": "ba",
       "file": "assets/tappe/londra/ba.webp",
       "tappa": "Volo British Airways",
-      "titolo": "File:Airbus A319-131 G-EUPL British Airways (6990563152).jpg",
-      "autore": "Alan Wilson",
-      "licenza": "CC BY-SA 2.0",
-      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/2.0",
-      "pagina": "https://commons.wikimedia.org/wiki/File:Airbus_A319-131_G-EUPL_British_Airways_(6990563152).jpg",
-      "kb": 17
+      "titolo": "File:20251011 British Airways G-TTNN EGLL.jpg",
+      "autore": "Alex Noble",
+      "licenza": "CC0",
+      "licenzaUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+      "pagina": "https://commons.wikimedia.org/wiki/File:20251011_British_Airways_G-TTNN_EGLL.jpg",
+      "kb": 20
     },
     {
       "id": "lhr",
@@ -233,7 +233,8 @@
       "licenza": "CC BY-SA 2.0",
       "licenzaUrl": "https://creativecommons.org/licenses/by-sa/2.0",
       "pagina": "https://commons.wikimedia.org/wiki/File:Carnaby_Street_Christmas_Lights_2019_-_geograph.org.uk_-_6329567.jpg",
-      "kb": 94
+      "kb": 77,
+      "qualita": 70
     },
     {
       "id": "regent",

@@ -23,7 +23,7 @@ const W = 800, H = 450
 // Titoli esatti su Commons: non vanno modificati, sono l'indirizzo del file.
 export const FILE = {
   blq: 'File:Bologna Guglielmo Marconi Airport Terminal.jpg',
-  ba: 'File:Airbus A319-131 G-EUPL British Airways (6990563152).jpg',
+  ba: 'File:20251011 British Airways G-TTNN EGLL.jpg',
   lhr: 'File:Terminal 5 at London Heathrow Airport, 2008.jpg',
   bakerloo: 'File:Edgware Road-Bakerloo Line-Northbound.jpg',
   southbank: 'File:Yellow steps at the Southbank Centre, London - geograph.org.uk - 7261180.jpg',
@@ -50,7 +50,7 @@ export const FILE = {
 // altrimenti torri, insegne e luminarie appese finiscono tagliate.
 const BIAS = {
   eye: 0.15, lina: 0.1, nhm: 0.15, regent: 0.2, sealife: 0.3, trafalgar: 0.25, buckingham: 0.25,
-  soho: 0.3, covent: 0.3, southbank: 0.35, horseguards: 0.4, nhm_balena: 0.25, bakerloo: 0.45, ba: 0.45
+  soho: 0.3, covent: 0.3, southbank: 0.35, horseguards: 0.4, nhm_balena: 0.25, bakerloo: 0.45
 }
 // Nome umano della tappa, per i crediti
 export const TITOLI = {

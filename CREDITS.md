@@ -107,7 +107,7 @@ restituisce spesso dettagli irriconoscibili o omonimi sbagliati.
 | Tappa | File nel sito | Autore | Licenza | Originale su Commons |
 |---|---|---|---|---|
 | Aeroporto di Bologna | `public/assets/tappe/londra/blq.webp` | Threecharlie | [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0) | [Bologna Guglielmo Marconi Airport Terminal.jpg](https://commons.wikimedia.org/wiki/File:Bologna_Guglielmo_Marconi_Airport_Terminal.jpg) |
-| Volo British Airways | `public/assets/tappe/londra/ba.webp` | Alan Wilson | [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0) | [Airbus A319-131 G-EUPL British Airways (6990563152).jpg](https://commons.wikimedia.org/wiki/File:Airbus_A319-131_G-EUPL_British_Airways_(6990563152).jpg) |
+| Volo British Airways | `public/assets/tappe/londra/ba.webp` | Alex Noble | [CC0](http://creativecommons.org/publicdomain/zero/1.0/deed.en) | [20251011 British Airways G-TTNN EGLL.jpg](https://commons.wikimedia.org/wiki/File:20251011_British_Airways_G-TTNN_EGLL.jpg) |
 | Arrivo a Heathrow | `public/assets/tappe/londra/lhr.webp` | Warren Rohner | [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0) | [Terminal 5 at London Heathrow Airport, 2008.jpg](https://commons.wikimedia.org/wiki/File:Terminal_5_at_London_Heathrow_Airport,_2008.jpg) |
 | Linea Bakerloo | `public/assets/tappe/londra/bakerloo.webp` | Chris McKenna (Thryduulf) | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | [Edgware Road-Bakerloo Line-Northbound.jpg](https://commons.wikimedia.org/wiki/File:Edgware_Road-Bakerloo_Line-Northbound.jpg) |
 | Southbank Centre | `public/assets/tappe/londra/southbank.webp` | Robin Stott | [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0) | [Yellow steps at the Southbank Centre, London - geograph.org.uk - 7261180.jpg](https://commons.wikimedia.org/wiki/File:Yellow_steps_at_the_Southbank_Centre,_London_-_geograph.org.uk_-_7261180.jpg) |
@@ -130,7 +130,7 @@ restituisce spesso dettagli irriconoscibili o omonimi sbagliati.
 | Luci di Regent Street | `public/assets/tappe/londra/regent.webp` | Oast House Archive | [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0) | [Regent Street Christmas Lights 2016 - geograph.org.uk - 5233956.jpg](https://commons.wikimedia.org/wiki/File:Regent_Street_Christmas_Lights_2016_-_geograph.org.uk_-_5233956.jpg) |
 | Hintze Hall (per Olly) | `public/assets/tappe/londra/nhm_balena.webp` | APK | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0) | [Hintze Hall, Natural History Museum, London - 4.jpg](https://commons.wikimedia.org/wiki/File:Hintze_Hall,_Natural_History_Museum,_London_-_4.jpg) |
 
-Ultimo aggiornamento: `npm run foto:londra` · 23 foto, 1498 kB in tutto.
+Ultimo aggiornamento: `npm run foto:londra` · 23 foto, 1484 kB in tutto.
 
 <!-- foto-londra:end -->
 
