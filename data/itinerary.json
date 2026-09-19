@@ -907,9 +907,10 @@
      "timeStatus": "verificato",
      "venueId": "bunkers",
      "title": "Bunkers del Carmel — MUHBA Turó de la Rovira",
-     "why": "La città tutta insieme, dall'alto, prima di tornare. Si entra alle 16:00.",
+     "why": "La città tutta insieme, dall'alto, prima di tornare. Si resta fino al tramonto.",
      "details": [
-      "Orario ufficiale: mercoledì, venerdì, sabato e domenica 16:00–19:00",
+      "Il belvedere è uno spazio ad accesso libero: nessun orario, nessun biglietto",
+      "Spazi museali (bunker della guerra civile) da ottobre a maggio: mer/ven/sab/dom 10:00–14:00, ultimo ingresso 13:30",
       "4,6 su 17.545 recensioni",
       "Tel +34 932 56 21 22"
      ],
@@ -930,7 +931,7 @@
      "minFromPrev": 12,
      "img": "bunkers.webp",
      "durataMin": 180,
-     "avviso": "Aprono alle 16:00, non prima. Da El Mirador sono dodici minuti in salita: se finisci di pranzare alle 15:00, prenditela comoda o fermati al bar."
+     "avviso": "Il belvedere è sempre aperto e gratuito. La parte museale sui bunker chiude alle 14:00, quindi domenica la trovate chiusa: si sale per la vista."
     },
     {
      "id": "d3",

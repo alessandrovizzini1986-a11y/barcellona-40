@@ -28,10 +28,11 @@ ok('Taps: nome, indirizzo e coordinate nuovi', venues.taps.name === 'Taps Sagrad
 ok('Taps: coordinate verificate, niente geocoded', venues.taps.verified === true && venues.taps.geocoded === undefined)
 ok('Taps: orari e telefono', /16:30/.test(venues.taps.hours) && venues.taps.phone === '+34 938 09 85 83')
 ok('Taps: la tappa non è più da verificare e ha la distanza', stops.f13.badges.join() === 'verificato' && stops.f13.distFromPrevM > 0, `${stops.f13.distFromPrevM} m · ${stops.f13.minFromPrev} min`)
-ok('Bunkers: nome MUHBA e orario ufficiale', venues.bunkers.name.includes('MUHBA Turó de la Rovira') && venues.bunkers.hours.includes('16:00–19:00'))
+ok('Bunkers: nome MUHBA e orario vero (belvedere libero, museo fino alle 14)', venues.bunkers.name.includes('MUHBA Turó de la Rovira') && /accesso libero sempre/.test(venues.bunkers.hours) && /10:00-14:00/.test(venues.bunkers.hours), venues.bunkers.hours)
 ok('Bunkers: coordinate verificate', venues.bunkers.verified === true && venues.bunkers.lat === 41.4193003 && !venues.bunkers.geocoded)
-ok('Bunkers: avviso sull\'apertura', /Aprono alle 16:00, non prima/.test(stops.d2.avviso || ''))
-ok('Bunkers: tre ore di sosta, dalle 16:00', stops.d2.durataMin === 180 && stops.d2.time === '16:00')
+ok('Bunkers: avviso sul belvedere libero e sul museo chiuso', /belvedere è sempre aperto e gratuito/.test(stops.d2.avviso || '') && /chiude alle 14:00/.test(stops.d2.avviso || ''))
+ok('Bunkers: niente più finestra 16:00–19:00 come vincolo', !/16:00[–-]19:00/.test(JSON.stringify(stops.d2)))
+ok('domenica invariata: si sale alle 16:00 e si resta fino al tramonto', stops.d2.durataMin === 180 && stops.d2.time === '16:00' && stops.d1.time === '13:30')
 ok('domenica: nessun arrivo ai Bunkers alle 15:15', !JSON.stringify(it.days[2]).includes('15:15'))
 
 // ---- link ----
@@ -89,7 +90,7 @@ for (const [giorno, attesi] of [['ven', ['ven-mattina', 'ven-pomeriggio', 'ven-c
 {
   const { p, ctx } = await vista('ale', '/?now=2026-10-18T16:30#/oggi')
   ok('Oggi · domenica pomeriggio: percorso dei Bunkers', (await p.locator('.tile--accent .percorso').getAttribute('data-percorso')) === 'dom-pomeriggio')
-  ok('Oggi · avviso dei Bunkers visibile nella card di adesso', /Aprono alle 16:00/.test(await p.locator('.tile--accent .avviso').innerText()))
+  ok('Oggi · avviso dei Bunkers visibile nella card di adesso', /belvedere è sempre aperto/.test(await p.locator('.tile--accent .avviso').innerText()))
   await ctx.close()
 }
 // Chi non c'è non vede il percorso di quella mezza giornata

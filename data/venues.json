@@ -126,7 +126,7 @@
    "lat": 41.3915035,
    "lng": 2.1715182,
    "verified": true,
-   "note": "Coordinate dal link del percorso di venerdì pomeriggio"
+   "note": "Coordinate verificate via Google Places: El Palace Hotel Barcelona, Gran Via de les Corts Catalanes 668. Il Rooftop Garden è sul tetto dell'hotel."
   },
   "biarritz": {
    "name": "Bodega Biarritz 1881",
@@ -145,7 +145,7 @@
    "verified": true,
    "rating": 4.6,
    "reviews": 17545,
-   "hours": "mer, ven, sab, dom 16:00–19:00 · lun, mar, gio chiuso",
+   "hours": "Belvedere: accesso libero sempre · Spazi museali ott-mag: mer/ven/sab/dom 10:00-14:00",
    "phone": "+34 932 56 21 22"
   },
   "duckstore": {

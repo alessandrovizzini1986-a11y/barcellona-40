@@ -23,7 +23,7 @@ Nessuna: tutte le tappe hanno le coordinate e la distanza dalla precedente.
 - c6 · Deposito bagagli venerdì mattina 08:05 → 15:00 (Monne)
 - c7 · Programma notturno Sala Apolo sabato 17 (interferenza Soundhood a 89 m)
 - c8 · SOUNDIT Plaza / Happy Techno Open Air: esistono? orari? (Resident Advisor)
-- c9 · Civico esatto Braseria Sarrià e Rooftop Garden El Palace
+- c9 · Civico esatto della Braseria Sarrià
 - c10 · Coordinate geocodificate automaticamente: Bodega Biarritz (vedi sezione geocoding)
 
 ## Altri dati mancanti o non verificati
@@ -33,11 +33,9 @@ Nessuna: tutte le tappe hanno le coordinate e la distanza dalla precedente.
 
 - **Distanze a piedi: motore di routing sostituito.** Il server demo `router.project-osrm.org` ignora il profilo `/foot/` e restituisce sempre percorsi stradali per auto (verificato: `/foot/` e `/driving/` danno risultati identici), quindi gonfiava ogni distanza a piedi. Ora `scripts/distances.mjs` usa Valhalla di OpenStreetMap con costing `pedestrian` (`auto` per le tratte in auto o taxi) e prende i minuti dal tempo restituito da Valhalla, non più da una conversione a 5 km/h. Restano stime su dati OpenStreetMap, non rilievi sul posto.
 - **Bar Joan: coordinate prese dal mercato.** Il locale è dentro il Mercat de Santa Caterina e non ha coordinate proprie: sulla mappa il suo marker sta sopra quello del mercato. Stessa cosa per `f10` e `f11`, che sono entrambi all'appartamento.
-- **Distanze non calcolate**: `f5→f6`, `f6→f7`, `f7→f8`, perché Enoteca Taps e Rooftop Garden El Palace non hanno coordinate. Le tappe sono marcate `da_verificare`.
 
 - Numero volo di Giulio (atterraggio 07:40 confermato) e di Manuel (09:45).
 - Voli di ritorno di Giulio e Manuel: la tappa `d3` resta `da_verificare` e continua a dire le 20:00. Quella di Alessandro non lo è più: FR5220 delle 23:05, con il percorso completo in `data/viaggio.json`.
-- **Coordinate di El Palace prese dal link del percorso**: il link "venerdì pomeriggio" che mi hai dato ha come destinazione 41.3915035, 2.1715182, e l'ho usato per il venue `rooftop`, che prima non aveva coordinate. Adesso sta sulla mappa e la distanza Taps → El Palace (2.099 m, 25 min) è calcolata. Se quel punto non è il Rooftop Garden, va corretto lì.
 - **Braseria Sarrià, distanza**: 4.580 m e 15 min sono la strada in auto secondo Valhalla, non il percorso dei mezzi. Il tuo link dice 4,3 km: è un altro itinerario, non un errore.
 - **Bar Joan e il mercato**: il link del percorso di venerdì mattina finisce a 41.386162, 2.1786073, che è a una trentina di metri dalle coordinate del mercato nei nostri dati (41.3863611, 2.1781566). Nessuna conseguenza pratica, ma sono due punti leggermente diversi.
 - **Orari della mattina di venerdì**: sono quelli decisi da te, non ricavati da un calcolo. Le distanze, i minuti a piedi e le durate delle soste invece sono dati, e il sito li somma da solo.

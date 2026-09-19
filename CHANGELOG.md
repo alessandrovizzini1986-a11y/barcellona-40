@@ -194,3 +194,8 @@
 - **Cache**: il changelog è importato come modulo, quindi finisce nel bundle con l'hash nel nome — nessuna richiesta a `/data/changelog.json` a runtime (verificato leggendo le risorse caricate dalla pagina) e nessun modo di servire dati vecchi insieme a codice nuovo. Le regole `no-cache` su `/`, `/index.html` e `/data/*` in `public/_headers` sono rimaste dov'erano.
 - Le altre suite di QA partono "già aggiornate": il pannello è modale e in mezzo ai loro click non ci deve stare. A trovarlo è stato il QA stesso, con album e song che si sono bloccati al primo giro.
 - Nuova suite `scripts/qa/novita.mjs` (42 controlli).
+
+## Correzione: l'orario dei Bunkers era quello estivo
+- **Il belvedere del Turó de la Rovira è ad accesso libero**, sempre e gratis: la vista e il tramonto non hanno orario. Quello che chiude sono gli **spazi museali** sul bunker della guerra civile, e da ottobre a maggio chiudono alle 14:00 (mer/ven/sab/dom 10:00–14:00, ultimo ingresso 13:30). La finestra 16:00–19:00 che avevamo messo è l'orario di giugno-settembre.
+- **La domenica non cambia**: pranzo alle 13:30, salita dopo, sosta fino al tramonto. Quella che sparisce è la costrizione: non si sta aspettando che aprano, si sale quando si vuole. Il 18 ottobre la parte museale la trovano chiusa, e l'avviso sulla card ora lo dice.
+- **Coordinate del Rooftop Garden confermate** (El Palace Hotel Barcelona, Gran Via de les Corts Catalanes 668): non erano più una deduzione dal link del percorso. Il check `c9` resta aperto solo per il civico della Braseria.
