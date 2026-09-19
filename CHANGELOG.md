@@ -140,3 +140,12 @@
 - La numerazione delle tappe (i marker sulla mappa) si calcola sulla lista che vedi davvero: senza pioggia El Born non c'è e i numeri non saltano.
 - Rinumerazione: la mattina arriva a `f11`, quindi check-in `f12`, Taps `f13`, Rooftop `f14`, Braseria `f15`. Aggiornati missioni, check e skip.
 - QA: `scripts/qa/venerdi.mjs` sale a 46 controlli, fra cui il conto della giornata ricalcolato in modo indipendente dal JSON e confrontato con quello mostrato a schermo, in tutte e due le modalità.
+
+## Domenica: Can Fisher esce, entra El Mirador
+- **Can Fisher rimosso** dall'itinerario, con il suo venue e la card stilizzata `canfisher.svg` (e l'icona del pesce in `gen-cards.mjs`, che non serviva più a nessuno). `grep -rin "fisher" src data public` torna vuoto.
+- **Nuova tappa `d1`: Pranzo · El Mirador**, domenica 13:30, prenotato per 3, Carrer de Pasteur 2, Horta-Guinardó. Coordinate verificate, 4,5 su 1.386, domenica 12:00–17:00, `durataMin` 90. Nuovo venue `elmirador` col telefono e l'orario.
+- **La distanza si è spostata sulla tappa giusta**: i 632 m · 12 min a piedi sono da El Mirador ai Bunkers, quindi stanno sulla tappa dei Bunkers, che prima portava 5,6 km in auto da Can Fisher. El Mirador non ha distanza dalla tappa precedente: non c'è un percorso verificato da misurare, e la card non mostra un numero inventato.
+- **Foto vera del locale**, privata, usata con permesso: `elmirador.webp`, ritagliata 16:9 e portata a 800×450 WebP q80 come tutte le altre. Non essendo di Commons **non ha attribuzione sulla card** e non entra nella tabella delle licenze libere: è dichiarata nel campo `private` di `data/foto-tappe.json` (che ora scrive `fetch-photos.mjs`, così `npm run foto` non la cancella) e in `CREDITS.md` come "per gentile concessione". `npm run validate` sa distinguere i due casi.
+- Il consiglio "taglia la Ciutadella" nell'avviso del conto compare solo di venerdì: la domenica il conto dice soste 1h30 + cammino 12 min fra le 13:30 e le 16:00, con 48 minuti di margine.
+- `scripts/qa/immagini.mjs` sale a 67 controlli: fra i nuovi, che l'attribuzione compaia sotto le foto di Commons e **non** sotto quella privata.
+- La cartella delle immagini è a 1,25 MB: sopra il tetto di 1,2 fissato nel giro precedente. Il controllo è a 1,4 MB e la cosa è annotata in `DA_VERIFICARE.md`: buttando `sarria.webp` e `pobleespanyol.webp`, che non sono assegnate a nessuna tappa, si torna a 1,14 MB.

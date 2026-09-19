@@ -33,6 +33,7 @@ const ALT = {
   'apolo.webp': 'Un concerto alla Sala Apolo',
   'sarria.webp': 'Il Carrer Major de Sarrià',
   'bunkers.webp': 'La vista su Barcellona dai Bunkers del Carmel',
+  'elmirador.webp': 'L\'insegna di El Mirador, con la tenda blu e i tavoli all\'aperto',
   'elborn.webp': 'La sala in ferro e vetro dell\'antico mercato del Born, con le rovine del quartiere del 1714 visibili sotto il piano di calpestio',
   'parcheggio.svg': 'Illustrazione del parcheggio P2 di Bologna',
   'duckstore.svg': 'Illustrazione del Barcelona Duck Store',
@@ -42,7 +43,6 @@ const ALT = {
   'braseria.svg': 'Illustrazione della Braseria Sarrià',
   'olimpo.svg': 'Illustrazione della Vermutería Olimpo',
   'biarritz.svg': 'Illustrazione della Bodega Biarritz 1881',
-  'canfisher.svg': 'Illustrazione di Can Fisher',
   'canudas.svg': 'Illustrazione della Sala VIP Canudas'
 }
 export const haFoto = (stop) => !!stop.img

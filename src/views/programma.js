@@ -20,7 +20,7 @@ function emptyState(person, key) {
 }
 
 // Il conto della giornata, scritto con i numeri veri: soste e cammino sono somme dei dati, non frasi.
-function avvisoConto(giorno) {
+function avvisoConto(giorno, key) {
   const c = contoDelGiorno(giorno)
   if (!c || !c.fine) return ''
   const totale = c.soste + c.cammino
@@ -28,7 +28,7 @@ function avvisoConto(giorno) {
     ? `Restano ${fmtMinutes(c.margine)} di margine, non di più.`
     : 'Non resta margine: ogni sosta più lunga sposta l\'arrivo a casa.'
   // Il consiglio ha senso solo col giro asciutto: sotto la pioggia la Ciutadella è già tagliata a 15 minuti
-  const taglio = piove() ? '' : ' Se slitti, taglia la Ciutadella da 45 a 25 minuti.'
+  const taglio = key === 'ven' && !piove() ? ' Se slitti, taglia la Ciutadella da 45 a 25 minuti.' : ''
   return `<div class="avviso avviso--forte">${icon('clock')}<span>Soste ${fmtMinutes(c.soste)} + cammino ${fmtMinutes(c.cammino)} = ${fmtMinutes(totale)} tra le ${esc(c.inizio)} e le ${esc(c.fine)}. ${margine}${taglio}</span></div>`
 }
 // Il venerdì mattina sta quasi tutto all'aperto e ottobre è il mese più piovoso dell'anno a Barcellona
@@ -61,7 +61,7 @@ export async function render(root, { person, sub, header }) {
     </div>
     ${key === 'ven' ? toggleP(piove()) : ''}
     ${key === 'ven' && piove() ? `<div class="avviso">${icon('alert')}<span>Modalità pioggia: una sola tappa scoperta invece di sei. Montcada, Pont del Bisbe e Sant Felip Neri sono vicoli stretti, si cammina quasi sempre riparati.</span></div>` : ''}
-    ${avvisoConto(stops)}
+    ${avvisoConto(stops, key)}
     ${righe.length ? `<ol class="timeline" style="--dc:${DAY_COLOR[key]}">${righe.map((r) => `<li>${r.html}</li>`).join('')}</ol>` : `<div class="empty">${emptyState(person, key)}</div>`}
   </section>`
   root.querySelector('#piove')?.addEventListener('change', (e) => {

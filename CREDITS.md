@@ -86,6 +86,16 @@ Le licenze CC BY e CC BY-SA obbligano a citare autore e licenza e a linkare l'or
 riga "foto: autore / licenza" sotto ogni card. Le foto sono state ritagliate a 16:9 e ridimensionate a
 800×450, niente altro.
 
+## Foto private (non Commons)
+
+| Tappa | File nel sito | Origine |
+|---|---|---|
+| El Mirador | `public/assets/tappe/elmirador.webp` | Foto di un amico di Alessandro, uso autorizzato — per gentile concessione |
+
+Non ha licenza libera e non sta nella tabella qui sopra: sotto la card non compare nessuna riga di
+attribuzione, perché non è dovuta a nessuno per contratto. È tracciata qui e in `data/foto-tappe.json`
+(campo `private`) perché `npm run validate` sappia che quella `.webp` è a posto anche senza crediti Commons.
+
 ## Card stilizzate (originali del progetto)
 
 I luoghi senza una foto libera su Commons hanno una card disegnata: mosaico trencadís seedato, vignettatura e
@@ -93,7 +103,7 @@ un'icona in stile Lucide, generata da `scripts/gen-cards.mjs` (`npm run cards`).
 questo progetto: nessuna attribuzione dovuta, e infatti sotto queste card non compare nessuna riga di credito.
 
 `parcheggio.svg` · `duckstore.svg` · `barjoan.svg` · `apt.svg` · `taps.svg` · `braseria.svg` · `olimpo.svg` ·
-`biarritz.svg` · `canfisher.svg` · `canudas.svg`
+`biarritz.svg` · `canudas.svg`
 
 ## Font
 - Clash Display (Fontshare, licenza Fontshare Free Font) e Inter (SIL OFL): già usati dal sito, self-hosted in `public/fonts/`.

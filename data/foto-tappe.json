@@ -178,5 +178,13 @@
       "kb": 68
     }
   ],
+  "private": [
+    {
+      "id": "elmirador",
+      "file": "assets/tappe/elmirador.webp",
+      "tappa": "El Mirador",
+      "nota": "Foto di un amico di Alessandro, uso autorizzato. Per gentile concessione."
+    }
+  ],
   "scartate": []
 }

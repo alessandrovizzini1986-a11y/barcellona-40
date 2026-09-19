@@ -797,20 +797,27 @@
    "stops": [
     {
      "id": "d1",
-     "time": "13:00",
-     "timeStatus": "stimato",
-     "venueId": "canfisher",
-     "title": "Pranzo · Can Fisher",
-     "why": "Ultimo pranzo, ritmo lento.",
-     "details": [],
+     "time": "13:30",
+     "timeStatus": "verificato",
+     "venueId": "elmirador",
+     "title": "Pranzo · El Mirador",
+     "img": "elmirador.webp",
+     "durataMin": 90,
+     "why": "Dodici minuti a piedi e sei ai Bunkers. Qui mangiano quelli del quartiere, non i turisti.",
+     "details": [
+      "Prenotato: domenica 13:30, 3 persone",
+      "Tapas e cucina di quartiere, prezzi onesti",
+      "Una recensione cita il filetto di manzo a €3,90",
+      "Chiude alle 17:00",
+      "Tel +34 931 64 20 22"
+     ],
      "people": [
       "ale",
       "giulio",
       "manuel"
      ],
      "badges": [
-      "stimato",
-      "geocoded"
+      "verificato"
      ],
      "actions": {
       "maps": true,
@@ -818,8 +825,7 @@
       "metro": null
      },
      "distFromPrevM": null,
-     "minFromPrev": null,
-     "img": "canfisher.svg"
+     "minFromPrev": null
     },
     {
      "id": "d2",
@@ -843,9 +849,8 @@
       "taxi": true,
       "metro": null
      },
-     "distFromPrevM": 5631,
-     "minFromPrev": 17,
-     "distMode": "auto",
+     "distFromPrevM": 632,
+     "minFromPrev": 12,
      "img": "bunkers.webp"
     },
     {

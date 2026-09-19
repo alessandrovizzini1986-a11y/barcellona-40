@@ -9,7 +9,9 @@ const { people } = readJson('people.json')
 const { missions } = readJson('missions.json')
 const { checks } = readJson('checks.json')
 const viaggio = readJson('viaggio.json')
-const fotoIds = new Set(readJson('foto-tappe.json').foto.map((f) => `${f.id}.webp`))
+const fotoJson = readJson('foto-tappe.json')
+// le foto private non hanno crediti Commons, ma sono immagini legittime: vanno dichiarate lì dentro
+const fotoIds = new Set([...fotoJson.foto, ...(fotoJson.private || [])].map((f) => `${f.id}.webp`))
 const errors = []
 const personIds = new Set(people.map((p) => p.id))
 const stopIds = new Set()

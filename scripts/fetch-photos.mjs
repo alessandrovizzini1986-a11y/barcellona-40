@@ -46,6 +46,13 @@ export const TITOLI = {
   bunkers: 'Bunkers del Carmel', elborn: 'El Born Centre de Cultura i Memòria'
 }
 const LIBERA = [/^cc0/i, /^cc[- ]by(-sa)?([- ]\d)?/i, /^public domain/i, /^pd/i]
+// Foto NON di Commons: private, usate con permesso. Non hanno licenza libera, quindi non stanno nella
+// tabella dei crediti e sotto la card non compare nessuna riga di attribuzione. Il file non lo scarica
+// questo script: sta nel repo e basta. Elencarle qui serve a `npm run validate`, che così sa che quella
+// .webp è a posto anche senza crediti da Commons.
+const PRIVATE = [
+  { id: 'elmirador', file: 'assets/tappe/elmirador.webp', tappa: 'El Mirador', nota: 'Foto di un amico di Alessandro, uso autorizzato. Per gentile concessione.' }
+]
 const testo = (v) => String(v || '').replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim()
 const attesa = (ms) => new Promise((r) => setTimeout(r, ms))
 
@@ -108,7 +115,7 @@ for (const [id, titolo] of Object.entries(FILE)) {
   }
 }
 
-writeFileSync('data/foto-tappe.json', JSON.stringify({ fonte: 'Wikimedia Commons', foto: crediti, scartate }, null, 2) + '\n')
+writeFileSync('data/foto-tappe.json', JSON.stringify({ fonte: 'Wikimedia Commons', foto: crediti, private: PRIVATE, scartate }, null, 2) + '\n')
 
 // Crediti: si riscrive solo il blocco fra i marcatori, il resto del file resta com'è
 const righe = crediti.map((f) => `| ${f.tappa} | \`public/${f.file}\` | ${f.autore} | [${f.licenza}](${f.licenzaUrl}) | [${f.titolo.replace('File:', '')}](${f.pagina}) |`)

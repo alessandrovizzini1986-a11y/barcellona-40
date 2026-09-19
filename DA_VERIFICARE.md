@@ -8,7 +8,6 @@ Generato in parte dagli script dati (`npm run data`). Le sezioni tra marker veng
 - **Enoteca Taps Sagrada Família** (`taps`): coordinate mancanti, errore rete: Nominatim HTTP 429. Query: "Enoteca Taps Sagrada Família, Barcelona"
 - **Rooftop Garden – El Palace Barcelona** (`rooftop`): coordinate mancanti, errore rete: Nominatim HTTP 429. Query: "Rooftop Garden – El Palace Barcelona, Barcelona"
 - **Bodega Biarritz 1881** (`biarritz`): coordinate automatiche da Nominatim (41.3792173, 2.1770987), da controllare sul posto
-- **Can Fisher** (`canfisher`): coordinate automatiche da Nominatim (41.3946058, 2.2062439), da controllare sul posto
 - **Bunkers del Carmel** (`bunkers`): coordinate automatiche da Nominatim (41.4193923, 2.1616974), da controllare sul posto
 <!-- geocoding:end -->
 
@@ -30,7 +29,7 @@ Generato in parte dagli script dati (`npm run data`). Le sezioni tra marker veng
 - c7 · Programma notturno Sala Apolo sabato 17 (interferenza Soundhood a 89 m)
 - c8 · SOUNDIT Plaza / Happy Techno Open Air: esistono? orari? (Resident Advisor)
 - c9 · Civico esatto Braseria Sarrià e Rooftop Garden El Palace
-- c10 · Coordinate geocodificate automaticamente: Biarritz, Can Fisher, Bunkers (vedi sezione geocoding)
+- c10 · Coordinate geocodificate automaticamente: Biarritz e Bunkers (vedi sezione geocoding)
 
 ## Altri dati mancanti o non verificati
 
@@ -54,6 +53,9 @@ Generato in parte dagli script dati (`npm run data`). Le sezioni tra marker veng
 - **Sala Apolo**: la foto è un concerto visto dall'interno, non la facciata. Rende l'atmosfera, che è il punto.
 - **La Terrrazza**: la tappa `s7` usa `monumental.webp`. `pobleespanyol.webp` è scaricata e disponibile se il pomeriggio si sposta là: è il complesso che ospita il locale, del club non esiste foto libera.
 - **`sarria.webp`** è scaricata ma non assegnata a nessuna tappa: è l'alternativa alla card stilizzata della Braseria, se un giorno la preferisci.
+- **La cartella delle immagini è a 1,28 MB, sopra il tetto di 1,2 che avevi messo.** Con la foto di El Mirador non ci si sta più. `sarria.webp` e `pobleespanyol.webp` non sono assegnate a nessuna tappa e pesano 141 kB: buttandole si torna a 1,14 MB. Finché restano, il controllo in `scripts/qa/immagini.mjs` è a 1,4 MB.
+- **El Mirador, distanza dalla tappa precedente**: non calcolata. Il gruppo arriva da dove ha dormito, non c'è un percorso verificato da misurare, quindi la card non mostra nessun chip di distanza. I 632 m · 12 min verso i Bunkers invece ci sono, sulla tappa dei Bunkers.
+- **La foto di El Mirador è privata**, di un amico di Alessandro, usata con permesso. Non è su Commons e non ha licenza libera: non sta nella tabella dei crediti e sotto la card non compare nessuna attribuzione. Se un giorno il sito diventa pubblico sul serio, chiedere conferma all'autore.
 - **Tappe di arrivo di Giulio e Manuel** (`s1`, `s3`): non erano nell'elenco delle immagini. Hanno l'immagine del posto dove arrivano, appartamento e Olimpo.
 - Bodega Biarritz 1881: Nominatim restituisce "Bodega Biarritz, Carrer d'en Rull" (Gòtic). Controllare che sia il locale giusto.
 - Coordinate `verified:true` del prompt (appartamento, aeroporto, Sagrada, Olimpo, Braseria, Apolo, Monumental, Terrrazza, mercati) non sono state toccate.

@@ -19,7 +19,6 @@ const ICONE = {
   flame: '<path d="M12 2c2 4-1 5 0 8 2-1 3-3 3-5 2 2 3 5 3 8a6 6 0 0 1-12 0c0-3 2-6 6-11Z"/>',
   glass: '<path d="M6 3h12l-5 8v8h3M8 19h3v-8L6 3"/>',
   cake: '<path d="M4 21h16v-8H4v8Z"/><path d="M4 13a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4"/><path d="M12 9V5M9 9V7M15 9V7"/>',
-  fish: '<path d="M3 12c4-6 12-6 16 0-4 6-12 6-16 0Z"/><path d="M19 12l3-3v6l-3-3Z"/><circle cx="8" cy="11" r=".8" fill="currentColor"/>',
   shower: '<path d="M5 20V7a3 3 0 0 1 6 0M8 7h11l-3 4H8"/><path d="M11 15v2M14 14v2M17 15v2"/>'
 }
 
@@ -32,7 +31,6 @@ export const CARD = [
   { id: 'braseria', label: 'Braseria Sarrià', accento: '#E8552E', icona: 'flame' },
   { id: 'olimpo', label: 'Vermutería Olimpo', accento: '#F2B705', icona: 'glass' },
   { id: 'biarritz', label: 'Bodega Biarritz 1881', accento: '#E8552E', icona: 'cake' },
-  { id: 'canfisher', label: 'Can Fisher', accento: '#2CA6A4', icona: 'fish' },
   { id: 'canudas', label: 'Sala VIP Canudas', accento: '#3D5A80', icona: 'shower' }
 ]
 

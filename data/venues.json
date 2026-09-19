@@ -135,15 +135,6 @@
    "geocoded": true,
    "geocodedFrom": "Bodega Biarritz, Carrer d'en Rull, la Mercè, el Gòtic, Ciutat Vella, Barcelona, Barcelonès, Barcelona, Catalunya, 08002, Espanya"
   },
-  "canfisher": {
-   "name": "Can Fisher",
-   "addr": "Barcelona",
-   "lat": 41.3946058,
-   "lng": 2.2062439,
-   "verified": false,
-   "geocoded": true,
-   "geocodedFrom": "Can Fisher, Passeig Marítim del Bogatell, la Plata, el Poblenou, Sant Martí, Barcelona, Barcelonès, Barcelona, Catalunya, 08071, Espanya"
-  },
   "bunkers": {
    "name": "Bunkers del Carmel",
    "addr": "Carrer de Marià Labèrnia, Barcelona",
@@ -229,6 +220,18 @@
    "rating": 5.0,
    "reviews": 246,
    "note": "Coordinate del mercato: il banco è al suo interno"
+  },
+  "elmirador": {
+   "name": "El Mirador",
+   "addr": "Carrer de Pasteur 2, Horta-Guinardó",
+   "lat": 41.4169774,
+   "lng": 2.1589342,
+   "verified": true,
+   "rating": 4.5,
+   "reviews": 1386,
+   "tel": "+34 931 64 20 22",
+   "hours": "domenica 12:00–17:00",
+   "note": "Prenotato: domenica 18 alle 13:30, 3 persone"
   }
  }
 }
