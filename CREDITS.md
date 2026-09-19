@@ -95,6 +95,44 @@ riga "foto: autore / licenza" sotto ogni card. Le foto sono state ritagliate a 1
 Non ha licenza libera e non sta nella tabella qui sopra: sotto la card non compare nessuna riga di
 attribuzione, perché non è dovuta a nessuno per contratto. È tracciata qui e in `data/foto-tappe.json`
 (campo `private`) perché `npm run validate` sappia che quella `.webp` è a posto anche senza crediti Commons.
+## Foto delle tappe · Londra (Wikimedia Commons)
+
+Stesso metodo del viaggio a Barcellona, cartella separata (`public/assets/tappe/londra/`,
+`scripts/londra-foto.mjs`, `npm run foto:londra`): solo licenze libere verificate in `extmetadata`, ritaglio
+16:9, 800×450, WebP q80. I file sono stati scelti guardando i provini uno per uno: la ricerca su Commons
+restituisce spesso dettagli irriconoscibili o omonimi sbagliati.
+
+<!-- foto-londra:start -->
+
+| Tappa | File nel sito | Autore | Licenza | Originale su Commons |
+|---|---|---|---|---|
+| Aeroporto di Bologna | `public/assets/tappe/londra/blq.webp` | Threecharlie | [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0) | [Bologna Guglielmo Marconi Airport Terminal.jpg](https://commons.wikimedia.org/wiki/File:Bologna_Guglielmo_Marconi_Airport_Terminal.jpg) |
+| Volo British Airways | `public/assets/tappe/londra/ba.webp` | Alex Noble | [CC0](http://creativecommons.org/publicdomain/zero/1.0/deed.en) | [20251011 British Airways G-TTNN EGLL.jpg](https://commons.wikimedia.org/wiki/File:20251011_British_Airways_G-TTNN_EGLL.jpg) |
+| Arrivo a Heathrow | `public/assets/tappe/londra/lhr.webp` | Warren Rohner | [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0) | [Terminal 5 at London Heathrow Airport, 2008.jpg](https://commons.wikimedia.org/wiki/File:Terminal_5_at_London_Heathrow_Airport,_2008.jpg) |
+| Linea Bakerloo | `public/assets/tappe/londra/bakerloo.webp` | Chris McKenna (Thryduulf) | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | [Edgware Road-Bakerloo Line-Northbound.jpg](https://commons.wikimedia.org/wiki/File:Edgware_Road-Bakerloo_Line-Northbound.jpg) |
+| Southbank Centre | `public/assets/tappe/londra/southbank.webp` | Robin Stott | [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0) | [Yellow steps at the Southbank Centre, London - geograph.org.uk - 7261180.jpg](https://commons.wikimedia.org/wiki/File:Yellow_steps_at_the_Southbank_Centre,_London_-_geograph.org.uk_-_7261180.jpg) |
+| SEA LIFE London Aquarium | `public/assets/tappe/londra/sealife.webp` | ʘx | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | [Underwater Walk of Sea Life London Aquarium.jpg](https://commons.wikimedia.org/wiki/File:Underwater_Walk_of_Sea_Life_London_Aquarium.jpg) |
+| London Eye | `public/assets/tappe/londra/eye.webp` | Danbu14 | [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0) | [London Eye by Day.jpg](https://commons.wikimedia.org/wiki/File:London_Eye_by_Day.jpg) |
+| Lina Stores | `public/assets/tappe/londra/lina.webp` | Ewan-M | [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0) | [Lina Stores, Soho, W1.jpg](https://commons.wikimedia.org/wiki/File:Lina_Stores,_Soho,_W1.jpg) |
+| Soho | `public/assets/tappe/londra/soho.webp` | Philafrenzy | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | [Dean Street - Old Compton Street corner.JPG](https://commons.wikimedia.org/wiki/File:Dean_Street_-_Old_Compton_Street_corner.JPG) |
+| Trafalgar Square | `public/assets/tappe/londra/trafalgar.webp` | Diliff | [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0) | [Trafalgar Square, London 2 - Jun 2009.jpg](https://commons.wikimedia.org/wiki/File:Trafalgar_Square,_London_2_-_Jun_2009.jpg) |
+| Horse Guards Parade | `public/assets/tappe/londra/horseguards.webp` | Lewis Clarke | [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0) | [London , Westminster - Horse Guards Parade - geograph.org.uk - 2546769.jpg](https://commons.wikimedia.org/wiki/File:London_,_Westminster_-_Horse_Guards_Parade_-_geograph.org.uk_-_2546769.jpg) |
+| Big Ben e Parlamento | `public/assets/tappe/londra/bigben.webp` | Domob | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | [Palace of Westminster and Elizabeth Tower 20250522.jpg](https://commons.wikimedia.org/wiki/File:Palace_of_Westminster_and_Elizabeth_Tower_20250522.jpg) |
+| St James's Park | `public/assets/tappe/londra/stjames.webp` | Colin | [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0) | [St James's Park Lake – East from the Blue Bridge - 2012-10-06.jpg](https://commons.wikimedia.org/wiki/File:St_James%27s_Park_Lake_%E2%80%93_East_from_the_Blue_Bridge_-_2012-10-06.jpg) |
+| Buckingham Palace | `public/assets/tappe/londra/buckingham.webp` | Diliff | [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0) | [Buckingham Palace from gardens, London, UK - Diliff.jpg](https://commons.wikimedia.org/wiki/File:Buckingham_Palace_from_gardens,_London,_UK_-_Diliff.jpg) |
+| Green Park | `public/assets/tappe/londra/greenpark.webp` | LondonHistoryatHome | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | [View from Green Park towards Victoria Memorial.jpg](https://commons.wikimedia.org/wiki/File:View_from_Green_Park_towards_Victoria_Memorial.jpg) |
+| Harrods | `public/assets/tappe/londra/harrods.webp` | Editor5807 | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | [Harrods Knightsbridge exterior Christmas decorations in November 2022.jpg](https://commons.wikimedia.org/wiki/File:Harrods_Knightsbridge_exterior_Christmas_decorations_in_November_2022.jpg) |
+| Natural History Museum | `public/assets/tappe/londra/nhm.webp` | Diliff | [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0) | [Natural History Museum London Jan 2006.jpg](https://commons.wikimedia.org/wiki/File:Natural_History_Museum_London_Jan_2006.jpg) |
+| Covent Garden | `public/assets/tappe/londra/covent.webp` | Dietmar Rabich | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | [London, Covent Garden -- 2016 -- 4878.jpg](https://commons.wikimedia.org/wiki/File:London,_Covent_Garden_--_2016_--_4878.jpg) |
+| Partenza da Heathrow | `public/assets/tappe/londra/lhr_dep.webp` | Andrew Milligan sumo | [CC BY 2.0](https://creativecommons.org/licenses/by/2.0) | [Departures Terminal 5, London Heathrow Airport (33215594911).jpg](https://commons.wikimedia.org/wiki/File:Departures_Terminal_5,_London_Heathrow_Airport_(33215594911).jpg) |
+| Atterraggio a Bologna | `public/assets/tappe/londra/blq_arr.webp` | Ex13 | [CC BY-SA 3.0](http://creativecommons.org/licenses/by-sa/3.0/) | [Bologna Guglielmo Marconi Airport aerial.jpg](https://commons.wikimedia.org/wiki/File:Bologna_Guglielmo_Marconi_Airport_aerial.jpg) |
+| Luci di Carnaby Street | `public/assets/tappe/londra/carnaby.webp` | Christine Matthews | [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0) | [Carnaby Street Christmas Lights 2019 - geograph.org.uk - 6329567.jpg](https://commons.wikimedia.org/wiki/File:Carnaby_Street_Christmas_Lights_2019_-_geograph.org.uk_-_6329567.jpg) |
+| Luci di Regent Street | `public/assets/tappe/londra/regent.webp` | Oast House Archive | [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0) | [Regent Street Christmas Lights 2016 - geograph.org.uk - 5233956.jpg](https://commons.wikimedia.org/wiki/File:Regent_Street_Christmas_Lights_2016_-_geograph.org.uk_-_5233956.jpg) |
+| Hintze Hall (per Olly) | `public/assets/tappe/londra/nhm_balena.webp` | APK | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0) | [Hintze Hall, Natural History Museum, London - 4.jpg](https://commons.wikimedia.org/wiki/File:Hintze_Hall,_Natural_History_Museum,_London_-_4.jpg) |
+
+Ultimo aggiornamento: `npm run foto:londra` · 23 foto, 1484 kB in tutto.
+
+<!-- foto-londra:end -->
 
 ## Card stilizzate (originali del progetto)
 
