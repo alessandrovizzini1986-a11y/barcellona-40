@@ -13,7 +13,7 @@ async function open(person, path, opts = {}) {
   p.on('pageerror', (e) => errs.push(e.message))
   p.on('request', (r) => reqs.push(r.url()))
   await p.goto(base + '/')
-  await p.evaluate((x) => { localStorage.clear(); localStorage.setItem('b40:v1:person', JSON.stringify(x)) }, person)
+  await p.evaluate((x) => { localStorage.clear(); localStorage.setItem('b40:v1:lastSeenVersion', '999'); localStorage.setItem('b40:v1:person', JSON.stringify(x)) }, person)
   await p.goto(base + path, { waitUntil: 'networkidle' })
   await p.waitForTimeout(600)
   return { p, ctx, errs, reqs }
@@ -37,7 +37,7 @@ async function open(person, path, opts = {}) {
 {
   const { p, ctx } = await open('monne', '/#/info')
   const ids = await p.evaluate(() => [...document.querySelectorAll('.acc > details')].map((d) => d.id))
-  ok('Info: "La canzone" subito dopo "Foto"', ids[1] === 'sec-foto' && ids[2] === 'sec-canzone', ids.slice(0, 3).join(','))
+  ok('Info: "La canzone" subito dopo "Foto"', ids[2] === 'sec-foto' && ids[3] === 'sec-canzone', ids.slice(0, 4).join(','))
   ok('"La canzone" aperta di default', await p.evaluate(() => document.querySelector('#sec-canzone').open))
   await ctx.close()
 }
@@ -45,7 +45,7 @@ async function open(person, path, opts = {}) {
 {
   const ctx = await b.newContext({ viewport: { width: 380, height: 800 } })
   const p = await ctx.newPage()
-  await p.goto(base + '/'); await p.evaluate(() => localStorage.clear())
+  await p.goto(base + '/'); await p.evaluate(() => { localStorage.clear(); localStorage.setItem('b40:v1:lastSeenVersion', '999'); })
   await p.goto(base + '/#/oggi', { waitUntil: 'networkidle' }); await p.waitForTimeout(400)
   ok('onboarding senza player', (await p.locator('.song').count()) === 0 && (await p.locator('.person-card').count()) === 4)
   await ctx.close()

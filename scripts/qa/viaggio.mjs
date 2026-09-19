@@ -14,7 +14,7 @@ async function apri(person, path, ctxIn = null) {
   p.on('pageerror', (e) => errs.push(e.message))
   if (!ctxIn) {
     await p.goto(base + '/')
-    await p.evaluate((x) => { localStorage.clear(); localStorage.setItem('b40:v1:person', JSON.stringify(x)); localStorage.setItem('b40:v1:onboarded', 'true') }, person)
+    await p.evaluate((x) => { localStorage.clear(); localStorage.setItem('b40:v1:lastSeenVersion', '999'); localStorage.setItem('b40:v1:person', JSON.stringify(x)); localStorage.setItem('b40:v1:onboarded', 'true') }, person)
   }
   await p.goto(base + path, { waitUntil: 'networkidle' })
   await p.waitForTimeout(450)
@@ -124,7 +124,7 @@ const overflow = (p) => p.evaluate(() => document.documentElement.scrollWidth - 
   const ctx = await b.newContext({ viewport: { width: 380, height: 820 }, isMobile: true, hasTouch: true })
   const p1 = await ctx.newPage()
   await p1.goto(base + '/')
-  await p1.evaluate(() => { localStorage.clear(); localStorage.setItem('b40:v1:person', JSON.stringify('ale')); localStorage.setItem('b40:v1:onboarded', 'true') })
+  await p1.evaluate(() => { localStorage.clear(); localStorage.setItem('b40:v1:lastSeenVersion', '999'); localStorage.setItem('b40:v1:person', JSON.stringify('ale')); localStorage.setItem('b40:v1:onboarded', 'true') })
   await p1.goto(base + '/#/info/viaggio', { waitUntil: 'networkidle' })
   await p1.waitForTimeout(400)
   const cb = p1.locator('input[data-viaggio-check="b3"]')

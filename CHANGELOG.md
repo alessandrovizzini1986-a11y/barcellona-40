@@ -173,3 +173,14 @@
 - **Pulsante "Apri il percorso su Maps"** in cima a ogni blocco nel Programma e nella card "Adesso" della vista Oggi, con icona `route` per i percorsi a piedi e `train-front` per quelli coi mezzi. Accanto, il totale sommato dalle tappe: chilometri e minuti a piedi per i percorsi pedonali, "Mezzi pubblici" per gli altri, dove il tempo di Google non è il nostro e non lo si finge. In modalità pioggia il pulsante avverte che El Born non è nel link.
 - Chi quella mezza giornata non c'è non vede il pulsante: l'ancoraggio è sulla prima tappa del blocco che quella persona vede davvero.
 - Nuova suite `scripts/qa/percorsi.mjs` (46 controlli).
+
+## Novità: chi rientra vede cosa è cambiato
+- **`data/changelog.json`**: le voci degli aggiornamenti, le più recenti in cima, con un numero di versione che cresce di uno alla volta. È l'unica cosa da aggiornare a mano quando il sito cambia.
+- **Pannello dal basso all'apertura** con le sole entry uscite dopo `b40:v1:lastSeenVersion`. Si chiude col pulsante "Ho capito", col tap fuori, con Esc o con lo swipe verso il basso: **in tutti i casi salva**, così non insegue nessuno.
+- **Al primo accesso in assoluto non compare**: chi apre il sito per la prima volta si ritroverebbe la cronologia di cose che non ha mai visto. Si salva solo la versione corrente e si parte allineati. "Primo accesso" vuol dire nessuna chiave `b40:v1:` in memoria; se `localStorage` è rotto vale lo stesso, perché un pannello che non può essere chiuso per sempre è peggio di nessun pannello.
+- Chi c'era **prima che il changelog esistesse** (chiave assente ma dati salvati) vede tutto lo storico, una volta sola.
+- **Pallino terracotta sulla tab Info** finché c'è qualcosa da leggere, e nuova sezione **"Novità"** come primo accordion con lo storico completo: le entry non lette hanno il puntino accanto alla data. Letto tutto, la sezione dice "Nessuna novità. Sei aggiornato." e resta consultabile.
+- **"Avvisa i ragazzi"** (solo Alessandro): apre WhatsApp con il testo già scritto dall'ultima entry, titolo e voci comprese, più l'indirizzo del sito.
+- **Cache**: il changelog è importato come modulo, quindi finisce nel bundle con l'hash nel nome — nessuna richiesta a `/data/changelog.json` a runtime (verificato leggendo le risorse caricate dalla pagina) e nessun modo di servire dati vecchi insieme a codice nuovo. Le regole `no-cache` su `/`, `/index.html` e `/data/*` in `public/_headers` sono rimaste dov'erano.
+- Le altre suite di QA partono "già aggiornate": il pannello è modale e in mezzo ai loro click non ci deve stare. A trovarlo è stato il QA stesso, con album e song che si sono bloccati al primo giro.
+- Nuova suite `scripts/qa/novita.mjs` (42 controlli).

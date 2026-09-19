@@ -47,7 +47,7 @@ async function vista(person, path) {
   const errs = []
   p.on('pageerror', (e) => errs.push(e.message))
   await p.goto(base + '/')
-  await p.evaluate((x) => { localStorage.clear(); localStorage.setItem('b40:v1:person', JSON.stringify(x)); localStorage.setItem('b40:v1:onboarded', 'true') }, person)
+  await p.evaluate((x) => { localStorage.clear(); localStorage.setItem('b40:v1:lastSeenVersion', '999'); localStorage.setItem('b40:v1:person', JSON.stringify(x)); localStorage.setItem('b40:v1:onboarded', 'true') }, person)
   await p.goto(base + path, { waitUntil: 'networkidle' })
   await p.waitForTimeout(500)
   return { p, ctx, errs }

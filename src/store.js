@@ -71,6 +71,9 @@ export const store = {
   // Modalità pioggia del venerdì: ottobre è il mese più piovoso a Barcellona
   get piove() { return read('piove', false) },
   set piove(v) { write('piove', !!v) },
+  // Ultima versione del changelog letta da questa persona, su questo telefono
+  get lastSeenVersion() { return read('lastSeenVersion', null) },
+  set lastSeenVersion(v) { write('lastSeenVersion', v) },
 
   get done() { return read('done', []) },
   isDone: (stopId) => read('done', []).includes(stopId),
@@ -100,6 +103,15 @@ export const store = {
     if (!obj || typeof obj.person !== 'string' || typeof obj.xp !== 'number' || !Array.isArray(obj.done)) throw new Error('Contenuto non valido')
     this.setScore(obj.person, { xp: obj.xp, done: obj.done, at: Date.now() })
     return obj
+  },
+
+  // Primo accesso in assoluto: nessuna chiave nostra in memoria. Se localStorage è rotto si risponde
+  // "vuoto", così il pannello delle novità non parte davanti a chi non potrebbe nemmeno chiuderlo per sempre.
+  storageVuoto() {
+    try {
+      for (let i = 0; i < localStorage.length; i++) if ((localStorage.key(i) || '').startsWith(PREFIX)) return false
+      return true
+    } catch { return true }
   },
 
   storageAvailable() { try { const k = PREFIX + '__t'; localStorage.setItem(k, '1'); localStorage.removeItem(k); return true } catch { return false } }

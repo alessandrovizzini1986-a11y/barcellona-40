@@ -13,7 +13,7 @@ async function open(person, path, { storageBroken = false, permissions = [] } = 
   p.on('pageerror', (e) => errors.push(e.message))
   if (storageBroken) await p.addInitScript(() => { Object.defineProperty(window, 'localStorage', { get() { throw new DOMException('QuotaExceededError') } }) })
   await p.goto(base + '/')
-  if (!storageBroken) await p.evaluate((person) => { localStorage.clear(); if (person) localStorage.setItem('b40:v1:person', JSON.stringify(person)) }, person)
+  if (!storageBroken) await p.evaluate((person) => { localStorage.clear(); localStorage.setItem('b40:v1:lastSeenVersion', '999'); if (person) localStorage.setItem('b40:v1:person', JSON.stringify(person)) }, person)
   await p.goto(base + path, { waitUntil: 'networkidle' })
   await p.waitForTimeout(400)
   return { p, ctx, errors }

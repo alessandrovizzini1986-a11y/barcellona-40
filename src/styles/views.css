@@ -155,3 +155,15 @@
 .percorso__txt small{ color:var(--ink-2); font-size:var(--fs-0); font-weight:500; line-height:1.3; }
 .timeline__percorso{ margin-top:var(--space-2); }
 .tile .percorso{ margin-top:var(--space-2); }
+
+/* Novità: pannello e storico */
+.novita{ display:flex; flex-direction:column; gap:var(--space-4); }
+.novita__entry{ display:flex; flex-direction:column; gap:var(--space-1); padding-left:var(--space-4); border-left:3px solid var(--line-2); }
+.novita__data{ display:flex; align-items:center; gap:6px; font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); }
+.novita__punto{ width:8px; height:8px; border-radius:50%; background:var(--terracotta); flex:none; }
+.novita__titolo{ font-size:var(--fs-2); font-weight:600; line-height:1.2; }
+.novita__voci{ display:flex; flex-direction:column; gap:var(--space-1); color:var(--ink-2); font-size:var(--fs-0); line-height:1.45; }
+.novita__voci li{ position:relative; padding-left:var(--space-4); }
+.novita__voci li::before{ content:""; position:absolute; left:0; top:.55em; width:6px; height:6px; border-radius:2px; background:var(--acqua); transform:rotate(12deg); }
+.tab__dot{ position:absolute; top:6px; margin-left:18px; width:8px; height:8px; border-radius:50%; background:var(--terracotta); box-shadow:0 0 0 2px var(--bg-2); }
+.tab{ position:relative; }

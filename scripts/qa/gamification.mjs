@@ -12,7 +12,7 @@ async function open(person) {
   const ctx = await b.newContext({ viewport: { width: 380, height: 800 }, isMobile: true, hasTouch: true })
   const p = await ctx.newPage(); const errs = []
   p.on('pageerror', (e) => errs.push(e.message))
-  await p.goto(base + '/'); await p.evaluate((x) => { localStorage.clear(); localStorage.setItem('b40:v1:person', JSON.stringify(x)) }, person)
+  await p.goto(base + '/'); await p.evaluate((x) => { localStorage.clear(); localStorage.setItem('b40:v1:lastSeenVersion', '999'); localStorage.setItem('b40:v1:person', JSON.stringify(x)) }, person)
   return { p, ctx, errs }
 }
 const go = async (p, hash) => { await p.goto(`${base}/${NOW}#/${hash}`, { waitUntil: 'networkidle' }); await p.waitForTimeout(350) }

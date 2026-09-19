@@ -10,16 +10,20 @@ import { albumBanner, bindAlbum } from '../ui/album.js'
 import { shareAlbum, bindShareAlbum } from '../ui/share-album.js'
 import { songCard, bindSong } from '../ui/song.js'
 import { sezioneViaggio, bindViaggio } from '../ui/viaggio.js'
+import { sezioneNovita } from '../ui/novita.js'
+import { nonLette } from '../novita.js'
 
 const sec = (id, title, body, open = false) => `<details id="sec-${id}" ${open ? 'open' : ''}><summary>${esc(title)}${icon('chevron')}</summary><div class="acc__body">${body}</div></details>`
 
 export async function render(root, { person, sub, header }) {
   const p = personById(person)
-  const openId = ['profilo', 'verifiche', 'foto', 'canzone', 'viaggio'].includes(sub) ? sub : null
+  const openId = ['profilo', 'verifiche', 'foto', 'canzone', 'viaggio', 'novita'].includes(sub) ? sub : null
+  const nuove = nonLette().length
   const openChecks = checks.filter((c) => !store.isChecked(c.id)).length
 
   root.innerHTML = header('Le cose da sapere, in un posto solo') + `<section class="view">
     <div class="acc">
+    ${sec('novita', `Novità${nuove ? ` (${nuove})` : ''}`, sezioneNovita(person), openId === 'novita' || nuove > 0)}
     ${sec('viaggio', 'Viaggio', `
       <p>Voli, parcheggio e lounge in un posto solo. Il QR del P2 è qui dentro: alla colonnina non serve cercarlo nelle mail.</p>
       ${sezioneViaggio(person)}`, !openId || openId === 'viaggio')}

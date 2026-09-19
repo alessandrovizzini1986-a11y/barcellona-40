@@ -15,7 +15,7 @@ for (const [name, path] of shots) {
   p.on('pageerror', (e) => errors.push(`${name}: ${e.message}`))
   p.on('console', (m) => { if (m.type() === 'error') errors.push(`${name}: console ${m.text()}`) })
   await p.goto(base + '/')
-  await p.evaluate((person) => { try { localStorage.clear(); if (person) localStorage.setItem('b40:v1:person', JSON.stringify(person)) } catch {} }, opts.person || null)
+  await p.evaluate((person) => { try { localStorage.clear(); localStorage.setItem('b40:v1:lastSeenVersion', '999'); if (person) localStorage.setItem('b40:v1:person', JSON.stringify(person)) } catch {} }, opts.person || null)
   await p.goto(base + path, { waitUntil: 'networkidle' })
   await p.waitForTimeout(700)
   const overflow = await p.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)

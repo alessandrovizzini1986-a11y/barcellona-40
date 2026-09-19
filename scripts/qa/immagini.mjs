@@ -49,7 +49,7 @@ async function vista(person, path) {
   const errs = []
   p.on('pageerror', (e) => errs.push(e.message))
   await p.goto(base + '/')
-  await p.evaluate((x) => { localStorage.clear(); localStorage.setItem('b40:v1:person', JSON.stringify(x)); localStorage.setItem('b40:v1:onboarded', 'true') }, person)
+  await p.evaluate((x) => { localStorage.clear(); localStorage.setItem('b40:v1:lastSeenVersion', '999'); localStorage.setItem('b40:v1:person', JSON.stringify(x)); localStorage.setItem('b40:v1:onboarded', 'true') }, person)
   await p.goto(base + path, { waitUntil: 'networkidle' })
   await p.evaluate(async () => { for (let y = 0; y < document.body.scrollHeight; y += 400) { window.scrollTo(0, y); await new Promise((r) => setTimeout(r, 60)) } window.scrollTo(0, 0) })
   await p.waitForFunction(() => [...document.querySelectorAll('.card__foto img')].every((i) => i.complete), null, { timeout: 25000 }).catch(() => {})
@@ -108,7 +108,7 @@ for (const [giorno, attese, crediti0] of [['ven', 15, 9], ['sab', 6, 3], ['dom',
   const ctx = await b.newContext({ viewport: { width: 380, height: 820 } })
   const p = await ctx.newPage()
   await p.goto(base + '/')
-  await p.evaluate(() => { localStorage.clear(); localStorage.setItem('b40:v1:person', JSON.stringify('ale')); localStorage.setItem('b40:v1:onboarded', 'true') })
+  await p.evaluate(() => { localStorage.clear(); localStorage.setItem('b40:v1:lastSeenVersion', '999'); localStorage.setItem('b40:v1:person', JSON.stringify('ale')); localStorage.setItem('b40:v1:onboarded', 'true') })
   await p.route('**/assets/tappe/*', (r) => r.abort())
   await p.goto(base + '/#/programma/ven', { waitUntil: 'networkidle' })
   await p.waitForTimeout(1500)

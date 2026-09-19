@@ -9,7 +9,7 @@ async function open(person, path, opts = {}) {
   const ctx = await b.newContext({ viewport: { width: 380, height: 800 }, isMobile: true, hasTouch: true, ...opts })
   const p = await ctx.newPage(); const errs = [], reqs = []
   p.on('pageerror', (e) => errs.push(e.message)); p.on('request', (r) => reqs.push(r.url()))
-  await p.goto(base + '/'); await p.evaluate((x) => { localStorage.clear(); localStorage.setItem('b40:v1:person', JSON.stringify(x)) }, person)
+  await p.goto(base + '/'); await p.evaluate((x) => { localStorage.clear(); localStorage.setItem('b40:v1:lastSeenVersion', '999'); localStorage.setItem('b40:v1:person', JSON.stringify(x)) }, person)
   await p.goto(base + path, { waitUntil: 'networkidle' }); await p.waitForTimeout(600)
   return { p, ctx, errs, reqs }
 }
@@ -41,7 +41,7 @@ async function open(person, path, opts = {}) {
 }
 {
   const ctx = await b.newContext({ viewport: { width: 1100, height: 700 } }); const p = await ctx.newPage()
-  await p.goto(base + '/'); await p.evaluate(() => { localStorage.clear(); localStorage.setItem('b40:v1:person', JSON.stringify('ale')) })
+  await p.goto(base + '/'); await p.evaluate(() => { localStorage.clear(); localStorage.setItem('b40:v1:lastSeenVersion', '999'); localStorage.setItem('b40:v1:person', JSON.stringify('ale')) })
   await p.goto(base + '/#/info', { waitUntil: 'networkidle' }); await p.waitForTimeout(500)
   ok('desktop: il video copre tutta la card', await p.evaluate(() => { const s = document.querySelector('.song').getBoundingClientRect(), v = document.querySelector('.song__canvas').getBoundingClientRect(); return Math.abs(v.height - s.height) <= 5 /* bordo 2px per lato */ }))
   await ctx.close()
@@ -56,7 +56,7 @@ async function open(person, path, opts = {}) {
 }
 {
   const ctx = await b.newContext({ viewport: { width: 380, height: 800 } }); const p = await ctx.newPage()
-  await p.goto(base + '/'); await p.evaluate(() => { localStorage.clear(); localStorage.setItem('b40:v1:person', JSON.stringify('monne')) })
+  await p.goto(base + '/'); await p.evaluate(() => { localStorage.clear(); localStorage.setItem('b40:v1:lastSeenVersion', '999'); localStorage.setItem('b40:v1:person', JSON.stringify('monne')) })
   await p.goto(base + '/canzone.html'); await p.waitForTimeout(900)
   ok('canzone.html porta alla card della canzone', (await p.evaluate(() => location.hash)) === '#/info/canzone' && (await p.locator('.song').count()) === 1, await p.url())
   await ctx.close()

@@ -1,0 +1,81 @@
+{
+  "entries": [
+    {
+      "v": 8,
+      "data": "2026-09-19",
+      "titolo": "Il sito ti dice cosa è cambiato",
+      "voci": [
+        "Quando rientri, un pannello ti mostra solo quello che è uscito dall'ultima volta",
+        "In Info c'è lo storico completo, sempre consultabile",
+        "Enoteca Taps: indirizzo e coordinate corretti"
+      ]
+    },
+    {
+      "v": 7,
+      "data": "2026-09-19",
+      "titolo": "Pranzo di domenica cambiato",
+      "voci": [
+        "Can Fisher sostituito con El Mirador, prenotato per le 13:30",
+        "I Bunkers aprono alle 16:00, non prima: orari della domenica rifatti",
+        "Aggiunti i link ai percorsi completi su Maps"
+      ]
+    },
+    {
+      "v": 6,
+      "data": "2026-09-19",
+      "titolo": "Venerdì con i minuti veri e il piano pioggia",
+      "voci": [
+        "Ogni tappa della mattina dice quanto ci si sta",
+        "Il jamón si compra dopo pranzo: resta fuori dal frigo un'ora invece di tre",
+        "Toggle \"Piove\": entra El Born al coperto e gli orari si rifanno da soli",
+        "Bar Joan non prende prenotazioni: alle 13:15 sei dentro"
+      ]
+    },
+    {
+      "v": 5,
+      "data": "2026-09-19",
+      "titolo": "Una foto per ogni tappa",
+      "voci": [
+        "Venticinque immagini: foto vere da Wikimedia Commons e card disegnate dove non c'era niente di libero",
+        "Autore e licenza sotto ogni foto, come vuole la licenza"
+      ]
+    },
+    {
+      "v": 4,
+      "data": "2026-09-19",
+      "titolo": "Venerdì mattina a livello strada",
+      "voci": [
+        "Chao Pescao esce, entra il pranzo al Bar Joan dentro il mercato",
+        "Santa Maria del Mar, Carrer de Montcada, Pont del Bisbe e Sant Felip Neri",
+        "4,3 km in 55 minuti effettivi, spalmati su cinque ore"
+      ]
+    },
+    {
+      "v": 3,
+      "data": "2026-09-19",
+      "titolo": "Sezione Viaggio",
+      "voci": [
+        "Voli, parcheggio P2 col QR a schermo pieno, lounge del ritorno",
+        "Checklist del bagaglio a mano che resta spuntata"
+      ]
+    },
+    {
+      "v": 2,
+      "data": "2026-09-18",
+      "titolo": "Anteprime su WhatsApp e rigori in scala",
+      "voci": [
+        "Il link del sito e quello del gioco mostrano l'anteprima invece del vuoto",
+        "Porta e portiere del gioco rimessi in proporzione"
+      ]
+    },
+    {
+      "v": 1,
+      "data": "2026-09-18",
+      "titolo": "Il sito nuovo",
+      "voci": [
+        "Oggi, Programma, Mappa, Missioni e Info",
+        "Album condiviso, la canzone e il gioco dei rigori"
+      ]
+    }
+  ]
+}

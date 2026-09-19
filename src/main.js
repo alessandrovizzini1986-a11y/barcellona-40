@@ -16,6 +16,8 @@ import { esc } from './ui/html.js'
 import { icon } from './ui/icons.js'
 import { renderOnboarding } from './views/onboarding.js'
 import { easterEgg } from './ui/egg.js'
+import { ciSonoNovita, segnaLette } from './novita.js'
+import { apriNovita } from './ui/novita.js'
 
 const views = {
   oggi: () => import('./views/oggi.js'),
@@ -64,14 +66,14 @@ async function route({ route, sub, params }) {
   const my = ++token
   if (typeof cleanup === 'function') { try { cleanup() } catch { /* noop */ } cleanup = null }
   if (!store.person) {
-    renderTabbar(route, { hideMissions: true })
+    renderTabbar(route, { hideMissions: true, novita: ciSonoNovita() })
     cleanup = renderOnboarding(app, () => navigate('oggi'))
     return
   }
   if (route === 'speedrun' && store.person !== 'monne') { navigate('oggi'); return }
   // La modalità coro è a schermo pieno: la tab bar sparisce (#tabbar:empty non si mostra)
   if (route === 'coro') document.getElementById('tabbar').innerHTML = ''
-  else renderTabbar(route, { hideMissions: store.gamificationHidden })
+  else renderTabbar(route, { hideMissions: store.gamificationHidden, novita: ciSonoNovita() })
   const mod = await views[route]()
   if (my !== token) return
   cleanup = await mod.render(app, { route, sub, params, person: store.person, header })
@@ -84,10 +86,17 @@ applyTheme()
 applyMosaic(now())
 startRouter(route)
 
+// NOVITÀ. Al primo accesso in assoluto non si mostra niente: si parte allineati, perché la cronologia
+// di cose mai viste non è una novità per nessuno. Dalla seconda volta in poi, quello che è uscito dopo.
+if (store.lastSeenVersion == null && store.storageVuoto()) segnaLette()
+else apriNovita()
+
 // Ri-render leggero quando cambia lo stato che influenza header/tab
 store.subscribe((key) => {
   if (key === 'theme') applyTheme()
   if (key === 'gamificationHidden' || key === 'person') route(parseHash())
+  // letto il pannello: sparisce il pallino sulla tab e i puntini nello storico
+  if (key === 'lastSeenVersion' && store.person) route(parseHash())
 })
 
 // Aggiorna il colore del giorno a cavallo della mezzanotte (senza ricaricare)

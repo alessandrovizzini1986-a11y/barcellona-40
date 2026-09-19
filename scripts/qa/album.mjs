@@ -23,7 +23,7 @@ async function open(person, path) {
   const errs = []
   p.on('pageerror', (e) => errs.push(e.message))
   await p.goto(base + '/')
-  await p.evaluate((x) => { localStorage.clear(); localStorage.setItem('b40:v1:person', JSON.stringify(x)) }, person)
+  await p.evaluate((x) => { localStorage.clear(); localStorage.setItem('b40:v1:lastSeenVersion', '999'); localStorage.setItem('b40:v1:person', JSON.stringify(x)) }, person)
   await p.goto(base + path, { waitUntil: 'networkidle' })
   await p.waitForTimeout(500)
   return { p, ctx, errs }
@@ -126,9 +126,9 @@ for (const [person, path] of [['ale', '/#/oggi'], ['monne', '/#/info'], ['giulio
 // Info: "Viaggio" primo accordion, "Foto" subito dopo, entrambi aperti
 {
   const { p, ctx } = await open('ale', '/#/info')
-  ok('Viaggio è il primo accordion, Foto il secondo', await p.evaluate(() => {
+  ok('Novità è il primo accordion, poi Viaggio e Foto', await p.evaluate(() => {
     const ids = [...document.querySelectorAll('.acc > details')].map((d) => d.id)
-    return ids[0] === 'sec-viaggio' && ids[1] === 'sec-foto'
+    return ids[0] === 'sec-novita' && ids[1] === 'sec-viaggio' && ids[2] === 'sec-foto'
   }))
   ok('Foto aperto di default', await p.evaluate(() => document.querySelector('#sec-foto').open))
   await ctx.close()
