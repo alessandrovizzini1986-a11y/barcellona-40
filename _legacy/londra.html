@@ -133,9 +133,24 @@
   details.acc{background:linear-gradient(180deg,var(--night-1),var(--night-2));border:1px solid var(--line);
     border-radius:18px;box-shadow:var(--shadow-card);margin-top:14px;overflow:hidden}
   details.acc[open]{border-color:var(--line-gold)}
-  details.acc summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:13px;padding:16px 18px;
+  details.acc summary{list-style:none;cursor:pointer;display:block;padding:16px 18px;
     -webkit-tap-highlight-color:transparent}
   details.acc summary::-webkit-details-marker{display:none}
+  .srow{display:flex;align-items:center;gap:13px}
+
+  /* meteo del giorno: sta nel summary, quindi resta visibile anche a giornata chiusa */
+  .meteo{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;margin-top:11px;padding-top:10px;
+    border-top:1px dashed var(--line);font-size:12.5px;color:var(--muted)}
+  .meteo b{color:var(--ink);font-weight:700}
+  .meteo .mt{display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+  .meteo .ico{font-size:15px}
+  .meteo .pioggia{font-weight:800;font-size:14px;font-variant-numeric:tabular-nums}
+  .meteo .pioggia.bassa{color:#8fe0b6}
+  .meteo .pioggia.media{color:var(--gold-soft)}
+  .meteo .pioggia.alta{color:#ff9d94}
+  .meteo .sole{margin-left:auto;font-variant-numeric:tabular-nums}
+  .meteo-fonte{flex-basis:100%;font-size:10.5px;font-style:italic;color:#79839a;margin-top:-2px}
+  @media(max-width:380px){.meteo .sole{margin-left:0}}
   .daynum{flex:none;width:46px;height:46px;border-radius:13px;display:flex;flex-direction:column;align-items:center;justify-content:center;
     font-family:"Playfair Display",serif;font-weight:700;font-size:19px;line-height:1;border:1px solid var(--line-gold)}
   .daynum small{font-family:system-ui,sans-serif;font-weight:600;font-size:8.5px;letter-spacing:.1em;margin-top:2px;opacity:.8}
@@ -396,7 +411,7 @@
         <div class="chip2"><div class="k">Check-in</div><div class="v">15:00</div></div>
         <div class="chip2"><div class="k">Check-out</div><div class="v">10:30</div></div>
       </div>
-      <p class="ci-co-note">⚠️ Impatta domenica (arrivo ~10:00, camera non ancora pronta) e martedì (camera libera alle 10:30, volo solo alle 18:10). Soluzione in entrambi i casi: <b>deposito bagagli in reception</b> — da confermare disponibilità con la struttura.</p>
+      <p class="ci-co-note">🎒 I due buchi (domenica prima delle 15:00, martedì dopo le 10:30) non sono un problema: <b>si viaggia con il solo bagaglio a mano sotto il sedile</b> e gli zaini restano in spalla. Da sapere però: il check-in è self-service, <b>una reception dove lasciare i bagagli potrebbe non esserci</b> — va chiarito con l’host prima di un eventuale viaggio con la valigia.</p>
       <p class="ci-co-note">🔑 Check-in autonomo con chiave digitale <b>Clevio</b> — arriva via email ~2 giorni prima dell'arrivo, ingresso libero dopo le 15:00. Verificare che il link/dominio sia legittimo (<b>clevio.io</b> o dominio ufficiale) e che non venga richiesto alcun pagamento in quel passaggio.</p>
       <p class="meta" style="margin-top:8px">Host confermato: nessuna unità sostitutiva (sarà esattamente l'appartamento fotografato), nessun costo extra, contatto diretto tramite numero Booking.com.</p>
       <p class="why"><b>Perché questa zona:</b> è il punto di minor cammino cumulativo per la giornata di lunedì (la Royal walk, sette tappe), tutte raggiungibili in 12–21 minuti a piedi, zero attraversamenti del fiume. Si sacrifica la comodità verso Southbank e South Kensington (serve la metro), accettabile perché cadono su giornate più leggere (domenica e martedì).</p>
@@ -432,9 +447,17 @@
 
     <details class="acc dom" open>
       <summary>
-        <span class="daynum">15<small>DOM</small></span>
-        <span class="dtit"><h3>Southbank</h3><p>Arrivo, acquario e ruota al tramonto</p></span>
-        <span class="chev">▼</span>
+        <span class="srow">
+          <span class="daynum">15<small>DOM</small></span>
+          <span class="dtit"><h3>Southbank</h3><p>Arrivo, acquario e ruota al tramonto</p></span>
+          <span class="chev">▼</span>
+        </span>
+        <span class="meteo" data-giorno="2026-11-15">
+          <span class="mt"><span class="ico">🌤️</span> <b>13°</b> / 8°</span>
+          <span class="mt">pioggia <span class="pioggia media">30%</span></span>
+          <span class="mt sole">↑ 07:18 · ↓ 16:12</span>
+          <span class="meteo-fonte">media degli ultimi 10 anni, non una previsione</span>
+        </span>
       </summary>
       <div class="dbody">
         <article class="tcard">
@@ -466,40 +489,30 @@
           </div>
           <div class="tcard__body">
             <h4>Arrivo a Heathrow</h4>
-            <p>Terminal 5, quello di British Airways: controllo passaporti e ritiro bagagli.</p>
+            <p>Terminal 5, quello di British Airways. Solo controllo passaporti: senza bagaglio in stiva non c’è nessun nastro da aspettare.</p>
           </div>
           <p class="tcard__credito">foto: <a href="https://commons.wikimedia.org/wiki/File:Terminal_5_at_London_Heathrow_Airport,_2008.jpg" target="_blank" rel="noopener">Warren Rohner / CC BY-SA 2.0</a></p>
         </article>
         <article class="tcard">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/bakerloo.webp" width="800" height="450" alt="Una banchina della metropolitana di Londra con il treno fermo e il cartello della stazione" loading="lazy" decoding="async">
-            <span class="tcard__ora">09:45</span>
+            <span class="tcard__ora">09:30</span>
           </div>
           <div class="tcard__body">
             <h4>In metro verso il centro</h4>
-            <p>Piccadilly line diretta da Heathrow a Piccadilly Circus, circa 50 minuti. Per Southbank si prende poi la Bakerloo fino a Waterloo: zero cambi.</p>
+            <p>Piccadilly line diretta da Heathrow a Piccadilly Circus, circa 50 minuti; lì si passa sulla Bakerloo, diretta fino a Waterloo. Si tira dritto a Southbank: con gli zaini in spalla non serve passare da casa.</p>
           </div>
           <p class="tcard__credito">foto: <a href="https://commons.wikimedia.org/wiki/File:Edgware_Road-Bakerloo_Line-Northbound.jpg" target="_blank" rel="noopener">Chris McKenna (Thryduulf) / CC BY-SA 4.0</a></p>
         </article>
-        <article class="tcard">
-          <div class="tcard__foto">
-            <img src="assets/tappe/londra/apt.svg" width="800" height="450" alt="Illustrazione dell’appartamento di Beak Street" loading="lazy" decoding="async">
-            <span class="tcard__ora">10:45</span>
-          </div>
-          <div class="tcard__body">
-            <h4>79 Beak Street: deposito bagagli</h4>
-            <p>La camera è pronta dalle 15:00, ma le valigie si lasciano subito e si esce leggeri.</p>
-            <a class="gmap" href="https://www.google.com/maps/search/?api=1&amp;query=79%20Beak%20Street%2C%20Soho%2C%20London%20W1F%209SU" target="_blank" rel="noopener">📍 Apri in Google Maps</a>
-          </div>
-        </article>
+        
         <article class="tcard">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/southbank.webp" width="800" height="450" alt="Le scale gialle del Southbank Centre, con il palazzo in cemento e la gente che passa" loading="lazy" decoding="async">
-            <span class="tcard__ora">11:45</span>
+            <span class="tcard__ora">10:45</span>
           </div>
           <div class="tcard__body">
             <h4>Southbank Centre e Winter Market</h4>
-            <p>Pranzo con lo street food del mercatino di Natale, lungo il fiume.</p>
+            <p>Pranzo con lo street food del mercatino di Natale, lungo il fiume. Si arriva un’ora prima di quanto previsto all’inizio, perché non si passa da casa: se le bancarelle non hanno ancora aperto, il lungofiume regge l’attesa.</p>
             <a class="gmap" href="https://www.google.com/maps/search/?api=1&amp;query=Southbank%20Centre%20London" target="_blank" rel="noopener">📍 Apri in Google Maps</a>
           </div>
           <p class="tcard__credito">foto: <a href="https://commons.wikimedia.org/wiki/File:Yellow_steps_at_the_Southbank_Centre,_London_-_geograph.org.uk_-_7261180.jpg" target="_blank" rel="noopener">Robin Stott / CC BY-SA 2.0</a></p>
@@ -507,11 +520,11 @@
         <article class="tcard">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/sealife.webp" width="800" height="450" alt="Il tunnel sottomarino dell’acquario, con la volta di vetro e i pesci sopra la testa" loading="lazy" decoding="async">
-            <span class="tcard__ora">13:15</span>
+            <span class="tcard__ora">12:45</span>
           </div>
           <div class="tcard__body">
             <h4>SEA LIFE London Aquarium</h4>
-            <p>Squali, pinguini e il tunnel sottomarino. È dentro County Hall, a due passi dalla ruota.</p>
+            <p>Squali, pinguini e il tunnel sottomarino, dentro County Hall. Zaini fino a 30 litri si portano dentro; guardaroba non c’è, ma il deposito ufficiale è nello stesso edificio, alla biglietteria del London Eye: 5 £ a collo, ritiro entro le 19:00.</p>
             <a class="gmap" href="https://www.google.com/maps/search/?api=1&amp;query=SEA%20LIFE%20London%20Aquarium" target="_blank" rel="noopener">📍 Apri in Google Maps</a>
           </div>
           <p class="tcard__credito">foto: <a href="https://commons.wikimedia.org/wiki/File:Underwater_Walk_of_Sea_Life_London_Aquarium.jpg" target="_blank" rel="noopener">ʘx / CC BY-SA 4.0</a></p>
@@ -523,7 +536,7 @@
           </div>
           <div class="tcard__body">
             <h4>London Eye</h4>
-            <p>Giro di mezz’ora. A metà novembre il sole cala verso le 16:10: si sale con la luce e si scende con la città accesa.</p>
+            <p>Giro di mezz’ora. A metà novembre il sole cala verso le 16:10: si sale con la luce e si scende con la città accesa. A bordo sono ammesse borse fino a 46 × 33 × 20 cm.</p>
             <a class="gmap" href="https://www.google.com/maps/search/?api=1&amp;query=London%20Eye" target="_blank" rel="noopener">📍 Apri in Google Maps</a>
           </div>
           <p class="tcard__credito">foto: <a href="https://commons.wikimedia.org/wiki/File:London_Eye_by_Day.jpg" target="_blank" rel="noopener">Danbu14 / CC BY-SA 3.0</a></p>
@@ -535,7 +548,7 @@
           </div>
           <div class="tcard__body">
             <h4>Spesa da Lina Stores</h4>
-            <p>Gastronomia italiana in Brewer Street, 2 minuti da casa: pasta fresca, salumi, sughi. La domenica chiude alle 18:00. Poi check-in con la chiave Clevio e cena in appartamento.</p>
+            <p>Gastronomia italiana in Brewer Street, 2 minuti da casa: pasta fresca, salumi, sughi. La domenica chiude alle 18:00, quindi è la prima cosa da fare rientrando.</p>
             <a class="gmap" href="https://www.google.com/maps/search/?api=1&amp;query=Lina%20Stores%20Brewer%20Street%20London" target="_blank" rel="noopener">📍 Apri in Google Maps</a>
           </div>
           <p class="tcard__credito">foto: <a href="https://commons.wikimedia.org/wiki/File:Lina_Stores,_Soho,_W1.jpg" target="_blank" rel="noopener">Ewan-M / CC BY-SA 2.0</a></p>
@@ -543,23 +556,42 @@
         <article class="tcard">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/carnaby.webp" width="800" height="450" alt="L’arco luminoso con la scritta Carnaby sopra la strada affollata, di sera" loading="lazy" decoding="async">
-            <span class="tcard__ora">18:30</span>
+            <span class="tcard__ora">17:45</span>
           </div>
           <div class="tcard__body">
             <h4>Luci di Carnaby Street</h4>
-            <p>Sono la via di casa: due minuti a piedi, si vedono uscendo dopo cena.</p>
+            <p>Sono la via di casa: due minuti a piedi, e a quell’ora sono accese da un pezzo — a metà novembre buio alle 16:15.</p>
             <a class="gmap" href="https://www.google.com/maps/search/?api=1&amp;query=Carnaby%20Street%20London" target="_blank" rel="noopener">📍 Apri in Google Maps</a>
           </div>
           <p class="tcard__credito">foto: <a href="https://commons.wikimedia.org/wiki/File:Carnaby_Street_Christmas_Lights_2019_-_geograph.org.uk_-_6329567.jpg" target="_blank" rel="noopener">Christine Matthews / CC BY-SA 2.0</a></p>
+        </article>
+<article class="tcard">
+          <div class="tcard__foto">
+            <img src="assets/tappe/londra/apt.svg" width="800" height="450" alt="Illustrazione dell’appartamento di Beak Street" loading="lazy" decoding="async">
+            <span class="tcard__ora">18:15</span>
+          </div>
+          <div class="tcard__body">
+            <h4>Check-in, zaini giù e cena</h4>
+            <p>Chiave digitale Clevio, ingresso libero. Gli zaini si posano solo adesso, dopo averli portati tutto il giorno. Cena in appartamento con la spesa di Lina Stores.</p>
+            <a class="gmap" href="https://www.google.com/maps/search/?api=1&amp;query=79%20Beak%20Street%2C%20Soho%2C%20London%20W1F%209SU" target="_blank" rel="noopener">📍 Apri in Google Maps</a>
+          </div>
         </article>
       </div>
     </details>
 
     <details class="acc lun">
       <summary>
-        <span class="daynum">16<small>LUN</small></span>
-        <span class="dtit"><h3>Royal walk e museo</h3><p>Quasi tutto a piedi, una sola tratta in metro</p></span>
-        <span class="chev">▼</span>
+        <span class="srow">
+          <span class="daynum">16<small>LUN</small></span>
+          <span class="dtit"><h3>Royal walk e museo</h3><p>Quasi tutto a piedi, una sola tratta in metro</p></span>
+          <span class="chev">▼</span>
+        </span>
+        <span class="meteo" data-giorno="2026-11-16">
+          <span class="mt"><span class="ico">🌤️</span> <b>11°</b> / 7°</span>
+          <span class="mt">pioggia <span class="pioggia media">40%</span></span>
+          <span class="mt sole">↑ 07:19 · ↓ 16:10</span>
+          <span class="meteo-fonte">media degli ultimi 10 anni, non una previsione</span>
+        </span>
       </summary>
       <div class="dbody">
         <article class="tcard">
@@ -688,9 +720,17 @@
 
     <details class="acc mar">
       <summary>
-        <span class="daynum">17<small>MAR</small></span>
-        <span class="dtit"><h3>Covent Garden e rientro</h3><p>Mattina leggera, poi Heathrow</p></span>
-        <span class="chev">▼</span>
+        <span class="srow">
+          <span class="daynum">17<small>MAR</small></span>
+          <span class="dtit"><h3>Covent Garden e rientro</h3><p>Mattina leggera, poi Heathrow</p></span>
+          <span class="chev">▼</span>
+        </span>
+        <span class="meteo" data-giorno="2026-11-17">
+          <span class="mt"><span class="ico">🌤️</span> <b>11°</b> / 6°</span>
+          <span class="mt">pioggia <span class="pioggia media">30%</span></span>
+          <span class="mt sole">↑ 07:21 · ↓ 16:09</span>
+          <span class="meteo-fonte">media degli ultimi 10 anni, non una previsione</span>
+        </span>
       </summary>
       <div class="dbody">
         <article class="tcard">
@@ -699,8 +739,8 @@
             <span class="tcard__ora">10:30</span>
           </div>
           <div class="tcard__body">
-            <h4>Check-out, bagagli in deposito</h4>
-            <p>La camera si lascia alle 10:30; le valigie restano in struttura fino al pomeriggio.</p>
+            <h4>Check-out, zaini in spalla</h4>
+            <p>La camera si lascia alle 10:30. Con solo bagaglio a mano non serve nessun deposito: gli zaini vengono a Covent Garden e poi in aeroporto.</p>
             <a class="gmap" href="https://www.google.com/maps/search/?api=1&amp;query=79%20Beak%20Street%2C%20Soho%2C%20London%20W1F%209SU" target="_blank" rel="noopener">📍 Apri in Google Maps</a>
           </div>
         </article>
@@ -718,14 +758,36 @@
         </article>
         <article class="tcard">
           <div class="tcard__foto">
+            <img src="assets/tappe/londra/bakerloo.webp" width="800" height="450" alt="Una banchina della metropolitana di Londra con il treno fermo e il cartello della stazione" loading="lazy" decoding="async">
+            <span class="tcard__ora">15:15</span>
+          </div>
+          <div class="tcard__body">
+            <h4>Partenza per Heathrow</h4>
+            <p>Entro le 15:15–15:30, limite per stare larghi. Gli zaini sono già con voi dal check-out, quindi si parte da dove siete: Piccadilly line diretta da Piccadilly Circus o da Covent Garden con un cambio.</p>
+          </div>
+          <p class="tcard__credito">foto: <a href="https://commons.wikimedia.org/wiki/File:Edgware_Road-Bakerloo_Line-Northbound.jpg" target="_blank" rel="noopener">Chris McKenna (Thryduulf) / CC BY-SA 4.0</a></p>
+        </article>
+        <article class="tcard">
+          <div class="tcard__foto">
             <img src="assets/tappe/londra/lhr_dep.webp" width="800" height="450" alt="La sala partenze del Terminal 5 di Heathrow, con i tabelloni e le sedute" loading="lazy" decoding="async">
             <span class="tcard__ora">16:10</span>
           </div>
           <div class="tcard__body">
             <h4>Heathrow, Terminal 5 · BA546</h4>
-            <p>Uscita da casa entro le 15:15–15:30, Piccadilly line diretta da Piccadilly Circus: circa 50 minuti.</p>
+            <p>Circa 50 minuti di metro dal centro. Check-in, controlli e gate: il volo parte dal Terminal 5.</p>
           </div>
           <p class="tcard__credito">foto: <a href="https://commons.wikimedia.org/wiki/File:Departures_Terminal_5,_London_Heathrow_Airport_(33215594911).jpg" target="_blank" rel="noopener">Andrew Milligan sumo / CC BY 2.0</a></p>
+        </article>
+        <article class="tcard">
+          <div class="tcard__foto">
+            <img src="assets/tappe/londra/ba.webp" width="800" height="450" alt="Un Airbus A320neo in livrea British Airways in volo, con il carrello già fuori" loading="lazy" decoding="async">
+            <span class="tcard__ora">18:10</span>
+          </div>
+          <div class="tcard__body">
+            <h4>Volo BA546</h4>
+            <p>LHR → BLQ su Airbus A320: 2 ore e 15 di volo. In Italia si riporta avanti l’orologio di un’ora.</p>
+          </div>
+          <p class="tcard__credito">foto: <a href="https://commons.wikimedia.org/wiki/File:20251011_British_Airways_G-TTNN_EGLL.jpg" target="_blank" rel="noopener">Alex Noble / CC0</a></p>
         </article>
         <article class="tcard">
           <div class="tcard__foto">
@@ -734,7 +796,7 @@
           </div>
           <div class="tcard__body">
             <h4>Atterraggio a Bologna</h4>
-            <p>Volo BA546 delle 18:10 su Airbus A320: 2 ore e 15, si arriva alle 21:25.</p>
+            <p>Si atterra al Marconi alle 21:25, ora italiana.</p>
           </div>
           <p class="tcard__credito">foto: <a href="https://commons.wikimedia.org/wiki/File:Bologna_Guglielmo_Marconi_Airport_aerial.jpg" target="_blank" rel="noopener">Ex13 / CC BY-SA 3.0</a></p>
         </article>
@@ -752,15 +814,15 @@
       <span class="hp-badge dom">Domenica 15 — Southbank</span>
       <ul class="hp-tl">
         <li><span class="hp-t">05:15</span><span class="hp-d">Aeroporto di Bologna</span></li>
-        <li><span class="hp-t">07:00</span><span class="hp-d">Volo British Airways</span></li>
-        <li><span class="hp-t">08:40</span><span class="hp-d">Arrivo a Heathrow</span></li>
-        <li><span class="hp-t">09:45</span><span class="hp-d">In metro verso il centro</span></li>
-        <li><span class="hp-t">10:45</span><span class="hp-d">79 Beak Street: deposito bagagli</span></li>
-        <li><span class="hp-t">11:45</span><span class="hp-d">Southbank Centre e Winter Market</span></li>
-        <li><span class="hp-t">13:15</span><span class="hp-d">SEA LIFE London Aquarium</span></li>
+        <li><span class="hp-t">07:00</span><span class="hp-d">Volo BA547, BLQ → LHR</span></li>
+        <li><span class="hp-t">08:40</span><span class="hp-d">Arrivo a Heathrow, Terminal 5</span></li>
+        <li><span class="hp-t">09:30</span><span class="hp-d">In metro: Piccadilly, poi Bakerloo</span></li>
+        <li><span class="hp-t">10:45</span><span class="hp-d">Southbank Centre e Winter Market</span></li>
+        <li><span class="hp-t">12:45</span><span class="hp-d">SEA LIFE London Aquarium</span></li>
         <li><span class="hp-t">15:30</span><span class="hp-d">London Eye</span></li>
         <li><span class="hp-t">17:15</span><span class="hp-d">Spesa da Lina Stores</span></li>
-        <li><span class="hp-t">18:30</span><span class="hp-d">Luci di Carnaby Street</span></li>
+        <li><span class="hp-t">17:45</span><span class="hp-d">Luci di Carnaby Street</span></li>
+        <li><span class="hp-t">18:15</span><span class="hp-d">Check-in, zaini giù e cena</span></li>
       </ul>
     </div>
 
@@ -783,9 +845,11 @@
     <div class="hp-day mar">
       <span class="hp-badge mar">Martedì 17 — Covent Garden e rientro</span>
       <ul class="hp-tl">
-        <li><span class="hp-t">10:30</span><span class="hp-d">Check-out, bagagli in deposito</span></li>
+        <li><span class="hp-t">10:30</span><span class="hp-d">Check-out, zaini in spalla</span></li>
         <li><span class="hp-t">11:00</span><span class="hp-d">Covent Garden</span></li>
+        <li><span class="hp-t">15:15</span><span class="hp-d">Partenza per Heathrow</span></li>
         <li><span class="hp-t">16:10</span><span class="hp-d">Heathrow, Terminal 5</span></li>
+        <li><span class="hp-t">18:10</span><span class="hp-d">Volo BA546, LHR → BLQ</span></li>
         <li><span class="hp-t">21:25</span><span class="hp-d">Atterraggio a Bologna</span></li>
       </ul>
     </div>
@@ -1018,6 +1082,7 @@
       <ul class="notes">
         <li><span class="ic">🚇</span><span>Olly viaggia gratis sulla metro (under 11 con adulto).</span></li>
         <li><span class="ic">🧭</span><span>Regola del viaggio: una zona al giorno, minimo cammino.</span></li>
+        <li><span class="ic">🎒</span><span>Solo bagaglio a mano sotto il sedile: niente nastro all’arrivo e niente depositi. SEA LIFE ammette zaini fino a 30 litri, il London Eye borse fino a 46 × 33 × 20 cm — se il vostro underseat è uno da 45 × 36 × 20, quel lato da 36 cm sfora.</span></li>
         <li><span class="ic">🌧️</span><span>Meteo novembre: freddo e possibile pioggia — il martedì è al coperto (mercato di Covent Garden) e il Natural History Museum del lunedì è un riparo pronto.</span></li>
       </ul>
     </div>
@@ -1038,6 +1103,45 @@
   integrity="sha512-nMnXAGKzA0wZ4YsriudrdnAKSFYXwdCvSt1Auwz6q7XXtSRoRcMVud13Q1LnQnobA2hRhLtHUv9tbVR5pyStPw=="
   crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
+  /* ====== meteo dei tre giorni ======
+     In pagina ci sono le medie 2015-2024 (Open-Meteo archive) con alba e tramonto calcolati: si vedono
+     subito, anche senza rete. Open-Meteo dà previsioni solo entro ~16 giorni, quindi da lontano la
+     chiamata torna un errore e le medie restano. Riprovando a ogni caricamento, avvicinandosi al viaggio
+     la pagina passa da sola alla previsione vera. Nessuna chiave, nessun dato salvato. */
+  (function(){
+    var giorni = document.querySelectorAll('.meteo[data-giorno]');
+    if (!giorni.length || !window.fetch) return;
+    var date = Array.prototype.map.call(giorni, function(el){ return el.dataset.giorno; }).sort();
+    var url = 'https://api.open-meteo.com/v1/forecast?latitude=51.5129&longitude=-0.1364'
+      + '&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max'
+      + '&timezone=Europe/London&start_date=' + date[0] + '&end_date=' + date[date.length - 1];
+
+    var icona = function(p){ return p < 30 ? '☀️' : p < 60 ? '🌤️' : p < 80 ? '☁️' : '🌧️'; };
+    var livello = function(p){ return p < 30 ? 'bassa' : p <= 60 ? 'media' : 'alta'; };
+    var MESI = ['gennaio','febbraio','marzo','aprile','maggio','giugno','luglio','agosto','settembre','ottobre','novembre','dicembre'];
+
+    fetch(url).then(function(r){ return r.ok ? r.json() : null; }).then(function(d){
+      if (!d || d.error || !d.daily || !d.daily.time) return;   // troppo in anticipo: restano le medie
+      var oggi = new Date();
+      var quando = oggi.getDate() + ' ' + MESI[oggi.getMonth()] + ' ' + oggi.getFullYear();
+      Array.prototype.forEach.call(giorni, function(el){
+        var i = d.daily.time.indexOf(el.dataset.giorno);
+        if (i < 0) return;
+        var tmax = d.daily.temperature_2m_max[i], tmin = d.daily.temperature_2m_min[i];
+        var pio = d.daily.precipitation_probability_max[i];
+        if (tmax == null || tmin == null || pio == null) return;
+        tmax = Math.round(tmax); tmin = Math.round(tmin); pio = Math.round(pio);
+        el.querySelector('.ico').textContent = icona(pio);
+        el.querySelector('b').textContent = tmax + '°';
+        el.querySelector('b').nextSibling.textContent = ' / ' + tmin + '°';
+        var p = el.querySelector('.pioggia');
+        p.textContent = pio + '%';
+        p.className = 'pioggia ' + livello(pio);
+        el.querySelector('.meteo-fonte').textContent = 'previsione Open-Meteo, aggiornata al ' + quando;
+      });
+    }).catch(function(){ /* niente rete: restano le medie */ });
+  })();
+
   /* ====== biglietti del Natural History Museum: barcode CODE128 veri, da scansionare ======
      Se la libreria non arriva (niente rete al museo), sotto resta il numero scritto: la biglietteria
      lo può battere a mano. Per questo il numero è nell'HTML e non generato dal barcode. */
