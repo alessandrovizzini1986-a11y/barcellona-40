@@ -1,6 +1,16 @@
 {
   "entries": [
     {
+      "v": 13,
+      "data": "2026-09-19",
+      "titolo": "Domenica: l'ora esatta in cui il sole sparisce",
+      "voci": [
+        "Il sole se ne va dietro Collserola alle 18:58, calcolato sul profilo del terreno reale",
+        "Correzione: le 18:50 della novità qui sotto erano stimate su Tibidabo, che non sta sull'azimut del tramonto. Il profilo reale dà 18:58.",
+        "Restano 38 minuti di città che si accende: la discesa alle 19:30 non cambia"
+      ]
+    },
+    {
       "v": 12,
       "data": "2026-09-19",
       "titolo": "Domenica: il sole sparisce prima, la vista no",

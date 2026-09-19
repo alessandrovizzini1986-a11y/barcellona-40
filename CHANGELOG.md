@@ -222,3 +222,12 @@
 - **Tolte `sarria.webp` e `pobleespanyol.webp`**, 141 kB che non erano assegnati a nessuna tappa. La cartella delle immagini torna a **1,11 MB** e il controllo in `scripts/qa/immagini.mjs` torna al tetto originale di 1,2 MB. I titoli Commons per riscaricarle in un comando sono in `DA_VERIFICARE.md`.
 - **I due dati che restano aperti** — attesa del taxi ai Bunkers di domenica sera e illuminazione della strada di discesa — non sono verificabili a distanza: restano marcati stimato, si controllano sul posto.
 - `scripts/qa/percorsi.mjs` sale a 62 controlli, `immagini.mjs` scende a 65 (due foto in meno).
+
+## Il profilo del terreno: le 18:50 erano sbagliate di otto minuti
+- **Profilo altimetrico vero, non la montagna più famosa.** SRTM 30 m (opentopodata.org) campionato ogni 250 m fino a 15 km su cinque azimut da 250° a 262°, con correzione per la curvatura terrestre. Sull'azimut del tramonto (256°) la cresta sta a **1,14°** — 369 m a 5,2 km, un crinale secondario di Collserola — non a 2,15°-2,56°. **Il Tibidabo non c'entra: sta più a nord e il sole non ci passa dietro.**
+- **Il sole sparisce alle 18:58**, non alle 18:50. Il numero passa dal blocco stimato ai **dettagli verificati**, con la fonte scritta accanto ("profilo altimetrico SRTM 30 m lungo l'azimut 256°, cresta a 1,14°, 369 m a 5,2 km"). Ricontrollato in modo indipendente con NOAA: 18:55 per il centro del disco, 18:57 con il semidiametro, 18:59 aggiungendo la rifrazione. Le 18:58 stanno in mezzo, **±1 minuto**.
+- **La finestra buona è 18:58 → 19:36: 38 minuti.** Il `why` della tappa non cambia (cambia solo il numero dentro), la discesa alle 19:30 resta giusta, a valle non si muove niente.
+- **Nel blocco stimato restano due sole voci**, quelle che si verificano davvero solo sul posto: prenotare il taxi dall'app mentre si è ancora in cima, e il piano B a piedi verso Carrer de Marià Labèrnia.
+- **Nota di metodo, annotata in `DA_VERIFICARE.md`**: la stima sbagliava perché prendeva la cima più nota invece della cima sulla linea giusta. Otto minuti di errore. Per un orizzonte locale serve il profilo del terreno lungo l'azimut, non la montagna che uno conosce.
+- Nel changelog la **v13 dichiara cosa corregge della v12**, come la v12 faceva con la v11.
+- `scripts/qa/percorsi.mjs` sale a 64 controlli: la fonte del calcolo nei dettagli, e la prova che "18:50" e "18:31" non compaiono più da nessuna parte nella tappa.
