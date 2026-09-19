@@ -68,6 +68,9 @@ export const store = {
   set theme(v) { write('theme', v) },
   get gamificationHidden() { return read('gamificationHidden', false) },
   set gamificationHidden(v) { write('gamificationHidden', !!v) },
+  // Modalità pioggia del venerdì: ottobre è il mese più piovoso a Barcellona
+  get piove() { return read('piove', false) },
+  set piove(v) { write('piove', !!v) },
 
   get done() { return read('done', []) },
   isDone: (stopId) => read('done', []).includes(stopId),

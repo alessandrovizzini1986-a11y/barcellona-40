@@ -204,9 +204,31 @@
    "lng": 2.1781566,
    "verified": true,
    "rating": 4.6,
-   "reviews": 1480,
-   "hours": "chiude alle 15:30",
-   "note": "Coordinate del mercato: il bar è al suo interno"
+   "reviews": 1483,
+   "hours": "lun-sab fino alle 15:30 · domenica chiuso",
+   "note": "Non prende prenotazioni",
+   "tel": "+34 933 10 61 50"
+  },
+  "elborn": {
+   "name": "El Born Centre de Cultura i Memòria",
+   "addr": "Plaça Comercial 12, Ciutat Vella",
+   "lat": 41.3856869,
+   "lng": 2.1836862,
+   "verified": true,
+   "rating": 4.5,
+   "reviews": 16439,
+   "hours": "ven 10:00–20:00",
+   "note": "Ingresso gratuito alla sala"
+  },
+  "debon": {
+   "name": "Xarcuteria Debón",
+   "addr": "Dentro il Mercat de Santa Caterina",
+   "lat": 41.3863611,
+   "lng": 2.1781566,
+   "verified": true,
+   "rating": 5.0,
+   "reviews": 246,
+   "note": "Coordinate del mercato: il banco è al suo interno"
   }
  }
 }

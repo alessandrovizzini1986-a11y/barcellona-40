@@ -30,11 +30,12 @@ export const FILE = {
   pobleespanyol: 'File:004 Poble Espanyol (Barcelona), plaça Major i glorieta.jpg',
   apolo: 'File:Gatibu a la Sala Apolo de Barcelona 20251101 02.jpg',
   sarria: 'File:Carrer Major de Sarrià (Barcelona) 01.jpg',
-  bunkers: 'File:Barcelona, View from Bunkers del Carmel.jpg'
+  bunkers: 'File:Barcelona, View from Bunkers del Carmel.jpg',
+  elborn: 'File:Mercat del Born ruïnes - panoramio.jpg'
 }
 // Quanto spazio verticale lasciare SOPRA il ritaglio: 0,5 = centrato. Più basso = si tiene l'alto,
 // altrimenti le torri finiscono tagliate.
-const BIAS = { sagrada: 0.1, santamaria: 0.15, monumental: 0.35, elpalace: 0.25 }
+const BIAS = { sagrada: 0.1, santamaria: 0.15, monumental: 0.35, elpalace: 0.25, elborn: 0.45 }
 // Nome umano della tappa, per i crediti e per l'alt
 export const TITOLI = {
   blq: 'Aeroporto di Bologna', bcn_t2: 'Barcellona T2', ciutadella: 'Parc de la Ciutadella',
@@ -42,7 +43,7 @@ export const TITOLI = {
   santfelip: 'Plaça de Sant Felip Neri', santacaterina: 'Mercat de Santa Caterina',
   elpalace: 'Rooftop Garden · El Palace', sagrada: 'Sagrada Família', monumental: 'Plaza Monumental',
   pobleespanyol: 'La Terrrazza · Poble Espanyol', apolo: 'Sala Apolo', sarria: 'Sarrià',
-  bunkers: 'Bunkers del Carmel'
+  bunkers: 'Bunkers del Carmel', elborn: 'El Born Centre de Cultura i Memòria'
 }
 const LIBERA = [/^cc0/i, /^cc[- ]by(-sa)?([- ]\d)?/i, /^public domain/i, /^pd/i]
 const testo = (v) => String(v || '').replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim()

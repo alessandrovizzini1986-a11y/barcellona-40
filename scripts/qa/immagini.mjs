@@ -12,7 +12,7 @@ const ok = (n, c, x = '') => { out.push(c); if (!c) process.exitCode = 1; consol
 const DIR = 'public/assets/tappe'
 const file = readdirSync(DIR)
 const webp = file.filter((f) => f.endsWith('.webp')), svg = file.filter((f) => f.endsWith('.svg'))
-ok('15 foto WebP', webp.length === 15, webp.length + '')
+ok('16 foto WebP', webp.length === 16, webp.length + '')
 ok('10 card stilizzate SVG', svg.length === 10, svg.length + '')
 const misure = []
 for (const f of webp) { const m = await sharp(`${DIR}/${f}`).metadata(); misure.push(`${f} ${m.width}×${m.height} ${m.format}`) ; ok(`${f} è 800×450 WebP`, m.width === 800 && m.height === 450 && m.format === 'webp', `${m.width}×${m.height} ${m.format}`) }
@@ -22,7 +22,7 @@ ok('cartella sotto 1,2 MB', kb < 1228, `${(kb / 1024).toFixed(2)} MB`)
 // ---- crediti ----
 const crediti = JSON.parse(readFileSync('data/foto-tappe.json', 'utf8'))
 const cred = readFileSync('CREDITS.md', 'utf8')
-ok('crediti per tutte e 15 le foto', crediti.foto.length === 15 && crediti.scartate.length === 0)
+ok('crediti per tutte e 16 le foto', crediti.foto.length === 16 && crediti.scartate.length === 0)
 ok('ogni foto ha autore, licenza e pagina Commons', crediti.foto.every((f) => f.autore && f.licenza && (f.pagina || '').startsWith('https://commons.wikimedia.org/wiki/File:')))
 ok('licenze tutte libere', crediti.foto.every((f) => /^(cc0|cc by|public domain|pd)/i.test(f.licenza)), [...new Set(crediti.foto.map((f) => f.licenza))].join(', '))
 ok('CREDITS.md elenca tutte le foto', crediti.foto.every((f) => cred.includes(f.pagina) && cred.includes(f.autore)))
@@ -52,7 +52,7 @@ async function vista(person, path) {
   await p.waitForTimeout(400)
   return { p, ctx, errs }
 }
-for (const [giorno, attese, crediti0] of [['ven', 14, 8], ['sab', 6, 3], ['dom', 3, 2]]) {
+for (const [giorno, attese, crediti0] of [['ven', 15, 9], ['sab', 6, 3], ['dom', 3, 2]]) {
   const { p, ctx, errs } = await vista('ale', `/#/programma/${giorno}`)
   const st = await p.evaluate(() => ({
     img: [...document.querySelectorAll('.card[data-stop] .card__foto img')].map((i) => ({ src: i.getAttribute('src').split('/').pop(), nat: i.naturalWidth, lazy: i.getAttribute('loading'), alt: i.getAttribute('alt'), ratio: +(i.getBoundingClientRect().width / i.getBoundingClientRect().height).toFixed(2) })),

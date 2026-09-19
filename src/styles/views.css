@@ -138,3 +138,11 @@
 .viaggio-step.is-key b{ color:var(--giallo); }
 .viaggio-check .is-done{ text-decoration:line-through; color:var(--ink-2); }
 @media (max-width:360px){ .viaggio-step time{ min-width:42px; } .card--viaggio .card__time{ min-width:50px; } }
+
+/* Toggle "Piove" sopra la timeline del venerdì */
+.switch--piove{ align-items:flex-start; padding:var(--space-3) var(--space-4); background:var(--bg-2); border:1px solid var(--line); border-radius:var(--radius-m); }
+.switch--piove b{ display:inline-flex; align-items:center; gap:6px; font-size:var(--fs-1); }
+.switch--piove b svg{ width:18px; height:18px; color:var(--blu); }
+:root[data-theme="light"] .switch--piove b svg{ color:var(--blu); }
+.switch--piove input{ margin-top:2px; }
+.switch--piove .faint{ display:block; margin-top:2px; }

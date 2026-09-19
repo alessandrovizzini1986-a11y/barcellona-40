@@ -76,8 +76,9 @@ il contenuto, con link alla pagina Commons del file.
 | Sala Apolo | `public/assets/tappe/apolo.webp` | Aniol | [CC0](http://creativecommons.org/publicdomain/zero/1.0/deed.en) | [Gatibu a la Sala Apolo de Barcelona 20251101 02.jpg](https://commons.wikimedia.org/wiki/File:Gatibu_a_la_Sala_Apolo_de_Barcelona_20251101_02.jpg) |
 | Sarrià | `public/assets/tappe/sarria.webp` | Joe Mabel | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | [Carrer Major de Sarrià (Barcelona) 01.jpg](https://commons.wikimedia.org/wiki/File:Carrer_Major_de_Sarri%C3%A0_(Barcelona)_01.jpg) |
 | Bunkers del Carmel | `public/assets/tappe/bunkers.webp` | Alexey Komarov | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | [Barcelona, View from Bunkers del Carmel.jpg](https://commons.wikimedia.org/wiki/File:Barcelona,_View_from_Bunkers_del_Carmel.jpg) |
+| El Born Centre de Cultura i Memòria | `public/assets/tappe/elborn.webp` | Olga Gairin | [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0) | [Mercat del Born ruïnes - panoramio.jpg](https://commons.wikimedia.org/wiki/File:Mercat_del_Born_ru%C3%AFnes_-_panoramio.jpg) |
 
-Ultimo aggiornamento: `npm run foto` · 15 foto, 977 kB in tutto.
+Ultimo aggiornamento: `npm run foto` · 16 foto, 1045 kB in tutto.
 
 <!-- foto:end -->
 

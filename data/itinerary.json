@@ -61,11 +61,46 @@
      "distFromPrevM": 15504,
      "minFromPrev": 28,
      "distMode": "auto",
-     "img": "ciutadella.webp"
+     "img": "ciutadella.webp",
+     "durataMin": 45,
+     "durataPioggiaMin": 15
+    },
+    {
+     "id": "f2b",
+     "time": "09:53",
+     "timeStatus": "verificato",
+     "venueId": "elborn",
+     "title": "El Born Centre de Cultura i Memòria",
+     "img": "elborn.webp",
+     "soloPioggia": true,
+     "durataMin": 40,
+     "why": "Un mercato ottocentesco in ferro e vetro, e sotto un intero quartiere del 1714 venuto fuori scavando. Cammini su una passerella e guardi giù.",
+     "details": [
+      "Ingresso gratuito alla sala",
+      "Non è una visita da museo: entri, guardi, esci in 40 minuti",
+      "Ha i bagni",
+      "È sul percorso, non una deviazione",
+      "4,5 su 16.439 recensioni",
+      "Venerdì aperto 10:00–20:00"
+     ],
+     "people": [
+      "ale",
+      "monne"
+     ],
+     "badges": [
+      "verificato"
+     ],
+     "actions": {
+      "maps": true,
+      "taxi": false,
+      "metro": null
+     },
+     "distFromPrevM": 629,
+     "minFromPrev": 8
     },
     {
      "id": "f3",
-     "time": "10:15",
+     "time": "10:30",
      "timeStatus": "verificato",
      "venueId": "santamaria",
      "title": "Basílica de Santa Maria del Mar",
@@ -87,11 +122,16 @@
      },
      "distFromPrevM": 841,
      "minFromPrev": 10,
-     "img": "santamaria.webp"
+     "img": "santamaria.webp",
+     "durataMin": 15,
+     "distPioggia": {
+      "m": 246,
+      "min": 3
+     }
     },
     {
      "id": "f4",
-     "time": "10:35",
+     "time": "10:50",
      "timeStatus": "verificato",
      "venueId": "montcada",
      "title": "Carrer de Montcada",
@@ -113,11 +153,12 @@
      },
      "distFromPrevM": 239,
      "minFromPrev": 4,
-     "img": "montcada.webp"
+     "img": "montcada.webp",
+     "durataMin": 20
     },
     {
      "id": "f5",
-     "time": "11:00",
+     "time": "11:20",
      "timeStatus": "verificato",
      "venueId": "pontbisbe",
      "title": "Pont del Bisbe",
@@ -140,11 +181,12 @@
      },
      "distFromPrevM": 854,
      "minFromPrev": 11,
-     "img": "pontbisbe.webp"
+     "img": "pontbisbe.webp",
+     "durataMin": 10
     },
     {
      "id": "f6",
-     "time": "11:15",
+     "time": "11:35",
      "timeStatus": "verificato",
      "venueId": "santfelip",
      "title": "Plaça de Sant Felip Neri",
@@ -164,11 +206,12 @@
      },
      "distFromPrevM": 185,
      "minFromPrev": 2,
-     "img": "santfelip.webp"
+     "img": "santfelip.webp",
+     "durataMin": 10
     },
     {
      "id": "f7",
-     "time": "11:30",
+     "time": "11:50",
      "timeStatus": "verificato",
      "venueId": "duckstore",
      "title": "Barcelona Duck Store · la paperella per Olly",
@@ -193,21 +236,20 @@
      },
      "distFromPrevM": 130,
      "minFromPrev": 2,
-     "img": "duckstore.svg"
+     "img": "duckstore.svg",
+     "durataMin": 20
     },
     {
      "id": "f8",
-     "time": "12:15",
+     "time": "12:20",
      "timeStatus": "verificato",
      "venueId": "santacaterina",
-     "title": "Mercat de Santa Caterina · jamón da Debón",
-     "why": "Tetto ondulato di Miralles in ceramica colorata, ispirato alla frutta dei mercati. Jamón da Debón per domani.",
+     "title": "Mercat de Santa Caterina",
+     "why": "Tetto ondulato di Miralles in ceramica colorata, ispirato alla frutta dei mercati. Giro dei banchi.",
      "details": [
       "Tetto di Enric Miralles e Benedetta Tagliabue",
-      "Xarcuteria Debón: 5.0 su 246 recensioni",
       "4,4 su 18.408 recensioni",
-      "Venerdì aperto 07:30–20:00",
-      "Il jamón va in frigo in appartamento alle 15:00"
+      "Venerdì aperto 07:30–20:00"
      ],
      "people": [
       "ale",
@@ -223,19 +265,25 @@
      },
      "distFromPrevM": 677,
      "minFromPrev": 8,
-     "img": "santacaterina.webp"
+     "img": "santacaterina.webp",
+     "durataMin": 20
     },
     {
      "id": "f9",
-     "time": "13:00",
+     "time": "12:45",
      "timeStatus": "verificato",
      "venueId": "barjoan",
      "title": "Pranzo · Bar Joan",
-     "why": "Qui mangiano i locali. Tre portate, bevanda e pane.",
+     "why": "Qui mangiano i locali. Tre portate, bevanda e pane. Non si prenota: alle 13:15 sei dentro, alle 13:30 sei in coda.",
      "details": [
       "Dentro il Mercat de Santa Caterina",
-      "4,6 su 1.480 recensioni",
-      "ATTENZIONE: chiude alle 15:30"
+      "NON prende prenotazioni: è un banco da mercato, si va e si aspetta",
+      "Le recensioni segnalano coda già dalle 13:30 e attese fino a 20 minuti",
+      "ATTENZIONE: arrivare entro le 13:15",
+      "Menù 3 portate €15-16, bevanda e pane inclusi",
+      "4,6 su 1.483 recensioni",
+      "Chiude alle 15:30 (lun-sab, domenica chiuso)",
+      "Tel +34 933 10 61 50"
      ],
      "people": [
       "ale",
@@ -253,15 +301,46 @@
      "minFromPrev": null,
      "prices": [
       {
-       "label": "Menù del giorno",
+       "label": "Menù del giorno · 3 portate",
        "eur": 16
       }
      ],
-     "img": "barjoan.svg"
+     "img": "barjoan.svg",
+     "durataMin": 75,
+     "avviso": "Non si prenota. Alle 13:15 sei dentro, alle 13:30 sei in coda."
     },
     {
      "id": "f10",
-     "time": "14:00",
+     "time": "14:05",
+     "timeStatus": "verificato",
+     "venueId": "debon",
+     "title": "Jamón da Debón, all'uscita",
+     "img": "santacaterina.webp",
+     "durataMin": 10,
+     "why": "Ultima cosa prima di uscire. Un'ora dopo è in frigo.",
+     "details": [
+      "Xarcuteria Debón, dentro il mercato — 5,0 su 246 recensioni",
+      "Serve per il bocadillo di sabato a pranzo",
+      "Comprarlo adesso e non all'arrivo: resta fuori dal frigo un'ora invece di tre"
+     ],
+     "people": [
+      "ale",
+      "monne"
+     ],
+     "badges": [
+      "verificato"
+     ],
+     "actions": {
+      "maps": true,
+      "taxi": false,
+      "metro": null
+     },
+     "distFromPrevM": 0,
+     "minFromPrev": null
+    },
+    {
+     "id": "f11",
+     "time": "14:20",
      "timeStatus": "verificato",
      "venueId": "apt",
      "title": "Verso l'appartamento",
@@ -284,7 +363,7 @@
      "img": "apt.svg"
     },
     {
-     "id": "f11",
+     "id": "f12",
      "time": "15:00",
      "timeStatus": "verificato",
      "venueId": "apt",
@@ -320,7 +399,7 @@
      "img": "apt.svg"
     },
     {
-     "id": "f12",
+     "id": "f13",
      "time": "16:30",
      "timeStatus": "verificato",
      "venueId": "taps",
@@ -343,7 +422,7 @@
      "img": "taps.svg"
     },
     {
-     "id": "f13",
+     "id": "f14",
      "time": "18:00",
      "timeStatus": "stimato",
      "venueId": "rooftop",
@@ -380,7 +459,7 @@
      "img": "elpalace.webp"
     },
     {
-     "id": "f14",
+     "id": "f15",
      "time": "20:30",
      "timeStatus": "stimato",
      "venueId": "braseria",

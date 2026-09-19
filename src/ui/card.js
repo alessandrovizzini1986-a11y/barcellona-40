@@ -2,7 +2,8 @@
 import { icon } from './icons.js'
 import { badges as badgeHtml } from './badge.js'
 import { esc } from './html.js'
-import { badgesFor, fmtDist, fmtEur, mapsUrl, taxiUrl, TAXI_FALLBACK, missionByStop, hasCoords, DAY_COLOR } from '../data.js'
+import { badgesFor, fmtDist, fmtEur, mapsUrl, taxiUrl, TAXI_FALLBACK, missionByStop, hasCoords, DAY_COLOR, durataDi } from '../data.js'
+import { fmtMinutes } from '../time.js'
 import { store } from '../store.js'
 import fotoTappe from '../../data/foto-tappe.json'
 import { setStopDone } from '../game.js'
@@ -32,6 +33,7 @@ const ALT = {
   'apolo.webp': 'Un concerto alla Sala Apolo',
   'sarria.webp': 'Il Carrer Major de Sarrià',
   'bunkers.webp': 'La vista su Barcellona dai Bunkers del Carmel',
+  'elborn.webp': 'La sala in ferro e vetro dell\'antico mercato del Born, con le rovine del quartiere del 1714 visibili sotto il piano di calpestio',
   'parcheggio.svg': 'Illustrazione del parcheggio P2 di Bologna',
   'duckstore.svg': 'Illustrazione del Barcelona Duck Store',
   'barjoan.svg': 'Illustrazione del Bar Joan',
@@ -71,6 +73,12 @@ export function distChip(stop) {
   return `<span class="chip">${icon('walk')} ${d}${stop.minFromPrev != null ? ` · ${stop.minFromPrev} min a piedi` : ''}</span>`
 }
 
+// Quanto si sta in una tappa: è un dato, non il buco fra due orari
+export function durataChip(stop) {
+  const m = durataDi(stop)
+  return m == null ? '' : `<span class="chip">${icon('clock')} ${fmtMinutes(m)}</span>`
+}
+
 export function stopCard(stop, { person = null, isNow = false, nowLabel = 'adesso', showCheck = true, reveal = false, eager = false } = {}) {
   const done = store.isDone(stop.id)
   const mission = missionByStop(stop.id)
@@ -101,7 +109,8 @@ export function stopCard(stop, { person = null, isNow = false, nowLabel = 'adess
       </div>
     </div>
     <p class="card__why">${esc(stop.why)}</p>
-    <div class="chips">${distChip(stop)}${voto}${prices}${badgeHtml(badgesFor(stop), reveal)}</div>
+    <div class="chips">${distChip(stop)}${durataChip(stop)}${voto}${prices}${badgeHtml(badgesFor(stop), reveal)}</div>
+    ${stop.avviso ? `<div class="avviso">${icon('alert')}<span>${esc(stop.avviso)}</span></div>` : ''}
     ${acts.length ? `<div class="actions">${acts.join('')}</div>` : ''}
     ${details ? `<details><summary><span>Dettagli</span>${icon('chevron')}</summary><div class="card__more"><div><ul>${details}</ul></div></div></details>` : ''}
     ${showCheck ? `<label class="check"><input type="checkbox" data-done="${stop.id}" ${done ? 'checked' : ''} aria-label="Fatto: ${esc(stop.title)}"><span>Fatto</span>${missionMine ? `<span class="check__xp">+${mission.xp} XP · ${esc(mission.title)}</span>` : ''}</label>` : ''}

@@ -165,6 +165,17 @@
       "licenzaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
       "pagina": "https://commons.wikimedia.org/wiki/File:Barcelona,_View_from_Bunkers_del_Carmel.jpg",
       "kb": 80
+    },
+    {
+      "id": "elborn",
+      "file": "assets/tappe/elborn.webp",
+      "tappa": "El Born Centre de Cultura i Memòria",
+      "titolo": "File:Mercat del Born ruïnes - panoramio.jpg",
+      "autore": "Olga Gairin",
+      "licenza": "CC BY-SA 3.0",
+      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Mercat_del_Born_ru%C3%AFnes_-_panoramio.jpg",
+      "kb": 68
     }
   ],
   "scartate": []
