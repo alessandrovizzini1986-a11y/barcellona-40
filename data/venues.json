@@ -123,12 +123,13 @@
   },
   "biarritz": {
    "name": "Bodega Biarritz 1881",
-   "addr": "Barcelona",
-   "lat": 41.3792173,
-   "lng": 2.1770987,
-   "verified": false,
-   "geocoded": true,
-   "geocodedFrom": "Bodega Biarritz, Carrer d'en Rull, la Mercè, el Gòtic, Ciutat Vella, Barcelona, Barcelonès, Barcelona, Catalunya, 08002, Espanya"
+   "addr": "Carrer Nou de Sant Francesc 7, Ciutat Vella",
+   "lat": 41.3791891,
+   "lng": 2.1770567,
+   "verified": true,
+   "rating": 4.7,
+   "reviews": 9353,
+   "hours": "gio-lun 12:30-23:00 · martedì e mercoledì chiuso"
   },
   "bunkers": {
    "name": "Bunkers del Carmel — MUHBA Turó de la Rovira",

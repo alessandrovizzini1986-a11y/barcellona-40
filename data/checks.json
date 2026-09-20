@@ -1,6 +1,3 @@
 { "checks":[
- {"id": "c2", "stopId": "d3", "who": "ale", "text": "Voli di ritorno domenica 18 di Giulio e Manuel (Alessandro: FR5220 delle 23:05, verificato)"},
- {"id": "c8", "stopId": "s7", "who": "ale", "text": "SOUNDIT Plaza / Happy Techno Open Air: esistono? orari? (Resident Advisor)"},
- {"id": "c9", "stopId": "f15", "who": "ale", "text": "Civico esatto della Braseria Sarrià"},
- {"id": "c10", "stopId": null, "who": "ale", "text": "Coordinate geocodificate automaticamente: Bodega Biarritz"}
+ {"id": "c9", "stopId": "f15", "who": "ale", "text": "Civico esatto della Braseria Sarrià"}
 ]}

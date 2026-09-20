@@ -38,6 +38,19 @@ const camminoM = visibili.filter(aPiedi).reduce((n, s) => n + s.distFromPrevM, 0
 const camminoMin = visibili.filter(aPiedi).reduce((n, s) => n + s.minFromPrev, 0)
 ok('cammino del sabato ricalcolato con le due tratte nuove', camminoM === 1309 + 527 + 1189 + 574 + 672 + 2823 && camminoMin === 16 + 7 + 15 + 7 + 8 + 34, `${camminoM} m · ${camminoMin} min`)
 
+// ---- cena dei 40: Bodega Biarritz ----
+const b8 = venues.biarritz
+ok('Biarritz: indirizzo e coordinate verificate via Google Places', b8.addr === 'Carrer Nou de Sant Francesc 7, Ciutat Vella' && b8.lat === 41.3791891 && b8.lng === 2.1770567)
+ok('Biarritz: niente più coordinate automatiche', b8.verified === true && b8.geocoded === undefined && b8.geocodedFrom === undefined)
+ok('Biarritz: voto e recensioni', b8.rating === 4.7 && b8.reviews === 9353)
+ok('Biarritz: orari col martedì e mercoledì chiuso', /gio-lun 12:30-23:00/.test(b8.hours) && /martedì e mercoledì chiuso/.test(b8.hours), b8.hours)
+ok('cena: si sceglie la fascia di prezzo, non i piatti', stops.s8.details.some((d) => /fascia di prezzo prima di entrare/.test(d) && /a sorpresa/.test(d)))
+ok('cena: la recensione col conto in due', stops.s8.details.some((d) => /8 tapas/.test(d) && /70 euro in due/.test(d)))
+ok('cena: sabato 17 è dentro la finestra di apertura', stops.s8.details.some((d) => /sabato 17 siete nella finestra giusta/.test(d)))
+ok('cena: nessun badge di coordinate automatiche', !stops.s8.badges.includes('geocoded'))
+// Nessun venue del sito ha più coordinate automatiche
+ok('nessun venue geocodificato in tutto il sito', !Object.values(venues).some((v) => v.geocoded))
+
 // ---- nel browser ----
 const b = await chromium.launch({ executablePath: exe, args: ['--no-sandbox'] })
 async function vista(person, path) {
@@ -65,6 +78,29 @@ async function vista(person, path) {
   ok('niente riquadro del conto sul sabato: non è una mezza giornata', await p.locator('.avviso--forte').count() === 0)
   ok('nessun errore JS', errs.length === 0, errs.join(' | '))
   ok('niente overflow a 380px', await p.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth))
+  await ctx.close()
+}
+{
+  const { p, ctx } = await vista('ale', '/#/programma/sab')
+  const cena = p.locator('.card[data-stop="s8"]')
+  ok('cena: nessun badge "coordinate automatiche" sulla card', await cena.locator('.badge--geocoded').count() === 0)
+  await cena.locator('summary').click(); await p.waitForTimeout(350)
+  ok('cena: la fascia di prezzo si legge nei dettagli', /fascia di prezzo prima di entrare/.test(await cena.innerHTML()))
+  ok('cena: indirizzo vero sotto il titolo', /Carrer Nou de Sant Francesc 7/.test(await cena.locator('.card__venue').innerText()))
+  await ctx.close()
+}
+{
+  const { p, ctx } = await vista('ale', '/#/info/verifiche')
+  await p.waitForTimeout(300)
+  ok('Info: resta una sola voce da verificare', (await p.locator('#sec-verifiche input[data-check]').count()) === 1, String(await p.locator('#sec-verifiche input[data-check]').count()))
+  ok('Info: è il civico della Braseria', (await p.locator('#sec-verifiche input[data-check]').getAttribute('data-check')) === 'c9')
+  await ctx.close()
+}
+{
+  const { p, ctx } = await vista('ale', '/#/programma/dom')
+  const rientro = p.locator('.card[data-stop="d3"]')
+  ok('rientro: niente più badge da verificare', await rientro.locator('.badge--da_verificare').count() === 0)
+  ok('rientro: il badge è stimato', await rientro.locator('.badge--stimato').count() === 1)
   await ctx.close()
 }
 {

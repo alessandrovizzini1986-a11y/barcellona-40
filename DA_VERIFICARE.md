@@ -4,21 +4,20 @@ Generato in parte dagli script dati (`npm run data`). Le sezioni tra marker veng
 
 ## Restano aperte (20/09/2026)
 
-Sei cose, e due sole sono decisioni: il resto del file sono **note e scelte già prese**, tenute per memoria, non pendenze.
+Cinque cose, e nessuna è una decisione in sospeso: il resto del file sono **note e scelte già prese**, tenute per memoria, non pendenze.
 
-1. **Civico esatto della Braseria Sarrià** (`c9`) — la prenotazione è fatta, manca solo il numero civico nei dati.
+1. **Promozioni Casino Barcelona** — pagina dinamica, da guardare dal telefono prima di partire.
 2. **Attesa del taxi ai Bunkers, domenica sera** — stimata, si rileva sul posto.
 3. **Illuminazione della discesa da Carrer de Marià Labèrnia** — stimata, si rileva sul posto.
 4. **Le 18:58 hanno una precisione di ±1 minuto**, non al secondo: dipende da dove si mette il bordo del disco solare e da quanta rifrazione si conta.
-5. **Promozioni Casino Barcelona** — pagina dinamica, da controllare manualmente prima del viaggio.
-6. **BO&MIE, il ritrovo con Giulio prima della Sagrada** — la tappa non è nel sito: la foto è arrivata corrotta e senza foto la tappa non passa la validazione. In attesa che il blocco base64 venga rimandato.
+5. **Civico esatto della Braseria Sarrià** (`c9`) — la prenotazione è fatta, manca solo il numero civico nei dati.
 
-Più due che non dipendono da noi: i **voli di ritorno di Giulio e Manuel** (`c2`, tiene aperta la tappa `d3`), l'esistenza di **SOUNDIT Plaza** (`c8`) e le **coordinate automatiche della Bodega Biarritz** (`c10`).
+Più una che dipende da un file, non da una verifica: **BO&MIE**, il ritrovo con Giulio prima della Sagrada, non è nel sito perché la foto è arrivata corrotta (vedi sotto). Tutto il resto della tappa è pronto.
 
 ## geocoding
 
 <!-- geocoding:start -->
-- **Bodega Biarritz 1881** (`biarritz`): coordinate automatiche da Nominatim (41.3792173, 2.1770987), da controllare sul posto
+Nessuna: tutti i venue hanno coordinate verificate a mano.
 <!-- geocoding:end -->
 
 ## distanze
@@ -29,12 +28,9 @@ Nessuna: tutte le tappe hanno le coordinate e la distanza dalla precedente.
 
 ## Voci aperte (da `data/checks.json`, spuntabili nella sezione Info → Da verificare)
 
-- c2 · Voli di ritorno domenica 18 di Giulio e Manuel (Alessandro: FR5220 delle 23:05, verificato)
-- c8 · SOUNDIT Plaza / Happy Techno Open Air: esistono? orari? (Resident Advisor)
 - c9 · Civico esatto della Braseria Sarrià
-- c10 · Coordinate geocodificate automaticamente: Bodega Biarritz (vedi sezione geocoding)
 
-**Chiuse il 20/09**: c3 (Braseria riprenotata per 2), c4 e c5 (letto extra di sabato €65 in reception, richiesta del 4° ospite cancellata, tassa di soggiorno non tracciata), c6 (niente deposito bagagli, zaini al seguito), c7 (il post-cena di sabato non ha più vincoli: Soundhood non c'entra più).
+**Chiuse il 20/09**: c3 (Braseria riprenotata per 2), c4 e c5 (letto extra di sabato €65 in reception, richiesta del 4° ospite cancellata, tassa di soggiorno non tracciata), c6 (niente deposito bagagli, zaini al seguito), c7 (il post-cena di sabato non ha più vincoli: Soundhood non c'entra più), c2 (i voli di ritorno di Giulio e Manuel non si tracciano: tornano la domenica col gruppo), c8 (chiusa per decisione, non per verifica: il post-cena resta libero e cosa suoni non ci interessa), c10 (coordinate della Bodega Biarritz verificate via Google Places).
 
 ## Altri dati mancanti o non verificati
 
@@ -44,8 +40,8 @@ Nessuna: tutte le tappe hanno le coordinate e la distanza dalla precedente.
 - **Distanze a piedi: motore di routing sostituito.** Il server demo `router.project-osrm.org` ignora il profilo `/foot/` e restituisce sempre percorsi stradali per auto (verificato: `/foot/` e `/driving/` danno risultati identici), quindi gonfiava ogni distanza a piedi. Ora `scripts/distances.mjs` usa Valhalla di OpenStreetMap con costing `pedestrian` (`auto` per le tratte in auto o taxi) e prende i minuti dal tempo restituito da Valhalla, non più da una conversione a 5 km/h. Restano stime su dati OpenStreetMap, non rilievi sul posto.
 - **Bar Joan: coordinate prese dal mercato.** Il locale è dentro il Mercat de Santa Caterina e non ha coordinate proprie: sulla mappa il suo marker sta sopra quello del mercato. Stessa cosa per `f10` e `f11`, che sono entrambi all'appartamento.
 
-- **Arrivi di Giulio e Manuel: chiusi.** Gli orari di atterraggio (07:40 e 09:45 di sabato) bastano, il numero del volo non serve: le loro schede non sono più `da_verificare`.
-- **Voli di ritorno di Giulio e Manuel: ancora aperti** (`c2`). La tappa `d3` resta `da_verificare` e continua a dire le 20:00. Quella di Alessandro non lo è più: FR5220 delle 23:05, col percorso completo in `data/viaggio.json`.
+- **Voli di Giulio e Manuel: chiusi, andata e ritorno.** Gli orari di atterraggio (07:40 e 09:45 di sabato) bastano e il numero del volo non serve; i ritorni non si tracciano affatto, perché la domenica tornano col gruppo. Le loro schede non sono più `da_verificare` da nessuna parte, e la tappa `d3` porta il badge `stimato`: l'orario delle 20:00 è indicativo, non incerto.
+- **Bodega Biarritz: coordinate verificate via Google Places.** Carrer Nou de Sant Francesc 7, Ciutat Vella — 41.3791891, 2.1770567 — non più il civico di Carrer d'en Rull che restituiva Nominatim. Il flag `geocoded` è sparito e con lui l'ultimo badge di coordinate automatiche del sito.
 - **Braseria Sarrià, distanza**: 4.580 m e 15 min sono la strada in auto secondo Valhalla, non il percorso dei mezzi. Il tuo link dice 4,3 km: è un altro itinerario, non un errore.
 - **Bar Joan e il mercato**: il link del percorso di venerdì mattina finisce a 41.386162, 2.1786073, che è a una trentina di metri dalle coordinate del mercato nei nostri dati (41.3863611, 2.1781566). Nessuna conseguenza pratica, ma sono due punti leggermente diversi.
 - **Orari della mattina di venerdì**: sono quelli decisi da te, non ricavati da un calcolo. Le distanze, i minuti a piedi e le durate delle soste invece sono dati, e il sito li somma da solo.
@@ -68,7 +64,6 @@ Nessuna: tutte le tappe hanno le coordinate e la distanza dalla precedente.
 - **El Mirador → Bunkers**: restano i tuoi 632 m · 12 min. Valhalla con le coordinate nuove dei Bunkers dice 613 m · 11 min: differenza da nulla, ho tenuto i tuoi numeri perché sono quelli verificati.
 - **La foto di El Mirador è privata**, di un amico di Alessandro, usata con permesso. Non è su Commons e non ha licenza libera: non sta nella tabella dei crediti e sotto la card non compare nessuna attribuzione. Se un giorno il sito diventa pubblico sul serio, chiedere conferma all'autore.
 - **Tappe di arrivo di Giulio e Manuel** (`s1`, `s3`): non erano nell'elenco delle immagini. Hanno l'immagine del posto dove arrivano, appartamento e Olimpo.
-- Bodega Biarritz 1881: Nominatim restituisce "Bodega Biarritz, Carrer d'en Rull" (Gòtic). Controllare che sia il locale giusto.
 - Coordinate `verified:true` del prompt (appartamento, aeroporto, Sagrada, Olimpo, Braseria, Apolo, Monumental, Terrrazza, mercati) non sono state toccate.
 - Il sito precedente era installabile con un service worker (`_legacy/sw.js`): chi lo aveva aperto vedrà il nuovo sito alla seconda visita, quando il browser rimuove il vecchio worker (404 su `sw.js`).
 

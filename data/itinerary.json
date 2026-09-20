@@ -860,6 +860,10 @@
      "title": "Cena dei 40 · Bodega Biarritz 1881",
      "why": "Alle 19:30 siete già seduti. Niente prenotazione: si arriva puntuali.",
      "details": [
+      "Si sceglie una fascia di prezzo prima di entrare: le tapas arrivano a sorpresa, senza scegliere i piatti",
+      "Una recensione: fascia bassa con un antipasto, 8 tapas e due shot, più una bottiglia di vino, poco meno di 70 euro in due",
+      "Aperto gio-lun 12:30-23:00, martedì e mercoledì chiuso: sabato 17 siete nella finestra giusta",
+      "4,7 su 9.353 recensioni",
       "Foto di gruppo obbligatoria"
      ],
      "people": [
@@ -868,8 +872,7 @@
       "manuel"
      ],
      "badges": [
-      "verificato",
-      "geocoded"
+      "verificato"
      ],
      "actions": {
       "maps": true,
@@ -1061,13 +1064,13 @@
     {
      "id": "d3",
      "time": "20:00",
-     "timeStatus": "da_verificare",
+     "timeStatus": "stimato",
      "venueId": "bcnT2",
      "title": "Rientro a Bologna",
-     "why": "Alessandro parte alle 23:05; per Giulio e Manuel gli orari sono ancora da confermare.",
+     "why": "Alessandro parte alle 23:05. Giulio e Manuel tornano lo stesso giorno, con orari loro.",
      "details": [
       "Alessandro: FR5220 delle 23:05, T2. Si stacca dal gruppo alle 19:30, il viaggio completo è nella sezione Viaggio",
-      "Giulio e Manuel: numero volo e orario da inserire"
+      "Giulio e Manuel rientrano domenica anche loro: i voli non li tracciamo, l'orario qui è indicativo"
      ],
      "people": [
       "ale",
@@ -1075,7 +1078,7 @@
       "manuel"
      ],
      "badges": [
-      "da_verificare"
+      "stimato"
      ],
      "actions": {
       "maps": true,
