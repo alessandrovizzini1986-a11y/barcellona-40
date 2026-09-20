@@ -99,14 +99,15 @@ riga "foto: autore / licenza" sotto ogni card. Le foto sono state ritagliate a 1
 | Parcheggio P2 · Bologna | `public/assets/tappe/parcheggio.webp` | Foto fornita da Alessandro, uso autorizzato |
 | Taps Sagrada Familia | `public/assets/tappe/taps.webp` | Foto fornita da Alessandro, uso autorizzato |
 | Teixidó · Forn de Pa | `public/assets/tappe/teixido.webp` | Foto fornita da Alessandro, uso autorizzato |
+| BO&MIE Barcelona | `public/assets/tappe/bomie.webp` | Foto fornita da Alessandro, uso autorizzato |
 | Barcelona Duck Store | `public/assets/tappe/duckstore.webp` | Foto fornita da Alessandro, uso autorizzato |
 
 Nessuna di queste ha una licenza libera e **nessuna sta nella tabella Commons qui sopra**: non si possono
 ripubblicare altrove. Sotto la card portano la riga **"foto: per gentile concessione"**, senza link e senza
 nome — un'attribuzione che non fa promesse di licenza. Sono tracciate qui e in `data/foto-tappe.json`
 (campo `private`) perché `npm run validate` sappia che quelle `.webp` sono a posto anche senza crediti
-Commons. Ritagliate a 16:9 con sharp, larghezza massima 640 px (mai ingrandite oltre l'originale),
-WebP qualità 72.
+Commons. Ritagliate a 16:9 con sharp, larghezza massima 640 px (mai ingrandite oltre l'originale), WebP qualità 72.
+`bomie.webp` fa eccezione: 480 px e qualità 62, perché l'originale è un verticale da cui si ricava poco.
 ## Foto delle tappe · Londra (Wikimedia Commons)
 
 Stesso metodo del viaggio a Barcellona, cartella separata (`public/assets/tappe/londra/`,

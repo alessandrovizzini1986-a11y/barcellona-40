@@ -1,5 +1,5 @@
-// QA delle tappe nuove del sabato: il pane da Teixidó fra Olimpo e il bocadillo.
-// (BO&MIE, il ritrovo con Giulio, non c'è ancora: la foto è arrivata corrotta, vedi DA_VERIFICARE.md)
+// QA delle due tappe nuove del sabato: il caffè con Giulio da BO&MIE prima della Sagrada,
+// e il pane da Teixidó fra Olimpo e il bocadillo.
 import { chromium } from 'playwright-core'
 import { readFileSync } from 'node:fs'
 const base = process.argv[2] || 'http://localhost:4173'
@@ -36,7 +36,27 @@ const aPiedi = (s) => s.distMode !== 'auto' && s.distMode !== 'taxi' && s.minFro
 const visibili = sab.filter((s) => s.people.includes('ale'))
 const camminoM = visibili.filter(aPiedi).reduce((n, s) => n + s.distFromPrevM, 0)
 const camminoMin = visibili.filter(aPiedi).reduce((n, s) => n + s.minFromPrev, 0)
-ok('cammino del sabato ricalcolato con le due tratte nuove', camminoM === 1309 + 527 + 1189 + 574 + 672 + 2823 && camminoMin === 16 + 7 + 15 + 7 + 8 + 34, `${camminoM} m · ${camminoMin} min`)
+// appartamento→BO&MIE, BO&MIE→Sagrada, Sagrada→Olimpo, Olimpo→Teixidó, Teixidó→casa, casa→pomeriggio, →cena
+ok('cammino del sabato ricalcolato con le tappe nuove', camminoM === 1291 + 162 + 527 + 1189 + 574 + 672 + 2823 && camminoMin === 16 + 2 + 7 + 15 + 7 + 8 + 34, `${camminoM} m · ${camminoMin} min`)
+
+// ---- BO&MIE: il ritrovo con Giulio ----
+const bm = venues.bomie
+ok('BO&MIE: nome, indirizzo e coordinate', bm.name === 'BO&MIE Barcelona' && bm.addr === 'Carrer de Provença 433, Eixample' && bm.lat === 41.4041701 && bm.lng === 2.1736931)
+ok('BO&MIE: verificato, orari e telefono', bm.verified === true && /8:30-20:30/.test(bm.hours) && bm.phone === '+34 934 84 74 60')
+ok('BO&MIE: voto e recensioni', bm.rating === 4.4 && bm.reviews === 2657)
+ok('sta fra l\'uscita di casa e la Sagrada', sab.map((s) => s.id).join(' ').includes('s3c s4'), sab.map((s) => s.id).join(' '))
+ok('orario e durata: 09:55 per mezz\'ora', stops.s3c.time === '09:55' && stops.s3c.durataMin === 30)
+ok('titolo e perché', stops.s3c.title === 'Caffè con Giulio · BO&MIE' && /prima di entrare/.test(stops.s3c.why))
+ok('dice che Giulio è già atterrato e ha fatto il check-in', stops.s3c.details.some((d) => /atterrato alle 7:40/.test(d) && /check-in/.test(d)))
+ok('dice i 162 m dall\'ingresso di Carrer de la Marina', stops.s3c.details.some((d) => /162 m/.test(d) && /Carrer de la Marina/.test(d)))
+ok('dice che è piccola e si sta in piedi', stops.s3c.details.some((d) => /in piedi al bancone/.test(d)))
+ok('dall\'appartamento: 1.291 m e 16 min a piedi', stops.s3c.distFromPrevM === 1291 && stops.s3c.minFromPrev === 16 && !stops.s3c.distMode)
+ok('ci vanno solo Alessandro e Giulio', JSON.stringify(stops.s3c.people) === JSON.stringify(['ale', 'giulio']))
+ok('foto vera', stops.s3c.img === 'bomie.webp')
+ok('la Sagrada ora dista 162 m e 2 min, da BO&MIE', stops.s4.distFromPrevM === 162 && stops.s4.minFromPrev === 2)
+ok('la Sagrada dice da dove si arriva', stops.s4.details.some((d) => /Due minuti da BO&MIE/.test(d)))
+ok('il percorso della mattina comprende BO&MIE', it.days.find((d) => d.label === 'Sabato').percorsi.find((p) => p.id === 'sab-mattina').stops.join() === 's3c,s4,s5')
+ok('Forn Oriol: dati verificati nella riga del piano B', stops.s5b.details.some((d) => /Forn Oriol, Carrer de Nàpols 113/.test(d) && /6:30-21:00/.test(d) && /938 74 77 54/.test(d)))
 
 // ---- cena dei 40: Bodega Biarritz ----
 const b8 = venues.biarritz
@@ -78,6 +98,25 @@ async function vista(person, path) {
   ok('niente riquadro del conto sul sabato: non è una mezza giornata', await p.locator('.avviso--forte').count() === 0)
   ok('nessun errore JS', errs.length === 0, errs.join(' | '))
   ok('niente overflow a 380px', await p.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth))
+  await ctx.close()
+}
+{
+  const { p, ctx } = await vista('ale', '/#/programma/sab')
+  const bomie = p.locator('.card[data-stop="s3c"]')
+  ok('BO&MIE: la card c\'è, prima della Sagrada', await bomie.count() === 1 && await p.evaluate(() => {
+    const ids = [...document.querySelectorAll('.timeline .card[data-stop]')].map((c) => c.dataset.stop)
+    return ids.indexOf('s3c') === ids.indexOf('s4') - 1
+  }))
+  ok('BO&MIE: la foto si vede', (await bomie.locator('.card__foto img').getAttribute('src')).endsWith('bomie.webp'))
+  ok('BO&MIE: per gentile concessione', (await bomie.locator('.card__credito').innerText()).trim() === 'foto: per gentile concessione')
+  ok('BO&MIE: mezz\'ora e 1,3 km a piedi nei chip', /30 min/.test(await bomie.locator('.chips').innerText()) && /1,3 km · 16 min a piedi/.test(await bomie.locator('.chips').innerText()), await bomie.locator('.chips').innerText())
+  ok('Sagrada: chip dei 162 m', /162 m · 2 min a piedi/.test(await p.locator('.card[data-stop="s4"] .chips').innerText()))
+  await ctx.close()
+}
+{
+  const { p, ctx } = await vista('manuel', '/#/programma/sab')
+  const ids = await p.evaluate(() => [...document.querySelectorAll('.timeline .card[data-stop]')].map((c) => c.dataset.stop))
+  ok('Manuel non vede BO&MIE né la Sagrada: va dritto a Olimpo', !ids.includes('s3c') && !ids.includes('s4') && ids.includes('s5'), ids.join(' '))
   await ctx.close()
 }
 {

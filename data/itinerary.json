@@ -685,6 +685,37 @@
      "img": "olimpo.webp"
     },
     {
+     "id": "s3c",
+     "time": "09:55",
+     "timeStatus": "stimato",
+     "venueId": "bomie",
+     "title": "Caffè con Giulio · BO&MIE",
+     "why": "Boulangerie francese davanti alla Basilica. Mezz'ora insieme prima di entrare, senza correre.",
+     "details": [
+      "Qui ti trovi con Giulio: è atterrato alle 7:40 e ha già fatto il check-in",
+      "162 m dall'ingresso di Carrer de la Marina: due minuti a piedi",
+      "Aperta tutti i giorni dalle 8:30",
+      "4,4 su 2.657 recensioni. Pain au chocolat e croque monsieur i più citati",
+      "Piccola e stretta: si mangia in piedi al bancone, pochi posti a sedere"
+     ],
+     "people": [
+      "ale",
+      "giulio"
+     ],
+     "badges": [
+      "verificato"
+     ],
+     "actions": {
+      "maps": true,
+      "taxi": false,
+      "metro": null
+     },
+     "distFromPrevM": 1291,
+     "minFromPrev": 16,
+     "durataMin": 30,
+     "img": "bomie.webp"
+    },
+    {
      "id": "s4",
      "time": "10:30",
      "timeStatus": "verificato",
@@ -696,7 +727,8 @@
       "Biglietto Alessandro: 105578278 · Giulio: stesso slot",
       "Serve documento con foto, biglietto non cedibile",
       "Tolleranza ritardo 15 min · visita 45–50 min",
-      "Audioguida: app ufficiale (data + email + numero prenotazione) → auricolari"
+      "Audioguida: app ufficiale (data + email + numero prenotazione) → auricolari",
+      "Due minuti da BO&MIE all'ingresso di Carrer de la Marina."
      ],
      "prices": [
       {
@@ -716,8 +748,8 @@
       "taxi": false,
       "metro": null
      },
-     "distFromPrevM": 1309,
-     "minFromPrev": 16,
+     "distFromPrevM": 162,
+     "minFromPrev": 2,
      "img": "sagrada.webp"
     },
     {
@@ -775,7 +807,7 @@
       "Da dire al banco: ¿Me da un pa de pagès recién horneado?",
       "Per averlo già aperto: ¿Me lo puede cortar por la mitad a lo largo?",
       "4,6 su 292 recensioni, tutto fatto in casa",
-      "Piano B se è chiuso: Forn Oriol, Nàpols 113, a 69 metri da casa, aperto fino alle 21:00"
+      "Piano B se è chiuso: Forn Oriol, Carrer de Nàpols 113, a 69 metri da casa. Sabato 6:30-21:00, domenica 8:00-14:30. Tel +34 938 74 77 54"
      ],
      "people": [
       "ale",
@@ -962,6 +994,7 @@
      "mode": "walking",
      "url": "https://www.google.com/maps/dir/?api=1&origin=41.395437,2.179608&destination=41.4066347,2.1799385&travelmode=walking&waypoints=41.4039406,2.1751597",
      "stops": [
+      "s3c",
       "s4",
       "s5"
      ]

@@ -38,6 +38,7 @@ const ALT = {
   'elborn.webp': 'La sala in ferro e vetro dell\'antico mercato del Born, con le rovine del quartiere del 1714 visibili sotto il piano di calpestio',
   'apt.webp': 'L\'insegna illuminata dell\'Aparthotel Nàpols sopra l\'ingresso, di sera',
   'barjoan.webp': 'Il bancone del Bar Joan dentro il mercato, con le bottiglie alle spalle e la gente sugli sgabelli',
+  'bomie.webp': 'L\'ingresso di BO&MIE, con l\'insegna Artisan Bakery & Speciality Coffee e la parete interna a mosaico colorato',
   'biarritz.webp': 'L\'insegna di legno della Bodega Biarritz e le lavagne dei pinchos sul marciapiede',
   'braseria.webp': 'Un cameriere della Brasería Sarrià porta la tartare servita in un mortaio di legno, col pane tostato',
   'canudas.webp': 'La reception in marmo della Sala VIP Canudas, con le lampade a sospensione',

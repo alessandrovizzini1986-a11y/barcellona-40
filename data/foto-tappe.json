@@ -228,6 +228,12 @@
       "file": "assets/tappe/teixido.webp",
       "tappa": "Teixidó Barcelona · Forn de Pa",
       "nota": "Foto fornita da Alessandro, uso autorizzato. Per gentile concessione."
+    },
+    {
+      "id": "bomie",
+      "file": "assets/tappe/bomie.webp",
+      "tappa": "BO&MIE Barcelona",
+      "nota": "Foto fornita da Alessandro, uso autorizzato. Per gentile concessione."
     }
   ],
   "scartate": []

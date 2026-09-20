@@ -252,6 +252,17 @@
    "reviews": 292,
    "hours": "lun-ven 7:00-20:00 · sab 8:00-14:00 · dom chiuso",
    "phone": "+34 686 21 08 40"
+  },
+  "bomie": {
+   "name": "BO&MIE Barcelona",
+   "addr": "Carrer de Provença 433, Eixample",
+   "lat": 41.4041701,
+   "lng": 2.1736931,
+   "verified": true,
+   "rating": 4.4,
+   "reviews": 2657,
+   "hours": "tutti i giorni 8:30-20:30",
+   "phone": "+34 934 84 74 60"
   }
  }
 }
