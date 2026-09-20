@@ -98,6 +98,7 @@ riga "foto: autore / licenza" sotto ogni card. Le foto sono state ritagliate a 1
 | Vermutería Olimpo | `public/assets/tappe/olimpo.webp` | Foto fornita da Alessandro, uso autorizzato |
 | Parcheggio P2 · Bologna | `public/assets/tappe/parcheggio.webp` | Foto fornita da Alessandro, uso autorizzato |
 | Taps Sagrada Familia | `public/assets/tappe/taps.webp` | Foto fornita da Alessandro, uso autorizzato |
+| Teixidó · Forn de Pa | `public/assets/tappe/teixido.webp` | Foto fornita da Alessandro, uso autorizzato |
 | Barcelona Duck Store | `public/assets/tappe/duckstore.webp` | Foto fornita da Alessandro, uso autorizzato |
 
 Nessuna di queste ha una licenza libera e **nessuna sta nella tabella Commons qui sopra**: non si possono

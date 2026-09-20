@@ -285,3 +285,13 @@ Dati presi dalle pagine statiche del sito ufficiale (Visítanos → Documentos n
 - Aggiornati i tre commenti che citavano il generatore (`fetch-photos.mjs`, `validate.mjs`, `card.js`): puntavano a un file che non esiste più.
 - **Ogni tappa del weekend ha la foto del posto**: 14 da Commons, 11 private. La cartella è a **1,20 MB**, dentro il tetto di 1,3.
 - QA `immagini.mjs` a **83 controlli**: ora pretende **zero** `.svg` fra le immagini delle tappe, e per ogni giorno tante attribuzioni quante immagini — prima il Duck Store era l'unica card senza credito, adesso i due numeri coincidono.
+
+## Sabato: il pane da Teixidó, fra Olimpo e il bocadillo
+- **Nuova tappa `s5b` alle 13:00, dieci minuti**, sulla strada del rientro: Teixidó, Carrer de Nàpols 194, 4,6 su 292 recensioni, tutto fatto in casa. Da Olimpo 1.189 m · 15 min a piedi; da lì all'appartamento 574 m · 7 min, che è la nuova distanza del bocadillo (prima arrivava direttamente da Olimpo, 1.726 m).
+- **La chiusura delle 14:00 è un avviso, non un dettaglio.** Il sabato Teixidó chiude alle 14:00 e da Olimpo sono 15 minuti: l'informazione che fa saltare la tappa sta nel riquadro giallo, visibile senza aprire nulla, non sepolta in fondo ai dettagli. Nei dettagli restano il **pa de pagès** (non la baguette: regge il jamón senza sfaldarsi), le due frasi da dire al banco e il piano B, il Forn Oriol a 69 metri da casa.
+- **`teixido.webp`**, foto vera, 640×360, 25 kB, nel blocco `private` con la riga "per gentile concessione".
+- **Il riquadro del conto non compare più quando la catena è di una tappa sola.** Con una durata dichiarata su `s5b`, il sabato si sarebbe messo a mostrare "Soste 10 min + cammino 7 min" come se fosse il totale della giornata: quel riquadro riassume una mezza giornata, e con una tappa sola non è un riassunto, è un equivoco. Il venerdì resta identico, 3h45 di soste e 54 minuti di cammino.
+- Nuova suite `scripts/qa/sabato.mjs`, **27 controlli**, fra cui il cammino del sabato ricalcolato dai dati con le due tratte nuove.
+
+### BO&MIE: non inserita, la foto è arrivata corrotta
+Il blocco base64 si è interrotto: 21.379 byte su disco contro i 31.170 dichiarati dall'intestazione del file, mancava il 31%. L'inizio era giusto — WebP valido, misure esatte 554×311 — si è persa la coda, e senza foto la tappa non passa `npm run validate`. Niente è stato ricostruito a mano: il file è stato cancellato e la pendenza è annotata in `DA_VERIFICARE.md`. Tutto il resto della tappa (venue, 09:55 per 30 minuti, 1.291 m dall'appartamento, 162 m alla Sagrada, testi) si applica appena la foto arriva, insieme alla correzione della distanza della Sagrada.

@@ -45,6 +45,7 @@ const ALT = {
   'olimpo.webp': 'L\'insegna rossa della Vermutería Olimpo, con la botte e le lavagne all\'ingresso',
   'parcheggio.webp': 'Il cartello "P2 Official Parking" sulla facciata del parcheggio di Bologna',
   'taps.webp': 'La vetrina viola dell\'enoteca Taps, con la botte davanti all\'ingresso',
+  'teixido.webp': 'L\'interno di Teixidó, con l\'insegna in metallo Forners i Pastissers e il banco del pane in vista',
   'duckstore.webp': 'La vetrina del Barcelona Duck Store, con la Sagrada Família di mattoncini e le paperelle in fila'
 }
 export const haFoto = (stop) => !!stop.img

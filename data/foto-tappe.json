@@ -222,6 +222,12 @@
       "file": "assets/tappe/duckstore.webp",
       "tappa": "Barcelona Duck Store",
       "nota": "Foto fornita da Alessandro, uso autorizzato. Per gentile concessione."
+    },
+    {
+      "id": "teixido",
+      "file": "assets/tappe/teixido.webp",
+      "tappa": "Teixidó Barcelona · Forn de Pa",
+      "nota": "Foto fornita da Alessandro, uso autorizzato. Per gentile concessione."
     }
   ],
   "scartate": []

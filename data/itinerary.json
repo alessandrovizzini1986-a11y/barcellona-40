@@ -764,13 +764,48 @@
      "img": "olimpo.webp"
     },
     {
+     "id": "s5b",
+     "time": "13:00",
+     "timeStatus": "stimato",
+     "venueId": "teixido",
+     "title": "Il pane, da Teixidó",
+     "why": "Sulla strada del rientro. Dieci minuti e il pranzo è pronto.",
+     "details": [
+      "Chiedi pa de pagès, non baguette: regge il jamón senza sfaldarsi",
+      "Da dire al banco: ¿Me da un pa de pagès recién horneado?",
+      "Per averlo già aperto: ¿Me lo puede cortar por la mitad a lo largo?",
+      "4,6 su 292 recensioni, tutto fatto in casa",
+      "Piano B se è chiuso: Forn Oriol, Nàpols 113, a 69 metri da casa, aperto fino alle 21:00"
+     ],
+     "people": [
+      "ale",
+      "giulio",
+      "manuel"
+     ],
+     "badges": [
+      "verificato"
+     ],
+     "actions": {
+      "maps": true,
+      "taxi": false,
+      "metro": null
+     },
+     "distFromPrevM": 1189,
+     "minFromPrev": 15,
+     "durataMin": 10,
+     "img": "teixido.webp",
+     "avviso": "Teixidó il sabato chiude alle 14:00. Da Olimpo sono 15 minuti a piedi: uscite entro le 13:30."
+    },
+    {
      "id": "s6",
      "time": "13:30",
      "timeStatus": "stimato",
      "venueId": "apt",
      "title": "Bocadillo de jamón in appartamento",
      "why": "Il jamón di Debón, il pane, il divano. Pausa vera.",
-     "details": [],
+     "details": [
+      "Pane di Teixidó preso tornando, jamón di Debón comprato venerdì."
+     ],
      "people": [
       "ale",
       "giulio",
@@ -784,8 +819,8 @@
       "taxi": false,
       "metro": null
      },
-     "distFromPrevM": 1726,
-     "minFromPrev": 21,
+     "distFromPrevM": 574,
+     "minFromPrev": 7,
      "img": "apt.webp"
     },
     {

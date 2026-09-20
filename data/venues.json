@@ -240,6 +240,17 @@
    "reviews": 8232,
    "hours": "aperto 24 ore su 24, tutti i giorni",
    "phone": "+34 932 25 78 78"
+  },
+  "teixido": {
+   "name": "Teixidó Barcelona · Forn de Pa",
+   "addr": "Carrer de Nàpols 194, Eixample",
+   "lat": 41.3989914,
+   "lng": 2.174836,
+   "verified": true,
+   "rating": 4.6,
+   "reviews": 292,
+   "hours": "lun-ven 7:00-20:00 · sab 8:00-14:00 · dom chiuso",
+   "phone": "+34 686 21 08 40"
   }
  }
 }

@@ -26,7 +26,7 @@ function emptyState(person, key) {
 // Il conto della giornata, scritto con i numeri veri: soste e cammino sono somme dei dati, non frasi.
 function avvisoConto(giorno, key) {
   const c = contoDelGiorno(giorno)
-  if (!c || !c.fine) return ''
+  if (!c || !c.fine || c.tappe < 2) return ''
   const totale = c.soste + c.cammino
   const margine = c.margine > 0
     ? `Restano ${fmtMinutes(c.margine)} di margine, non di più.`

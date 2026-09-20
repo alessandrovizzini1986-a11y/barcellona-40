@@ -1,4 +1,4 @@
-// QA delle immagini delle tappe: una per tappa, e sono tutte foto vere. 14 da Wikimedia Commons e 11
+// QA delle immagini delle tappe: una per tappa, e sono tutte foto vere. 14 da Wikimedia Commons e 12
 // private (fornite da chi c'era, uso autorizzato). Nessuna card disegnata: sono sparite tutte.
 // Attribuzione obbligatoria sotto ogni foto — il link alla pagina Commons per le prime, "per gentile
 // concessione" per le seconde.
@@ -14,7 +14,7 @@ const ok = (n, c, x = '') => { out.push(c); if (!c) process.exitCode = 1; consol
 const DIR = 'public/assets/tappe'
 const file = readdirSync(DIR)
 const webp = file.filter((f) => f.endsWith('.webp')), svg = file.filter((f) => f.endsWith('.svg'))
-ok('25 foto WebP: 14 da Commons più 11 private', webp.length === 25, webp.length + '')
+ok('26 foto WebP: 14 da Commons più 12 private', webp.length === 26, webp.length + '')
 ok('nessuna card stilizzata: ogni tappa ha la foto vera', svg.length === 0, svg.join(' '))
 const misure = []
 // Le foto di Commons sono tutte 800×450. Le private partono da originali più piccoli e non si
@@ -35,7 +35,7 @@ const crediti = JSON.parse(readFileSync('data/foto-tappe.json', 'utf8'))
 const privateFile = new Set((crediti.private || []).map((f) => `${f.id}.webp`))
 const cred = readFileSync('CREDITS.md', 'utf8')
 ok('crediti per tutte e 14 le foto di Commons', crediti.foto.length === 14 && crediti.scartate.length === 0)
-ok('le undici foto private sono dichiarate e fuori dai crediti Commons', crediti.private?.length === 11 && crediti.private.every((f) => f.id && f.file && f.tappa && /concessione/i.test(f.nota) && !crediti.foto.some((c) => c.id === f.id)), String(crediti.private?.length))
+ok('le dodici foto private sono dichiarate e fuori dai crediti Commons', crediti.private?.length === 12 && crediti.private.every((f) => f.id && f.file && f.tappa && /concessione/i.test(f.nota) && !crediti.foto.some((c) => c.id === f.id)), String(crediti.private?.length))
 // stanno in CREDITS.md, ma nella tabella delle private: nessuna riga con un link a Commons le nomina
 ok('nessuna foto privata nella tabella Commons di CREDITS.md', crediti.private.every((f) => !cred.split('\n').some((r) => r.includes(f.file) && r.includes('commons.wikimedia.org'))))
 ok('CREDITS.md elenca tutte le foto private', crediti.private.every((f) => cred.includes(f.file)))
@@ -69,7 +69,7 @@ async function vista(person, path) {
   return { p, ctx, errs }
 }
 // Ogni tappa ha la sua foto, e ogni foto la sua attribuzione: i due numeri coincidono
-for (const [giorno, attese, crediti0] of [['ven', 16, 16], ['sab', 7, 7], ['dom', 3, 3]]) {
+for (const [giorno, attese, crediti0] of [['ven', 16, 16], ['sab', 8, 8], ['dom', 3, 3]]) {
   const { p, ctx, errs } = await vista('ale', `/#/programma/${giorno}`)
   const st = await p.evaluate(() => ({
     img: [...document.querySelectorAll('.card[data-stop] .card__foto img')].map((i) => ({ src: i.getAttribute('src').split('/').pop(), nat: i.naturalWidth, lazy: i.getAttribute('loading'), alt: i.getAttribute('alt'), ratio: +(i.getBoundingClientRect().width / i.getBoundingClientRect().height).toFixed(2) })),
