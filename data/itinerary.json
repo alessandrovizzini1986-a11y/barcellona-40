@@ -519,10 +519,14 @@
      "why": "Aperto tutta la notte. Si decide lì, se la serata regge.",
      "details": [
       "Aperto 24 ore su 24",
-      "SERVE IL DOCUMENTO ORIGINALE: passaporto o carta d'identità. Niente fotocopie, niente foto sul telefono",
-      "Zaini e borse grandi vanno lasciati al guardaroba",
+      "SERVE IL DOCUMENTO ORIGINALE. Cittadini UE: carta d'identità o passaporto, documenti originali. Vietato l'ingresso ai minori di 18 anni",
+      "Scarpe da ginnastica sì, infradito e canottiera no",
+      "Zaini grandi non entrano",
+      "Guardaroba a pagamento per valigie e oggetti di grandi dimensioni, gratuito per il resto",
+      "Non ci si registra online: ti schedano all'ingresso col documento",
       "Minimi alti a roulette e blackjack: per giocare poco, slot",
       "Il ristorante interno è stroncato dalle recensioni: andateci dopo cena, non per cena",
+      "Posteggio taxi davanti all'ingresso, Calle Marina 16: per tornare non devi cercare nulla",
       "Dalla Braseria Sarrià: 8,2 km · 22 min in auto",
       "Rientro all'appartamento: 2,1 km · 27 min a piedi, oppure 10 min in auto"
      ],
@@ -541,7 +545,11 @@
      "distFromPrevM": null,
      "minFromPrev": null,
      "durataMin": null,
-     "img": "casino.svg"
+     "img": "casino.svg",
+     "detailsStimati": [
+      "Il casinò ha una pagina promozioni, ma il contenuto non è leggibile da qui: controllala dal telefono qualche giorno prima. https://www.casinobarcelona.com/barcelona/promociones"
+     ],
+     "avviso": "Venerdì avete gli zaini: quelli grandi non entrano in sala e il guardaroba per gli oggetti ingombranti è a pagamento. Valutate di passare prima dall'appartamento."
     }
    ],
    "percorsi": [
@@ -875,10 +883,14 @@
      "why": "Aperto tutta la notte. Si decide lì, se la serata regge.",
      "details": [
       "Aperto 24 ore su 24",
-      "SERVE IL DOCUMENTO ORIGINALE: passaporto o carta d'identità. Niente fotocopie, niente foto sul telefono",
-      "Zaini e borse grandi vanno lasciati al guardaroba",
+      "SERVE IL DOCUMENTO ORIGINALE. Cittadini UE: carta d'identità o passaporto, documenti originali. Vietato l'ingresso ai minori di 18 anni",
+      "Scarpe da ginnastica sì, infradito e canottiera no",
+      "Zaini grandi non entrano",
+      "Guardaroba a pagamento per valigie e oggetti di grandi dimensioni, gratuito per il resto",
+      "Non ci si registra online: ti schedano all'ingresso col documento",
       "Minimi alti a roulette e blackjack: per giocare poco, slot",
       "Il ristorante interno è stroncato dalle recensioni: andateci dopo cena, non per cena",
+      "Posteggio taxi davanti all'ingresso, Calle Marina 16: per tornare non devi cercare nulla",
       "Dalla Bodega Biarritz: 2,3 km · 28 min a piedi",
       "Da Sala Apolo: 3,3 km · 8 min in auto",
       "Rientro all'appartamento: 2,1 km · 27 min a piedi, oppure 10 min in auto"
@@ -899,7 +911,10 @@
      "distFromPrevM": null,
      "minFromPrev": null,
      "durataMin": null,
-     "img": "casino.svg"
+     "img": "casino.svg",
+     "detailsStimati": [
+      "Il casinò ha una pagina promozioni, ma il contenuto non è leggibile da qui: controllala dal telefono qualche giorno prima. https://www.casinobarcelona.com/barcelona/promociones"
+     ]
     }
    ],
    "percorsi": [

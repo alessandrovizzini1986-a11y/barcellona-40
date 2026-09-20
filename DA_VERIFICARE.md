@@ -4,12 +4,13 @@ Generato in parte dagli script dati (`npm run data`). Le sezioni tra marker veng
 
 ## Restano aperte (20/09/2026)
 
-Quattro cose, e due sole sono decisioni: il resto del file sono **note e scelte già prese**, tenute per memoria, non pendenze.
+Cinque cose, e due sole sono decisioni: il resto del file sono **note e scelte già prese**, tenute per memoria, non pendenze.
 
 1. **Civico esatto della Braseria Sarrià** (`c9`) — la prenotazione è fatta, manca solo il numero civico nei dati.
 2. **Attesa del taxi ai Bunkers, domenica sera** — stimata, si rileva sul posto.
 3. **Illuminazione della discesa da Carrer de Marià Labèrnia** — stimata, si rileva sul posto.
 4. **Le 18:58 hanno una precisione di ±1 minuto**, non al secondo: dipende da dove si mette il bordo del disco solare e da quanta rifrazione si conta.
+5. **Promozioni Casino Barcelona** — pagina dinamica, da controllare manualmente prima del viaggio.
 
 Più due che non dipendono da noi: i **voli di ritorno di Giulio e Manuel** (`c2`, tiene aperta la tappa `d3`), l'esistenza di **SOUNDIT Plaza** (`c8`) e le **coordinate automatiche della Bodega Biarritz** (`c10`).
 
@@ -57,6 +58,8 @@ Nessuna: tutte le tappe hanno le coordinate e la distanza dalla precedente.
 - **Tramonto dei Bunkers: verificato con due algoritmi indipendenti.** Tramonto astronomico del 18/10/2026 alle 19:07 sulle coordinate del belvedere (41.4193, 2.1618), fuso CEST — l'ora legale spagnola finisce il 25 ottobre. Fine del crepuscolo civile 19:36. Non è più una voce aperta.
 - **Sparizione del sole dietro Collserola: calcolata, voce chiusa.** Profilo altimetrico SRTM 30 m (opentopodata.org) campionato ogni 250 m fino a 15 km su cinque azimut da 250° a 262°, con correzione per la curvatura terrestre. Sull'azimut del tramonto (256°) la cresta sta a **1,14°**: 369 m a 5,2 km, un crinale secondario di Collserola. Incrociato con la traiettoria solare dà le **18:58**. Verificato due volte in modo indipendente: stesso profilo, stesso angolo, e la posizione del sole ricalcolata con NOAA dà 18:55 per il centro del disco, 18:57 con il semidiametro e **18:59** aggiungendo la rifrazione a quell'altezza. Le 18:58 stanno in mezzo: **la precisione reale è ±1 minuto**, non al secondo.
 - **Nota di metodo: la stima precedente sbagliava di otto minuti** (diceva 18:50) perché prendeva la cima più nota, il Tibidabo a 512 m, invece della cima **sulla linea giusta**. Il Tibidabo sta più a nord dell'azimut del tramonto e da lassù il sole non ci passa dietro. Regola: per un orizzonte locale serve il profilo del terreno lungo l'azimut, non la montagna che uno conosce.
+- **Promozioni Casino Barcelona: non verificabili da qui.** La pagina `casinobarcelona.com/barcelona/promociones` esiste ma il contenuto si carica via JavaScript e da questo ambiente non è leggibile: nessuna promozione è stata scritta nei dati. Il link sta fra i dettagli **stimati** della tappa, da aprire dal telefono qualche giorno prima. Tutto il resto dei dati del casinò viene dalle pagine statiche del sito ufficiale (Visítanos, sezioni Documentos necesarios, Código de vestimenta, Ubicación y contacto).
+- **Attenzione a non confondere `casinobarcelona.com` con `casinobarcelona.es`**: il secondo è il casinò **online** dello stesso gruppo. I suoi bonus non valgono in sala e non c'entrano niente con la serata. Nel sito non compare da nessuna parte.
 - **Attesa del taxi ai Bunkers di domenica sera: stimata, da controllare sul posto.** "In cima non passano taxi, prenotalo dall'app" è un ragionamento sulla zona residenziale, non un rilievo. È l'unica variabile che sposta davvero lo scenario peggiore del rientro.
 - **Illuminazione della strada di discesa (Carrer de Marià Labèrnia): stimata, da controllare sul posto.** Il piano B "scendi a piedi e richiama da lì" presume che alle 19:30 di metà ottobre la strada sia illuminata. Non verificabile a distanza.
 - **El Mirador, distanza**: ora c'è, presa dall'appartamento come dice il tuo link del percorso: 4.961 m e 18 min in auto secondo Valhalla (il tuo link dice 6 km coi mezzi, che è un altro itinerario). Sulla card è marcata come tratta in auto, non a piedi.

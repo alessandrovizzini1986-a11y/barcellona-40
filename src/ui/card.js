@@ -1,7 +1,7 @@
 // Card tappa: orario, titolo, "perché", chip distanza/prezzi, badge, azioni, dettagli, checkbox "Fatto"
 import { icon } from './icons.js'
 import { badge, badges as badgeHtml } from './badge.js'
-import { esc } from './html.js'
+import { esc, escLink } from './html.js'
 import { badgesFor, fmtDist, fmtEur, mapsUrl, taxiUrl, TAXI_FALLBACK, missionByStop, hasCoords, DAY_COLOR, durataDi, totaleTratta } from '../data.js'
 import { fmtMinutes } from '../time.js'
 import { store } from '../store.js'
@@ -103,10 +103,10 @@ export function stopCard(stop, { person = null, isNow = false, nowLabel = 'adess
   const prices = (stop.prices || []).map((p) => `<span class="chip chip--price">${esc(p.label)} · ${fmtEur(p.eur)}</span>`).join('')
   // Alcuni venue hanno il voto senza il numero di recensioni: si mostra quello che c'è, senza inventare
   const voto = v?.rating ? `<span class="chip">★ ${String(v.rating).replace('.', ',')}${v.reviews ? ` · ${v.reviews.toLocaleString('it-IT')}` : ''}</span>` : ''
-  const details = (stop.details || []).map((d) => `<li class="${/ATTENZIONE|NON confermato|da verificare|da chiarire/i.test(d) ? 'alert' : ''}">${esc(d)}</li>`).join('')
+  const details = (stop.details || []).map((d) => `<li class="${/ATTENZIONE|NON confermato|da verificare|da chiarire/i.test(d) ? 'alert' : ''}">${escLink(d)}</li>`).join('')
   // Consigli nostri, non dati confermati: stanno nello stesso pannello ma sotto il badge "stimato",
   // così chi legge sa che è un ragionamento sulla zona e non un orario o un numero verificato.
-  const stimati = (stop.detailsStimati || []).map((d) => `<li>${esc(d)}</li>`).join('')
+  const stimati = (stop.detailsStimati || []).map((d) => `<li>${escLink(d)}</li>`).join('')
   const bloccoStimati = stimati ? `<div class="card__stimati"><p class="card__stimati-tit">${badge('stimato')}<span>ragionamento nostro, non un dato confermato</span></p><ul>${stimati}</ul></div>` : ''
   const acts = []
   if (stop.actions?.maps) acts.push(`<a class="btn" href="${mapsUrl(stop)}" target="_blank" rel="noopener">${icon('map-pin')} Maps</a>`)

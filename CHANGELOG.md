@@ -257,3 +257,15 @@
 - `scripts/validate.mjs` accetta `time: null` **solo** insieme a `timeStatus: "opzionale"` (e viceversa, e pretende `durataMin` nullo): così non nasce per sbaglio una tappa senza ora che il sito tratta come un impegno.
 - Nuova suite `scripts/qa/opzionali.mjs`, **63 controlli**. Le altre si adeguano: `venerdi` (f99 in coda), `viaggio` (la fila cronologica salta le card senza orario), `immagini` (una card stilizzata e una immagine in più per giorno).
 - Bug trovato dalla QA: l'immagine `eager` finiva anche sulla prima card opzionale, perché la lista delle opzionali riparte da indice zero. Ora l'eager si aggancia all'**id** della prima tappa in programma, non alla posizione.
+
+## Casino Barcelona: dress code, documenti, zaini
+Dati presi dalle pagine statiche del sito ufficiale (Visítanos → Documentos necesarios, Código de vestimenta, Ubicación y contacto), non da ricordi.
+- **Dress code**: scarpe da ginnastica sì; vietati infradito, espadrillas, costume, canottiera, caschi da moto e **zaini di grandi dimensioni**.
+- **Avviso solo sul venerdì** (`f99`), in giallo sulla card: quel giorno si gira con gli zaini tutto il giorno, quelli grandi non entrano in sala e il guardaroba per gli ingombranti si paga. Sabato l'avviso non c'è, perché gli zaini sono già a casa.
+- **Guardaroba, correzione**: non è gratis per tutto. A pagamento per valigie e oggetti di grandi dimensioni, gratuito per il resto. La riga di prima diceva solo "zaini e borse grandi al guardaroba".
+- **Documenti**, formulazione ufficiale: cittadini UE carta d'identità o passaporto, **documenti originali**, vietato l'ingresso ai minori di 18 anni. La riga resta in maiuscolo e in cima ai dettagli.
+- **Taxi**: posteggio davanti all'ingresso, in Calle Marina 16. Per tornare non si cerca niente.
+- **Non esiste una registrazione online**: la schedatura si fa all'ingresso col documento. Verificato su Visítanos, Club e Requisitos de acceso.
+- **Promozioni: non verificabili da qui.** La pagina esiste ma si carica via JavaScript, quindi nessuna promozione è finita nei dati: il link sta fra i dettagli **stimati**, da aprire dal telefono prima di partire. Annotato in `DA_VERIFICARE.md`, insieme all'avvertenza di non confondere `casinobarcelona.com` con `casinobarcelona.es`, che è il casinò **online** dello stesso gruppo e i cui bonus in sala non valgono niente.
+- Per il link serviva un link vero: i dettagli ora passano da `escLink()`, che **prima escapa tutto** il testo e solo dopo riconosce le URL. Nei dati continua a stare solo testo, mai HTML.
+- `scripts/qa/opzionali.mjs` sale a **86 controlli**, fra cui che il testo del link non finisca a schermo escapato e che di `casinobarcelona.es` non ci sia traccia da nessuna parte.
