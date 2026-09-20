@@ -453,8 +453,7 @@
       "monne"
      ],
      "badges": [
-      "stimato",
-      "da_verificare"
+      "verificato"
      ],
      "actions": {
       "maps": true,
@@ -686,7 +685,7 @@
     },
     {
      "id": "s3c",
-     "time": "09:55",
+     "time": "09:45",
      "timeStatus": "stimato",
      "venueId": "bomie",
      "title": "Caffè con Giulio · BO&MIE",
@@ -696,7 +695,8 @@
       "162 m dall'ingresso di Carrer de la Marina: due minuti a piedi",
       "Aperta tutti i giorni dalle 8:30",
       "4,4 su 2.657 recensioni. Pain au chocolat e croque monsieur i più citati",
-      "Piccola e stretta: si mangia in piedi al bancone, pochi posti a sedere"
+      "Piccola e stretta: si mangia in piedi al bancone, pochi posti a sedere",
+      "Tredici minuti di margine prima dell'ingresso. Se il caffè va lungo, è questa la tappa da accorciare, non la Sagrada."
      ],
      "people": [
       "ale",
@@ -860,12 +860,12 @@
      "time": "15:00",
      "timeStatus": "stimato",
      "venueId": "monumental",
-     "title": "Pomeriggio libero · opzione techno diurno",
-     "why": "Solo se finisce prima delle 19:00. Da confermare su Resident Advisor.",
+     "title": "Pomeriggio libero",
+     "why": "Nessun programma. Siesta, passeggiata, o quello che c'è in giro.",
      "details": [
-      "SOUNDIT Plaza: Marcel Dettmann @ Plaza Monumental (672 m, 8 min a piedi) — evento NON confermato",
-      "Happy Techno Open Air @ La Terrrazza (5,6 km, taxi 18 min) — evento NON confermato",
-      "Se non confermati: siesta, Sant Antoni (2,7 km, 33 min a piedi) o passeggiata"
+      "Se c'è un open air che vi va, si decide lì: non abbiamo prenotato niente e non stiamo dietro ai programmi",
+      "A piedi da casa: Plaza Monumental 672 m, Mercat de Sant Antoni 2,7 km",
+      "Il punto sulla mappa è la Plaza Monumental: da lì sono calcolate le distanze della sera"
      ],
      "people": [
       "ale",
@@ -873,7 +873,7 @@
       "manuel"
      ],
      "badges": [
-      "da_verificare"
+      "stimato"
      ],
      "actions": {
       "maps": true,
@@ -892,8 +892,7 @@
      "title": "Cena dei 40 · Bodega Biarritz 1881",
      "why": "Alle 19:30 siete già seduti. Niente prenotazione: si arriva puntuali.",
      "details": [
-      "Si sceglie una fascia di prezzo prima di entrare: le tapas arrivano a sorpresa, senza scegliere i piatti",
-      "Una recensione: fascia bassa con un antipasto, 8 tapas e due shot, più una bottiglia di vino, poco meno di 70 euro in due",
+      "Si sceglie una fascia di prezzo prima di entrare, poi le tapas arrivano a sorpresa: non si ordina dal menu",
       "Aperto gio-lun 12:30-23:00, martedì e mercoledì chiuso: sabato 17 siete nella finestra giusta",
       "4,7 su 9.353 recensioni",
       "Foto di gruppo obbligatoria"
@@ -913,7 +912,10 @@
      },
      "distFromPrevM": 2823,
      "minFromPrev": 34,
-     "img": "biarritz.webp"
+     "img": "biarritz.webp",
+     "detailsStimati": [
+      "Una recensione riporta: fascia bassa con antipasto, 8 tapas e due shot, più una bottiglia di vino, poco meno di 70 euro in due. Sui 30-35 a testa, vino compreso. Le fasce esatte non sono pubblicate: si vedono all'ingresso."
+     ]
     },
     {
      "id": "s9",

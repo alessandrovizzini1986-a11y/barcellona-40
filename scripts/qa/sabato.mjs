@@ -45,7 +45,15 @@ ok('BO&MIE: nome, indirizzo e coordinate', bm.name === 'BO&MIE Barcelona' && bm.
 ok('BO&MIE: verificato, orari e telefono', bm.verified === true && /8:30-20:30/.test(bm.hours) && bm.phone === '+34 934 84 74 60')
 ok('BO&MIE: voto e recensioni', bm.rating === 4.4 && bm.reviews === 2657)
 ok('sta fra l\'uscita di casa e la Sagrada', sab.map((s) => s.id).join(' ').includes('s3c s4'), sab.map((s) => s.id).join(' '))
-ok('orario e durata: 09:55 per mezz\'ora', stops.s3c.time === '09:55' && stops.s3c.durataMin === 30)
+ok('orario e durata: 09:45 per mezz\'ora', stops.s3c.time === '09:45' && stops.s3c.durataMin === 30)
+// 09:45 + 30 di sosta + 2 di strada = 10:17, contro un ingresso alle 10:30: il margine è quello, calcolato
+ok('margine vero prima della Sagrada: 13 minuti', (() => {
+  const [h, m] = stops.s3c.time.split(':').map(Number)
+  const fine = h * 60 + m + stops.s3c.durataMin + stops.s4.minFromPrev
+  const ingresso = 10 * 60 + 30
+  return ingresso - fine === 13
+})())
+ok('la card dice quanto margine c\'è e cosa accorciare', stops.s3c.details.some((d) => /Tredici minuti di margine/.test(d) && /non la Sagrada/.test(d)))
 ok('titolo e perché', stops.s3c.title === 'Caffè con Giulio · BO&MIE' && /prima di entrare/.test(stops.s3c.why))
 ok('dice che Giulio è già atterrato e ha fatto il check-in', stops.s3c.details.some((d) => /atterrato alle 7:40/.test(d) && /check-in/.test(d)))
 ok('dice i 162 m dall\'ingresso di Carrer de la Marina', stops.s3c.details.some((d) => /162 m/.test(d) && /Carrer de la Marina/.test(d)))
@@ -65,7 +73,12 @@ ok('Biarritz: niente più coordinate automatiche', b8.verified === true && b8.ge
 ok('Biarritz: voto e recensioni', b8.rating === 4.7 && b8.reviews === 9353)
 ok('Biarritz: orari col martedì e mercoledì chiuso', /gio-lun 12:30-23:00/.test(b8.hours) && /martedì e mercoledì chiuso/.test(b8.hours), b8.hours)
 ok('cena: si sceglie la fascia di prezzo, non i piatti', stops.s8.details.some((d) => /fascia di prezzo prima di entrare/.test(d) && /a sorpresa/.test(d)))
-ok('cena: la recensione col conto in due', stops.s8.details.some((d) => /8 tapas/.test(d) && /70 euro in due/.test(d)))
+ok('cena: la recensione sta fra gli stimati, non fra i verificati', stops.s8.detailsStimati.some((d) => /8 tapas/.test(d) && /70 euro in due/.test(d) && /non sono pubblicate/.test(d)) && !stops.s8.details.some((d) => /70 euro/.test(d)))
+ok('cena: il meccanismo delle fasce resta un dato verificato', stops.s8.details.some((d) => /non si ordina dal menu/.test(d)))
+// il pomeriggio di sabato non insegue più eventi che nessuno ha confermato
+ok('pomeriggio libero: niente eventi non confermati', stops.s7.title === 'Pomeriggio libero' && !JSON.stringify(stops.s7).includes('NON confermato') && !/SOUNDIT|Resident Advisor/.test(JSON.stringify(stops.s7)))
+ok('pomeriggio libero: badge stimato, non da verificare', JSON.stringify(stops.s7.badges) === JSON.stringify(['stimato']))
+ok('nessuna tappa porta più il badge da_verificare', !sab.concat(it.days.flatMap((d) => d.stops)).some((s) => (s.badges || []).includes('da_verificare')))
 ok('cena: sabato 17 è dentro la finestra di apertura', stops.s8.details.some((d) => /sabato 17 siete nella finestra giusta/.test(d)))
 ok('cena: nessun badge di coordinate automatiche', !stops.s8.badges.includes('geocoded'))
 // Nessun venue del sito ha più coordinate automatiche
