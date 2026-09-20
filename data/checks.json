@@ -1,11 +1,6 @@
 { "checks":[
- {"id":"c2","stopId":"d3","who":"ale","text":"Voli di ritorno domenica 18 di Giulio e Manuel (Alessandro: FR5220 delle 23:05, verificato)"},
- {"id":"c3","stopId":"f15","who":"ale","text":"Braseria Sarrià: portare la prenotazione a 2 coperti"},
- {"id":"c4","stopId":"f12","who":"ale","text":"Hotel: il prezzo €430 include già il 3° adulto? Aliquota tassa di soggiorno? Quando si paga il sovrapprezzo?"},
- {"id":"c5","stopId":"f12","who":"ale","text":"Hotel: cancellare la richiesta di letto extra per il 4° ospite di sabato (non serve più)"},
- {"id":"c6","stopId":"f1","who":"monne","text":"Deposito bagagli venerdì mattina 08:05 → 15:00"},
- {"id":"c7","stopId":"s9","who":"ale","text":"Programma notturno Sala Apolo sabato 17 (interferenza Soundhood a 89 m)"},
- {"id":"c8","stopId":"s7","who":"ale","text":"SOUNDIT Plaza / Happy Techno Open Air: esistono? orari? (Resident Advisor)"},
- {"id":"c9","stopId":"f15","who":"ale","text":"Civico esatto della Braseria Sarrià"},
- {"id":"c10","stopId":null,"who":"ale","text":"Coordinate geocodificate automaticamente: Biarritz e Bunkers"}
+ {"id": "c2", "stopId": "d3", "who": "ale", "text": "Voli di ritorno domenica 18 di Giulio e Manuel (Alessandro: FR5220 delle 23:05, verificato)"},
+ {"id": "c8", "stopId": "s7", "who": "ale", "text": "SOUNDIT Plaza / Happy Techno Open Air: esistono? orari? (Resident Advisor)"},
+ {"id": "c9", "stopId": "f15", "who": "ale", "text": "Civico esatto della Braseria Sarrià"},
+ {"id": "c10", "stopId": null, "who": "ale", "text": "Coordinate geocodificate automaticamente: Bodega Biarritz"}
 ]}

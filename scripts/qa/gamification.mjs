@@ -1,6 +1,8 @@
 // QA gamification: riproduce il bug "titolo barrato con casella vuota" e verifica la coerenza
 // tra stato salvato, classe card--done, casella e XP dopo più navigazioni.
 import { chromium } from 'playwright-core'
+import { readFileSync } from 'node:fs'
+const CHECKS = JSON.parse(readFileSync('data/checks.json', 'utf8')).checks
 const base = process.argv[2] || 'http://localhost:4173'
 const exe = process.env.CHROME_PATH || '/opt/pw-browsers/chromium-1194/chrome-linux/chrome'
 const b = await chromium.launch({ executablePath: exe, args: ['--no-sandbox'] })
@@ -97,11 +99,12 @@ for (const hops of [2, 3, 5]) {
 {
   const { p, ctx } = await open('ale')
   for (const h of ['info', 'oggi', 'info', 'missioni', 'info/verifiche']) await go(p, h) // l'ultimo apre l'accordion delle verifiche
-  await tick(p, 'input[data-check="c3"]', true)
-  ok('verifica c3 on', await p.evaluate(() => JSON.parse(localStorage.getItem('b40:v1:checks')).includes('c3')))
-  ok('contatore verifiche sceso a 8', (await p.locator('#sec-verifiche summary').textContent()).includes('(8)'))
-  await tick(p, 'input[data-check="c3"]', false)
-  ok('verifica c3 off', await p.evaluate(() => !JSON.parse(localStorage.getItem('b40:v1:checks')).includes('c3')))
+  await tick(p, 'input[data-check="c9"]', true)
+  ok('verifica c9 on', await p.evaluate(() => JSON.parse(localStorage.getItem('b40:v1:checks')).includes('c9')))
+  // il contatore parte dal numero di voci vere, non da una costante scritta a mano
+  ok(`contatore verifiche sceso a ${CHECKS.length - 1}`, (await p.locator('#sec-verifiche summary').textContent()).includes(`(${CHECKS.length - 1})`))
+  await tick(p, 'input[data-check="c9"]', false)
+  ok('verifica c9 off', await p.evaluate(() => !JSON.parse(localStorage.getItem('b40:v1:checks')).includes('c9')))
   await ctx.close()
 }
 

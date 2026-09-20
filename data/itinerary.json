@@ -17,7 +17,7 @@
      "title": "Atterraggio a Barcellona",
      "why": "FR2097. Il weekend inizia adesso.",
      "details": [
-      "Monne ha 7 ore prima del check-in delle 15:00: chiedere all'hotel il deposito bagagli (da verificare)",
+      "Zaini al seguito tutto il giorno: il check-in è alle 15:00.",
       "Aerobus A2 dal T2 → Plaça Catalunya, oppure taxi"
      ],
      "people": [
@@ -373,7 +373,8 @@
       "Prenotazione #6178165481 · €430 totali · 2 camere, 70 m²",
       "Reception 24h: Giulio e Manuel possono fare check-in da soli sabato",
       "Frigo in cucina: metti subito il jamón",
-      "Sovrapprezzo 3° ospite sabato notte (€65 + tassa): da chiarire in reception"
+      "Venerdì notte in due, sabato in tre",
+      "€65 per il letto extra di sabato, si pagano in reception"
      ],
      "prices": [
       {
@@ -386,8 +387,7 @@
       "monne"
      ],
      "badges": [
-      "verificato",
-      "da_verificare"
+      "verificato"
      ],
      "actions": {
       "maps": true,
@@ -477,7 +477,7 @@
       "Voce 47: costilla de vaca vieja, 450 g — la fiorentina spagnola (bassa temperatura + salsa, non brace pura)",
       "Vino: Bai Gorri ½ L, Rioja Tempranillo — il formato giusto per non esagerare",
       "Un bicchiere d'acqua per ogni calice. Niente digestivi. Domani alle 10:30 sei alla Sagrada",
-      "PRENOTAZIONE DA PORTARE A 2 PERSONE (Monne)"
+      "Prenotato per 2, venerdì sera"
      ],
      "prices": [
       {
@@ -498,8 +498,7 @@
       "monne"
      ],
      "badges": [
-      "verificato",
-      "da_verificare"
+      "verificato"
      ],
      "actions": {
       "maps": true,
@@ -810,10 +809,11 @@
      "time": "00:15",
      "timeStatus": "stimato",
      "venueId": "apolo",
-     "title": "Sala Apolo · dopo mezzanotte",
-     "why": "3,5 km: metro L2/L3 fino a Paral·lel o taxi in dieci minuti.",
+     "title": "Dopo cena · si vede",
+     "why": "Nessun programma. Si decide lì, con quello che ha voglia il gruppo.",
      "details": [
-      "ATTENZIONE: sabato 17 a 89 m da Apolo c'è Soundhood Barcelona 2026 (Paral·lel 62, porte 17:00, concerto 20:30, Mandy Indiana / Honeyglaze / Fat Dog, da €31,15). Verificare il programma notturno di Apolo prima di contarci"
+      "Sala Apolo è l'opzione più probabile: metro L2/L3 fino a Paral·lel o taxi in dieci minuti",
+      "Nessuna prenotazione, nessun orario da rispettare"
      ],
      "people": [
       "ale",
@@ -821,7 +821,7 @@
       "manuel"
      ],
      "badges": [
-      "da_verificare"
+      "stimato"
      ],
      "actions": {
       "maps": true,

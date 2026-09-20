@@ -112,6 +112,33 @@ for (const [person, path] of [['ale', '/#/oggi'], ['ale', '/?now=2026-10-17T10:0
   ok(`no overflow ${path} (${person})`, !over && errors.length === 0, errors.join(' | '))
   await ctx.close()
 }
+// Pendenze chiuse: quello che era "da verificare" adesso è un dato, e si vede sulla card
+{
+  const { p, ctx } = await open('ale', '/#/programma/ven')
+  const apt = p.locator('.card[data-stop="f12"]')
+  await apt.locator('summary').click(); await p.waitForTimeout(350)
+  const testoApt = await apt.innerHTML()
+  ok('appartamento · venerdì in due, sabato in tre', /Venerdì notte in due, sabato in tre/.test(testoApt))
+  ok('appartamento · €65 in reception', /€65 per il letto extra di sabato/.test(testoApt))
+  ok('appartamento · niente più tassa di soggiorno da chiarire', !/tassa/i.test(testoApt))
+  ok('appartamento · niente badge da verificare', await apt.locator('.badge--da_verificare').count() === 0)
+  const bra = p.locator('.card[data-stop="f15"]')
+  await bra.locator('summary').click(); await p.waitForTimeout(350)
+  const testoBra = await bra.innerHTML()
+  ok('braseria · prenotato per 2', /Prenotato per 2, venerdì sera/.test(testoBra))
+  ok('braseria · via la riga in maiuscolo sulla prenotazione', !/PRENOTAZIONE DA PORTARE/.test(testoBra))
+  ok('braseria · niente badge da verificare', await bra.locator('.badge--da_verificare').count() === 0)
+  await ctx.close()
+}
+{
+  const { p, ctx } = await open('ale', '/#/programma/sab')
+  const post = p.locator('.card[data-stop="s9"]')
+  ok('sabato · il dopo cena è una tappa aperta', (await post.locator('.card__title').innerText()).includes('Dopo cena'))
+  ok('sabato · niente più avviso su Soundhood', !/Soundhood/i.test(await post.innerHTML()))
+  ok('sabato · niente badge da verificare sul dopo cena', await post.locator('.badge--da_verificare').count() === 0)
+  ok('sabato · Apolo resta raggiungibile da Maps', (await post.locator('a[href*="maps"]').count()) >= 1)
+  await ctx.close()
+}
 await b.close()
 for (const [s, n, e] of results) console.log(s, n, e ? `(${e})` : '')
 console.log(`\n${results.filter((r) => r[0] === '✓').length}/${results.length} test ok`)

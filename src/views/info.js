@@ -47,7 +47,7 @@ export async function render(root, { person, sub, header }) {
         <li>Check-in venerdì dalle 15:00. Reception 24h: chi arriva sabato fa self check-in a nome Alessandro</li>
         <li>Chiedi <strong>3 set di chiavi</strong></li>
         <li>Frigo in cucina: il jamón di Debón va dentro subito</li>
-        <li>Sovrapprezzo 3° ospite sabato notte (€65 + tassa): da chiarire in reception</li>
+        <li>Venerdì notte in due, sabato in tre: <strong>€65</strong> per il letto extra di sabato, si pagano in reception</li>
       </ul>
       <a class="btn" href="https://www.google.com/maps/dir/?api=1&destination=41.395437,2.179608&travelmode=walking" target="_blank" rel="noopener">${icon('map-pin')} Apri in Maps</a>`)}
     ${sec('profilo', 'Profilo', `

@@ -2,6 +2,17 @@
 
 Generato in parte dagli script dati (`npm run data`). Le sezioni tra marker vengono riscritte a ogni esecuzione.
 
+## Restano aperte (20/09/2026)
+
+Quattro cose, e due sole sono decisioni: il resto del file sono **note e scelte già prese**, tenute per memoria, non pendenze.
+
+1. **Civico esatto della Braseria Sarrià** (`c9`) — la prenotazione è fatta, manca solo il numero civico nei dati.
+2. **Attesa del taxi ai Bunkers, domenica sera** — stimata, si rileva sul posto.
+3. **Illuminazione della discesa da Carrer de Marià Labèrnia** — stimata, si rileva sul posto.
+4. **Le 18:58 hanno una precisione di ±1 minuto**, non al secondo: dipende da dove si mette il bordo del disco solare e da quanta rifrazione si conta.
+
+Più due che non dipendono da noi: i **voli di ritorno di Giulio e Manuel** (`c2`, tiene aperta la tappa `d3`), l'esistenza di **SOUNDIT Plaza** (`c8`) e le **coordinate automatiche della Bodega Biarritz** (`c10`).
+
 ## geocoding
 
 <!-- geocoding:start -->
@@ -17,14 +28,11 @@ Nessuna: tutte le tappe hanno le coordinate e la distanza dalla precedente.
 ## Voci aperte (da `data/checks.json`, spuntabili nella sezione Info → Da verificare)
 
 - c2 · Voli di ritorno domenica 18 di Giulio e Manuel (Alessandro: FR5220 delle 23:05, verificato)
-- c3 · Braseria Sarrià: portare la prenotazione a 2 coperti
-- c4 · Hotel: il prezzo €430 include già il 3° adulto? Aliquota tassa di soggiorno? Quando si paga il sovrapprezzo?
-- c5 · Hotel: cancellare la richiesta di letto extra per il 4° ospite di sabato (non serve più)
-- c6 · Deposito bagagli venerdì mattina 08:05 → 15:00 (Monne)
-- c7 · Programma notturno Sala Apolo sabato 17 (interferenza Soundhood a 89 m)
 - c8 · SOUNDIT Plaza / Happy Techno Open Air: esistono? orari? (Resident Advisor)
 - c9 · Civico esatto della Braseria Sarrià
 - c10 · Coordinate geocodificate automaticamente: Bodega Biarritz (vedi sezione geocoding)
+
+**Chiuse il 20/09**: c3 (Braseria riprenotata per 2), c4 e c5 (letto extra di sabato €65 in reception, richiesta del 4° ospite cancellata, tassa di soggiorno non tracciata), c6 (niente deposito bagagli, zaini al seguito), c7 (il post-cena di sabato non ha più vincoli: Soundhood non c'entra più).
 
 ## Altri dati mancanti o non verificati
 
@@ -34,8 +42,8 @@ Nessuna: tutte le tappe hanno le coordinate e la distanza dalla precedente.
 - **Distanze a piedi: motore di routing sostituito.** Il server demo `router.project-osrm.org` ignora il profilo `/foot/` e restituisce sempre percorsi stradali per auto (verificato: `/foot/` e `/driving/` danno risultati identici), quindi gonfiava ogni distanza a piedi. Ora `scripts/distances.mjs` usa Valhalla di OpenStreetMap con costing `pedestrian` (`auto` per le tratte in auto o taxi) e prende i minuti dal tempo restituito da Valhalla, non più da una conversione a 5 km/h. Restano stime su dati OpenStreetMap, non rilievi sul posto.
 - **Bar Joan: coordinate prese dal mercato.** Il locale è dentro il Mercat de Santa Caterina e non ha coordinate proprie: sulla mappa il suo marker sta sopra quello del mercato. Stessa cosa per `f10` e `f11`, che sono entrambi all'appartamento.
 
-- Numero volo di Giulio (atterraggio 07:40 confermato) e di Manuel (09:45).
-- Voli di ritorno di Giulio e Manuel: la tappa `d3` resta `da_verificare` e continua a dire le 20:00. Quella di Alessandro non lo è più: FR5220 delle 23:05, con il percorso completo in `data/viaggio.json`.
+- **Arrivi di Giulio e Manuel: chiusi.** Gli orari di atterraggio (07:40 e 09:45 di sabato) bastano, il numero del volo non serve: le loro schede non sono più `da_verificare`.
+- **Voli di ritorno di Giulio e Manuel: ancora aperti** (`c2`). La tappa `d3` resta `da_verificare` e continua a dire le 20:00. Quella di Alessandro non lo è più: FR5220 delle 23:05, col percorso completo in `data/viaggio.json`.
 - **Braseria Sarrià, distanza**: 4.580 m e 15 min sono la strada in auto secondo Valhalla, non il percorso dei mezzi. Il tuo link dice 4,3 km: è un altro itinerario, non un errore.
 - **Bar Joan e il mercato**: il link del percorso di venerdì mattina finisce a 41.386162, 2.1786073, che è a una trentina di metri dalle coordinate del mercato nei nostri dati (41.3863611, 2.1781566). Nessuna conseguenza pratica, ma sono due punti leggermente diversi.
 - **Orari della mattina di venerdì**: sono quelli decisi da te, non ricavati da un calcolo. Le distanze, i minuti a piedi e le durate delle soste invece sono dati, e il sito li somma da solo.

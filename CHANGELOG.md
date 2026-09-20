@@ -231,3 +231,13 @@
 - **Nota di metodo, annotata in `DA_VERIFICARE.md`**: la stima sbagliava perché prendeva la cima più nota invece della cima sulla linea giusta. Otto minuti di errore. Per un orizzonte locale serve il profilo del terreno lungo l'azimut, non la montagna che uno conosce.
 - Nel changelog la **v13 dichiara cosa corregge della v12**, come la v12 faceva con la v11.
 - `scripts/qa/percorsi.mjs` sale a 64 controlli: la fonte del calcolo nei dettagli, e la prova che "18:50" e "18:31" non compaiono più da nessuna parte nella tappa.
+
+## Sette pendenze chiuse
+- **Appartamento**: venerdì notte in due, sabato in tre. **€65 per il letto extra di sabato, si pagano in reception.** La richiesta per il 4° ospite era già stata cancellata. Il badge `da_verificare` sparisce dal check-in, e con lui `c4` e `c5`.
+- **Tassa di soggiorno**: non si traccia più. Via ogni riferimento all'aliquota dalla card, dalla sezione Info e da `DA_VERIFICARE.md`.
+- **Braseria Sarrià**: prenotazione rifatta per 2, stesso orario, la vecchia cancellata. Via la riga in maiuscolo "PRENOTAZIONE DA PORTARE A 2" e il badge; al suo posto un dato normale, "Prenotato per 2, venerdì sera". Resta aperto solo il civico (`c9`).
+- **Sabato dopo cena**: non è più "Sala Apolo · dopo mezzanotte" con l'avviso sull'interferenza di Soundhood, è **"Dopo cena · si vede"**. Nessuna prenotazione, nessun orario: Apolo resta indicata come l'opzione più probabile, con coordinate e link Maps dove erano. Il badge diventa `stimato`, che è la verità di una tappa senza vincoli. Via `c7` e, con lui, il venue `parallel62` che esisteva solo per quell'avviso.
+- **Arrivi di Giulio e Manuel**: gli orari di atterraggio (07:40 e 09:45 di sabato) bastano, il numero del volo non serve. Le loro schede non sono più `da_verificare`.
+- **Deposito bagagli**: non serve, si portano gli zaini. Via `c6` e l'accenno nella tappa dell'atterraggio, sostituito da "Zaini al seguito tutto il giorno: il check-in è alle 15:00."
+- **`DA_VERIFICARE.md` apre con quello che resta davvero aperto**, quattro voci, e dice a chiare lettere che il resto del file sono note e scelte già prese, non pendenze.
+- Le verifiche passano da 9 a 4. `scripts/qa/gamification.mjs` non conta più su `c3` né sul numero 8 scritto a mano: legge `data/checks.json` e calcola il contatore. `scripts/qa/e2e.mjs` sale a 57 controlli, con undici nuovi sulle tre card cambiate.
