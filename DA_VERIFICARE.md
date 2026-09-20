@@ -16,10 +16,19 @@ memoria, non pendenze.
 | **Civico esatto della Braseria Sarrià** (`c9`) | arrivandoci | nessuna: la prenotazione è a nome, non a civico |
 | **Promozioni del Casino Barcelona** | dal telefono, prima di partire | nessuna: è un'opzione, non un impegno |
 
-Due precisazioni che non sono pendenze ma è giusto ricordare: le **18:58** della sparizione del sole dietro
-Collserola hanno una precisione di **±1 minuto** (e il profilo SRTM è terreno nudo: con gli alberi sul crinale
-il sole sparisce semmai un minuto prima), e gli **orari di apertura** dei locali sono stati verificati a
-settembre — se qualcuno cambia, cambia fra qui e ottobre.
+## Da fare prima di partire
+
+Due cose che non si chiudono sul posto perché vanno fatte **prima**:
+
+- **Orari di Teixidó (sab 8-14) e BO&MIE (8:30): ricontrollare il giovedì prima di partire.** Sono gli unici
+  due che, se cambiati, fanno saltare una tappa. Tutti gli orari del sito sono stati verificati a settembre.
+- **Il sito non è mai stato aperto su un telefono reale**: tutta la QA è headless, Chromium a 380 px.
+  **Collaudo da fare prima della partenza** — cinque minuti col wifi, aprendo Oggi, Programma, Mappa e la
+  sezione Viaggio col QR del parcheggio.
+
+Una precisazione che non è una pendenza ma è giusto ricordare: le **18:58** della sparizione del sole dietro
+Collserola hanno una precisione di **±1 minuto**, e il profilo SRTM è terreno nudo — con gli alberi sul
+crinale il sole sparisce semmai un minuto prima, mai dopo.
 
 ## geocoding
 
