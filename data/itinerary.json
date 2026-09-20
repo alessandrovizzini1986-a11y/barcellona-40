@@ -305,7 +305,7 @@
        "eur": 16
       }
      ],
-     "img": "barjoan.svg",
+     "img": "barjoan.webp",
      "durataMin": 75,
      "avviso": "Non si prenota. Alle 13:15 sei dentro, alle 13:30 sei in coda."
     },
@@ -360,7 +360,7 @@
      },
      "distFromPrevM": 1351,
      "minFromPrev": 17,
-     "img": "apt.svg"
+     "img": "apt.webp"
     },
     {
      "id": "f12",
@@ -396,7 +396,7 @@
      },
      "distFromPrevM": 0,
      "minFromPrev": null,
-     "img": "apt.svg"
+     "img": "apt.webp"
     },
     {
      "id": "f13",
@@ -422,7 +422,7 @@
       "taxi": false,
       "metro": null
      },
-     "img": "taps.svg",
+     "img": "taps.webp",
      "distFromPrevM": 1536,
      "minFromPrev": 19
     },
@@ -505,7 +505,7 @@
       "taxi": true,
       "metro": "FGC → Sarrià"
      },
-     "img": "braseria.svg",
+     "img": "braseria.webp",
      "distFromPrevM": 4580,
      "minFromPrev": 15,
      "distMode": "auto"
@@ -545,7 +545,7 @@
      "distFromPrevM": null,
      "minFromPrev": null,
      "durataMin": null,
-     "img": "casino.svg",
+     "img": "casino.webp",
      "detailsStimati": [
       "Il casinò ha una pagina promozioni, ma il contenuto non è leggibile da qui: controllala dal telefono qualche giorno prima. https://www.casinobarcelona.com/barcelona/promociones"
      ],
@@ -628,7 +628,7 @@
      },
      "distFromPrevM": null,
      "minFromPrev": null,
-     "img": "apt.svg"
+     "img": "apt.webp"
     },
     {
      "id": "s2",
@@ -682,7 +682,7 @@
      },
      "distFromPrevM": null,
      "minFromPrev": null,
-     "img": "olimpo.svg"
+     "img": "olimpo.webp"
     },
     {
      "id": "s4",
@@ -761,7 +761,7 @@
      },
      "distFromPrevM": 527,
      "minFromPrev": 7,
-     "img": "olimpo.svg"
+     "img": "olimpo.webp"
     },
     {
      "id": "s6",
@@ -786,7 +786,7 @@
      },
      "distFromPrevM": 1726,
      "minFromPrev": 21,
-     "img": "apt.svg"
+     "img": "apt.webp"
     },
     {
      "id": "s7",
@@ -843,7 +843,7 @@
      },
      "distFromPrevM": 2823,
      "minFromPrev": 34,
-     "img": "biarritz.svg"
+     "img": "biarritz.webp"
     },
     {
      "id": "s9",
@@ -911,7 +911,7 @@
      "distFromPrevM": null,
      "minFromPrev": null,
      "durataMin": null,
-     "img": "casino.svg",
+     "img": "casino.webp",
      "detailsStimati": [
       "Il casinò ha una pagina promozioni, ma il contenuto non è leggibile da qui: controllala dal telefono qualche giorno prima. https://www.casinobarcelona.com/barcelona/promociones"
      ]

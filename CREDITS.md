@@ -88,11 +88,23 @@ riga "foto: autore / licenza" sotto ogni card. Le foto sono state ritagliate a 1
 
 | Tappa | File nel sito | Origine |
 |---|---|---|
-| El Mirador | `public/assets/tappe/elmirador.webp` | Foto di un amico di Alessandro, uso autorizzato — per gentile concessione |
+| El Mirador | `public/assets/tappe/elmirador.webp` | Foto di un amico di Alessandro, uso autorizzato |
+| Aparthotel Nàpols | `public/assets/tappe/apt.webp` | Foto fornita da Alessandro, uso autorizzato |
+| Bar Joan | `public/assets/tappe/barjoan.webp` | Foto fornita da Alessandro, uso autorizzato |
+| Bodega Biarritz 1881 | `public/assets/tappe/biarritz.webp` | Foto fornita da Alessandro, uso autorizzato |
+| Brasería Sarrià | `public/assets/tappe/braseria.webp` | Foto fornita da Alessandro, uso autorizzato |
+| Sala VIP Canudas | `public/assets/tappe/canudas.webp` | Foto fornita da Alessandro, uso autorizzato |
+| Casino Barcelona | `public/assets/tappe/casino.webp` | Foto fornita da Alessandro, uso autorizzato |
+| Vermutería Olimpo | `public/assets/tappe/olimpo.webp` | Foto fornita da Alessandro, uso autorizzato |
+| Parcheggio P2 · Bologna | `public/assets/tappe/parcheggio.webp` | Foto fornita da Alessandro, uso autorizzato |
+| Taps Sagrada Familia | `public/assets/tappe/taps.webp` | Foto fornita da Alessandro, uso autorizzato |
 
-Non ha licenza libera e non sta nella tabella qui sopra: sotto la card non compare nessuna riga di
-attribuzione, perché non è dovuta a nessuno per contratto. È tracciata qui e in `data/foto-tappe.json`
-(campo `private`) perché `npm run validate` sappia che quella `.webp` è a posto anche senza crediti Commons.
+Nessuna di queste ha una licenza libera e **nessuna sta nella tabella Commons qui sopra**: non si possono
+ripubblicare altrove. Sotto la card portano la riga **"foto: per gentile concessione"**, senza link e senza
+nome — un'attribuzione che non fa promesse di licenza. Sono tracciate qui e in `data/foto-tappe.json`
+(campo `private`) perché `npm run validate` sappia che quelle `.webp` sono a posto anche senza crediti
+Commons. Ritagliate a 16:9 con sharp, larghezza massima 640 px (mai ingrandite oltre l'originale),
+WebP qualità 72.
 ## Foto delle tappe · Londra (Wikimedia Commons)
 
 Stesso metodo del viaggio a Barcellona, cartella separata (`public/assets/tappe/londra/`,

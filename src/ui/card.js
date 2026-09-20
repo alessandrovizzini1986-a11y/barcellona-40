@@ -15,6 +15,9 @@ import { short as confettiShort } from './confetti.js'
 // `.svg` = card stilizzata generata da scripts/gen-cards.mjs, grafica originale del progetto, niente crediti.
 // Le foto di Google Places non si possono ripubblicare: vedi CREDITS.md.
 const CREDITI = Object.fromEntries(fotoTappe.foto.map((f) => [`${f.id}.webp`, f]))
+// Foto private: fornite da chi c'era, uso autorizzato. Non hanno una licenza libera e non stanno in
+// CREDITS.md fra le Commons, ma un'attribuzione la meritano lo stesso.
+const PRIVATE = new Set((fotoTappe.private || []).map((f) => `${f.id}.webp`))
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, '') + '/assets/tappe/'
 // Testo alternativo, uno per immagine: descrive cosa si vede, non ripete il titolo della card
 const ALT = {
@@ -33,16 +36,16 @@ const ALT = {
   'bunkers.webp': 'La vista su Barcellona dai Bunkers del Carmel',
   'elmirador.webp': 'L\'insegna di El Mirador, con la tenda blu e i tavoli all\'aperto',
   'elborn.webp': 'La sala in ferro e vetro dell\'antico mercato del Born, con le rovine del quartiere del 1714 visibili sotto il piano di calpestio',
-  'parcheggio.svg': 'Illustrazione del parcheggio P2 di Bologna',
-  'duckstore.svg': 'Illustrazione del Barcelona Duck Store',
-  'barjoan.svg': 'Illustrazione del Bar Joan',
-  'apt.svg': 'Illustrazione dell\'appartamento di Carrer de Nàpols',
-  'taps.svg': 'Illustrazione dell\'Enoteca Taps',
-  'braseria.svg': 'Illustrazione della Braseria Sarrià',
-  'olimpo.svg': 'Illustrazione della Vermutería Olimpo',
-  'biarritz.svg': 'Illustrazione della Bodega Biarritz 1881',
-  'canudas.svg': 'Illustrazione della Sala VIP Canudas',
-  'casino.svg': 'Illustrazione del Casino Barcelona'
+  'apt.webp': 'L\'insegna illuminata dell\'Aparthotel Nàpols sopra l\'ingresso, di sera',
+  'barjoan.webp': 'Il bancone del Bar Joan dentro il mercato, con le bottiglie alle spalle e la gente sugli sgabelli',
+  'biarritz.webp': 'L\'insegna di legno della Bodega Biarritz e le lavagne dei pinchos sul marciapiede',
+  'braseria.webp': 'Un cameriere della Brasería Sarrià porta la tartare servita in un mortaio di legno, col pane tostato',
+  'canudas.webp': 'La reception in marmo della Sala VIP Canudas, con le lampade a sospensione',
+  'casino.webp': 'L\'ingresso illuminato del Casino Barcelona di sera, con tre persone che escono',
+  'olimpo.webp': 'L\'insegna rossa della Vermutería Olimpo, con la botte e le lavagne all\'ingresso',
+  'parcheggio.webp': 'Il cartello "P2 Official Parking" sulla facciata del parcheggio di Bologna',
+  'taps.webp': 'La vetrina viola dell\'enoteca Taps, con la botte davanti all\'ingresso',
+  'duckstore.svg': 'Illustrazione del Barcelona Duck Store'
 }
 export const haFoto = (stop) => !!stop.img
 
@@ -56,6 +59,7 @@ export function immagineCard(img, etichetta, { eager = false, classe = '', oraDe
 }
 // L'attribuzione è dovuta solo per le foto: le card stilizzate sono nostre
 export function creditoImmagine(img) {
+  if (PRIVATE.has(img)) return '<p class="card__credito">foto: per gentile concessione</p>'
   const f = CREDITI[img]
   if (!f) return ''
   return `<p class="card__credito">foto: <a href="${esc(f.pagina)}" target="_blank" rel="noopener">${esc(f.autore || 'autore ignoto')} / ${esc(f.licenza)}</a></p>`

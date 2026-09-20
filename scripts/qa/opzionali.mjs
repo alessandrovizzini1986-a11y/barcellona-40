@@ -32,7 +32,7 @@ for (const id of ['f99', 's99']) {
   ok(`${id}: le promozioni sono un dettaglio stimato, col link`, s.detailsStimati.length === 1 && /non è leggibile da qui/.test(s.detailsStimati[0]) && s.detailsStimati[0].includes('https://www.casinobarcelona.com/barcelona/promociones'))
   ok(`${id}: rientro all'appartamento nei dettagli`, s.details.some((d) => /Rientro all'appartamento: 2,1 km · 27 min a piedi/.test(d)))
   ok(`${id}: niente distanza dalla tappa precedente`, s.distFromPrevM === null && s.minFromPrev === null)
-  ok(`${id}: card stilizzata`, s.img === 'casino.svg')
+  ok(`${id}: foto dell'ingresso`, s.img === 'casino.webp')
   ok(`${id}: maps e taxi attivi`, s.actions.maps === true && s.actions.taxi === true)
 }
 ok('venerdì: la distanza è quella dalla Braseria', stops.f99.details.some((d) => d === 'Dalla Braseria Sarrià: 8,2 km · 22 min in auto'))

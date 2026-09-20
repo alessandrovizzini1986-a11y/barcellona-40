@@ -23,19 +23,11 @@ const ICONE = {
   chips: '<path d="M3 18a4 2.2 0 0 0 8 0M3 18a4 2.2 0 0 1 8 0v3a4 2.2 0 0 1-8 0Z"/><path d="M3 14.5a4 2.2 0 0 0 8 0M3 14.5a4 2.2 0 0 1 8 0"/><path d="M14 4h6a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1h-6a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1Z"/><path d="M17 8.5 18.5 11h-3L17 8.5Z"/>'
 }
 
+// Una sola card stilizzata: del Barcelona Duck Store non esiste una foto nostra, tutte le altre
+// tappe hanno la foto vera (vedi il blocco `private` in data/foto-tappe.json).
 export const CARD = [
-  { id: 'parcheggio', label: 'P2 · Bologna', accento: '#3D5A80', icona: 'car' },
-  { id: 'duckstore', label: 'Barcelona Duck Store', accento: '#F2B705', icona: 'duck' },
-  { id: 'barjoan', label: 'Bar Joan', accento: '#E8552E', icona: 'fork' },
-  { id: 'apt', label: 'Nàpols 116', accento: '#2CA6A4', icona: 'home' },
-  { id: 'taps', label: 'Enoteca Taps', accento: '#A50044', icona: 'bottle' },
-  { id: 'braseria', label: 'Braseria Sarrià', accento: '#E8552E', icona: 'flame' },
-  { id: 'olimpo', label: 'Vermutería Olimpo', accento: '#F2B705', icona: 'glass' },
-  { id: 'biarritz', label: 'Bodega Biarritz 1881', accento: '#E8552E', icona: 'cake' },
-  { id: 'canudas', label: 'Sala VIP Canudas', accento: '#3D5A80', icona: 'shower' },
-  // Il seme è dato, non calcolato dalla posizione: questa card è arrivata dopo le altre e
-  // il mosaico non deve cambiare se un giorno se ne aggiunge un'altra in mezzo.
-  { id: 'casino', label: 'Casino Barcelona', accento: '#A50044', icona: 'chips', seme: 1337 }
+  // seme 38: è quello che aveva quando le card erano dieci, così il mosaico non cambia sotto gli occhi
+  { id: 'duckstore', label: 'Barcelona Duck Store', accento: '#F2B705', icona: 'duck', seme: 38 }
 ]
 
 // PRNG con seme: stesso seme, stesso mosaico. Un seme diverso per card.

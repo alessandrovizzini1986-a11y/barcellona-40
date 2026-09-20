@@ -162,6 +162,60 @@
       "file": "assets/tappe/elmirador.webp",
       "tappa": "El Mirador",
       "nota": "Foto di un amico di Alessandro, uso autorizzato. Per gentile concessione."
+    },
+    {
+      "id": "apt",
+      "file": "assets/tappe/apt.webp",
+      "tappa": "Aparthotel Nàpols",
+      "nota": "Foto fornita da Alessandro, uso autorizzato. Per gentile concessione."
+    },
+    {
+      "id": "barjoan",
+      "file": "assets/tappe/barjoan.webp",
+      "tappa": "Bar Joan",
+      "nota": "Foto fornita da Alessandro, uso autorizzato. Per gentile concessione."
+    },
+    {
+      "id": "biarritz",
+      "file": "assets/tappe/biarritz.webp",
+      "tappa": "Bodega Biarritz 1881",
+      "nota": "Foto fornita da Alessandro, uso autorizzato. Per gentile concessione."
+    },
+    {
+      "id": "braseria",
+      "file": "assets/tappe/braseria.webp",
+      "tappa": "Brasería Sarrià",
+      "nota": "Foto fornita da Alessandro, uso autorizzato. Per gentile concessione."
+    },
+    {
+      "id": "canudas",
+      "file": "assets/tappe/canudas.webp",
+      "tappa": "Sala VIP Canudas",
+      "nota": "Foto fornita da Alessandro, uso autorizzato. Per gentile concessione."
+    },
+    {
+      "id": "casino",
+      "file": "assets/tappe/casino.webp",
+      "tappa": "Casino Barcelona",
+      "nota": "Foto fornita da Alessandro, uso autorizzato. Per gentile concessione."
+    },
+    {
+      "id": "olimpo",
+      "file": "assets/tappe/olimpo.webp",
+      "tappa": "Vermutería Olimpo",
+      "nota": "Foto fornita da Alessandro, uso autorizzato. Per gentile concessione."
+    },
+    {
+      "id": "parcheggio",
+      "file": "assets/tappe/parcheggio.webp",
+      "tappa": "Parcheggio P2 · Bologna",
+      "nota": "Foto fornita da Alessandro, uso autorizzato. Per gentile concessione."
+    },
+    {
+      "id": "taps",
+      "file": "assets/tappe/taps.webp",
+      "tappa": "Taps Sagrada Familia",
+      "nota": "Foto fornita da Alessandro, uso autorizzato. Per gentile concessione."
     }
   ],
   "scartate": []

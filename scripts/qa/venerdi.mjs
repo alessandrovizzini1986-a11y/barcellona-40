@@ -47,7 +47,9 @@ const overflow = (p) => p.evaluate(() => document.documentElement.scrollWidth - 
   // 2. Immagini: qui solo il minimo, il resto lo controlla scripts/qa/immagini.mjs
   const img = await p.evaluate(() => [...document.querySelectorAll('.card[data-stop]')].map((c) => [c.dataset.stop, c.querySelector('.card__foto img')?.getAttribute('src').split('/').pop() || null]))
   ok('ogni tappa del venerdì ha la sua immagine', img.every(([, src]) => !!src), img.filter(([, s2]) => !s2).map(([id]) => id).join(' '))
-  ok('Duck Store e Bar Joan hanno la card stilizzata', img.find(([id]) => id === 'f7')?.[1] === 'duckstore.svg' && img.find(([id]) => id === 'f9')?.[1] === 'barjoan.svg')
+  // il Duck Store è l'unico rimasto disegnato: del negozio non abbiamo una foto
+  ok('solo il Duck Store ha la card stilizzata', img.find(([id]) => id === 'f7')?.[1] === 'duckstore.svg' && img.filter(([, src]) => (src || '').endsWith('.svg')).length === 1, img.filter(([, src]) => (src || '').endsWith('.svg')).map(([id]) => id).join(' '))
+  ok('Bar Joan ha la foto vera', img.find(([id]) => id === 'f9')?.[1] === 'barjoan.webp')
   ok('orario sopra la foto', (await p.locator('.card[data-stop="f3"] .card__foto-time').innerText()) === '10:30')
   const peso = await p.evaluate(() => performance.getEntriesByType('resource').reduce((n, r) => n + (r.encodedBodySize || 0), 0))
   ok('pagina sotto i 2 MB', peso < 2_000_000, `${(peso / 1024 / 1024).toFixed(2)} MB`)
