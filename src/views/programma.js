@@ -1,5 +1,5 @@
 // Programma: segmented Ven/Sab/Dom + timeline filtrata per persona
-import { stopsForDay, personById, DAY_COLOR, days, contoDelGiorno, piove, percorsiDi } from '../data.js'
+import { stopsForDay, personById, DAY_COLOR, days, contoDelGiorno, piove, percorsiDi, conOrario, senzaOrario } from '../data.js'
 import { store } from '../store.js'
 import { icon } from '../ui/icons.js'
 import { fmtMinutes } from '../time.js'
@@ -10,6 +10,10 @@ import { navigate } from '../router.js'
 import { stepCards, bindViaggio } from '../ui/viaggio.js'
 
 const KEYS = ['ven', 'sab', 'dom']
+const conteggio = (stops) => {
+  const n = stops.filter(conOrario).length, o = stops.length - n
+  return `${n} ${n === 1 ? 'tappa' : 'tappe'}${o ? ` · ${o} opzionale${o === 1 ? '' : 'i'}` : ''}`
+}
 const LABEL = { ven: 'Ven 16', sab: 'Sab 17', dom: 'Dom 18' }
 
 function emptyState(person, key) {
@@ -48,9 +52,14 @@ export async function render(root, { person, sub, header }) {
   // sono card normali della stessa timeline, non un blocco a parte.
   const passi = stepCards(key, person)
   // la prima foto della pagina si carica subito, le altre in lazy
-  const prima = stops.findIndex(haFoto)
-  const righe = [...stops.map((s, i) => ({ at: s.at, id: s.id, html: stopCard(s, { person, isNow: cur?.id === s.id, eager: i === prima }) })), ...passi]
-    .sort((a, b) => a.at - b.at)
+  // La prima foto della pagina è quella della prima tappa in programma: l'eager si aggancia all'id,
+  // non alla posizione, perché le opzionali sono una lista a parte che riparte da zero.
+  const primaFoto = stops.filter(conOrario).find(haFoto)?.id
+  const card = (s) => ({ at: s.at, id: s.id, html: stopCard(s, { person, isNow: cur?.id === s.id, eager: s.id === primaFoto }) })
+  // Le tappe opzionali escono dalla timeline cronologica e vanno in coda, dopo la riga tratteggiata:
+  // non hanno un orario, quindi non hanno un posto nella fila.
+  const righe = [...stops.filter(conOrario).map(card), ...passi].sort((a, b) => a.at - b.at)
+  const opzionali = stops.filter(senzaOrario).map(card)
   // Il pulsante del percorso va in cima al suo blocco: si aggancia alla prima tappa del blocco
   // che questa persona vede davvero (chi salta la mattina non deve vedere il percorso della mattina).
   const ancore = new Map()
@@ -64,12 +73,12 @@ export async function render(root, { person, sub, header }) {
     </div>
     <div class="day-head" style="--dc:${DAY_COLOR[key]}">
       <h2>${esc(day.label)} ${day.date.slice(-2)} ottobre</h2>
-      <span class="faint">${stops.length} ${stops.length === 1 ? 'tappa' : 'tappe'}${passi.length ? ` · ${passi.length} passi di viaggio` : ''}</span>
+      <span class="faint">${conteggio(stops)}${passi.length ? ` · ${passi.length} passi di viaggio` : ''}</span>
     </div>
     ${key === 'ven' ? toggleP(piove()) : ''}
     ${key === 'ven' && piove() ? `<div class="avviso">${icon('alert')}<span>Modalità pioggia: una sola tappa scoperta invece di sei. Montcada, Pont del Bisbe e Sant Felip Neri sono vicoli stretti, si cammina quasi sempre riparati.</span></div>` : ''}
     ${avvisoConto(stops, key)}
-    ${righe.length ? `<ol class="timeline" style="--dc:${DAY_COLOR[key]}">${righe.map((r) => `${r.id && ancore.has(r.id) ? `<li class="timeline__percorso">${ancore.get(r.id)}</li>` : ''}<li>${r.html}</li>`).join('')}</ol>` : `<div class="empty">${emptyState(person, key)}</div>`}
+    ${righe.length || opzionali.length ? `<ol class="timeline" style="--dc:${DAY_COLOR[key]}">${righe.map((r) => `${r.id && ancore.has(r.id) ? `<li class="timeline__percorso">${ancore.get(r.id)}</li>` : ''}<li>${r.html}</li>`).join('')}${opzionali.length ? `<li class="timeline__opzionale">Opzionale</li>${opzionali.map((r) => `<li class="timeline__opz">${r.html}</li>`).join('')}` : ''}</ol>` : `<div class="empty">${emptyState(person, key)}</div>`}
   </section>`
   root.querySelector('#piove')?.addEventListener('change', (e) => {
     store.piove = e.target.checked // la preferenza resta sul telefono

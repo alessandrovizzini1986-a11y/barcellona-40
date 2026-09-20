@@ -241,3 +241,19 @@
 - **Deposito bagagli**: non serve, si portano gli zaini. Via `c6` e l'accenno nella tappa dell'atterraggio, sostituito da "Zaini al seguito tutto il giorno: il check-in è alle 15:00."
 - **`DA_VERIFICARE.md` apre con quello che resta davvero aperto**, quattro voci, e dice a chiare lettere che il resto del file sono note e scelte già prese, non pendenze.
 - Le verifiche passano da 9 a 4. `scripts/qa/gamification.mjs` non conta più su `c3` né sul numero 8 scritto a mano: legge `data/checks.json` e calcola il contatore. `scripts/qa/e2e.mjs` sale a 57 controlli, con undici nuovi sulle tre card cambiate.
+
+## Casino Barcelona: la prima tappa senza orario
+- **Nuova tappa opzionale** in fondo a venerdì e sabato (`f99`, `s99`), stesso venue verificato: Carrer de la Marina 19-21, aperto 24 ore su 24, 4,0 su 8.232 recensioni. Dettagli verificati: **serve il documento originale** — passaporto o carta d'identità, niente fotocopie e niente foto sul telefono — zaini al guardaroba, minimi alti a roulette e blackjack, e il ristorante interno da evitare. Le distanze sono quelle di Valhalla, scritte per giorno: dalla Braseria 8,2 km · 22 min in auto il venerdì, dalla Biarritz 2,3 km · 28 min a piedi o da Apolo 3,3 km · 8 min in auto il sabato, e il rientro a casa 2,1 km · 27 min a piedi.
+- **Card stilizzata `casino.svg`**, stesso generatore delle altre nove: seme 1337 fissato nel dato, accento `#A50044`, icona fiches e carta. Il seme è scritto perché la card è arrivata dopo: se un domani se ne aggiunge un'altra in mezzo, questo mosaico non cambia.
+
+**Regole nuove per le tappe senza orario** (`time: null`, `timeStatus: "opzionale"`), valide da qui in avanti e non solo per il Casino:
+- **Non entrano nei conti della giornata.** `contoDelGiorno` le scarta prima di calcolare soste, cammino e margine: il venerdì resta "soste 3h45 + cammino 54 min, 11 minuti di margine", identico a prima. Nemmeno la cascata degli orari le tocca.
+- **Non diventano mai "Adesso" né "Prossima".** Sarebbe il sito a mandare la gente al casinò perché è l'ultima cosa in lista. Verificato anche alle 02:00 di sabato, quando sarebbe l'unica rimasta.
+- **Al posto dell'ora, sulla card, c'è "Se avete voglia"** in `--ink-3`, e un badge blu **OPZIONALE** derivato dal `timeStatus`, come già il badge delle coordinate è derivato dal venue.
+- **In fondo alla timeline**, sotto una riga tratteggiata con scritto "Opzionale", e con il pallino sulla linea del tempo **vuoto** invece che pieno. L'intestazione del giorno dice "15 tappe · 1 opzionale", senza mescolare i due numeri.
+- **Il progresso conta il piano, non le opzioni**: 0/15 e non 0/16. La spunta "Fatto" resta, perché se ci andate si segna.
+- **Sulla mappa** il marker c'è ma è **tratteggiato e senza numero**, e la linea del giro non ci passa: la numerazione delle tappe non deve saltare.
+- **Fuori dal riepilogo da copiare e dalla speedrun di Monne**: quello che si incolla su WhatsApp è il piano.
+- `scripts/validate.mjs` accetta `time: null` **solo** insieme a `timeStatus: "opzionale"` (e viceversa, e pretende `durataMin` nullo): così non nasce per sbaglio una tappa senza ora che il sito tratta come un impegno.
+- Nuova suite `scripts/qa/opzionali.mjs`, **63 controlli**. Le altre si adeguano: `venerdi` (f99 in coda), `viaggio` (la fila cronologica salta le card senza orario), `immagini` (una card stilizzata e una immagine in più per giorno).
+- Bug trovato dalla QA: l'immagine `eager` finiva anche sulla prima card opzionale, perché la lista delle opzionali riparte da indice zero. Ora l'eager si aggancia all'**id** della prima tappa in programma, non alla posizione.

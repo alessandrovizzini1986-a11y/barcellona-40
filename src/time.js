@@ -36,9 +36,17 @@ export function phase(d = now()) {
 }
 
 // Data/ora assoluta di una tappa: orari prima delle 04:00 appartengono alla notte successiva (es. s9 00:15)
+// Le tappe opzionali non hanno orario (`time: null`): prendono la fine della loro notte, le 03:59, così
+// stanno in fondo al loro giorno senza scavalcare quello dopo. Non è un orario, è una posizione.
+export const FINE_NOTTE = [3, 59]
 export function stopDate(stop, dayDate) {
-  const [h, m] = stop.time.split(':').map(Number)
   const [y, mo, d] = dayDate.split('-').map(Number)
+  if (stop.time == null) {
+    const dt = new Date(y, mo - 1, d, FINE_NOTTE[0], FINE_NOTTE[1])
+    dt.setDate(dt.getDate() + 1)
+    return dt
+  }
+  const [h, m] = stop.time.split(':').map(Number)
   const dt = new Date(y, mo - 1, d, h, m)
   if (h < 4) dt.setDate(dt.getDate() + 1)
   return dt

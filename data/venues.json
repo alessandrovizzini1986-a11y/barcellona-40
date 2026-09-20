@@ -229,6 +229,17 @@
    "tel": "+34 931 64 20 22",
    "hours": "domenica 12:00–17:00",
    "note": "Prenotato: domenica 18 alle 13:30, 3 persone"
+  },
+  "casino": {
+   "name": "Casino Barcelona",
+   "addr": "Carrer de la Marina 19-21, Port Olímpic",
+   "lat": 41.3866938,
+   "lng": 2.1970601,
+   "verified": true,
+   "rating": 4.0,
+   "reviews": 8232,
+   "hours": "aperto 24 ore su 24, tutti i giorni",
+   "phone": "+34 932 25 78 78"
   }
  }
 }

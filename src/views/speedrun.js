@@ -1,5 +1,5 @@
 // Speedrun (Monne): f1→f8 + s2, timer live verso le 08:15 del 17/10, sveglia 07:15
-import { stopsFor, stopById, personById, fmtDist } from '../data.js'
+import { stopsFor, stopById, personById, fmtDist, conOrario } from '../data.js'
 import { store } from '../store.js'
 import { countdownTo, SPEEDRUN_DEADLINE, fmtClock, now } from '../time.js'
 import { icon } from '../ui/icons.js'
@@ -17,7 +17,7 @@ function timer() {
 export async function render(root, { person, header }) {
   if (person !== 'monne') { navigate('oggi'); return () => {} }
   const monne = personById('monne')
-  const list = stopsFor('monne')
+  const list = stopsFor('monne').filter(conOrario) // la corsa ha orari: le tappe opzionali non ci stanno
   const s2 = stopById('s2')
   root.innerHTML = header('Modalità speedrun · Monne') + `<section class="view">
     <a class="banner" href="#/programma/sab">${icon('zap')}<span>Ventisei ore a Barcellona. Ogni tappa conta, ogni minuto pure.</span></a>

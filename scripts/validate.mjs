@@ -26,8 +26,14 @@ for (const day of it.days) {
     if (v && (v.lat == null || v.lng == null) && !(stop.badges || []).includes('da_verificare')) errors.push(`${stop.id}: venue "${stop.venueId}" senza coordinate e stop non marcato da_verificare`)
     for (const p of stop.prices || []) if (!ALLOWED_PRICES.includes(p.eur)) errors.push(`${stop.id}: prezzo ${p.eur} (${p.label}) non presente nell'elenco ammesso`)
     for (const p of stop.people || []) if (!personIds.has(p)) errors.push(`${stop.id}: persona "${p}" sconosciuta`)
-    if (!/^\d{2}:\d{2}$/.test(stop.time)) errors.push(`${stop.id}: orario "${stop.time}" non valido`)
-    if (!['verificato', 'stimato', 'da_verificare'].includes(stop.timeStatus)) errors.push(`${stop.id}: timeStatus "${stop.timeStatus}" non valido`)
+    // Le tappe opzionali non hanno orario: `time: null` è ammesso solo insieme a timeStatus "opzionale",
+    // e viceversa. Così non si crea per sbaglio una tappa senza ora che il sito tratta come un impegno.
+    const opzionale = stop.timeStatus === 'opzionale'
+    if (opzionale) {
+      if (stop.time !== null) errors.push(`${stop.id}: tappa opzionale con orario "${stop.time}"`)
+      if (stop.durataMin != null) errors.push(`${stop.id}: tappa opzionale con durata ${stop.durataMin}`)
+    } else if (!/^\d{2}:\d{2}$/.test(stop.time)) errors.push(`${stop.id}: orario "${stop.time}" non valido`)
+    if (!['verificato', 'stimato', 'da_verificare', 'opzionale'].includes(stop.timeStatus)) errors.push(`${stop.id}: timeStatus "${stop.timeStatus}" non valido`)
     // Ogni tappa ha la sua immagine, e il file deve esistere davvero: .webp = foto da Commons (con
     // crediti), .svg = card stilizzata generata da scripts/gen-cards.mjs
     if (!stop.img) errors.push(`${stop.id}: manca il campo "img"`)

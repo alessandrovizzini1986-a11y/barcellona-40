@@ -13,7 +13,7 @@ const DIR = 'public/assets/tappe'
 const file = readdirSync(DIR)
 const webp = file.filter((f) => f.endsWith('.webp')), svg = file.filter((f) => f.endsWith('.svg'))
 ok('15 foto WebP: 14 da Commons più una privata', webp.length === 15, webp.length + '')
-ok('9 card stilizzate SVG', svg.length === 9, svg.length + '')
+ok('10 card stilizzate SVG', svg.length === 10, svg.length + '')
 const misure = []
 for (const f of webp) { const m = await sharp(`${DIR}/${f}`).metadata(); misure.push(`${f} ${m.width}×${m.height} ${m.format}`) ; ok(`${f} è 800×450 WebP`, m.width === 800 && m.height === 450 && m.format === 'webp', `${m.width}×${m.height} ${m.format}`) }
 const kb = file.reduce((n, f) => n + statSync(`${DIR}/${f}`).size, 0) / 1024
@@ -56,7 +56,8 @@ async function vista(person, path) {
   await p.waitForTimeout(400)
   return { p, ctx, errs }
 }
-for (const [giorno, attese, crediti0] of [['ven', 15, 9], ['sab', 6, 3], ['dom', 3, 2]]) {
+// ven e sab hanno una tappa in più: il Casino, opzionale, con la sua card stilizzata (niente crediti)
+for (const [giorno, attese, crediti0] of [['ven', 16, 9], ['sab', 7, 3], ['dom', 3, 2]]) {
   const { p, ctx, errs } = await vista('ale', `/#/programma/${giorno}`)
   const st = await p.evaluate(() => ({
     img: [...document.querySelectorAll('.card[data-stop] .card__foto img')].map((i) => ({ src: i.getAttribute('src').split('/').pop(), nat: i.naturalWidth, lazy: i.getAttribute('loading'), alt: i.getAttribute('alt'), ratio: +(i.getBoundingClientRect().width / i.getBoundingClientRect().height).toFixed(2) })),

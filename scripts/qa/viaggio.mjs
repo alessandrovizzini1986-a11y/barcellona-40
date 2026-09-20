@@ -66,7 +66,8 @@ const overflow = (p) => p.evaluate(() => document.documentElement.scrollWidth - 
   // l'orario sta in .card__time sulle card senza immagine e in .card__foto-time su quelle con l'immagine
   const orari = await p.locator('.timeline .card__time, .timeline .card__foto-time').allInnerTexts()
   // il testo dell'orario può portarsi dietro la tilde dello "stimato" e l'etichetta del giorno dopo
-  const puliti = orari.map((t) => (t.match(/\d{2}:\d{2}/) || [''])[0])
+  // le tappe opzionali non hanno orario ("Se avete voglia"): stanno in fondo e non entrano nella fila
+  const puliti = orari.map((t) => (t.match(/\d{2}:\d{2}/) || [''])[0]).filter(Boolean)
   const ordinati = [...puliti].sort()
   ok('programma ven · passi di viaggio in timeline', puliti.includes('03:30') && puliti.includes('06:20'), puliti.join(' '))
   ok('programma ven · ordine cronologico', JSON.stringify(puliti) === JSON.stringify(ordinati), puliti.join(' '))

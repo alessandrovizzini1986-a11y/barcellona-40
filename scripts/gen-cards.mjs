@@ -19,7 +19,8 @@ const ICONE = {
   flame: '<path d="M12 2c2 4-1 5 0 8 2-1 3-3 3-5 2 2 3 5 3 8a6 6 0 0 1-12 0c0-3 2-6 6-11Z"/>',
   glass: '<path d="M6 3h12l-5 8v8h3M8 19h3v-8L6 3"/>',
   cake: '<path d="M4 21h16v-8H4v8Z"/><path d="M4 13a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4"/><path d="M12 9V5M9 9V7M15 9V7"/>',
-  shower: '<path d="M5 20V7a3 3 0 0 1 6 0M8 7h11l-3 4H8"/><path d="M11 15v2M14 14v2M17 15v2"/>'
+  shower: '<path d="M5 20V7a3 3 0 0 1 6 0M8 7h11l-3 4H8"/><path d="M11 15v2M14 14v2M17 15v2"/>',
+  chips: '<path d="M3 18a4 2.2 0 0 0 8 0M3 18a4 2.2 0 0 1 8 0v3a4 2.2 0 0 1-8 0Z"/><path d="M3 14.5a4 2.2 0 0 0 8 0M3 14.5a4 2.2 0 0 1 8 0"/><path d="M14 4h6a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1h-6a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1Z"/><path d="M17 8.5 18.5 11h-3L17 8.5Z"/>'
 }
 
 export const CARD = [
@@ -31,7 +32,10 @@ export const CARD = [
   { id: 'braseria', label: 'Braseria Sarrià', accento: '#E8552E', icona: 'flame' },
   { id: 'olimpo', label: 'Vermutería Olimpo', accento: '#F2B705', icona: 'glass' },
   { id: 'biarritz', label: 'Bodega Biarritz 1881', accento: '#E8552E', icona: 'cake' },
-  { id: 'canudas', label: 'Sala VIP Canudas', accento: '#3D5A80', icona: 'shower' }
+  { id: 'canudas', label: 'Sala VIP Canudas', accento: '#3D5A80', icona: 'shower' },
+  // Il seme è dato, non calcolato dalla posizione: questa card è arrivata dopo le altre e
+  // il mosaico non deve cambiare se un giorno se ne aggiunge un'altra in mezzo.
+  { id: 'casino', label: 'Casino Barcelona', accento: '#A50044', icona: 'chips', seme: 1337 }
 ]
 
 // PRNG con seme: stesso seme, stesso mosaico. Un seme diverso per card.
@@ -80,7 +84,7 @@ mkdirSync(OUT, { recursive: true })
 let totale = 0
 CARD.forEach((c, i) => {
   const dest = path.join(OUT, `${c.id}.svg`)
-  writeFileSync(dest, svg(c, i * 31 + 7))
+  writeFileSync(dest, svg(c, c.seme ?? i * 31 + 7))
   const kb = statSync(dest).size / 1024
   totale += kb
   console.log(`✓ ${c.id}.svg · ${c.icona} · ${c.accento} · ${kb.toFixed(1)} kB`)

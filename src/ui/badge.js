@@ -1,6 +1,6 @@
 import { icon } from './icons.js'
-const LABEL = { verificato: 'verificato', stimato: 'stimato', da_verificare: 'da verificare', geocoded: 'coordinate automatiche' }
-const TITLE = { verificato: 'Dato confermato', stimato: 'Orario indicativo', da_verificare: 'Dato ancora da confermare', geocoded: 'Coordinate calcolate automaticamente, da controllare' }
+const LABEL = { verificato: 'verificato', stimato: 'stimato', da_verificare: 'da verificare', geocoded: 'coordinate automatiche', opzionale: 'OPZIONALE' }
+const TITLE = { verificato: 'Dato confermato', stimato: 'Orario indicativo', da_verificare: 'Dato ancora da confermare', geocoded: 'Coordinate calcolate automaticamente, da controllare', opzionale: 'Tappa facoltativa: nessun orario, nessun impegno' }
 export function badge(kind, reveal = false) {
   if (!LABEL[kind]) return ''
   const ic = kind === 'da_verificare' ? icon('alert') : ''

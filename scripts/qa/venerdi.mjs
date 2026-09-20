@@ -31,9 +31,10 @@ const overflow = (p) => p.evaluate(() => document.documentElement.scrollWidth - 
   await fotoPronte(p)
   const tappe = await p.evaluate(() => [...document.querySelectorAll('.card[data-stop]')].map((c) => [c.dataset.stop, c.querySelector('.card__title').textContent.trim()]))
   const ids = tappe.map((t) => t[0])
-  const attesi = ['f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f9', 'f10', 'f11', 'f12', 'f13', 'f14', 'f15']
-  ok('quindici tappe, dalla mattina alla cena', ids.length === attesi.length, ids.join(' '))
-  ok('ordine f1→f15', JSON.stringify(ids) === JSON.stringify(attesi), ids.join(' '))
+  // f99 (Casino, opzionale) sta in fondo, fuori dalla fila cronologica: la mattina e la cena sono f1→f15
+  const attesi = ['f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f9', 'f10', 'f11', 'f12', 'f13', 'f14', 'f15', 'f99']
+  ok('quindici tappe più quella opzionale', ids.length === attesi.length, ids.join(' '))
+  ok('ordine f1→f15, poi l\'opzionale', JSON.stringify(ids) === JSON.stringify(attesi), ids.join(' '))
   ok('El Born non c\'è col sereno', !ids.includes('f2b'))
   const titoli = tappe.map((t) => t[1]).join(' | ')
   for (const atteso of ['Parc de la Ciutadella', 'Santa Maria del Mar', 'Carrer de Montcada', 'Pont del Bisbe', 'Sant Felip Neri', 'Duck Store', 'Santa Caterina', 'Bar Joan', 'Jamón da Debón'])

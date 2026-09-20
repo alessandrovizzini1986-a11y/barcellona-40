@@ -1,6 +1,6 @@
 // Vista Oggi: countdown prima del weekend, bento durante, "Missione compiuta" dopo
 import { now, phase, countdownTo, WEEKEND_START, dayKey, minutesUntil, fmtMinutes, currentStop, nextStop, isOverridden } from '../time.js'
-import { stopsFor, stopsForDay, personById, checks, fmtDist, DAY_COLOR, missionsFor, percorsiDi } from '../data.js'
+import { stopsFor, stopsForDay, personById, checks, fmtDist, DAY_COLOR, missionsFor, percorsiDi, conOrario } from '../data.js'
 import { store } from '../store.js'
 import { stopCard, bindCards, percorsoLink } from '../ui/card.js'
 import { ring } from '../ui/ring.js'
@@ -19,7 +19,8 @@ import { timelineViaggio, bindViaggio } from '../ui/viaggio.js'
 const DAY_LABEL = { ven: 'Venerdì 16', sab: 'Sabato 17', dom: 'Domenica 18' }
 
 export function summaryText(person, key) {
-  const stops = stopsForDay(person, key)
+  // Il riepilogo è il piano del giorno: le tappe opzionali restano sulla card, non nel messaggio.
+  const stops = stopsForDay(person, key).filter(conOrario)
   const lines = stops.map((s) => {
     const v = s.venue
     const addr = v?.addr && v.addr !== 'Barcelona' ? v.addr : ''
@@ -101,15 +102,21 @@ export async function render(root, { person, header, params }) {
   const key = dayKey()
   const mine = stopsFor(person)
   const todays = stopsForDay(person, key)
-  const nxt = nextStop(mine)
+  // Le tappe opzionali non hanno orario: non possono essere "Adesso" né "Prossima", altrimenti il sito
+  // manderebbe la gente al casinò per averlo messo in fondo a una lista.
+  const nxt = nextStop(mine.filter(conOrario))
   // "Adesso" = ultima tappa di oggi già iniziata; se non c'è ancora e la prossima è entro 45 min, è lei
-  let cur = currentStop(todays)
+  let cur = currentStop(todays.filter(conOrario))
   let imminent = false
   if (!cur && nxt && nxt.dayKey === key && minutesUntil(nxt.at) <= 45) { cur = nxt; imminent = true }
-  const doneToday = todays.filter((s) => store.isDone(s.id)).length
-  const allDoneCount = mine.filter((s) => store.isDone(s.id)).length
+  // Il progresso conta il piano, non le opzioni: un casinò non spuntato non deve far sembrare
+  // la giornata incompleta. La spunta resta, ma non pesa sull'anello.
+  const piano = todays.filter(conOrario)
+  const mioPiano = mine.filter(conOrario)
+  const doneToday = piano.filter((s) => store.isDone(s.id)).length
+  const allDoneCount = mioPiano.filter((s) => store.isDone(s.id)).length
   const openChecks = checks.filter((c) => !store.isChecked(c.id))
-  const monneGone = person === 'monne' && now() > mine[mine.length - 1]?.at
+  const monneGone = person === 'monne' && now() > mioPiano[mioPiano.length - 1]?.at
 
   html = header(`${DAY_LABEL[key]} · ${p.name}`) + `<section class="view">
     ${timelineViaggio(key, person)}
@@ -125,7 +132,7 @@ export async function render(root, { person, header, params }) {
         <div class="tile__label">Prossima</div>
         ${nxt ? `<div class="tile__big tnum">${nxt.time}</div><div><strong>${esc(nxt.title)}</strong></div><div class="faint">${nextIn(nxt)}</div><a class="btn btn--sm" href="#/programma/${nxt.dayKey}">${icon('list')} Programma</a>` : `<p class="muted">Nessun'altra tappa in programma per te.</p>`}
       </div>
-      <div class="tile" id="progress">${progressHtml(allDoneCount, mine.length, doneToday, todays.length, DAY_COLOR[key])}</div>
+      <div class="tile" id="progress">${progressHtml(allDoneCount, mioPiano.length, doneToday, piano.length, DAY_COLOR[key])}</div>
       <div class="tile">
         <div class="tile__label">Riepilogo di oggi</div>
         <p class="faint">Il piano di ${DAY_LABEL[key].split(' ')[0].toLowerCase()} pronto per WhatsApp.</p>
@@ -143,8 +150,8 @@ export async function render(root, { person, header, params }) {
         <a class="btn btn--sm" href="#/missioni">${icon('trophy')} Apri</a>
       </div>`}
     </div>
-    ${todays.length ? `<h2 class="section-title">Oggi per te <small>${todays.length} tappe</small></h2>
-    <ol class="timeline" style="--dc:${DAY_COLOR[key]}">${todays.map((s) => `<li>${stopCard(s, { person, isNow: cur?.id === s.id, showCheck: true })}</li>`).join('')}</ol>` : ''}
+    ${todays.length ? `<h2 class="section-title">Oggi per te <small>${piano.length} tappe${todays.length > piano.length ? ` · ${todays.length - piano.length} opzionale` : ''}</small></h2>
+    <ol class="timeline" style="--dc:${DAY_COLOR[key]}">${piano.map((s) => `<li>${stopCard(s, { person, isNow: cur?.id === s.id, showCheck: true })}</li>`).join('')}${todays.length > piano.length ? `<li class="timeline__opzionale">Opzionale</li>${todays.filter((s) => !conOrario(s)).map((s) => `<li class="timeline__opz">${stopCard(s, { person, showCheck: true })}</li>`).join('')}` : ''}</ol>` : ''}
     ${isOverridden() ? `<p class="faint">Data simulata: ${now().toLocaleString('it-IT')}</p>` : ''}
   </section>`
   root.innerHTML = html
@@ -155,9 +162,9 @@ export async function render(root, { person, header, params }) {
   const progress = root.querySelector('#progress')
   bindCards(root, { signal: ac.signal, onChange: () => {
     // l'anello e il contatore di oggi si aggiornano subito, senza aspettare il prossimo render
-    const doneAll = mine.filter((s) => store.isDone(s.id)).length
-    const doneDay = todays.filter((s) => store.isDone(s.id)).length
-    if (progress) progress.innerHTML = progressHtml(doneAll, mine.length, doneDay, todays.length, DAY_COLOR[key])
+    const doneAll = mioPiano.filter((s) => store.isDone(s.id)).length
+    const doneDay = piano.filter((s) => store.isDone(s.id)).length
+    if (progress) progress.innerHTML = progressHtml(doneAll, mioPiano.length, doneDay, piano.length, DAY_COLOR[key])
   } })
   root.querySelector('#copy')?.addEventListener('click', () => copyText(summaryText(person, key)))
   return () => { ac.abort(); timers.forEach(clearInterval) }

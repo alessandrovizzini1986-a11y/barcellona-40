@@ -2,7 +2,7 @@
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { DAY_COLOR, hasCoords, fmtDist, mapsUrl } from '../data.js'
-import { distChip } from '../ui/card.js'
+import { distChip, etichettaOra } from '../ui/card.js'
 import { icon } from '../ui/icons.js'
 import { esc } from '../ui/html.js'
 import { toast } from '../ui/toast.js'
@@ -27,9 +27,13 @@ export function createMap(el, stopsByDay, { theme = 'dark' } = {}) {
     const pts = []
     stops.filter(hasCoords).forEach((s) => {
       const ll = [s.venue.lat, s.venue.lng]
-      pts.push(ll); all.push(ll)
-      const m = L.marker(ll, { icon: L.divIcon({ className: '', html: `<div class="marker" style="--mc:${DAY_COLOR[key]}"><span>${s.order}</span></div>`, iconSize: [28, 28], iconAnchor: [14, 14], popupAnchor: [0, -16] }), alt: s.title, keyboard: true })
-      m.bindPopup(`<div class="popup"><p class="popup__title">${esc(s.title)}</p><p class="muted">${s.time} · ${esc(s.venue.name)}</p>${distChip(s)}<br><a class="btn btn--sm" href="${mapsUrl(s)}" target="_blank" rel="noopener">${icon('map-pin')} Maps</a></div>`, { maxWidth: 260 })
+      // Le tappe opzionali si vedono sulla mappa ma restano fuori dalla linea del giro e non hanno
+      // un numero: il tracciato del giorno non passa di lì se non si decide di andarci.
+      const opz = s.time == null
+      if (!opz) pts.push(ll)
+      all.push(ll)
+      const m = L.marker(ll, { icon: L.divIcon({ className: '', html: `<div class="marker${opz ? ' marker--opz' : ''}" style="--mc:${DAY_COLOR[key]}">${opz ? '' : `<span>${s.order}</span>`}</div>`, iconSize: [28, 28], iconAnchor: [14, 14], popupAnchor: [0, -16] }), alt: s.title, keyboard: true })
+      m.bindPopup(`<div class="popup"><p class="popup__title">${esc(s.title)}</p><p class="muted">${esc(etichettaOra(s))} · ${esc(s.venue.name)}</p>${distChip(s)}<br><a class="btn btn--sm" href="${mapsUrl(s)}" target="_blank" rel="noopener">${icon('map-pin')} Maps</a></div>`, { maxWidth: 260 })
       g.addLayer(m)
     })
     if (pts.length > 1) g.addLayer(L.polyline(pts, { color: DAY_COLOR[key].startsWith('var') ? cssVar(DAY_COLOR[key]) : DAY_COLOR[key], weight: 3, opacity: .7 }))

@@ -41,16 +41,17 @@ const ALT = {
   'braseria.svg': 'Illustrazione della Braseria Sarrià',
   'olimpo.svg': 'Illustrazione della Vermutería Olimpo',
   'biarritz.svg': 'Illustrazione della Bodega Biarritz 1881',
-  'canudas.svg': 'Illustrazione della Sala VIP Canudas'
+  'canudas.svg': 'Illustrazione della Sala VIP Canudas',
+  'casino.svg': 'Illustrazione del Casino Barcelona'
 }
 export const haFoto = (stop) => !!stop.img
 
 // Blocco immagine in cima alla card: 16:9, orario in sovrimpressione, mosaico se il file non carica
-export function immagineCard(img, etichetta, { eager = false, classe = '' } = {}) {
+export function immagineCard(img, etichetta, { eager = false, classe = '', oraDebole = false } = {}) {
   if (!img) return ''
   return `<div class="card__foto ${classe}">
     <img src="${BASE}${esc(img)}" width="800" height="450" alt="${esc(ALT[img] || etichetta || '')}" ${eager ? '' : 'loading="lazy" '}decoding="async">
-    ${etichetta ? `<span class="card__foto-time tnum">${esc(etichetta)}</span>` : ''}
+    ${etichetta ? `<span class="card__foto-time ${oraDebole ? 'card__foto-time--opz' : 'tnum'}">${esc(etichetta)}</span>` : ''}
   </div>`
 }
 // L'attribuzione è dovuta solo per le foto: le card stilizzate sono nostre
@@ -59,7 +60,10 @@ export function creditoImmagine(img) {
   if (!f) return ''
   return `<p class="card__credito">foto: <a href="${esc(f.pagina)}" target="_blank" rel="noopener">${esc(f.autore || 'autore ignoto')} / ${esc(f.licenza)}</a></p>`
 }
-const fotoBlocco = (stop, eager) => immagineCard(stop.img, `${stop.timeStatus === 'stimato' ? '~' : ''}${stop.time}`, { eager })
+// Le tappe opzionali non hanno un orario da mostrare: al suo posto va detto cosa sono.
+export const ORA_OPZIONALE = 'Se avete voglia'
+export const etichettaOra = (stop) => (stop.time == null ? ORA_OPZIONALE : `${stop.timeStatus === 'stimato' ? '~' : ''}${stop.time}`)
+const fotoBlocco = (stop, eager) => immagineCard(stop.img, etichettaOra(stop), { eager, oraDebole: stop.time == null })
 const attribuzione = (stop) => creditoImmagine(stop.img)
 
 export function distChip(stop) {
@@ -118,7 +122,7 @@ export function stopCard(stop, { person = null, isNow = false, nowLabel = 'adess
   return `<article class="card${done ? ' card--done' : ''}${isNow ? ' card--now' : ''}${foto ? ' card--conFoto' : ''}" data-stop="${stop.id}" style="--dc:${DAY_COLOR[stop.dayKey]}" aria-label="${esc(stop.title)}">
     ${foto}
     <div class="card__head">
-      ${foto ? (isNow ? `<div class="card__time tnum card__time--adesso">${esc(nowLabel)}</div>` : '') : `<div class="card__time tnum">${stop.timeStatus === 'stimato' ? '~' : ''}${stop.time}${isNow ? `<small>${esc(nowLabel)}</small>` : ''}</div>`}
+      ${foto ? (isNow ? `<div class="card__time tnum card__time--adesso">${esc(nowLabel)}</div>` : '') : `<div class="card__time ${stop.time == null ? 'card__time--opz' : 'tnum'}">${esc(etichettaOra(stop))}${isNow ? `<small>${esc(nowLabel)}</small>` : ''}</div>`}
       <div class="grow">
         <h3 class="card__title">${esc(stop.title)}</h3>
         ${venueLine}

@@ -34,6 +34,12 @@ export const stops = days.flatMap((day, di) => day.stops.map((s, i) => ({
 // all'aperto: col toggle acceso entra El Born CCM (al coperto), la Ciutadella scende a un quarto d'ora e
 // TUTTI gli orari successivi si ricalcolano a cascata dalle durate. Nessun orario di pioggia è scritto a mano.
 export const piove = () => !!store.get('piove', false)
+
+// TAPPE OPZIONALI. Non hanno orario: sono posti dove si può finire, non impegni. Non entrano nei totali
+// della giornata, non diventano mai "Adesso" o "Prossima", e in fondo alla timeline stanno sotto una riga
+// tratteggiata. La spunta "Fatto" resta: se ci andate, si segna.
+export const senzaOrario = (s) => s.time == null
+export const conOrario = (s) => s.time != null
 const oraDi = (d) => `${pad2(d.getHours())}:${pad2(d.getMinutes())}`
 export const durataDi = (s) => (piove() && s.durataPioggiaMin != null ? s.durataPioggiaMin : s.durataMin)
 
@@ -42,10 +48,10 @@ export const durataDi = (s) => (piove() && s.durataPioggiaMin != null ? s.durata
 // il check-in delle 15:00 e la sera restano dove sono, perché non dipendono da quanto ci metti la mattina.
 function ricalcola(giorno) {
   const out = giorno.map((s) => (s.distPioggia ? { ...s, distFromPrevM: s.distPioggia.m, minFromPrev: s.distPioggia.min } : { ...s }))
-  const i0 = out.findIndex((s) => s.durataMin != null)
+  const i0 = out.findIndex((s) => conOrario(s) && s.durataMin != null)
   if (i0 < 0) return out
   let t = new Date(out[i0].at)
-  for (let i = i0; i < out.length && out[i].durataMin != null; i++) {
+  for (let i = i0; i < out.length && conOrario(out[i]) && out[i].durataMin != null; i++) {
     out[i].at = new Date(t)
     out[i].time = oraDi(t)
     t = new Date(t.getTime() + (durataDi(out[i]) + (out[i + 1]?.minFromPrev || 0)) * 60000)
@@ -59,7 +65,10 @@ function conPioggia(list) {
 
 // Conto della mattina: soste, cammino e margine, tutti calcolati dalle durate reali (mai scritti a mano).
 // La finestra va dalla prima tappa con durata alla tappa subito dopo la catena (il rientro verso casa).
-export function contoDelGiorno(giorno) {
+export function contoDelGiorno(lista) {
+  // Le tappe senza orario non fanno parte della giornata: non hanno durata, non hanno cammino,
+  // e contarle vorrebbe dire far dipendere il margine da una cosa che forse non si fa.
+  const giorno = lista.filter(conOrario)
   const i0 = giorno.findIndex((s) => s.durataMin != null)
   if (i0 < 0) return null
   let i1 = i0
@@ -115,7 +124,9 @@ export function stopsFor(personId) {
 // senza pioggia El Born non c'è, e la numerazione non deve saltare un numero.
 function numera(list) {
   const conta = {}
-  return list.map((s) => ({ ...s, order: (conta[s.dayKey] = (conta[s.dayKey] || 0) + 1) }))
+  // Le tappe opzionali non prendono un numero: sulla mappa sarebbero la "tappa 9" di una giornata
+  // che di tappe ne ha otto.
+  return list.map((s) => ({ ...s, order: senzaOrario(s) ? null : (conta[s.dayKey] = (conta[s.dayKey] || 0) + 1) }))
 }
 export function stopsForDay(personId, dayKey) { return stopsFor(personId).filter((s) => s.dayKey === dayKey) }
 export function missionsFor(personId) { return missions.filter((m) => m.people.includes(personId)) }
@@ -132,6 +143,7 @@ export function coordsBadge(stop) {
 // Badge da mostrare sulla card: quelli dichiarati + quello delle coordinate, senza duplicati
 export function badgesFor(stop) {
   const set = new Set(stop.badges || [])
+  if (stop.timeStatus === 'opzionale') set.add('opzionale')
   const cb = coordsBadge(stop)
   if (cb) set.add(cb)
   if (stop.venue?.verified) set.delete('geocoded')
