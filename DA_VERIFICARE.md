@@ -2,15 +2,24 @@
 
 Generato in parte dagli script dati (`npm run data`). Le sezioni tra marker vengono riscritte a ogni esecuzione.
 
-## Restano aperte (20/09/2026)
+## Restano aperte: solo cose che si risolvono sul posto (20/09/2026)
 
-Cinque cose, e nessuna è una decisione in sospeso: il resto del file sono **note e scelte già prese**, tenute per memoria, non pendenze.
+Il sito è chiuso. Quello che resta non è verificabile da qui: sono quattro cose da guardare con gli occhi,
+più una pagina web da aprire dal telefono. Il resto del file sono **note e scelte già prese**, tenute per
+memoria, non pendenze.
 
-1. **Promozioni Casino Barcelona** — pagina dinamica, da guardare dal telefono prima di partire.
-2. **Attesa del taxi ai Bunkers, domenica sera** — stimata, si rileva sul posto.
-3. **Illuminazione della discesa da Carrer de Marià Labèrnia** — stimata, si rileva sul posto.
-4. **Le 18:58 hanno una precisione di ±1 minuto**, non al secondo: dipende da dove si mette il bordo del disco solare e da quanta rifrazione si conta.
-5. **Civico esatto della Braseria Sarrià** (`c9`) — la prenotazione è fatta, manca solo il numero civico nei dati.
+| Cosa | Dove si chiude | Se va male |
+|---|---|---|
+| **Attesa del taxi ai Bunkers**, domenica sera | in cima, prenotandolo dall'app | si scende a piedi verso Carrer de Marià Labèrnia e si richiama da lì (è scritto sulla card) |
+| **Illuminazione della discesa** da Carrer de Marià Labèrnia | lì, alle 19:30 | si aspetta il taxi in cima |
+| **Fasce di prezzo della Bodega Biarritz** | all'ingresso, sabato sera | nessuna conseguenza: si sceglie lì |
+| **Civico esatto della Braseria Sarrià** (`c9`) | arrivandoci | nessuna: la prenotazione è a nome, non a civico |
+| **Promozioni del Casino Barcelona** | dal telefono, prima di partire | nessuna: è un'opzione, non un impegno |
+
+Due precisazioni che non sono pendenze ma è giusto ricordare: le **18:58** della sparizione del sole dietro
+Collserola hanno una precisione di **±1 minuto** (e il profilo SRTM è terreno nudo: con gli alberi sul crinale
+il sole sparisce semmai un minuto prima), e gli **orari di apertura** dei locali sono stati verificati a
+settembre — se qualcuno cambia, cambia fra qui e ottobre.
 
 ## geocoding
 
