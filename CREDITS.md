@@ -98,6 +98,7 @@ riga "foto: autore / licenza" sotto ogni card. Le foto sono state ritagliate a 1
 | Vermutería Olimpo | `public/assets/tappe/olimpo.webp` | Foto fornita da Alessandro, uso autorizzato |
 | Parcheggio P2 · Bologna | `public/assets/tappe/parcheggio.webp` | Foto fornita da Alessandro, uso autorizzato |
 | Taps Sagrada Familia | `public/assets/tappe/taps.webp` | Foto fornita da Alessandro, uso autorizzato |
+| Barcelona Duck Store | `public/assets/tappe/duckstore.webp` | Foto fornita da Alessandro, uso autorizzato |
 
 Nessuna di queste ha una licenza libera e **nessuna sta nella tabella Commons qui sopra**: non si possono
 ripubblicare altrove. Sotto la card portano la riga **"foto: per gentile concessione"**, senza link e senza
@@ -146,12 +147,14 @@ Ultimo aggiornamento: `npm run foto:londra` · 23 foto, 1484 kB in tutto.
 
 ## Card stilizzate (originali del progetto)
 
-I luoghi senza una foto libera su Commons hanno una card disegnata: mosaico trencadís seedato, vignettatura e
-un'icona in stile Lucide, generata da `scripts/gen-cards.mjs` (`npm run cards`). Sono grafica originale di
-questo progetto: nessuna attribuzione dovuta, e infatti sotto queste card non compare nessuna riga di credito.
+**Per Barcellona non ce ne sono più.** Ogni tappa del weekend ha la foto vera del posto: le dieci card
+disegnate — mosaico trencadís seedato, vignettatura e icona in stile Lucide — sono state sostituite una a una
+e il generatore `scripts/gen-cards.mjs` è stato tolto insieme all'ultima, il Duck Store. Era grafica originale
+del progetto, senza attribuzione dovuta; se un domani servisse una tappa senza foto, lo script si recupera
+dalla storia di git (ultimo commit che lo conteneva: quello delle nove foto vere).
 
-`parcheggio.svg` · `duckstore.svg` · `barjoan.svg` · `apt.svg` · `taps.svg` · `braseria.svg` · `olimpo.svg` ·
-`biarritz.svg` · `canudas.svg`
+Londra continua ad avere la sua card dell'appartamento (`public/assets/tappe/londra/apt.svg`), generata da
+`scripts/londra-cards.mjs` (`npm run cards:londra`), che è un altro script e resta dov'è.
 
 ## Font
 - Clash Display (Fontshare, licenza Fontshare Free Font) e Inter (SIL OFL): già usati dal sito, self-hosted in `public/fonts/`.

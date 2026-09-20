@@ -35,7 +35,7 @@ for (const day of it.days) {
     } else if (!/^\d{2}:\d{2}$/.test(stop.time)) errors.push(`${stop.id}: orario "${stop.time}" non valido`)
     if (!['verificato', 'stimato', 'da_verificare', 'opzionale'].includes(stop.timeStatus)) errors.push(`${stop.id}: timeStatus "${stop.timeStatus}" non valido`)
     // Ogni tappa ha la sua immagine, e il file deve esistere davvero: .webp = foto da Commons (con
-    // crediti), .svg = card stilizzata generata da scripts/gen-cards.mjs
+    // crediti Commons o dichiarazione fra le private). Le card .svg disegnate non ci sono più.
     if (!stop.img) errors.push(`${stop.id}: manca il campo "img"`)
     else if (!existsSync('public/assets/tappe/' + stop.img)) errors.push(`${stop.id}: immagine "${stop.img}" inesistente`)
     else if (stop.img.endsWith('.webp') && !fotoIds.has(stop.img)) errors.push(`${stop.id}: foto "${stop.img}" senza crediti in data/foto-tappe.json`)

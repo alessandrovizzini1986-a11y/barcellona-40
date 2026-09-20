@@ -2,7 +2,7 @@
 // Le foto di Google Places NON si possono usare: l'attribuzione è per singolo autore e non sono
 // ripubblicabili. Qui si accettano solo CC0 / CC BY / CC BY-SA / pubblico dominio, verificate leggendo
 // `extmetadata` PRIMA di salvare il file: se la licenza non torna, la foto si scarta e al suo posto va la
-// card stilizzata di scripts/gen-cards.mjs.
+// card stilizzata (le card disegnate non esistono più: ogni tappa ha la sua foto).
 //
 //   node scripts/fetch-photos.mjs        (npm run foto)
 import { writeFileSync, mkdirSync, existsSync, readFileSync, statSync } from 'node:fs'

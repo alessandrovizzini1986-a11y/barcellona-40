@@ -14,7 +14,6 @@
     "data": "node scripts/geocode.mjs && node scripts/distances.mjs && node scripts/validate.mjs",
     "validate": "node scripts/validate.mjs",
     "foto": "node scripts/fetch-photos.mjs",
-    "cards": "node scripts/gen-cards.mjs",
     "foto:londra": "node scripts/londra-foto.mjs",
     "cards:londra": "node scripts/londra-cards.mjs"
   },

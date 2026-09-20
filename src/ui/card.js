@@ -10,9 +10,9 @@ import { setStopDone } from '../game.js'
 import { toast } from './toast.js'
 import { short as confettiShort } from './confetti.js'
 
-// Immagini delle tappe. Il file da mostrare sta nel dato (`img` in data/itinerary.json e data/viaggio.json):
-// `.webp` = foto vera da Wikimedia Commons, con attribuzione obbligatoria sotto la card;
-// `.svg` = card stilizzata generata da scripts/gen-cards.mjs, grafica originale del progetto, niente crediti.
+// Immagini delle tappe. Il file da mostrare sta nel dato (`img` in data/itinerary.json e data/viaggio.json)
+// e sono tutte foto vere: da Wikimedia Commons, con autore e licenza sotto la card, oppure private,
+// fornite da chi c'era, con la riga "per gentile concessione". Le card disegnate non esistono più.
 // Le foto di Google Places non si possono ripubblicare: vedi CREDITS.md.
 const CREDITI = Object.fromEntries(fotoTappe.foto.map((f) => [`${f.id}.webp`, f]))
 // Foto private: fornite da chi c'era, uso autorizzato. Non hanno una licenza libera e non stanno in
@@ -45,7 +45,7 @@ const ALT = {
   'olimpo.webp': 'L\'insegna rossa della Vermutería Olimpo, con la botte e le lavagne all\'ingresso',
   'parcheggio.webp': 'Il cartello "P2 Official Parking" sulla facciata del parcheggio di Bologna',
   'taps.webp': 'La vetrina viola dell\'enoteca Taps, con la botte davanti all\'ingresso',
-  'duckstore.svg': 'Illustrazione del Barcelona Duck Store'
+  'duckstore.webp': 'La vetrina del Barcelona Duck Store, con la Sagrada Família di mattoncini e le paperelle in fila'
 }
 export const haFoto = (stop) => !!stop.img
 

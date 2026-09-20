@@ -278,3 +278,10 @@ Dati presi dalle pagine statiche del sito ufficiale (Visítanos → Documentos n
 - **Il tetto di peso passa a 1,3 MB**: la cartella è a **1,20 MB**, quattro kB sopra il limite di prima. Comprimere più di così si vedrebbe — sono già a qualità 72 — quindi si alza il limite, non la compressione.
 - **Alt in italiano** riscritti su tutte e nove: descrivono cosa si vede, non ripetono il titolo.
 - QA `immagini.mjs` a **82 controlli**: il controllo sulle misure non pretende più 800×450 per tutte (le private partono da originali più piccoli) ma verifica formato, 16:9 e che nessuna sia stata ingrandita; controlla il **testo** dell'attribuzione, link a Commons da una parte e gentile concessione dall'altra; e che nessuna privata finisca nella tabella Commons. `venerdi.mjs` sale a 47.
+
+## Anche il Duck Store ha la sua foto: card disegnate azzerate
+- **`duckstore.webp`**, stessa lavorazione delle altre nove: 16:9 con bias 0,15 per tenere l'insegna tonda, 640 px, WebP qualità 72, **17 kB**. Si vede la vetrina con la Sagrada Família di mattoncini e le paperelle in fila.
+- **Era l'ultima card disegnata.** Con lei se ne va `scripts/gen-cards.mjs` e lo script `npm run cards`: generava una lista vuota. Il mosaico trencadís resta nella storia di git e `CREDITS.md` dice dove ripescarlo se un domani servisse una tappa senza foto. `scripts/londra-cards.mjs` è un altro script e resta dov'è, insieme all'unica `.svg` rimasta nel progetto, quella dell'appartamento di Londra.
+- Aggiornati i tre commenti che citavano il generatore (`fetch-photos.mjs`, `validate.mjs`, `card.js`): puntavano a un file che non esiste più.
+- **Ogni tappa del weekend ha la foto del posto**: 14 da Commons, 11 private. La cartella è a **1,20 MB**, dentro il tetto di 1,3.
+- QA `immagini.mjs` a **83 controlli**: ora pretende **zero** `.svg` fra le immagini delle tappe, e per ogni giorno tante attribuzioni quante immagini — prima il Duck Store era l'unica card senza credito, adesso i due numeri coincidono.

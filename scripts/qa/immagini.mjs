@@ -1,8 +1,7 @@
-// QA delle immagini delle tappe: una per tappa, e sono quasi tutte foto vere. 14 da Wikimedia Commons,
-// 10 private (fornite da chi c'era, uso autorizzato) e una sola card stilizzata, il Duck Store, perché
-// di quel negozio una foto non ce l'abbiamo. Attribuzione obbligatoria sotto ogni foto — il link alla
-// pagina Commons per le prime, "per gentile concessione" per le seconde — e vietata sotto la card
-// nostra, che non è dovuta a nessuno.
+// QA delle immagini delle tappe: una per tappa, e sono tutte foto vere. 14 da Wikimedia Commons e 11
+// private (fornite da chi c'era, uso autorizzato). Nessuna card disegnata: sono sparite tutte.
+// Attribuzione obbligatoria sotto ogni foto — il link alla pagina Commons per le prime, "per gentile
+// concessione" per le seconde.
 import { chromium } from 'playwright-core'
 import { readdirSync, statSync, readFileSync } from 'node:fs'
 import sharp from 'sharp'
@@ -15,8 +14,8 @@ const ok = (n, c, x = '') => { out.push(c); if (!c) process.exitCode = 1; consol
 const DIR = 'public/assets/tappe'
 const file = readdirSync(DIR)
 const webp = file.filter((f) => f.endsWith('.webp')), svg = file.filter((f) => f.endsWith('.svg'))
-ok('24 foto WebP: 14 da Commons più 10 private', webp.length === 24, webp.length + '')
-ok('una sola card stilizzata, il Duck Store', svg.length === 1 && svg[0] === 'duckstore.svg', svg.join(' '))
+ok('25 foto WebP: 14 da Commons più 11 private', webp.length === 25, webp.length + '')
+ok('nessuna card stilizzata: ogni tappa ha la foto vera', svg.length === 0, svg.join(' '))
 const misure = []
 // Le foto di Commons sono tutte 800×450. Le private partono da originali più piccoli e non si
 // ingrandiscono: si controlla il formato e il 16:9, non una misura fissa.
@@ -36,14 +35,14 @@ const crediti = JSON.parse(readFileSync('data/foto-tappe.json', 'utf8'))
 const privateFile = new Set((crediti.private || []).map((f) => `${f.id}.webp`))
 const cred = readFileSync('CREDITS.md', 'utf8')
 ok('crediti per tutte e 14 le foto di Commons', crediti.foto.length === 14 && crediti.scartate.length === 0)
-ok('le dieci foto private sono dichiarate e fuori dai crediti Commons', crediti.private?.length === 10 && crediti.private.every((f) => f.id && f.file && f.tappa && /concessione/i.test(f.nota) && !crediti.foto.some((c) => c.id === f.id)), String(crediti.private?.length))
+ok('le undici foto private sono dichiarate e fuori dai crediti Commons', crediti.private?.length === 11 && crediti.private.every((f) => f.id && f.file && f.tappa && /concessione/i.test(f.nota) && !crediti.foto.some((c) => c.id === f.id)), String(crediti.private?.length))
 // stanno in CREDITS.md, ma nella tabella delle private: nessuna riga con un link a Commons le nomina
 ok('nessuna foto privata nella tabella Commons di CREDITS.md', crediti.private.every((f) => !cred.split('\n').some((r) => r.includes(f.file) && r.includes('commons.wikimedia.org'))))
 ok('CREDITS.md elenca tutte le foto private', crediti.private.every((f) => cred.includes(f.file)))
 ok('ogni foto ha autore, licenza e pagina Commons', crediti.foto.every((f) => f.autore && f.licenza && (f.pagina || '').startsWith('https://commons.wikimedia.org/wiki/File:')))
 ok('licenze tutte libere', crediti.foto.every((f) => /^(cc0|cc by|public domain|pd)/i.test(f.licenza)), [...new Set(crediti.foto.map((f) => f.licenza))].join(', '))
 ok('CREDITS.md elenca tutte le foto', crediti.foto.every((f) => cred.includes(f.pagina) && cred.includes(f.autore)))
-ok('CREDITS.md cita le card stilizzate come originali', /Card stilizzate \(originali del progetto\)/.test(cred))
+ok('CREDITS.md dice che le card disegnate non ci sono più', /Card stilizzate \(originali del progetto\)/.test(cred) && /Per Barcellona non ce ne sono più/.test(cred))
 ok('nessuna immagine da Google Places', !/googleusercontent|maps\.googleapis|places\/photo/i.test(cred + JSON.stringify(crediti)))
 
 // ---- itinerario ----
@@ -69,8 +68,8 @@ async function vista(person, path) {
   await p.waitForTimeout(400)
   return { p, ctx, errs }
 }
-// Ogni tappa ha la sua immagine; l'unica senza attribuzione è il Duck Store, che è una card nostra
-for (const [giorno, attese, crediti0] of [['ven', 16, 15], ['sab', 7, 7], ['dom', 3, 3]]) {
+// Ogni tappa ha la sua foto, e ogni foto la sua attribuzione: i due numeri coincidono
+for (const [giorno, attese, crediti0] of [['ven', 16, 16], ['sab', 7, 7], ['dom', 3, 3]]) {
   const { p, ctx, errs } = await vista('ale', `/#/programma/${giorno}`)
   const st = await p.evaluate(() => ({
     img: [...document.querySelectorAll('.card[data-stop] .card__foto img')].map((i) => ({ src: i.getAttribute('src').split('/').pop(), nat: i.naturalWidth, lazy: i.getAttribute('loading'), alt: i.getAttribute('alt'), ratio: +(i.getBoundingClientRect().width / i.getBoundingClientRect().height).toFixed(2) })),

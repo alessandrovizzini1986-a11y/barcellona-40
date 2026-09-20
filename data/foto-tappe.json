@@ -216,6 +216,12 @@
       "file": "assets/tappe/taps.webp",
       "tappa": "Taps Sagrada Familia",
       "nota": "Foto fornita da Alessandro, uso autorizzato. Per gentile concessione."
+    },
+    {
+      "id": "duckstore",
+      "file": "assets/tappe/duckstore.webp",
+      "tappa": "Barcelona Duck Store",
+      "nota": "Foto fornita da Alessandro, uso autorizzato. Per gentile concessione."
     }
   ],
   "scartate": []
