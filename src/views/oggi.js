@@ -1,6 +1,6 @@
 // Vista Oggi: countdown prima del weekend, bento durante, "Missione compiuta" dopo
-import { now, phase, countdownTo, WEEKEND_START, dayKey, minutesUntil, fmtMinutes, currentStop, nextStop, isOverridden } from '../time.js'
-import { stopsFor, stopsForDay, personById, checks, fmtDist, DAY_COLOR, missionsFor, percorsiDi, conOrario } from '../data.js'
+import { now, phase, countdownTo, WEEKEND_START, dayKey, minutesUntil, fmtMinutes, currentStop, nextStop, isOverridden, parseLocal } from '../time.js'
+import { stopsFor, stopsForDay, personById, checks, fmtDist, DAY_COLOR, missionsFor, percorsiDi, conOrario, days, durataDi } from '../data.js'
 import { store } from '../store.js'
 import { stopCard, bindCards, percorsoLink } from '../ui/card.js'
 import { ring } from '../ui/ring.js'
@@ -116,17 +116,24 @@ export async function render(root, { person, header, params }) {
   const doneToday = piano.filter((s) => store.isDone(s.id)).length
   const allDoneCount = mioPiano.filter((s) => store.isDone(s.id)).length
   const openChecks = checks.filter((c) => !store.isChecked(c.id))
-  const monneGone = person === 'monne' && now() > mioPiano[mioPiano.length - 1]?.at
+  // Chi riparte prima dell'ultimo giorno del weekend (Monne, sabato alle 10:20) finisce il viaggio mentre
+  // gli altri continuano. Dopo la sua ultima tappa "Adesso" non è più una tappa: è un volo, e poi casa.
+  // Lasciargli il taxi delle 08:15 come tappa corrente vuol dire dirgli che è ancora a Barcellona.
+  const ultimaTappa = mioPiano[mioPiano.length - 1]
+  const rientroPrima = !!(p.departure?.date && p.departure.date < days[days.length - 1].date)
+  const ripartito = rientroPrima && !nxt && !!ultimaTappa && now() > ultimaTappa.at
+  const atterraggio = ripartito && p.departure.landing ? parseLocal(`${p.departure.date}T${p.departure.landing}`) : null
+  const aCasa = !!(atterraggio && now() >= atterraggio)
 
   html = header(`${DAY_LABEL[key]} · ${p.name}`) + `<section class="view">
     ${timelineViaggio(key, person)}
     ${albumBanner({ line: 'Ogni foto che carichi finisce nello stesso posto. Stasera riguardate tutto insieme.' })}
     ${songCard({ line: 'Due minuti e quarantacinque. Dopo il terzo ascolto il ritornello non esce più.' })}
-    ${person === 'monne' && !monneGone ? speedBanner() : ''}
+    ${person === 'monne' && !ripartito ? speedBanner() : ''}
     <div class="bento">
       <div class="tile tile--accent span-2" style="--day:${DAY_COLOR[key]}">
         <div class="tile__label">Adesso</div>
-        ${cur ? stopCard(cur, { person, isNow: true, nowLabel: imminent ? nextIn(cur) : 'adesso', eager: true }) + percorsoOra(cur, key, todays) : `<p class="muted">${monneGone ? 'Tu a quest\'ora sei già a Bologna. Missione compiuta.' : 'La prima tappa di oggi non è ancora iniziata. Respira, c\'è tempo.'}</p>`}
+        ${cur && !ripartito ? stopCard(cur, { person, isNow: true, nowLabel: imminent ? nextIn(cur) : etichettaAdesso(cur), eager: true }) + percorsoOra(cur, key, todays) : `<p class="muted">${ripartito ? (aCasa ? 'Tu a quest\'ora sei già a Bologna. Missione compiuta.' : `In volo verso Bologna · atterri alle ${esc(p.departure.landing)}.`) : 'La prima tappa di oggi non è ancora iniziata. Respira, c\'è tempo.'}</p>${aCasa ? `<a class="btn album__cta btn--block" href="${PHOTO_ALBUM}" target="_blank" rel="noopener" aria-label="Guarda com'è andata, apre l'album foto">${icon('camera')} Guarda com'è andata</a>` : ''}`}
       </div>
       <div class="tile">
         <div class="tile__label">Prossima</div>
@@ -151,7 +158,7 @@ export async function render(root, { person, header, params }) {
       </div>`}
     </div>
     ${todays.length ? `<h2 class="section-title">Oggi per te <small>${piano.length} tappe${todays.length > piano.length ? ` · ${todays.length - piano.length} opzionale` : ''}</small></h2>
-    <ol class="timeline" style="--dc:${DAY_COLOR[key]}">${piano.map((s) => `<li>${stopCard(s, { person, isNow: cur?.id === s.id, showCheck: true })}</li>`).join('')}${todays.length > piano.length ? `<li class="timeline__opzionale">Opzionale</li>${todays.filter((s) => !conOrario(s)).map((s) => `<li class="timeline__opz">${stopCard(s, { person, showCheck: true })}</li>`).join('')}` : ''}</ol>` : ''}
+    <ol class="timeline" style="--dc:${DAY_COLOR[key]}">${piano.map((s) => `<li>${stopCard(s, { person, isNow: cur?.id === s.id && !ripartito, nowLabel: imminent && cur?.id === s.id ? nextIn(s) : etichettaAdesso(s), showCheck: true })}</li>`).join('')}${todays.length > piano.length ? `<li class="timeline__opzionale">Opzionale</li>${todays.filter((s) => !conOrario(s)).map((s) => `<li class="timeline__opz">${stopCard(s, { person, showCheck: true })}</li>`).join('')}` : ''}</ol>` : ''}
     ${isOverridden() ? `<p class="faint">Data simulata: ${now().toLocaleString('it-IT')}</p>` : ''}
   </section>`
   root.innerHTML = html
@@ -180,6 +187,14 @@ function progressHtml(doneAll, total, doneDay, totalDay, color) {
   return `<div class="tile__label">Progresso weekend</div>
     ${ring(doneAll, total, `${doneAll}/${total}`, 'tappe', color)}
     <div class="faint" style="text-align:center">Oggi ${doneDay}/${totalDay}</div>`
+}
+
+// "Adesso" resta l'ultima tappa iniziata (currentStop non cambia), ma la parola sopra la card dice la
+// verità: finché dura è ADESSO, dopo è ULTIMA TAPPA. Senza durata dichiarata si contano 60 minuti.
+function etichettaAdesso(stop) {
+  const passati = -minutesUntil(stop.at)
+  const finestra = durataDi(stop) ?? 60
+  return passati < finestra ? 'adesso' : 'ultima tappa'
 }
 
 function nextIn(stop) {

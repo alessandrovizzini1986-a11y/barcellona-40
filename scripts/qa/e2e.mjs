@@ -139,6 +139,46 @@ for (const [person, path] of [['ale', '/#/oggi'], ['ale', '/?now=2026-10-17T10:0
   ok('sabato · Apolo resta raggiungibile da Maps', (await post.locator('a[href*="maps"]').count()) >= 1)
   await ctx.close()
 }
+// Chi è già ripartito non ha una tappa "adesso": ha un volo, e poi casa
+{
+  const { p, ctx } = await open('monne', '/?now=2026-10-17T09:00#/oggi')
+  const ad = p.locator('.tile--accent')
+  ok('monne 09:00 · in volo, nessuna card', await ad.locator('.card[data-stop]').count() === 0 && /In volo verso Bologna · atterri alle 12:05/.test(await ad.innerText()), await ad.innerText())
+  ok('monne 09:00 · niente banner speedrun: è già partito', await p.locator('.speed-banner').count() === 0)
+  await ctx.close()
+}
+{
+  const { p, ctx } = await open('monne', '/?now=2026-10-17T13:00#/oggi')
+  const ad = p.locator('.tile--accent')
+  ok('monne 13:00 · atterrato, messaggio di fine', /già a Bologna. Missione compiuta/.test(await ad.innerText()))
+  ok('monne 13:00 · album come pulsante principale', await ad.locator('.album__cta').count() === 1)
+  await ctx.close()
+}
+{
+  const { p, ctx } = await open('monne', '/?now=2026-10-16T12:00#/oggi')
+  ok('monne venerdì · la tappa corrente c\'è ancora', (await p.locator('.tile--accent .card[data-stop]').getAttribute('data-stop')) === 'f7')
+  ok('monne venerdì · banner speedrun al suo posto', await p.locator('.speed-banner').count() === 1)
+  await ctx.close()
+}
+// L'etichetta sopra la card dice la verità: finché dura è ADESSO, dopo è ULTIMA TAPPA
+for (const [quando, atteso, etichetta] of [
+  ['2026-10-17T10:00', 's3c', 'ADESSO'],        // iniziata da 15 min su 30 di durata
+  ['2026-10-17T16:30', 's7', 'ULTIMA TAPPA'],   // senza durata: 90 min dopo, oltre i 60
+  ['2026-10-18T13:45', 'd1', 'ADESSO'],         // 15 min su 90
+  ['2026-10-18T21:00', 'd3', 'ULTIMA TAPPA']
+]) {
+  const { p, ctx } = await open('ale', `/?now=${quando}#/oggi`)
+  const card = p.locator('.tile--accent .card[data-stop]')
+  ok(`${quando} · Adesso è ${atteso}`, (await card.getAttribute('data-stop')) === atteso)
+  ok(`${quando} · etichetta "${etichetta}"`, (await p.locator('.tile--accent .card__time--adesso').innerText()) === etichetta, await p.locator('.tile--accent .card__time--adesso').innerText())
+  ok(`${quando} · la lista dice la stessa parola`, (await p.locator('.timeline .card--now .card__time--adesso').innerText()) === etichetta)
+  await ctx.close()
+}
+{
+  const { p, ctx } = await open('ale', '/?now=2026-10-16T07:30#/oggi')
+  ok('tappa imminente · resta "TRA 35 MIN", non diventa ADESSO', (await p.locator('.tile--accent .card__time--adesso').innerText()) === 'TRA 35 MIN')
+  await ctx.close()
+}
 await b.close()
 for (const [s, n, e] of results) console.log(s, n, e ? `(${e})` : '')
 console.log(`\n${results.filter((r) => r[0] === '✓').length}/${results.length} test ok`)
