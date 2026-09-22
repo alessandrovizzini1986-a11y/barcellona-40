@@ -1,5 +1,5 @@
 // Vista Oggi: countdown prima del weekend, bento durante, "Missione compiuta" dopo
-import { now, phase, countdownTo, WEEKEND_START, dayKey, minutesUntil, fmtMinutes, currentStop, nextStop, isOverridden, parseLocal } from '../time.js'
+import { now, phase, countdownTo, dayKey, minutesUntil, fmtMinutes, currentStop, nextStop, isOverridden, parseLocal } from '../time.js'
 import { stopsFor, stopsForDay, personById, checks, fmtDist, DAY_COLOR, missionsFor, percorsiDi, conOrario, days, durataDi } from '../data.js'
 import { store } from '../store.js'
 import { stopCard, bindCards, percorsoLink } from '../ui/card.js'
@@ -14,9 +14,18 @@ import { albumBanner, bindAlbum } from '../ui/album.js'
 import { songCard, bindSong } from '../ui/song.js'
 import { shareAlbum, bindShareAlbum } from '../ui/share-album.js'
 import { PHOTO_ALBUM } from '../store.js'
-import { timelineViaggio, bindViaggio } from '../ui/viaggio.js'
+import { timelineViaggio, bindViaggio, voli } from '../ui/viaggio.js'
 
 const DAY_LABEL = { ven: 'Venerdì 16', sab: 'Sabato 17', dom: 'Domenica 18' }
+
+// Il countdown punta al DECOLLO, non alla mezzanotte: è quello che si aspetta davvero.
+// phase() invece cambia a mezzanotte (WEEKEND_START) e non si tocca: alle 4 del mattino, al parcheggio,
+// il sito deve essere già una guida, non un conto alla rovescia. Sono due istanti diversi apposta.
+const VOLO_ANDATA = voli.find((v) => v.tipo === 'andata')
+const DECOLLO = parseLocal(`${VOLO_ANDATA.data}T${VOLO_ANDATA.partenza}`)
+// Giulio e Manuel arrivano sabato con voli loro, che non tracciamo: per loro questo resta l'inizio
+// del weekend, e la riga lo dice senza spacciargli un volo che non è il loro.
+const rigaVolo = (person) => `${VOLO_ANDATA.persone.includes(person) ? '' : 'Il primo volo · '}${VOLO_ANDATA.volo} · Bologna ${VOLO_ANDATA.partenza}`
 
 export function summaryText(person, key) {
   // Il riepilogo è il piano del giorno: le tappe opzionali restano sulla card, non nel messaggio.
@@ -50,7 +59,8 @@ export async function render(root, { person, header, params }) {
     html = header('Manca poco. Tutto è già deciso.') + `<section class="view">
       <div class="hero" aria-live="off">
         <div class="hero__label">Si parte venerdì 16 ottobre</div>
-        <div class="countdown" id="cd" role="timer" aria-label="Countdown alla partenza">${countdownHtml()}</div>
+        <div class="countdown" id="cd" role="timer" aria-label="Countdown al decollo">${countdownHtml()}</div>
+        <p class="faint">${esc(rigaVolo(person))}</p>
         <p class="muted">Zero fatica, tutto gusto. Quando atterri, il piano è già pronto.</p>
       </div>
       ${albumBanner({ line: 'Ogni foto che carichi finisce nello stesso posto. Stasera riguardate tutto insieme.' })}
@@ -203,7 +213,7 @@ function nextIn(stop) {
   return `tra ${fmtMinutes(m)}`
 }
 function countdownHtml() {
-  const c = countdownTo(WEEKEND_START)
+  const c = countdownTo(DECOLLO)
   return `<div><b class="tnum">${c.days}</b><span>giorni</span></div><div><b class="tnum">${String(c.hours).padStart(2, '0')}</b><span>ore</span></div><div><b class="tnum">${String(c.mins).padStart(2, '0')}</b><span>min</span></div>`
 }
 export function speedBanner() {

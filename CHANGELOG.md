@@ -328,3 +328,10 @@ Due correzioni alla vista Oggi, nate dalla lettura del codice reale, non dalle s
 - **L'etichetta sopra "Adesso" non mente più sul tempo.** `currentStop()` non è stato toccato — la tappa corrente resta l'ultima iniziata — ma la parola sopra la card ora è **ADESSO** finché la tappa dura (`durataMin`, o 60 minuti se non ce l'ha) e **ULTIMA TAPPA** dopo. Sabato alle 16:30 il pomeriggio libero delle 15:00 è "ultima tappa", non "adesso"; domenica alle 21:00 il rientro delle 20:00 idem. La tappa imminente continua a dire **TRA X MIN**. La stessa parola vale anche nella lista "Oggi per te": non può dire due cose diverse sulla stessa pagina.
 - **Non toccata**, come da tua decisione: la timeline dell'andata che resta a schermo fra mezzanotte e le 4 del mattino.
 - `scripts/qa/e2e.mjs` sale a **76 test**: i tre momenti di Monne (09:00, 10:00, 13:00), le quattro etichette e la tappa imminente.
+
+## Il countdown conta fino al decollo, non fino a mezzanotte
+- **Bersaglio spostato da `2026-10-16T00:00` a `2026-10-16T06:20`**, il decollo di FR2097. Il 22 settembre alle 22:56 diceva 23 giorni e 1 ora: erano i minuti che mancavano alla mezzanotte, non al volo. Ora dice **23 giorni, 07 ore, 24 minuti**, che è il tempo vero.
+- **L'orario non è scritto nel codice**: viene da `data/viaggio.json`, dal volo di andata. Se cambia lì, cambia il countdown.
+- **Sotto i numeri c'è il volo**: "FR2097 · Bologna 06:20". Giulio e Manuel arrivano sabato con voli che non tracciamo, quindi per loro la riga è **"Il primo volo · FR2097 · Bologna 06:20"**: resta l'inizio del weekend, senza spacciargli un aereo che non è il loro.
+- **`phase()` non è stata toccata**, ed è la parte importante: il passaggio da "prima" a "durante" resta a **mezzanotte**. Alle 04:00, mentre si entra al P2 col QR, il sito è già una guida — timeline del viaggio e bento — non un conto alla rovescia. I due istanti sono diversi apposta, e ora c'è un commento nel codice che spiega perché.
+- `scripts/qa/e2e.mjs` sale a **81 test**: i 23 giorni 7 ore 24 minuti dal 22 settembre, le due versioni della riga del volo, e la verifica che alle 04:00 del 16 il countdown sia sparito e la timeline ci sia.

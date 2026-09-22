@@ -31,6 +31,26 @@ const text = (p, sel) => p.locator(sel).first().textContent().then((t) => (t || 
 
 // 3. Date
 { const { p, ctx } = await open('ale', '/?now=2026-10-15T20:00#/oggi'); ok('countdown 15/10', (await p.locator('#cd b').count()) === 3 && (await text(p, '#cd b')) === '0'); await ctx.close() }
+// Il countdown punta al decollo delle 06:20, non alla mezzanotte: dal 22/09 alle 22:56 mancano 23 g 7 h 24 min
+{
+  const { p, ctx } = await open('ale', '/?now=2026-09-22T22:56#/oggi')
+  const cd = await p.evaluate(() => [...document.querySelectorAll('#cd > div b')].map((b) => b.textContent))
+  ok('countdown al decollo: 23 giorni, 07 ore, 24 min', JSON.stringify(cd) === JSON.stringify(['23', '07', '24']), cd.join(' '))
+  ok('sotto i numeri c\'è il volo', (await text(p, '.hero .faint')) === 'FR2097 · Bologna 06:20')
+  await ctx.close()
+}
+{
+  const { p, ctx } = await open('giulio', '/?now=2026-09-22T22:56#/oggi')
+  ok('chi non è su quel volo legge che è il primo, non il suo', (await text(p, '.hero .faint')) === 'Il primo volo · FR2097 · Bologna 06:20')
+  await ctx.close()
+}
+// phase() resta alla mezzanotte: alle 4 del mattino, al parcheggio, il sito è già una guida
+{
+  const { p, ctx } = await open('ale', '/?now=2026-10-16T04:00#/oggi')
+  ok('16/10 04:00 · countdown sparito', await p.locator('#cd').count() === 0)
+  ok('16/10 04:00 · fase durante: timeline del viaggio e bento', await p.locator('.viaggio-oggi').count() === 1 && await p.locator('.bento').count() === 1)
+  await ctx.close()
+}
 { const { p, ctx } = await open('ale', '/?now=2026-10-16T09:00#/oggi'); ok('16/10 09:00 ale: Adesso = f1', (await p.locator('.tile .card[data-stop="f1"]').count()) === 1); await ctx.close() }
 { const { p, ctx } = await open('monne', '/?now=2026-10-17T07:50#/oggi'); ok('17/10 07:50 monne: Adesso = s2', (await p.locator('.tile .card[data-stop="s2"]').count()) === 1); ok('banner speedrun', (await p.locator('a[href="#/speedrun"]').count()) >= 1); await ctx.close() }
 { const { p, ctx } = await open('monne', '/?now=2026-10-17T07:50#/missioni'); const cls = await p.locator('.mission__timer').first().getAttribute('class'); ok('07:50 timer giallo (25 min)', cls.includes('warm'), cls); await ctx.close() }
