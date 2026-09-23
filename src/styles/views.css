@@ -168,3 +168,6 @@
 .novita__voci li::before{ content:""; position:absolute; left:0; top:.55em; width:6px; height:6px; border-radius:2px; background:var(--acqua); transform:rotate(12deg); }
 .tab__dot{ position:absolute; top:6px; margin-left:18px; width:8px; height:8px; border-radius:50%; background:var(--terracotta); box-shadow:0 0 0 2px var(--bg-2); }
 .tab{ position:relative; }
+
+/* Nota sulle statistiche anonime, in fondo al Profilo: si legge se la cerchi, non ruba la scena */
+.stats-nota{ color:var(--ink-3); font-size:var(--fs-0); line-height:1.45; }

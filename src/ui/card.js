@@ -9,6 +9,7 @@ import fotoTappe from '../../data/foto-tappe.json'
 import { setStopDone } from '../game.js'
 import { toast } from './toast.js'
 import { short as confettiShort } from './confetti.js'
+import { evento } from '../stats.js'
 
 // Immagini delle tappe. Il file da mostrare sta nel dato (`img` in data/itinerary.json e data/viaggio.json)
 // e sono tutte foto vere: da Wikimedia Commons, con autore e licenza sotto la card, oppure private,
@@ -115,7 +116,7 @@ export function stopCard(stop, { person = null, isNow = false, nowLabel = 'adess
   const stimati = (stop.detailsStimati || []).map((d) => `<li>${escLink(d)}</li>`).join('')
   const bloccoStimati = stimati ? `<div class="card__stimati"><p class="card__stimati-tit">${badge('stimato')}<span>ragionamento nostro, non un dato confermato</span></p><ul>${stimati}</ul></div>` : ''
   const acts = []
-  if (stop.actions?.maps) acts.push(`<a class="btn" href="${mapsUrl(stop)}" target="_blank" rel="noopener">${icon('map-pin')} Maps</a>`)
+  if (stop.actions?.maps) acts.push(`<a class="btn" data-maps="${stop.id}" href="${mapsUrl(stop)}" target="_blank" rel="noopener">${icon('map-pin')} Maps</a>`)
   if (stop.actions?.taxi) acts.push(`<a class="btn" href="${taxiUrl(stop)}" data-taxi target="_blank" rel="noopener" title="Uber; in alternativa FREE NOW">${icon('taxi')} Taxi</a>`)
   if (stop.actions?.metro) acts.push(`<span class="btn btn--ghost" aria-label="Metro: ${esc(stop.actions.metro)}">${icon('train')} ${esc(stop.actions.metro)}</span>`)
   // Il nome del posto si ripete solo se non è già nel titolo: "Basílica de Santa Maria del Mar" due volte no
@@ -156,6 +157,10 @@ export function bindCards(container, { signal, onChange } = {}) {
     img.remove()
   }, { signal, capture: true })
   container.addEventListener('click', (e) => {
+    const maps = e.target.closest('[data-maps]')
+    if (maps) evento('maps-tappa', maps.dataset.maps)
+    const percorso = e.target.closest('[data-percorso]')
+    if (percorso) evento('maps-percorso', percorso.dataset.percorso)
     const sum = e.target.closest('summary')
     if (sum && container.contains(sum)) {
       const det = sum.parentElement
@@ -172,6 +177,7 @@ export function bindCards(container, { signal, onChange } = {}) {
     }
     const taxi = e.target.closest('[data-taxi]')
     if (taxi) {
+      evento('taxi')
       // Se Uber non si apre entro 1,5 s (nessuna app), proponi FREE NOW
       setTimeout(() => { if (document.visibilityState === 'visible' && taxi.dataset.fb !== '1') { taxi.dataset.fb = '1'; taxi.href = TAXI_FALLBACK; taxi.innerHTML = `${icon('taxi')} FREE NOW` } }, 1500)
     }

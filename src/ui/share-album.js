@@ -4,6 +4,7 @@ import { PHOTO_ALBUM, SITE_URL } from '../store.js'
 import { icon } from './icons.js'
 import { toast } from './toast.js'
 import { esc } from './html.js'
+import { evento } from '../stats.js'
 
 export const MESSAGGIO_ALBUM = `Ragazzi, album unico per le foto del weekend a Barcellona 🦆
 
@@ -50,6 +51,7 @@ export function bindShareAlbum(container) {
   if (!container || container.dataset.shareBound) return
   container.dataset.shareBound = '1'
   container.addEventListener('click', async (e) => {
+    if (e.target.closest('.share-album__cta')) evento('album-whatsapp')
     if (!e.target.closest('[data-share-copy]')) return
     try {
       await navigator.clipboard.writeText(MESSAGGIO_ALBUM)

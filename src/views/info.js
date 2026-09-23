@@ -3,6 +3,7 @@ import { people, personById, checks, stopById } from '../data.js'
 import { store } from '../store.js'
 import { icon } from '../ui/icons.js'
 import { URL_GIOCO, URL_GIOCO_CLASSICO } from '../rigoriLink.js'
+import { evento } from '../stats.js'
 import { esc } from '../ui/html.js'
 import { toast } from '../ui/toast.js'
 import { navigate } from '../router.js'
@@ -37,7 +38,7 @@ export async function render(root, { person, sub, header }) {
     ${sec('extra', 'Extra', `
       <p>Il gioco dei rigori sta dentro questo sito: si apre nella stessa scheda e il tasto indietro riporta qui.</p>
       <ul class="list">
-        <li class="row"><a class="row__main" href="${URL_GIOCO}" aria-label="Apri Rigori al Camp Nou">${icon('goal')} <b>Rigori al Camp Nou</b><span class="faint">Cinque rigori contro Ale</span></a></li>
+        <li class="row"><a class="row__main" data-rigori href="${URL_GIOCO}" aria-label="Apri Rigori al Camp Nou">${icon('goal')} <b>Rigori al Camp Nou</b><span class="faint">Cinque rigori contro Ale</span></a></li>
         <li class="row"><a class="row__main" href="${URL_GIOCO_CLASSICO}" aria-label="Apri la versione classica dei rigori">${icon('trophy')} <b>Rigori, versione classica</b><span class="faint">Il gioco precedente, lasciato dov'era</span></a></li>
       </ul>`, openId === 'extra')}
     ${sec('apt', 'Appartamento', `
@@ -55,7 +56,8 @@ export async function render(root, { person, sub, header }) {
         <select class="input" id="person">${people.map((x) => `<option value="${x.id}" ${x.id === person ? 'selected' : ''}>${esc(x.name)} · ${esc(x.role)}</option>`).join('')}</select></div>
       <label class="switch"><span>Tema chiaro</span><input type="checkbox" id="theme" ${store.theme === 'light' ? 'checked' : ''}></label>
       <label class="switch"><span>Nascondi gamification (missioni, XP)</span><input type="checkbox" id="gam" ${store.gamificationHidden ? 'checked' : ''}></label>
-      <p class="faint">Stato salvato solo su questo telefono${store.storageAvailable() ? '' : '. Attenzione: la memoria del browser non è disponibile, le spunte spariranno alla chiusura'}.</p>`, openId === 'profilo')}
+      <p class="faint">Stato salvato solo su questo telefono${store.storageAvailable() ? '' : '. Attenzione: la memoria del browser non è disponibile, le spunte spariranno alla chiusura'}.</p>
+      <p class="stats-nota">Il sito conta le visite in forma anonima (GoatCounter), per sapere cosa viene usato davvero.</p>`, openId === 'profilo')}
     ${sec('verifiche', `Da verificare (${openChecks})`, `
       <p class="faint">${person === 'ale' ? 'Spunta quello che hai chiuso.' : 'Lista gestita da Alessandro: qui la vedi, lui la spunta.'}</p>
       <div class="list">${checks.map((c) => {
@@ -90,6 +92,7 @@ export async function render(root, { person, sub, header }) {
   root.querySelector('#gam').addEventListener('change', (e) => { store.gamificationHidden = e.target.checked })
   const ac = new AbortController()
   bindViaggio(root, { signal: ac.signal })
+  root.addEventListener('click', (e) => { if (e.target.closest('[data-rigori]')) evento('rigori-apri') }, { signal: ac.signal })
   root.addEventListener('change', (e) => {
     const cb = e.target.closest('input[data-check]')
     if (!cb) return

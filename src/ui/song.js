@@ -3,6 +3,7 @@ import { SONG_MP3, SONG_MP4, SONG_POSTER, SONG_TITLE, SONG_URL, CANVAS_MP4, CANV
 import { icon } from './icons.js'
 import { mosaicDataUri } from './mosaic.js'
 import { esc } from './html.js'
+import { evento } from '../stats.js'
 
 // Il link condiviso è canzone.html: porta alla stessa card ma con l'anteprima della papera su WhatsApp
 const SHARE_TEXT = `L'inno ufficiale del weekend. Alza il volume e impara il ritornello.\n\n${SONG_URL}`
@@ -69,12 +70,12 @@ export function songCard({ line = "L'inno ufficiale dei quaranta. Alza il volume
     </div>
 
     <div class="actions song__downloads">
-      <a class="btn song__cta" href="${SONG_MP3}" download="${esc(SONG_TITLE)} - Barcelona 40.mp3" aria-label="Scarica l'audio di ${esc(SONG_TITLE)} in MP3">${icon('download')} Scarica MP3</a>
-      <a class="btn song__cta" href="${SONG_MP4}" download="${esc(SONG_TITLE)} - Barcelona 40.mp4" aria-label="Scarica il video di ${esc(SONG_TITLE)}">${icon('download')} Scarica video</a>
+      <a class="btn song__cta" data-song-dl="mp3" href="${SONG_MP3}" download="${esc(SONG_TITLE)} - Barcelona 40.mp3" aria-label="Scarica l'audio di ${esc(SONG_TITLE)} in MP3">${icon('download')} Scarica MP3</a>
+      <a class="btn song__cta" data-song-dl="video" href="${SONG_MP4}" download="${esc(SONG_TITLE)} - Barcelona 40.mp4" aria-label="Scarica il video di ${esc(SONG_TITLE)}">${icon('download')} Scarica video</a>
     </div>
     <a class="btn btn--ghost btn--block" href="https://wa.me/?text=${encodeURIComponent(SHARE_TEXT)}" target="_blank" rel="noopener" aria-label="Manda l'inno ai ragazzi su WhatsApp">${icon('whatsapp')} Manda ai ragazzi</a>
 
-    <a class="btn btn--ghost btn--block" href="#/coro" aria-label="Modalità coro: il ritornello a schermo pieno">${icon('music')} Modalità coro</a>
+    <a class="btn btn--ghost btn--block" data-song-coro href="#/coro" aria-label="Modalità coro: il ritornello a schermo pieno">${icon('music')} Modalità coro</a>
 
     <details class="song__lyrics"><summary>Leggi il testo${icon('chevron')}</summary><div class="song__lyrics-body">${lyricsHtml()}</div></details>
   </section>`
@@ -104,10 +105,18 @@ export function bindSong(container) {
   }
 
   const spin = (on) => disc?.classList.toggle('song__disc--spin', on)
-  audio.addEventListener('play', () => { video?.pause(); spin(true) })
+  audio.addEventListener('play', () => { video?.pause(); spin(true); evento('canzone-play') })
   audio.addEventListener('pause', () => spin(false))
   audio.addEventListener('ended', () => spin(false))
-  video?.addEventListener('play', () => { audio.pause(); spin(false) })
+  video?.addEventListener('play', () => { audio.pause(); spin(false); evento('canzone-video') })
+
+  // Download e modalità coro. Il listener va sulla card, non sul contenitore: #app sopravvive ai
+  // re-render e ne accumulerebbe uno per volta, contando la stessa azione più volte.
+  audio.closest('.song')?.addEventListener('click', (e) => {
+    const dl = e.target.closest('[data-song-dl]')
+    if (dl) evento(dl.dataset.songDl === 'mp3' ? 'canzone-scarica-mp3' : 'canzone-scarica-video')
+    if (e.target.closest('[data-song-coro]')) evento('coro-apri')
+  })
 
   toggle?.addEventListener('click', () => {
     const open = wrap.hidden

@@ -12,6 +12,7 @@ import { short as confettiShort, big as confettiBig } from '../ui/confetti.js'
 import { copyText } from './oggi.js'
 import { PHOTO_ALBUM } from '../store.js'
 import { URL_GIOCO, rigoriXp, rigoriStats, haGiocato } from '../rigoriLink.js'
+import { evento } from '../stats.js'
 
 // Card del gioco dei rigori: sta in cima alle missioni perché è l'unica cosa del weekend a cui si gioca.
 // Gli XP arrivano da b40:v1:rigori:xp, scritti dal gioco; qui si leggono e basta.
@@ -25,7 +26,7 @@ function cardRigori() {
       <p class="rigori-card__sub">Cinque rigori contro Ale. Vinci e ti porti gli XP.</p>
       ${record}
     </div>
-    <a class="btn btn--acqua rigori-card__cta" href="${URL_GIOCO}" aria-label="Gioca a Rigori al Camp Nou">GIOCA</a>
+    <a class="btn btn--acqua rigori-card__cta" data-rigori href="${URL_GIOCO}" aria-label="Gioca a Rigori al Camp Nou">GIOCA</a>
   </section>`
 }
 function timerHtml() {
@@ -131,6 +132,7 @@ export async function render(root, { person, header }) {
     }
   }, { signal: ac.signal })
   root.addEventListener('click', (e) => {
+    if (e.target.closest('[data-rigori]')) evento('rigori-apri')
     if (e.target.closest('#export')) {
       const s = summaryFor(person)
       copyText(store.export(s.person, s.xp, s.done), 'Punteggio copiato: incollalo su WhatsApp')

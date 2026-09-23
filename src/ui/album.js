@@ -4,6 +4,7 @@ import { icon } from './icons.js'
 import { toast } from './toast.js'
 import { mosaicDataUri } from './mosaic.js'
 import { esc } from './html.js'
+import { evento } from '../stats.js'
 
 export function albumBanner({ line = "Carica le tue, guarda quelle degli altri. Una sola cartella per tutti e quattro.", cta = "Apri l'album" } = {}) {
   return `<section class="album" style="--album-mosaic:${mosaicDataUri(1610, 28)}" aria-labelledby="album-title">
@@ -24,7 +25,9 @@ export function bindAlbum(container) {
   if (!container || container.dataset.albumBound) return
   container.dataset.albumBound = '1'
   container.addEventListener('click', async (e) => {
+    if (e.target.closest('.album__cta')) evento('album-apri')
     if (!e.target.closest('[data-album-copy]')) return
+    evento('album-copia-link')
     try {
       await navigator.clipboard.writeText(PHOTO_ALBUM)
       toast('Link copiato, mandalo nel gruppo')

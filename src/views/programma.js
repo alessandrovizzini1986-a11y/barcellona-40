@@ -8,6 +8,7 @@ import { dayKey, currentStop } from '../time.js'
 import { esc } from '../ui/html.js'
 import { navigate } from '../router.js'
 import { stepCards, bindViaggio } from '../ui/viaggio.js'
+import { evento } from '../stats.js'
 
 const KEYS = ['ven', 'sab', 'dom']
 const conteggio = (stops) => {
@@ -81,11 +82,13 @@ export async function render(root, { person, sub, header }) {
     ${righe.length || opzionali.length ? `<ol class="timeline" style="--dc:${DAY_COLOR[key]}">${righe.map((r) => `${r.id && ancore.has(r.id) ? `<li class="timeline__percorso">${ancore.get(r.id)}</li>` : ''}<li>${r.html}</li>`).join('')}${opzionali.length ? `<li class="timeline__opzionale">Opzionale</li>${opzionali.map((r) => `<li class="timeline__opz">${r.html}</li>`).join('')}` : ''}</ol>` : `<div class="empty">${emptyState(person, key)}</div>`}
   </section>`
   root.querySelector('#piove')?.addEventListener('change', (e) => {
+    if (e.target.checked) evento('piove-attiva')
     store.piove = e.target.checked // la preferenza resta sul telefono
     navigate('programma', key) // si ridisegna con gli orari ricalcolati
   })
   root.querySelector('.seg').addEventListener('click', (e) => {
     const b = e.target.closest('[data-day]')
+    if (b && b.dataset.day !== key) evento('giorno-cambia', b.dataset.day)
     if (b) navigate('programma', b.dataset.day)
   })
   const ac = new AbortController()

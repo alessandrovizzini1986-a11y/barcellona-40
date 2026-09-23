@@ -18,6 +18,7 @@ import { renderOnboarding } from './views/onboarding.js'
 import { easterEgg } from './ui/egg.js'
 import { ciSonoNovita, segnaLette } from './novita.js'
 import { apriNovita } from './ui/novita.js'
+import { vista } from './stats.js'
 
 const views = {
   oggi: () => import('./views/oggi.js'),
@@ -67,6 +68,7 @@ async function route({ route, sub, params }) {
   if (typeof cleanup === 'function') { try { cleanup() } catch { /* noop */ } cleanup = null }
   if (!store.person) {
     renderTabbar(route, { hideMissions: true, novita: ciSonoNovita() })
+    vista('onboarding', 'anonimo')
     cleanup = renderOnboarding(app, () => navigate('oggi'))
     return
   }
@@ -74,6 +76,7 @@ async function route({ route, sub, params }) {
   // La modalità coro è a schermo pieno: la tab bar sparisce (#tabbar:empty non si mostra)
   if (route === 'coro') document.getElementById('tabbar').innerHTML = ''
   else renderTabbar(route, { hideMissions: store.gamificationHidden, novita: ciSonoNovita() })
+  vista(route)
   const mod = await views[route]()
   if (my !== token) return
   cleanup = await mod.render(app, { route, sub, params, person: store.person, header })

@@ -3,6 +3,7 @@ import { missionsFor, levels, badgeDefs, stopById, missionByStop, missions } fro
 import { rigoriXp } from './rigoriLink.js'
 import { store } from './store.js'
 import { now, BIRTHDAY } from './time.js'
+import { evento } from './stats.js'
 
 export function xpFor(person) {
   const done = new Set(store.missions)
@@ -49,6 +50,7 @@ export function setStopDone(stopId, on, person = store.person) {
   if (!m || (person && !m.people.includes(person))) return { mission: null, changed: false }
   const was = store.isMissionDone(m.id)
   store.setMission(m.id, on)
+  if (on && was !== true) evento('missione-completata')
   return { mission: m, changed: was !== !!on }
 }
 export function setMissionDone(missionId, on) {
@@ -57,5 +59,6 @@ export function setMissionDone(missionId, on) {
   const was = store.isMissionDone(m.id)
   store.setMission(m.id, on)
   if (m.stopId) store.setDone(m.stopId, on)
+  if (on && was !== true) evento('missione-completata')
   return { mission: m, changed: was !== !!on }
 }

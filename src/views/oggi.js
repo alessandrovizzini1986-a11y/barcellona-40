@@ -15,6 +15,7 @@ import { songCard, bindSong } from '../ui/song.js'
 import { shareAlbum, bindShareAlbum } from '../ui/share-album.js'
 import { PHOTO_ALBUM } from '../store.js'
 import { timelineViaggio, bindViaggio, voli } from '../ui/viaggio.js'
+import { evento } from '../stats.js'
 
 const DAY_LABEL = { ven: 'Venerdì 16', sab: 'Sabato 17', dom: 'Domenica 18' }
 
@@ -183,7 +184,7 @@ export async function render(root, { person, header, params }) {
     const doneDay = piano.filter((s) => store.isDone(s.id)).length
     if (progress) progress.innerHTML = progressHtml(doneAll, mioPiano.length, doneDay, piano.length, DAY_COLOR[key])
   } })
-  root.querySelector('#copy')?.addEventListener('click', () => copyText(summaryText(person, key)))
+  root.querySelector('#copy')?.addEventListener('click', () => { evento('riepilogo-copia'); copyText(summaryText(person, key)) })
   return () => { ac.abort(); timers.forEach(clearInterval) }
 }
 

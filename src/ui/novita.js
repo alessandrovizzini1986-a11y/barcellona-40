@@ -6,6 +6,7 @@ import { openSheet } from './sheet.js'
 import { icon } from './icons.js'
 import { esc } from './html.js'
 import { SITE_URL } from '../store.js'
+import { evento } from '../stats.js'
 
 const vociHtml = (e) => `<ul class="novita__voci">${e.voci.map((v) => `<li>${esc(v)}</li>`).join('')}</ul>`
 export const entryHtml = (e, { puntino = false } = {}) => `<article class="novita__entry">
@@ -18,6 +19,7 @@ export const entryHtml = (e, { puntino = false } = {}) => `<article class="novit
 export function apriNovita() {
   const nuove = nonLette()
   if (!nuove.length) return null
+  evento('novita-apri')
   return openSheet({
     title: 'Cosa è cambiato',
     body: `<p class="muted">${esc(conteggio(nuove.length))}</p>

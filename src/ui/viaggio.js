@@ -6,6 +6,7 @@ import { icon } from './icons.js'
 import { badges as badgeHtml } from './badge.js'
 import { immagineCard, creditoImmagine } from './card.js'
 import { esc } from './html.js'
+import { evento } from '../stats.js'
 import { now } from '../time.js'
 
 // Il sito è pubblicato sotto /barcellona-40/: un percorso assoluto "/assets/..." darebbe 404
@@ -218,7 +219,7 @@ export function apriQr() {
 // ---------- Eventi ----------
 export function bindViaggio(root, { signal } = {}) {
   root.addEventListener('click', (e) => {
-    if (e.target.closest('[data-qr]')) { e.preventDefault(); apriQr() }
+    if (e.target.closest('[data-qr]')) { e.preventDefault(); evento('qr-parcheggio-apri'); apriQr() }
   }, { signal })
   root.addEventListener('change', (e) => {
     const cb = e.target.closest('input[data-viaggio-check]')
