@@ -161,6 +161,9 @@ const eventi = async (p) => (await conte(p)).filter((c) => c[2])
   ok('evento maps-tappa', !!trova('maps-tappa'))
   ok("maps-tappa porta l'id della tappa nel titolo", trova('maps-tappa')?.[1] === `maps-tappa ${idTappa}`, trova('maps-tappa')?.[1])
   ok('evento maps-percorso', !!trova('maps-percorso'))
+  // Secondo conteggio senza profilo: è quello che rende interrogabile la classifica delle tappe,
+  // perché i contatori pubblici di GoatCounter si leggono per percorso esatto.
+  ok('evento globale maps-tappa/<id>', ev.some((c) => c[0] === `maps-tappa/${idTappa}`), ev.map((c) => c[0]).join(','))
   ok('evento taxi', !!trova('taxi'))
   ok('evento qr-parcheggio-apri', !!trova('qr-parcheggio-apri'))
   ok('nessun errore JS nel programma', errs.length === 0, errs.join(' | '))

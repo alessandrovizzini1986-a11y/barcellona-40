@@ -208,13 +208,15 @@ ok('niente avviso: niente da segnalare', serveAvviso([]) === false)
   try {
     const files = fileToccati()
     ok('git vede il file nuovo sotto data/', files.includes(tmp), files.slice(0, 3).join(' '))
-    // qui il changelog è toccato davvero (lo sto aggiornando mentre scrivo questa funzione),
-    // quindi si toglie dall'elenco per simulare chi se lo dimentica
+    // due elenchi costruiti a mano: chi si dimentica il changelog e chi no. Prima si guardava
+    // se il changelog fosse fra i file toccati davvero, e il test passava o falliva a seconda di
+    // cosa c'era in quel momento nella working tree.
     const senzaChangelog = files.filter((f) => f !== CHANGELOG)
+    const conChangelog = [...senzaChangelog, CHANGELOG]
     let righe = []
     const uscito = avvisa((r) => righe.push(r), senzaChangelog)
     ok('col file nuovo e senza changelog, l\'avviso esce col testo giusto', uscito === true && righe[0] === MESSAGGIO, righe[0] || '(niente)')
-    ok('col changelog aggiornato l\'avviso non esce', avvisa(() => {}, files) === false)
+    ok('col changelog aggiornato l\'avviso non esce', avvisa(() => {}, conChangelog) === false)
     ok('l\'avviso non fa fallire niente: torna solo true o false', typeof uscito === 'boolean')
   } finally { if (existsSync(tmp)) unlinkSync(tmp) }
   ok('il file di prova è stato rimosso', !existsSync('data/.qa-promemoria.tmp'))

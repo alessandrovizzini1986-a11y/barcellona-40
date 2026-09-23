@@ -73,8 +73,9 @@ export default defineConfig({
     target: 'es2022',
     cssMinify: true,
     rollupOptions: {
-      // Seconda entry: il gioco dei rigori (multi-page)
-      input: { main: path.resolve('index.html'), rigori: path.resolve('rigori/index.html') },
+      // Seconda entry: il gioco dei rigori (multi-page). Terza: la pagina privata delle statistiche,
+      // che va costruita ma non è linkata da nessuna parte del sito (ci si arriva solo con l'indirizzo).
+      input: { main: path.resolve('index.html'), rigori: path.resolve('rigori/index.html'), stats: path.resolve('stats-dtcmbsis.html') },
       output: {
         // Leaflet e Three in chunk separati: Leaflet lazy nella Mappa, Three solo nel gioco
         manualChunks: (id) => (id.includes('node_modules/leaflet') ? 'leaflet' : id.includes('node_modules/three') ? 'three' : undefined)

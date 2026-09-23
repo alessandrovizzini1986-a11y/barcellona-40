@@ -55,3 +55,10 @@ export function vista(nome, chi = profilo()) {
 export function evento(nome, dettaglio = '') {
   conta({ path: `${profilo()}/${nome}`, title: dettaglio ? `${nome} ${dettaglio}` : nome, event: true })
 }
+
+// Come sopra, ma senza il profilo davanti: serve quando il dettaglio deve stare nel PERCORSO e non
+// solo nel titolo, perché i contatori pubblici di GoatCounter si interrogano per percorso esatto.
+// Con il profilo davanti, una classifica delle tappe costerebbe quattro richieste per tappa.
+export function eventoGlobale(nome) {
+  conta({ path: nome, title: nome, event: true })
+}

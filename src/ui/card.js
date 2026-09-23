@@ -9,7 +9,7 @@ import fotoTappe from '../../data/foto-tappe.json'
 import { setStopDone } from '../game.js'
 import { toast } from './toast.js'
 import { short as confettiShort } from './confetti.js'
-import { evento } from '../stats.js'
+import { evento, eventoGlobale } from '../stats.js'
 
 // Immagini delle tappe. Il file da mostrare sta nel dato (`img` in data/itinerary.json e data/viaggio.json)
 // e sono tutte foto vere: da Wikimedia Commons, con autore e licenza sotto la card, oppure private,
@@ -158,7 +158,7 @@ export function bindCards(container, { signal, onChange } = {}) {
   }, { signal, capture: true })
   container.addEventListener('click', (e) => {
     const maps = e.target.closest('[data-maps]')
-    if (maps) evento('maps-tappa', maps.dataset.maps)
+    if (maps) { evento('maps-tappa', maps.dataset.maps); eventoGlobale(`maps-tappa/${maps.dataset.maps}`) }
     const percorso = e.target.closest('[data-percorso]')
     if (percorso) evento('maps-percorso', percorso.dataset.percorso)
     const sum = e.target.closest('summary')

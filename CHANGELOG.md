@@ -335,3 +335,23 @@ Due correzioni alla vista Oggi, nate dalla lettura del codice reale, non dalle s
 - **Sotto i numeri c'è il volo**: "FR2097 · Bologna 06:20". Giulio e Manuel arrivano sabato con voli che non tracciamo, quindi per loro la riga è **"Il primo volo · FR2097 · Bologna 06:20"**: resta l'inizio del weekend, senza spacciargli un aereo che non è il loro.
 - **`phase()` non è stata toccata**, ed è la parte importante: il passaggio da "prima" a "durante" resta a **mezzanotte**. Alle 04:00, mentre si entra al P2 col QR, il sito è già una guida — timeline del viaggio e bento — non un conto alla rovescia. I due istanti sono diversi apposta, e ora c'è un commento nel codice che spiega perché.
 - `scripts/qa/e2e.mjs` sale a **81 test**: i 23 giorni 7 ore 24 minuti dal 22 settembre, le due versioni della riga del volo, e la verifica che alle 04:00 del 16 il countdown sia sparito e la timeline ci sia.
+
+## Statistiche anonime con GoatCounter
+- **Script in `index.html`**, account `barcellona40`, `no_onload: true`: il sito è a hash, quindi il conteggio lo fa il router e non l'onload.
+- **`src/stats.js`**, unico punto di ingresso con tre guardie: senza `window.goatcounter` (ad blocker, rete assente) non succede niente e non finisce niente in console; con `?now=` nell'URL non si conta, perché sono prove; in sviluppo (localhost) nemmeno. Ogni eccezione è inghiottita: una statistica persa non è un problema, un errore in console sì.
+- **Viste** con il profilo davanti — `/alessandro/oggi`, `/giulio/programma`, `/anonimo/onboarding` prima della scelta — contate una volta per cambio vista vero: i ri-render dovuti a tema, novità lette o gamification nascosta non valgono una visita in più.
+- **18 eventi** ai punti veri: album (apri, copia link, WhatsApp), canzone (play, video, due download), coro, Maps di tappa e di percorso, taxi, QR del parcheggio, riepilogo copiato, novità aperte, missione completata, cambio giorno, modalità pioggia, rigori.
+- **Info · Profilo** lo dice in chiaro: "Il sito conta le visite in forma anonima (GoatCounter), per sapere cosa viene usato davvero."
+- `scripts/qa/stats.mjs`: **44 controlli**. Con `?stats=prova` le chiamate restano in `window.__b40stats.conte` invece di partire, così i percorsi si verificano senza contattare nessuno.
+
+## Pagina privata delle statistiche
+Pagina fuori dal sito, **non linkata da nessuna parte**: `stats-dtcmbsis.html`. Legge i contatori pubblici di GoatCounter (`/counter/<path>.json`, aperti senza token grazie a "Allow adding visitor counts"), quindi **nel sorgente non c'è nessuna chiave**: l'unica cosa da tenere per sé è l'indirizzo.
+
+- **Cosa mostra**: totale delle viste e chi è più attivo; una card per persona con le viste per sezione a barre e l'elenco ✓/— di cosa ha toccato (card grigia "Non ancora entrato" per chi non è mai entrato); "Cosa viene usato", gli eventi sommati fra tutti; "I posti più aperti su Maps", con il colore del giorno della tappa; in fondo l'ora dell'ultimo aggiornamento e il pulsante Aggiorna.
+- **Il 404 di quell'endpoint non è un errore**: vuol dire "mai visitato" e vale 0. Dati non disponibili sono solo gli errori di rete e i 5xx: se cadono tutte le richieste la pagina dice **"Dati non disponibili"** e non spaccia il guasto per zero visite; se ne cadono alcune mostra il resto dicendo che i numeri sono incompleti, per difetto.
+- **Caricamento**: 127 contatori a blocchi di 6, scheletro mentre arrivano, cache di 5 minuti in `sessionStorage` che il pulsante Aggiorna svuota.
+- **Un evento in più nel sito**: oltre a `profilo/maps-tappa` (con l'id nel titolo) il clic su Maps conta anche **`maps-tappa/<id>` senza profilo**. Serviva perché i contatori si interrogano per percorso esatto: con il profilo davanti, la classifica delle tappe costerebbe quattro richieste per tappa invece di una.
+- **Limiti scritti nella pagina**: chi usa un ad blocker non viene contato, il profilo non è la persona reale, i conteggi sono totali e non per giorno, e "volte diverse" è il conteggio unico di GoatCounter (per una persona il massimo fra le sue sezioni, non la somma).
+- `scripts/qa/stats-pagina.mjs`: **52 controlli**, compresi il grep che nessun file del sito la nomini, i tre contatori veri letti con curl e confrontati con quello che finisce a schermo, il caso "tutto giù", quello parziale, la cache e il tetto di 6 richieste insieme.
+- **Corretto un test ballerino** in `scripts/qa/novita.mjs`: il controllo "col changelog aggiornato l'avviso non esce" guardava i file davvero modificati nella working tree, quindi passava o falliva a seconda del momento. Ora costruisce i due elenchi a mano.
+- **Nessuna entry in `data/changelog.json`**: questa pagina non deve comparire fra le novità che vedono gli altri.
