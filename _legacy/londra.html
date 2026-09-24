@@ -228,6 +228,39 @@
     background:rgba(200,54,43,.1);border:1px solid rgba(200,54,43,.35);border-radius:12px;padding:11px 13px}
   .tk-order{margin-top:10px;font-size:11px;color:var(--muted);text-align:center}
 
+  /* parcheggio: il QR sta in un riquadro bianco pieno e si apre a schermo intero,
+     perché alla sbarra lo legge un lettore ottico dallo schermo del telefono */
+  .pk{margin:14px 0 18px;background:linear-gradient(180deg,rgba(212,169,78,.09),rgba(33,44,64,.55));
+    border:1px solid var(--line-gold);border-radius:18px;padding:16px;box-shadow:var(--shadow-card)}
+  .pk__eyebrow{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);font-weight:700}
+  .pk__tit{font-family:"Playfair Display",Georgia,serif;font-size:19px;font-weight:700;margin-top:4px}
+  .pk__grid{display:flex;gap:10px;margin-top:12px}
+  .pk__grid > div{flex:1;background:rgba(212,169,78,.08);border:1px solid var(--line-gold);border-radius:12px;
+    padding:9px 10px;text-align:center;min-width:0}
+  .pk__grid .k{display:block;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700}
+  .pk__grid .v{display:block;font-family:"Playfair Display",serif;font-weight:700;font-size:16px;margin-top:3px;
+    color:var(--gold-soft);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+  .pk__box{display:block;width:100%;margin:12px 0 0;background:#fff;border:0;border-radius:14px;
+    padding:14px 14px 10px;text-align:center;cursor:pointer;box-shadow:0 6px 18px -10px rgba(0,0,0,.85)}
+  .pk__box:active{transform:scale(.995)}
+  .pk__svg{display:block;width:min(64vw,240px);height:auto;margin:0 auto}
+  .pk__cta{display:block;margin-top:8px;font-size:12.5px;font-weight:700;color:#0d1321}
+  .pk__tot{display:flex;align-items:center;justify-content:center;gap:9px;margin-top:12px;font-size:14px}
+  .pk__tot b{font-family:"Playfair Display",serif;font-size:19px;color:var(--gold-soft)}
+  .pk__paid{font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ok);
+    background:rgba(79,174,124,.13);border:1px solid rgba(79,174,124,.4);border-radius:999px;padding:3px 9px}
+  .pk__note{margin-top:12px;font-size:12.5px;line-height:1.55;color:var(--muted)}
+
+  /* schermo pieno: tutto bianco, QR il più grande possibile, di notte in auto */
+  .pk-full{position:fixed;inset:0;z-index:2000;background:#fff;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;gap:16px;padding:20px}
+  .pk-full .pk__svg{width:min(92vw,78vh)}
+  .pk-full__cap{font-size:15px;font-weight:700;color:#0d1321;text-align:center;font-variant-numeric:tabular-nums}
+  .pk-full__hint{font-size:13px;color:#4a4740;text-align:center;max-width:34ch;line-height:1.5}
+  .pk-full__x{position:absolute;top:14px;right:14px;width:44px;height:44px;border:0;border-radius:999px;
+    background:#efe8dd;color:#0d1321;font-size:20px;line-height:1;cursor:pointer}
+  html.pk-open{overflow:hidden}
+
   /* mappa */
   #map{height:420px;border-radius:18px;border:1px solid var(--line-gold);box-shadow:var(--shadow-card);
     margin-top:14px;background:var(--night-1);z-index:0}
@@ -460,6 +493,24 @@
         </span>
       </summary>
       <div class="dbody">
+      <section class="pk" aria-labelledby="pkTit">
+          <p class="pk__eyebrow">🅿️ Parcheggio aeroporto</p>
+          <h4 class="pk__tit" id="pkTit">P1 · Aeroporto di Bologna</h4>
+          <div class="pk__grid">
+            <div><span class="k">Prenotazione</span><span class="v">3039188</span></div>
+            <div><span class="k">Intestatario</span><span class="v">Alessandro Vizzini</span></div>
+          </div>
+          <button class="pk__box" type="button" id="pkBox" aria-label="Ingrandisci il QR del parcheggio a schermo pieno">
+            <svg class="pk__svg" viewBox="0 0 33 33" shape-rendering="crispEdges" role="img" aria-label="QR code della prenotazione parcheggio 3039188" xmlns="http://www.w3.org/2000/svg"><path fill="#fff" d="M0 0h33v33h-33z"/><path stroke="#000" d="M4 4.5h7m2 0h2m1 0h1m2 0h2m1 0h7m-25 1h1m5 0h1m1 0h1m1 0h2m2 0h2m2 0h1m5 0h1m-25 1h1m1 0h3m1 0h1m1 0h2m1 0h5m2 0h1m1 0h3m1 0h1m-25 1h1m1 0h3m1 0h1m2 0h1m2 0h1m5 0h1m1 0h3m1 0h1m-25 1h1m1 0h3m1 0h1m2 0h5m4 0h1m1 0h3m1 0h1m-25 1h1m5 0h1m4 0h1m2 0h1m1 0h1m1 0h1m5 0h1m-25 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-16 1h6m-14 1h3m1 0h2m3 0h2m1 0h2m1 0h1m5 0h2m-23 1h2m6 0h1m1 0h2m2 0h1m1 0h1m4 0h1m1 0h1m-21 1h1m1 0h1m1 0h1m1 0h1m3 0h1m2 0h4m-21 1h1m1 0h2m4 0h1m2 0h1m1 0h2m1 0h1m2 0h1m1 0h2m1 0h1m-24 1h1m1 0h1m1 0h2m2 0h1m5 0h1m2 0h3m3 0h1m-22 1h3m2 0h1m2 0h3m2 0h1m1 0h1m1 0h1m2 0h1m-23 1h1m1 0h2m1 0h3m4 0h1m2 0h1m1 0h1m2 0h3m-24 1h1m2 0h2m2 0h10m1 0h1m1 0h2m2 0h1m-23 1h3m1 0h2m3 0h1m1 0h2m1 0h7m-15 1h1m1 0h1m1 0h2m1 0h2m3 0h1m1 0h1m1 0h1m-25 1h7m2 0h2m2 0h4m1 0h1m1 0h1m1 0h1m1 0h1m-25 1h1m5 0h1m1 0h2m3 0h1m1 0h2m3 0h1m3 0h1m-25 1h1m1 0h3m1 0h1m2 0h1m1 0h1m1 0h1m2 0h6m1 0h2m-25 1h1m1 0h3m1 0h1m1 0h1m1 0h4m2 0h6m2 0h1m-25 1h1m1 0h3m1 0h1m1 0h6m1 0h1m1 0h1m2 0h1m2 0h1m-24 1h1m5 0h1m1 0h1m3 0h1m1 0h1m1 0h3m1 0h1m1 0h1m-23 1h7m2 0h1m1 0h2m5 0h1m3 0h3"/></svg>
+            <span class="pk__cta">Tocca per ingrandire</span>
+          </button>
+          <div class="pk__grid">
+            <div><span class="k">Entrata</span><span class="v">15/11/26 · 04:15</span></div>
+            <div><span class="k">Uscita</span><span class="v">17/11/26 · 23:45</span></div>
+          </div>
+          <p class="pk__tot"><b>€ 63,00</b> <span class="pk__paid">Pagato</span></p>
+          <p class="pk__note">Tenere il QR a portata di mano su questa pagina all’ingresso del parcheggio (P1, Bologna) — nessuna stampa necessaria.</p>
+        </section>
         <article class="tcard">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/blq.webp" width="800" height="450" alt="Il terminal dell’aeroporto di Bologna con le arcate rosse della pensilina" decoding="async">
@@ -1162,6 +1213,66 @@
           valid: function(ok){ if (ok) el.closest('.tk-box').classList.add('reso'); }
         });
       } catch (e) { /* resta il numero scritto sotto */ }
+    });
+  })();
+
+  /* ====== QR del parcheggio a schermo pieno ======
+     Il QR è già dentro la pagina (SVG statico, nessuna libreria e nessuna rete):
+     alle 4 del mattino sotto la sbarra non si può dipendere da un CDN.
+     A schermo pieno diventa grande e su fondo bianco, e lo schermo resta acceso. */
+  (function(){
+    var box = document.getElementById('pkBox');
+    if (!box) return;
+    var lock = null;
+    function tieniAcceso(){
+      try {
+        if (navigator.wakeLock && navigator.wakeLock.request) {
+          navigator.wakeLock.request('screen').then(function(l){ lock = l; }, function(){});
+        }
+      } catch (e) { /* niente wake lock: pazienza */ }
+    }
+    function rilascia(){ try { if (lock) lock.release(); } catch (e) {} lock = null; }
+
+    box.addEventListener('click', function(){
+      if (document.querySelector('.pk-full')) return;
+      var el = document.createElement('div');
+      el.className = 'pk-full';
+      el.setAttribute('role', 'dialog');
+      el.setAttribute('aria-label', 'QR del parcheggio a schermo pieno');
+      var qr = box.querySelector('.pk__svg').cloneNode(true);
+      el.appendChild(qr);
+      var cap = document.createElement('p');
+      cap.className = 'pk-full__cap';
+      cap.textContent = 'Prenotazione 3039188 · P1 Bologna';
+      el.appendChild(cap);
+      var hint = document.createElement('p');
+      hint.className = 'pk-full__hint';
+      hint.textContent = 'Alza la luminosità dello schermo e avvicinalo al lettore, a circa 10 cm';
+      el.appendChild(hint);
+      var x = document.createElement('button');
+      x.className = 'pk-full__x'; x.type = 'button';
+      x.setAttribute('aria-label', 'Chiudi'); x.textContent = '✕';
+      el.appendChild(x);
+      document.body.appendChild(el);
+      document.documentElement.classList.add('pk-open');
+      tieniAcceso();
+      /* il wake lock cade quando la pagina va in background: si riprende al rientro */
+      function riprendi(){ if (document.visibilityState === 'visible' && document.body.contains(el)) tieniAcceso(); }
+      document.addEventListener('visibilitychange', riprendi);
+      /* lo schermo intero non c'è ovunque e può essere rifiutato: l'overlay basta da solo */
+      try { if (el.requestFullscreen) { var p = el.requestFullscreen({ navigationUI: 'hide' }); if (p && p.catch) p.catch(function(){}); } } catch (e) {}
+      function chiudi(){
+        document.removeEventListener('visibilitychange', riprendi);
+        document.removeEventListener('keydown', esci);
+        rilascia();
+        try { if (document.fullscreenElement && document.exitFullscreen) { var q = document.exitFullscreen(); if (q && q.catch) q.catch(function(){}); } } catch (e) {}
+        document.documentElement.classList.remove('pk-open');
+        el.remove();
+        box.focus();
+      }
+      function esci(e){ if (e.key === 'Escape') chiudi(); }
+      document.addEventListener('keydown', esci);
+      el.addEventListener('click', chiudi);
     });
   })();
 
