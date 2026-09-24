@@ -1,6 +1,6 @@
 {
  "v": 2,
- "aggiornato": "2026-09-21T19:19:51.877041Z",
+ "aggiornato": "2026-09-24T19:04:36.790417Z",
  "scheda": {
   "giorni": [
    {
@@ -1262,6 +1262,151 @@
     "w1": true
    },
    "pt": true,
+   "warmOpen": false
+  },
+  {
+   "id": "2026-09-24-wa6imu4",
+   "data": "2026-09-24",
+   "giorno": "B",
+   "settimana": 4,
+   "chiusa": true,
+   "inizio": 1790271012357,
+   "fine": 1790276597222,
+   "esercizi": {
+    "affondi-indietro": [
+     {
+      "kg": 6,
+      "reps": 10,
+      "fatta": true
+     },
+     {
+      "kg": 8,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 10,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": 6,
+      "reps": 12,
+      "fatta": true
+     }
+    ],
+    "lat-prona": [
+     {
+      "kg": 35,
+      "reps": 12,
+      "fatta": true
+     },
+     {
+      "kg": 40,
+      "reps": 10,
+      "fatta": true
+     },
+     {
+      "kg": 45,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 35,
+      "reps": 12,
+      "fatta": true
+     }
+    ],
+    "leg-curl": [
+     {
+      "kg": 40,
+      "reps": 7,
+      "fatta": true
+     },
+     {
+      "kg": 40,
+      "reps": 7,
+      "fatta": true
+     },
+     {
+      "kg": 40,
+      "reps": 7,
+      "fatta": true
+     }
+    ],
+    "low-row": [
+     {
+      "kg": 35,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 35,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 35,
+      "reps": 8,
+      "fatta": true
+     }
+    ],
+    "push-up-ginocchia": [
+     {
+      "kg": null,
+      "reps": null,
+      "fatta": false
+     }
+    ],
+    "curl-manubri": [
+     {
+      "kg": 10,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 8,
+      "reps": 10,
+      "fatta": true
+     },
+     {
+      "kg": 6,
+      "reps": 12,
+      "fatta": true
+     }
+    ],
+    "alzate-laterali": [
+     {
+      "kg": 4,
+      "reps": 15,
+      "fatta": true
+     },
+     {
+      "kg": 4,
+      "reps": 15,
+      "fatta": true
+     },
+     {
+      "kg": 4,
+      "reps": 15,
+      "fatta": true
+     }
+    ]
+   },
+   "rt": {
+    "push-up-ginocchia": {
+     "reps": 40,
+     "sec": 342,
+     "start": null
+    }
+   },
+   "warm": {
+    "w0": true,
+    "w1": true,
+    "stretch": true
+   },
+   "luogoId": "hkfbbse",
+   "luogoNome": "Mcfit",
    "warmOpen": false
   }
  ],
