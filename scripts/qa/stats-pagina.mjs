@@ -144,7 +144,10 @@ const RICHIESTE = 4 * 6 + 1 + (18 * 4 - 3) + 1 + TAPPE_MAPS
   const manuel = p.locator('.p-card').nth(3)
   ok('Manuel: le viste di /manuel/oggi sono quelle del contatore', (await manuel.locator('.barra').allInnerTexts()).some((t) => t.startsWith('Oggi') && t.trim().endsWith(String(veri['/manuel/oggi'].n))), String(veri['/manuel/oggi'].n))
   ok('Manuel: la missione contata è quella del contatore', (await manuel.locator('.spunte li').allInnerTexts()).some((t) => t.includes('Completata una missione') && t.includes('✓')))
-  ok('Giulio: 404 sul contatore → card spenta', (await p.locator('.p-card').nth(2).innerText()).includes('Non ancora entrato'))
+  // Il contatore è vivo: il giorno in cui Giulio entra, il 404 diventa 200. Il test segue il dato.
+  const giulio = p.locator('.p-card').nth(2)
+  if (veri['/giulio/oggi'].stato === 404) ok('Giulio: 404 sul contatore → card spenta', (await giulio.innerText()).includes('Non ancora entrato'))
+  else ok('Giulio: le viste di /giulio/oggi sono quelle del contatore', (await giulio.locator('.barra').allInnerTexts()).some((t) => t.startsWith('Oggi') && t.trim().endsWith(String(veri['/giulio/oggi'].n))), String(veri['/giulio/oggi'].n))
   await ctx.close()
 }
 

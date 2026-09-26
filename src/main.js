@@ -18,7 +18,8 @@ import { renderOnboarding } from './views/onboarding.js'
 import { easterEgg } from './ui/egg.js'
 import { ciSonoNovita, segnaLette } from './novita.js'
 import { apriNovita } from './ui/novita.js'
-import { vista } from './stats.js'
+import { vista, evento } from './stats.js'
+import { URL_GIOCO } from './rigoriLink.js'
 
 const views = {
   oggi: () => import('./views/oggi.js'),
@@ -53,6 +54,7 @@ export function header(subtitle) {
         <span class="header__anchor">Zero fatica, tutto gusto</span>
       </div>
       <div class="header__actions">
+        <a class="header__rigori" href="${URL_GIOCO}" data-rigori-header aria-label="Gioca ai rigori">${icon('pallone')}</a>
         <a class="header__camera" href="${PHOTO_ALBUM}" target="_blank" rel="noopener" aria-label="Apri l'album foto">${icon('camera')}</a>
         <a class="header__music" href="#/info/canzone" aria-label="Ascolta l'inno">${icon('music')}</a>
         ${p ? `<a class="person-chip" href="#/info/profilo" style="--pc:var(${p.color})" aria-label="Profilo: ${esc(p.name)}"><span class="person-chip__dot"></span>${esc(p.name)}</a>` : ''}
@@ -101,6 +103,10 @@ store.subscribe((key) => {
   // letto il pannello: sparisce il pallino sulla tab e i puntini nello storico
   if (key === 'lastSeenVersion' && store.person) route(parseHash())
 })
+
+// Il pallone dell'header porta al gioco nella stessa scheda. Listener unico su #app, che sopravvive ai
+// render: l'header si ridisegna a ogni vista, il listener no.
+app.addEventListener('click', (e) => { if (e.target.closest('[data-rigori-header]')) evento('rigori-apri') })
 
 // Aggiorna il colore del giorno a cavallo della mezzanotte (senza ricaricare)
 setInterval(applyDay, 60_000)

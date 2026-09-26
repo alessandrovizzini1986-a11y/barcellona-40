@@ -222,10 +222,16 @@ select.input,input.input{ min-height:44px; background:var(--bg-3); border:1px so
 .share-album__preview[open] summary svg{ transform:rotate(180deg); }
 .share-album__preview pre{ white-space:pre-wrap; word-break:break-word; background:var(--bg-3); border-radius:var(--radius-s); padding:var(--space-3); margin:0; font-family:var(--font-body); line-height:1.5; max-height:44dvh; overflow:auto; }
 
-/* Icona album nell'header */
-.header__actions{ display:flex; align-items:center; gap:var(--space-2); flex-wrap:wrap; justify-content:flex-end; }
+/* Pulsanti dell'header: rigori, camera, musica e profilo stanno SEMPRE su una riga sola e si muovono
+   insieme. Se accanto al titolo non c'è posto (a 380 px non c'è: titolo 203 px, riga 271 px con
+   "Alessandro"), il blocco intero va a capo sotto il titolo, allineato a destra. Il titolo non si
+   stringe e non va a capo: è lui a decidere, i pulsanti si adeguano. */
+.header__actions{ display:flex; align-items:center; gap:var(--space-2); flex-wrap:nowrap; justify-content:flex-end; margin-left:auto; }
 .header__camera{ display:grid; place-items:center; width:44px; height:44px; flex:none; border-radius:999px; background:var(--bg-3); border:1px solid var(--line-2); color:var(--giallo); }
 .header__camera svg{ width:22px; height:22px; }
+/* Il pallone: stesso tondo di camera e musica, acqua per chiudere la palette (giallo, terracotta, acqua) */
+.header__rigori{ display:grid; place-items:center; width:44px; height:44px; flex:none; border-radius:999px; background:var(--bg-3); border:1px solid var(--line-2); color:var(--acqua); }
+.header__rigori svg{ width:22px; height:22px; }
 
 /* Inno ufficiale */
 .song{ position:relative; display:flex; flex-direction:column; justify-content:flex-end; gap:var(--space-3); min-height:560px; padding:var(--space-4); border-radius:var(--radius-l); background-color:var(--bg-2); border:2px solid var(--terracotta); overflow:hidden; isolation:isolate; }
