@@ -229,9 +229,13 @@ select.input,input.input{ min-height:44px; background:var(--bg-3); border:1px so
 .header__actions{ display:flex; align-items:center; gap:var(--space-2); flex-wrap:nowrap; justify-content:flex-end; margin-left:auto; }
 .header__camera{ display:grid; place-items:center; width:44px; height:44px; flex:none; border-radius:999px; background:var(--bg-3); border:1px solid var(--line-2); color:var(--giallo); }
 .header__camera svg{ width:22px; height:22px; }
-/* Il pallone: stesso tondo di camera e musica, acqua per chiudere la palette (giallo, terracotta, acqua) */
+/* Il pallone: stesso tondo di camera e musica, acqua per chiudere la palette (giallo, terracotta, acqua).
+   Il colore arriva all'SVG da qui: dentro ha fill="currentColor". */
 .header__rigori{ display:grid; place-items:center; width:44px; height:44px; flex:none; border-radius:999px; background:var(--bg-3); border:1px solid var(--line-2); color:var(--acqua); }
-.header__rigori svg{ width:22px; height:22px; }
+/* 20 px e non 22: camera e musica sono icone Lucide con 2 unità di margine su 24, quindi il loro disegno
+   occupa circa 20 px del riquadro da 22. Il pallone è pieno e tocca i bordi del suo viewBox: a 20 px ha
+   lo stesso ingombro, a 22 sembrava più grande degli altri due. */
+.header__rigori svg{ width:20px; height:20px; }
 
 /* Inno ufficiale */
 .song{ position:relative; display:flex; flex-direction:column; justify-content:flex-end; gap:var(--space-3); min-height:560px; padding:var(--space-4); border-radius:var(--radius-l); background-color:var(--bg-2); border:2px solid var(--terracotta); overflow:hidden; isolation:isolate; }

@@ -20,6 +20,10 @@ import { ciSonoNovita, segnaLette } from './novita.js'
 import { apriNovita } from './ui/novita.js'
 import { vista, evento } from './stats.js'
 import { URL_GIOCO } from './rigoriLink.js'
+// Il pallone dell'header: SVG pieno fornito da Alessandro, usato così com'è. Unico cambio: il fill
+// è currentColor invece di #2CA6A4, così il colore lo decide il pulsante (var(--acqua)).
+// Non passa da icon(): quella è fatta per le icone Lucide a tratto e ci aggiungerebbe stroke.
+import PALLONE from './ui/pallone.svg?raw'
 
 const views = {
   oggi: () => import('./views/oggi.js'),
@@ -54,7 +58,7 @@ export function header(subtitle) {
         <span class="header__anchor">Zero fatica, tutto gusto</span>
       </div>
       <div class="header__actions">
-        <a class="header__rigori" href="${URL_GIOCO}" data-rigori-header aria-label="Gioca ai rigori">${icon('pallone')}</a>
+        <a class="header__rigori" href="${URL_GIOCO}" data-rigori-header aria-label="Gioca ai rigori">${PALLONE}</a>
         <a class="header__camera" href="${PHOTO_ALBUM}" target="_blank" rel="noopener" aria-label="Apri l'album foto">${icon('camera')}</a>
         <a class="header__music" href="#/info/canzone" aria-label="Ascolta l'inno">${icon('music')}</a>
         ${p ? `<a class="person-chip" href="#/info/profilo" style="--pc:var(${p.color})" aria-label="Profilo: ${esc(p.name)}"><span class="person-chip__dot"></span>${esc(p.name)}</a>` : ''}

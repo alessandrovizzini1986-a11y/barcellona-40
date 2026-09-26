@@ -2,6 +2,7 @@
 // A 380 px i tre tondi più il titolo non stanno su una riga: vanno tutti e tre sulla riga del
 // profilo, a sinistra del chip. Il titolo non deve né stringersi né andare a capo.
 import { chromium } from 'playwright-core'
+import { readFileSync } from 'node:fs'
 const base = process.argv[2] || 'http://localhost:4173'
 const exe = process.env.CHROME_PATH || '/opt/pw-browsers/chromium-1194/chrome-linux/chrome'
 const shot = process.env.SHOT_DIR
@@ -63,10 +64,26 @@ for (const person of ['ale', 'monne', 'giulio', 'manuel']) {
   const [r, c, m] = stili
   ok('stesso diametro', r.w === c.w && r.w === m.w && r.h === c.h && r.w === '44px')
   ok('stesso sfondo e bordo', r.bg === c.bg && r.bg === m.bg && r.bordo === c.bordo && r.raggio === c.raggio)
-  ok('stessa misura dell\'icona', r.svg === c.svg && r.svg === m.svg)
+  // Stesso ingombro, non stessa scatola: il disegno di camera (Lucide, tratto 2) occupa circa 20 px del
+  // suo riquadro da 22; il pallone è pieno fino al bordo. Si confronta quello che si vede.
+  const ingombro = await p.evaluate(() => {
+    const vis = (sel) => { const s = document.querySelector(sel + ' svg'); const bb = s.getBBox(); const k = s.getBoundingClientRect().width / s.viewBox.baseVal.width; const sw = parseFloat(s.getAttribute('stroke-width') || 0) * k; return Math.max(bb.width, bb.height) * k + sw }
+    return { pallone: document.querySelector('.header__rigori svg').getBoundingClientRect().width, camera: vis('.header__camera'), musica: vis('.header__music') }
+  })
+  ok('il pallone ha lo stesso ingombro di camera e musica', Math.abs(ingombro.pallone - ingombro.camera) <= 1.5 && ingombro.pallone <= Math.max(ingombro.camera, ingombro.musica) + 0.5, JSON.stringify(ingombro))
   ok('colore acqua #2CA6A4', r.colore === 'rgb(44, 166, 164)', r.colore)
   ok('tre colori diversi', new Set([r.colore, c.colore, m.colore]).size === 3)
-  ok('icona a tratto, senza riempimento', await p.evaluate(() => { const s = document.querySelector('.header__rigori svg'); return s.getAttribute('fill') === 'none' && s.getAttribute('stroke') === 'currentColor' }))
+  ok('pallone pieno, colore preso dal pulsante', await p.evaluate(() => document.querySelector('.header__rigori svg g').getAttribute('fill') === 'currentColor'))
+  ok('il pallone si vede in acqua', await p.evaluate(() => getComputedStyle(document.querySelector('.header__rigori svg path')).fill) === 'rgb(44, 166, 164)')
+  // L'SVG è quello fornito, non ridisegnato: stessi tracciati, stesso viewBox, stessa trasformazione
+  const norma = (t) => t.replace(/\s+/g, ' ').trim()
+  const file = readFileSync('src/ui/pallone.svg', 'utf8')
+  const attesi = [...file.matchAll(/ d="([^"]*)"/g)].map((m) => norma(m[1]))
+  const inPagina = await p.evaluate(() => ({ d: [...document.querySelectorAll('.header__rigori svg path')].map((x) => x.getAttribute('d')), vb: document.querySelector('.header__rigori svg').getAttribute('viewBox'), tr: document.querySelector('.header__rigori svg g').getAttribute('transform') }))
+  ok('SVG identico a quello fornito: due tracciati', attesi.length === 2 && inPagina.d.length === 2)
+  ok('SVG identico a quello fornito: tracciati', inPagina.d.map(norma).join('|') === attesi.join('|'))
+  ok('SVG identico a quello fornito: viewBox e trasformazione', inPagina.vb === '0 0 744.000000 744.000000' && inPagina.tr === 'translate(0.000000,744.000000) scale(0.100000,-0.100000)')
+  ok('pallone nascosto ai lettori di schermo (parla l\'aria-label)', await p.evaluate(() => document.querySelector('.header__rigori svg').getAttribute('aria-hidden') === 'true'))
   // tutte le viste con l'header lo mostrano
   for (const v of ['programma', 'mappa', 'missioni', 'info']) {
     await p.evaluate((x) => { location.hash = '#/' + x }, v)

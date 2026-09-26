@@ -44,22 +44,7 @@ import Maximize from 'lucide/dist/esm/icons/maximize.mjs'
 import CloudRain from 'lucide/dist/esm/icons/cloud-rain.mjs'
 import Route from 'lucide/dist/esm/icons/route.mjs'
 
-// Pallone da calcio: Lucide non ce l'ha (c'è solo volleyball, che si legge pallavolo; goal e trophy
-// al volo non dicono "rigori"). Disegnato qui nello stesso formato dei nodi Lucide, così passa dallo
-// stesso createElement con gli stessi attributi: 24×24, tratto 2, angoli tondi, niente riempimento.
-// Pentagono al centro e, verso il bordo, i lembi delle toppe vicine: con i soli cinque raggi, a 22 px,
-// sembrava un volante.
-const Pallone = [
-  ['circle', { cx: '12', cy: '12', r: '10' }],
-  ['path', { d: 'M12 7.2l4.57 3.32-1.75 5.36H9.18L7.43 10.52z' }],
-  ['path', { d: 'M12 7.2V4.5l-3-1.8M12 4.5l3-1.8' }],
-  ['path', { d: 'm16.57 10.52 2.6-.85 1.6-3M19.17 9.67l2.3 2.6' }],
-  ['path', { d: 'm14.82 15.88 1.6 2.2-.7 3.3M16.42 18.08l3.4-.9' }],
-  ['path', { d: 'm9.18 15.88-1.6 2.2.7 3.3M7.58 18.08l-3.4-.9' }],
-  ['path', { d: 'm7.43 10.52-2.6-.85-1.6-3M4.83 9.67l-2.3 2.6' }]
-]
-
-const ICONS = { sun: Sun, list: List, map: MapIcon, trophy: Trophy, info: Info, 'map-pin': MapPin, taxi: CarTaxiFront, train: TrainFront, copy: Copy, check: Check, alarm: AlarmClock, locate: Locate, alert: TriangleAlert, chevron: ChevronDown, walk: Footprints, zap: Zap, download: Download, upload: Upload, sparkles: Sparkles, user: User, phone: Phone, clock: Clock, x: X, refresh: RefreshCw, camera: Camera, whatsapp: MessageCircle, share: Share2, disc: Disc3, music: Music, goal: Goal, 'plane-takeoff': PlaneTakeoff, 'plane-landing': PlaneLanding, car: Car, bus: Bus, luggage: Luggage, coffee: Coffee, 'door-open': DoorOpen, shower: ShowerHead, utensils: Utensils, qr: QrCode, maximize: Maximize, rain: CloudRain, route: Route, pallone: Pallone }
+const ICONS = { sun: Sun, list: List, map: MapIcon, trophy: Trophy, info: Info, 'map-pin': MapPin, taxi: CarTaxiFront, train: TrainFront, copy: Copy, check: Check, alarm: AlarmClock, locate: Locate, alert: TriangleAlert, chevron: ChevronDown, walk: Footprints, zap: Zap, download: Download, upload: Upload, sparkles: Sparkles, user: User, phone: Phone, clock: Clock, x: X, refresh: RefreshCw, camera: Camera, whatsapp: MessageCircle, share: Share2, disc: Disc3, music: Music, goal: Goal, 'plane-takeoff': PlaneTakeoff, 'plane-landing': PlaneLanding, car: Car, bus: Bus, luggage: Luggage, coffee: Coffee, 'door-open': DoorOpen, shower: ShowerHead, utensils: Utensils, qr: QrCode, maximize: Maximize, rain: CloudRain, route: Route }
 
 export function icon(name, attrs = {}) {
   const node = ICONS[name]
