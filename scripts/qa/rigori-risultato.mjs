@@ -12,8 +12,16 @@ await p.addInitScript(() => { try { localStorage.setItem('b40:v1:rigori:onboarde
 await p.goto(url, { waitUntil: 'load' })
 await p.waitForFunction(() => window.__rigori?.ready, null, { timeout: 60000 }); await p.click('.rg-loading__tap', { force: true })
 // Dal menu vero allo Shootout: volto → VAI → modalità, come farebbe una persona
+let nomiVisti = false
 const avvia = async () => {
-  await p.waitForFunction(() => window.__rigori.flow() === 'chiTira'); await p.click('.rg-card[data-value="monne"]')
+  await p.waitForFunction(() => window.__rigori.flow() === 'chiTira')
+  if (!nomiVisti) {
+    nomiVisti = true
+    const nomi = await p.evaluate(() => [...document.querySelectorAll('.rg-card__name')].map((e) => e.textContent))
+    ok('CHI TIRA?: Manuel, Giulio, Monne (Mario non esiste più)', nomi.join(',') === 'Manuel,Giulio,Monne', nomi.join(','))
+    ok('la card di Manuel ha il numero 10 e la faccia', await p.evaluate(() => { const c = document.querySelector('.rg-card[data-value="manuel"]'); return !!c && c.querySelector('.rg-card__jersey b').textContent === '10' && /face-manuel\.png$/.test(c.querySelector('img').getAttribute('src')) }))
+  }
+  await p.click('.rg-card[data-value="monne"]')
   await p.waitForFunction(() => window.__rigori.flow() === 'giocatore'); await p.click('[data-value="vai"]')
   await p.waitForFunction(() => window.__rigori.flow() === 'modalita'); await p.click('.rg-mode[data-value="shootout"]')
   await p.waitForFunction(() => window.__rigori.flow() === 'gioco' && window.__rigori.role() !== 'idle')

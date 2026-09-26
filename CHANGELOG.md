@@ -381,3 +381,9 @@ Pagina fuori dal sito, **non linkata da nessuna parte**: `stats-dtcmbsis.html`. 
 - **Gerarchia dei pulsanti**: un solo pulsante grande e giallo, **Rigioca**; sotto Menu, Torna al sito e **Condividi**, che apre a scomparsa Immagine, Video (solo dove il replay è stato registrato) e Copia risultato. "Manda ai ragazzi" non c'è più: il testo della partita è quello che copia "Copia risultato" (`data-copy` porta il testo, il cartello dell'esito continua a copiare l'ultimo tiro).
 - **Tono**: sconfitta in Shootout, Boss e Sfida Ale → sotto il punteggio *«Ale ti aspetta per la rivincita.»* in terracotta; vittoria in Shootout e Boss → coriandoli (gli stessi del sito, `src/ui/confetti.js`, rispettano "riduci flash e shake") e *«Ale chiede il VAR. Non c'è.»* in giallo. Skill e pass-and-play non hanno un Ale da battere: nessuna riga.
 - `scripts/qa/rigori-passplay.mjs`: non cerca più il link WhatsApp; controlla il testo nel pulsante Copia, che il pulsante grande sia uno solo e che il gruppo Condividi abbia Immagine e Copia risultato.
+
+## Rigori: Mario si chiama Manuel (correzione al blocco 4)
+- Mario e Manuel erano la stessa persona con due nomi. **Rinominato, non aggiunto**: `id: 'manuel'` in `data/players.js` (lo stesso id del profilo del sito), stessa faccia (`face-manuel.png`, era `face-mario.png`), stesso numero 10, stessa maglia. Le sei varianti di sfottò sono passate da `mario` a `manuel`.
+- `PASS_PLAY_NAMES` è `Ale, Monne, Giulio, Manuel`: Mario non c'è più.
+- Verificato: nessun "Mario" resta in `src/`, `data/`, `public/` e `scripts/`. Il gioco precedente (`rigori-classic.html`, in `_legacy/`) è lasciato com'è e lì si chiama ancora Mario: è il gioco vecchio, non toccato per scelta.
+- `scripts/qa/rigori-risultato.mjs` controlla i nomi delle card (Manuel, Giulio, Monne), il 10 e la faccia di Manuel.

@@ -47,7 +47,7 @@ gli stinger hanno il silenzio di coda tagliato. Tutto a -14 LUFS, MP3 96 kbps (l
 
 ## Volti
 - `faces/face-monne-head.webp`, `faces/face-monne.webp`: forniti dall'autore del progetto nel prompt di lavoro.
-- `faces/face-mario.png`, `face-giulio.png`, `face-ale.png`: dal gioco precedente di questo progetto (`_legacy/assets/`).
+- `faces/face-manuel.png` (era `face-mario.png`: Manuel e Mario sono la stessa persona), `face-giulio.png`, `face-ale.png`: dal gioco precedente di questo progetto (`_legacy/assets/`).
 
 ## Foto delle tappe (Wikimedia Commons)
 

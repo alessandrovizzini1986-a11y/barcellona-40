@@ -40,7 +40,7 @@ await gioco.waitForTimeout(1200)
 await gioco.screenshot({ path: SFONDO })
 
 // --- 2. composizione -------------------------------------------------------------------
-const VOLTI = ['faces/face-monne-head.webp', 'faces/face-giulio.png', 'faces/face-mario.png', 'faces/face-ale.png']
+const VOLTI = ['faces/face-monne-head.webp', 'faces/face-giulio.png', 'faces/face-manuel.png', 'faces/face-ale.png']
 const html = `<!doctype html><html><head><meta charset="utf-8"><style>
 @font-face{font-family:"Clash Display";src:url("file://${radice}/public/fonts/ClashDisplay-Bold.woff2") format("woff2");font-weight:700}
 @font-face{font-family:"Inter";src:url("file://${radice}/public/fonts/Inter-Variable.woff2") format("woff2");font-weight:100 900}

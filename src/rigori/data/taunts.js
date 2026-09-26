@@ -19,14 +19,14 @@ export const TAUNTS = {
     tiratore: {
       monne: ['{tiratore}, gli occhiali da sole di notte. Coraggio.', 'Rincorsa alla {tiratore}: veloce, poi vediamo.'],
       giulio: ['{tiratore} non suda. Mai. Nemmeno adesso.', 'Freddo come il ghiaccio. {portiere} no.'],
-      mario: ['{tiratore} ne ha tirati più lui che tutti gli altri insieme.', 'Esperienza contro gioventù. {portiere} è la gioventù, dice lui.'],
+      manuel: ['{tiratore} ne ha tirati più lui che tutti gli altri insieme.', 'Esperienza contro gioventù. {portiere} è la gioventù, dice lui.'],
       ale: ['{tiratore} sul dischetto. Il portiere che tira: che tempi.', '{tiratore} ha annunciato l\'angolo. Non fidarti, {portiere}.']
     },
     portiere: {
       ale: ['{portiere} in porta, e parla troppo.', '{portiere}: "Io lo dico sempre dove pararo. E paro lo stesso."'],
       monne: ['{portiere} in porta con gli occhiali da sole. Serata strana.'],
       giulio: ['{portiere} in porta, espressione invariata da mezz\'ora.'],
-      mario: ['{portiere} in porta: dice che ai suoi tempi la porta era più piccola.']
+      manuel: ['{portiere} in porta: dice che ai suoi tempi la porta era più piccola.']
     }
   },
   postGol: {
@@ -43,14 +43,14 @@ export const TAUNTS = {
     tiratore: {
       monne: ['{tiratore}: troppo veloce anche per gli occhiali.', 'Gol con gli occhiali da sole. Stile.'],
       giulio: ['{tiratore} segna e non esulta. Freddo.', 'Rete. {tiratore} già pensa al prossimo.'],
-      mario: ['Il veterano non sbaglia. Mai.', '{tiratore}: gol numero mille, più o meno.'],
+      manuel: ['Il veterano non sbaglia. Mai.', '{tiratore}: gol numero mille, più o meno.'],
       ale: ['{tiratore} segna e para. Dice lui.', 'Il portiere goleador. Insopportabile.']
     },
     portiere: {
       ale: ['{portiere}: "L\'avevo detto dove tirava." Certo.'],
       monne: ['{portiere} non l\'ha vista. Il riflesso degli occhiali.'],
       giulio: ['{portiere} resta impassibile. Dentro piange.'],
-      mario: ['{portiere}: "Ai miei tempi quella la prendevo."']
+      manuel: ['{portiere}: "Ai miei tempi quella la prendevo."']
     }
   },
   postParata: {
@@ -67,14 +67,14 @@ export const TAUNTS = {
     tiratore: {
       monne: ['{tiratore}, gli occhiali non ti hanno aiutato.', 'Troppo veloce la rincorsa, troppo lento il tiro.'],
       giulio: ['{tiratore} parato. L\'espressione non cambia.', 'Freddo sì, preciso stavolta no.'],
-      mario: ['{tiratore} parato. L\'esperienza a volte non basta.', 'Il veterano prende nota. {portiere} pure.'],
+      manuel: ['{tiratore} parato. L\'esperienza a volte non basta.', 'Il veterano prende nota. {portiere} pure.'],
       ale: ['{tiratore} parato da {portiere}. Serata strana.', 'Il portiere sbaglia da tiratore. Equilibrio.']
     },
     portiere: {
       ale: ['{portiere}: "Te lo paravo anche da bambino."'],
       monne: ['{portiere} para con gli occhiali da sole. Insopportabile.'],
       giulio: ['{portiere} para e non dice niente. Peggio.'],
-      mario: ['{portiere} para e si tocca la schiena. Ne è valsa la pena.']
+      manuel: ['{portiere} para e si tocca la schiena. Ne è valsa la pena.']
     }
   },
   postLegno: {

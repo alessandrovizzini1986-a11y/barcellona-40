@@ -1,9 +1,10 @@
 // Personaggi del gioco. I percorsi dei volti sono relativi ad ASSETS (base path del sito).
 // NESSUNO stemma, NESSUNO sponsor, nessun nome di club: vincolo di marchio.
 export const PLAYERS = [
-  { id: 'mario',  nome: 'Mario',  ruolo: 'tiratore', numero: 10,
+  // Manuel è Mario del gioco precedente: stessa persona, stessa faccia, stesso 10. Un nome solo, quello del sito.
+  { id: 'manuel', nome: 'Manuel', ruolo: 'tiratore', numero: 10,
     maglia: { tipo: 'tinta', colore: '#E8552E' },
-    face: 'faces/face-mario.png',       // dal legacy (_legacy/assets/face-mario.png, 256×256 PNG)
+    face: 'faces/face-manuel.png',      // dal legacy (_legacy/assets/face-mario.png, 256×256 PNG)
     stats: { potenza: 3, precisione: 5, effetto: 2 },
     tips: ['Il veterano: potenza media, precisione alta.', 'Ha la traversa facile: tienilo basso.'] },
   { id: 'giulio', nome: 'Giulio', ruolo: 'tiratore', numero: 7,
@@ -26,8 +27,8 @@ export const PLAYERS = [
 // Statistiche mostrate nella card di conferma: fittizie ma coerenti col personaggio, 5 tacche.
 // DA VERIFICARE: non sono agganciate alla fisica del tiro, sono solo un ritratto.
 export const STAT_LABELS = { potenza: 'Potenza', precisione: 'Precisione', effetto: 'Effetto' }
-// Nomi ammessi nel pass-and-play (da prompt): Ale, Monne, Giulio, Manuel, Mario
-export const PASS_PLAY_NAMES = ['Ale', 'Monne', 'Giulio', 'Manuel', 'Mario']
+// Nomi ammessi nel pass-and-play: i quattro del weekend, nessun altro
+export const PASS_PLAY_NAMES = ['Ale', 'Monne', 'Giulio', 'Manuel']
 export const byId = (id) => PLAYERS.find((p) => p.id === id) || null
 export const shooters = () => PLAYERS.filter((p) => p.ruolo === 'tiratore')
 export const keeper = () => PLAYERS.find((p) => p.ruolo === 'portiere')
