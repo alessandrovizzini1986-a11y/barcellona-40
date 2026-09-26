@@ -42,6 +42,7 @@ import { toast } from './ui/components/toast.js'
 import { save } from './core/save.js'
 import { keeper as keeperData, faceOf, byId } from './data/players.js'
 import { createKicker, KICK_DELAY } from './game/kicker.js'
+import { big as confettiBig } from '../ui/confetti.js' // gli stessi coriandoli del sito, caricati solo quando servono
 
 const root = document.getElementById('game')
 const ASSETS = import.meta.env.BASE_URL.replace(/\/$/, '') + '/assets/rigori/'
@@ -376,6 +377,8 @@ function endMode() {
 }
 listeners.add((e) => {
   if (!mode) return
+  // Partecipazione: ogni tiro dell'utente vale XP.tiro, in qualunque modalità, prima del merito dell'esito
+  if (e.type === 'result' && e.ruoli?.tiratore?.utente) ctx.xp('tiro')
   if (e.type === 'result') mode.onResult(e, ctx)
   if (e.type === 'replayEnd') { if (esitoLock) return; if (!mode.finished) mode.nextTurn(ctx); if (mode?.finished) endMode() }
 })
@@ -403,8 +406,9 @@ document.getElementById('rg-ui').addEventListener('click', async (e) => {
   if (e.target.closest('[data-share-video]')) { e.stopPropagation(); condividiVideo(); return }
   if (e.target.closest('[data-copy]')) {
     e.stopPropagation()
+    // Nel risultato il pulsante porta con sé il testo della partita; sul cartello si copia l'ultimo tiro
     const d = datiCondivisione()
-    const testo = d ? `${d.titolo} · ${d.sfida}${d.punteggio ? ' · ' + d.punteggio : ''} — rigori al camp nou` : 'rigori al camp nou · barcelona 40'
+    const testo = e.target.closest('[data-copy]').dataset.copy || (d ? `${d.titolo} · ${d.sfida}${d.punteggio ? ' · ' + d.punteggio : ''} — rigori al camp nou` : 'rigori al camp nou · barcelona 40')
     try { await navigator.clipboard.writeText(testo); toast(game.ui, 'Risultato copiato') } catch { toast(game.ui, 'Non sono riuscito a copiare') }
   }
 })
@@ -461,7 +465,9 @@ async function runFlow() {
       if (e.summary?.winner === 'me' || (e.id !== 'shootout' && e.id !== 'boss')) audio.sting('vittoria')
       const xpNow = game.progress?.xp?.() ?? 0
       const lv = game.progress?.level?.() || { n: 1, title: 'Esordiente' }
-      const r = await risultato(game.ui, { title: titleFor(e), lines: linesFor(e), xpGained: xpNow - xpBefore, xp: xpNow, level: lv, next: game.progress?.next?.() || null, achievements: game.progress?.takeFresh?.() || [], shareText: shareFor(e), sito: SITO, video: !!fileVideo })
+      const esito = esitoPartita(e)
+      if (esito === 'vinto' && !settings.reduceFx) confettiBig()
+      const r = await risultato(game.ui, { title: titleFor(e), lines: linesFor(e), esito, xpGained: xpNow - xpBefore, xp: xpNow, level: lv, next: game.progress?.next?.() || null, achievements: game.progress?.takeFresh?.() || [], shareText: shareFor(e), sito: SITO, video: !!fileVideo })
       again = r === 'again'
     }
   }
@@ -473,7 +479,11 @@ async function overlayMenu() {
   return v
 }
 function titleFor(e) { const s = e.summary; if (e.id === 'shootout' || e.id === 'boss') return s.winner === 'me' ? `Hai vinto ${s.me}–${s.ale}` : `Ale vince ${s.ale}–${s.me}`; if (e.id === 'sfidaAle') return `${s.goals} gol prima di tre parate`; if (e.id === 'skill') return `${s.score} punti`; if (e.id === 'passAndPlay') return `Vince ${s.leaderboard[0].name}`; return MODES_INFO.find((m) => m.id === e.id)?.title || e.id }
-function linesFor(e) { const b = game.progress.board(e.id).slice(0, 3); const top = b.length ? [`Classifica: ${b.map((x, i) => `${i + 1}. ${x.name} ${x.label}`).join(' · ')}`] : []; return [...linesBase(e), ...top] }
+// La classifica salvata si mostra solo se ci sono almeno due persone dentro: "1. Monne Perso 0–3" da solo
+// non è una classifica, è una presa in giro.
+function linesFor(e) { const b = game.progress.board(e.id).slice(0, 3); const top = new Set(b.map((x) => x.name)).size >= 2 ? [`Classifica: ${b.map((x, i) => `${i + 1}. ${x.name} ${x.label}`).join(' · ')}`] : []; return [...linesBase(e), ...top] }
+// Come è andata, per il tono della schermata: 'vinto' | 'perso' | null (Skill e pass-and-play non hanno un Ale da battere)
+function esitoPartita(e) { const s = e.summary || {}; if (e.id === 'shootout' || e.id === 'boss') return s.winner === 'me' ? 'vinto' : 'perso'; if (e.id === 'sfidaAle') return 'perso'; return null }
 function linesBase(e) { const s = e.summary; if (e.id === 'passAndPlay') return s.leaderboard.map((p, i) => `${i + 1}. ${p.name}: ${p.goals} gol, ${p.saves} parate`); if (e.id === 'sfidaAle') return [`${s.shots} tiri, ${s.goals} gol`]; if (e.id === 'skill') return [`${s.hits} bersagli su ${s.shots} tiri`]; if (e.id === 'shootout' || e.id === 'boss') return [s.suddenDeath ? 'Deciso al sudden death' : `${s.rounds} rigori a testa`]; return [] }
 function shareFor(e) {
   const s = e.summary, who = byId(shooterId)?.nome || 'Io', url = __SITE_URL__.replace(/\/?$/, '/') + 'rigori/'

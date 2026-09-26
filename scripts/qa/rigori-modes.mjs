@@ -30,9 +30,11 @@ async function playUntilResult(name, chooseAim, budget = 300000) {
 // Skill: mira al bersaglio corrente
 await p.click('.rg-mode[data-value="skill"]'); await p.waitForFunction(() => window.__rigori.flow() === 'gioco'); await p.waitForTimeout(800)
 await playUntilResult('skill', () => p.evaluate(() => { const t = window.__rigori.mode()?.target; return { x: t ? t.x : 0, y: t ? t.y : 1, power: 0.9, curve: 0 } }))
-// Sfida Ale: Ale forzato in basso al centro, tiro lì → tre parate
-await p.click('.rg-mode[data-value="sfidaAle"]'); await p.waitForFunction(() => window.__rigori.flow() === 'gioco'); await p.evaluate(() => window.__rigori.ctx.forceKeeperZone(4)); await p.waitForTimeout(800)
-await playUntilResult('sfidaAle', async () => ({ x: 0, y: 0.6, power: 0.7, curve: 0 }))
+// Sfida Ale: Ale forzato in basso a destra, tiro piazzato lì → tre parate. (Era basso al centro con la porta
+// regolamentare; con la porta in scala la posa `catch` non arriva a y 0,6, mentre il tuffo basso laterale para
+// sempre: vedi il gate di copertura.)
+await p.click('.rg-mode[data-value="sfidaAle"]'); await p.waitForFunction(() => window.__rigori.flow() === 'gioco'); await p.evaluate(() => window.__rigori.ctx.forceKeeperZone(5)); await p.waitForTimeout(800)
+await playUntilResult('sfidaAle', async () => ({ x: 1.4, y: 0.4, power: 0.5, curve: 0 }))
 // Boss: tiri fuori, Ale segna → sconfitta al terzo turno
 await p.click('.rg-mode[data-value="boss"]'); await p.waitForFunction(() => window.__rigori.flow() === 'gioco'); await p.waitForTimeout(800)
 await playUntilResult('boss', async () => ({ x: 5, y: 1.2, power: 1, curve: 0 }))

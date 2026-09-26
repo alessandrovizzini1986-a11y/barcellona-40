@@ -172,3 +172,10 @@ button.rg-unlock{ cursor:pointer; }
 
 /* Condividi sul cartello dell'esito: il cartello non prende tocchi, il bottone sì */
 .rg-esito__share{ pointer-events:auto; margin-top:var(--space-2); min-height:44px; padding:0 16px; opacity:.9; background:color-mix(in srgb, var(--bg) 72%, transparent); }
+
+/* Risultato: un solo pulsante grande, la riga di Ale sotto il punteggio, il gruppo Condividi a scomparsa */
+.rg-btn--block{ width:100%; flex:0 0 100%; }
+.rg-risultato__riga{ margin:0; font-family:var(--font-display); font-size:var(--fs-2); line-height:1.2; }
+.rg-risultato__riga--vinto{ color:var(--giallo); }
+.rg-risultato__riga--perso{ color:var(--terracotta); }
+.rg-share-opts[hidden]{ display:none; }

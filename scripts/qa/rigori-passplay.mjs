@@ -26,7 +26,10 @@ while (Date.now() - t0 < 560000) {
 }
 await p.waitForFunction(() => window.__rigori.flow() === 'risultato', null, { timeout: 60000 }); await p.waitForTimeout(400)
 await p.screenshot({ path: 'docs/rigori/screenshots/f13-passplay-risultato.png' })
-const res = await p.evaluate(() => ({ txt: document.querySelector('.rg-panel')?.innerText.replace(/\n+/g, ' | ').slice(0, 400), wa: document.querySelector('a[href^="https://wa.me/"]')?.getAttribute('href') }))
-console.log('risultato →', res.txt); console.log('whatsapp →', res.wa ? decodeURIComponent(res.wa.replace('https://wa.me/?text=', '')).replace(/\n/g, ' / ') : 'MANCA')
-if (!res.wa) errors.push('link WhatsApp assente')
+await p.click('[data-share-toggle]')
+const res = await p.evaluate(() => ({ txt: document.querySelector('.rg-panel')?.innerText.replace(/\n+/g, ' | ').slice(0, 400), testo: document.querySelector('[data-copy]')?.dataset.copy, opzioni: [...document.querySelectorAll('#rg-share-opts .rg-btn')].map((b) => b.textContent.trim()), primari: document.querySelectorAll('.rg-panel .rg-btn--giallo').length }))
+console.log('risultato →', res.txt); console.log('testo da copiare →', res.testo ? res.testo.replace(/\n/g, ' / ') : 'MANCA'); console.log('condividi →', res.opzioni.join(' · '))
+if (!res.testo || !res.testo.includes('classifica di serata')) errors.push('testo del risultato assente nel pulsante Copia')
+if (res.primari !== 1) errors.push('nel risultato deve esserci un solo pulsante grande (Rigioca), trovati ' + res.primari)
+if (!res.opzioni.includes('Immagine') || !res.opzioni.includes('Copia risultato')) errors.push('gruppo Condividi incompleto: ' + res.opzioni.join(','))
 await b.close(); if (errors.length) { console.error('ERRORI:\n' + errors.join('\n')); process.exit(1) } console.log(`OK pass-and-play (${rounds} tiri)`)

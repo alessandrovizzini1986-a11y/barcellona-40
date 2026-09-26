@@ -1,6 +1,17 @@
 {
   "entries": [
     {
+      "v": 27,
+      "data": "2026-09-26",
+      "titolo": "Rigori: la schermata del risultato rifatta",
+      "voci": [
+        "Ogni tiro vale 5 XP: una partita giocata non finisce più con +0",
+        "Un solo pulsante grande, Rigioca; Menu e Torna al sito sotto; immagine, video e testo dentro Condividi",
+        "Se perdi, Ale ti aspetta per la rivincita. Se vinci, coriandoli e Ale che chiede il VAR",
+        "La classifica compare solo quando ci sono almeno due persone dentro"
+      ]
+    },
+    {
       "v": 26,
       "data": "2026-09-26",
       "titolo": "Il gioco dei rigori ora si apre dall'header",

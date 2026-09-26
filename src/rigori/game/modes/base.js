@@ -3,7 +3,9 @@ import { GOAL } from '../../scene/net.js'
 //   mode.start(ctx) → mode.nextTurn(ctx) finché mode.finished; a ogni esito mode.onResult(res, ctx).
 // ctx offre: role(r) per impostare 'shooter' (tira l'utente) o 'keeper' (para l'utente, tira la CPU),
 //   cpuShoot({difficulty}) per il tiro della CPU, setDifficulty(d), hud(text), xp(kind), player(), score.
-export const XP = { goal: 10, corner: 25, save: 15, series: 50, boss: 150 } // da prompt
+// XP. `tiro` è la partecipazione: ogni tiro dell'utente vale qualcosa, così una partita intera non
+// finisce mai con "+0 XP". Gli altri valori sono quelli del prompt originale.
+export const XP = { tiro: 5, goal: 10, corner: 25, save: 15, series: 50, boss: 150 }
 export function makeMode(def) {
   // Niente spread: copierebbe i getter (shooter, keeperP) come valori fissi
   def.finished = false
