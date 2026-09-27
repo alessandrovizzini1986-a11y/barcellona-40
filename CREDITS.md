@@ -142,8 +142,9 @@ restituisce spesso dettagli irriconoscibili o omonimi sbagliati.
 | Luci di Carnaby Street | `public/assets/tappe/londra/carnaby.webp` | Christine Matthews | [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0) | [Carnaby Street Christmas Lights 2019 - geograph.org.uk - 6329567.jpg](https://commons.wikimedia.org/wiki/File:Carnaby_Street_Christmas_Lights_2019_-_geograph.org.uk_-_6329567.jpg) |
 | Luci di Regent Street | `public/assets/tappe/londra/regent.webp` | Oast House Archive | [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0) | [Regent Street Christmas Lights 2016 - geograph.org.uk - 5233956.jpg](https://commons.wikimedia.org/wiki/File:Regent_Street_Christmas_Lights_2016_-_geograph.org.uk_-_5233956.jpg) |
 | Hintze Hall (per Olly) | `public/assets/tappe/londra/nhm_balena.webp` | APK | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0) | [Hintze Hall, Natural History Museum, London - 4.jpg](https://commons.wikimedia.org/wiki/File:Hintze_Hall,_Natural_History_Museum,_London_-_4.jpg) |
+| Appartamento, 79 Beak Street | `public/assets/tappe/londra/apt.webp` | No Swan So Fine | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | [79 Beak Street, Soho, January 2022.jpg](https://commons.wikimedia.org/wiki/File:79_Beak_Street,_Soho,_January_2022.jpg) |
 
-Ultimo aggiornamento: `npm run foto:londra` · 23 foto, 1484 kB in tutto.
+Ultimo aggiornamento: `npm run foto:londra` · 24 foto, 1438 kB in tutto.
 
 <!-- foto-londra:end -->
 

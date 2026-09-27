@@ -87,7 +87,7 @@
       "licenza": "CC BY-SA 2.0",
       "licenzaUrl": "https://creativecommons.org/licenses/by-sa/2.0",
       "pagina": "https://commons.wikimedia.org/wiki/File:Lina_Stores,_Soho,_W1.jpg",
-      "kb": 69
+      "kb": 56
     },
     {
       "id": "soho",
@@ -98,7 +98,7 @@
       "licenza": "CC BY-SA 4.0",
       "licenzaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
       "pagina": "https://commons.wikimedia.org/wiki/File:Dean_Street_-_Old_Compton_Street_corner.JPG",
-      "kb": 74
+      "kb": 62
     },
     {
       "id": "trafalgar",
@@ -109,7 +109,7 @@
       "licenza": "CC BY-SA 3.0",
       "licenzaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
       "pagina": "https://commons.wikimedia.org/wiki/File:Trafalgar_Square,_London_2_-_Jun_2009.jpg",
-      "kb": 70
+      "kb": 59
     },
     {
       "id": "horseguards",
@@ -142,7 +142,7 @@
       "licenza": "CC BY-SA 3.0",
       "licenzaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
       "pagina": "https://commons.wikimedia.org/wiki/File:St_James%27s_Park_Lake_%E2%80%93_East_from_the_Blue_Bridge_-_2012-10-06.jpg",
-      "kb": 69
+      "kb": 57
     },
     {
       "id": "buckingham",
@@ -153,7 +153,7 @@
       "licenza": "CC BY-SA 3.0",
       "licenzaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
       "pagina": "https://commons.wikimedia.org/wiki/File:Buckingham_Palace_from_gardens,_London,_UK_-_Diliff.jpg",
-      "kb": 93
+      "kb": 78
     },
     {
       "id": "greenpark",
@@ -188,7 +188,7 @@
       "licenza": "CC BY-SA 3.0",
       "licenzaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
       "pagina": "https://commons.wikimedia.org/wiki/File:Natural_History_Museum_London_Jan_2006.jpg",
-      "kb": 66
+      "kb": 53
     },
     {
       "id": "covent",
@@ -211,7 +211,7 @@
       "licenza": "CC BY 2.0",
       "licenzaUrl": "https://creativecommons.org/licenses/by/2.0",
       "pagina": "https://commons.wikimedia.org/wiki/File:Departures_Terminal_5,_London_Heathrow_Airport_(33215594911).jpg",
-      "kb": 65
+      "kb": 54
     },
     {
       "id": "blq_arr",
@@ -222,7 +222,7 @@
       "licenza": "CC BY-SA 3.0",
       "licenzaUrl": "http://creativecommons.org/licenses/by-sa/3.0/",
       "pagina": "https://commons.wikimedia.org/wiki/File:Bologna_Guglielmo_Marconi_Airport_aerial.jpg",
-      "kb": 41
+      "kb": 29
     },
     {
       "id": "carnaby",
@@ -245,7 +245,7 @@
       "licenza": "CC BY-SA 2.0",
       "licenzaUrl": "https://creativecommons.org/licenses/by-sa/2.0",
       "pagina": "https://commons.wikimedia.org/wiki/File:Regent_Street_Christmas_Lights_2016_-_geograph.org.uk_-_5233956.jpg",
-      "kb": 85
+      "kb": 70
     },
     {
       "id": "nhm_balena",
@@ -258,6 +258,17 @@
       "pagina": "https://commons.wikimedia.org/wiki/File:Hintze_Hall,_Natural_History_Museum,_London_-_4.jpg",
       "kb": 111,
       "qualita": 70
+    },
+    {
+      "id": "apt",
+      "file": "assets/tappe/londra/apt.webp",
+      "tappa": "Appartamento, 79 Beak Street",
+      "titolo": "File:79 Beak Street, Soho, January 2022.jpg",
+      "autore": "No Swan So Fine",
+      "licenza": "CC BY-SA 4.0",
+      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:79_Beak_Street,_Soho,_January_2022.jpg",
+      "kb": 68
     }
   ],
   "scartate": []

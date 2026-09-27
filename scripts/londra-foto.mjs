@@ -44,13 +44,15 @@ export const FILE = {
   blq_arr: 'File:Bologna Guglielmo Marconi Airport aerial.jpg',
   carnaby: 'File:Carnaby Street Christmas Lights 2019 - geograph.org.uk - 6329567.jpg',
   regent: 'File:Regent Street Christmas Lights 2016 - geograph.org.uk - 5233956.jpg',
-  nhm_balena: 'File:Hintze Hall, Natural History Museum, London - 4.jpg'
+  nhm_balena: 'File:Hintze Hall, Natural History Museum, London - 4.jpg',
+  // verticale, eccezione voluta: il ritaglio basso tiene il portone col 79 e la vetrina
+  apt: 'File:79 Beak Street, Soho, January 2022.jpg'
 }
 // Quanto spazio verticale lasciare SOPRA il ritaglio: 0,5 = centrato. Più basso = si tiene l'alto,
 // altrimenti torri, insegne e luminarie appese finiscono tagliate.
 const BIAS = {
   eye: 0.15, lina: 0.1, nhm: 0.15, regent: 0.2, sealife: 0.3, trafalgar: 0.25, buckingham: 0.25,
-  soho: 0.3, covent: 0.3, southbank: 0.35, horseguards: 0.4, nhm_balena: 0.25, bakerloo: 0.45
+  soho: 0.3, covent: 0.3, southbank: 0.35, horseguards: 0.4, nhm_balena: 0.25, bakerloo: 0.45, apt: 0.8
 }
 // Nome umano della tappa, per i crediti
 export const TITOLI = {
@@ -61,7 +63,7 @@ export const TITOLI = {
   buckingham: 'Buckingham Palace', greenpark: 'Green Park', harrods: 'Harrods',
   nhm: 'Natural History Museum', covent: 'Covent Garden', lhr_dep: 'Partenza da Heathrow',
   blq_arr: 'Atterraggio a Bologna', carnaby: 'Luci di Carnaby Street', regent: 'Luci di Regent Street',
-  nhm_balena: 'Hintze Hall (per Olly)'
+  nhm_balena: 'Hintze Hall (per Olly)', apt: 'Appartamento, 79 Beak Street'
 }
 const LIBERA = [/^cc0/i, /^cc[- ]by(-sa)?([- ]\d)?/i, /^public domain/i, /^pd/i]
 const testo = (v) => String(v || '').replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim()
@@ -131,8 +133,8 @@ for (const [id, titolo] of Object.entries(FILE)) {
   }
 }
 
-// Nella cartella ci sono anche file che questo script non scarica (la card stilizzata
-// dell'appartamento, la foto di famiglia dell'M&M'S): pesano lo stesso, quindi contano nel tetto.
+// Nella cartella ci sono anche file che questo script non scarica (la foto di famiglia
+// dell'M&M'S): pesano lo stesso, quindi contano nel tetto.
 const gestiti = new Set(Object.keys(FILE).map((id) => `${id}.webp`))
 const estranei = readdirSync(OUT).filter((f) => !gestiti.has(f))
 const kbEstranei = estranei.reduce((n, f) => n + Math.round(statSync(path.join(OUT, f)).size / 1024), 0)
