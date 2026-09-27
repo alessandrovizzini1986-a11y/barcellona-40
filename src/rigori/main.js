@@ -42,6 +42,7 @@ import { toast } from './ui/components/toast.js'
 import { save } from './core/save.js'
 import { keeper as keeperData, faceOf, byId } from './data/players.js'
 import { createKicker, KICK_DELAY } from './game/kicker.js'
+import { SITO } from './ui/sito.js'
 import { big as confettiBig } from '../ui/confetti.js' // gli stessi coriandoli del sito, caricati solo quando servono
 
 const root = document.getElementById('game')
@@ -49,7 +50,7 @@ const ASSETS = import.meta.env.BASE_URL.replace(/\/$/, '') + '/assets/rigori/'
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches
 
 // ---------- loading screen ----------
-const TIPS = ['Trascina dal pallone: direzione, forza e curva in un gesto solo.', 'Rilascia quando la barra è al centro: tell dimezzato.', 'Ale legge il corpo del tiratore. Fintalo.', 'La traversa è a 2,44 m. La potenza la cerca.']
+const TIPS = ['Trascina dal pallone: direzione, forza e curva in un gesto solo.', 'Rilascia quando la barra è al centro: il portiere si sbilancia la metà.', 'Ale legge il corpo del tiratore. Fintalo.', 'La traversa è a 2,44 m. La potenza la cerca.']
 root.innerHTML = `<div class="rg-loading" id="rg-loading" role="status" aria-live="polite">
   <div class="rg-loading__title">Rigori <b>al Camp Nou</b></div>
   <div class="rg-loading__bar"><i id="rg-loading-fill"></i></div>
@@ -423,7 +424,6 @@ document.getElementById('rg-ui').addEventListener('pointerdown', (e) => { if (es
 stage.addEventListener('pointerdown', () => { if (esitoLock) saltaSequenza() }, true)
 let flow = 'boot', quitRequested = false
 // Il gioco vive dentro il sito: /rigori/ sta sotto la stessa base. Link nella stessa scheda, non _blank.
-const SITO = new URL('../#/oggi', location.href).href
 const openOptions = () => opzioni(game.ui, settings, { onChange: applySettings, onReset: () => { save.reset(); toast(game.ui, 'Progressi azzerati'); setTimeout(() => location.reload(), 700) } })
 async function runFlow() {
   await kitReady
@@ -478,13 +478,14 @@ async function overlayMenu() {
   if (v === 'opzioni') { await openOptions(); return 'continua' }
   return v
 }
-function titleFor(e) { const s = e.summary; if (e.id === 'shootout' || e.id === 'boss') return s.winner === 'me' ? `Hai vinto ${s.me}–${s.ale}` : `Ale vince ${s.ale}–${s.me}`; if (e.id === 'sfidaAle') return `${s.goals} gol prima di tre parate`; if (e.id === 'skill') return `${s.score} punti`; if (e.id === 'passAndPlay') return `Vince ${s.leaderboard[0].name}`; return MODES_INFO.find((m) => m.id === e.id)?.title || e.id }
+function titleFor(e) { const s = e.summary; if (e.id === 'shootout' || e.id === 'boss') return s.winner === 'me' ? `Hai vinto ${s.me}–${s.ale}` : `Ale vince ${s.ale}–${s.me}`; if (e.id === 'sfidaAle') return `${s.goals} gol prima delle tre parate di Ale`; if (e.id === 'skill') return `${s.score} punti`; if (e.id === 'passAndPlay') return `Vince ${s.leaderboard[0].name}`; return MODES_INFO.find((m) => m.id === e.id)?.title || e.id }
 // La classifica salvata si mostra solo se ci sono almeno due persone dentro: "1. Monne Perso 0–3" da solo
 // non è una classifica, è una presa in giro.
 function linesFor(e) { const b = game.progress.board(e.id).slice(0, 3); const top = new Set(b.map((x) => x.name)).size >= 2 ? [`Classifica: ${b.map((x, i) => `${i + 1}. ${x.name} ${x.label}`).join(' · ')}`] : []; return [...linesBase(e), ...top] }
 // Come è andata, per il tono della schermata: 'vinto' | 'perso' | null (Skill e pass-and-play non hanno un Ale da battere)
-function esitoPartita(e) { const s = e.summary || {}; if (e.id === 'shootout' || e.id === 'boss') return s.winner === 'me' ? 'vinto' : 'perso'; if (e.id === 'sfidaAle') return 'perso'; return null }
-function linesBase(e) { const s = e.summary; if (e.id === 'passAndPlay') return s.leaderboard.map((p, i) => `${i + 1}. ${p.name}: ${p.goals} gol, ${p.saves} parate`); if (e.id === 'sfidaAle') return [`${s.shots} tiri, ${s.goals} gol`]; if (e.id === 'skill') return [`${s.hits} bersagli su ${s.shots} tiri`]; if (e.id === 'shootout' || e.id === 'boss') return [s.suddenDeath ? 'Deciso al sudden death' : `${s.rounds} rigori a testa`]; return [] }
+// Sfida Ale finisce SEMPRE con tre parate: non è una sconfitta, è il modo in cui si chiude. Niente rivincita lì.
+function esitoPartita(e) { const s = e.summary || {}; if (e.id === 'shootout' || e.id === 'boss') return s.winner === 'me' ? 'vinto' : 'perso'; return null }
+function linesBase(e) { const s = e.summary; if (e.id === 'passAndPlay') return s.leaderboard.map((p, i) => `${i + 1}. ${p.name}: ${p.goals} gol, ${p.saves} parate`); if (e.id === 'sfidaAle') { const record = Math.max(s.goals, ...game.progress.board('sfidaAle').map((x) => x.score)); return [`${s.shots} tiri`, s.goals >= record && s.goals > 0 ? `Il tuo record: ${record} gol${game.progress.board('sfidaAle').filter((x) => x.score === record).length <= 1 ? ', fatto adesso' : ''}` : `Il tuo record: ${record} gol`] } if (e.id === 'skill') return [`${s.hits} bersagli su ${s.shots} tiri`]; if (e.id === 'shootout' || e.id === 'boss') return [s.suddenDeath ? 'Deciso al sudden death' : `${s.rounds} rigori a testa`]; return [] }
 function shareFor(e) {
   const s = e.summary, who = byId(shooterId)?.nome || 'Io', url = __SITE_URL__.replace(/\/?$/, '/') + 'rigori/'
   if (e.id === 'shootout' || e.id === 'boss') return `⚽ Rigori al Camp Nou\n${who} ${s.me}-${s.ale} Ale 🧤\n${s.winner === 'me' ? (s.suddenDeath ? 'Deciso al sudden death. Disonesti.' : 'Ale a casa. Disonesti.') : 'Ale ha parlato troppo, e aveva ragione.'}\n${url}`

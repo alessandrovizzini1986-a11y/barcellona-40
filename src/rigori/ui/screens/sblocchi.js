@@ -1,4 +1,5 @@
 import { esc } from '../components/esc.js'
+import { linkSito } from '../sito.js'
 // Sblocchi e traguardi: lista con stato; gli sblocchi ottenuti si equipaggiano con un tocco (pallone, esultanza, camera)
 export function sblocchi(ui, data, { onEquip } = {}) {
   return new Promise((resolve) => {
@@ -10,7 +11,7 @@ export function sblocchi(ui, data, { onEquip } = {}) {
       <ul class="rg-unlocks">${unlocks.map((u) => `<li class="${u.unlocked ? 'on' : ''}${u.equipped ? ' eq' : ''}">${u.unlocked && u.kind !== 'sfottò' ? `<button class="rg-unlock" data-equip="${u.id}" data-kind="${u.kind}" aria-pressed="${u.equipped}" aria-label="${esc(u.title)}${u.equipped ? ', in uso' : ', usa'}">` : '<div class="rg-unlock">'}<b>${u.unlocked ? (u.equipped ? '●' : '✓') : '🔒'} ${esc(u.title)}</b><span>${esc(u.unlocked ? u.desc : u.rule)}</span>${u.unlocked && u.kind !== 'sfottò' ? '</button>' : '</div>'}</li>`).join('')}</ul>
       <h3 class="rg-h3">Traguardi</h3>
       <ul class="rg-unlocks">${achievements.map((a) => `<li class="${a.unlocked ? 'on' : ''}"><div class="rg-unlock"><b>${a.unlocked ? '🏆' : '·'} ${esc(a.title)}</b><span>${esc(a.desc)}</span></div></li>`).join('')}</ul>
-      <div class="rg-row"><button class="rg-btn rg-btn--primary" data-value="ok" aria-label="Chiudi">Chiudi</button></div></div>`
+      <div class="rg-row"><button class="rg-btn rg-btn--primary" data-value="ok" aria-label="Chiudi">Chiudi</button></div>${linkSito()}</div>`
     }
     render()
     el.addEventListener('click', (e) => {

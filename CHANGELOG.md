@@ -387,3 +387,13 @@ Pagina fuori dal sito, **non linkata da nessuna parte**: `stats-dtcmbsis.html`. 
 - `PASS_PLAY_NAMES` è `Ale, Monne, Giulio, Manuel`: Mario non c'è più.
 - Verificato: nessun "Mario" resta in `src/`, `data/`, `public/` e `scripts/`. Il gioco precedente (`rigori-classic.html`, in `_legacy/`) è lasciato com'è e lì si chiama ancora Mario: è il gioco vecchio, non toccato per scelta.
 - `scripts/qa/rigori-risultato.mjs` controlla i nomi delle card (Manuel, Giulio, Monne), il 10 e la faccia di Manuel.
+
+## Rigori, blocco 1: navigazione e testi
+- **Ritocco al blocco 7**: Sfida Ale non è una sconfitta (finisce sempre con tre parate): via la riga della rivincita, al suo posto *«N gol prima delle tre parate di Ale, in M tiri»* e *«Il tuo record: N gol»* (dalla classifica salvata, con "fatto adesso" quando è nuovo).
+- **"← Torna al programma" in ogni schermata di scelta**: CHI TIRA?, card giocatore, Modalità, Chi gioca?, Opzioni, Sblocchi, più la Pausa che l'aveva già. Un solo posto per l'indirizzo (`ui/sito.js`), stessa scheda. Da qualunque schermata al sito in **1 tocco**.
+- **≡ sopra gli overlay** (`z-index 35`): nel pass-and-play si esce anche dalla scelta della zona; verificato con `elementFromPoint`.
+- **✕ della Pausa a 44 px** (era 40).
+- **HUD a destra del ≡** (`left 66px`, `right 12px`): "Rigore 1 di 5 · Tu 0 – 0 Ale · Monne fuori" non finisce più sotto il pulsante.
+- **Testi**: "pararo" → "paro"; la dritta falsa *«Ha il lato debole a destra, in basso»* → *«Il lato debole ce l'ha: è la bocca. Non stare a sentirlo»*; Skill senza "traversa"; "tell dimezzato" → "il portiere si sbilancia la metà"; Boss "Non si sbilancia quasi mai"; onboarding "zona colorata".
+- **Boss al livello 2** (100 XP, `BOSS_LEVEL`).
+- `scripts/qa/rigori-nav.mjs`: 23 controlli, compreso il grep sul bundle pubblicato per i refusi.

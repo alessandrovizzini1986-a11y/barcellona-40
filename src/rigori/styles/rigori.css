@@ -45,7 +45,8 @@ html,body{ margin:0; height:100%; background:var(--bg); color:var(--ink); font-f
 @media (prefers-reduced-motion: reduce){ .rg-timing--ok .rg-timing__track{ animation:none; } .rg-timing--ok .rg-timing__ok{ animation:none; opacity:1; } }
 
 /* HUD della modalità e overlay */
-.rg-modehud{ position:absolute; top:calc(12px + env(safe-area-inset-top, 0px)); left:50%; transform:translateX(-50%); max-width:92vw; padding:8px 14px; border-radius:999px; background:color-mix(in srgb, var(--bg) 72%, transparent); color:var(--ink); font-weight:600; font-size:var(--fs-0); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+/* A destra del ≡ (10 + 48 + 8 px): con i testi lunghi dello Shootout il pulsante copriva le prime lettere */
+.rg-modehud{ position:absolute; top:calc(12px + env(safe-area-inset-top, 0px)); left:66px; right:12px; text-align:center; padding:8px 14px; border-radius:999px; background:color-mix(in srgb, var(--bg) 72%, transparent); color:var(--ink); font-weight:600; font-size:var(--fs-0); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .rg-modehud:empty{ display:none; }
 .rg-overlay{ position:absolute; inset:0; z-index:30; display:flex; align-items:center; justify-content:center; padding:var(--space-4); background:color-mix(in srgb, var(--bg) 88%, transparent); }
 .rg-panel{ width:100%; max-width:420px; display:flex; flex-direction:column; gap:var(--space-4); padding:var(--space-5); border-radius:var(--radius-l); background:var(--bg-2); border:1px solid color-mix(in srgb, var(--ink) 14%, transparent); }
@@ -63,7 +64,7 @@ a.rg-btn{ text-decoration:none; }
 
 /* Schermate */
 .rg-overlay--top{ align-items:flex-start; padding-top:calc(var(--space-6) + env(safe-area-inset-top, 0px)); overflow:auto; }
-.rg-close{ position:absolute; top:8px; right:8px; min-height:40px; width:40px; padding:0; }
+.rg-close{ position:absolute; top:8px; right:8px; min-height:44px; width:44px; padding:0; }
 .rg-panel{ position:relative; }
 .rg-row{ display:flex; gap:var(--space-2); flex-wrap:wrap; }
 .rg-row .rg-btn{ flex:1 1 auto; }
@@ -137,7 +138,7 @@ button.rg-unlock{ cursor:pointer; }
 .rg-onb__skip{ position:absolute; right:12px; bottom:calc(12px + var(--safe-b)); pointer-events:auto; }
 @media (prefers-reduced-motion: reduce){ .rg-onb__arrow{ animation:none; } }
 /* Bottone menu in gioco */
-.rg-menubtn{ position:absolute; top:calc(10px + env(safe-area-inset-top, 0px)); left:10px; width:48px; height:48px; padding:0; border-radius:50%; }
+.rg-menubtn{ position:absolute; top:calc(10px + env(safe-area-inset-top, 0px)); left:10px; width:48px; height:48px; padding:0; border-radius:50%; z-index:35; /* sopra gli overlay (30): nel pass-and-play si deve poter uscire anche dalla scelta della zona */ }
 
 /* Loading: bottone 'Tocca per iniziare' (sblocco audio) */
 .rg-loading__tap{ margin-top:var(--space-4); min-width:200px; animation:rg-pulse 1.4s ease-in-out infinite; }
@@ -179,3 +180,6 @@ button.rg-unlock{ cursor:pointer; }
 .rg-risultato__riga--vinto{ color:var(--giallo); }
 .rg-risultato__riga--perso{ color:var(--terracotta); }
 .rg-share-opts[hidden]{ display:none; }
+
+/* Torna al programma: in fondo a ogni schermata di scelta, un tocco, stessa scheda */
+.rg-sito{ width:100%; justify-content:center; }

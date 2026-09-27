@@ -23,7 +23,7 @@ export const TAUNTS = {
       ale: ['{tiratore} sul dischetto. Il portiere che tira: che tempi.', '{tiratore} ha annunciato l\'angolo. Non fidarti, {portiere}.']
     },
     portiere: {
-      ale: ['{portiere} in porta, e parla troppo.', '{portiere}: "Io lo dico sempre dove pararo. E paro lo stesso."'],
+      ale: ['{portiere} in porta, e parla troppo.', '{portiere}: "Io lo dico sempre dove paro. E paro lo stesso."'],
       monne: ['{portiere} in porta con gli occhiali da sole. Serata strana.'],
       giulio: ['{portiere} in porta, espressione invariata da mezz\'ora.'],
       manuel: ['{portiere} in porta: dice che ai suoi tempi la porta era più piccola.']

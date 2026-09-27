@@ -22,7 +22,7 @@ export const PLAYERS = [
     maglia: { tipo: 'tinta', colore: '#2CA6A4' },
     face: 'faces/face-ale.png',         // dal legacy (_legacy/assets/keeper-face.png, 512×512 PNG)
     stats: { potenza: 3, precisione: 3, effetto: 1 },
-    tips: ['Parla troppo: non farti distrarre.', 'Ha il lato debole a destra, in basso.'] }
+    tips: ['Parla troppo: non farti distrarre.', 'Il lato debole ce l\'ha: è la bocca. Non stare a sentirlo.'] }
 ]
 // Statistiche mostrate nella card di conferma: fittizie ma coerenti col personaggio, 5 tacche.
 // DA VERIFICARE: non sono agganciate alla fisica del tiro, sono solo un ritratto.

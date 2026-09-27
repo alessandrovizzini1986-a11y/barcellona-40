@@ -32,5 +32,5 @@ export function giocatore(ui, ASSETS, id) {
     <div class="rg-row rg-player__actions">
       <button class="rg-btn rg-btn--giallo" data-value="vai">VAI</button>
       <button class="rg-btn rg-btn--ghost" data-value="cambia">Cambia</button>
-    </div>`, { label: 'Conferma il giocatore: ' + p.nome, cls: 'rg-overlay--top rg-overlay--player' })
+    </div>`, { label: 'Conferma il giocatore: ' + p.nome, cls: 'rg-overlay--top rg-overlay--player', sito: true })
 }

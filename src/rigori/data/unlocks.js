@@ -4,7 +4,7 @@ export const LEVELS = [
   { n: 1, xp: 0, title: 'Esordiente' }, { n: 2, xp: 100, title: 'Riserva' }, { n: 3, xp: 250, title: 'Titolare' },
   { n: 4, xp: 500, title: 'Capitano' }, { n: 5, xp: 900, title: 'Leggenda' }, { n: 6, xp: 1400, title: 'Disonesto' }
 ]
-export const BOSS_LEVEL = 5
+export const BOSS_LEVEL = 2 // era 5 (900 XP): in una sera non ci arrivava nessuno
 export const UNLOCKS = [
   { id: 'ball:classico', kind: 'pallone', title: 'Pallone classico', desc: 'Il pallone di sempre.', level: 1 },
   { id: 'celeb:salto', kind: 'celebrazione', title: 'Esultanza: il salto', desc: 'Salta e urla.', level: 1 },

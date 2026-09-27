@@ -1,6 +1,18 @@
 {
   "entries": [
     {
+      "v": 29,
+      "data": "2026-09-27",
+      "titolo": "Rigori: si torna al programma da ogni schermata",
+      "voci": [
+        "In fondo a ogni schermata del gioco c'è Torna al programma: un tocco e sei sul sito",
+        "Nel pass-and-play il menu resta raggiungibile anche mentre si sceglie dove tuffarsi",
+        "Il Boss si sblocca al livello 2, non più al 5: si vede in una sera",
+        "Sfida Ale mostra il tuo record di gol, senza rivincita: finisce sempre con tre parate",
+        "Testi sistemati: niente più gergo, e la dritta falsa sul lato debole di Ale è diventata una battuta"
+      ]
+    },
+    {
       "v": 28,
       "data": "2026-09-26",
       "titolo": "Rigori: Mario si chiama Manuel",
