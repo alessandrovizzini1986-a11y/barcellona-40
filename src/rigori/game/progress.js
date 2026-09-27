@@ -68,6 +68,12 @@ export function createProgress({ save, listeners, role, shooterName, shooterId =
   listeners.add(onEvent)
   // Classifica locale per modalità: b40:v1:rigori:board:<modo>, dieci voci
   const boardKey = (id) => 'board:' + id
+  // Chi aveva giocato prima della rinomina (blocco 4) ha righe con "Mario" in localStorage: stessa persona,
+  // un nome solo. Si rinominano una volta al caricamento, così la classifica non mostra due nomi.
+  for (const id of ['passAndPlay', 'shootout', 'boss', 'sfidaAle', 'skill']) {
+    const b = save.get(boardKey(id), null); if (!Array.isArray(b) || !b.some((e) => e.name === 'Mario')) continue
+    save.set(boardKey(id), b.map((e) => e.name === 'Mario' ? { ...e, name: 'Manuel' } : e))
+  }
   function board(id, s) {
     const entries = save.get(boardKey(id), [])
     const date = new Date().toISOString().slice(0, 10)

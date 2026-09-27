@@ -5,8 +5,10 @@ import { shooters, keeper as keeperData, byId } from '../../data/players.js'
 // Il bordo giallo non è uno stato, è un'informazione: segna "Sei tu", il profilo scelto nel sito, e non
 // cambia mai toccando gli altri. Sotto ogni nome la riga di progressione di quel giocatore.
 // `profilo`: id del profilo del sito (null se il gioco è aperto da link diretto: niente bordo, niente
-// pulsante primario). `statsDi(id)`: { level, xp, vittorie } oppure null se non ha mai tirato.
-export const rigaStats = (s) => s ? `Lv ${s.level.n} · ${s.xp} XP · ${s.vittorie} ${s.vittorie === 1 ? 'vittoria' : 'vittorie'}` : 'Mai tirato'
+// pulsante primario). `statsDi(id)`: { xp, vittorie } oppure null se non ha mai tirato.
+// Niente livello qui: livello, Boss e sblocchi sono del telefono (progressione di B7), non del singolo
+// giocatore. Con "Lv" la riga diceva un numero diverso dal risultato.
+export const rigaStats = (s) => s ? `${s.xp} XP · ${s.vittorie} ${s.vittorie === 1 ? 'vittoria' : 'vittorie'}` : 'Mai tirato'
 export function chiTira(ui, ASSETS, { profilo = null, statsDi = () => null } = {}) {
   const ale = keeperData()
   const io = profilo && byId(profilo)?.ruolo === 'tiratore' ? byId(profilo) : null

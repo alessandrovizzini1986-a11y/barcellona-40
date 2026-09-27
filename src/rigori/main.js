@@ -323,11 +323,16 @@ async function registraVideo() {
   const { from, to, speed } = finestraReplay(rec)
   const [cam1] = camereReplay(rec)
   const suoni = suoniDelTiro(rec)
+  // Mentre si registra il tempo di gioco è fermo e i pulsanti del risultato non rispondono: un "Rigioca" a metà
+  // registrazione farebbe partire una partita sopra il replay.
+  game.ui.classList.add('rg-registrando')
+  kicker?.onKick() // nel replay visto il tiratore era nella posa del calcio, non fermo sul dischetto
   audio.whistle()
   await new Promise((res) => juice.startReplay({ from, to, speed, render: (t) => { renderShotAt(rec, t, { ball, keeper, live: false }); suoni(t) }, camera: replayCamUnlock ? null : cam1, segui: cam1.segui, onEnd: res }))
-  ball.reset(); keeper?.reset(); rig.goTo('dietroTiratore', { instant: true })
+  ball.reset(); keeper?.reset(); kicker?.reset(); audio.duck(false); rig.goTo('dietroTiratore', { instant: true })
   let file = null
   try { file = await reg.ferma() } catch { file = null }
+  game.ui.classList.remove('rg-registrando')
   if (!file) videoNonDisponibile = true
   return file
 }
@@ -340,8 +345,9 @@ function suoniDelTiro(rec) {
   return (t) => {
     if (t >= 0) una('calcio', () => audio.play(rec.aim?.power > 0.95 ? 'kick2' : 'kick', { volume: 0.6 + Math.min(0.4, (rec.aim?.power ?? 0.8) * 0.4) }))
     if (t >= tImp) una('impatto', () => {
-      if (rec.outcome === 'goal') { audio.play('net', { volume: .8 }); audio.crowd('roar'); setTimeout(() => audio.crowd('clap'), 700) }
-      else if (rec.outcome === 'save') { audio.play('glove', { volume: .9 }); audio.crowd('oooh') }
+      audio.duck(true) // come dal vivo: la musica si abbassa sotto l'esito, lo stinger (se la musica è accesa) suona sopra
+      if (rec.outcome === 'goal') { audio.sting('gol'); audio.play('net', { volume: .8 }); audio.crowd('roar'); setTimeout(() => audio.crowd('clap'), 700) }
+      else if (rec.outcome === 'save') { audio.sting('parata'); audio.play('glove', { volume: .9 }); audio.crowd('oooh') }
       else if (rec.outcome === 'post' || rec.outcome === 'crossbar') { audio.play(rec.outcome, { volume: .9 }); audio.crowd('oooh') }
       else audio.crowd('oooh')
     })
@@ -491,7 +497,7 @@ const apriClassifica = () => {
 // Profilo scelto nel sito (b40:v1:person, JSON): SOLA LETTURA, il gioco non scrive mai chiavi del sito.
 // null se il gioco è aperto da link diretto senza profilo.
 function profiloSito() { try { const v = JSON.parse(localStorage.getItem('b40:v1:person')); return typeof v === 'string' && v ? v : null } catch { return null } }
-const openOptions = () => opzioni(game.ui, settings, { onChange: applySettings, onReset: () => { save.reset(); toast(game.ui, 'Progressi azzerati'); setTimeout(() => location.reload(), 700) } })
+const openOptions = () => opzioni(game.ui, settings, { onChange: () => { applySettings(); aggiornaMusicBtn() }, onReset: () => { save.reset(); toast(game.ui, 'Progressi azzerati'); setTimeout(() => location.reload(), 700) } })
 async function runFlow() {
   await kitReady
   ctx.role('idle')

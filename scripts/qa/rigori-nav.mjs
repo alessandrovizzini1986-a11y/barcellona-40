@@ -95,7 +95,7 @@ const okSito = async (p, dove) => { const s = await sito(p); ok(`"Torna al progr
   ok('profilo monne: bordo giallo solo su Monne, con "Sei tu"', stato.bordo.join() === 'monne' && stato.etichetta === 'Sei tu', JSON.stringify(stato.bordo))
   ok('profilo monne: pulsante primario "Tira come Monne →"', stato.primario === 'Tira come Monne →', String(stato.primario))
   ok('sotto i volti: "Tocca un altro nome per far tirare lui"', stato.hint === 'Tocca un altro nome per far tirare lui')
-  ok('riga sotto il nome: "Lv 2 · 140 XP · 3 vittorie" per Monne, "Mai tirato" per gli altri', stato.righe.monne === 'Lv 2 · 140 XP · 3 vittorie' && stato.righe.giulio === 'Mai tirato' && stato.righe.manuel === 'Mai tirato', JSON.stringify(stato.righe))
+  ok('riga sotto il nome: "140 XP · 3 vittorie" per Monne, "Mai tirato" per gli altri', stato.righe.monne === '140 XP · 3 vittorie' && stato.righe.giulio === 'Mai tirato' && stato.righe.manuel === 'Mai tirato', JSON.stringify(stato.righe))
   // tocco su Giulio: il bordo non si sposta, si va dritti a Modalità con "Tira Giulio"
   let tocchi = 0
   await p.click('.rg-card[data-value="giulio"]'); tocchi++

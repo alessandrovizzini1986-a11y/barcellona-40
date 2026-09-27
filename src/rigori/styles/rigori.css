@@ -147,6 +147,8 @@ button.rg-unlock{ cursor:pointer; }
 .rg-onb__text span{ color:var(--ink-2); font-size:var(--fs-0); }
 .rg-onb__skip{ position:absolute; right:12px; bottom:calc(12px + var(--safe-b)); pointer-events:auto; }
 @media (prefers-reduced-motion: reduce){ .rg-onb__arrow{ animation:none; } }
+/* Mentre si registra il video i pulsanti del risultato non rispondono */
+.rg-registrando .rg-panel .rg-btn{ pointer-events:none; opacity:.55; }
 /* Altoparlante in gioco: musica on/off a un tocco, a destra sopra l'HUD */
 .rg-musicbtn{ position:absolute; top:calc(10px + env(safe-area-inset-top, 0px)); right:10px; width:48px; height:48px; padding:0; border-radius:50%; z-index:35; display:grid; place-items:center; }
 .rg-musicbtn--off{ color:var(--ink-2); }
