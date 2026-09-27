@@ -145,9 +145,15 @@ restituisce spesso dettagli irriconoscibili o omonimi sbagliati.
 | Appartamento, 79 Beak Street | `public/assets/tappe/londra/apt.webp` | No Swan So Fine | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | [79 Beak Street, Soho, January 2022.jpg](https://commons.wikimedia.org/wiki/File:79_Beak_Street,_Soho,_January_2022.jpg) |
 | Benjamin Pollock's Toyshop | `public/assets/tappe/londra/pollock.webp` | Jack1956 | [CC0](http://creativecommons.org/publicdomain/zero/1.0/deed.en) | [Benjamin Pollocks Toy Shop exterior.jpg](https://commons.wikimedia.org/wiki/File:Benjamin_Pollocks_Toy_Shop_exterior.jpg) |
 
-Ultimo aggiornamento: `npm run foto:londra` · 25 foto, 1422 kB in tutto.
+Ultimo aggiornamento: `npm run foto:londra` · 25 foto, 1314 kB in tutto.
 
 <!-- foto-londra:end -->
+
+### Eccezione alla regola delle licenze libere (Londra)
+
+| Tappa | File nel sito | Fonte | Licenza |
+|---|---|---|---|
+| Shrek's Adventure! London (solo con "Piove" acceso) | `public/assets/tappe/londra/shrek.webp` | Immagine promozionale di Shrek's Adventure! London, fornita da Alessandro | **Non libera**: materiale promozionale del gestore, non una foto Commons né una foto di famiglia. Usata su richiesta esplicita; per tornare alla card stilizzata basta `npm run cards:londra` e ripuntare la card su `shrek.svg`. |
 
 ## Card stilizzate (originali del progetto)
 
