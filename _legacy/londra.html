@@ -227,6 +227,10 @@
   .tcard__body p{color:var(--muted);font-size:13.5px;line-height:1.5;margin-top:5px}
   .tcard__credito{padding:10px 16px 14px;font-size:11px;color:#79839a;line-height:1.35}
   .tcard__credito a{color:inherit}
+  /* durata stimata della visita: solo sulle tappe fisse che ce l'hanno */
+  .tcard__body .tdur{display:inline-block;margin-top:6px;font-size:12px;font-weight:700;color:var(--gold-soft);
+    background:rgba(212,169,78,.1);border:1px solid var(--line-gold);border-radius:999px;padding:2px 9px}
+  .margine{margin:2px 0 14px}
 
   /* percorso di mezza giornata: un link Maps fisso, in testa al blocco che copre */
   .percorso{display:flex;align-items:center;gap:11px;margin:4px 0 14px;padding:11px 14px;border-radius:14px;
@@ -642,37 +646,40 @@
           <span class="percorso__txt"><b>Percorso · Domenica</b><span>Southbank Centre → SEA LIFE → London Eye</span></span>
           <span class="percorso__modo">🚶 a piedi</span>
         </a>
-        <article class="tcard">
+        <article class="tcard" data-tappa="southbank" data-durata="45-45" data-comprimibile>
           <div class="tcard__foto">
             <img src="assets/tappe/londra/southbank.webp" width="800" height="450" alt="Le scale gialle del Southbank Centre, con il palazzo in cemento e la gente che passa" loading="lazy" decoding="async">
             <span class="tcard__ora">10:45</span>
           </div>
           <div class="tcard__body">
             <h4>Southbank Centre e Winter Market</h4>
+            <p class="tdur">⏱️ 45 min</p>
             <p>Pranzo con lo street food del mercatino di Natale, lungo il fiume. Si arriva un’ora prima di quanto previsto all’inizio, perché non si passa da casa: se le bancarelle non hanno ancora aperto, il lungofiume regge l’attesa.</p>
             <a class="gmap" href="https://www.google.com/maps/search/?api=1&amp;query=Southbank%20Centre%20London" target="_blank" rel="noopener">📍 Apri in Google Maps</a>
           </div>
           <p class="tcard__credito">foto: <a href="https://commons.wikimedia.org/wiki/File:Yellow_steps_at_the_Southbank_Centre,_London_-_geograph.org.uk_-_7261180.jpg" target="_blank" rel="noopener">Robin Stott / CC BY-SA 2.0</a></p>
         </article>
-        <article class="tcard">
+        <article class="tcard" data-tappa="sealife" data-durata="105-105">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/sealife.webp" width="800" height="450" alt="Il tunnel sottomarino dell’acquario, con la volta di vetro e i pesci sopra la testa" loading="lazy" decoding="async">
             <span class="tcard__ora">12:45</span>
           </div>
           <div class="tcard__body">
             <h4>SEA LIFE London Aquarium</h4>
+            <p class="tdur">⏱️ 1 h 45</p>
             <p>Squali, pinguini e il tunnel sottomarino, dentro County Hall. Zaini fino a 30 litri si portano dentro; guardaroba non c’è, ma il deposito ufficiale è nello stesso edificio, alla biglietteria del London Eye: 5 £ a collo, ritiro entro le 19:00.</p>
             <a class="gmap" href="https://www.google.com/maps/search/?api=1&amp;query=SEA%20LIFE%20London%20Aquarium" target="_blank" rel="noopener">📍 Apri in Google Maps</a>
           </div>
           <p class="tcard__credito">foto: <a href="https://commons.wikimedia.org/wiki/File:Underwater_Walk_of_Sea_Life_London_Aquarium.jpg" target="_blank" rel="noopener">ʘx / CC BY-SA 4.0</a></p>
         </article>
-        <article class="tcard">
+        <article class="tcard" data-tappa="eye" data-durata="30-30">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/eye.webp" width="800" height="450" alt="La ruota panoramica del London Eye per intero, con County Hall accanto" loading="lazy" decoding="async">
             <span class="tcard__ora">15:30</span>
           </div>
           <div class="tcard__body">
             <h4>London Eye</h4>
+            <p class="tdur">⏱️ 30 min</p>
             <p>Giro di mezz’ora. A metà novembre il sole cala verso le 16:10: si sale con la luce e si scende con la città accesa. A bordo sono ammesse borse fino a 46 × 33 × 20 cm.</p>
             <a class="gmap" href="https://www.google.com/maps/search/?api=1&amp;query=London%20Eye" target="_blank" rel="noopener">📍 Apri in Google Maps</a>
           </div>
@@ -765,37 +772,40 @@
           </div>
           <p class="tcard__credito">foto: <a href="https://commons.wikimedia.org/wiki/File:Dean_Street_-_Old_Compton_Street_corner.JPG" target="_blank" rel="noopener">Philafrenzy / CC BY-SA 4.0</a></p>
         </article>
-        <article class="tcard">
+        <article class="tcard" data-tappa="trafalgar" data-durata="15-15">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/trafalgar.webp" width="800" height="450" alt="Le fontane di Trafalgar Square con la National Gallery sullo sfondo" loading="lazy" decoding="async">
             <span class="tcard__ora">09:45</span>
           </div>
           <div class="tcard__body">
             <h4>Trafalgar Square</h4>
+            <p class="tdur">⏱️ 15 min</p>
             <p>I leoni, le fontane e la National Gallery. L’albero norvegese di solito arriva a inizio dicembre: il 16 novembre potrebbe non esserci ancora.</p>
             <a class="gmap" href="https://www.google.com/maps/search/?api=1&amp;query=Trafalgar%20Square%20London" target="_blank" rel="noopener">📍 Apri in Google Maps</a>
           </div>
           <p class="tcard__credito">foto: <a href="https://commons.wikimedia.org/wiki/File:Trafalgar_Square,_London_2_-_Jun_2009.jpg" target="_blank" rel="noopener">Diliff / CC BY-SA 3.0</a></p>
         </article>
-        <article class="tcard">
+        <article class="tcard" data-tappa="horseguards" data-durata="20-20">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/horseguards.webp" width="800" height="450" alt="Una sentinella della Household Cavalry in tunica rossa ed elmo col pennacchio, sotto l’arco" loading="lazy" decoding="async">
             <span class="tcard__ora">10:30</span>
           </div>
           <div class="tcard__body">
             <h4>Whitehall e Horse Guards</h4>
+            <p class="tdur">⏱️ 20 min</p>
             <p>Le sentinelle a cavallo nel cortile. Il cambio della guardia a cavallo è alle 11:00 (10:00 la domenica): calendario da confermare.</p>
             <a class="gmap" href="https://www.google.com/maps/search/?api=1&amp;query=Horse%20Guards%20Parade%20London" target="_blank" rel="noopener">📍 Apri in Google Maps</a>
           </div>
           <p class="tcard__credito">foto: <a href="https://commons.wikimedia.org/wiki/File:London_,_Westminster_-_Horse_Guards_Parade_-_geograph.org.uk_-_2546769.jpg" target="_blank" rel="noopener">Lewis Clarke / CC BY-SA 2.0</a></p>
         </article>
-        <article class="tcard">
+        <article class="tcard" data-tappa="bigben" data-durata="15-15">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/bigben.webp" width="800" height="450" alt="Il Palazzo di Westminster dal fiume, con la torre dell’orologio e il ponte" loading="lazy" decoding="async">
             <span class="tcard__ora">11:30</span>
           </div>
           <div class="tcard__body">
             <h4>Big Ben e il Parlamento</h4>
+            <p class="tdur">⏱️ 15 min</p>
             <p>Dieci minuti a piedi lungo Whitehall, fino a Parliament Square e al ponte di Westminster.</p>
             <a class="gmap" href="https://www.google.com/maps/search/?api=1&amp;query=Big%20Ben%20London" target="_blank" rel="noopener">📍 Apri in Google Maps</a>
           </div>
@@ -806,37 +816,40 @@
           <span class="percorso__txt"><b>Percorso · Lunedì</b><span>Big Ben → St James’s Park → Buckingham → Green Park</span></span>
           <span class="percorso__modo">🚶 a piedi</span>
         </a>
-        <article class="tcard">
+        <article class="tcard" data-tappa="stjames" data-durata="30-30" data-comprimibile>
           <div class="tcard__foto">
             <img src="assets/tappe/londra/stjames.webp" width="800" height="450" alt="Il lago di St James’s Park visto dal Blue Bridge, con gli alberi e la città in fondo" loading="lazy" decoding="async">
             <span class="tcard__ora">12:00</span>
           </div>
           <div class="tcard__body">
             <h4>St James’s Park</h4>
+            <p class="tdur">⏱️ 30 min</p>
             <p>I pellicani e il Blue Bridge: da lì si vede il palazzo da una parte e Horse Guards dall’altra.</p>
             <a class="gmap" href="https://www.google.com/maps/search/?api=1&amp;query=St%20James%E2%80%99s%20Park%20London" target="_blank" rel="noopener">📍 Apri in Google Maps</a>
           </div>
           <p class="tcard__credito">foto: <a href="https://commons.wikimedia.org/wiki/File:St_James%27s_Park_Lake_%E2%80%93_East_from_the_Blue_Bridge_-_2012-10-06.jpg" target="_blank" rel="noopener">Colin / CC BY-SA 3.0</a></p>
         </article>
-        <article class="tcard">
+        <article class="tcard" data-tappa="buckingham" data-durata="20-20">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/buckingham.webp" width="800" height="450" alt="La facciata di Buckingham Palace con il Victoria Memorial e le aiuole fiorite" loading="lazy" decoding="async">
             <span class="tcard__ora">12:45</span>
           </div>
           <div class="tcard__body">
             <h4>Buckingham Palace</h4>
+            <p class="tdur">⏱️ 20 min</p>
             <p>Solo esterno: le State Rooms a novembre sono chiuse.</p>
             <a class="gmap" href="https://www.google.com/maps/search/?api=1&amp;query=Buckingham%20Palace%20London" target="_blank" rel="noopener">📍 Apri in Google Maps</a>
           </div>
           <p class="tcard__credito">foto: <a href="https://commons.wikimedia.org/wiki/File:Buckingham_Palace_from_gardens,_London,_UK_-_Diliff.jpg" target="_blank" rel="noopener">Diliff / CC BY-SA 3.0</a></p>
         </article>
-        <article class="tcard">
+        <article class="tcard" data-tappa="greenpark" data-durata="30-45" data-comprimibile>
           <div class="tcard__foto">
             <img src="assets/tappe/londra/greenpark.webp" width="800" height="450" alt="Un viale alberato di Green Park in autunno, con le foglie a terra e il Victoria Memorial in fondo" loading="lazy" decoding="async">
             <span class="tcard__ora">13:15</span>
           </div>
           <div class="tcard__body">
             <h4>Green Park</h4>
+            <p class="tdur">⏱️ 30–45 min, con pranzo</p>
             <p>Scoiattoli e viali di foglie fra il palazzo e Piccadilly. Pausa pranzo.</p>
             <a class="gmap" href="https://www.google.com/maps/search/?api=1&amp;query=Green%20Park%20London" target="_blank" rel="noopener">📍 Apri in Google Maps</a>
           </div>
@@ -847,13 +860,14 @@
           <span class="percorso__txt"><b>Percorso · Lunedì</b><span>Green Park → Harrods</span></span>
           <span class="percorso__modo">🚇 con i mezzi</span>
         </a>
-        <article class="tcard">
+        <article class="tcard" data-tappa="harrods" data-durata="60-60" data-comprimibile>
           <div class="tcard__foto">
             <img src="assets/tappe/londra/harrods.webp" width="800" height="450" alt="La facciata di Harrods illuminata dalle luminarie natalizie" loading="lazy" decoding="async">
             <span class="tcard__ora">14:30</span>
           </div>
           <div class="tcard__body">
             <h4>Harrods</h4>
+            <p class="tdur">⏱️ 1 h</p>
             <p>Piccadilly line diretta da Green Park a Knightsbridge, zero cambi. Vetrine di Natale e tè alle Tea Rooms.</p>
             <a class="gmap" href="https://www.google.com/maps/search/?api=1&amp;query=Harrods%20London" target="_blank" rel="noopener">📍 Apri in Google Maps</a>
           </div>
@@ -864,13 +878,14 @@
           <span class="percorso__txt"><b>Percorso · Lunedì</b><span>Harrods → Natural History Museum</span></span>
           <span class="percorso__modo">🚶 a piedi</span>
         </a>
-        <article class="tcard">
+        <article class="tcard" data-tappa="nhm" data-durata="75-75">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/nhm.webp" width="800" height="450" alt="La facciata in terracotta del Natural History Museum, con le torri e il portale ad arco" loading="lazy" decoding="async">
             <span class="tcard__ora">16:30</span>
           </div>
           <div class="tcard__body">
             <h4>Natural History Museum</h4>
+            <p class="tdur">⏱️ 1 h 15</p>
             <p>Dieci minuti a piedi da Harrods. I tre biglietti sono già presi, con ingresso a fascia oraria alle 16:30: non si entra prima. Il museo chiude alle 17:50.</p>
             <a class="gmap" href="https://www.google.com/maps/search/?api=1&amp;query=Natural%20History%20Museum%20London" target="_blank" rel="noopener">📍 Apri in Google Maps</a>
             <a class="gmap" href="#biglietti">🎟️ I biglietti</a>
@@ -945,13 +960,14 @@
           </div>
           <p class="tcard__credito">foto: <a href="https://commons.wikimedia.org/wiki/File:79_Beak_Street,_Soho,_January_2022.jpg" target="_blank" rel="noopener">No Swan So Fine / CC BY-SA 4.0</a></p>
         </article>
-        <article class="tcard">
+        <article class="tcard" data-tappa="covent" data-durata="60-120" data-comprimibile>
           <div class="tcard__foto">
             <img src="assets/tappe/londra/covent.webp" width="800" height="450" alt="La galleria coperta di Covent Garden, con il tetto in ferro e vetro verde e i carretti di fiori" loading="lazy" decoding="async">
             <span class="tcard__ora">11:00</span>
           </div>
           <div class="tcard__body">
             <h4>Covent Garden</h4>
+            <p class="tdur">⏱️ 1–2 h, flessibile</p>
             <p>Dieci minuti a piedi da Beak Street: il mercato coperto, gli artisti di strada e il pranzo.</p>
             <a class="gmap" href="https://www.google.com/maps/search/?api=1&amp;query=Covent%20Garden%20London" target="_blank" rel="noopener">📍 Apri in Google Maps</a>
           </div>
@@ -1546,6 +1562,45 @@
     });
   })();
 
+  /* ====== margine delle giornate ======
+     Per ogni tratto, dall'orario di inizio al prossimo vincolo fisso, somma le durate stimate delle tappe
+     (il valore alto, se è una forchetta) e la confronta col tempo disponibile. Se non ci sta, in testa alla
+     giornata compare un avviso non bloccante che propone di accorciare la tappa comprimibile più lunga.
+     Gli spostamenti a piedi e in metro NON sono contati: se l'avviso compare, la giornata è stretta davvero. */
+  var MARGINI = [
+    { g: 'dom', da: '10:45', a: '18:00', vincolo: 'la chiusura di Lina Stores alle 18:00', tappe: ['southbank', 'sealife', 'eye'] },
+    { g: 'lun', da: '09:15', a: '16:30', vincolo: 'l’ingresso al Natural History Museum alle 16:30', tappe: ['trafalgar', 'horseguards', 'bigben', 'stjames', 'buckingham', 'greenpark', 'harrods'] },
+    { g: 'lun', da: '16:30', a: '17:50', vincolo: 'la chiusura del museo alle 17:50', tappe: ['nhm'] },
+    { g: 'mar', da: '11:00', a: '15:15', vincolo: 'la partenza per Heathrow alle 15:15', tappe: ['covent'] }
+  ];
+  window.londraMargini = function(){
+    var min = function(s){ var p = s.split(':'); return +p[0] * 60 + +p[1]; };
+    var fmt = function(m){ return m < 60 ? m + ' min' : Math.floor(m / 60) + ' h' + (m % 60 ? ' ' + ('0' + m % 60).slice(-2) : ''); };
+    document.querySelectorAll('.margine').forEach(function(x){ x.remove(); });
+    var esito = [];
+    MARGINI.forEach(function(s){
+      var somma = 0, peggiore = null;
+      s.tappe.forEach(function(id){
+        var c = document.querySelector('.tcard[data-tappa="' + id + '"]'); if (!c) return;
+        var d = c.dataset.durata.split('-').map(Number), alto = d[1] || d[0];
+        somma += alto;
+        if (c.hasAttribute('data-comprimibile') && (!peggiore || alto > peggiore.alto)) peggiore = { alto: alto, nome: c.querySelector('h4').textContent };
+      });
+      var finestra = min(s.a) - min(s.da);
+      esito.push({ g: s.g, da: s.da, a: s.a, somma: somma, finestra: finestra });
+      if (somma <= finestra) return;
+      var body = document.querySelector('details.acc.' + s.g + ' .dbody'); if (!body) return;
+      var n = document.createElement('div');
+      n.className = 'hp-note warn margine';
+      n.textContent = '⏱️ Giornata stretta: ' + fmt(somma) + ' di visite fra le ' + s.da + ' e ' + s.vincolo
+        + ', ma il tempo è ' + fmt(finestra) + ' (spostamenti esclusi).'
+        + (peggiore ? ' Valutare di accorciare ' + peggiore.nome + '.' : '');
+      body.insertBefore(n, body.firstChild);
+    });
+    return esito;
+  };
+  window.londraMargini();
+
   /* ====== DA VERIFICARE: le incertezze aperte, con chi le chiude ======
      Allineato a DA_VERIFICARE_LONDRA.md nella radice del repository: chiudendone una, si toglie da
      entrambi. Il numero nel badge si conta da qui; se l'elenco è vuoto il badge sparisce. */
@@ -1592,6 +1647,9 @@
      dati bloccati) il pannello non compare da solo: uno che non si può chiudere per sempre è peggio di niente.
      Il link in fondo alla pagina lo riapre con tutto lo storico, in ogni caso. */
   var NOVITA = [
+    { v: 8, data: '2026-09-27', titolo: 'Quanto dura ogni tappa', voci: [
+      'Sulle tappe fisse c’è la durata stimata della visita: SEA LIFE 1 h 45, Natural History Museum 1 h 15, Covent Garden 1–2 h…',
+      'Se una giornata non ci sta prima del suo vincolo (Lina Stores la domenica, il museo il lunedì, il volo il martedì) compare un avviso in cima al giorno. Oggi non ce n’è bisogno' ] },
     { v: 7, data: '2026-09-27', titolo: 'Le cose ancora da verificare', voci: [
       'In testata il badge rosso «da verificare»: tocca per l’elenco, con chi deve controllare cosa',
       'Per ora sono tre: Winter Market di domenica, cambio della guardia di lunedì, prezzi bambino di London Eye e SEA LIFE' ] },
