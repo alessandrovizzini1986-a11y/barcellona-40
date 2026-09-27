@@ -514,3 +514,10 @@ Cercati bug dello stesso tipo di "portiere che si rituffa nel replay": due cambi
 - **Unico uso di localStorage della pagina**, come da richiesta: una chiave sola, `londra:novita:vista`, con l'ultima versione vista. Con lo storage bloccato (navigazione privata, dati disattivati) il pannello non si apre da solo — non si potrebbe chiudere per sempre — ma lo storico resta raggiungibile dal link.
 - Storico di partenza: sei voci, dal QR del parcheggio (24 settembre) a oggi.
 - Provato in Chromium: prima visita (6 novità), "Ho capito" e ricarica (niente), versione 4 salvata (2 novità), chiusura con Esc e toccando fuori (salva), storage che lancia eccezioni (nessun pannello, nessun errore, storico dal link funzionante).
+
+## Londra · DA_VERIFICARE_LONDRA.md e badge in testata
+- **Nuovo file `DA_VERIFICARE_LONDRA.md`** nella radice, separato da quello di Barcellona: le incertezze aperte con contesto e "chi e come" le chiude, più una sezione di quelle risolte, tenute per memoria.
+- **Aperte, tre:** apertura del Winter Market di domenica 15; cambio della guardia di lunedì 16 (Buckingham e Horse Guards: con Buckingham alle 12:45, una cerimonia alle 11:00 si perderebbe); fascia d'età e prezzo bambino di London Eye e SEA LIFE, ancora da comprare.
+- **Chiuse, due, dopo averle controllate sul sito:** il deposito bagagli è superato (solo bagaglio a mano, e il sito lo dice già in tre punti); il prezzo della Tower Bridge Exhibition non serve più, perché Tower Bridge non è né tappa né voce di budget — compare solo nel disegno dello skyline in testata.
+- **Badge rosso "3 da verificare"** in testata, sotto il pulsante per Olly: apre un pannello con lo stesso elenco. Il numero si conta dall'elenco in pagina; a elenco vuoto il badge sparisce. Il pannello non salva nulla.
+- File ed elenco in pagina partono dalla stessa fonte; verificato in Chromium che titoli e ordine coincidano. Da qui in avanti vanno tenuti allineati a mano (scritto in testa a entrambi).
