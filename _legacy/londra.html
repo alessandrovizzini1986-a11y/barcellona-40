@@ -449,6 +449,16 @@
   .nov__ok{width:100%;border:0;border-radius:14px;padding:14px;background:var(--gold);color:var(--night-0);
     font:inherit;font-weight:800;font-size:15px;cursor:pointer}
   html.nov-aperto{overflow:hidden}
+  /* piano pioggia: solo note contestuali, compaiono quando il toggle "Piove" è acceso */
+  .piove-btn{margin-top:10px;display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(109,179,216,.45);
+    background:rgba(109,179,216,.08);color:var(--ink);border-radius:999px;padding:6px 13px;font:inherit;font-size:12.5px;font-weight:700;cursor:pointer}
+  .piove-stato{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border-left:1px solid var(--line);padding-left:7px}
+  .piove-btn[aria-pressed="true"]{background:var(--sky);border-color:var(--sky);color:var(--night-0)}
+  .piove-btn[aria-pressed="true"] .piove-stato{color:var(--night-0);border-color:rgba(13,19,33,.3)}
+  .pioggia-nota{display:none}
+  html.piove .pioggia-nota{display:block}
+  .tcard__body .pioggia-nota{margin-top:8px;font-size:12.5px;line-height:1.45;color:var(--sky)}
+  .pioggia-nota--blocco{margin:2px 0 14px;background:rgba(109,179,216,.1);border:1px solid rgba(109,179,216,.35);color:var(--ink)}
   .dv-badge{margin-top:14px;display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(200,54,43,.55);
     background:rgba(200,54,43,.12);color:#ffb3ac;border-radius:999px;padding:6px 13px;font:inherit;font-size:12.5px;font-weight:700;cursor:pointer}
   .dv-n{display:inline-grid;place-items:center;min-width:20px;height:20px;border-radius:999px;background:var(--bus);color:#fff;font-size:11.5px}
@@ -470,6 +480,7 @@
   <p class="fam">Alessandro, Vale e Olly</p>
   <a class="pics-btn" href="londra-illustrata.html">🖼️ Versione per immagini, per Olly →</a>
   <p><button class="dv-badge" type="button" id="dvApri"><span class="dv-n" id="dvN"></span> da verificare</button></p>
+  <p><button class="piove-btn" type="button" id="pioveBtn" aria-pressed="false"><span class="piove-ic">🌧️</span> Piove <span class="piove-stato" id="pioveStato">no</span></button></p>
   <div class="skyline" aria-hidden="true">
     <svg viewBox="0 0 640 90" fill="currentColor" preserveAspectRatio="xMidYMax meet">
       <!-- skyline stilizzata: Big Ben, London Eye, Tower Bridge, St Paul's -->
@@ -681,6 +692,7 @@
             <h4>London Eye</h4>
             <p class="tdur">⏱️ 30 min</p>
             <p>Giro di mezz’ora. A metà novembre il sole cala verso le 16:10: si sale con la luce e si scende con la città accesa. A bordo sono ammesse borse fino a 46 × 33 × 20 cm.</p>
+            <p class="pioggia-nota">🌧️ Con la pioggia la ruota gira lo stesso: le capsule sono chiuse, ma dall’alto la visibilità è ridotta.</p>
             <a class="gmap" href="https://www.google.com/maps/search/?api=1&amp;query=London%20Eye" target="_blank" rel="noopener">📍 Apri in Google Maps</a>
           </div>
           <p class="tcard__credito">foto: <a href="https://commons.wikimedia.org/wiki/File:London_Eye_by_Day.jpg" target="_blank" rel="noopener">Danbu14 / CC BY-SA 3.0</a></p>
@@ -755,6 +767,7 @@
         </span>
       </summary>
       <div class="dbody">
+        <div class="hp-note pioggia-nota pioggia-nota--blocco">🌧️ <b>Mattina tutta all’aperto</b> (Trafalgar → Green Park): con la pioggia, considerare di invertire — Harrods prima, al coperto, e i parchi dopo, se spiove. Il Natural History Museum resta alle 16:30: i biglietti sono a fascia oraria e prima non si entra.</div>
         <a class="percorso" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.5129114,-0.1364381&amp;destination=51.5007292,-0.1246254&amp;waypoints=51.508039,-0.128069%7C51.5047752,-0.1272358&amp;travelmode=walking" target="_blank" rel="noopener" data-percorso="Lunedì · Beak St → Trafalgar → Whitehall → Big Ben">
           <span class="percorso__ic" aria-hidden="true">🗺️</span>
           <span class="percorso__txt"><b>Percorso · Lunedì</b><span>Beak St → Trafalgar → Whitehall → Big Ben</span></span>
@@ -969,6 +982,7 @@
             <h4>Covent Garden</h4>
             <p class="tdur">⏱️ 1–2 h, flessibile</p>
             <p>Dieci minuti a piedi da Beak Street: il mercato coperto, gli artisti di strada e il pranzo.</p>
+            <p class="pioggia-nota">🌧️ Già al riparo: il mercato di Covent Garden è coperto, il programma del martedì non cambia.</p>
             <a class="gmap" href="https://www.google.com/maps/search/?api=1&amp;query=Covent%20Garden%20London" target="_blank" rel="noopener">📍 Apri in Google Maps</a>
           </div>
           <p class="tcard__credito">foto: <a href="https://commons.wikimedia.org/wiki/File:London,_Covent_Garden_--_2016_--_4878.jpg" target="_blank" rel="noopener">Dietmar Rabich / CC BY-SA 4.0</a></p>
@@ -1617,6 +1631,20 @@
   };
   window.londraMargini();
 
+  /* ====== piano pioggia ======
+     Il toggle accende solo note per-giorno (niente ricalcolo delle durate). Lo stato vive in memoria
+     finché la pagina resta aperta: nessuno storage, una ricarica lo rimette su "no". */
+  (function(){
+    var btn = document.getElementById('pioveBtn'); if (!btn) return;
+    var piove = false;
+    btn.addEventListener('click', function(){
+      piove = !piove;
+      document.documentElement.classList.toggle('piove', piove);
+      btn.setAttribute('aria-pressed', String(piove));
+      document.getElementById('pioveStato').textContent = piove ? 'sì' : 'no';
+    });
+  })();
+
   /* ====== DA VERIFICARE: le incertezze aperte, con chi le chiude ======
      Allineato a DA_VERIFICARE_LONDRA.md nella radice del repository: chiudendone una, si toglie da
      entrambi. Il numero nel badge si conta da qui; se l'elenco è vuoto il badge sparisce. */
@@ -1663,6 +1691,9 @@
      dati bloccati) il pannello non compare da solo: uno che non si può chiudere per sempre è peggio di niente.
      Il link in fondo alla pagina lo riapre con tutto lo storico, in ogni caso. */
   var NOVITA = [
+    { v: 10, data: '2026-09-27', titolo: 'Se piove', voci: [
+      'In testata il pulsante «🌧️ Piove»: acceso, mostra cosa cambia giorno per giorno',
+      'Domenica e martedì quasi niente (acquario e mercato sono al coperto); lunedì mattina il consiglio di fare Harrods prima dei parchi' ] },
     { v: 9, data: '2026-09-27', titolo: 'Un plus per martedì: i teatrini di carta', voci: [
       'Benjamin Pollock’s Toyshop, negozio storico di teatrini di carta, è dentro il mercato di Covent Garden: in fondo a martedì, se avanza tempo' ] },
     { v: 8, data: '2026-09-27', titolo: 'Quanto dura ogni tappa', voci: [

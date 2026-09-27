@@ -532,3 +532,10 @@ Cercati bug dello stesso tipo di "portiere che si rituffa nel replay": due cambi
 - Nuova card **"✨ Plus — se avanza tempo"** solo al martedì, prima di quella di M&M'S: negozio storico di teatrini di carta dentro il mercato coperto di Covent Garden, zero deviazione. Stesso trattamento delle altre plus: bordo tratteggiato, nessun orario, nessuna durata. Maps sulle coordinate fornite, che su OpenStreetMap cadono a 3 m dal negozio.
 - **Foto da Commons**: `Benjamin Pollocks Toy Shop exterior.jpg` (Jack1956, CC0), in `CREDITS.md` e sotto la card. Degli altri candidati due erano interni e uno solo l'insegna appesa. L'originale è verticale: stessa eccezione di Beak Street, con il ritaglio centrale (bias 0,2) che tiene insegna, figurine e porte rosse. Registrata in `scripts/londra-foto.mjs`.
 - Per restare sotto 1,5 MB sette foto ancora a q80 sono scese a q70 (pollock, southbank, bigben, bakerloo, horseguards, eye, sealife): cartella a 1498,4 kB. A q80 ne restano solo tre piccole (lhr, blq, ba): **il margine per altre foto è finito**.
+
+## Londra · piano pioggia
+- **Pulsante "🌧️ Piove"** in testata, sotto il badge "da verificare": acceso diventa azzurro e dice "sì". Accende solo note per-giorno, nessun ricalcolo delle durate.
+- **Domenica**: nessun cambio di tappe; sulla card del London Eye "la ruota gira lo stesso, capsule chiuse, visibilità ridotta dall'alto".
+- **Lunedì**: in testa alla mattina (tutta all'aperto, Trafalgar → Green Park) il consiglio di invertire — Harrods prima, al coperto, parchi dopo se spiove. **Il museo resta alle 16:30**: il suggerimento di partenza lo anticipava insieme a Harrods, ma i biglietti sono a fascia oraria e prima non si entra, quindi la nota lo dice.
+- **Martedì**: sulla card di Covent Garden "già al riparo, il mercato è coperto".
+- Stato solo in memoria finché la pagina è aperta: nessuno storage (verificato in Chromium), una ricarica lo rimette su "no".
