@@ -98,6 +98,19 @@ async function apri(path, { dati = null, fallisce = false, piove = false } = {})
   ok('dopo un errore non si riprova prima di 30 minuti', (await chiamate()) === 0)
   await ctx.close()
 }
+// 4b. IL CASO DEL TELEFONO: ?now=2026-10-15T10:00 ma i dati sono quelli veri di oggi (27 settembre → 6 ottobre).
+// La data simulata non sta nella previsione: la card deve comparire lo stesso, con l'ora reale e i tre giorni successivi.
+{
+  const { p, ctx, errs } = await apri('/#/oggi?now=2026-10-15T10:00', { dati: fixture('2026-09-27') })
+  ok('?now= fuori dalla previsione: la card compare lo stesso', (await p.locator('[data-meteo]').count()) === 1)
+  const st = await p.evaluate(() => { const c = document.querySelector('[data-meteo]'); return { oggi: c?.dataset.oggi, ora: c?.dataset.ora, giorni: [...c.querySelectorAll('.meteo__giorni > span i')].map((e) => e.textContent.trim()).join(' '), chips: [...c.querySelectorAll('[data-meteo-giorno]')].map((e) => e.textContent.trim()).join(' ') } })
+  ok('adesso = ora reale del giorno dei dati, giorni = i tre successivi, chip Oggi + tre', st.oggi === '2026-09-27' && st.giorni === 'Lun Mar Mer' && st.chips === 'Oggi Lun Mar Mer', JSON.stringify(st))
+  await p.click('[data-meteo-toggle]'); await p.waitForTimeout(150)
+  const prima = await p.evaluate(() => document.querySelector('.meteo__col')?.dataset.ora)
+  ok('la striscia di Oggi parte dall\'ora reale', prima === String(new Date().getHours()).padStart(2, '0'), `${prima} vs ${new Date().getHours()}`)
+  ok('nessun errore JS', errs.length === 0, errs.join(' | '))
+  await ctx.close()
+}
 // 5. 19 ottobre: fuori finestra
 {
   const { p, ctx, chiamate } = await apri('/?now=2026-10-19T09:00#/oggi', { dati: fixture('2026-10-15') })

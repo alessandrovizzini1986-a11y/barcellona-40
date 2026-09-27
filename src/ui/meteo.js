@@ -51,27 +51,40 @@ export function pioggiaVenerdiMattina(dati) {
   return max
 }
 
-// La card. `piove`: stato del toggle del Programma. Torna '' se manca l'ora corrente nei dati.
+// La card. `piove`: stato del toggle del Programma. Torna '' solo se nei dati non c'è nemmeno un'ora.
+// I DATI SONO SEMPRE REALI: con ?now= la data simulata può non stare nella previsione (il 15 ottobre
+// chiesto il 27 settembre). Allora "adesso" è l'ora reale e i giorni sono i tre successivi disponibili;
+// dal 9 ottobre in poi, senza simulazione, i due casi coincidono e si vedono Ven, Sab e Dom.
+const NOMI_GIORNO = ['Dom', 'Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab']
+const oraIso = (d) => `${isoDi(d)}T${pad2(d.getHours())}:00`
+export function riferimento(dati, simulata = now()) {
+  const h = dati.hourly
+  let d = simulata, iOra = h.time.indexOf(oraIso(d))
+  if (iOra < 0) { d = new Date(); iOra = h.time.indexOf(oraIso(d)) }
+  if (iOra < 0) { iOra = h.time.findIndex((t) => t >= oraIso(d)); if (iOra < 0) iOra = h.time.length - 1 }
+  return { iOra, oggi: h.time[iOra].slice(0, 10), ora: +h.time[iOra].slice(11, 13) }
+}
 export function meteoCard(dati, { piove = false } = {}) {
-  const d = now(), oggi = isoDi(d), h = dati.hourly, g = dati.daily
-  const iOra = h.time.indexOf(`${oggi}T${pad2(d.getHours())}:00`)
-  if (iOra < 0) return ''
-  const giorni = GIORNI.map(([iso, breve, lungo]) => ({ iso, breve, lungo, i: g.time.indexOf(iso) })).filter((x) => x.i >= 0)
-  const chips = (oggi < '2026-10-16' ? [{ iso: oggi, breve: 'Oggi', lungo: 'Oggi', i: g.time.indexOf(oggi) }] : []).concat(giorni).filter((x) => x.i >= 0)
+  const h = dati.hourly, g = dati.daily
+  if (!h.time.length || !g.time.length) return ''
+  const { iOra, oggi, ora } = riferimento(dati)
+  let giorni = GIORNI.map(([iso, breve, lungo]) => ({ iso, breve, lungo, i: g.time.indexOf(iso) })).filter((x) => x.i >= 0)
+  if (!giorni.length) giorni = g.time.map((iso, i) => ({ iso, i })).filter((x) => x.iso > oggi).slice(0, 3).map((x) => { const [y, m, gg] = x.iso.split('-').map(Number); const n = NOMI_GIORNO[new Date(y, m - 1, gg).getDay()]; return { ...x, breve: n, lungo: n } })
+  const chips = (!giorni.some((x) => x.iso === oggi) && g.time.includes(oggi) ? [{ iso: oggi, breve: 'Oggi', lungo: 'Oggi', i: g.time.indexOf(oggi) }] : []).concat(giorni)
   if (!chips.length) return ''
   const scelto = chips.find((x) => x.iso === oggi) || chips[0]
   const prob = pioggiaVenerdiMattina(dati)
   const rigaPiove = prob != null && prob >= 50
     ? `<div class="meteo__piove">${icon('rain')}<span>${piove ? 'Piano coperto attivo.' : `Previsione: venerdì mattina ${prob} % di pioggia. Attivo il piano coperto?`}</span>${piove ? '' : '<button class="btn btn--sm" data-meteo-piove>Attiva</button>'}</div>`
     : ''
-  return `<section class="meteo" data-meteo data-oggi="${oggi}" aria-label="Meteo di Barcellona, previsione">
+  return `<section class="meteo" data-meteo data-oggi="${oggi}" data-ora="${ora}" aria-label="Meteo di Barcellona, previsione">
     <button class="meteo__riga" data-meteo-toggle aria-expanded="false" aria-controls="meteo-dett">
       <span class="meteo__ora">${icon(iconaMeteo(h.weather_code[iOra]))}<span class="meteo__ora__testo"><b class="tnum">${Math.round(h.temperature_2m[iOra])}°</b><span class="meteo__dove">Barcellona, adesso</span></span></span>
       <span class="meteo__giorni">${giorni.map((x) => `<span><i>${icon(iconaMeteo(g.weather_code[x.i]))}${x.breve}</i><span class="tnum">${Math.round(g.temperature_2m_min[x.i])}/${Math.round(g.temperature_2m_max[x.i])}°</span></span>`).join('')}</span>
     </button>
     <div class="meteo__dett" id="meteo-dett" hidden>
       <div class="meteo__chips" role="tablist" aria-label="Giorno">${chips.map((x) => `<button class="chip${x.iso === scelto.iso ? ' chip--on' : ''}" role="tab" data-meteo-giorno="${x.iso}" aria-selected="${x.iso === scelto.iso}">${x.breve}</button>`).join('')}</div>
-      <div class="meteo__striscia" data-meteo-striscia>${strisciaHtml(dati, scelto.iso, oggi, d.getHours())}</div>
+      <div class="meteo__striscia" data-meteo-striscia>${strisciaHtml(dati, scelto.iso, oggi, ora)}</div>
       <p class="meteo__sole" data-meteo-sole>${soleHtml(dati, scelto.iso)}</p>
       ${rigaPiove}
     </div>
@@ -111,9 +124,8 @@ export async function montaMeteo(slot, { signal, piove = () => false, onPiove } 
     if (t) { const box = card.querySelector('#meteo-dett'); box.hidden = !box.hidden; t.setAttribute('aria-expanded', String(!box.hidden)); if (!box.hidden) evento('meteo-apri'); return }
     const g = e.target.closest('[data-meteo-giorno]')
     if (g) {
-      const d = now()
       card.querySelectorAll('[data-meteo-giorno]').forEach((b) => { const on = b === g; b.classList.toggle('chip--on', on); b.setAttribute('aria-selected', String(on)) })
-      card.querySelector('[data-meteo-striscia]').innerHTML = strisciaHtml(dati, g.dataset.meteoGiorno, card.dataset.oggi, d.getHours())
+      card.querySelector('[data-meteo-striscia]').innerHTML = strisciaHtml(dati, g.dataset.meteoGiorno, card.dataset.oggi, +card.dataset.ora)
       card.querySelector('[data-meteo-sole]').innerHTML = soleHtml(dati, g.dataset.meteoGiorno)
       card.querySelector('[data-meteo-striscia]').scrollLeft = 0
       return
