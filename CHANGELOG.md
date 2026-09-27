@@ -406,3 +406,12 @@ Pagina fuori dal sito, **non linkata da nessuna parte**: `stats-dtcmbsis.html`. 
 - **Swipe da tutta la metà bassa** dello schermo (`input.js`): il raggio di 70 px attorno al pallone non c'è più.
 - **Video solo a richiesta**: niente più `MediaRecorder` acceso a ogni replay di ogni tiro. "Video" nel risultato riesegue il replay dell'ultimo tiro registrando il canvas (il record è immutabile, il video è identico a quello visto) e poi condivide.
 - `scripts/qa/rigori-ritmo.mjs`: 16 controlli. `rigori-musica.mjs` accende la musica nelle impostazioni, perché è lei che controlla.
+
+## Rigori, blocco 3: equilibrio
+- **Due leve sole**, come da decisione; le capsule di `reach.js` non si toccano.
+  1. `TELL_MS` 350 (era 200): il tiratore CPU si sbilancia 350 ms prima del calcio.
+  2. `cpuAim`: 40 % centro (da basso a mezza altezza), 35 % laterali bassi, 25 % alti. Prima pesava i lati 6 volte su 8 e andava in alto il 45 % delle volte, dove il tuffo non arriva nemmeno indovinando.
+- **Gate a 200 tiri (`npm run test:gate`)**: invariato, 5/5 — campiona tiri uniformi sullo specchio, non la distribuzione di Ale, e la geometria è la stessa: gol 63,6 %, parate cieche 14,8 %, incroci 100 %, (a) e (b) verdi.
+- **Misura vera (`scripts/qa/rigori-equilibrio.mjs`)**: 60 tiri di Ale dalla sua distribuzione contro chi indovina la zona (tuffo 250 ms dopo il calcio), 60 contro un tuffo a caso, e 12 Shootout interi con un tiratore "umano medio" (mira a caso fra le sei zone, dispersione vera) che da portiere legge il tell. I numeri sono nel report del blocco.
+- **Risultato: gli obiettivi NON stanno insieme con queste due leve**, e per decisione ci si ferma qui senza toccare le capsule. Con 40/35/25 (`rigori-sweep.mjs`, 600 tiri per riga, fisica vera in node): chi indovina para il 46 % se si tuffa sul tell (prima del calcio) e il 26 % se aspetta 250 ms; Ale contro chi legge il tell segna il 46-52 %; Shootout vinto stimato 68-75 %. Ogni mix che porta Ale al 55-60 % (più tiri alti, che non si parano mai) fa scendere le parate "indovinando" al 35 %. Nel browser (SwiftShader, 60 tiri): 52 % · 47 % · 10 vittorie su 12. La scelta del mix è nel report.
+- `rigori-progress.mjs` portato alla porta in scala: incrocio a (1,85, 1,50), traversa a y 1,92.

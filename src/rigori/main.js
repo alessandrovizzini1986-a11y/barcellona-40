@@ -328,6 +328,7 @@ systems.push({ update(dt) { shot.update(dt); timing.update(dt); if (!timingEl.hi
 systems.push({ update(_dt, raw) { timeScale = juice.update(raw, ball.mesh) } })
 
 // ---------- modalità ----------
+const TELL_MS = 350
 const MODES = { shootout: (o) => createShootout(o), boss: (o) => createShootout({ ...o, boss: true }), sfidaAle: (o) => createSfidaAle(o), passAndPlay: (o) => createPassAndPlay(o), skill: (o) => createSkill(o) }
 // Chi tira e chi para in questo turno: nel ruolo portiere tira Ale, altrimenti tira il giocatore scelto.
 // Nessun file di interfaccia conosce il nome 'Ale': lo legge da qui, attraverso il record del tiro.
@@ -363,7 +364,8 @@ const ctx = {
   showTarget(t) { if (!t) { target.visible = false; return } target.position.set(t.x, t.y, 0.05); target.visible = true },
   pickZone: (o) => pickZone(game.ui, o),
   handoff: (name) => handoff(game.ui, name),
-  // Tiro della CPU (l'utente para): tell 200 ms prima (lato vero 60%, finta 40%; in Boss finta 15%), poi il calcio.
+  // Tiro della CPU (l'utente para): il tiratore si sbilancia TELL_MS prima del calcio (lato vero 60 %, finta 40 %;
+  // in Boss finta 15 %). 350 ms, erano 200: a 200 non si faceva in tempo a leggerlo e a rispondere.
   cpuShoot({ strength = 1 } = {}) {
     const boss = keeper?.difficulty === 'boss'
     const early = shot.playerDiveZone()
@@ -377,7 +379,7 @@ const ctx = {
       const a = (late != null && early == null) ? cpuAim({ avoidCol: late % 3, strength }) : aim
       shot.setPrecision(0.6); shot.fire(a, { timingPerfect: false, delay: kicker ? KICK_DELAY : 0 }); shot.setPrecision(1)
       kicker?.windup()
-    }, 200)
+    }, TELL_MS)
   }
 }
 function startMode(id, opts = {}) {
@@ -568,7 +570,7 @@ window.__rigori = {
     const rec = shot.record; if (!rec) return res(false)
     juice.startReplay({ from: from ?? Math.max(0, rec.contactTime - 0.55), to: to ?? Math.min(rec.duration, rec.contactTime + 0.45), speed, render: (t) => shot.renderAt(t), onEnd: () => res(true) })
   }),
-  setShooter, shooter: () => shooterId, flow: () => flow, settings, applySettings,
+  setShooter, shooter: () => shooterId, flow: () => flow, settings, applySettings, cpuAim, TELL_MS,
   kitReady, startMode, mode: () => mode, role: () => role, xpLog, ctx, chars, rig, keeper: () => keeper, kicker: () => kicker, get frames() { return frames },
   setPrecision: (v) => shot.setPrecision(v), audio, events, get esitoLocked() { return esitoLock }, shotState: () => shot.state, lastResult: () => [...events].reverse().find((e) => e.type === 'result')?.result || null,
   info: () => ({ fps: +perf.fps.toFixed(1), level: perf.level, quality: { ...quality }, frames, draws: R.renderer.info.render.calls, tris: R.renderer.info.render.triangles, camera: rig.current })
