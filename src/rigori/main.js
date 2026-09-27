@@ -309,17 +309,43 @@ function dopoEsito() {
 }
 // Video a richiesta: si riesegue il replay dell'ultimo tiro registrando il canvas. Il record è immutabile, quindi
 // il video è identico a quello che si è visto. Torna il file, o null dove MediaRecorder non funziona davvero.
+// Il video ha l'audio: la traccia del master (effetti, musica se accesa) entra nel file, e i suoni del tiro
+// (fischio, calcio, impatto, boato o "ooh") vengono rifatti agli stessi istanti del record mentre si registra.
+// Se il file esce muto o vuoto, "Condividi video" sparisce per questa sessione: mai un video senza suono.
+let videoNonDisponibile = false
+const videoPossibile = () => !!tipoVideoSupportato() && !videoNonDisponibile
 async function registraVideo() {
   const rec = ultimoTiro
-  if (!rec || !tipoVideoSupportato() || juice.replaying) return null
+  if (!rec || !videoPossibile() || juice.replaying) return null
   let reg = null
-  try { reg = registraReplay(R.renderer.domElement, { durataMax: 6000 }) } catch { reg = null }
-  if (!reg) return null
+  try { reg = registraReplay(R.renderer.domElement, { durataMax: 6000, audioStream: audio.streamAudio() }) } catch { reg = null }
+  if (!reg) { videoNonDisponibile = true; return null }
   const { from, to, speed } = finestraReplay(rec)
   const [cam1] = camereReplay(rec)
-  await new Promise((res) => juice.startReplay({ from, to, speed, render: (t) => renderShotAt(rec, t, { ball, keeper, live: false }), camera: replayCamUnlock ? null : cam1, segui: cam1.segui, onEnd: res }))
+  const suoni = suoniDelTiro(rec)
+  audio.whistle()
+  await new Promise((res) => juice.startReplay({ from, to, speed, render: (t) => { renderShotAt(rec, t, { ball, keeper, live: false }); suoni(t) }, camera: replayCamUnlock ? null : cam1, segui: cam1.segui, onEnd: res }))
   ball.reset(); keeper?.reset(); rig.goTo('dietroTiratore', { instant: true })
-  try { return await reg.ferma() } catch { return null }
+  let file = null
+  try { file = await reg.ferma() } catch { file = null }
+  if (!file) videoNonDisponibile = true
+  return file
+}
+// Suoni del tiro in funzione del tempo del record, ognuno una volta sola: calcio a t = 0, impatto alla risoluzione,
+// pubblico subito dopo. Stessi suoni dal vivo e nel video.
+function suoniDelTiro(rec) {
+  const tImp = rec.tRisoluzione ?? rec.contactTime
+  const fatti = new Set()
+  const una = (k, f) => { if (!fatti.has(k)) { fatti.add(k); f() } }
+  return (t) => {
+    if (t >= 0) una('calcio', () => audio.play(rec.aim?.power > 0.95 ? 'kick2' : 'kick', { volume: 0.6 + Math.min(0.4, (rec.aim?.power ?? 0.8) * 0.4) }))
+    if (t >= tImp) una('impatto', () => {
+      if (rec.outcome === 'goal') { audio.play('net', { volume: .8 }); audio.crowd('roar'); setTimeout(() => audio.crowd('clap'), 700) }
+      else if (rec.outcome === 'save') { audio.play('glove', { volume: .9 }); audio.crowd('oooh') }
+      else if (rec.outcome === 'post' || rec.outcome === 'crossbar') { audio.play(rec.outcome, { volume: .9 }); audio.crowd('oooh') }
+      else audio.crowd('oooh')
+    })
+  }
 }
 systems.push({ update(dt) { shot.update(dt); timing.update(dt); if (!timingEl.hidden) timingCur.style.left = (timing.value * 100) + '%' } })
 // Dal vivo il tiro va a velocità reale dall'inizio alla fine: il volo dura quello che dice la fisica
@@ -349,7 +375,8 @@ const ctx = {
     keeper?.setPlayable(r === 'keeper')
     // Ruoli del turno: chi tira e chi para finiscono nel record, e da lì li leggono HUD, sfottò, punteggio e XP.
     if (r !== 'idle') ctx.setRuoli(ruoliDalTurno(r))
-    if (mode && r !== 'idle' && r !== was) { audio.whistle(); const ru = shot.ruoli; toast(game.ui, taunt('preTiro', { nomi: { tiratore: ru.tiratore.nome, portiere: ru.portiere.nome }, ids: { tiratore: ru.tiratore.id, portiere: ru.portiere.id }, extra: game.progress?.unlocked('taunt:extra') }), 2600) }
+    if (mode && r !== 'idle') audio.whistle() // fischio a ogni tiro, anche quando il ruolo non cambia (Sfida Ale, Skill)
+    if (mode && r !== 'idle' && r !== was) { const ru = shot.ruoli; toast(game.ui, taunt('preTiro', { nomi: { tiratore: ru.tiratore.nome, portiere: ru.portiere.nome }, ids: { tiratore: ru.tiratore.id, portiere: ru.portiere.id }, extra: game.progress?.unlocked('taunt:extra') }), 2600) }
     if (r === 'shooter') { hint.textContent = 'Trascina dal pallone'; hint.hidden = false; rig.goTo('dietroTiratore', { instant: was === 'keeper' }) }
     else if (r === 'keeper') { hint.textContent = 'Trascina verso la zona in cui tuffarti'; hint.hidden = false; rig.goTo('dietroPortiere', { instant: true }) }
     else hint.hidden = true
@@ -410,9 +437,19 @@ systems.push({ update(dt) {
 } })
 
 // ---------- flusso: onboarding → CHI TIRA? → modalità → partita → risultato ----------
+// Ogni tocco vero sul gioco (volti di "Chi tira?" compresi) riprende l'AudioContext se non gira: iOS lo sospende
+// dopo una chiamata o lo standby, e senza questo gli effetti tacerebbero fino a un ritorno al caricamento.
+for (const el of [document.getElementById('rg-ui'), stage]) el.addEventListener('pointerdown', () => { if (audio.context?.state !== 'running') audio.unlock() }, { capture: true, passive: true })
 document.getElementById('rg-ui').addEventListener('click', (e) => { const b = e.target.closest('button, a'); if (!b) return; audio.play(b.classList.contains('rg-btn--primary') ? 'confirm' : b.dataset.value === '__close' || b.dataset.back != null ? 'back' : 'click', { volume: .5 }) })
 const menuBtn = document.createElement('button'); menuBtn.className = 'rg-btn rg-btn--ghost rg-menubtn'; menuBtn.setAttribute('aria-label', 'Menu'); menuBtn.textContent = '≡'; menuBtn.hidden = true
 document.getElementById('rg-ui').appendChild(menuBtn)
+// Altoparlante nell'HUD di gioco: un tocco accende o spegne la musica, con l'inno o la tensione che partono subito.
+// Sta a destra, sopra l'HUD del punteggio: accanto al ≡ a sinistra avrebbe tolto 56 px alla riga del punteggio.
+const ICONA_MUSICA = { on: '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M3 9v6h4l5 4V5L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z"/></svg>', off: '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M3 9v6h4l5 4V5L7 9H3zm13.6 3 2.7-2.7-1.4-1.4-2.7 2.7-2.7-2.7-1.4 1.4 2.7 2.7-2.7 2.7 1.4 1.4 2.7-2.7 2.7 2.7 1.4-1.4z"/></svg>' }
+const musicBtn = document.createElement('button'); musicBtn.className = 'rg-btn rg-btn--ghost rg-musicbtn'; musicBtn.hidden = true
+const aggiornaMusicBtn = () => { const on = settings.music !== false; musicBtn.innerHTML = ICONA_MUSICA[on ? 'on' : 'off']; musicBtn.setAttribute('aria-pressed', String(on)); musicBtn.setAttribute('aria-label', on ? 'Musica accesa: tocca per spegnerla' : 'Musica spenta: tocca per accenderla'); musicBtn.classList.toggle('rg-musicbtn--off', !on) }
+musicBtn.addEventListener('click', () => { settings.music = settings.music === false; applySettings(); aggiornaMusicBtn(); toast(game.ui, settings.music === false ? 'Musica spenta' : 'Musica accesa', 1400) })
+aggiornaMusicBtn(); document.getElementById('rg-ui').appendChild(musicBtn)
 // TOCCA PER SALTARE: durante esito e replay, grande, in basso, sopra tutto. Anche un tocco in qualunque punto salta,
 // ma solo dopo 150 ms dal cartello: bastano a scartare il tocco residuo del dito che ha appena tirato.
 const RITARDO_SALTO = 150
@@ -433,6 +470,7 @@ document.getElementById('rg-ui').addEventListener('click', async (e) => {
 })
 async function condividiVideo() {
   if (!fileVideo) { toast(game.ui, 'Registro il replay…', 2500); fileVideo = await registraVideo() }
+  if (!fileVideo) { toast(game.ui, 'Video non disponibile su questo telefono: condividi l\'immagine', 3200); return }
   if (!fileVideo) { toast(game.ui, 'Video non disponibile'); return }
   const d = datiCondivisione()
   const testo = d ? `${d.titolo} · ${d.sfida} — rigori al camp nou` : 'rigori al camp nou'
@@ -482,12 +520,12 @@ async function runFlow() {
     // partita
     let again = true
     while (again) {
-      flow = 'gioco'; quitRequested = false; menuBtn.hidden = false; audio.playMusic('tensione')
+      flow = 'gioco'; quitRequested = false; menuBtn.hidden = false; musicBtn.hidden = false; aggiornaMusicBtn(); audio.playMusic('tensione')
       const xpBefore = game.progress?.xp?.() ?? 0
       const ended = new Promise((res) => { const fn = (e) => { if (e.type === 'modeEnd') { listeners.delete(fn); res(e) } }; listeners.add(fn) })
       startMode(choice.id, choice.opts)
       const e = await Promise.race([ended, new Promise((res) => { const iv = setInterval(() => { if (quitRequested) { clearInterval(iv); res(null) } }, 200) })])
-      menuBtn.hidden = true
+      menuBtn.hidden = true; musicBtn.hidden = true
       if (!e) { mode = null; clearEsitoTimers(); esitoLock = false; ctx.keeperPassive(false); ctx.forceKeeperZone(null); ctx.showTarget(null); ctx.role('idle'); shot.reset(); keeper?.reset(); kicker?.reset(); hideEsito(game.ui); rig.goTo('dietroTiratore', { instant: true }); break }
       flow = 'risultato'
       audio.playMusic('inno')
@@ -496,8 +534,8 @@ async function runFlow() {
       const lv = game.progress?.level?.() || { n: 1, title: 'Esordiente' }
       const esito = esitoPartita(e)
       if (esito === 'vinto' && !settings.reduceFx) confettiBig()
-      const r = await risultato(game.ui, { title: titleFor(e), lines: linesFor(e), esito, xpGained: xpNow - xpBefore, xp: xpNow, level: lv, next: game.progress?.next?.() || null, achievements: game.progress?.takeFresh?.() || [], shareText: shareFor(e), sito: SITO, video: !!tipoVideoSupportato() })
-      if (r === 'classifica') { await apriClassifica(); flow = 'risultato'; again = (await risultato(game.ui, { title: titleFor(e), lines: linesFor(e), esito, xpGained: xpNow - xpBefore, xp: xpNow, level: lv, next: game.progress?.next?.() || null, achievements: [], shareText: shareFor(e), sito: SITO, video: !!tipoVideoSupportato() })) === 'again'; continue }
+      const r = await risultato(game.ui, { title: titleFor(e), lines: linesFor(e), esito, xpGained: xpNow - xpBefore, xp: xpNow, level: lv, next: game.progress?.next?.() || null, achievements: game.progress?.takeFresh?.() || [], shareText: shareFor(e), sito: SITO, video: videoPossibile() })
+      if (r === 'classifica') { await apriClassifica(); flow = 'risultato'; again = (await risultato(game.ui, { title: titleFor(e), lines: linesFor(e), esito, xpGained: xpNow - xpBefore, xp: xpNow, level: lv, next: game.progress?.next?.() || null, achievements: [], shareText: shareFor(e), sito: SITO, video: videoPossibile() })) === 'again'; continue }
       again = r === 'again'
     }
   }
@@ -573,7 +611,7 @@ window.__rigori = {
   // (sequenza già chiusa, oppure il cartello è a schermo da meno di 400 ms).
   salta: () => saltaSequenza(), get sequenzaConsumata() { return sequenzaConsumata }, get ritardoSalto() { return RITARDO_SALTO },
   // QA del ritmo: com'è stato fatto l'ultimo replay, le costanti della sequenza e il video (null finché nessuno lo chiede)
-  get ultimoReplay() { return ultimoReplay }, ritmo: { KICK_DELAY, REPLAY_ATTESA, REPLAY_DURATA, FINE }, get fileVideo() { return fileVideo }, registraVideo,
+  get ultimoReplay() { return ultimoReplay }, get videoNonDisponibile() { return videoNonDisponibile }, ritmo: { KICK_DELAY, REPLAY_ATTESA, REPLAY_DURATA, FINE }, get fileVideo() { return fileVideo }, registraVideo,
   // QA: gonfiore massimo toccato dalla rete dall'ultimo impulso, in metri (azzerabile fra un tiro e l'altro)
   reteAmpiezza: () => goal.ampiezzaMax?.() ?? null,
   reteRiposo: () => goal.riposo?.(),

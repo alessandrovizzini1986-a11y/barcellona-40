@@ -1,6 +1,17 @@
 {
   "entries": [
     {
+      "v": 36,
+      "data": "2026-09-27",
+      "titolo": "Rigori: il video ha l'audio, musica a un tocco",
+      "voci": [
+        "Il video condiviso ora ha il suono: fischio, calcio, impatto, pubblico e la musica se è accesa",
+        "Effetti al 70 %: fischio a ogni tiro anche con la musica spenta",
+        "Altoparlante in alto a destra durante la partita: un tocco accende o spegne la musica",
+        "Il suono del tuffo non si ripete più durante il replay"
+      ]
+    },
+    {
       "v": 35,
       "data": "2026-09-27",
       "titolo": "Rigori: Chi tira? a un tocco",

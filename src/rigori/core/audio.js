@@ -7,8 +7,11 @@ const MUSIC = { inno: 'inno.mp3', tensione: 'tensione.mp3' }
 const STINGER = { gol: 'gol.mp3', parata: 'parata.mp3', vittoria: 'vittoria.mp3' }
 const VO = { goal: 'gol.mp3', save: 'parata.mp3', miss: 'fuori.mp3', post: 'palo.mp3', crossbar: 'traversa.mp3', corner: 'incrocio.mp3' }
 const MAX_VOICES = 8
+// Effetti al 70 % (era 0,45, il 50 %): misurati in Chromium, fischio e impatto al 50 % stavano sotto i -20 dBFS,
+// troppo poco per un telefono a volume medio. Gli effetti NON dipendono dalla musica: suonano anche con la musica OFF.
+const SFX_GAIN = 0.63
 export function createAudio(ASSETS, settings) {
-  let ctx = null, master = null, sfxGain = null, musicGain = null, voGain = null, stingGain = null
+  let ctx = null, master = null, sfxGain = null, musicGain = null, voGain = null, stingGain = null, uscita = null
   const buffers = new Map(), missing = new Set(), voices = [], stingati = [], vivi = []
   let music = null, musicName = null, ducked = false, unlocked = false
   let desiderata = null // l'ultima traccia chiesta: se la musica è OFF non parte, ma parte appena la si accende
@@ -28,7 +31,7 @@ export function createAudio(ASSETS, settings) {
     if (!ctx) return
     // Musica OFF: si ferma e non si scarica nemmeno. ON: riparte la traccia che il gioco vorrebbe adesso.
     if (settings.music === false) { if (music) stopMusic() } else if (!music && desiderata && unlocked) playMusic(desiderata)
-    sfxGain.gain.value = settings.audio === false ? 0 : 0.45 // era 0,9: al tavolo basta la metà
+    sfxGain.gain.value = settings.audio === false ? 0 : SFX_GAIN
     voGain.gain.value = settings.audio === false ? 0 : 1
     stingGain.gain.value = settings.music === false ? 0 : 0.9
     musicGain.gain.setTargetAtTime(settings.music === false ? 0 : (ducked ? 0.28 : 0.7), ctx.currentTime, 0.08)
@@ -38,8 +41,15 @@ export function createAudio(ASSETS, settings) {
     if (!ensure()) return false
     try { if (ctx.state !== 'running') await ctx.resume() } catch { /* niente audio: il gioco va avanti */ }
     unlocked = ctx.state === 'running'
-    if (unlocked) preload()
+    if (unlocked) { preload(); if (desiderata && !music) apply() }
     return unlocked
+  }
+  // Flusso audio per la registrazione video: tutto quello che esce dal master (effetti, telecronaca, musica e
+  // stinger ai loro volumi) finisce anche in un MediaStream, la cui traccia si aggiunge a quella del canvas.
+  const streamAudio = () => {
+    if (!ctx || !ctx.createMediaStreamDestination) return null
+    if (!uscita) { try { uscita = ctx.createMediaStreamDestination(); master.connect(uscita) } catch { return null } }
+    return uscita.stream
   }
   const load = async (url) => {
     if (buffers.has(url)) return buffers.get(url)
@@ -68,7 +78,7 @@ export function createAudio(ASSETS, settings) {
     const o = ctx.createOscillator(), o2 = ctx.createOscillator(), g = ctx.createGain(), lfo = ctx.createOscillator(), lg = ctx.createGain()
     o.type = 'square'; o.frequency.value = 2650; o2.type = 'square'; o2.frequency.value = 2650 * 1.02
     lfo.frequency.value = 38; lg.gain.value = 140; lfo.connect(lg); lg.connect(o.frequency); lg.connect(o2.frequency)
-    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.16, t + 0.02); g.gain.setValueAtTime(0.16, t + dur - 0.06); g.gain.linearRampToValueAtTime(0, t + dur)
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.28, t + 0.02); g.gain.setValueAtTime(0.28, t + dur - 0.06); g.gain.linearRampToValueAtTime(0, t + dur)
     const f = ctx.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 2700; f.Q.value = 6
     o.connect(f); o2.connect(f); f.connect(g); g.connect(sfxGain)
     o.start(t); o2.start(t); lfo.start(t); o.stop(t + dur); o2.stop(t + dur); lfo.stop(t + dur)
@@ -146,5 +156,5 @@ export function createAudio(ASSETS, settings) {
     const s = ctx.createBufferSource(); s.buffer = b; s.connect(voGain); s.start()
   }
   const vibrate = (pattern) => { if (settings.vibration !== false && navigator.vibrate) { try { navigator.vibrate(pattern) } catch { /* non supportato */ } } }
-  return { unlock, play, whistle, crowd, playMusic, stopMusic, sting, stopSting, duck, vo, vibrate, apply, get unlocked() { return unlocked }, get ducked() { return ducked }, get musicName() { return musicName }, get stingati() { return stingati }, get musicGain() { return musicGain?.gain.value ?? null }, get sfxGain() { return sfxGain?.gain.value ?? null }, get context() { return ctx } }
+  return { unlock, streamAudio, play, whistle, crowd, playMusic, stopMusic, sting, stopSting, duck, vo, vibrate, apply, get unlocked() { return unlocked }, get ducked() { return ducked }, get musicName() { return musicName }, get stingati() { return stingati }, get musicGain() { return musicGain?.gain.value ?? null }, get sfxGain() { return sfxGain?.gain.value ?? null }, get context() { return ctx }, get masterNode() { return master } }
 }

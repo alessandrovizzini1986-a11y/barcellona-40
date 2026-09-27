@@ -76,13 +76,23 @@ export async function catturaImmagine(canvas, dati, render) {
   return new File([blob], 'rigori-camp-nou.png', { type: 'image/png' })
 }
 
-// Registra il replay mentre gira: nessuna riesecuzione. Torna null se il supporto non c'è davvero.
-export function registraReplay(canvas, { durataMax = 6000, bitrate = 2_500_000 } = {}) {
+// La traccia audio c'è davvero? Si leggono i metadati del file, non ci si fida dell'occhio: in un WebM il
+// CodecID della traccia audio (A_OPUS, A_VORBIS, A_AAC), in un MP4 il gestore 'soun' dentro moov. Senza traccia
+// audio il video è muto e non si offre.
+export function haTracciaAudio(bytes, tipo) {
+  const testo = new TextDecoder('latin1').decode(bytes)
+  if (tipo.startsWith('video/mp4')) return testo.includes('soun')
+  return /A_OPUS|A_VORBIS|A_AAC|A_MPEG/.test(testo)
+}
+// Registra il replay mentre gira: nessuna riesecuzione. `audioStream` (da audio.streamAudio()) porta effetti e
+// musica dentro il file: senza, il video sarebbe muto. Torna null se il supporto non c'è davvero.
+export function registraReplay(canvas, { durataMax = 6000, bitrate = 2_500_000, audioStream = null } = {}) {
   const tipo = tipoVideoSupportato()
   if (!tipo || !canvas.captureStream) return null
   let rec, pezzi = []
   try {
     const stream = canvas.captureStream(30)
+    for (const t of audioStream?.getAudioTracks?.() || []) stream.addTrack(t)
     rec = new MediaRecorder(stream, { mimeType: tipo, videoBitsPerSecond: bitrate })
   } catch { return null }
   rec.ondataavailable = (e) => { if (e.data && e.data.size) pezzi.push(e.data) }
@@ -97,6 +107,8 @@ export function registraReplay(canvas, { durataMax = 6000, bitrate = 2_500_000 }
       const blob = new Blob(pezzi, { type: tipo })
       // Safari iOS dichiara il supporto e poi produce un file vuoto: sotto i 10 kB si butta via
       if (blob.size < 10_000) return null
+      // File muto (nessuna traccia audio nei metadati): si butta via, meglio niente che un video senza suono
+      if (audioStream) { const testa = new Uint8Array(await blob.slice(0, 262_144).arrayBuffer()); if (!haTracciaAudio(testa, tipo)) return null }
       const est = tipo.startsWith('video/mp4') ? 'mp4' : 'webm'
       return new File([blob], 'rigori-camp-nou.' + est, { type: tipo })
     }

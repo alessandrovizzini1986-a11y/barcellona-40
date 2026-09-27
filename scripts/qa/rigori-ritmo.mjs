@@ -1,5 +1,5 @@
 // QA del ritmo (blocco 2): un replay solo di 2,2 s, salto dopo 150 ms, un tiro sotto i 4 s di sistema,
-// musica e vibrazione OFF di default, effetti al 50 %, swipe da tutta la metà bassa, video solo a richiesta.
+// musica e vibrazione OFF di default, effetti al 70 % (erano al 50 %, troppo bassi), swipe da tutta la metà bassa, video solo a richiesta.
 //   node scripts/qa/rigori-ritmo.mjs [url]
 import { chromium } from 'playwright-core'
 const url = process.argv[2] || 'http://localhost:4173/rigori/?q=bassa'
@@ -15,7 +15,7 @@ await p.waitForFunction(() => window.__rigori?.ready, null, { timeout: 60000 });
 const s0 = await p.evaluate(() => ({ music: window.__rigori.settings.music, vibration: window.__rigori.settings.vibration, audio: window.__rigori.settings.audio, sfx: window.__rigori.audio.sfxGain, musicName: window.__rigori.audio.musicName }))
 ok('musica OFF di default', s0.music === false && s0.musicName === null, JSON.stringify(s0))
 ok('vibrazione OFF di default', s0.vibration === false)
-ok('effetti accesi, al 50 %', s0.audio === true && Math.abs(s0.sfx - 0.45) < 0.01, String(s0.sfx))
+ok('effetti accesi, al 70 %', s0.audio === true && Math.abs(s0.sfx - 0.63) < 0.01, String(s0.sfx))
 const flow = (f) => p.waitForFunction((f) => window.__rigori.flow() === f, f, { timeout: 30000 })
 await flow('chiTira'); await p.click('.rg-card[data-value="monne"]'); await flow('modalita'); await p.click('.rg-mode[data-value="sfidaAle"]'); await flow('gioco')
 await p.waitForFunction(() => window.__rigori.role() === 'shooter' && window.__rigori.shotState() === 'idle')

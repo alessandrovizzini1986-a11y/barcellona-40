@@ -330,6 +330,9 @@ export function createShot({ ball, goal, keeper, onEvent, precision = 1 }) {
         return
       }
       if (state !== 'live') return
+      // Tempo fermo (replay in corso, hit-stop): non si ridisegna. Durante il replay il disegno dal vivo a t fermo
+      // si alternava a quello del replay e il portiere rifaceva tuffo (suono e polvere) a ogni frame.
+      if (dt <= 0) return
       t += dt
       if (!rec.sealed && t >= rec.contactTime) sealShotRecord(rec, keeper)
       draw(t)
