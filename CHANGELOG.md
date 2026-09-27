@@ -422,3 +422,8 @@ Pagina fuori dal sito, **non linkata da nessuna parte**: `stats-dtcmbsis.html`. 
 - **Fari**: doppio alone per torre (largo e tenue 20 m, opacità 0,55; piccolo e caldo 7 m, bianco) e cono quasi doppio (0,24, era 0,13).
 - Ombra e erba: non fatte, come da decisione ("solo se ci stai dentro senza sforzo").
 - `rigori-ritmo.mjs` controlla cartello in alto e Condividi in basso a sinistra.
+
+## Rigori, blocco 6: sociale
+- **Pass-and-play in cima** al menu Modalità, Shootout secondo (`MODES_INFO`).
+- **Classifica di serata** (`ui/screens/classifica.js`): le dieci voci salvate del pass-and-play (nome, gol · parate, data) più il miglior risultato di Shootout, Sfida Ale, Skill e Boss. Si apre da CHI TIRA? e da Modalità (1 tocco), dalla Pausa e dal risultato (≡ → Classifica: 2 tocchi), e ha anche lei "Torna al programma".
+- `rigori-nav.mjs`: ordine del menu, classifica a 1 tocco da Modalità e CHI TIRA?, a 2 dalla partita.

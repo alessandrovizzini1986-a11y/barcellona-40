@@ -2,10 +2,11 @@ import { esc } from '../components/esc.js'
 import { overlay } from './overlay.js'
 import { PASS_PLAY_NAMES } from '../../data/players.js'
 import { linkSito } from '../sito.js'
+// Pass-and-play per primo: è il motivo per cui il gioco sta a un tavolo con quattro persone
 export const MODES_INFO = [
+  { id: 'passAndPlay', title: 'Pass-and-play', desc: 'Da 2 a 4 sullo stesso telefono. Classifica di serata.' },
   { id: 'shootout', title: 'Shootout', desc: 'Best of 5 contro Ale, poi sudden death.' },
   { id: 'sfidaAle', title: 'Sfida Ale', desc: 'Tiri finché Ale ne para tre. Quanti gol fai?' },
-  { id: 'passAndPlay', title: 'Pass-and-play', desc: 'Da 2 a 4 sullo stesso telefono. Classifica di serata.' },
   { id: 'skill', title: 'Skill', desc: 'Bersagli negli angoli e al centro. Trenta secondi.' },
   { id: 'boss', title: 'Boss: Ale in forma', desc: 'Non si sbilancia quasi mai, reattività +40 %. Si sblocca al livello 2.' }
 ]
@@ -13,7 +14,7 @@ export async function modalita(ui, { bossUnlocked = false, level = 1 } = {}) {
   const html = `<h2 class="rg-title">Modalità</h2><div class="rg-modes">${MODES_INFO.map((m) => {
     const locked = m.id === 'boss' && !bossUnlocked
     return `<button class="rg-mode" data-value="${m.id}" ${locked ? 'disabled aria-disabled="true"' : ''} aria-label="${esc(m.title)}: ${esc(m.desc)}${locked ? ' (bloccata)' : ''}"><b>${esc(m.title)}${locked ? ' 🔒' : ''}</b><span>${esc(m.desc)}</span></button>`
-  }).join('')}</div><div class="rg-row"><button class="rg-btn rg-btn--ghost" data-value="__opzioni" aria-label="Opzioni">Opzioni</button><button class="rg-btn rg-btn--ghost" data-value="__sblocchi" aria-label="Sblocchi e traguardi">Sblocchi</button><button class="rg-btn rg-btn--ghost" data-value="__chi" aria-label="Cambia tiratore">Cambia tiratore</button></div>`
+  }).join('')}</div><div class="rg-row"><button class="rg-btn" data-value="__classifica" aria-label="Classifica di serata">Classifica</button><button class="rg-btn rg-btn--ghost" data-value="__opzioni" aria-label="Opzioni">Opzioni</button><button class="rg-btn rg-btn--ghost" data-value="__sblocchi" aria-label="Sblocchi e traguardi">Sblocchi</button><button class="rg-btn rg-btn--ghost" data-value="__chi" aria-label="Cambia tiratore">Cambia tiratore</button></div>`
   const v = await overlay(ui, html, { label: 'Scelta della modalità', cls: 'rg-overlay--top', sito: true })
   if (v === 'passAndPlay') {
     const names = await passPlayNames(ui)

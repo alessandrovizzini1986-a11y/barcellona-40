@@ -37,6 +37,7 @@ import { risultato } from './ui/screens/risultato.js'
 import { opzioni } from './ui/screens/opzioni.js'
 import { sblocchi } from './ui/screens/sblocchi.js'
 import { onboarding } from './ui/screens/onboarding.js'
+import { classifica } from './ui/screens/classifica.js'
 import { overlay } from './ui/screens/overlay.js'
 import { toast } from './ui/components/toast.js'
 import { save } from './core/save.js'
@@ -442,6 +443,13 @@ document.getElementById('rg-ui').addEventListener('pointerdown', (e) => { if (es
 stage.addEventListener('pointerdown', () => { if (esitoLock) saltaSequenza() }, true)
 let flow = 'boot', quitRequested = false
 // Il gioco vive dentro il sito: /rigori/ sta sotto la stessa base. Link nella stessa scheda, non _blank.
+// Classifica di serata: la classifica del pass-and-play più il miglior risultato di ogni altra modalità
+const apriClassifica = () => {
+  const pr = game.progress
+  const record = {}
+  for (const k of ['shootout', 'sfidaAle', 'skill', 'boss']) { const b = pr.board(k); if (b.length) record[k] = b[0] }
+  return classifica(game.ui, { serata: pr.board('passAndPlay'), record })
+}
 const openOptions = () => opzioni(game.ui, settings, { onChange: applySettings, onReset: () => { save.reset(); toast(game.ui, 'Progressi azzerati'); setTimeout(() => location.reload(), 700) } })
 async function runFlow() {
   await kitReady
@@ -453,6 +461,7 @@ async function runFlow() {
     for (let scelto = false; !scelto;) {
       flow = 'chiTira'; audio.playMusic('inno')
       const id = await chiTira(game.ui, ASSETS, { current: shooterId })
+      if (id === '__classifica') { await apriClassifica(); continue }
       if (!id) { scelto = true; break }
       flow = 'giocatore'
       if (await giocatore(game.ui, ASSETS, id) === 'vai') { setShooter(id); scelto = true }
@@ -462,6 +471,7 @@ async function runFlow() {
       flow = 'modalita'
       const r = await modalita(game.ui, { bossUnlocked: game.progress?.bossUnlocked?.() ?? false, level: game.progress?.level?.().n ?? 1 })
       if (r.id === '__opzioni') { await openOptions(); continue }
+      if (r.id === '__classifica') { await apriClassifica(); continue }
       if (r.id === '__sblocchi') { await sblocchi(game.ui, game.progress.summaryForUi(), { onEquip: (kind, id) => { if (game.progress.setEquip(kind, id)) { applyEquip(); return game.progress.summaryForUi() } audio.play('error', { volume: .5 }); return null } }); continue }
       if (r.id === '__chi') break
       if (!r.id) continue
@@ -486,14 +496,16 @@ async function runFlow() {
       const esito = esitoPartita(e)
       if (esito === 'vinto' && !settings.reduceFx) confettiBig()
       const r = await risultato(game.ui, { title: titleFor(e), lines: linesFor(e), esito, xpGained: xpNow - xpBefore, xp: xpNow, level: lv, next: game.progress?.next?.() || null, achievements: game.progress?.takeFresh?.() || [], shareText: shareFor(e), sito: SITO, video: !!tipoVideoSupportato() })
+      if (r === 'classifica') { await apriClassifica(); flow = 'risultato'; again = (await risultato(game.ui, { title: titleFor(e), lines: linesFor(e), esito, xpGained: xpNow - xpBefore, xp: xpNow, level: lv, next: game.progress?.next?.() || null, achievements: [], shareText: shareFor(e), sito: SITO, video: !!tipoVideoSupportato() })) === 'again'; continue }
       again = r === 'again'
     }
   }
 }
 menuBtn.addEventListener('click', async () => { const v = await overlayMenu(); if (v === 'esci') quitRequested = true })
 async function overlayMenu() {
-  const v = await overlay(game.ui, `<h2 class="rg-title">Pausa</h2><div class="rg-row"><a class="rg-btn rg-btn--ghost" href="${SITO}" aria-label="Torna al programma del weekend" style="flex:1 0 100%">← Torna al programma</a><button class="rg-btn rg-btn--primary" data-value="continua" aria-label="Continua">Continua</button><button class="rg-btn" data-value="opzioni" aria-label="Opzioni">Opzioni</button><button class="rg-btn rg-btn--ghost" data-value="esci" aria-label="Esci dalla partita">Esci</button></div>`, { label: 'Pausa', closable: true })
+  const v = await overlay(game.ui, `<h2 class="rg-title">Pausa</h2><div class="rg-row"><a class="rg-btn rg-btn--ghost" href="${SITO}" aria-label="Torna al programma del weekend" style="flex:1 0 100%">← Torna al programma</a><button class="rg-btn rg-btn--primary" data-value="continua" aria-label="Continua">Continua</button><button class="rg-btn" data-value="classifica" aria-label="Classifica di serata">Classifica</button><button class="rg-btn" data-value="opzioni" aria-label="Opzioni">Opzioni</button><button class="rg-btn rg-btn--ghost" data-value="esci" aria-label="Esci dalla partita">Esci</button></div>`, { label: 'Pausa', closable: true })
   if (v === 'opzioni') { await openOptions(); return 'continua' }
+  if (v === 'classifica') { await apriClassifica(); return 'continua' }
   return v
 }
 function titleFor(e) { const s = e.summary; if (e.id === 'shootout' || e.id === 'boss') return s.winner === 'me' ? `Hai vinto ${s.me}–${s.ale}` : `Ale vince ${s.ale}–${s.me}`; if (e.id === 'sfidaAle') return `${s.goals} gol prima delle tre parate di Ale`; if (e.id === 'skill') return `${s.score} punti`; if (e.id === 'passAndPlay') return `Vince ${s.leaderboard[0].name}`; return MODES_INFO.find((m) => m.id === e.id)?.title || e.id }

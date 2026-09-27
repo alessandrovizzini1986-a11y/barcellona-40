@@ -40,6 +40,12 @@ const okSito = async (p, dove) => { const s = await sito(p); ok(`"Torna al progr
   await p.click('.rg-card[data-value="manuel"]'); await flow(p, 'giocatore'); await okSito(p, 'card giocatore')
   await p.click('[data-value="vai"]'); await flow(p, 'modalita'); await okSito(p, 'Modalità')
   ok('Boss sbloccato con 100 XP (livello 2)', await p.evaluate(() => !document.querySelector('.rg-mode[data-value="boss"]').disabled))
+  // blocco 6: pass-and-play in cima, Shootout secondo; classifica a un tocco da Modalità e da CHI TIRA?, a due dalla partita
+  const ordine = await p.evaluate(() => [...document.querySelectorAll('.rg-mode')].map((m) => m.dataset.value))
+  ok('Modalità: Pass-and-play primo, Shootout secondo', ordine[0] === 'passAndPlay' && ordine[1] === 'shootout', ordine.join(','))
+  await p.click('[data-value="__classifica"]'); await p.waitForSelector('.rg-classifica, .rg-panel h2', { timeout: 5000 })
+  ok('Classifica di serata da Modalità: 1 tocco', (await p.locator('.rg-panel h2').innerText()) === 'Classifica di serata')
+  await okSito(p, 'Classifica'); await p.click('[data-value="ok"]'); await flow(p, 'modalita')
   ok('Modalità: Skill senza "traversa", Boss "livello 2"', await p.evaluate(() => !document.querySelector('.rg-mode[data-value="skill"] span').textContent.includes('traversa') && document.querySelector('.rg-mode[data-value="boss"] span').textContent.includes('livello 2')))
   await p.click('[data-value="__opzioni"]'); await p.waitForSelector('[data-ok]'); await okSito(p, 'Opzioni'); await p.click('[data-ok]'); await flow(p, 'modalita')
   await p.click('[data-value="__sblocchi"]'); await p.waitForSelector('[data-value="ok"]'); await okSito(p, 'Sblocchi'); await p.click('[data-value="ok"]'); await flow(p, 'modalita')
@@ -52,8 +58,14 @@ const okSito = async (p, dove) => { const s = await sito(p); ok(`"Torna al progr
   const chiudi = await p.evaluate(() => { const c = document.querySelector('.rg-close').getBoundingClientRect(); return { w: c.width, h: c.height } })
   ok('✕ della Pausa a 44 px', chiudi.w >= 44 && chiudi.h >= 44, JSON.stringify(chiudi))
   ok('Pausa: "Torna al programma" c\'è', await p.evaluate(() => !![...document.querySelectorAll('.rg-overlay a')].find((a) => /#\/oggi$/.test(a.getAttribute('href')))))
+  await p.click('[data-value="classifica"]'); await p.waitForSelector('.rg-panel h2', { timeout: 5000 })
+  ok('Classifica dalla partita: ≡ → Classifica, 2 tocchi', (await p.evaluate(() => [...document.querySelectorAll('.rg-panel h2')].pop().textContent)) === 'Classifica di serata')
+  await p.click('[data-value="ok"]'); await p.waitForTimeout(300); await p.click('.rg-menubtn'); await p.waitForSelector('[data-value="esci"]', { timeout: 5000 })
   await p.click('[data-value="esci"]'); await flow(p, 'chiTira')
   ok('Esci dal pass-and-play riporta a CHI TIRA?', true)
+  await p.click('[data-value="__classifica"]'); await p.waitForSelector('.rg-panel h2', { timeout: 5000 })
+  ok('Classifica da CHI TIRA?: 1 tocco', (await p.evaluate(() => [...document.querySelectorAll('.rg-panel h2')].pop().textContent)) === 'Classifica di serata')
+  await p.click('[data-value="ok"]'); await flow(p, 'chiTira')
   await ctx.close()
 }
 // 5. HUD a destra del ≡, mai coperto, anche con il testo lungo dello Shootout

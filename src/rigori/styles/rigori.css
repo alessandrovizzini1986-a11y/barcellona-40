@@ -185,3 +185,15 @@ button.rg-unlock{ cursor:pointer; }
 
 /* Torna al programma: in fondo a ogni schermata di scelta, un tocco, stessa scheda */
 .rg-sito{ width:100%; justify-content:center; }
+
+/* Classifica di serata */
+.rg-classifica{ margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:6px; }
+.rg-classifica__riga{ display:grid; grid-template-columns:28px 1fr auto; grid-template-areas:"pos nome punti" "pos lab punti"; align-items:center; column-gap:var(--space-2); padding:8px 12px; border-radius:var(--radius-s); background:var(--bg-3); }
+.rg-classifica__pos{ grid-area:pos; font-family:var(--font-display); font-weight:700; color:var(--ink-3); }
+.rg-classifica__riga b{ grid-area:nome; font-family:var(--font-display); font-size:var(--fs-1); }
+.rg-classifica__lab{ grid-area:lab; color:var(--ink-2); font-size:var(--fs-0); }
+.rg-classifica__punti{ grid-area:punti; font-family:var(--font-display); font-weight:700; font-size:var(--fs-2); color:var(--giallo); font-variant-numeric:tabular-nums; }
+.rg-classifica__riga:first-child{ outline:2px solid var(--giallo); }
+.rg-record{ margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:4px; }
+.rg-record li{ display:flex; justify-content:space-between; gap:var(--space-3); font-size:var(--fs-0); color:var(--ink-2); }
+.rg-record b{ color:var(--ink); text-align:right; }

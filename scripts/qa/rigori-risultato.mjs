@@ -59,7 +59,7 @@ ok('perso: riga di Ale', pers.riga.includes('rivincita'), pers.riga)
 ok('perso: un solo pulsante grande', pers.primari === 1)
 ok('perso: Condividi chiuso all\'apertura', pers.nascosto === true)
 ok('perso: niente "Manda ai ragazzi"', pers.wa === 0 && !pers.testo.includes('Manda ai ragazzi'))
-ok('perso: niente classifica con un nome solo', !pers.testo.includes('Classifica'), pers.testo)
+ok('perso: niente classifica con un nome solo', !pers.testo.includes('Classifica:'), pers.testo) // 'Classifica:' è la riga; 'Classifica' da solo è il pulsante del blocco 6
 await p.click('[data-share-toggle]'); await p.waitForTimeout(150)
 ok('Condividi apre le scelte', await p.evaluate(() => !document.querySelector('#rg-share-opts').hidden && [...document.querySelectorAll('#rg-share-opts .rg-btn')].map((b) => b.textContent.trim()).includes('Copia risultato')))
 ok('Copia risultato porta il testo della partita', await p.evaluate(() => (document.querySelector('[data-copy]').dataset.copy || '').includes('Rigori al Camp Nou')))

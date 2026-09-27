@@ -16,6 +16,7 @@ export function risultato(ui, { title, lines = [], esito = null, xpGained = 0, x
       <button class="rg-btn" data-value="menu" aria-label="Torna al menu">Menu</button>
       ${sito ? `<a class="rg-btn" href="${sito}" aria-label="Torna al sito del weekend">Torna al sito</a>` : ''}
       <button class="rg-btn rg-btn--ghost" data-share-toggle aria-expanded="false" aria-controls="rg-share-opts" aria-label="Condividi il risultato">Condividi</button>
+      <button class="rg-btn rg-btn--ghost" data-value="classifica" aria-label="Classifica di serata">Classifica</button>
     </div>
     <div class="rg-row rg-share-opts" id="rg-share-opts" hidden>
       <button class="rg-btn" data-share aria-label="Condividi l'immagine del momento">Immagine</button>

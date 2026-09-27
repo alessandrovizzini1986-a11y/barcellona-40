@@ -13,5 +13,5 @@ export function chiTira(ui, ASSETS, { current = null } = {}) {
       <span class="rg-card__name">${esc(p.nome)}</span>
     </button>`
   }).join('')
-  return overlay(ui, `<h2 class="rg-title">Chi tira?</h2><p class="rg-sub">Tocca il tuo nome. In porta c'è ${esc(ale.nome)}, e parla troppo.</p><div class="rg-cards">${cards}</div>`, { label: 'Scelta del tiratore', cls: 'rg-overlay--top', sito: true })
+  return overlay(ui, `<h2 class="rg-title">Chi tira?</h2><p class="rg-sub">Tocca il tuo nome. In porta c'è ${esc(ale.nome)}, e parla troppo.</p><div class="rg-cards">${cards}</div><div class="rg-row"><button class="rg-btn rg-btn--ghost" data-value="__classifica" aria-label="Classifica di serata">Classifica di serata</button></div>`, { label: 'Scelta del tiratore', cls: 'rg-overlay--top', sito: true })
 }
