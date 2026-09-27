@@ -8,8 +8,11 @@ export function showEsito(ui, { outcome, corner = false, shooterId = null, taunt
   const el = document.createElement('div'); el.className = `rg-esito rg-esito--${outcome}`
   el.setAttribute('role', 'status'); el.setAttribute('aria-live', 'assertive')
   if (shooterId) el.dataset.shooter = shooterId
-  el.innerHTML = `<b>${corner ? 'INCROCIO' : (WORD[outcome] || outcome)}</b>${taunt ? `<span>${esc(taunt)}</span>` : ''}` +
-    `<button class="rg-btn rg-btn--ghost rg-esito__share" data-share aria-label="Condividi questo momento">Condividi</button>`
+  el.innerHTML = `<b>${corner ? 'INCROCIO' : (WORD[outcome] || outcome)}</b>${taunt ? `<span>${esc(taunt)}</span>` : ''}`
   ui.appendChild(el)
+  // Condividi sta in basso a sinistra, fuori dal cartello: la porta resta libera nel momento che conta
+  const share = document.createElement('button'); share.className = 'rg-btn rg-btn--ghost rg-esito-share'; share.dataset.share = ''
+  share.setAttribute('aria-label', 'Condividi questo momento'); share.textContent = 'Condividi'
+  ui.appendChild(share)
 }
-export function hideEsito(ui) { ui.querySelectorAll('.rg-esito').forEach((e) => e.remove()) }
+export function hideEsito(ui) { ui.querySelectorAll('.rg-esito, .rg-esito-share').forEach((e) => e.remove()) }

@@ -87,6 +87,9 @@ export function headTexture(skin = '#C8956D') {
     mg.fillStyle = rg; mg.fillRect(0, 0, m.width, m.height); mg.restore()
     g.fillStyle = skin; g.fillRect(0, 0, W, H)
     g.drawImage(m, cx - w / 2, cy - h / 2)
+    // Lo stesso volto anche sul retro (u = 0,75): il tiratore dà le spalle alla camera per tutto il tiro,
+    // e senza questo era una sfera color pelle. Nessuno guarda una nuca durante un rigore.
+    g.drawImage(m, W * 0.75 - w / 2, cy - h / 2)
     t.needsUpdate = true
   }
   return { texture: t, draw }

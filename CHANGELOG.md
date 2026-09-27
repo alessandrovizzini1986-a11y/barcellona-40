@@ -415,3 +415,10 @@ Pagina fuori dal sito, **non linkata da nessuna parte**: `stats-dtcmbsis.html`. 
 - **Misura vera (`scripts/qa/rigori-equilibrio.mjs`)**: 60 tiri di Ale dalla sua distribuzione contro chi indovina la zona (tuffo 250 ms dopo il calcio), 60 contro un tuffo a caso, e 12 Shootout interi con un tiratore "umano medio" (mira a caso fra le sei zone, dispersione vera) che da portiere legge il tell. I numeri sono nel report del blocco.
 - **Risultato: gli obiettivi NON stanno insieme con queste due leve**, e per decisione ci si ferma qui senza toccare le capsule. Con 40/35/25 (`rigori-sweep.mjs`, 600 tiri per riga, fisica vera in node): chi indovina para il 46 % se si tuffa sul tell (prima del calcio) e il 26 % se aspetta 250 ms; Ale contro chi legge il tell segna il 46-52 %; Shootout vinto stimato 68-75 %. Ogni mix che porta Ale al 55-60 % (più tiri alti, che non si parano mai) fa scendere le parate "indovinando" al 35 %. Nel browser (SwiftShader, 60 tiri): 52 % · 47 % · 10 vittorie su 12. La scelta del mix è nel report.
 - `rigori-progress.mjs` portato alla porta in scala: incrocio a (1,85, 1,50), traversa a y 1,92.
+
+## Rigori, blocco 5: visivo
+- **Volto anche sul retro della testa** (`textures.js`, stessa foto mascherata a u = 0,75): dalla camera di gioco il tiratore non è più una sfera color pelle.
+- **Cartello dell'esito in alto** (60 px dal bordo, sotto l'HUD) e **più piccolo** (30–46 px, erano 40–64); **Condividi** è un pulsante a sé in basso a sinistra (56 px), fuori dal cartello. La porta e il portiere restano visibili sotto la scritta.
+- **Fari**: doppio alone per torre (largo e tenue 20 m, opacità 0,55; piccolo e caldo 7 m, bianco) e cono quasi doppio (0,24, era 0,13).
+- Ombra e erba: non fatte, come da decisione ("solo se ci stai dentro senza sforzo").
+- `rigori-ritmo.mjs` controlla cartello in alto e Condividi in basso a sinistra.

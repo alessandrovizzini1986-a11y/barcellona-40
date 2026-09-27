@@ -26,6 +26,7 @@ ok('swipe da lontano dal pallone: il tiro parte', ['windup', 'flying', 'done'].i
 await p.waitForFunction(() => window.__rigori.esitoLocked, null, { timeout: 30000 })
 // 3. salto: rifiutato prima di 150 ms, accettato dopo
 const r = await p.evaluate(() => window.__rigori.ritardoSalto); ok('ritardo del salto 150 ms', r === 150, String(r))
+ok('cartello dell\'esito in alto (sotto i 120 px) e Condividi in basso a sinistra', await p.evaluate(() => { const e = document.querySelector('.rg-esito').getBoundingClientRect(), s = document.querySelector('.rg-esito-share').getBoundingClientRect(); return e.top < 120 && s.left < 40 && s.bottom > innerHeight - 100 && s.height >= 44 }))
 ok('"Tocca per saltare" grande e visibile col cartello', await p.evaluate(() => { const s = document.querySelector('.rg-skip'); const c = getComputedStyle(s); return !s.hidden && s.textContent.includes('Tocca per saltare') && s.getBoundingClientRect().height >= 56 && parseFloat(c.fontSize) >= 18 }))
 await p.waitForFunction(() => !window.__rigori.esitoLocked && window.__rigori.shotState() === 'idle', null, { timeout: 60000 })
 const rp = await p.evaluate(() => window.__rigori.ultimoReplay)

@@ -41,15 +41,18 @@ export function createStadium() {
     transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.BackSide, fog: false,
     uniforms: { color: { value: new THREE.Color(0xfff1c8) } },
     vertexShader: 'varying float vT; void main(){ vT = uv.y; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
-    fragmentShader: 'uniform vec3 color; varying float vT; void main(){ float a = 0.13 * pow(vT, 2.0); gl_FragColor = vec4(color * a, a); }'
+    fragmentShader: 'uniform vec3 color; varying float vT; void main(){ float a = 0.24 * pow(vT, 2.0); gl_FragColor = vec4(color * a, a); }'
   })
-  const haloMat = new THREE.SpriteMaterial({ map: glowTexture(), color: 0xfff1c8, transparent: true, opacity: .9, blending: THREE.AdditiveBlending, depthWrite: false, fog: false })
+  const haloMat = new THREE.SpriteMaterial({ map: glowTexture(), color: 0xfff1c8, transparent: true, opacity: .55, blending: THREE.AdditiveBlending, depthWrite: false, fog: false })
+  const haloCuoreMat = new THREE.SpriteMaterial({ map: glowTexture(), color: 0xffffff, transparent: true, opacity: .95, blending: THREE.AdditiveBlending, depthWrite: false, fog: false })
   const towers = [], lightPos = [], heads = [], cones = []
   const aim = new THREE.Vector3(0, 0, 22)
   for (const [x, z, h] of [[-17, -64, 30], [17, -64, 30], [-62, 126, 40], [62, 126, 40]]) {
     const pg = new THREE.CylinderGeometry(0.45, 0.9, h, 8); pg.translate(x, h / 2, z); buckets.pole.push(pg)
     const head = new THREE.Mesh(new THREE.BoxGeometry(4.2, 1.8, 0.9), lamp); head.position.set(x, h, z); head.lookAt(aim); head.updateMatrix(); heads.push(head.geometry.clone().applyMatrix4(head.matrix)); towers.push(head)
-    const halo = new THREE.Sprite(haloMat); halo.position.set(x, h, z); halo.scale.set(13, 13, 1); g.add(halo)
+    // Doppio alone: uno largo e tenue (l'aria umida attorno al faro) e uno piccolo e caldo (la lampada)
+    const halo = new THREE.Sprite(haloMat); halo.position.set(x, h, z); halo.scale.set(20, 20, 1); g.add(halo)
+    const cuore = new THREE.Sprite(haloCuoreMat); cuore.position.set(x, h, z); cuore.scale.set(7, 7, 1); g.add(cuore)
     const dir = aim.clone().sub(head.position), len = dir.length()
     const cone = new THREE.ConeGeometry(9, len, 20, 1, true); cone.translate(0, -len / 2, 0)
     const q = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, -1, 0), dir.normalize()); cone.applyQuaternion(q); cone.translate(x, h, z); cones.push(cone)
