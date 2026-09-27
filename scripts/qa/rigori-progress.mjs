@@ -16,7 +16,7 @@ await p.evaluate(() => { window.__rigori.ctx.forceKeeperZone(3); window.__rigori
 await p.waitForTimeout(500)
 await shoot({ x: 1.85, y: 1.5, power: 1.0, curve: 0 })     // incrocio: |x| > 1,65 e y > 1,37 sulla porta 4,40 × 1,82
 console.log('dopo incrocio:', await p.evaluate(() => ({ xp: window.__rigori.game.progress.xp(), ls: localStorage.getItem('b40:v1:rigori:xp'), last: window.__rigori.lastResult(), corner: window.__rigori.events.find((e) => e.type === 'result')?.corner })))
-await shoot({ x: 0, y: 1.92, power: 1.15, curve: 0 }, 'settled') // traversa piena: y = GOAL.h + spessore del palo
+await shoot({ x: 0, y: 1.92, power: 1.15, curve: 0 }, 'result') // traversa piena. Dal blocco 2 il replay parte all'esito e azzera il tiro: 'settled' non arriva più in partita: y = GOAL.h + spessore del palo
 console.log('dopo traversa:', await p.evaluate(() => ({ last: window.__rigori.lastResult(), ach: Object.keys(JSON.parse(localStorage.getItem('b40:v1:rigori:achievements') || '{}')) })))
 const site = await p.evaluate(() => ({ person: localStorage.getItem('b40:v1:person'), done: localStorage.getItem('b40:v1:done'), keys: Object.keys(localStorage).filter((k) => k.startsWith('b40:v1:')).sort() }))
 console.log('chiavi:', JSON.stringify(site))

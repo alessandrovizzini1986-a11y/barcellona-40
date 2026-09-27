@@ -21,7 +21,7 @@ const shoot = async (aim, seed) => {
   await p.evaluate(() => { window.__rigori.game.keeper.reset(); window.__rigori.game.shot.reset(); window.__rigori.events.length = 0; window.__rigori.trace(true) })
   await p.evaluate(([aim, seed]) => window.__rigori.fire(aim, true, 0, seed), [aim, seed])
   await p.waitForFunction(() => window.__rigori.events.some((e) => e.type === 'settled'), null, { timeout: 60000 })
-  return p.evaluate(() => ({ rec: (() => { const r = window.__rigori.record(); return { seed: r.seed, flightTime: r.flightTime, contactTime: r.contactTime, duration: r.duration, outcome: r.outcome, zone: r.keeper?.zone ?? null, react: r.keeper?.reactionDelay ?? null, clip: r.keeper?.clip ?? null } })(), trace: window.__rigori.traced() }))
+  return p.evaluate(() => ({ rec: (() => { const r = window.__rigori.record(); return { seed: r.seed, flightTime: r.flightTime, contactTime: r.contactTime, tRisoluzione: r.tRisoluzione ?? r.contactTime, duration: r.duration, outcome: r.outcome, zone: r.keeper?.zone ?? null, react: r.keeper?.reactionDelay ?? null, clip: r.keeper?.clip ?? null } })(), trace: window.__rigori.traced() }))
 }
 const probe = (times) => p.evaluate((ts) => ts.map((t) => { window.__rigori.renderAt(t); return { t, ...window.__rigori.pose() } }), times)
 
@@ -73,18 +73,19 @@ const startTimes = firstFrames.map((f) => f.clipTime)
 check(startTimes.every((v) => Math.abs(v - startTimes[0]) < 1e-3), 'ogni replay riparte dalla stessa posa iniziale: ' + JSON.stringify(startTimes))
 check(startTimes[0] < 0.75, 'il primo frame del replay è all\'inizio della clip, non alla fine: ' + startTimes[0])
 // La posa vista dal vivo, ricalcolata agli STESSI istanti, deve venire identica.
-// La palla è governata dal record per tutta la durata; il portiere fino all'impatto, dopo di che passa
-// all'animazione di reazione (esultanza/delusione), che non fa parte del tiro.
+// La palla è governata dal record per tutta la durata; il portiere fino alla risoluzione dell'esito, dopo di che
+// passa all'animazione di reazione (esultanza/delusione), che non fa parte del tiro. Su una parata l'esito si
+// risolve al guanto (tRisoluzione), prima che la palla arrivi alla linea (contactTime): il confine è quello.
 const liveTimes = live.map((f) => f.t)
 const recomputed = await probe(liveTimes)
 let ballDiff = 0, keeperDiff = 0
 for (let i = 0; i < live.length; i++) {
   const a = live[i], q = recomputed[i]
   if (JSON.stringify(a.ball) !== JSON.stringify(q.ball) || a.ballRot !== q.ballRot) ballDiff++
-  if (a.t <= rec.contactTime && (a.keeperX !== q.keeperX || a.clipTime !== q.clipTime)) keeperDiff++
+  if (a.t <= rec.tRisoluzione && (a.keeperX !== q.keeperX || a.clipTime !== q.clipTime)) keeperDiff++
 }
 check(ballDiff === 0, `la palla dal vivo e ricalcolata è identica in tutti i ${live.length} frame (${ballDiff} differenze)`)
-check(keeperDiff === 0, `il portiere dal vivo e ricalcolato è identico fino all'impatto (${keeperDiff} differenze)`)
+check(keeperDiff === 0, `il portiere dal vivo e ricalcolato è identico fino alla risoluzione dell'esito (${keeperDiff} differenze)`)
 // replay 1 e replay 2: stessi istanti, stessa posa
 const r1 = globalThis.replay1, r2 = globalThis.replay2
 const r2at = await probe(r1.map((f) => f.t))
