@@ -11,7 +11,7 @@
 // o omonimi sbagliati (il Clock Tower di Città del Capo, il Harrods Depository di Barnes).
 //
 //   node scripts/londra-foto.mjs        (npm run foto:londra)
-import { writeFileSync, mkdirSync, readFileSync, statSync } from 'node:fs'
+import { writeFileSync, mkdirSync, readFileSync, statSync, readdirSync } from 'node:fs'
 import path from 'node:path'
 import sharp from 'sharp'
 
@@ -131,8 +131,15 @@ for (const [id, titolo] of Object.entries(FILE)) {
   }
 }
 
+// Nella cartella ci sono anche file che questo script non scarica (la card stilizzata
+// dell'appartamento, la foto di famiglia dell'M&M'S): pesano lo stesso, quindi contano nel tetto.
+const gestiti = new Set(Object.keys(FILE).map((id) => `${id}.webp`))
+const estranei = readdirSync(OUT).filter((f) => !gestiti.has(f))
+const kbEstranei = estranei.reduce((n, f) => n + Math.round(statSync(path.join(OUT, f)).size / 1024), 0)
+if (estranei.length) console.log(`\n${estranei.length} file non gestiti da questo script: ${kbEstranei} kB (${estranei.join(', ')})`)
+
 // Seconda passata: se la cartella sfora il tetto, le foto più pesanti tornano giù a q70
-let totale = crediti.reduce((n, f) => n + f.kb, 0)
+let totale = crediti.reduce((n, f) => n + f.kb, 0) + kbEstranei
 if (totale > BUDGET_KB) {
   console.log(`\n${totale} kB: sopra il tetto di ${BUDGET_KB} kB, ricomprimo le più pesanti a q70`)
   for (const f of [...crediti].sort((a, b) => b.kb - a.kb)) {
