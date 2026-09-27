@@ -539,3 +539,8 @@ Cercati bug dello stesso tipo di "portiere che si rituffa nel replay": due cambi
 - **Lunedì**: in testa alla mattina (tutta all'aperto, Trafalgar → Green Park) il consiglio di invertire — Harrods prima, al coperto, parchi dopo se spiove. **Il museo resta alle 16:30**: il suggerimento di partenza lo anticipava insieme a Harrods, ma i biglietti sono a fascia oraria e prima non si entra, quindi la nota lo dice.
 - **Martedì**: sulla card di Covent Garden "già al riparo, il mercato è coperto".
 - Stato solo in memoria finché la pagina è aperta: nessuno storage (verificato in Chromium), una ricarica lo rimette su "no".
+
+## Londra · passeggino a noleggio, piano B
+- Box **"👶 Passeggino a noleggio — piano B"** nelle note pratiche: il piano base resta a piedi e in braccio. Tre servizi verificati sui loro siti: **Baboodle** (consegna il giorno dopo in tutta Londra, finestra di due ore, ritiro gratuito; listino mensile, quindi il prezzo per due notti va chiesto), **The London Baby Equipment Hire Company** (specialisti londinesi, consegnano anche a hotel e alloggi; prezzi in un listino a parte), **Babonbo** (piattaforma di noleggiatori locali, consegna in hotel e case vacanza e a Heathrow; prezzi solo prenotando).
+- **Nessun prezzo in pagina**: nessuno dei tre pubblica chiaramente il costo di un noleggio di due o tre giorni, quindi "prezzo da verificare al momento della prenotazione". In fondo, due cose da controllare prima di prenotare: il peso massimo del modello rispetto a Olly (5 anni) e che si chiuda abbastanza per la metro.
+- **"Anytime Baby Equipment Hire" non c'è**: cercato col nome esatto e con varianti, non risulta un servizio con quel nome a Londra, quindi non è in pagina.

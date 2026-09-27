@@ -449,6 +449,14 @@
   .nov__ok{width:100%;border:0;border-radius:14px;padding:14px;background:var(--gold);color:var(--night-0);
     font:inherit;font-weight:800;font-size:15px;cursor:pointer}
   html.nov-aperto{overflow:hidden}
+  /* passeggino a noleggio: piano B, nelle note pratiche */
+  .psg{margin-top:14px}
+  .psg h3{font-family:"Playfair Display",Georgia,serif;font-size:19px}
+  .psg-lede{margin-top:6px;font-size:13.5px;line-height:1.55;color:var(--muted)}
+  .psg-lede b{color:var(--gold-soft)}
+  .psg .notes{margin-top:10px}
+  .psg .notes a{color:var(--sky)}
+  .psg-nota{margin-top:10px;font-size:12.5px;line-height:1.5;color:var(--muted);font-style:italic}
   /* piano pioggia: solo note contestuali, compaiono quando il toggle "Piove" è acceso */
   .piove-btn{margin-top:10px;display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(109,179,216,.45);
     background:rgba(109,179,216,.08);color:var(--ink);border-radius:999px;padding:6px 13px;font:inherit;font-size:12.5px;font-weight:700;cursor:pointer}
@@ -1355,6 +1363,16 @@
         <li><span class="ic">🌧️</span><span>Meteo novembre: freddo e possibile pioggia — il martedì è al coperto (mercato di Covent Garden) e il Natural History Museum del lunedì è un riparo pronto.</span></li>
       </ul>
     </div>
+    <div class="card psg" id="passeggino">
+      <h3>👶 Passeggino a noleggio — piano B</h3>
+      <p class="psg-lede">Il piano base resta a piedi e in braccio. Se Olly si stanca troppo, a Londra ci sono servizi che portano il passeggino dove state. Nessuno pubblica chiaramente il prezzo di un noleggio di due o tre giorni: <b>prezzo da verificare al momento della prenotazione</b>.</p>
+      <ul class="notes">
+        <li><span class="ic">🛒</span><span><a href="https://baboodle.co.uk/collections/pram-hire-london" target="_blank" rel="noopener"><b>Baboodle</b></a> — consegna il giorno dopo in tutta Londra, con una finestra di due ore, e ritiro gratuito. Il listino sul sito è mensile: per due notti il prezzo va chiesto, e va chiesto se consegnano all’indirizzo di un appartamento per le vacanze.</span></li>
+        <li><span class="ic">🏨</span><span><a href="https://www.babyequipmenthirelondon.co.uk/" target="_blank" rel="noopener"><b>The London Baby Equipment Hire Company</b></a> — specialisti londinesi, lavorano con chi è in vacanza e consegnano anche a hotel e alloggi. Prezzi in un listino a parte: da verificare.</span></li>
+        <li><span class="ic">✈️</span><span><a href="https://www.babonbo.com/en/places/united-kingdom/london" target="_blank" rel="noopener"><b>Babonbo</b></a> — piattaforma di noleggiatori locali: consegna in hotel e case vacanza, anche a Heathrow. Prezzo e durata minima si vedono solo prenotando.</span></li>
+      </ul>
+      <p class="psg-nota">Prima di prenotare: controllare il peso massimo del modello rispetto a Olly, che ha 5 anni, e che si chiuda abbastanza da salire in metro.</p>
+    </div>
   </section>
 
 </div>
@@ -1691,6 +1709,9 @@
      dati bloccati) il pannello non compare da solo: uno che non si può chiudere per sempre è peggio di niente.
      Il link in fondo alla pagina lo riapre con tutto lo storico, in ogni caso. */
   var NOVITA = [
+    { v: 11, data: '2026-09-27', titolo: 'Passeggino a noleggio, se serve', voci: [
+      'Nelle note pratiche, tre servizi londinesi che portano il passeggino dove state: piano B, il piano resta a piedi e in braccio',
+      'Prezzi da verificare al momento della prenotazione: nessuno li pubblica chiari per due o tre giorni' ] },
     { v: 10, data: '2026-09-27', titolo: 'Se piove', voci: [
       'In testata il pulsante «🌧️ Piove»: acceso, mostra cosa cambia giorno per giorno',
       'Domenica e martedì quasi niente (acquario e mercato sono al coperto); lunedì mattina il consiglio di fare Harrods prima dei parchi' ] },
