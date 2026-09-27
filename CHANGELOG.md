@@ -397,3 +397,12 @@ Pagina fuori dal sito, **non linkata da nessuna parte**: `stats-dtcmbsis.html`. 
 - **Testi**: "pararo" → "paro"; la dritta falsa *«Ha il lato debole a destra, in basso»* → *«Il lato debole ce l'ha: è la bocca. Non stare a sentirlo»*; Skill senza "traversa"; "tell dimezzato" → "il portiere si sbilancia la metà"; Boss "Non si sbilancia quasi mai"; onboarding "zona colorata".
 - **Boss al livello 2** (100 XP, `BOSS_LEVEL`).
 - `scripts/qa/rigori-nav.mjs`: 23 controlli, compreso il grep sul bundle pubblicato per i refusi.
+
+## Rigori, blocco 2: ritmo
+- **Un replay solo, 2,2 s**, dalla laterale rialzata di 0,5 m e arretrata di 1,2 m (`camereReplay`, `[lato·5,6, 1,6, 5,2]`): portiere e palla nel quadro. La velocità del replay è ricavata dalla finestra (`(to − from) / 2,2`), non più fissa a 0,3×. La sequenza parte dall'**esito**, non da quando la palla si ferma: `REPLAY_ATTESA` 0,4 s per leggere il cartello, replay, `FINE` 0,15 s. Prima: due passate da 3,5 s più pause, 8,05 s.
+- **Tempo di sistema per tiro**: rincorsa 0,5 + volo fino a 0,75 + 0,4 + 2,2 + 0,15 = **4,00 s** (era 9,7). Shootout da 10 tiri: **41,8 s** di sistema (era 98). Misurato qui con GPU software: esito dopo 3,8 s, tiro concluso dopo 11,6 s, contro 36-43 s di prima nello stesso ambiente.
+- **"Tocca per saltare ▸"** grande (56 px, `--fs-2`) e visibile appena esce il cartello; il salto è accettato dopo **150 ms** (era 400).
+- **Default**: musica OFF, vibrazione OFF, effetti al **50 %** (`sfxGain` 0,45, era 0,9). Con la musica OFF il loop non parte e **non si scarica nemmeno** (prima partiva a volume zero, 1,1 MB per niente); accendendola in Opzioni parte la traccia giusta. Chi ha già delle impostazioni salvate le tiene.
+- **Swipe da tutta la metà bassa** dello schermo (`input.js`): il raggio di 70 px attorno al pallone non c'è più.
+- **Video solo a richiesta**: niente più `MediaRecorder` acceso a ogni replay di ogni tiro. "Video" nel risultato riesegue il replay dell'ultimo tiro registrando il canvas (il record è immutabile, il video è identico a quello visto) e poi condivide.
+- `scripts/qa/rigori-ritmo.mjs`: 16 controlli. `rigori-musica.mjs` accende la musica nelle impostazioni, perché è lei che controlla.

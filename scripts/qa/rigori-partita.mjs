@@ -14,7 +14,7 @@ await p.goto(url, { waitUntil: 'load' })
 await p.waitForFunction(() => window.__rigori?.ready, null, { timeout: 60000 })
 await p.evaluate(() => window.__rigori.kitReady)
 
-const COL = [-2.55, 0, 2.55]                               // centri delle tre colonne di zona
+const COL = [-1.47, 0, 1.47]                               // centri delle tre colonne di zona (porta 4,40 × 1,82)
 const stato = () => p.evaluate(() => {
   const R = window.__rigori, m = R.mode()
   return { role: R.role(), shot: R.shotState(), locked: R.esitoLocked, replay: !!R.game.juice.replaying, mode: m && { round: m.round, me: m.me, ale: m.ale, sudden: m.suddenDeath, finished: m.finished } }
@@ -33,10 +33,11 @@ async function partita(tentativo) {
     if (ruolo === 'shooter') {
       // in vantaggio ci si fa parare, altrimenti si segna: così la serie arriva in parità al quinto rigore
       const segna = s.mode.me <= s.mode.ale
-      const col = n % 3, riga = n % 2
+      // per farsi parare si tira basso: in alto il tuffo non arriva (data/reach.js), e la parata non verrebbe
+      const col = n % 3, riga = segna ? n % 2 : 1
       const zona = segna ? riga * 3 + (col + 2) % 3 : riga * 3 + col
       await p.evaluate(({ aim, zona, seme }) => { const R = window.__rigori; R.setPrecision(0); R.ctx.forceKeeperZone(zona); R.fire(aim, true, 0, seme) },
-        { aim: { x: COL[col], y: riga === 0 ? 1.8 : 0.6, power: 0.55 + (n % 4) * 0.12, curve: (n % 3 - 1) * 0.35 }, zona, seme: 5100 + tentativo * 100 + n })
+        { aim: segna ? { x: COL[col], y: riga === 0 ? 1.35 : 0.45, power: 0.55 + (n % 4) * 0.12, curve: (n % 3 - 1) * 0.35 } : { x: COL[col] * 0.95, y: 0.4, power: 0.5, curve: 0 }, zona, seme: 5100 + tentativo * 100 + n }) // per farsi parare: piazzato, basso, senza curva
     } else {
       // da portiere ci si tuffa alla rincorsa, alla cieca, come farebbe una persona
       await attendi((x) => x.shot === 'windup' || x.shot === 'flying', 40000, 'tiro di Ale')
@@ -77,9 +78,9 @@ const guai = []
 for (const x of reg) {
   const atteso = x.turno === 'tu' ? { t: 'monne', p: 'ale' } : { t: 'ale', p: 'monne' }
   if (x.shooterId !== atteso.t || x.keeperId !== atteso.p) guai.push(`tiro ${x.n}: ruoli ${x.shooterId}/${x.keeperId}, attesi ${atteso.t}/${atteso.p}`)
-  if (!(x.v0 >= 15 && x.v0 <= 30)) guai.push(`tiro ${x.n}: v0 ${x.v0} fuori da 15–30 m/s`)
-  if (!(x.volo >= 0.4 && x.volo <= 0.75)) guai.push(`tiro ${x.n}: volo ${x.volo} s fuori da 0,40–0,75 s`)
-  if (x.outcome === 'save' && !(x.guanto != null && x.guanto <= 0.15)) guai.push(`tiro ${x.n}: guanto a ${x.guanto} m dalla palla`)
+  if (!(x.v0 >= 11.5 && x.v0 <= 22)) guai.push(`tiro ${x.n}: v0 ${x.v0} fuori da 11,5–22 m/s`) // finestra della porta in scala
+  if (!(x.volo >= 0.4 && x.volo <= 0.85)) guai.push(`tiro ${x.n}: volo ${x.volo} s fuori da 0,40–0,85 s`)
+  if (x.outcome === 'save' && !(x.guanto != null && x.guanto <= 0.25)) guai.push(`tiro ${x.n}: guanto a ${x.guanto} m dalla palla`) // raggio della capsula
   if (x.outcome === 'goal' && !(x.rete >= 0.15 && x.rete <= 0.45)) guai.push(`tiro ${x.n}: gonfiore rete ${x.rete} m fuori scala`)
   if (!x.sfotto) guai.push(`tiro ${x.n}: sfottò mancante`)
 }

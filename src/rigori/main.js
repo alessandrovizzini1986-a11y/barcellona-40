@@ -12,7 +12,7 @@ import { createLights } from './scene/lights.js'
 import { createPostFx } from './scene/postfx.js'
 import { createBall } from './game/ball.js'
 import { createInput } from './core/input.js'
-import { createShot, aimFromGesture } from './game/shot.js'
+import { createShot, aimFromGesture, renderShotAt } from './game/shot.js'
 import { createTiming } from './game/timing.js'
 import { createGhost } from './game/ghost.js'
 import { loadCharacterKit, makeCharacter } from './scene/players.js'
@@ -91,7 +91,8 @@ const perf = createPerf({
 applyQuality()
 let timingEnabled = true               // opzione (fase 9); ON di default
 // Opzione "riduci flash e shake" (fase 9) + prefers-reduced-motion: niente shake né particelle intense
-const settings = Object.assign({ audio: true, music: true, vibration: true, reduceFx: reducedMotion, timing: true, quality: 'auto', skipReplay: save.get('skipReplay', false) }, save.get('settings', {}))
+// Musica e vibrazione OFF di default: al tavolo del ristorante il telefono non deve urlare. Si accendono in Opzioni.
+const settings = Object.assign({ audio: true, music: false, vibration: false, reduceFx: reducedMotion, timing: true, quality: 'auto', skipReplay: save.get('skipReplay', false) }, save.get('settings', {}))
 const qOverride = new URLSearchParams(location.search).get('q') // QA: ?q=alta|bassa|auto, solo per questa visita (non viene salvato)
 const audio = createAudio(ASSETS, settings)
 function applySettings() {
@@ -214,15 +215,16 @@ function onShotEvent(e) {
   if (e.type === 'windup') { hint.hidden = true; audio.play('step', { volume: .5 }) }
   if (e.type === 'kick') { clearEsitoTimers(); audio.play(e.aim.power > 0.95 ? 'kick2' : 'kick', { volume: 0.6 + Math.min(0.4, e.aim.power * 0.4) }); hint.hidden = true; replayPending = true; kicker?.onKick(); rig.followLook(ball.mesh) }
   if (e.type === 'result') kicker?.react(e.result)
-  if (e.type === 'result') { esitoLock = true; sequenzaConsumata = false; esitoDa = performance.now(); skipBtn.hidden = false; keeper?.react(e.result); const rec = shot.record; const sfotto = game.tauntFor(rec); rec.sfotto = sfotto; ultimoTiro = rec; showEsito(game.ui, { outcome: rec.outcome, corner: rec.corner, shooterId: rec.ruoli.tiratore.id, taunt: sfotto }); audio.duck(true); audio.vo(rec.corner ? 'corner' : rec.outcome) }
+  if (e.type === 'result') { esitoLock = true; sequenzaConsumata = false; esitoDa = performance.now(); skipBtn.hidden = false; dopoEsito(); keeper?.react(e.result); const rec = shot.record; const sfotto = game.tauntFor(rec); rec.sfotto = sfotto; ultimoTiro = rec; showEsito(game.ui, { outcome: rec.outcome, corner: rec.corner, shooterId: rec.ruoli.tiratore.id, taunt: sfotto }); audio.duck(true); audio.vo(rec.corner ? 'corner' : rec.outcome) }
   if (e.type === 'goal') { crowd.react('ola'); shake(0.10, 0.35); audio.sting('gol'); audio.play('net', { volume: .8 }); audio.crowd('roar'); setTimeout(() => audio.crowd('clap'), 700); audio.vibrate([30, 40, 70]) }
   if (e.type === 'post' || e.type === 'crossbar') { shake(0.06, 0.2); juice.hitStop(60); audio.play(e.type, { volume: .9 }); audio.vibrate(50) }
   if (e.type === 'save') { juice.hitStop(60); crowd.react('oooh'); audio.sting('parata'); audio.play('glove', { volume: .9 }); audio.crowd('oooh'); audio.vibrate(40) }
   if (e.type === 'miss') { crowd.react('oooh'); audio.crowd('oooh') }
-  if (e.type === 'settled') afterSettled()
+  if (e.type === 'settled') { if (game.holdShot) esitoLock = false } // QA: holdShot tiene il record vivo; la sequenza vera parte dall'esito
 }
-// Dopo l'esito: due replay con camere diverse, poi si torna dietro al tiratore. Le modalità ascoltano 'replayEnd'.
-// Nessuna delle due sta dietro la porta: si vedono sempre la palla, il portiere e almeno un volto.
+// Dopo l'esito: UN replay solo, dalla laterale, poi si torna dietro al tiratore. Le modalità ascoltano 'replayEnd'.
+// La seconda camera resta qui per chi la vuole (QA, condivisione), ma in partita non gira più: costava 3,5 s a tiro.
+// Laterale rialzata di 0,5 m e arretrata di 1,2 m rispetto a prima: portiere e palla stanno tutti e due nel quadro.
 export function camereReplay(rec) {
   const lato = Math.sign(rec.contact.x) || 1
   // Si inquadra il punto medio fra dove finisce la palla e dove arriva il portiere: in ritratto il campo
@@ -231,7 +233,7 @@ export function camereReplay(rec) {
   const mx = (rec.contact.x + k.x) / 2, my = Math.max(0.8, (rec.contact.y + k.y) / 2)
   return [
     // 1) laterale bassa: 1,1 m da terra, sul lato del tiro; palla e portiere in campo
-    { pos: [lato * 5.2, 1.1, 4.0], look: [mx, my, 0.5], fov: 70, segui: false },
+    { pos: [lato * 5.6, 1.6, 5.2], look: [mx, my, 0.5], fov: 70, segui: false },
     // 2) frontale 3/4 dal lato del tiratore, dietro la palla: segue la palla e il portiere guarda in camera
     { pos: [lato * 2.2, 1.35, 9.0], look: [mx, my, 0.5], fov: 58, segui: true }
   ]
@@ -240,7 +242,7 @@ export function camereReplay(rec) {
 // arrivano dopo un salto trovano sequenzaConsumata a true e non fanno nulla. Saltare non cambia nulla del
 // risultato, perché punteggio, XP, traguardi e sfottò sono già stati applicati all'evento 'result'.
 // Dati dell'ultimo tiro, per la condivisione: nomi dal record, non dallo stato del turno.
-let ultimoTiro = null, videoReplay = null, fileVideo = null
+let ultimoTiro = null, fileVideo = null
 const PAROLE = { goal: 'GOL', save: 'PARATA', post: 'PALO', crossbar: 'TRAVERSA', miss: 'FUORI' }
 function datiCondivisione() {
   const rec = ultimoTiro
@@ -272,7 +274,6 @@ async function condividiMomento() {
 function chiudiSequenza() {
   if (sequenzaConsumata) return
   sequenzaConsumata = true
-  if (videoReplay) { const v = videoReplay; videoReplay = null; v.ferma().then((f) => { fileVideo = f }).catch(() => { fileVideo = null }) }
   clearEsitoTimers(); juice.stopReplay()
   skipBtn.hidden = true
   audio.duck(false); hideEsito(game.ui); shot.reset(); keeper?.reset(); kicker?.reset()
@@ -287,23 +288,38 @@ function saltaSequenza() {
   chiudiSequenza()
   return true
 }
-function afterSettled() {
-  if (game.holdShot) { esitoLock = false; return } // QA: tiene il record vivo per i test
+// RITMO. Un tiro completo deve stare sotto i 4 s di sistema: rincorsa 0,5 + volo 0,4-0,75 + il cartello che
+// si legge per REPLAY_ATTESA + un replay di REPLAY_DURATA + FINE per rientrare. Il replay parte dall'ESITO,
+// non da quando la palla si ferma: la palla che rotola in rete è già il momento GOL, non serve aspettarla.
+const REPLAY_ATTESA = 0.4, REPLAY_DURATA = 2.2, FINE = 0.15
+const finestraReplay = (rec) => { const from = Math.max(0, rec.contactTime - 0.55), to = Math.min(rec.duration, rec.contactTime + 0.5); return { from, to, speed: (to - from) / REPLAY_DURATA } }
+let ultimoReplay = null // QA: com'è stato fatto l'ultimo replay (finestra, velocità, passate)
+function dopoEsito() {
+  if (game.holdShot) return // QA: tiene il record vivo per i test
   const finish = chiudiSequenza
   if (!replayPending || settings.skipReplay) { tFinish = setTimeout(finish, settings.skipReplay ? 900 : 0); return }
   replayPending = false
   const rec = shot.record
-  const from = Math.max(0, rec.contactTime - 0.55), to = Math.min(rec.duration, rec.contactTime + 0.5)
-  const [cam1, cam2] = camereReplay(rec)
-  // la camera sbloccata (drone, dischetto) sostituisce la prima; la seconda resta la frontale
-  const primaCam = replayCamUnlock ? null : cam1
-  const passata = (camera, segui, poi) => juice.startReplay({ from, to, speed: 0.3, render: (t) => shot.renderAt(t), camera, segui, onEnd: poi })
-  // Video del replay: si registra MENTRE il replay gira, non si riesegue. Solo dove MediaRecorder funziona.
-  fileVideo = null
-  if (tipoVideoSupportato()) { try { videoReplay = registraReplay(R.renderer.domElement, { durataMax: 6000 }) } catch { videoReplay = null } }
-  tReplay = setTimeout(() => passata(primaCam, cam1.segui, () => {
-    tFinish = setTimeout(() => passata(cam2, cam2.segui, () => { tFinish = setTimeout(finish, 300) }), 250)
-  }), 500)
+  const { from, to, speed } = finestraReplay(rec)
+  const [cam1] = camereReplay(rec)
+  // la camera sbloccata (drone, dischetto) sostituisce la laterale
+  ultimoReplay = { from, to, speed, durata: (to - from) / speed, passate: 1, attesa: REPLAY_ATTESA, fine: FINE }
+  fileVideo = null // il video si registra solo se qualcuno lo chiede, dal risultato
+  tReplay = setTimeout(() => juice.startReplay({ from, to, speed, render: (t) => shot.renderAt(t), camera: replayCamUnlock ? null : cam1, segui: cam1.segui, onEnd: () => { tFinish = setTimeout(finish, FINE * 1000) } }), REPLAY_ATTESA * 1000)
+}
+// Video a richiesta: si riesegue il replay dell'ultimo tiro registrando il canvas. Il record è immutabile, quindi
+// il video è identico a quello che si è visto. Torna il file, o null dove MediaRecorder non funziona davvero.
+async function registraVideo() {
+  const rec = ultimoTiro
+  if (!rec || !tipoVideoSupportato() || juice.replaying) return null
+  let reg = null
+  try { reg = registraReplay(R.renderer.domElement, { durataMax: 6000 }) } catch { reg = null }
+  if (!reg) return null
+  const { from, to, speed } = finestraReplay(rec)
+  const [cam1] = camereReplay(rec)
+  await new Promise((res) => juice.startReplay({ from, to, speed, render: (t) => renderShotAt(rec, t, { ball, keeper, live: false }), camera: replayCamUnlock ? null : cam1, segui: cam1.segui, onEnd: res }))
+  ball.reset(); keeper?.reset(); rig.goTo('dietroTiratore', { instant: true })
+  try { return await reg.ferma() } catch { return null }
 }
 systems.push({ update(dt) { shot.update(dt); timing.update(dt); if (!timingEl.hidden) timingCur.style.left = (timing.value * 100) + '%' } })
 // Dal vivo il tiro va a velocità reale dall'inizio alla fine: il volo dura quello che dice la fisica
@@ -394,11 +410,10 @@ systems.push({ update(dt) {
 document.getElementById('rg-ui').addEventListener('click', (e) => { const b = e.target.closest('button, a'); if (!b) return; audio.play(b.classList.contains('rg-btn--primary') ? 'confirm' : b.dataset.value === '__close' || b.dataset.back != null ? 'back' : 'click', { volume: .5 }) })
 const menuBtn = document.createElement('button'); menuBtn.className = 'rg-btn rg-btn--ghost rg-menubtn'; menuBtn.setAttribute('aria-label', 'Menu'); menuBtn.textContent = '≡'; menuBtn.hidden = true
 document.getElementById('rg-ui').appendChild(menuBtn)
-// SALTA: durante esito e replay, in basso a destra e sopra tutto. Anche un tocco in qualunque punto salta,
-// ma solo dopo che il cartello è stato a schermo almeno 400 ms: altrimenti il dito che ha appena tirato
-// salterebbe l'esito senza che si sia potuto leggere.
-const RITARDO_SALTO = 400
-const skipBtn = document.createElement('button'); skipBtn.className = 'rg-btn rg-btn--ghost rg-skip'; skipBtn.textContent = 'SALTA ▸'
+// TOCCA PER SALTARE: durante esito e replay, grande, in basso, sopra tutto. Anche un tocco in qualunque punto salta,
+// ma solo dopo 150 ms dal cartello: bastano a scartare il tocco residuo del dito che ha appena tirato.
+const RITARDO_SALTO = 150
+const skipBtn = document.createElement('button'); skipBtn.className = 'rg-btn rg-skip'; skipBtn.textContent = 'Tocca per saltare ▸'
 skipBtn.setAttribute('aria-label', 'Salta il replay'); skipBtn.hidden = true
 document.getElementById('rg-ui').appendChild(skipBtn)
 skipBtn.addEventListener('click', (e) => { e.stopPropagation(); saltaSequenza() })
@@ -414,6 +429,7 @@ document.getElementById('rg-ui').addEventListener('click', async (e) => {
   }
 })
 async function condividiVideo() {
+  if (!fileVideo) { toast(game.ui, 'Registro il replay…', 2500); fileVideo = await registraVideo() }
   if (!fileVideo) { toast(game.ui, 'Video non disponibile'); return }
   const d = datiCondivisione()
   const testo = d ? `${d.titolo} · ${d.sfida} — rigori al camp nou` : 'rigori al camp nou'
@@ -467,7 +483,7 @@ async function runFlow() {
       const lv = game.progress?.level?.() || { n: 1, title: 'Esordiente' }
       const esito = esitoPartita(e)
       if (esito === 'vinto' && !settings.reduceFx) confettiBig()
-      const r = await risultato(game.ui, { title: titleFor(e), lines: linesFor(e), esito, xpGained: xpNow - xpBefore, xp: xpNow, level: lv, next: game.progress?.next?.() || null, achievements: game.progress?.takeFresh?.() || [], shareText: shareFor(e), sito: SITO, video: !!fileVideo })
+      const r = await risultato(game.ui, { title: titleFor(e), lines: linesFor(e), esito, xpGained: xpNow - xpBefore, xp: xpNow, level: lv, next: game.progress?.next?.() || null, achievements: game.progress?.takeFresh?.() || [], shareText: shareFor(e), sito: SITO, video: !!tipoVideoSupportato() })
       again = r === 'again'
     }
   }
@@ -541,6 +557,8 @@ window.__rigori = {
   // QA: salta la sequenza esito+replay come farebbe un tocco. Torna false se il salto non è accettato
   // (sequenza già chiusa, oppure il cartello è a schermo da meno di 400 ms).
   salta: () => saltaSequenza(), get sequenzaConsumata() { return sequenzaConsumata }, get ritardoSalto() { return RITARDO_SALTO },
+  // QA del ritmo: com'è stato fatto l'ultimo replay, le costanti della sequenza e il video (null finché nessuno lo chiede)
+  get ultimoReplay() { return ultimoReplay }, ritmo: { KICK_DELAY, REPLAY_ATTESA, REPLAY_DURATA, FINE }, get fileVideo() { return fileVideo }, registraVideo,
   // QA: gonfiore massimo toccato dalla rete dall'ultimo impulso, in metri (azzerabile fra un tiro e l'altro)
   reteAmpiezza: () => goal.ampiezzaMax?.() ?? null,
   reteRiposo: () => goal.riposo?.(),

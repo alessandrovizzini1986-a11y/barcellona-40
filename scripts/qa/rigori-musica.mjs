@@ -6,7 +6,8 @@ const b = await chromium.launch({ executablePath: process.env.CHROME_PATH || '/o
 const ctx = await b.newContext({ viewport: { width: 380, height: 820 }, isMobile: true, hasTouch: true })
 const p = await ctx.newPage(); const errori = [], check = (ok, msg) => { console.log((ok ? '✓ ' : '✗ ') + msg); if (!ok) errori.push(msg) }
 p.on('pageerror', (e) => errori.push('pageerror: ' + e.message)); p.on('console', (m) => { if (m.type() === 'error') errori.push('console: ' + m.text()); if (m.type() === 'info' && /assente/.test(m.text())) errori.push('traccia mancante: ' + m.text()) })
-await p.addInitScript(() => { try { localStorage.setItem('b40:v1:rigori:onboarded', 'true') } catch {} })
+// La musica è OFF di default (blocco 2): qui si accende, perché è proprio lei che si controlla
+await p.addInitScript(() => { try { localStorage.setItem('b40:v1:rigori:onboarded', 'true'); localStorage.setItem('b40:v1:rigori:settings', JSON.stringify({ music: true })) } catch {} })
 await p.goto(url, { waitUntil: 'load' })
 await p.waitForFunction(() => window.__rigori?.ready, null, { timeout: 60000 })
 await p.click('.rg-loading__tap', { force: true }); await p.waitForTimeout(500)

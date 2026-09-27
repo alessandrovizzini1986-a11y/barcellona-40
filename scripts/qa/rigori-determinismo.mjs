@@ -26,15 +26,18 @@ const shoot = async (aim, seed) => {
 const probe = (times) => p.evaluate((ts) => ts.map((t) => { window.__rigori.renderAt(t); return { t, ...window.__rigori.pose() } }), times)
 
 // ---- 2) venti tiri a seme fisso: il portiere parte sempre in tempo e il tuffo si vede ----
-const AIMS = [[-2.6, 1.9], [2.6, 1.9], [-2.6, 0.5], [2.6, 0.5], [0, 1.9], [0, 0.5], [-1.4, 1.2], [1.4, 1.2], [-3.2, 1.0], [3.2, 1.0]]
+// Mire in scala con la porta 4,40 × 1,82 (erano quelle della porta regolamentare)
+const AIMS = [[-1.55, 1.42], [1.55, 1.42], [-1.55, 0.38], [1.55, 0.38], [0, 1.42], [0, 0.38], [-0.85, 0.9], [0.85, 0.9], [-1.95, 0.75], [1.95, 0.75]]
 let lateOk = 0, visibleOk = 0, moveOk = 0, moveTot = 0
 for (let i = 0; i < 20; i++) {
   const [x, y] = AIMS[i % AIMS.length]
   const { rec, trace } = await shoot({ x, y, power: 0.6 + (i % 5) * 0.12, curve: 0 }, 1000 + i)
-  if (rec.react != null && rec.react < rec.flightTime) lateOk++
+  if (rec.react != null && rec.react < rec.contactTime) lateOk++
   const clipT = trace.map((f) => f.clipTime).filter((v) => v >= 0)
   if (clipT.length && Math.max(...clipT) - Math.min(...clipT) > 0.3) visibleOk++
-  if (rec.zone != null && rec.zone % 3 !== 1) { moveTot++; if (Math.max(...trace.map((f) => Math.abs(f.keeperX))) > 0.8) moveOk++ }
+  // lo spostamento laterale della radice è il rientro analitico 2,29 − GOAL.w/3 = 0,82 m a tuffo completo; sui tiri
+  // veloci l'esito arriva prima e la posa si ferma dov'è (dopo comanda la reazione). Si controlla che il movimento ci sia.
+  if (rec.zone != null && rec.zone % 3 !== 1) { moveTot++; if (Math.max(...trace.map((f) => Math.abs(f.keeperX))) > 0.25) moveOk++ }
   if (i === 0) console.log('  esempio:', JSON.stringify(rec))
 }
 check(lateOk === 20, `il tuffo parte prima dell'impatto in 20/20 tiri (${lateOk})`)
@@ -42,7 +45,7 @@ check(visibleOk === 20, `la clip del tuffo avanza in 20/20 tiri (${visibleOk})`)
 check(moveOk === moveTot, `il portiere si sposta lateralmente in tutte le zone non centrali (${moveOk}/${moveTot})`)
 
 // ---- 1, 3, 4) determinismo fra live, replay 1 e replay 2 ----
-const { rec, trace: live } = await shoot({ x: -2.5, y: 1.85, power: 0.85, curve: 0.2 }, 777)
+const { rec, trace: live } = await shoot({ x: -1.5, y: 1.39, power: 0.85, curve: 0.2 }, 777)
 console.log('  tiro di riferimento:', JSON.stringify(rec))
 const T = []; for (let t = 0.05; t <= rec.duration; t += 0.05) T.push(+t.toFixed(3))
 const passA = await probe(T)

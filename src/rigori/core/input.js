@@ -1,7 +1,8 @@
 import * as THREE from 'three'
 // Swipe dal pallone (Pointer Events): direzione = angolo del gesto, potenza = lunghezza × velocità,
 // curva = deviazione del tracciato dalla retta. Campiona i punti e li espone a chi disegna la traiettoria fantasma.
-// DA VERIFICARE: soglie (raggio di presa 70 px, lunghezza minima 40 px) scelte da me.
+// Presa: tutta la metà bassa dello schermo, sia da tiratore che da portiere. Il raggio di 70 px attorno al
+// pallone faceva fallire il primo swipe a chi partiva col pollice appena fuori. Lunghezza minima 40 px.
 export function createInput(el, { camera, getBallWorld, size, enabled = () => true }) {
   const listeners = { start: [], move: [], end: [], reject: [] }
   const on = (ev, fn) => { listeners[ev].push(fn); return () => { listeners[ev] = listeners[ev].filter((f) => f !== fn) } }
@@ -22,8 +23,7 @@ export function createInput(el, { camera, getBallWorld, size, enabled = () => tr
   }
   const down = (e) => {
     if (!enabled() || active) return
-    if (mode === 'keeper') { if (e.clientY < size.h * 0.45) return } // portiere: qualunque punto nella metà bassa
-    else { const b = ballOnScreen(); if (Math.hypot(e.clientX - b.x, e.clientY - b.y) > 70) { emit('reject', { x: e.clientX, y: e.clientY, ball: b }); return } }
+    if (e.clientY < size.h * 0.45) { if (mode === 'shooter') emit('reject', { x: e.clientX, y: e.clientY, ball: ballOnScreen() }); return } // metà bassa dello schermo, per tutti e due i ruoli
     active = { id: e.pointerId, pts: [{ x: e.clientX, y: e.clientY, t: e.timeStamp }] }
     el.setPointerCapture?.(e.pointerId); e.preventDefault()
     emit('start', { x: e.clientX, y: e.clientY })

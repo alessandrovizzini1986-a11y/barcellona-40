@@ -11,6 +11,7 @@ export function createAudio(ASSETS, settings) {
   let ctx = null, master = null, sfxGain = null, musicGain = null, voGain = null, stingGain = null
   const buffers = new Map(), missing = new Set(), voices = [], stingati = [], vivi = []
   let music = null, musicName = null, ducked = false, unlocked = false
+  let desiderata = null // l'ultima traccia chiesta: se la musica è OFF non parte, ma parte appena la si accende
   const AC = window.AudioContext || window.webkitAudioContext
   const ensure = () => {
     if (ctx || !AC) return !!ctx
@@ -25,7 +26,9 @@ export function createAudio(ASSETS, settings) {
   }
   const apply = () => {
     if (!ctx) return
-    sfxGain.gain.value = settings.audio === false ? 0 : 0.9
+    // Musica OFF: si ferma e non si scarica nemmeno. ON: riparte la traccia che il gioco vorrebbe adesso.
+    if (settings.music === false) { if (music) stopMusic() } else if (!music && desiderata && unlocked) playMusic(desiderata)
+    sfxGain.gain.value = settings.audio === false ? 0 : 0.45 // era 0,9: al tavolo basta la metà
     voGain.gain.value = settings.audio === false ? 0 : 1
     stingGain.gain.value = settings.music === false ? 0 : 0.9
     musicGain.gain.setTargetAtTime(settings.music === false ? 0 : (ducked ? 0.28 : 0.7), ctx.currentTime, 0.08)
@@ -92,7 +95,9 @@ export function createAudio(ASSETS, settings) {
   }
   // ---- musica: file forniti dall'utente, assenti = silenzio ----
   const playMusic = async (name, { loop = true } = {}) => {
-    if (!ctx || !unlocked || !MUSIC[name]) return
+    if (!MUSIC[name]) return
+    desiderata = name
+    if (!ctx || !unlocked || settings.music === false) return
     if (musicName === name && music) return
     stopMusic(); musicName = name // prenotazione: se nel frattempo viene chiesta un'altra traccia, questa non parte
     const b = await load(ASSETS + 'audio/music/' + MUSIC[name]); if (!b) { if (musicName === name) musicName = null; if (!missing.has('log:' + name)) { missing.add('log:' + name); console.info(`[rigori] musica "${name}" assente: silenzio (DA VERIFICARE)`) } return }
@@ -132,6 +137,7 @@ export function createAudio(ASSETS, settings) {
     setTimeout(apply, ms + 20) // riporta il canale al volume normale per il prossimo stinger
   }
   const stopMusic = () => { if (music) { try { music.stop() } catch { /* già ferma */ } } music = null; musicName = null }
+  const stopMusicDavvero = () => { stopMusic(); desiderata = null }
   const duck = (on) => { ducked = !!on; apply() }
   // ---- telecronaca opzionale: se il file c'è si riproduce, altrimenti niente ----
   const vo = async (key) => {
@@ -140,5 +146,5 @@ export function createAudio(ASSETS, settings) {
     const s = ctx.createBufferSource(); s.buffer = b; s.connect(voGain); s.start()
   }
   const vibrate = (pattern) => { if (settings.vibration !== false && navigator.vibrate) { try { navigator.vibrate(pattern) } catch { /* non supportato */ } } }
-  return { unlock, play, whistle, crowd, playMusic, stopMusic, sting, stopSting, duck, vo, vibrate, apply, get unlocked() { return unlocked }, get ducked() { return ducked }, get musicName() { return musicName }, get stingati() { return stingati }, get musicGain() { return musicGain?.gain.value ?? null }, get context() { return ctx } }
+  return { unlock, play, whistle, crowd, playMusic, stopMusic, sting, stopSting, duck, vo, vibrate, apply, get unlocked() { return unlocked }, get ducked() { return ducked }, get musicName() { return musicName }, get stingati() { return stingati }, get musicGain() { return musicGain?.gain.value ?? null }, get sfxGain() { return sfxGain?.gain.value ?? null }, get context() { return ctx } }
 }

@@ -1,6 +1,18 @@
 {
   "entries": [
     {
+      "v": 30,
+      "data": "2026-09-27",
+      "titolo": "Rigori: più ritmo, meno rumore",
+      "voci": [
+        "Un replay solo, di due secondi: un tiro completo dura meno di quattro secondi",
+        "Tocca per saltare, scritto grande: basta un tocco appena vedi l'esito",
+        "Musica e vibrazione spente di default, effetti a metà volume: al tavolo non urla. Si accendono in Opzioni",
+        "Lo swipe parte da tutta la metà bassa dello schermo, non solo dal pallone",
+        "Il video del replay si registra solo se lo chiedi dal risultato"
+      ]
+    },
+    {
       "v": 29,
       "data": "2026-09-27",
       "titolo": "Rigori: si torna al programma da ogni schermata",
