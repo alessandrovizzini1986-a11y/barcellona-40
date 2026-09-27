@@ -43,7 +43,7 @@
       "licenza": "CC BY-SA 4.0",
       "licenzaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
       "pagina": "https://commons.wikimedia.org/wiki/File:Edgware_Road-Bakerloo_Line-Northbound.jpg",
-      "kb": 53
+      "kb": 43
     },
     {
       "id": "southbank",
@@ -54,7 +54,7 @@
       "licenza": "CC BY-SA 2.0",
       "licenzaUrl": "https://creativecommons.org/licenses/by-sa/2.0",
       "pagina": "https://commons.wikimedia.org/wiki/File:Yellow_steps_at_the_Southbank_Centre,_London_-_geograph.org.uk_-_7261180.jpg",
-      "kb": 70
+      "kb": 59
     },
     {
       "id": "sealife",
@@ -65,7 +65,7 @@
       "licenza": "CC BY-SA 4.0",
       "licenzaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
       "pagina": "https://commons.wikimedia.org/wiki/File:Underwater_Walk_of_Sea_Life_London_Aquarium.jpg",
-      "kb": 31
+      "kb": 23
     },
     {
       "id": "eye",
@@ -76,7 +76,7 @@
       "licenza": "CC BY-SA 3.0",
       "licenzaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
       "pagina": "https://commons.wikimedia.org/wiki/File:London_Eye_by_Day.jpg",
-      "kb": 52
+      "kb": 44
     },
     {
       "id": "lina",
@@ -120,7 +120,7 @@
       "licenza": "CC BY-SA 2.0",
       "licenzaUrl": "https://creativecommons.org/licenses/by-sa/2.0",
       "pagina": "https://commons.wikimedia.org/wiki/File:London_,_Westminster_-_Horse_Guards_Parade_-_geograph.org.uk_-_2546769.jpg",
-      "kb": 46
+      "kb": 37
     },
     {
       "id": "bigben",
@@ -131,7 +131,7 @@
       "licenza": "CC BY-SA 4.0",
       "licenzaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
       "pagina": "https://commons.wikimedia.org/wiki/File:Palace_of_Westminster_and_Elizabeth_Tower_20250522.jpg",
-      "kb": 44
+      "kb": 34
     },
     {
       "id": "stjames",
@@ -269,6 +269,17 @@
       "licenzaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
       "pagina": "https://commons.wikimedia.org/wiki/File:79_Beak_Street,_Soho,_January_2022.jpg",
       "kb": 68
+    },
+    {
+      "id": "pollock",
+      "file": "assets/tappe/londra/pollock.webp",
+      "tappa": "Benjamin Pollock's Toyshop",
+      "titolo": "File:Benjamin Pollocks Toy Shop exterior.jpg",
+      "autore": "Jack1956",
+      "licenza": "CC0",
+      "licenzaUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Benjamin_Pollocks_Toy_Shop_exterior.jpg",
+      "kb": 59
     }
   ],
   "scartate": []
