@@ -10,15 +10,17 @@ export const MODES_INFO = [
   { id: 'skill', title: 'Skill', desc: 'Bersagli negli angoli e al centro. Trenta secondi.' },
   { id: 'boss', title: 'Boss: Ale in forma', desc: 'Non si sbilancia quasi mai, reattività +40 %, un tiro su due in alto. Si sblocca al livello 2.' }
 ]
-export async function modalita(ui, { bossUnlocked = false, level = 1 } = {}) {
-  const html = `<h2 class="rg-title">Modalità</h2><div class="rg-modes">${MODES_INFO.map((m) => {
+// `tiratore`: nome di chi sta per tirare, mostrato in alto con "Cambia" che torna a Chi tira?
+export async function modalita(ui, { bossUnlocked = false, level = 1, tiratore = null } = {}) {
+  const chi = tiratore ? `<p class="rg-modes__chi" data-tira>Tira <b>${esc(tiratore)}</b> · <button class="rg-link" data-value="__chi" aria-label="Cambia tiratore">Cambia</button></p>` : ''
+  const html = `<h2 class="rg-title">Modalità</h2>${chi}<div class="rg-modes">${MODES_INFO.map((m) => {
     const locked = m.id === 'boss' && !bossUnlocked
     return `<button class="rg-mode" data-value="${m.id}" ${locked ? 'disabled aria-disabled="true"' : ''} aria-label="${esc(m.title)}: ${esc(m.desc)}${locked ? ' (bloccata)' : ''}"><b>${esc(m.title)}${locked ? ' 🔒' : ''}</b><span>${esc(m.desc)}</span></button>`
-  }).join('')}</div><div class="rg-row"><button class="rg-btn" data-value="__classifica" aria-label="Classifica di serata">Classifica</button><button class="rg-btn rg-btn--ghost" data-value="__opzioni" aria-label="Opzioni">Opzioni</button><button class="rg-btn rg-btn--ghost" data-value="__sblocchi" aria-label="Sblocchi e traguardi">Sblocchi</button><button class="rg-btn rg-btn--ghost" data-value="__chi" aria-label="Cambia tiratore">Cambia tiratore</button></div>`
+  }).join('')}</div><div class="rg-row"><button class="rg-btn" data-value="__classifica" aria-label="Classifica di serata">Classifica</button><button class="rg-btn rg-btn--ghost" data-value="__opzioni" aria-label="Opzioni">Opzioni</button><button class="rg-btn rg-btn--ghost" data-value="__sblocchi" aria-label="Sblocchi e traguardi">Sblocchi</button></div>`
   const v = await overlay(ui, html, { label: 'Scelta della modalità', cls: 'rg-overlay--top', sito: true })
   if (v === 'passAndPlay') {
     const names = await passPlayNames(ui)
-    if (!names) return modalita(ui, { bossUnlocked, level })
+    if (!names) return modalita(ui, { bossUnlocked, level, tiratore })
     return { id: v, opts: { names } }
   }
   return { id: v, opts: {} }

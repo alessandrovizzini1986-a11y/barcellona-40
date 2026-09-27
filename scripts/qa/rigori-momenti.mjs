@@ -14,7 +14,7 @@ const flow = (f) => p.waitForFunction((f) => window.__rigori.flow() === f, f, { 
 await p.goto(url, { waitUntil: 'load' })
 await p.waitForFunction(() => window.__rigori?.ready, null, { timeout: 90000 }); await p.click('.rg-loading__tap', { force: true })
 await flow('chiTira'); await p.waitForTimeout(600); await shot('m2-chi-tira')
-await p.click('.rg-card[data-value="monne"]'); await flow('giocatore'); await p.click('[data-value="vai"]'); await flow('modalita'); await p.waitForTimeout(400); await shot('m1-menu-modalita')
+await p.click('.rg-card[data-value="monne"]'); await flow('modalita'); await p.waitForTimeout(400); await shot('m1-menu-modalita')
 await p.click('.rg-mode[data-value="sfidaAle"]'); await flow('gioco')
 await p.waitForFunction(() => window.__rigori.role() === 'shooter' && window.__rigori.shotState() === 'idle'); await p.waitForTimeout(600)
 // GOL all'angolo alto, portiere dall'altra parte: in volo, poi il cartello, poi il replay a metà tuffo

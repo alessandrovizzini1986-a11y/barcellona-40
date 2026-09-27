@@ -17,7 +17,7 @@ ok('musica OFF di default', s0.music === false && s0.musicName === null, JSON.st
 ok('vibrazione OFF di default', s0.vibration === false)
 ok('effetti accesi, al 50 %', s0.audio === true && Math.abs(s0.sfx - 0.45) < 0.01, String(s0.sfx))
 const flow = (f) => p.waitForFunction((f) => window.__rigori.flow() === f, f, { timeout: 30000 })
-await flow('chiTira'); await p.click('.rg-card[data-value="monne"]'); await flow('giocatore'); await p.click('[data-value="vai"]'); await flow('modalita'); await p.click('.rg-mode[data-value="sfidaAle"]'); await flow('gioco')
+await flow('chiTira'); await p.click('.rg-card[data-value="monne"]'); await flow('modalita'); await p.click('.rg-mode[data-value="sfidaAle"]'); await flow('gioco')
 await p.waitForFunction(() => window.__rigori.role() === 'shooter' && window.__rigori.shotState() === 'idle')
 // 2. swipe con il dito lontano dal pallone (basso a sinistra): il tiro parte lo stesso
 await p.mouse.move(60, 700); await p.mouse.down(); for (let i = 1; i <= 8; i++) { await p.mouse.move(60 + i * 12, 700 - i * 40); await p.waitForTimeout(25) } await p.mouse.up()

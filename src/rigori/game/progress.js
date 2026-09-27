@@ -2,8 +2,12 @@ import { LEVELS, UNLOCKS, BOSS_LEVEL, levelFor, nextLevel } from '../data/unlock
 import { ACHIEVEMENTS } from '../data/achievements.js'
 // Progressione: XP (b40:v1:rigori:xp), livelli, sblocchi, traguardi, classifica locale per modalità, equipaggiamento.
 // Ascolta gli eventi del gioco (listeners): xp, kick, result, crossbar, modeStart, modeEnd. Non tocca le chiavi del sito.
-export function createProgress({ save, listeners, role, shooterName, onLevelUp, onUnlock, onAchievement }) {
+export function createProgress({ save, listeners, role, shooterName, shooterId = () => null, onLevelUp, onUnlock, onAchievement }) {
   let xp = save.get('xp', 0)
+  // Progressione per giocatore (b40:v1:rigori:giocatori): { id: { xp, partite, vittorie } }. Serve alla riga sotto
+  // il nome in "Chi tira?". Il pass-and-play non conta: lì i nomi girano e il tiratore scelto non tira da solo.
+  const giocatori = save.get('giocatori', {})
+  const perGiocatore = () => { const id = cur && cur.id !== 'passAndPlay' ? shooterId() : null; if (!id) return null; return giocatori[id] || (giocatori[id] = { xp: 0, partite: 0, vittorie: 0 }) }
   const done = save.get('achievements', {})            // { id: timestamp }
   const equip = Object.assign({ pallone: 'ball:classico', celebrazione: 'celeb:salto', camera: 'cam:laterale' }, save.get('equip', {}))
   const fresh = []                                     // traguardi sbloccati dall'ultimo takeFresh()
@@ -20,7 +24,7 @@ export function createProgress({ save, listeners, role, shooterName, onLevelUp, 
   const onEvent = (e) => {
     if (e.type === 'modeStart') resetCur(e.id)
     if (!cur) return
-    if (e.type === 'xp') addXp(e.n)
+    if (e.type === 'xp') { addXp(e.n); const g = perGiocatore(); if (g) { g.xp += e.n; save.set('giocatori', giocatori) } }
     if (e.type === 'kick') cur.lastKick = e.aim
     if (e.type === 'crossbar') award('traversa')
     if (e.type === 'result') {
@@ -47,6 +51,7 @@ export function createProgress({ save, listeners, role, shooterName, onLevelUp, 
       }
       board(cur.id, s)
       aggiornaStats(s)
+      const g = perGiocatore(); if (g) { g.partite += 1; if (s.winner === 'me') g.vittorie += 1; save.set('giocatori', giocatori) }
       cur = null
     }
   }
@@ -82,6 +87,8 @@ export function createProgress({ save, listeners, role, shooterName, onLevelUp, 
     equipped: (kind) => equip[kind],
     setEquip(kind, id) { if (!unlocked(id)) return false; equip[kind] = id; save.set('equip', equip); return true },
     board: (id) => save.get(boardKey(id), []),
+    // null se quel giocatore non ha mai tirato
+    giocatore: (id) => { const g = giocatori[id]; if (!g || (!g.partite && !g.xp)) return null; return { level: levelFor(g.xp), xp: g.xp, partite: g.partite, vittorie: g.vittorie } },
     stats: () => Object.assign({}, statsDefault, save.get('stats', {})),
     takeFresh() { const out = fresh.slice(); fresh.length = 0; return out },
     summaryForUi() {

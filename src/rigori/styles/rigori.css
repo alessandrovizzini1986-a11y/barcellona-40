@@ -70,8 +70,17 @@ a.rg-btn{ text-decoration:none; }
 .rg-row .rg-btn{ flex:1 1 auto; }
 .rg-h3{ margin:var(--space-2) 0 0; font-family:var(--font-display); font-size:var(--fs-2); }
 .rg-cards{ display:grid; grid-template-columns:repeat(3, 1fr); gap:var(--space-2); }
-.rg-card{ position:relative; display:flex; flex-direction:column; align-items:center; gap:6px; padding:10px 6px 12px; min-height:150px; border-radius:var(--radius-m); background:var(--bg-3); border:2px solid transparent; color:var(--ink); font:inherit; cursor:pointer; }
-.rg-card--on{ border-color:var(--giallo); }
+.rg-card{ position:relative; display:flex; flex-direction:column; align-items:center; gap:4px; padding:12px 4px 10px; min-height:150px; border-radius:var(--radius-m); background:var(--bg-3); border:2px solid transparent; color:var(--ink); font:inherit; cursor:pointer; }
+.rg-card__slot{ position:relative; display:flex; flex-direction:column; }
+.rg-card__slot .rg-card{ flex:1; }
+/* "Sei tu": il bordo giallo segna il profilo del sito, non una selezione */
+.rg-card--tu{ border-color:var(--giallo); }
+.rg-card__tu{ position:absolute; top:-9px; left:50%; transform:translateX(-50%); z-index:1; padding:1px 8px; border-radius:999px; background:var(--giallo); color:#0E1116; font-family:var(--font-display); font-weight:700; font-size:var(--fs-0); line-height:1.2; white-space:nowrap; }
+.rg-card__stat{ font-size:var(--fs-0); color:var(--ink-3); line-height:1.15; text-align:center; }
+.rg-chi__hint{ margin:0; font-size:var(--fs-0); color:var(--ink-3); text-align:center; }
+.rg-modes__chi{ margin:0; font-size:var(--fs-0); color:var(--ink-2); }
+.rg-modes__chi b{ color:var(--ink); }
+.rg-link{ padding:0; min-height:0; border:0; background:none; color:var(--acqua); font:inherit; font-weight:700; text-decoration:underline; cursor:pointer; }
 .rg-card:focus-visible{ outline:3px solid var(--giallo); outline-offset:2px; }
 .rg-card__jersey{ position:absolute; top:8px; right:8px; width:28px; height:32px; border-radius:6px; display:grid; place-items:center; font-family:var(--font-display); font-weight:700; font-size:16px; }
 .rg-card__face{ width:80px; height:80px; object-fit:contain; }
@@ -146,26 +155,6 @@ button.rg-unlock{ cursor:pointer; }
 @keyframes rg-pulse{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.04); } }
 @media (prefers-reduced-motion: reduce){ .rg-loading__tap{ animation:none; } }
 
-/* Card di conferma del giocatore: entra dal basso in 220 ms */
-.rg-overlay--player .rg-panel{ animation:rg-player-in .22s var(--ease); gap:var(--space-3); }
-/* solo scorrimento, niente dissolvenza: se il dispositivo è lento e l'animazione avanza a scatti,
-   la card resta comunque leggibile (partendo da opacity:0 sparirebbe finché non recupera) */
-@keyframes rg-player-in{ from{ transform:translateY(28px); } }
-@media (prefers-reduced-motion: reduce){ .rg-overlay--player .rg-panel{ animation:none; } }
-.rg-player__top{ display:flex; align-items:center; gap:var(--space-4); }
-.rg-player__face{ width:132px; height:132px; object-fit:contain; flex:none; filter:drop-shadow(0 6px 16px #0007); }
-.rg-player__id{ display:flex; flex-direction:column; align-items:flex-start; gap:var(--space-2); }
-.rg-player__jersey{ display:grid; place-items:center; width:46px; height:52px; border-radius:8px; font-family:var(--font-display); font-size:22px; font-weight:700; }
-.rg-stats{ display:flex; flex-direction:column; gap:6px; }
-.rg-stat{ display:flex; align-items:center; justify-content:space-between; gap:var(--space-3); }
-.rg-stat span{ color:var(--ink-2); font-size:var(--fs-0); }
-.rg-stat__bar{ display:flex; gap:4px; }
-.rg-stat__bar i{ width:22px; height:10px; border-radius:3px; background:var(--bg-3); border:1px solid color-mix(in srgb, var(--ink) 14%, transparent); }
-.rg-stat__bar i.on{ background:var(--acqua); border-color:transparent; }
-.rg-tips{ margin:0; padding:0 0 0 18px; display:flex; flex-direction:column; gap:4px; }
-.rg-tips li{ font-size:var(--fs-0); color:var(--ink); }
-.rg-tips--avv li{ color:var(--ink-2); }
-.rg-player__actions{ margin-top:var(--space-2); }
 .rg-btn--giallo{ min-height:56px; flex:2 1 60%; background:var(--giallo); color:#0E1116; border-color:transparent; font-family:var(--font-display); font-size:var(--fs-2); letter-spacing:.02em; }
 
 /* SALTA: sopra ogni altro elemento, in basso a destra, durante esito e replay */

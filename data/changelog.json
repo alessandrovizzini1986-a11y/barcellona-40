@@ -1,6 +1,17 @@
 {
   "entries": [
     {
+      "v": 35,
+      "data": "2026-09-27",
+      "titolo": "Rigori: Chi tira? a un tocco",
+      "voci": [
+        "Il bordo giallo segna il tuo profilo (\"Sei tu\"), non una selezione: non cambia toccando gli altri",
+        "Toccare un volto porta dritto alle modalità: la card di conferma non c'è più",
+        "Sotto ogni nome livello, XP e vittorie di quel giocatore",
+        "Pulsante \"Tira come <te>\" e, in Modalità, \"Tira <nome> · Cambia\""
+      ]
+    },
+    {
       "v": 34,
       "data": "2026-09-27",
       "titolo": "Rigori: il Boss tira negli angoli alti",

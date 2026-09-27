@@ -24,9 +24,7 @@ export const PLAYERS = [
     stats: { potenza: 3, precisione: 3, effetto: 1 },
     tips: ['Parla troppo: non farti distrarre.', 'Il lato debole ce l\'ha: è la bocca. Non stare a sentirlo.'] }
 ]
-// Statistiche mostrate nella card di conferma: fittizie ma coerenti col personaggio, 5 tacche.
-// DA VERIFICARE: non sono agganciate alla fisica del tiro, sono solo un ritratto.
-export const STAT_LABELS = { potenza: 'Potenza', precisione: 'Precisione', effetto: 'Effetto' }
+// `stats` e `tips` erano la card di conferma del giocatore, che non c'è più: restano come ritratto del personaggio.
 // Nomi ammessi nel pass-and-play: i quattro del weekend, nessun altro
 export const PASS_PLAY_NAMES = ['Ale', 'Monne', 'Giulio', 'Manuel']
 export const byId = (id) => PLAYERS.find((p) => p.id === id) || null

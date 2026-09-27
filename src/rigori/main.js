@@ -30,7 +30,6 @@ import { cpuAim, MIRE, XP } from './game/modes/base.js'
 import { zoneOf, zoneCenter } from './game/keeper.js'
 import { pickZone, handoff } from './ui/screens/passaggio.js'
 import { chiTira } from './ui/screens/chiTira.js'
-import { giocatore } from './ui/screens/giocatore.js'
 import { modalita, MODES_INFO } from './ui/screens/modalita.js'
 import { showEsito, hideEsito } from './ui/screens/esito.js'
 import { risultato } from './ui/screens/risultato.js'
@@ -451,26 +450,27 @@ const apriClassifica = () => {
   for (const k of ['shootout', 'sfidaAle', 'skill', 'boss']) { const b = pr.board(k); if (b.length) record[k] = b[0] }
   return classifica(game.ui, { serata: pr.board('passAndPlay'), record })
 }
+// Profilo scelto nel sito (b40:v1:person, JSON): SOLA LETTURA, il gioco non scrive mai chiavi del sito.
+// null se il gioco è aperto da link diretto senza profilo.
+function profiloSito() { try { const v = JSON.parse(localStorage.getItem('b40:v1:person')); return typeof v === 'string' && v ? v : null } catch { return null } }
 const openOptions = () => opzioni(game.ui, settings, { onChange: applySettings, onReset: () => { save.reset(); toast(game.ui, 'Progressi azzerati'); setTimeout(() => location.reload(), 700) } })
 async function runFlow() {
   await kitReady
   ctx.role('idle')
   if (!save.get('onboarded', false)) { flow = 'onboarding'; ctx.role('shooter'); await onboarding(game.ui, () => input.ballOnScreen()); save.set('onboarded', true); ctx.role('idle') }
   while (true) {
-    // Chi tira? → card di conferma. Toccare un volto NON avvia la partita: apre la card con dritte,
-    // statistiche e il bottone VAI. "Cambia" riporta alla scelta.
+    // Chi tira? Toccare un volto (o "Tira come <profilo>") porta dritto a Modalità: nessuna conferma.
     for (let scelto = false; !scelto;) {
       flow = 'chiTira'; audio.playMusic('inno')
-      const id = await chiTira(game.ui, ASSETS, { current: shooterId })
+      const id = await chiTira(game.ui, ASSETS, { profilo: profiloSito(), statsDi: (pid) => game.progress?.giocatore?.(pid) ?? null })
       if (id === '__classifica') { await apriClassifica(); continue }
-      if (!id) { scelto = true; break }
-      flow = 'giocatore'
-      if (await giocatore(game.ui, ASSETS, id) === 'vai') { setShooter(id); scelto = true }
+      if (id && byId(id)) setShooter(id)
+      scelto = true
     }
     let choice = null
     while (!choice) {
       flow = 'modalita'
-      const r = await modalita(game.ui, { bossUnlocked: game.progress?.bossUnlocked?.() ?? false, level: game.progress?.level?.().n ?? 1 })
+      const r = await modalita(game.ui, { bossUnlocked: game.progress?.bossUnlocked?.() ?? false, level: game.progress?.level?.().n ?? 1, tiratore: byId(shooterId)?.nome || null })
       if (r.id === '__opzioni') { await openOptions(); continue }
       if (r.id === '__classifica') { await apriClassifica(); continue }
       if (r.id === '__sblocchi') { await sblocchi(game.ui, game.progress.summaryForUi(), { onEquip: (kind, id) => { if (game.progress.setEquip(kind, id)) { applyEquip(); return game.progress.summaryForUi() } audio.play('error', { volume: .5 }); return null } }); continue }
@@ -534,7 +534,7 @@ export const game = {
 }
 // ---------- progressione, sfottò, equipaggiamento ----------
 game.progress = createProgress({
-  save, listeners, role: () => role, shooterName: () => byId(shooterId)?.nome || 'Io',
+  save, listeners, role: () => role, shooterName: () => byId(shooterId)?.nome || 'Io', shooterId: () => shooterId,
   onLevelUp: (lv) => { audio.play('levelup', { volume: .7 }); toast(game.ui, `Livello ${lv.n}: ${lv.title}`, 3000) },
   onUnlock: (u) => { audio.play('unlock', { volume: .6 }); toast(game.ui, `Sbloccato: ${u.title}`, 3000) },
   onAchievement: (a) => { audio.play('unlock', { volume: .6 }); toast(game.ui, `🏆 ${a.title}`, 3000) }

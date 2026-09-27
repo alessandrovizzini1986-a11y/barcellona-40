@@ -12,7 +12,7 @@ export function overlay(ui, html, { label = 'Finestra', closable = false, cls = 
       const b = e.target.closest('[data-value]'); if (!b || b.disabled) return; el.remove(); resolve(b.dataset.value === '__close' ? null : b.dataset.value)
     })
     ui.appendChild(el)
-    ;(el.querySelector('.rg-card--on') || el.querySelector('button'))?.focus()
+    ;(el.querySelector('[data-tira-io]') || el.querySelector('.rg-card--tu') || el.querySelector('button'))?.focus()
     el.dataset.overlay = '1'
   })
 }

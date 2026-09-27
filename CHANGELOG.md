@@ -416,6 +416,14 @@ Pagina fuori dal sito, **non linkata da nessuna parte**: `stats-dtcmbsis.html`. 
 - **Risultato: gli obiettivi NON stanno insieme con queste due leve**, e per decisione ci si ferma qui senza toccare le capsule. Con 40/35/25 (`rigori-sweep.mjs`, 600 tiri per riga, fisica vera in node): chi indovina para il 46 % se si tuffa sul tell (prima del calcio) e il 26 % se aspetta 250 ms; Ale contro chi legge il tell segna il 46-52 %; Shootout vinto stimato 68-75 %. Ogni mix che porta Ale al 55-60 % (più tiri alti, che non si parano mai) fa scendere le parate "indovinando" al 35 %. Nel browser (SwiftShader, 60 tiri): 52 % · 47 % · 10 vittorie su 12. La scelta del mix è nel report.
 - `rigori-progress.mjs` portato alla porta in scala: incrocio a (1,85, 1,50), traversa a y 1,92.
 
+## Rigori: "Chi tira?" a un tocco
+- **Il bordo giallo dice "sei tu", non "selezionato"**: sta sul volto del profilo scelto nel sito (`b40:v1:person`, letto e mai scritto) con l'etichetta "Sei tu", e non cambia toccando gli altri. Senza profilo (link diretto): nessun bordo, nessuna etichetta, nessun pulsante primario, solo i tre volti e "Tocca il tuo nome".
+- **Toccare qualsiasi volto porta dritto a Modalità.** La card di conferma del giocatore (`giocatore.js`, "VAI/Cambia") non c'è più: era un tocco a vuoto. Da Chi tira? al primo tiro: 2 tocchi.
+- **Riga sotto ogni nome**: "Lv 2 · 140 XP · 3 vittorie" oppure "Mai tirato". È progressione **per giocatore** (`b40:v1:rigori:giocatori`, nuova, alimentata da XP e partite di chi tira; il pass-and-play non conta). Chi ha già XP sul telefono parte da "Mai tirato" per ogni volto: gli XP totali restano dov'erano.
+- **"Tira come Monne →"**: pulsante primario giallo sotto i volti, prima di Classifica. Sotto i volti: "Tocca un altro nome per far tirare lui".
+- **Modalità** dice in alto "Tira Giulio · Cambia", con Cambia che torna a Chi tira?; il vecchio "Cambia tiratore" in fondo è sparito.
+- `rigori-nav.mjs`: profilo monne (bordo, "Sei tu", pulsante, tocco su Giulio → "Tira Giulio", 2 tocchi al primo tiro), nessun profilo, bundle senza card giocatore. Le altre suite non passano più dalla card.
+
 ## Rigori, blocco 3 bis: il Boss tira negli angoli alti
 - **Decisione**: resta il 40/35/25 per tutte le modalità (al tavolo la reazione sarà vicina a 0,25 s, e lì lo Shootout si vince il 33-50 %). Il **Boss "Ale in forma"** usa il **25/25/50**: prima si distingueva solo per la reattività del portiere, ora Ale segna il 75 % e i due gradini di difficoltà sono veri.
 - `cpuAim` prende la distribuzione come parametro (`MIRE.normale`, `MIRE.boss`); `cpuShoot` sceglie in base alla difficoltà del portiere. Le capsule non si toccano.
