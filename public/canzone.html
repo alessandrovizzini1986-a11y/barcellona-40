@@ -16,12 +16,20 @@
     <meta name="twitter:card" content="summary" />
     <meta name="theme-color" content="#0E1116" />
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-    <!-- Pagina ponte: esiste solo per dare a WhatsApp l'anteprima della papera. Porta subito alla card. -->
-    <meta http-equiv="refresh" content="0; url=./#/info/canzone" />
-    <script>location.replace('./#/info/canzone')</script>
+    <meta name="robots" content="noindex, nofollow, noarchive" />
+    <!-- Pagina ponte: esiste solo per dare a WhatsApp l'anteprima della papera. Porta subito alla card,
+         e dal 19 ottobre 2026 alla home: la canzone non c'è più. ?now= serve ai test, come nel sito. -->
+    <script>
+      (function () {
+        var q = new URLSearchParams(location.search).get('now')
+        var m = q && q.match(/^(\d{4})-(\d{2})-(\d{2})(?:[T ](\d{2}):(\d{2}))?/)
+        var d = m ? new Date(+m[1], +m[2] - 1, +m[3], +(m[4] || 0), +(m[5] || 0)) : new Date()
+        location.replace(d >= new Date(2026, 9, 19) ? './' : './#/info/canzone')
+      })()
+    </script>
     <style>html,body{margin:0;background:#0E1116;color:#F2E9DE;font:16px/1.5 system-ui,sans-serif}main{padding:32px 16px;text-align:center}a{color:#F2B705}</style>
   </head>
   <body>
-    <main><p>Ti porto alla canzone. Se non succede, <a href="./#/info/canzone">tocca qui</a>.</p></main>
+    <main><p>Ti porto al sito. Se non succede, <a href="./">tocca qui</a>.</p></main>
   </body>
 </html>

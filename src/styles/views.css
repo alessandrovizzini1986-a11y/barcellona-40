@@ -171,3 +171,36 @@
 
 /* Nota sulle statistiche anonime, in fondo al Profilo: si legge se la cerchi, non ruba la scena */
 .stats-nota{ color:var(--ink-3); font-size:var(--fs-0); line-height:1.45; }
+
+/* Meteo di Barcellona (Oggi, dal 9 al 18 ottobre): una riga chiusa, ora per ora aperta */
+.meteo{ background:var(--bg-2); border:1px solid var(--line); border-radius:var(--radius-m); overflow:hidden; }
+.meteo__riga{ display:flex; align-items:center; justify-content:space-between; gap:var(--space-2); width:100%; min-height:52px; padding:6px var(--space-3); border:0; background:none; color:var(--ink); font:inherit; text-align:left; cursor:pointer; }
+.meteo__ora{ display:inline-flex; align-items:center; gap:8px; min-width:0; flex:1 1 auto; }
+.meteo__ora > svg{ width:24px; height:24px; flex:none; color:var(--giallo); }
+.meteo__ora__testo{ display:flex; flex-direction:column; min-width:0; line-height:1.1; }
+.meteo__ora b{ font-size:var(--fs-2); }
+.meteo__dove{ color:var(--ink-2); font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.meteo__giorni{ display:inline-flex; align-items:center; gap:var(--space-2); flex:none; }
+.meteo__giorni > span{ display:flex; flex-direction:column; align-items:center; gap:1px; font-size:12px; line-height:1.15; white-space:nowrap; }
+.meteo__giorni > span > span{ color:var(--ink); font-weight:600; }
+.meteo__giorni i{ display:inline-flex; align-items:center; gap:3px; font-style:normal; color:var(--ink-2); }
+.meteo__giorni svg{ width:14px; height:14px; color:var(--ink-2); }
+.meteo__dett{ display:flex; flex-direction:column; gap:var(--space-3); padding:var(--space-3); border-top:1px solid var(--line); }
+.meteo__dett[hidden]{ display:none; }
+.meteo__chips{ display:flex; gap:var(--space-2); }
+.meteo__chips .chip{ border:1px solid var(--line-2); background:none; color:var(--ink-2); font:inherit; font-size:var(--fs-0); cursor:pointer; }
+.meteo__chips .chip--on{ color:var(--ink); background:color-mix(in srgb, var(--day) 18%, transparent); border-color:transparent; }
+.meteo__striscia{ display:flex; gap:2px; overflow-x:auto; scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch; overscroll-behavior-x:contain; scrollbar-width:none; margin:0 calc(-1 * var(--space-3)); padding:0 var(--space-3); }
+.meteo__striscia::-webkit-scrollbar{ display:none; }
+.meteo__col{ flex:0 0 52px; display:flex; flex-direction:column; align-items:center; gap:4px; padding:6px 0; border-radius:var(--radius-s); scroll-snap-align:start; font-size:var(--fs-0); }
+.meteo__col svg{ width:20px; height:20px; color:var(--ink-2); }
+.meteo__h{ color:var(--ink-2); }
+.meteo__col--forte .meteo__h{ color:var(--ink); font-weight:700; }
+.meteo__col b{ font-size:var(--fs-1); }
+.meteo__p{ min-height:1.2em; color:var(--blu); font-weight:600; }
+.meteo__sole{ margin:0; display:flex; align-items:center; gap:6px; flex-wrap:wrap; color:var(--ink-2); font-size:var(--fs-0); }
+.meteo__sole svg{ width:16px; height:16px; }
+.meteo__piove{ display:flex; flex-wrap:wrap; align-items:center; gap:var(--space-2); padding:var(--space-2) var(--space-3); border-radius:var(--radius-s); background:color-mix(in srgb, var(--giallo) 16%, transparent); color:var(--giallo); font-size:var(--fs-0); font-weight:600; }
+.meteo__piove svg{ width:18px; height:18px; flex:none; }
+.meteo__piove span{ flex:1 1 200px; }
+.meteo__piove .btn{ flex:none; margin-left:auto; }

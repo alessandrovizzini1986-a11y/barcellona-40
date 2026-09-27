@@ -8,7 +8,7 @@ import './styles/views.css'
 
 import { store, PHOTO_ALBUM } from './store.js'
 import { startRouter, navigate, parseHash } from './router.js'
-import { readOverride, now, dayKey, phase } from './time.js'
+import { readOverride, now, dayKey, phase, canzoneVisibile } from './time.js'
 import { applyMosaic } from './ui/mosaic.js'
 import { renderTabbar } from './ui/tabbar.js'
 import { personById } from './data.js'
@@ -60,7 +60,7 @@ export function header(subtitle) {
       <div class="header__actions">
         <a class="header__rigori" href="${URL_GIOCO}" data-rigori-header aria-label="Gioca ai rigori">${PALLONE}</a>
         <a class="header__camera" href="${PHOTO_ALBUM}" target="_blank" rel="noopener" aria-label="Apri l'album foto">${icon('camera')}</a>
-        <a class="header__music" href="#/info/canzone" aria-label="Ascolta l'inno">${icon('music')}</a>
+        ${canzoneVisibile() ? `<a class="header__music" href="#/info/canzone" aria-label="Ascolta l'inno">${icon('music')}</a>` : ''}
         ${p ? `<a class="person-chip" href="#/info/profilo" style="--pc:var(${p.color})" aria-label="Profilo: ${esc(p.name)}"><span class="person-chip__dot"></span>${esc(p.name)}</a>` : ''}
       </div>
     </div>
@@ -79,6 +79,7 @@ async function route({ route, sub, params }) {
     return
   }
   if (route === 'speedrun' && store.person !== 'monne') { navigate('oggi'); return }
+  if (route === 'coro' && !canzoneVisibile()) { navigate('oggi'); return } // dal 19 ottobre la canzone non c'è più
   // La modalità coro è a schermo pieno: la tab bar sparisce (#tabbar:empty non si mostra)
   if (route === 'coro') document.getElementById('tabbar').innerHTML = ''
   else renderTabbar(route, { hideMissions: store.gamificationHidden, novita: ciSonoNovita() })
@@ -98,7 +99,7 @@ startRouter(route)
 // NOVITÀ. Al primo accesso in assoluto non si mostra niente: si parte allineati, perché la cronologia
 // di cose mai viste non è una novità per nessuno. Dalla seconda volta in poi, quello che è uscito dopo.
 if (store.lastSeenVersion == null && store.storageVuoto()) segnaLette()
-else apriNovita()
+else { readOverride(); apriNovita() } // readOverride prima: il filtro delle voci sulla canzone usa now()
 
 // Ri-render leggero quando cambia lo stato che influenza header/tab
 store.subscribe((key) => {

@@ -12,6 +12,7 @@ import { shareAlbum, bindShareAlbum } from '../ui/share-album.js'
 import { songCard, bindSong } from '../ui/song.js'
 import { sezioneViaggio, bindViaggio } from '../ui/viaggio.js'
 import { sezioneNovita } from '../ui/novita.js'
+import { canzoneVisibile } from '../time.js'
 import { nonLette } from '../novita.js'
 
 const sec = (id, title, body, open = false) => `<details id="sec-${id}" ${open ? 'open' : ''}><summary>${esc(title)}${icon('chevron')}</summary><div class="acc__body">${body}</div></details>`
@@ -32,9 +33,9 @@ export async function render(root, { person, sub, header }) {
       <p>Un album solo, quattro telefoni. Carica le tue quando vuoi, anche dopo essere tornato a casa.</p>
       ${albumBanner()}
       ${person === 'ale' ? shareAlbum() : ''}`, !openId || openId === 'foto')}
-    ${sec('canzone', 'La canzone', `
+    ${canzoneVisibile() ? sec('canzone', 'La canzone', `
       <p>Scaricala prima di partire: in aereo e in taxi la rete non c'è e il ritornello serve subito.</p>
-      ${songCard()}`, !openId || openId === 'canzone')}
+      ${songCard()}`, !openId || openId === 'canzone') : ''}
     ${sec('extra', 'Extra', `
       <p>Il gioco dei rigori sta dentro questo sito: si apre nella stessa scheda e il tasto indietro riporta qui.</p>
       <ul class="list">

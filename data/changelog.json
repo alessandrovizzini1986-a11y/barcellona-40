@@ -1,6 +1,16 @@
 {
   "entries": [
     {
+      "v": 38,
+      "data": "2026-09-27",
+      "titolo": "Meteo di Barcellona ora per ora, dal 9 ottobre.",
+      "voci": [
+        "In Oggi, sotto il countdown: temperatura di adesso e i tre giorni del weekend a colpo d'occhio",
+        "Tocca la card: ora per ora fino alle 23, alba e tramonto, chip per il giorno",
+        "Se per venerdì mattina la previsione dà pioggia, la card ti propone il piano coperto: decidi tu"
+      ]
+    },
+    {
       "v": 37,
       "data": "2026-09-27",
       "titolo": "Rigori: giro di regressione prima del congelamento",

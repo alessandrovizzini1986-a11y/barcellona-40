@@ -31,6 +31,7 @@ const EVENTI = [
   { id: 'album-apri', label: "Aperto l'album" },
   { id: 'album-copia-link', label: 'Copiato il link dell’album' },
   { id: 'album-whatsapp', label: "Mandato l'album su WhatsApp", solo: 'ale' },
+  { id: 'meteo-apri', label: 'Aperto il meteo' },
   { id: 'canzone-play', label: 'Ascoltata la canzone' },
   { id: 'canzone-video', label: 'Guardato il video' },
   { id: 'canzone-scarica-mp3', label: "Scaricato l'MP3" },

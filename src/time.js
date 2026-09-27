@@ -7,6 +7,10 @@ export const WEEKEND_START = new Date(2026, 9, 16, 0, 0, 0)
 export const WEEKEND_END = new Date(2026, 9, 19, 1, 40, 0)
 export const BIRTHDAY = new Date(2026, 9, 17, 0, 0, 0)
 export const SPEEDRUN_DEADLINE = new Date(2026, 9, 17, 8, 15, 0)
+// La canzone ha una scadenza: dalle 00:00 del 19 ottobre sparisce ovunque (card, header, Info, coro,
+// canzone.html, missione, eventi). Non è una fase del weekend, è un interruttore a data.
+export const FINE_CANZONE = new Date(2026, 9, 19, 0, 0, 0)
+export const canzoneVisibile = (d = now()) => d < FINE_CANZONE
 
 let override = null
 export function readOverride() {

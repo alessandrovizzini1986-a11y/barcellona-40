@@ -41,8 +41,12 @@ for (const person of ['ale', 'monne', 'giulio', 'manuel']) {
     ok(`pallone presente (${tag})`, (await a.count()) === 1)
     ok(`va al gioco nella stessa scheda (${tag})`, (await a.getAttribute('href')) === 'rigori/' && (await a.getAttribute('target')) === null)
     ok(`aria-label (${tag})`, (await a.getAttribute('aria-label')) === 'Gioca ai rigori')
-    const [r, c, m, chip, t] = await Promise.all(['.header__rigori', '.header__camera', '.header__music', '.person-chip', '.header__title'].map((s) => box(p, s)))
-    ok(`ordine rigori · camera · musica · profilo (${tag})`, r.r <= c.l && c.r <= m.l && m.r <= chip.l, JSON.stringify([r.l, c.l, m.l, chip.l]))
+    // dal 19 ottobre la canzone sparisce e con lei la nota: nella fase "dopo" i tondi sono due
+    const conNota = fase !== 'dopo'
+    const [r, c, chip, t] = await Promise.all(['.header__rigori', '.header__camera', '.person-chip', '.header__title'].map((s) => box(p, s)))
+    const m = conNota ? await box(p, '.header__music') : c
+    ok(`nota presente solo finché c'è la canzone (${tag})`, (await p.locator('.header__music').count()) === (conNota ? 1 : 0))
+    ok(`ordine rigori · camera${conNota ? ' · musica' : ''} · profilo (${tag})`, r.r <= c.l && (conNota ? c.r <= m.l && m.r <= chip.l : c.r <= chip.l), JSON.stringify([r.l, c.l, m.l, chip.l]))
     ok(`tutti sulla stessa riga del profilo (${tag})`, [r, c, m].every((x) => Math.abs(x.t - chip.t) < 1 && Math.abs(x.b - chip.b) < 1))
     ok(`i tondi sotto il titolo, non accanto (${tag})`, r.t >= t.b)
     ok(`il titolo non si stringe (${tag})`, Math.abs(t.w - titoloSolo.w) < 0.5 && (await p.evaluate(() => getComputedStyle(document.querySelector('.header__title')).fontSize)) === fsSolo, `${t.w} vs ${titoloSolo.w}`)

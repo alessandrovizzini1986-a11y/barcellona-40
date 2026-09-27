@@ -1,5 +1,5 @@
 // Vista Oggi: countdown prima del weekend, bento durante, "Missione compiuta" dopo
-import { now, phase, countdownTo, dayKey, minutesUntil, fmtMinutes, currentStop, nextStop, isOverridden, parseLocal } from '../time.js'
+import { now, phase, countdownTo, dayKey, minutesUntil, fmtMinutes, currentStop, nextStop, isOverridden, parseLocal, canzoneVisibile } from '../time.js'
 import { stopsFor, stopsForDay, personById, checks, fmtDist, DAY_COLOR, missionsFor, percorsiDi, conOrario, days, durataDi } from '../data.js'
 import { store } from '../store.js'
 import { stopCard, bindCards, percorsoLink } from '../ui/card.js'
@@ -16,6 +16,7 @@ import { shareAlbum, bindShareAlbum } from '../ui/share-album.js'
 import { PHOTO_ALBUM } from '../store.js'
 import { timelineViaggio, bindViaggio, voli } from '../ui/viaggio.js'
 import { evento } from '../stats.js'
+import { montaMeteo, slotMeteo } from '../ui/meteo.js'
 
 const DAY_LABEL = { ven: 'Venerdì 16', sab: 'Sabato 17', dom: 'Domenica 18' }
 
@@ -64,8 +65,9 @@ export async function render(root, { person, header, params }) {
         <p class="faint">${esc(rigaVolo(person))}</p>
         <p class="muted">Zero fatica, tutto gusto. Quando atterri, il piano è già pronto.</p>
       </div>
+      ${slotMeteo()}
       ${albumBanner({ line: 'Ogni foto che carichi finisce nello stesso posto. Stasera riguardate tutto insieme.' })}
-      ${songCard({ line: 'Due minuti e quarantacinque. Dopo il terzo ascolto il ritornello non esce più.' })}
+      ${canzoneVisibile() ? songCard({ line: 'Due minuti e quarantacinque. Dopo il terzo ascolto il ritornello non esce più.' }) : ''}
       ${person === 'ale' ? `<h2 class="section-title">Manda l'album ai ragazzi</h2>${shareAlbum()}` : ''}
       ${person === 'monne' ? speedBanner() : ''}
       ${isOverridden() ? `<p class="faint">Data simulata: ${now().toLocaleString('it-IT')}</p>` : ''}
@@ -76,7 +78,9 @@ export async function render(root, { person, header, params }) {
     if (person === 'ale') bindShareAlbum(root)
     const cd = root.querySelector('#cd')
     timers.push(setInterval(() => { cd.innerHTML = countdownHtml() }, 30_000))
-    return () => timers.forEach(clearInterval)
+    const acMeteo = new AbortController()
+    montaMeteo(root.querySelector('[data-meteo-slot]'), { signal: acMeteo.signal, piove: () => store.piove, onPiove: () => { store.piove = true } })
+    return () => { acMeteo.abort(); timers.forEach(clearInterval) }
   }
 
   if (ph === 'after') {
@@ -139,13 +143,14 @@ export async function render(root, { person, header, params }) {
   html = header(`${DAY_LABEL[key]} · ${p.name}`) + `<section class="view">
     ${timelineViaggio(key, person)}
     ${albumBanner({ line: 'Ogni foto che carichi finisce nello stesso posto. Stasera riguardate tutto insieme.' })}
-    ${songCard({ line: 'Due minuti e quarantacinque. Dopo il terzo ascolto il ritornello non esce più.' })}
+    ${canzoneVisibile() ? songCard({ line: 'Due minuti e quarantacinque. Dopo il terzo ascolto il ritornello non esce più.' }) : ''}
     ${person === 'monne' && !ripartito ? speedBanner() : ''}
     <div class="bento">
       <div class="tile tile--accent span-2" style="--day:${DAY_COLOR[key]}">
         <div class="tile__label">Adesso</div>
         ${cur && !ripartito ? stopCard(cur, { person, isNow: true, nowLabel: imminent ? nextIn(cur) : etichettaAdesso(cur), eager: true }) + percorsoOra(cur, key, todays) : `<p class="muted">${ripartito ? (aCasa ? 'Tu a quest\'ora sei già a Bologna. Missione compiuta.' : `In volo verso Bologna · atterri alle ${esc(p.departure.landing)}.`) : 'La prima tappa di oggi non è ancora iniziata. Respira, c\'è tempo.'}</p>${aCasa ? `<a class="btn album__cta btn--block" href="${PHOTO_ALBUM}" target="_blank" rel="noopener" aria-label="Guarda com'è andata, apre l'album foto">${icon('camera')} Guarda com'è andata</a>` : ''}`}
       </div>
+      ${slotMeteo('span-2')}
       <div class="tile">
         <div class="tile__label">Prossima</div>
         ${nxt ? `<div class="tile__big tnum">${nxt.time}</div><div><strong>${esc(nxt.title)}</strong></div><div class="faint">${nextIn(nxt)}</div><a class="btn btn--sm" href="#/programma/${nxt.dayKey}">${icon('list')} Programma</a>` : `<p class="muted">Nessun'altra tappa in programma per te.</p>`}
@@ -177,6 +182,7 @@ export async function render(root, { person, header, params }) {
   bindSong(root)
   const ac = new AbortController()
   bindViaggio(root, { signal: ac.signal })
+  montaMeteo(root.querySelector('[data-meteo-slot]'), { signal: ac.signal, piove: () => store.piove, onPiove: () => { store.piove = true } })
   const progress = root.querySelector('#progress')
   bindCards(root, { signal: ac.signal, onChange: () => {
     // l'anello e il contatore di oggi si aggiornano subito, senza aspettare il prossimo render

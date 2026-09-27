@@ -5,7 +5,7 @@ import peopleJson from '../data/people.json'
 import venuesJson from '../data/venues.json'
 import missionsJson from '../data/missions.json'
 import checksJson from '../data/checks.json'
-import { stopDate, pad2 } from './time.js'
+import { stopDate, pad2, canzoneVisibile } from './time.js'
 import { store } from './store.js'
 
 export const days = itinerary.days
@@ -129,7 +129,9 @@ function numera(list) {
   return list.map((s) => ({ ...s, order: senzaOrario(s) ? null : (conta[s.dayKey] = (conta[s.dayKey] || 0) + 1) }))
 }
 export function stopsForDay(personId, dayKey) { return stopsFor(personId).filter((s) => s.dayKey === dayKey) }
-export function missionsFor(personId) { return missions.filter((m) => m.people.includes(personId)) }
+// m15 "Coro Ufficiale" è la missione della canzone: dal 19 ottobre sparisce con lei (conteggi e XP compresi)
+export const MISSIONE_CANZONE = 'm15'
+export function missionsFor(personId) { return missions.filter((m) => m.people.includes(personId) && (canzoneVisibile() || m.id !== MISSIONE_CANZONE)) }
 
 export const hasCoords = (stop) => !!(stop.venue && stop.venue.lat != null && stop.venue.lng != null)
 
