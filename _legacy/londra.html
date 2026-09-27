@@ -228,6 +228,17 @@
   .tcard__credito{padding:10px 16px 14px;font-size:11px;color:#79839a;line-height:1.35}
   .tcard__credito a{color:inherit}
 
+  /* percorso di mezza giornata: un link Maps fisso, in testa al blocco che copre */
+  .percorso{display:flex;align-items:center;gap:11px;margin:4px 0 14px;padding:11px 14px;border-radius:14px;
+    background:rgba(109,179,216,.1);border:1px solid rgba(109,179,216,.35);color:var(--ink);text-decoration:none}
+  .percorso:active{transform:scale(.995)}
+  .percorso__ic{font-size:22px;line-height:1}
+  .percorso__txt{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}
+  .percorso__txt b{font-size:13.5px;color:var(--sky)}
+  .percorso__txt span{font-size:12px;color:var(--muted);line-height:1.35}
+  .percorso__modo{flex:none;font-size:11px;font-weight:700;color:var(--ink);background:rgba(245,240,232,.07);
+    border:1px solid var(--line);border-radius:999px;padding:3px 9px;white-space:nowrap}
+
   /* tappa "plus": non è nel programma, è un di più da fare se avanza tempo.
      Bordo tratteggiato e misura ridotta perché si veda a colpo d'occhio che non è fissa. */
   .tcard--plus{border-style:dashed;border-color:var(--gold-dim);background:rgba(26,35,50,.45)}
@@ -569,6 +580,11 @@
           </div>
           <p class="tcard__credito">foto: <a href="https://commons.wikimedia.org/wiki/File:20251011_British_Airways_G-TTNN_EGLL.jpg" target="_blank" rel="noopener">Alex Noble / CC0</a></p>
         </article>
+        <a class="percorso" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.4700,-0.4543&amp;destination=51.5054668,-0.1171985&amp;travelmode=transit" target="_blank" rel="noopener" data-percorso="Domenica mattina">
+          <span class="percorso__ic" aria-hidden="true">🗺️</span>
+          <span class="percorso__txt"><b>Percorso · Domenica mattina</b><span>Heathrow → Southbank Centre</span></span>
+          <span class="percorso__modo">🚇 con i mezzi</span>
+        </a>
         <article class="tcard">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/lhr.webp" width="800" height="450" alt="Il tetto ondulato del Terminal 5 di Heathrow visto dal piazzale, con gli aerei in sosta" loading="lazy" decoding="async">
@@ -592,6 +608,11 @@
           <p class="tcard__credito">foto: <a href="https://commons.wikimedia.org/wiki/File:Edgware_Road-Bakerloo_Line-Northbound.jpg" target="_blank" rel="noopener">Chris McKenna (Thryduulf) / CC BY-SA 4.0</a></p>
         </article>
         
+        <a class="percorso" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.5054668,-0.1171985&amp;destination=51.5031864,-0.1195192&amp;waypoints=51.501558,-0.119506&amp;travelmode=walking" target="_blank" rel="noopener" data-percorso="Domenica pomeriggio">
+          <span class="percorso__ic" aria-hidden="true">🗺️</span>
+          <span class="percorso__txt"><b>Percorso · Domenica pomeriggio</b><span>Southbank Centre → SEA LIFE → London Eye</span></span>
+          <span class="percorso__modo">🚶 a piedi</span>
+        </a>
         <article class="tcard">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/southbank.webp" width="800" height="450" alt="Le scale gialle del Southbank Centre, con il palazzo in cemento e la gente che passa" loading="lazy" decoding="async">
@@ -693,6 +714,11 @@
         </span>
       </summary>
       <div class="dbody">
+        <a class="percorso" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.5129114,-0.1364381&amp;destination=51.5039416,-0.1434016&amp;waypoints=51.508039,-0.128069%7C51.5047752,-0.1272358%7C51.5007292,-0.1246254%7C51.502967,-0.1339534%7C51.501364,-0.14189&amp;travelmode=walking" target="_blank" rel="noopener" data-percorso="Lunedì mattina">
+          <span class="percorso__ic" aria-hidden="true">🗺️</span>
+          <span class="percorso__txt"><b>Percorso · Lunedì mattina</b><span>Beak Street → Trafalgar → Whitehall → Big Ben → St James’s Park → Buckingham → Green Park</span></span>
+          <span class="percorso__modo">🚶 a piedi</span>
+        </a>
         <article class="tcard">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/soho.webp" width="800" height="450" alt="L’angolo fra Dean Street e Old Compton Street, nel cuore di Soho" loading="lazy" decoding="async">
@@ -777,6 +803,11 @@
           </div>
           <p class="tcard__credito">foto: <a href="https://commons.wikimedia.org/wiki/File:View_from_Green_Park_towards_Victoria_Memorial.jpg" target="_blank" rel="noopener">LondonHistoryatHome / CC BY-SA 4.0</a></p>
         </article>
+        <a class="percorso" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.5039416,-0.1434016&amp;destination=51.4967150,-0.1763672&amp;waypoints=51.4994055,-0.1632344&amp;travelmode=transit" target="_blank" rel="noopener" data-percorso="Lunedì pomeriggio">
+          <span class="percorso__ic" aria-hidden="true">🗺️</span>
+          <span class="percorso__txt"><b>Percorso · Lunedì pomeriggio</b><span>Green Park → Harrods → Natural History Museum</span></span>
+          <span class="percorso__modo">🚇 con i mezzi</span>
+        </a>
         <article class="tcard">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/harrods.webp" width="800" height="450" alt="La facciata di Harrods illuminata dalle luminarie natalizie" loading="lazy" decoding="async">
@@ -802,6 +833,11 @@
           </div>
           <p class="tcard__credito">foto: <a href="https://commons.wikimedia.org/wiki/File:Natural_History_Museum_London_Jan_2006.jpg" target="_blank" rel="noopener">Diliff / CC BY-SA 3.0</a></p>
         </article>
+        <a class="percorso" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.4967150,-0.1763672&amp;destination=51.5129114,-0.1364381&amp;waypoints=51.5117,-0.1410&amp;travelmode=transit" target="_blank" rel="noopener" data-percorso="Lunedì sera">
+          <span class="percorso__ic" aria-hidden="true">🗺️</span>
+          <span class="percorso__txt"><b>Percorso · Lunedì sera</b><span>Natural History Museum → luci di Regent Street → Beak Street</span></span>
+          <span class="percorso__modo">🚇 con i mezzi</span>
+        </a>
         <article class="tcard">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/regent.webp" width="800" height="450" alt="Un angelo luminoso sospeso sopra Regent Street, con un autobus rosso sotto" loading="lazy" decoding="async">
@@ -843,6 +879,11 @@
         </span>
       </summary>
       <div class="dbody">
+        <a class="percorso" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.5129114,-0.1364381&amp;destination=51.4700,-0.4543&amp;waypoints=51.5122737,-0.1234492%7C51.5129114,-0.1364381&amp;travelmode=transit" target="_blank" rel="noopener" data-percorso="Martedì">
+          <span class="percorso__ic" aria-hidden="true">🗺️</span>
+          <span class="percorso__txt"><b>Percorso · Martedì</b><span>Beak Street → Covent Garden → Beak Street → Heathrow</span></span>
+          <span class="percorso__modo">🚇 con i mezzi</span>
+        </a>
         <article class="tcard">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/apt.webp" width="800" height="450" alt="Il civico 79 di Beak Street: la vetrina verde di John Wilkes e, a sinistra, la porta col numero 79" loading="lazy" decoding="async">
