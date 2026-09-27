@@ -139,19 +139,38 @@
   details.acc summary::-webkit-details-marker{display:none}
   .srow{display:flex;align-items:center;gap:13px}
 
-  /* meteo del giorno: sta nel summary, quindi resta visibile anche a giornata chiusa */
-  .meteo{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;margin-top:11px;padding-top:10px;
-    border-top:1px dashed var(--line);font-size:12.5px;color:var(--muted)}
-  .meteo b{color:var(--ink);font-weight:700}
-  .meteo .mt{display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
-  .meteo .ico{font-size:15px}
-  .meteo .pioggia{font-weight:800;font-size:14px;font-variant-numeric:tabular-nums}
-  .meteo .pioggia.bassa{color:#8fe0b6}
-  .meteo .pioggia.media{color:var(--gold-soft)}
-  .meteo .pioggia.alta{color:#ff9d94}
-  .meteo .sole{margin-left:auto;font-variant-numeric:tabular-nums}
-  .meteo-fonte{flex-basis:100%;font-size:10.5px;font-style:italic;color:#79839a;margin-top:-2px}
-  @media(max-width:380px){.meteo .sole{margin-left:0}}
+  /* meteo ora per ora (modello Barcellona): una card sola in cima al programma.
+     Chiusa: adesso + i tre giorni del viaggio. Aperta: striscia scorrevole fino alle 23, alba e tramonto.
+     Compare solo da 10 giorni prima della partenza; senza dati non compare affatto. */
+  .meteo{margin:0 0 16px;background:var(--night-1);border:1px solid var(--line-gold);border-radius:16px;overflow:hidden}
+  .meteo[hidden]{display:none}
+  .meteo__riga{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;min-height:56px;
+    padding:8px 14px;border:0;background:none;color:var(--ink);font:inherit;text-align:left;cursor:pointer}
+  .meteo__ora{display:inline-flex;align-items:center;gap:9px;min-width:0}
+  .meteo__ora .ico{font-size:24px;line-height:1}
+  .meteo__ora b{display:block;font-family:"Playfair Display",serif;font-size:22px;line-height:1;font-variant-numeric:tabular-nums}
+  .meteo__dove{display:block;font-size:11.5px;color:var(--muted);white-space:nowrap}
+  .meteo__giorni{display:inline-flex;gap:10px;flex:none}
+  .meteo__giorni > span{display:flex;flex-direction:column;align-items:center;gap:1px;font-size:11.5px;line-height:1.2;color:var(--muted);white-space:nowrap}
+  .meteo__giorni > span > b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
+  .meteo__chev{color:var(--gold);font-size:11px;transition:transform .2s}
+  .meteo__riga[aria-expanded="true"] .meteo__chev{transform:rotate(180deg)}
+  .meteo__dett{display:flex;flex-direction:column;gap:12px;padding:12px 14px 14px;border-top:1px solid var(--line)}
+  .meteo__dett[hidden]{display:none}
+  .meteo__chips{display:flex;gap:8px}
+  .meteo__chips button{border:1px solid var(--line-gold);background:none;color:var(--muted);font:inherit;font-size:12.5px;font-weight:700;
+    border-radius:999px;padding:5px 12px;cursor:pointer}
+  .meteo__chips button[aria-selected="true"]{background:var(--gold);border-color:var(--gold);color:var(--night-0)}
+  .meteo__striscia{display:flex;gap:2px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;
+    overscroll-behavior-x:contain;scrollbar-width:none;margin:0 -14px;padding:0 14px}
+  .meteo__striscia::-webkit-scrollbar{display:none}
+  .meteo__col{flex:0 0 50px;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 0;scroll-snap-align:start;font-size:12px}
+  .meteo__col .h{color:var(--muted)}
+  .meteo__col--forte .h{color:var(--ink);font-weight:700}
+  .meteo__col .ico{font-size:18px;line-height:1.1}
+  .meteo__col b{font-size:14px;font-variant-numeric:tabular-nums}
+  .meteo__col .p{min-height:1.2em;color:var(--sky);font-weight:700;font-variant-numeric:tabular-nums}
+  .meteo__sole{font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
   .daynum{flex:none;width:46px;height:46px;border-radius:13px;display:flex;flex-direction:column;align-items:center;justify-content:center;
     font-family:"Playfair Display",serif;font-weight:700;font-size:19px;line-height:1;border:1px solid var(--line-gold)}
   .daynum small{font-family:system-ui,sans-serif;font-weight:600;font-size:8.5px;letter-spacing:.1em;margin-top:2px;opacity:.8}
@@ -492,6 +511,14 @@
     <div class="eyebrow">Programma</div>
     <h2>Tre giorni, una zona al giorno</h2>
     <p class="sub2">Tocca una giornata per aprire il dettaglio. <b>Gli orari sono una proposta</b>, ricavata da voli, check-in e distanze: vanno confermati.</p>
+    <section class="meteo" id="meteo" hidden aria-label="Meteo di Londra, previsione Open-Meteo">
+      <button class="meteo__riga" type="button" aria-expanded="false" aria-controls="meteoDett"></button>
+      <div class="meteo__dett" id="meteoDett" hidden>
+        <div class="meteo__chips" role="tablist" aria-label="Giorno"></div>
+        <div class="meteo__striscia"></div>
+        <p class="meteo__sole"></p>
+      </div>
+    </section>
 
     <details class="acc dom" open>
       <summary>
@@ -499,12 +526,6 @@
           <span class="daynum">15<small>DOM</small></span>
           <span class="dtit"><h3>Southbank</h3><p>Arrivo, acquario e ruota al tramonto</p></span>
           <span class="chev">▼</span>
-        </span>
-        <span class="meteo" data-giorno="2026-11-15">
-          <span class="mt"><span class="ico">🌤️</span> <b>13°</b> / 8°</span>
-          <span class="mt">pioggia <span class="pioggia media">30%</span></span>
-          <span class="mt sole">↑ 07:18 · ↓ 16:12</span>
-          <span class="meteo-fonte">media degli ultimi 10 anni, non una previsione</span>
         </span>
       </summary>
       <div class="dbody">
@@ -670,12 +691,6 @@
           <span class="dtit"><h3>Royal walk e museo</h3><p>Quasi tutto a piedi, una sola tratta in metro</p></span>
           <span class="chev">▼</span>
         </span>
-        <span class="meteo" data-giorno="2026-11-16">
-          <span class="mt"><span class="ico">🌤️</span> <b>11°</b> / 7°</span>
-          <span class="mt">pioggia <span class="pioggia media">40%</span></span>
-          <span class="mt sole">↑ 07:19 · ↓ 16:10</span>
-          <span class="meteo-fonte">media degli ultimi 10 anni, non una previsione</span>
-        </span>
       </summary>
       <div class="dbody">
         <article class="tcard">
@@ -825,12 +840,6 @@
           <span class="daynum">17<small>MAR</small></span>
           <span class="dtit"><h3>Covent Garden e rientro</h3><p>Mattina leggera, poi Heathrow</p></span>
           <span class="chev">▼</span>
-        </span>
-        <span class="meteo" data-giorno="2026-11-17">
-          <span class="mt"><span class="ico">🌤️</span> <b>11°</b> / 6°</span>
-          <span class="mt">pioggia <span class="pioggia media">30%</span></span>
-          <span class="mt sole">↑ 07:21 · ↓ 16:09</span>
-          <span class="meteo-fonte">media degli ultimi 10 anni, non una previsione</span>
         </span>
       </summary>
       <div class="dbody">
@@ -1222,43 +1231,116 @@
   integrity="sha512-nMnXAGKzA0wZ4YsriudrdnAKSFYXwdCvSt1Auwz6q7XXtSRoRcMVud13Q1LnQnobA2hRhLtHUv9tbVR5pyStPw=="
   crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
-  /* ====== meteo dei tre giorni ======
-     In pagina ci sono le medie 2015-2024 (Open-Meteo archive) con alba e tramonto calcolati: si vedono
-     subito, anche senza rete. Open-Meteo dà previsioni solo entro ~16 giorni, quindi da lontano la
-     chiamata torna un errore e le medie restano. Riprovando a ogni caricamento, avvicinandosi al viaggio
-     la pagina passa da sola alla previsione vera. Nessuna chiave, nessun dato salvato. */
+  /* ====== meteo ora per ora (Open-Meteo, nessuna chiave) ======
+     Compare solo da 10 giorni prima della partenza (dal 5 novembre) fino alla fine del viaggio: prima la
+     previsione per il 15-17 non esiste o non è affidabile, e dati incerti confondono più che aiutare.
+     Se la rete manca o l'API risponde con un errore la card resta nascosta: nessun placeholder.
+     Niente cache: nessun dato salvato sul dispositivo. ?now=AAAA-MM-GG simula la data, solo per i test. */
   (function(){
-    var giorni = document.querySelectorAll('.meteo[data-giorno]');
-    if (!giorni.length || !window.fetch) return;
-    var date = Array.prototype.map.call(giorni, function(el){ return el.dataset.giorno; }).sort();
-    var url = 'https://api.open-meteo.com/v1/forecast?latitude=51.5129&longitude=-0.1364'
-      + '&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max'
-      + '&timezone=Europe/London&start_date=' + date[0] + '&end_date=' + date[date.length - 1];
+    var card = document.getElementById('meteo');
+    if (!card || !window.fetch) return;
+    var DA = new Date(2026, 10, 5), FINE = new Date(2026, 10, 18);
+    var oggi = new Date();
+    var sim = /[?&]now=(\d{4})-(\d{2})-(\d{2})/.exec(location.search);
+    if (sim) oggi = new Date(+sim[1], +sim[2] - 1, +sim[3], oggi.getHours(), oggi.getMinutes());
+    if (oggi < DA || oggi >= FINE) { card.remove(); return; }
 
-    var icona = function(p){ return p < 30 ? '☀️' : p < 60 ? '🌤️' : p < 80 ? '☁️' : '🌧️'; };
-    var livello = function(p){ return p < 30 ? 'bassa' : p <= 60 ? 'media' : 'alta'; };
-    var MESI = ['gennaio','febbraio','marzo','aprile','maggio','giugno','luglio','agosto','settembre','ottobre','novembre','dicembre'];
+    var URL = 'https://api.open-meteo.com/v1/forecast?latitude=51.5129&longitude=-0.1364'
+      + '&hourly=temperature_2m,precipitation_probability,weathercode'
+      + '&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset'
+      + '&timezone=Europe/London&start_date=2026-11-15&end_date=2026-11-17'
+      + '&current=temperature_2m,weathercode';
+    var GIORNI = [['2026-11-15', 'Dom'], ['2026-11-16', 'Lun'], ['2026-11-17', 'Mar']];
+    var pad = function(n){ return (n < 10 ? '0' : '') + n; };
+    // codici WMO → emoji, come il resto della pagina
+    var icona = function(c){
+      if (c == null) return '·';
+      if (c === 0) return '☀️';
+      if (c === 1 || c === 2) return '🌤️';
+      if (c === 3) return '☁️';
+      if (c === 45 || c === 48) return '🌫️';
+      if ((c >= 71 && c <= 77) || c === 85 || c === 86) return '❄️';
+      if (c >= 95) return '⛈️';
+      return '🌧️';
+    };
+    var arr = function(v){ return Math.round(v) + '°'; };
 
-    fetch(url).then(function(r){ return r.ok ? r.json() : null; }).then(function(d){
-      if (!d || d.error || !d.daily || !d.daily.time) return;   // troppo in anticipo: restano le medie
-      var oggi = new Date();
-      var quando = oggi.getDate() + ' ' + MESI[oggi.getMonth()] + ' ' + oggi.getFullYear();
-      Array.prototype.forEach.call(giorni, function(el){
-        var i = d.daily.time.indexOf(el.dataset.giorno);
-        if (i < 0) return;
-        var tmax = d.daily.temperature_2m_max[i], tmin = d.daily.temperature_2m_min[i];
-        var pio = d.daily.precipitation_probability_max[i];
-        if (tmax == null || tmin == null || pio == null) return;
-        tmax = Math.round(tmax); tmin = Math.round(tmin); pio = Math.round(pio);
-        el.querySelector('.ico').textContent = icona(pio);
-        el.querySelector('b').textContent = tmax + '°';
-        el.querySelector('b').nextSibling.textContent = ' / ' + tmin + '°';
-        var p = el.querySelector('.pioggia');
-        p.textContent = pio + '%';
-        p.className = 'pioggia ' + livello(pio);
-        el.querySelector('.meteo-fonte').textContent = 'previsione Open-Meteo, aggiornata al ' + quando;
+    var ctrl = window.AbortController ? new AbortController() : null;
+    var t = setTimeout(function(){ if (ctrl) ctrl.abort(); }, 8000);
+    fetch(URL, ctrl ? { signal: ctrl.signal } : {})
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(d){ clearTimeout(t); if (valido(d)) monta(d); else card.remove(); })
+      .catch(function(){ clearTimeout(t); card.remove(); });
+
+    function valido(d){
+      if (!d || d.error || !d.hourly || !d.daily) return false;
+      if (!d.hourly.time || !d.hourly.time.length || !d.daily.time) return false;
+      return GIORNI.some(function(g){ return d.daily.time.indexOf(g[0]) >= 0; });
+    }
+
+    function monta(d){
+      var h = d.hourly, g = d.daily, cod = h.weathercode || h.weather_code;
+      var giorni = GIORNI.map(function(x){ return { iso: x[0], breve: x[1], i: g.time.indexOf(x[0]) }; })
+        .filter(function(x){ return x.i >= 0 && g.temperature_2m_max[x.i] != null; });
+      if (!giorni.length) { card.remove(); return; }
+      var isoOggi = oggi.getFullYear() + '-' + pad(oggi.getMonth() + 1) + '-' + pad(oggi.getDate());
+
+      // riga chiusa: adesso a Londra (se c'è) + i tre giorni del viaggio
+      var c = d.current, cCod = c && (c.weathercode != null ? c.weathercode : c.weather_code);
+      var adesso = c && c.temperature_2m != null
+        ? '<span class="meteo__ora"><span class="ico">' + icona(cCod) + '</span><span><b>' + arr(c.temperature_2m) + '</b><span class="meteo__dove">Londra, adesso</span></span></span>'
+        : '<span class="meteo__ora"><span class="ico">🌦️</span><span><b>Meteo</b><span class="meteo__dove">Londra, previsione</span></span></span>';
+      var riga = card.querySelector('.meteo__riga');
+      riga.innerHTML = adesso + '<span class="meteo__giorni">' + giorni.map(function(x){
+        return '<span>' + icona(maxCodice(x.iso)) + ' ' + x.breve + '<b>' + Math.round(g.temperature_2m_min[x.i]) + '/' + arr(g.temperature_2m_max[x.i]) + '</b></span>';
+      }).join('') + '<span class="meteo__chev" aria-hidden="true">▼</span></span>';
+
+      var scelto = (giorni.filter(function(x){ return x.iso === isoOggi; })[0] || giorni[0]).iso;
+      var chips = card.querySelector('.meteo__chips');
+      chips.innerHTML = giorni.map(function(x){
+        return '<button type="button" role="tab" data-giorno="' + x.iso + '" aria-selected="' + (x.iso === scelto) + '">' + x.breve + ' ' + +x.iso.slice(8) + '</button>';
+      }).join('');
+      disegna(scelto);
+
+      riga.addEventListener('click', function(){
+        var box = document.getElementById('meteoDett');
+        box.hidden = !box.hidden;
+        riga.setAttribute('aria-expanded', String(!box.hidden));
       });
-    }).catch(function(){ /* niente rete: restano le medie */ });
+      chips.addEventListener('click', function(e){
+        var b = e.target.closest('[data-giorno]'); if (!b) return;
+        chips.querySelectorAll('[data-giorno]').forEach(function(x){ x.setAttribute('aria-selected', String(x === b)); });
+        disegna(b.dataset.giorno);
+      });
+      card.hidden = false;
+
+      // icona del giorno: il codice più "grave" fra le 8 e le 20, le ore che si passano fuori
+      function maxCodice(iso){
+        var m = null;
+        h.time.forEach(function(t, i){
+          if (t.indexOf(iso + 'T') !== 0) return;
+          var o = +t.slice(11, 13); if (o < 8 || o > 20 || cod[i] == null) return;
+          if (m == null || cod[i] > m) m = cod[i];
+        });
+        return m;
+      }
+      // striscia ora per ora fino alle 23: oggi dall'ora attuale, gli altri giorni dalle 7
+      function disegna(iso){
+        var da = iso === isoOggi ? oggi.getHours() : 7, col = [];
+        h.time.forEach(function(t, i){
+          if (t.indexOf(iso + 'T') !== 0) return;
+          var o = +t.slice(11, 13); if (o < da || o > 23 || h.temperature_2m[i] == null) return;
+          var p = h.precipitation_probability[i];
+          col.push('<div class="meteo__col' + (o % 3 === 0 ? ' meteo__col--forte' : '') + '"><span class="h">' + pad(o) + '</span><span class="ico">' + icona(cod[i]) + '</span><b>' + arr(h.temperature_2m[i]) + '</b><span class="p">' + (p != null && p > 20 ? p + '%' : '') + '</span></div>');
+        });
+        var s = card.querySelector('.meteo__striscia');
+        s.innerHTML = col.join('');
+        s.scrollLeft = 0;
+        var i = g.time.indexOf(iso), hm = function(v){ return (v || '').slice(11, 16); };
+        card.querySelector('.meteo__sole').textContent = i < 0 ? '' :
+          '🌅 alba ' + hm(g.sunrise[i]) + ' · 🌇 tramonto ' + hm(g.sunset[i]) + ' · previsione Open-Meteo';
+      }
+    }
   })();
 
   /* ====== biglietti del Natural History Museum: barcode CODE128 veri, da scansionare ======
