@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "node --test tests/keeper-reach.test.js tests/shot.test.js",
+    "test": "node --test tests/keeper-reach.test.js tests/shot.test.js tests/mire.test.js",
     "test:gate": "node --test tests/keeper-reach.test.js",
     "reach": "node scripts/qa/rigori-reach.mjs",
     "og:rigori": "node scripts/qa/og-rigori.mjs",

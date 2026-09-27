@@ -8,7 +8,7 @@ export const MODES_INFO = [
   { id: 'shootout', title: 'Shootout', desc: 'Best of 5 contro Ale, poi sudden death.' },
   { id: 'sfidaAle', title: 'Sfida Ale', desc: 'Tiri finché Ale ne para tre. Quanti gol fai?' },
   { id: 'skill', title: 'Skill', desc: 'Bersagli negli angoli e al centro. Trenta secondi.' },
-  { id: 'boss', title: 'Boss: Ale in forma', desc: 'Non si sbilancia quasi mai, reattività +40 %. Si sblocca al livello 2.' }
+  { id: 'boss', title: 'Boss: Ale in forma', desc: 'Non si sbilancia quasi mai, reattività +40 %, un tiro su due in alto. Si sblocca al livello 2.' }
 ]
 export async function modalita(ui, { bossUnlocked = false, level = 1 } = {}) {
   const html = `<h2 class="rg-title">Modalità</h2><div class="rg-modes">${MODES_INFO.map((m) => {

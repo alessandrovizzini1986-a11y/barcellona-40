@@ -11,15 +11,19 @@ export function makeMode(def) {
   def.finished = false
   return def
 }
-// Dove tira Ale (blocco 3): 40 % al centro, basso o a mezza altezza · 35 % laterali bassi · 25 % alti.
-// Prima pesava gli angoli (6 volte su 8 ai lati, 45 % in alto) e i tiri alti non si parano nemmeno
-// indovinando: Ale segnava il 72-85 %. Le capsule del portiere (reach.js) non si toccano: si cambia dove va la palla.
-export function cpuAim({ avoidCol = null, strength = 1 } = {}) {
+// Dove tira Ale: distribuzione [centro basso/mezza altezza, laterali bassi], il resto va in alto.
+//   normale 40 / 35 / 25: al tavolo, con una reazione vicina a 0,25 s, lo Shootout si vince il 33-50 %.
+//   boss    25 / 25 / 50: Ale al 75 % (i tiri alti non si parano nemmeno indovinando). Prima il Boss si
+//   distingueva solo per la reattività del portiere; così i due gradini di difficoltà sono veri.
+// Le capsule del portiere (reach.js) non si toccano: si cambia solo dove va la palla.
+export const MIRE = { normale: [0.40, 0.35], boss: [0.25, 0.25] }
+export function cpuAim({ avoidCol = null, strength = 1, mix = MIRE.normale } = {}) {
+  const [pCentro, pLaterali] = mix
   const cols = [-GOAL.w * 0.348, 0, GOAL.w * 0.348]
   const r = Math.random()
   let col, row, y
-  if (r < 0.40) { col = 1; row = 1; y = GOAL.h * (0.22 + Math.random() * 0.33) }            // centro, da basso a mezza altezza
-  else if (r < 0.75) { col = Math.random() < 0.5 ? 0 : 2; row = 1; y = GOAL.h * (0.225 + (Math.random() - .5) * 0.143) } // laterali bassi
+  if (r < pCentro) { col = 1; row = 1; y = GOAL.h * (0.22 + Math.random() * 0.33) }            // centro, da basso a mezza altezza
+  else if (r < pCentro + pLaterali) { col = Math.random() < 0.5 ? 0 : 2; row = 1; y = GOAL.h * (0.225 + (Math.random() - .5) * 0.143) } // laterali bassi
   else { col = (Math.random() * 3) | 0; row = 0; y = GOAL.h * (0.758 + (Math.random() - .5) * 0.143) }                     // alti
   // se l'utente si è già tuffato durante la rincorsa, 7 volte su 10 Ale cambia colonna
   if (avoidCol != null && Math.random() < 0.7) col = [0, 1, 2].filter((c) => c !== avoidCol)[(Math.random() * 2) | 0]

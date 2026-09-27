@@ -416,6 +416,12 @@ Pagina fuori dal sito, **non linkata da nessuna parte**: `stats-dtcmbsis.html`. 
 - **Risultato: gli obiettivi NON stanno insieme con queste due leve**, e per decisione ci si ferma qui senza toccare le capsule. Con 40/35/25 (`rigori-sweep.mjs`, 600 tiri per riga, fisica vera in node): chi indovina para il 46 % se si tuffa sul tell (prima del calcio) e il 26 % se aspetta 250 ms; Ale contro chi legge il tell segna il 46-52 %; Shootout vinto stimato 68-75 %. Ogni mix che porta Ale al 55-60 % (più tiri alti, che non si parano mai) fa scendere le parate "indovinando" al 35 %. Nel browser (SwiftShader, 60 tiri): 52 % · 47 % · 10 vittorie su 12. La scelta del mix è nel report.
 - `rigori-progress.mjs` portato alla porta in scala: incrocio a (1,85, 1,50), traversa a y 1,92.
 
+## Rigori, blocco 3 bis: il Boss tira negli angoli alti
+- **Decisione**: resta il 40/35/25 per tutte le modalità (al tavolo la reazione sarà vicina a 0,25 s, e lì lo Shootout si vince il 33-50 %). Il **Boss "Ale in forma"** usa il **25/25/50**: prima si distingueva solo per la reattività del portiere, ora Ale segna il 75 % e i due gradini di difficoltà sono veri.
+- `cpuAim` prende la distribuzione come parametro (`MIRE.normale`, `MIRE.boss`); `cpuShoot` sceglie in base alla difficoltà del portiere. Le capsule non si toccano.
+- Sweep (`rigori-sweep.mjs`, 600 tiri): 25/25/50 → Ale segna a caso 75 %, chi indovina para il 34-39 %; lo Shootout stimato 43-51 % vale con un tiratore al 63,6 %, in Boss il portiere è più reattivo e la stima è per eccesso.
+- `tests/mire.test.js` (4 test, in `npm test`): distribuzioni entro ±3 punti, tiri dentro lo specchio.
+
 ## Rigori, blocco 5: visivo
 - **Volto anche sul retro della testa** (`textures.js`, stessa foto mascherata a u = 0,75): dalla camera di gioco il tiratore non è più una sfera color pelle.
 - **Cartello dell'esito in alto** (60 px dal bordo, sotto l'HUD) e **più piccolo** (30–46 px, erano 40–64); **Condividi** è un pulsante a sé in basso a sinistra (56 px), fuori dal cartello. La porta e il portiere restano visibili sotto la scritta.

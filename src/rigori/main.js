@@ -26,7 +26,7 @@ import { createShootout } from './game/modes/shootout.js'
 import { createSfidaAle } from './game/modes/sfidaAle.js'
 import { createPassAndPlay } from './game/modes/passAndPlay.js'
 import { createSkill } from './game/modes/skill.js'
-import { cpuAim, XP } from './game/modes/base.js'
+import { cpuAim, MIRE, XP } from './game/modes/base.js'
 import { zoneOf, zoneCenter } from './game/keeper.js'
 import { pickZone, handoff } from './ui/screens/passaggio.js'
 import { chiTira } from './ui/screens/chiTira.js'
@@ -366,18 +366,19 @@ const ctx = {
   pickZone: (o) => pickZone(game.ui, o),
   handoff: (name) => handoff(game.ui, name),
   // Tiro della CPU (l'utente para): il tiratore si sbilancia TELL_MS prima del calcio (lato vero 60 %, finta 40 %;
-  // in Boss finta 15 %). 350 ms, erano 200: a 200 non si faceva in tempo a leggerlo e a rispondere.
+  // in Boss finta 15 % e mira 25/25/50, metà dei tiri in alto). 350 ms, erano 200: a 200 non si faceva in tempo a leggerlo e a rispondere.
   cpuShoot({ strength = 1 } = {}) {
     const boss = keeper?.difficulty === 'boss'
     const early = shot.playerDiveZone()
-    const aim = cpuAim({ avoidCol: early != null ? early % 3 : null, strength })
+    const mix = boss ? MIRE.boss : MIRE.normale
+    const aim = cpuAim({ avoidCol: early != null ? early % 3 : null, strength, mix })
     const feint = Math.random() < (boss ? 0.15 : 0.40)
     const side = feint ? -Math.sign(aim.x || 1) : Math.sign(aim.x || 1)
     listeners.forEach((f) => f({ type: 'tell', side, feint }))
     kicker?.tell(side)
     setTimeout(() => {
       const late = shot.playerDiveZone()
-      const a = (late != null && early == null) ? cpuAim({ avoidCol: late % 3, strength }) : aim
+      const a = (late != null && early == null) ? cpuAim({ avoidCol: late % 3, strength, mix }) : aim
       shot.setPrecision(0.6); shot.fire(a, { timingPerfect: false, delay: kicker ? KICK_DELAY : 0 }); shot.setPrecision(1)
       kicker?.windup()
     }, TELL_MS)
@@ -582,7 +583,7 @@ window.__rigori = {
     const rec = shot.record; if (!rec) return res(false)
     juice.startReplay({ from: from ?? Math.max(0, rec.contactTime - 0.55), to: to ?? Math.min(rec.duration, rec.contactTime + 0.45), speed, render: (t) => shot.renderAt(t), onEnd: () => res(true) })
   }),
-  setShooter, shooter: () => shooterId, flow: () => flow, settings, applySettings, cpuAim, TELL_MS,
+  setShooter, shooter: () => shooterId, flow: () => flow, settings, applySettings, cpuAim, MIRE, TELL_MS,
   kitReady, startMode, mode: () => mode, role: () => role, xpLog, ctx, chars, rig, keeper: () => keeper, kicker: () => kicker, get frames() { return frames },
   setPrecision: (v) => shot.setPrecision(v), audio, events, get esitoLocked() { return esitoLock }, shotState: () => shot.state, lastResult: () => [...events].reverse().find((e) => e.type === 'result')?.result || null,
   info: () => ({ fps: +perf.fps.toFixed(1), level: perf.level, quality: { ...quality }, frames, draws: R.renderer.info.render.calls, tris: R.renderer.info.render.triangles, camera: rig.current })
