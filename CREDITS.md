@@ -145,7 +145,7 @@ restituisce spesso dettagli irriconoscibili o omonimi sbagliati.
 | Appartamento, 79 Beak Street | `public/assets/tappe/londra/apt.webp` | No Swan So Fine | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | [79 Beak Street, Soho, January 2022.jpg](https://commons.wikimedia.org/wiki/File:79_Beak_Street,_Soho,_January_2022.jpg) |
 | Benjamin Pollock's Toyshop | `public/assets/tappe/londra/pollock.webp` | Jack1956 | [CC0](http://creativecommons.org/publicdomain/zero/1.0/deed.en) | [Benjamin Pollocks Toy Shop exterior.jpg](https://commons.wikimedia.org/wiki/File:Benjamin_Pollocks_Toy_Shop_exterior.jpg) |
 
-Ultimo aggiornamento: `npm run foto:londra` · 25 foto, 1441 kB in tutto.
+Ultimo aggiornamento: `npm run foto:londra` · 25 foto, 1422 kB in tutto.
 
 <!-- foto-londra:end -->
 
