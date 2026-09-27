@@ -424,6 +424,28 @@
 
   footer{text-align:center;padding:44px 18px calc(34px + env(safe-area-inset-bottom));color:var(--muted);font-size:12.5px}
   footer .fam2{font-family:"Playfair Display",serif;font-style:italic;font-size:15px;color:var(--gold-soft);margin-bottom:6px}
+
+  /* novità: pannello dal basso con quello che è cambiato dall'ultima visita */
+  .nov-velo{position:fixed;inset:0;z-index:1500;background:rgba(5,8,15,.66);display:flex;align-items:flex-end;justify-content:center}
+  .nov-velo[hidden]{display:none}
+  .nov{width:100%;max-width:560px;max-height:82vh;display:flex;flex-direction:column;background:var(--night-1);
+    border:1px solid var(--line-gold);border-bottom:0;border-radius:22px 22px 0 0;box-shadow:0 -20px 50px -10px rgba(0,0,0,.7)}
+  .nov__testa{padding:20px 20px 8px}
+  .nov__testa .eyebrow{margin-bottom:6px}
+  .nov__testa h2{font-family:"Playfair Display",Georgia,serif;font-size:24px;line-height:1.15}
+  .nov__testa p{margin-top:5px;font-size:13px;color:var(--muted)}
+  .nov__lista{overflow-y:auto;overscroll-behavior:contain;padding:8px 20px 12px;display:flex;flex-direction:column;gap:18px}
+  .nov__voce{padding-left:14px;border-left:3px solid var(--line-gold)}
+  .nov__data{display:flex;align-items:center;gap:7px;font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .nov__punto{width:8px;height:8px;border-radius:50%;background:var(--bus);flex:none}
+  .nov__voce h3{font-family:"Playfair Display",Georgia,serif;font-size:17px;line-height:1.25;margin-top:4px}
+  .nov__voce ul{margin-top:6px;padding-left:16px;display:flex;flex-direction:column;gap:4px;font-size:13.5px;line-height:1.45;color:var(--muted)}
+  .nov__piede{position:sticky;bottom:0;padding:12px 20px calc(14px + env(safe-area-inset-bottom));
+    background:linear-gradient(180deg,rgba(26,35,50,0),var(--night-1) 30%)}
+  .nov__ok{width:100%;border:0;border-radius:14px;padding:14px;background:var(--gold);color:var(--night-0);
+    font:inherit;font-weight:800;font-size:15px;cursor:pointer}
+  html.nov-aperto{overflow:hidden}
+  .nov-link{background:none;border:0;color:var(--gold-soft);font:inherit;font-size:12.5px;text-decoration:underline;cursor:pointer;padding:0}
 </style>
 </head>
 <body>
@@ -1289,7 +1311,20 @@
   <p class="fam2">Famiglia in viaggio</p>
   <p>Londra 2026</p>
   <p style="margin-top:14px"><a href="londra-illustrata.html">🖼️ Versione per immagini, per Olly →</a></p>
+  <p style="margin-top:10px"><button class="nov-link" type="button" id="novApri">📋 Cosa è cambiato nel sito</button></p>
 </footer>
+
+<div class="nov-velo" id="novita" hidden>
+  <section class="nov" role="dialog" aria-modal="true" aria-labelledby="novTit">
+    <div class="nov__testa">
+      <div class="eyebrow">Novità</div>
+      <h2 id="novTit">Cosa è cambiato</h2>
+      <p id="novSub"></p>
+    </div>
+    <div class="nov__lista" id="novLista"></div>
+    <div class="nov__piede"><button class="nov__ok" type="button" id="novOk">Ho capito</button></div>
+  </section>
+</div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
   integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
@@ -1490,6 +1525,78 @@
       document.addEventListener('keydown', esci);
       el.addEventListener('click', chiudi);
     });
+  })();
+
+  /* ====== NOVITÀ: cosa è cambiato dall'ultima visita ======
+     REGOLA: ogni modifica a questa pagina che Vale o Alessandro possano notare aggiunge una voce IN CIMA
+     a NOVITA, con v = ultimo v + 1, nello stesso commit. Senza la voce l'aggiornamento passa inosservato.
+     È l'unico punto della pagina che usa localStorage, ed è voluto: una chiave sola per dispositivo,
+     con l'ultima versione vista. Se il localStorage non si può leggere o scrivere (navigazione privata,
+     dati bloccati) il pannello non compare da solo: uno che non si può chiudere per sempre è peggio di niente.
+     Il link in fondo alla pagina lo riapre con tutto lo storico, in ogni caso. */
+  var NOVITA = [
+    { v: 6, data: '2026-09-27', titolo: 'Il sito ti dice cosa è cambiato', voci: [
+      'Questo pannello: compare quando c’è qualcosa di nuovo dall’ultima volta che hai aperto la pagina',
+      'Lo storico completo resta in fondo alla pagina, “Cosa è cambiato nel sito”' ] },
+    { v: 5, data: '2026-09-27', titolo: 'Percorsi su Google Maps, tratto per tratto', voci: [
+      'Undici pulsanti “Percorso” in testa ai blocchi della giornata: a piedi o coi mezzi, già impostati',
+      'Heathrow è il Terminal 5, quello dei voli BA; il martedì non si ripassa da casa' ] },
+    { v: 4, data: '2026-09-27', titolo: 'Meteo ora per ora, dal 5 novembre', voci: [
+      'In cima al programma: Londra adesso e i tre giorni del viaggio, tocca per l’ora per ora fino alle 23',
+      'Compare solo da 10 giorni prima della partenza, quando la previsione è affidabile. Prima non c’è niente' ] },
+    { v: 3, data: '2026-09-27', titolo: 'La foto vera di casa', voci: [
+      '79 Beak Street sulle card di check-in e check-out: il portone verde col 79 sul vetro' ] },
+    { v: 2, data: '2026-09-27', titolo: 'M&M’S London, se avanza tempo', voci: [
+      'In fondo a ogni giorno, bordo tratteggiato: è a 7 minuti da casa, ci si passa quando capita',
+      'Occhio ai prezzi del Pick & Mix a peso' ] },
+    { v: 1, data: '2026-09-24', titolo: 'QR del parcheggio di Bologna', voci: [
+      'In cima a domenica: il QR del P1 da mostrare alla sbarra, tocca per averlo a schermo pieno',
+      'Funziona anche senza rete, nessuna stampa necessaria' ] }
+  ];
+  (function(){
+    var CHIAVE = 'londra:novita:vista';
+    var ultima = NOVITA.reduce(function(m, e){ return Math.max(m, e.v); }, 0);
+    var velo = document.getElementById('novita');
+    if (!velo) return;
+    var MESI = ['gennaio','febbraio','marzo','aprile','maggio','giugno','luglio','agosto','settembre','ottobre','novembre','dicembre'];
+    var esc = function(s){ return String(s).replace(/[&<>"]/g, function(c){ return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]; }); };
+    var dataIt = function(iso){ var p = iso.split('-'); return +p[2] + ' ' + MESI[+p[1] - 1]; };
+
+    // null = mai vista; undefined = storage non disponibile
+    function leggi(){ try { var v = localStorage.getItem(CHIAVE); return v == null ? null : +v; } catch (e) { return undefined; } }
+    function salva(){ try { localStorage.setItem(CHIAVE, String(ultima)); return true; } catch (e) { return false; } }
+
+    function apri(soloNuove){
+      var vista = leggi(), soglia = typeof vista === 'number' ? vista : 0;
+      var elenco = NOVITA.slice().sort(function(a, b){ return b.v - a.v; })
+        .filter(function(e){ return !soloNuove || e.v > soglia; });
+      var nuove = NOVITA.filter(function(e){ return e.v > soglia; }).length;
+      document.getElementById('novSub').textContent = soloNuove
+        ? (nuove === 1 ? 'Un aggiornamento dall’ultima visita.' : nuove + ' aggiornamenti dall’ultima visita.')
+        : 'Tutti gli aggiornamenti, dal più recente.';
+      document.getElementById('novLista').innerHTML = elenco.map(function(e){
+        return '<article class="nov__voce"><div class="nov__data">' + (e.v > soglia ? '<span class="nov__punto" aria-label="nuovo"></span>' : '')
+          + dataIt(e.data) + '</div><h3>' + esc(e.titolo) + '</h3><ul>'
+          + e.voci.map(function(x){ return '<li>' + esc(x) + '</li>'; }).join('') + '</ul></article>';
+      }).join('');
+      velo.hidden = false;
+      document.documentElement.classList.add('nov-aperto');
+      document.getElementById('novOk').focus();
+    }
+    // qualunque modo di chiudere segna come viste: così il pannello non insegue nessuno
+    function chiudi(){
+      salva();
+      velo.hidden = true;
+      document.documentElement.classList.remove('nov-aperto');
+    }
+    document.getElementById('novOk').addEventListener('click', chiudi);
+    velo.addEventListener('click', function(e){ if (e.target === velo) chiudi(); });
+    document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && !velo.hidden) chiudi(); });
+    document.getElementById('novApri').addEventListener('click', function(){ apri(false); });
+
+    var vista = leggi();
+    if (vista === undefined) return;                       // storage bloccato: niente pannello automatico
+    if (vista === null || vista < ultima) apri(true);
   })();
 
   /* ====== neve leggera nell'hero (rispetta reduced-motion) ====== */
