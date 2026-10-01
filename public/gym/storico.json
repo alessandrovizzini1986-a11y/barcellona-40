@@ -1,6 +1,6 @@
 {
  "v": 2,
- "aggiornato": "2026-09-28T19:38:52.469161Z",
+ "aggiornato": "2026-10-01T19:10:38.469910Z",
  "scheda": {
   "giorni": [
    {
@@ -1561,6 +1561,151 @@
    "warmOpen": false,
    "luogoId": "au2vmbf",
    "luogoNome": "Mcfit"
+  },
+  {
+   "id": "2026-10-01-86748an",
+   "data": "2026-10-01",
+   "giorno": "B",
+   "settimana": 5,
+   "chiusa": true,
+   "inizio": 1790878407617,
+   "fine": 1790881787728,
+   "esercizi": {
+    "affondi-indietro": [
+     {
+      "kg": 6,
+      "reps": 12,
+      "fatta": true
+     },
+     {
+      "kg": 8,
+      "reps": 10,
+      "fatta": true
+     },
+     {
+      "kg": 10,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 6,
+      "reps": 15,
+      "fatta": true
+     }
+    ],
+    "lat-prona": [
+     {
+      "kg": 35,
+      "reps": 13,
+      "fatta": true
+     },
+     {
+      "kg": 40,
+      "reps": 11,
+      "fatta": true
+     },
+     {
+      "kg": 45,
+      "reps": 9,
+      "fatta": true
+     },
+     {
+      "kg": 35,
+      "reps": 15,
+      "fatta": true
+     }
+    ],
+    "leg-curl": [
+     {
+      "kg": 40,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 40,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 40,
+      "reps": 8,
+      "fatta": true
+     }
+    ],
+    "low-row": [
+     {
+      "kg": 35,
+      "reps": 9,
+      "fatta": true
+     },
+     {
+      "kg": 35,
+      "reps": 9,
+      "fatta": true
+     },
+     {
+      "kg": 35,
+      "reps": 12,
+      "fatta": true
+     }
+    ],
+    "push-up-ginocchia": [
+     {
+      "kg": null,
+      "reps": null,
+      "fatta": false
+     }
+    ],
+    "curl-manubri": [
+     {
+      "kg": 10,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 8,
+      "reps": 10,
+      "fatta": true
+     },
+     {
+      "kg": 8,
+      "reps": 12,
+      "fatta": true
+     }
+    ],
+    "alzate-laterali": [
+     {
+      "kg": 6,
+      "reps": 10,
+      "fatta": true
+     },
+     {
+      "kg": 6,
+      "reps": 10,
+      "fatta": true
+     },
+     {
+      "kg": 6,
+      "reps": 12,
+      "fatta": true
+     }
+    ]
+   },
+   "rt": {
+    "push-up-ginocchia": {
+     "reps": 45,
+     "sec": 353,
+     "start": null
+    }
+   },
+   "warm": {
+    "w0": true,
+    "w1": true,
+    "stretch": true
+   },
+   "luogoId": "au2vmbf",
+   "luogoNome": "Mcfit",
+   "warmOpen": false
   }
  ],
  "luoghi": [
