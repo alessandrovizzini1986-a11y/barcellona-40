@@ -155,6 +155,10 @@ export function createAudio(ASSETS, settings) {
     const b = await load(ASSETS + 'audio/vo/' + VO[key]); if (!b) return
     const s = ctx.createBufferSource(); s.buffer = b; s.connect(voGain); s.start()
   }
+  // Schermo spento o scheda nascosta: il contesto si sospende (musica e code di suoni ferme, niente batteria
+  // bruciata), e riparte al ritorno solo se era già stato sbloccato da un tocco.
+  const sospendi = async () => { if (ctx && ctx.state === 'running') { try { await ctx.suspend() } catch { /* già fermo */ } } }
+  const riprendi = async () => { if (ctx && unlocked && ctx.state === 'suspended') { try { await ctx.resume() } catch { /* riparte al prossimo tocco */ } } }
   const vibrate = (pattern) => { if (settings.vibration !== false && navigator.vibrate) { try { navigator.vibrate(pattern) } catch { /* non supportato */ } } }
-  return { unlock, streamAudio, play, whistle, crowd, playMusic, stopMusic, sting, stopSting, duck, vo, vibrate, apply, get unlocked() { return unlocked }, get ducked() { return ducked }, get musicName() { return musicName }, get stingati() { return stingati }, get musicGain() { return musicGain?.gain.value ?? null }, get sfxGain() { return sfxGain?.gain.value ?? null }, get context() { return ctx }, get masterNode() { return master } }
+  return { unlock, streamAudio, play, whistle, crowd, playMusic, stopMusic, sting, stopSting, duck, vo, vibrate, apply, sospendi, riprendi, get unlocked() { return unlocked }, get ducked() { return ducked }, get musicName() { return musicName }, get stingati() { return stingati }, get musicGain() { return musicGain?.gain.value ?? null }, get sfxGain() { return sfxGain?.gain.value ?? null }, get context() { return ctx }, get masterNode() { return master } }
 }

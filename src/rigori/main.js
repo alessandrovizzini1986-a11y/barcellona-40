@@ -115,8 +115,12 @@ window.addEventListener('resize', onResize); onResize()
 const timer = new THREE.Timer()
 let timeScale = 1, frames = 0
 const systems = [] // moduli con update(dt) aggiunti dalle fasi successive
+// Pausa di sistema: quando lo schermo si spegne o si cambia app, il loop si ferma e l'audio si sospende;
+// al ritorno il timer riparte da zero (niente salto di tempo) e tutto riprende dove era.
+let rafId = 0, inPausa = false
 function loop() {
-  requestAnimationFrame(loop)
+  if (inPausa) return
+  rafId = requestAnimationFrame(loop)
   timer.update()
   const raw = Math.min(timer.getDelta(), 0.05)
   const dt = raw * timeScale
@@ -125,6 +129,11 @@ function loop() {
   for (const s of systems) s.update(dt, raw)
   fx.render(); frames++
 }
+
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) { inPausa = true; cancelAnimationFrame(rafId); audio.sospendi() }
+  else if (inPausa) { inPausa = false; timer.update(); audio.riprendi(); cancelAnimationFrame(rafId); rafId = requestAnimationFrame(loop) }
+})
 
 // ---------- tiro: input → mira → volo → esito ----------
 const timing = createTiming()
@@ -639,6 +648,7 @@ window.__rigori = {
   setShooter, shooter: () => shooterId, flow: () => flow, settings, applySettings, cpuAim, MIRE, TELL_MS,
   kitReady, startMode, mode: () => mode, role: () => role, xpLog, ctx, chars, rig, keeper: () => keeper, kicker: () => kicker, get frames() { return frames },
   setPrecision: (v) => shot.setPrecision(v), audio, events, get esitoLocked() { return esitoLock }, shotState: () => shot.state, lastResult: () => [...events].reverse().find((e) => e.type === 'result')?.result || null,
+  get inPausa() { return inPausa },
   info: () => ({ fps: +perf.fps.toFixed(1), level: perf.level, quality: { ...quality }, frames, draws: R.renderer.info.render.calls, tris: R.renderer.info.render.triangles, camera: rig.current })
 }
 
