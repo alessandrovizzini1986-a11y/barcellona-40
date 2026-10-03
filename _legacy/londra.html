@@ -63,12 +63,12 @@
     linear-gradient(180deg,var(--night-0),#101828 55%,var(--night-0))}
 
   /* ============ HERO ============ */
-  .hero{position:relative;text-align:center;padding:60px 18px 0;overflow:hidden}
+  .hero{position:relative;text-align:center;padding:22px 18px 0;overflow:hidden}
   .hero .badge{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line-gold);border-radius:999px;
     padding:7px 15px;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
   .hero .badge .dot{width:7px;height:7px;border-radius:50%;background:var(--gold);animation:pulse 2s infinite}
   @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(212,169,78,.55)}70%{box-shadow:0 0 0 9px rgba(212,169,78,0)}100%{box-shadow:0 0 0 0 rgba(212,169,78,0)}}
-  .hero h1{font-size:clamp(58px,20vw,96px);font-weight:700;margin-top:20px;
+  .hero h1{font-size:clamp(44px,13vw,64px);font-weight:700;margin-top:10px;
     background:linear-gradient(180deg,#fdf6e3 20%,var(--gold-soft) 60%,var(--gold) 100%);
     -webkit-background-clip:text;background-clip:text;color:transparent;
     text-shadow:0 0 60px rgba(212,169,78,.25)}
@@ -80,8 +80,8 @@
     padding:11px 20px;text-decoration:none;box-shadow:0 12px 30px -12px rgba(212,169,78,.55)}
   .pics-btn:active{transform:scale(.97)}
   /* skyline decorativa (SVG inline, leggerissima) */
-  .skyline{display:block;width:100%;max-width:640px;margin:34px auto -1px;color:#060a14}
-  .skyline svg{display:block;width:100%;height:auto}
+  .skyline{display:block;width:100%;max-width:640px;margin:10px auto -1px;color:#060a14}
+  .skyline svg{display:block;width:auto;height:34px;margin:0 auto}
   .snow{position:absolute;inset:0;pointer-events:none;overflow:hidden}
   .snow i{position:absolute;top:-8px;border-radius:50%;background:rgba(245,240,232,.7);animation:fall linear infinite}
   @keyframes fall{to{transform:translateY(105vh)}}
@@ -301,13 +301,6 @@
   .pk__note{margin-top:12px;font-size:12.5px;line-height:1.55;color:var(--muted)}
 
   /* schermo pieno: tutto bianco, QR il più grande possibile, di notte in auto */
-  .pk-full{position:fixed;inset:0;z-index:2000;background:#fff;display:flex;flex-direction:column;
-    align-items:center;justify-content:center;gap:16px;padding:20px}
-  .pk-full .pk__svg{width:min(92vw,78vh)}
-  .pk-full__cap{font-size:15px;font-weight:700;color:#0d1321;text-align:center;font-variant-numeric:tabular-nums}
-  .pk-full__hint{font-size:13px;color:#4a4740;text-align:center;max-width:34ch;line-height:1.5}
-  .pk-full__x{position:absolute;top:14px;right:14px;width:44px;height:44px;border:0;border-radius:999px;
-    background:#efe8dd;color:#0d1321;font-size:20px;line-height:1;cursor:pointer}
   html.pk-open{overflow:hidden}
 
   /* mappa */
@@ -454,6 +447,53 @@
   .nov__ok{width:100%;border:0;border-radius:14px;padding:14px;background:var(--gold);color:var(--night-0);
     font:inherit;font-weight:800;font-size:15px;cursor:pointer}
   html.nov-aperto{overflow:hidden}
+  /* testata compatta: il link per Olly c'è, ma non è la cosa più evidente della pagina */
+  .pics-link{display:inline-flex;align-items:center;min-height:44px;margin-top:2px;font-size:13.5px;font-weight:600;color:var(--gold-soft)}
+  /* barra fissa in basso, a portata di pollice; rispetta la safe area dell'iPhone */
+  body{padding-bottom:calc(68px + env(safe-area-inset-bottom))}
+  .barra{position:fixed;left:0;right:0;bottom:0;z-index:900;display:grid;grid-template-columns:repeat(4,1fr);
+    background:rgba(13,19,33,.96);border-top:1px solid var(--line-gold);padding-bottom:env(safe-area-inset-bottom);
+    -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+  .barra a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:60px;
+    font-size:12.5px;font-weight:700;color:var(--muted);text-decoration:none}
+  .barra a span{font-size:20px;line-height:1}
+  .barra a[aria-current="true"]{color:var(--gold-soft)}
+  /* portafoglio */
+  .pk-riga{display:flex;align-items:center;gap:12px;width:100%;min-height:60px;margin:2px 0 14px;padding:10px 14px;text-align:left;
+    border:1px solid var(--line-gold);border-radius:14px;background:rgba(212,169,78,.08);color:var(--ink);font:inherit;cursor:pointer}
+  .pk-riga b{display:block;font-size:15.5px}
+  .pk-riga small{display:block;font-size:13px;color:var(--muted)}
+  .pk-riga > span:last-child{margin-left:auto;font-size:22px;color:var(--gold)}
+  .pk-riga__ic{font-size:24px}
+  .tk-box[role="button"]{cursor:pointer}
+  .tk-card h3,.casa-card h3{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .gmap--btn{border:0;font:inherit;cursor:pointer}
+  .casa-indirizzo{font-family:"Playfair Display",Georgia,serif;font-size:24px;line-height:1.2;margin-top:8px}
+  .casa-azioni{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;align-items:center}
+  .casa-mostra{min-height:48px;padding:0 16px;border-radius:12px;border:0;background:var(--gold);color:var(--night-0);font:inherit;font-weight:800;font-size:15px;cursor:pointer}
+  /* Piove e badge nei nuovi posti */
+  .prog-azioni{margin-top:8px}
+  .ad-piove{margin-top:10px}
+  .ad-codice{display:flex;align-items:center;justify-content:center;width:100%;min-height:56px;margin-top:12px;border-radius:14px;
+    border:2px solid #fff;background:#fff;color:#0d1321;font:inherit;font-weight:800;font-size:17px;cursor:pointer}
+  .ad-codice[hidden]{display:none}
+  /* codici a schermo pieno: fondo bianco, uno alla volta, frecce in basso */
+  .cod-full{position:fixed;inset:0;z-index:2000;background:#fff;color:#0d1321;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;gap:14px;padding:64px 3vw calc(96px + env(safe-area-inset-bottom));text-align:center}
+  .cod-tit{font-size:17px;font-weight:800;max-width:34ch}
+  .cod-code{display:flex;align-items:center;justify-content:center;width:100%}
+  .cod-code .pk__svg{width:min(88vw,62vh);height:auto}
+  .cod-code .tk-svg{width:min(94vw,640px);height:max(160px,24vh);max-width:none}
+  .cod-num{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:clamp(20px,6vw,28px);font-weight:800;letter-spacing:.04em;font-variant-numeric:tabular-nums}
+  .cod-hint{font-size:15px;color:#3d3a34;max-width:34ch;line-height:1.45}
+  .cod-indirizzo{font-family:"Playfair Display",Georgia,serif;font-size:clamp(34px,11vw,56px);line-height:1.15}
+  .cod-x{position:absolute;top:12px;right:12px;width:52px;height:52px;border:0;border-radius:999px;background:#efe8dd;color:#0d1321;font-size:22px;cursor:pointer}
+  .cod-nav{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:space-between;gap:10px;
+    padding:12px 12px calc(12px + env(safe-area-inset-bottom))}
+  .cod-nav button{min-width:120px;min-height:56px;border:0;border-radius:14px;background:#0d1321;color:#fff;font:inherit;font-weight:800;font-size:16px;cursor:pointer}
+  .cod-nav button:disabled{opacity:.25}
+  .cod-n{font-weight:800;font-variant-numeric:tabular-nums}
+  html.cod-aperto{overflow:hidden}
   /* pannelli "Prima di partire" e "Adesso", in cima alla pagina */
   .ora-pan{margin:18px 0 6px;padding:16px;border-radius:18px;background:linear-gradient(180deg,var(--night-1),var(--night-2));
     border:1px solid var(--line-gold);box-shadow:var(--shadow-card)}
@@ -526,9 +566,7 @@
   <p class="sub"><b>15–17 novembre 2026</b> · 3 giorni, 2 notti</p>
   <p class="fam">Alessandro, Vale e Olly</p>
   <p class="offline-ok" id="offlineOk" hidden>✓ Disponibile offline</p>
-  <a class="pics-btn" href="londra-illustrata.html">🖼️ Versione per immagini, per Olly →</a>
-  <p><button class="dv-badge" type="button" id="dvApri"><span class="dv-n" id="dvN"></span> da verificare</button></p>
-  <p><button class="piove-btn" type="button" id="pioveBtn" aria-pressed="false"><span class="piove-ic">🌧️</span> Piove <span class="piove-stato" id="pioveStato">no</span></button></p>
+  <a class="pics-link" href="londra-illustrata.html">🖼️ Versione per immagini, per Olly</a>
   <div class="skyline" aria-hidden="true">
     <svg viewBox="0 0 640 90" fill="currentColor" preserveAspectRatio="xMidYMax meet">
       <!-- skyline stilizzata: Big Ben, London Eye, Tower Bridge, St Paul's -->
@@ -559,6 +597,7 @@
     <h2 class="ora-tit" id="ppTit"><span id="ppGiorni"></span></h2>
     <ul class="pp-lista" id="ppLista"></ul>
     <a class="pp-link" href="#checklist" id="ppCheck"></a>
+    <p><button class="dv-badge" type="button" data-dv><span class="dv-n"></span> da verificare: chi fa cosa</button></p>
   </section>
   <section class="ora-pan" id="adesso" hidden aria-labelledby="adTit">
     <div class="ad-testa"><span class="eyebrow" id="adTit">Adesso</span><span class="ad-orologio" id="adOrologio"></span></div>
@@ -571,47 +610,12 @@
       </div>
     </div>
     <p class="ad-vincolo" id="adVincolo" hidden></p>
+    <button class="ad-codice" id="adCodice" type="button" hidden></button>
     <div class="ad-azioni">
       <a class="ad-vai" id="adVai" target="_blank" rel="noopener" hidden>🧭 Portami lì</a>
       <button class="ad-scheda" id="adScheda" type="button">Vedi la scheda ↓</button>
     </div>
-  </section>
-
-  <!-- ============ VOLI & CASA ============ -->
-  <section id="base">
-    <div class="eyebrow">Voli &amp; base</div>
-
-    <div class="card">
-      <h3>✈️ Voli — British Airways <span class="st ok">✅ prenotato</span></h3>
-      <p class="meta">Diretti, Heathrow Terminal 5 · Economy · €433,39 totale famiglia</p>
-      <div class="flight">
-        <div class="ap">BLQ<small>Bologna</small></div>
-        <div class="mid"><span>✈︎ dom 15/11</span></div>
-        <div class="ap" style="text-align:right">LHR<small>Heathrow T5</small></div>
-        <div class="t"><b>07:00 → 08:40</b><small>BA547 · 2h40</small></div>
-      </div>
-      <div class="flight">
-        <div class="ap">LHR<small>Heathrow T5</small></div>
-        <div class="mid"><span>✈︎ mar 17/11</span></div>
-        <div class="ap" style="text-align:right">BLQ<small>Bologna</small></div>
-        <div class="t"><b>18:10 → 21:25</b><small>BA546 · 2h15</small></div>
-      </div>
-    </div>
-
-    <div class="card">
-      <h3>🏠 Bright Carnaby Soho 1BR Apartment <span class="st ok">✅ prenotato</span></h3>
-      <p class="meta">79 Beak Street, 3° piano, Soho, London W1F 9SU · 2 notti, 15–17 novembre · €631</p>
-      <p class="meta">Cancellazione gratuita attiva · verificato con l'host.</p>
-      <a class="gmap" href="https://www.google.com/maps/search/?api=1&query=51.5129114,-0.1364381&query_place_id=ChIJR5FBjdQEdkgRuAGI_oe-KPo" target="_blank" rel="noopener">📍 Apri in Google Maps</a>
-      <div class="ci-co">
-        <div class="chip2"><div class="k">Check-in</div><div class="v">15:00</div></div>
-        <div class="chip2"><div class="k">Check-out</div><div class="v">10:30</div></div>
-      </div>
-      <p class="ci-co-note">🎒 I due buchi (domenica prima delle 15:00, martedì dopo le 10:30) non sono un problema: <b>si viaggia con il solo bagaglio a mano sotto il sedile</b> e gli zaini restano in spalla. Da sapere però: il check-in è self-service, <b>una reception dove lasciare i bagagli potrebbe non esserci</b> — va chiarito con l’host prima di un eventuale viaggio con la valigia.</p>
-      <p class="ci-co-note">🔑 Check-in autonomo con chiave digitale <b>Clevio</b> — arriva via email ~2 giorni prima dell'arrivo, ingresso libero dopo le 15:00. Verificare che il link/dominio sia legittimo (<b>clevio.io</b> o dominio ufficiale) e che non venga richiesto alcun pagamento in quel passaggio.</p>
-      <p class="meta" style="margin-top:8px">Host confermato: nessuna unità sostitutiva (sarà esattamente l'appartamento fotografato), nessun costo extra, contatto diretto tramite numero Booking.com.</p>
-      <p class="why"><b>Perché questa zona:</b> è il punto di minor cammino cumulativo per la giornata di lunedì (la Royal walk, sette tappe), tutte raggiungibili in 12–21 minuti a piedi, zero attraversamenti del fiume. Si sacrifica la comodità verso Southbank e South Kensington (serve la metro), accettabile perché cadono su giornate più leggere (domenica e martedì).</p>
-    </div>
+    <p class="ad-piove"><button class="piove-btn" type="button" data-piove aria-pressed="false" id="pioveBtnAd"><span class="piove-ic">🌧️</span> Piove <span class="piove-stato">no</span></button></p>
   </section>
 
   <!-- ============ SICUREZZA ============ -->
@@ -639,6 +643,7 @@
   <section id="programma">
     <div class="eyebrow">Programma</div>
     <h2>Tre giorni, una zona al giorno</h2>
+    <p class="prog-azioni"><button class="piove-btn" type="button" data-piove aria-pressed="false" id="pioveBtn"><span class="piove-ic">🌧️</span> Piove <span class="piove-stato">no</span></button></p>
     <p class="sub2">Tocca una giornata per aprire il dettaglio. <b>Gli orari sono una proposta</b>, ricavata da voli, check-in e distanze: vanno confermati.</p>
     <section class="meteo" id="meteo" hidden aria-label="Meteo di Londra, previsione Open-Meteo">
       <button class="meteo__riga" type="button" aria-expanded="false" aria-controls="meteoDett"></button>
@@ -658,25 +663,8 @@
         </span>
       </summary>
       <div class="dbody">
-      <section class="pk" aria-labelledby="pkTit">
-          <p class="pk__eyebrow">🅿️ Parcheggio aeroporto</p>
-          <h4 class="pk__tit" id="pkTit">P1 · Aeroporto di Bologna</h4>
-          <div class="pk__grid">
-            <div><span class="k">Prenotazione</span><span class="v">3039188</span></div>
-            <div><span class="k">Intestatario</span><span class="v">Alessandro Vizzini</span></div>
-          </div>
-          <button class="pk__box" type="button" id="pkBox" aria-label="Ingrandisci il QR del parcheggio a schermo pieno">
-            <svg class="pk__svg" viewBox="0 0 33 33" shape-rendering="crispEdges" role="img" aria-label="QR code della prenotazione parcheggio 3039188" xmlns="http://www.w3.org/2000/svg"><path fill="#fff" d="M0 0h33v33h-33z"/><path stroke="#000" d="M4 4.5h7m2 0h2m1 0h1m2 0h2m1 0h7m-25 1h1m5 0h1m1 0h1m1 0h2m2 0h2m2 0h1m5 0h1m-25 1h1m1 0h3m1 0h1m1 0h2m1 0h5m2 0h1m1 0h3m1 0h1m-25 1h1m1 0h3m1 0h1m2 0h1m2 0h1m5 0h1m1 0h3m1 0h1m-25 1h1m1 0h3m1 0h1m2 0h5m4 0h1m1 0h3m1 0h1m-25 1h1m5 0h1m4 0h1m2 0h1m1 0h1m1 0h1m5 0h1m-25 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-16 1h6m-14 1h3m1 0h2m3 0h2m1 0h2m1 0h1m5 0h2m-23 1h2m6 0h1m1 0h2m2 0h1m1 0h1m4 0h1m1 0h1m-21 1h1m1 0h1m1 0h1m1 0h1m3 0h1m2 0h4m-21 1h1m1 0h2m4 0h1m2 0h1m1 0h2m1 0h1m2 0h1m1 0h2m1 0h1m-24 1h1m1 0h1m1 0h2m2 0h1m5 0h1m2 0h3m3 0h1m-22 1h3m2 0h1m2 0h3m2 0h1m1 0h1m1 0h1m2 0h1m-23 1h1m1 0h2m1 0h3m4 0h1m2 0h1m1 0h1m2 0h3m-24 1h1m2 0h2m2 0h10m1 0h1m1 0h2m2 0h1m-23 1h3m1 0h2m3 0h1m1 0h2m1 0h7m-15 1h1m1 0h1m1 0h2m1 0h2m3 0h1m1 0h1m1 0h1m-25 1h7m2 0h2m2 0h4m1 0h1m1 0h1m1 0h1m1 0h1m-25 1h1m5 0h1m1 0h2m3 0h1m1 0h2m3 0h1m3 0h1m-25 1h1m1 0h3m1 0h1m2 0h1m1 0h1m1 0h1m2 0h6m1 0h2m-25 1h1m1 0h3m1 0h1m1 0h1m1 0h4m2 0h6m2 0h1m-25 1h1m1 0h3m1 0h1m1 0h6m1 0h1m1 0h1m2 0h1m2 0h1m-24 1h1m5 0h1m1 0h1m3 0h1m1 0h1m1 0h3m1 0h1m1 0h1m-23 1h7m2 0h1m1 0h2m5 0h1m3 0h3"/></svg>
-            <span class="pk__cta">Tocca per ingrandire</span>
-          </button>
-          <div class="pk__grid">
-            <div><span class="k">Entrata</span><span class="v">15/11/26 · 04:15</span></div>
-            <div><span class="k">Uscita</span><span class="v">17/11/26 · 23:45</span></div>
-          </div>
-          <p class="pk__tot"><b>€ 63,00</b> <span class="pk__paid">Pagato</span></p>
-          <p class="pk__note">Tenere il QR a portata di mano su questa pagina all’ingresso del parcheggio (P1, Bologna) — nessuna stampa necessaria.</p>
-        </section>
-        <article class="tcard" data-giorno="2026-11-15" data-ora="05:15" data-tipo="trasporto" data-fuso="Europe/Rome">
+        <button class="pk-riga" type="button" data-codice="0"><span class="pk-riga__ic" aria-hidden="true">🅿️</span><span><b>QR del parcheggio P1</b><small>Tocca per mostrarlo alla sbarra, anche senza rete</small></span><span aria-hidden="true">›</span></button>
+        <article class="tcard" data-giorno="2026-11-15" data-ora="05:15" data-tipo="trasporto" data-fuso="Europe/Rome" data-mostra="qr">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/blq.webp" width="800" height="450" alt="Il terminal dell’aeroporto di Bologna con le arcate rosse della pensilina" decoding="async">
             <span class="tcard__ora">05:15</span>
@@ -981,7 +969,7 @@
           <span class="percorso__txt"><b>Percorso · Lunedì</b><span>Harrods → Natural History Museum</span></span>
           <span class="percorso__modo">🚶 a piedi</span>
         </a>
-        <article class="tcard" data-tappa="nhm" data-durata="75-75" data-giorno="2026-11-16" data-ora="16:30" data-tipo="tappa" data-non-prima="16:30" data-fine-entro="17:50" data-vincolo="Ingresso a fascia oraria alle 16:30, non prima · il museo chiude alle 17:50">
+        <article class="tcard" data-tappa="nhm" data-durata="75-75" data-giorno="2026-11-16" data-ora="16:30" data-tipo="tappa" data-non-prima="16:30" data-fine-entro="17:50" data-vincolo="Ingresso a fascia oraria alle 16:30, non prima · il museo chiude alle 17:50" data-mostra="nhm">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/nhm.webp" width="800" height="450" alt="La facciata in terracotta del Natural History Museum, con le torri e il portale ad arco" loading="lazy" decoding="async">
             <span class="tcard__ora">16:30</span>
@@ -991,7 +979,7 @@
             <p class="tdur">⏱️ 1 h 15</p>
             <p>Dieci minuti a piedi da Harrods. I tre biglietti sono già presi, con ingresso a fascia oraria alle 16:30: non si entra prima. Il museo chiude alle 17:50.</p>
             <a class="gmap" href="https://www.google.com/maps/search/?api=1&amp;query=Natural%20History%20Museum%20London" target="_blank" rel="noopener">📍 Apri in Google Maps</a>
-            <a class="gmap" href="#biglietti">🎟️ I biglietti</a>
+            <button class="gmap gmap--btn" type="button" data-codice="1">🎟️ Mostra i biglietti</button>
           </div>
           <p class="tcard__credito">foto: <a href="https://commons.wikimedia.org/wiki/File:Natural_History_Museum_London_Jan_2006.jpg" target="_blank" rel="noopener">Diliff / CC BY-SA 3.0</a></p>
         </article>
@@ -1115,7 +1103,7 @@
           </div>
           <p class="tcard__credito">foto: <a href="https://commons.wikimedia.org/wiki/File:20251011_British_Airways_G-TTNN_EGLL.jpg" target="_blank" rel="noopener">Alex Noble / CC0</a></p>
         </article>
-        <article class="tcard" data-giorno="2026-11-17" data-ora="21:25" data-tipo="trasporto" data-fuso="Europe/Rome">
+        <article class="tcard" data-giorno="2026-11-17" data-ora="21:25" data-tipo="trasporto" data-fuso="Europe/Rome" data-mostra="qr">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/blq_arr.webp" width="800" height="450" alt="L’aeroporto di Bologna visto dall’alto, con la pista e la campagna intorno" loading="lazy" decoding="async">
             <span class="tcard__ora">21:25</span>
@@ -1161,6 +1149,100 @@
         </article>
       </div>
     </details>
+  </section>
+
+  <!-- ============ BIGLIETTI ============ -->
+  <section id="biglietti" aria-labelledby="bigTit">
+    <div class="eyebrow">Biglietti</div>
+    <h2 id="bigTit">Portafoglio</h2>
+    <p class="sub2">Tocca un codice per aprirlo a schermo pieno. Funzionano anche senza rete.</p>
+
+      <article class="pk" aria-labelledby="pkTit">
+    <p class="pk__eyebrow">🅿️ Parcheggio aeroporto · domenica all’ingresso, martedì sera all’uscita</p>
+    <h4 class="pk__tit" id="pkTit">P1 · Aeroporto di Bologna</h4>
+    <div class="pk__grid">
+    <div><span class="k">Prenotazione</span><span class="v">3039188</span></div>
+    <div><span class="k">Intestatario</span><span class="v">Alessandro Vizzini</span></div>
+    </div>
+    <button class="pk__box" type="button" id="pkBox" data-codice="0" aria-label="Ingrandisci il QR del parcheggio a schermo pieno">
+    <svg class="pk__svg" viewBox="0 0 33 33" shape-rendering="crispEdges" role="img" aria-label="QR code della prenotazione parcheggio 3039188" xmlns="http://www.w3.org/2000/svg"><path fill="#fff" d="M0 0h33v33h-33z"/><path stroke="#000" d="M4 4.5h7m2 0h2m1 0h1m2 0h2m1 0h7m-25 1h1m5 0h1m1 0h1m1 0h2m2 0h2m2 0h1m5 0h1m-25 1h1m1 0h3m1 0h1m1 0h2m1 0h5m2 0h1m1 0h3m1 0h1m-25 1h1m1 0h3m1 0h1m2 0h1m2 0h1m5 0h1m1 0h3m1 0h1m-25 1h1m1 0h3m1 0h1m2 0h5m4 0h1m1 0h3m1 0h1m-25 1h1m5 0h1m4 0h1m2 0h1m1 0h1m1 0h1m5 0h1m-25 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-16 1h6m-14 1h3m1 0h2m3 0h2m1 0h2m1 0h1m5 0h2m-23 1h2m6 0h1m1 0h2m2 0h1m1 0h1m4 0h1m1 0h1m-21 1h1m1 0h1m1 0h1m1 0h1m3 0h1m2 0h4m-21 1h1m1 0h2m4 0h1m2 0h1m1 0h2m1 0h1m2 0h1m1 0h2m1 0h1m-24 1h1m1 0h1m1 0h2m2 0h1m5 0h1m2 0h3m3 0h1m-22 1h3m2 0h1m2 0h3m2 0h1m1 0h1m1 0h1m2 0h1m-23 1h1m1 0h2m1 0h3m4 0h1m2 0h1m1 0h1m2 0h3m-24 1h1m2 0h2m2 0h10m1 0h1m1 0h2m2 0h1m-23 1h3m1 0h2m3 0h1m1 0h2m1 0h7m-15 1h1m1 0h1m1 0h2m1 0h2m3 0h1m1 0h1m1 0h1m-25 1h7m2 0h2m2 0h4m1 0h1m1 0h1m1 0h1m1 0h1m-25 1h1m5 0h1m1 0h2m3 0h1m1 0h2m3 0h1m3 0h1m-25 1h1m1 0h3m1 0h1m2 0h1m1 0h1m1 0h1m2 0h6m1 0h2m-25 1h1m1 0h3m1 0h1m1 0h1m1 0h4m2 0h6m2 0h1m-25 1h1m1 0h3m1 0h1m1 0h6m1 0h1m1 0h1m2 0h1m2 0h1m-24 1h1m5 0h1m1 0h1m3 0h1m1 0h1m1 0h3m1 0h1m1 0h1m-23 1h7m2 0h1m1 0h2m5 0h1m3 0h3"/></svg>
+    <span class="pk__cta">Tocca per ingrandire</span>
+    </button>
+    <div class="pk__grid">
+    <div><span class="k">Entrata</span><span class="v">15/11/26 · 04:15</span></div>
+    <div><span class="k">Uscita</span><span class="v">17/11/26 · 23:45</span></div>
+    </div>
+    <p class="pk__tot"><b>€ 63,00</b> <span class="pk__paid">Pagato</span></p>
+    <p class="pk__note">Tenere il QR a portata di mano su questa pagina all’ingresso del parcheggio (P1, Bologna) — nessuna stampa necessaria.</p>
+    </article>
+
+    <div class="card tk-card">
+      <h3>🎟️ Natural History Museum <span class="st ok">3 ingressi</span></h3>
+      <div class="tk-when">
+        <div><span class="k">Data</span><span class="v">lunedì 16 nov</span></div>
+        <div><span class="k">Ingresso</span><span class="v">16:30</span></div>
+      </div>
+
+      <figure class="tk">
+        <figcaption>Adulto 1 <small>Adult · Free</small></figcaption>
+        <div class="tk-box" role="button" tabindex="0" data-codice="1" aria-label="Mostra a schermo pieno il biglietto 1">
+          <svg class="tk-svg" id="ticket-1" viewBox="0 0 324 72" shape-rendering="crispEdges" role="img" aria-label="Codice a barre del biglietto 1001401807011726169" xmlns="http://www.w3.org/2000/svg"><rect width="324" height="72" fill="#fff"/><path fill="#000" d="M6 6h4v60h-4zM12 6h2v60h-2zM18 6h6v60h-6zM28 6h4v60h-4zM36 6h2v60h-2zM44 6h2v60h-2zM50 6h4v60h-4zM58 6h4v60h-4zM64 6h4v60h-4zM72 6h4v60h-4zM82 6h2v60h-2zM86 6h2v60h-2zM94 6h4v60h-4zM102 6h6v60h-6zM112 6h2v60h-2zM116 6h2v60h-2zM122 6h4v60h-4zM132 6h2v60h-2zM138 6h4v60h-4zM146 6h4v60h-4zM152 6h4v60h-4zM160 6h2v60h-2zM166 6h6v60h-6zM176 6h4v60h-4zM182 6h6v60h-6zM192 6h2v60h-2zM198 6h4v60h-4zM204 6h2v60h-2zM210 6h6v60h-6zM218 6h4v60h-4zM226 6h6v60h-6zM234 6h2v60h-2zM238 6h8v60h-8zM248 6h6v60h-6zM258 6h2v60h-2zM262 6h4v60h-4zM270 6h2v60h-2zM274 6h6v60h-6zM286 6h4v60h-4zM292 6h4v60h-4zM302 6h6v60h-6zM310 6h2v60h-2zM314 6h4v60h-4z"/></svg>
+          <p class="tk-num">1001401807011726169</p>
+        </div>
+      </figure>
+
+      <figure class="tk">
+        <figcaption>Adulto 2 <small>Adult · Free</small></figcaption>
+        <div class="tk-box" role="button" tabindex="0" data-codice="2" aria-label="Mostra a schermo pieno il biglietto 2">
+          <svg class="tk-svg" id="ticket-2" viewBox="0 0 324 72" shape-rendering="crispEdges" role="img" aria-label="Codice a barre del biglietto 1001401807011726170" xmlns="http://www.w3.org/2000/svg"><rect width="324" height="72" fill="#fff"/><path fill="#000" d="M6 6h4v60h-4zM12 6h2v60h-2zM18 6h6v60h-6zM28 6h4v60h-4zM36 6h2v60h-2zM44 6h2v60h-2zM50 6h4v60h-4zM58 6h4v60h-4zM64 6h4v60h-4zM72 6h4v60h-4zM82 6h2v60h-2zM86 6h2v60h-2zM94 6h4v60h-4zM102 6h6v60h-6zM112 6h2v60h-2zM116 6h2v60h-2zM122 6h4v60h-4zM132 6h2v60h-2zM138 6h4v60h-4zM146 6h4v60h-4zM152 6h4v60h-4zM160 6h2v60h-2zM166 6h6v60h-6zM176 6h4v60h-4zM182 6h6v60h-6zM192 6h2v60h-2zM198 6h4v60h-4zM204 6h2v60h-2zM210 6h6v60h-6zM220 6h4v60h-4zM226 6h6v60h-6zM234 6h2v60h-2zM238 6h8v60h-8zM248 6h2v60h-2zM254 6h6v60h-6zM262 6h4v60h-4zM270 6h6v60h-6zM282 6h4v60h-4zM288 6h2v60h-2zM292 6h4v60h-4zM302 6h6v60h-6zM310 6h2v60h-2zM314 6h4v60h-4z"/></svg>
+          <p class="tk-num">1001401807011726170</p>
+        </div>
+      </figure>
+
+      <figure class="tk">
+        <figcaption>Bambina (Olly) <small>Child · Free</small></figcaption>
+        <div class="tk-box" role="button" tabindex="0" data-codice="3" aria-label="Mostra a schermo pieno il biglietto 3">
+          <svg class="tk-svg" id="ticket-3" viewBox="0 0 324 72" shape-rendering="crispEdges" role="img" aria-label="Codice a barre del biglietto 1001401807011726171" xmlns="http://www.w3.org/2000/svg"><rect width="324" height="72" fill="#fff"/><path fill="#000" d="M6 6h4v60h-4zM12 6h2v60h-2zM18 6h6v60h-6zM28 6h4v60h-4zM36 6h2v60h-2zM44 6h2v60h-2zM50 6h4v60h-4zM58 6h4v60h-4zM64 6h4v60h-4zM72 6h4v60h-4zM82 6h2v60h-2zM86 6h2v60h-2zM94 6h4v60h-4zM102 6h6v60h-6zM112 6h2v60h-2zM116 6h2v60h-2zM122 6h4v60h-4zM132 6h2v60h-2zM138 6h4v60h-4zM146 6h4v60h-4zM152 6h4v60h-4zM160 6h2v60h-2zM166 6h6v60h-6zM176 6h4v60h-4zM182 6h6v60h-6zM192 6h2v60h-2zM198 6h4v60h-4zM204 6h2v60h-2zM210 6h6v60h-6zM220 6h4v60h-4zM226 6h6v60h-6zM234 6h2v60h-2zM238 6h8v60h-8zM248 6h2v60h-2zM254 6h6v60h-6zM264 6h4v60h-4zM270 6h2v60h-2zM274 6h4v60h-4zM286 6h2v60h-2zM292 6h4v60h-4zM302 6h6v60h-6zM310 6h2v60h-2zM314 6h4v60h-4z"/></svg>
+          <p class="tk-num">1001401807011726171</p>
+        </div>
+      </figure>
+
+      <p class="tk-note">⏰ Ingresso a fascia oraria — non presentarsi prima delle 16:30. Museo aperto 10:00–17:50, ultimi ingressi in galleria verso le 17:30.</p>
+      <p class="tk-order">Order ID 7800197 · South Kensington Admission, Natural History Museum</p>
+    </div>
+
+    <div class="card">
+      <h3>✈️ Voli — British Airways <span class="st ok">✅ prenotato</span></h3>
+      <p class="meta">Diretti, Heathrow Terminal 5 · Economy · €433,39 totale famiglia</p>
+      <div class="flight">
+        <div class="ap">BLQ<small>Bologna</small></div>
+        <div class="mid"><span>✈︎ dom 15/11</span></div>
+        <div class="ap" style="text-align:right">LHR<small>Heathrow T5</small></div>
+        <div class="t"><b>07:00 → 08:40</b><small>BA547 · 2h40</small></div>
+      </div>
+      <div class="flight">
+        <div class="ap">LHR<small>Heathrow T5</small></div>
+        <div class="mid"><span>✈︎ mar 17/11</span></div>
+        <div class="ap" style="text-align:right">BLQ<small>Bologna</small></div>
+        <div class="t"><b>18:10 → 21:25</b><small>BA546 · 2h15</small></div>
+      </div>
+    </div>
+
+    <div class="card casa-card">
+      <h3>🏠 Appartamento <span class="st ok">✅ prenotato</span></h3>
+      <p class="casa-indirizzo">79 Beak Street<br>London W1F 9SU</p>
+      <p class="meta">Bright Carnaby Soho · 3° piano · Soho · 2 notti, 15–17 novembre</p>
+      <p class="meta">Cancellazione gratuita attiva · verificato con l'host.</p>
+      <div class="ci-co">
+        <div class="chip2"><div class="k">Check-in</div><div class="v">15:00</div></div>
+        <div class="chip2"><div class="k">Check-out</div><div class="v">10:30</div></div>
+      </div>
+      <p class="ci-co-note">🔑 Check-in autonomo con chiave digitale <b>Clevio</b> — arriva via email ~2 giorni prima dell'arrivo, ingresso libero dopo le 15:00. Verificare che il link/dominio sia legittimo (<b>clevio.io</b> o dominio ufficiale) e che non venga richiesto alcun pagamento in quel passaggio.</p>
+      <div class="casa-azioni">
+        <button class="casa-mostra" type="button" data-indirizzo>🚕 Mostra l’indirizzo</button>
+  <a class="gmap" href="https://www.google.com/maps/search/?api=1&query=51.5129114,-0.1364381&query_place_id=ChIJR5FBjdQEdkgRuAGI_oe-KPo" target="_blank" rel="noopener">📍 Apri in Google Maps</a>
+      </div>
+    </div>
   </section>
 
   <!-- ============ PROGRAMMA ORA PER ORA ============ -->
@@ -1217,47 +1299,6 @@
       <div class="hp-note warn">⚠️ Lina Stores la domenica chiude alle 18:00 — la spesa va fatta al rientro dal London Eye, entro le 17:30-17:45. Piano B: Whole Foods a Piccadilly Circus, aperto fino alle 18:00 di domenica e sulla via del rientro.</div>
       <div class="hp-note info">ℹ️ Il check-in è self-service con chiave digitale Clevio, senza orario limite: non serve rientrare alle 15:00 in punto, si fa alle 18:00 tornando da Southbank.</div>
       <div class="hp-note info">ℹ️ Orari proposti, non prenotati: gli unici vincoli fissi sono i voli (BA547 alle 07:00 e BA546 alle 18:10, entrambi dal Terminal 5) e il check-out delle 10:30.</div>
-    </div>
-  </section>
-
-  <!-- ============ BIGLIETTI ============ -->
-  <section id="biglietti">
-    <div class="eyebrow">Biglietti</div>
-    <h2>🎟️ Natural History Museum</h2>
-    <p class="sub2">Tre ingressi già acquistati. All’entrata si scansionano direttamente dallo schermo del telefono.</p>
-
-    <div class="card">
-      <div class="tk-when">
-        <div><span class="k">Data</span><span class="v">lunedì 16 nov</span></div>
-        <div><span class="k">Ingresso</span><span class="v">16:30</span></div>
-      </div>
-
-      <figure class="tk">
-        <figcaption>Adulto 1 <small>Adult · Free</small></figcaption>
-        <div class="tk-box">
-          <svg class="tk-svg" id="ticket-1" viewBox="0 0 324 72" shape-rendering="crispEdges" role="img" aria-label="Codice a barre del biglietto 1001401807011726169" xmlns="http://www.w3.org/2000/svg"><rect width="324" height="72" fill="#fff"/><path fill="#000" d="M6 6h4v60h-4zM12 6h2v60h-2zM18 6h6v60h-6zM28 6h4v60h-4zM36 6h2v60h-2zM44 6h2v60h-2zM50 6h4v60h-4zM58 6h4v60h-4zM64 6h4v60h-4zM72 6h4v60h-4zM82 6h2v60h-2zM86 6h2v60h-2zM94 6h4v60h-4zM102 6h6v60h-6zM112 6h2v60h-2zM116 6h2v60h-2zM122 6h4v60h-4zM132 6h2v60h-2zM138 6h4v60h-4zM146 6h4v60h-4zM152 6h4v60h-4zM160 6h2v60h-2zM166 6h6v60h-6zM176 6h4v60h-4zM182 6h6v60h-6zM192 6h2v60h-2zM198 6h4v60h-4zM204 6h2v60h-2zM210 6h6v60h-6zM218 6h4v60h-4zM226 6h6v60h-6zM234 6h2v60h-2zM238 6h8v60h-8zM248 6h6v60h-6zM258 6h2v60h-2zM262 6h4v60h-4zM270 6h2v60h-2zM274 6h6v60h-6zM286 6h4v60h-4zM292 6h4v60h-4zM302 6h6v60h-6zM310 6h2v60h-2zM314 6h4v60h-4z"/></svg>
-          <p class="tk-num">1001401807011726169</p>
-        </div>
-      </figure>
-
-      <figure class="tk">
-        <figcaption>Adulto 2 <small>Adult · Free</small></figcaption>
-        <div class="tk-box">
-          <svg class="tk-svg" id="ticket-2" viewBox="0 0 324 72" shape-rendering="crispEdges" role="img" aria-label="Codice a barre del biglietto 1001401807011726170" xmlns="http://www.w3.org/2000/svg"><rect width="324" height="72" fill="#fff"/><path fill="#000" d="M6 6h4v60h-4zM12 6h2v60h-2zM18 6h6v60h-6zM28 6h4v60h-4zM36 6h2v60h-2zM44 6h2v60h-2zM50 6h4v60h-4zM58 6h4v60h-4zM64 6h4v60h-4zM72 6h4v60h-4zM82 6h2v60h-2zM86 6h2v60h-2zM94 6h4v60h-4zM102 6h6v60h-6zM112 6h2v60h-2zM116 6h2v60h-2zM122 6h4v60h-4zM132 6h2v60h-2zM138 6h4v60h-4zM146 6h4v60h-4zM152 6h4v60h-4zM160 6h2v60h-2zM166 6h6v60h-6zM176 6h4v60h-4zM182 6h6v60h-6zM192 6h2v60h-2zM198 6h4v60h-4zM204 6h2v60h-2zM210 6h6v60h-6zM220 6h4v60h-4zM226 6h6v60h-6zM234 6h2v60h-2zM238 6h8v60h-8zM248 6h2v60h-2zM254 6h6v60h-6zM262 6h4v60h-4zM270 6h6v60h-6zM282 6h4v60h-4zM288 6h2v60h-2zM292 6h4v60h-4zM302 6h6v60h-6zM310 6h2v60h-2zM314 6h4v60h-4z"/></svg>
-          <p class="tk-num">1001401807011726170</p>
-        </div>
-      </figure>
-
-      <figure class="tk">
-        <figcaption>Bambina (Olly) <small>Child · Free</small></figcaption>
-        <div class="tk-box">
-          <svg class="tk-svg" id="ticket-3" viewBox="0 0 324 72" shape-rendering="crispEdges" role="img" aria-label="Codice a barre del biglietto 1001401807011726171" xmlns="http://www.w3.org/2000/svg"><rect width="324" height="72" fill="#fff"/><path fill="#000" d="M6 6h4v60h-4zM12 6h2v60h-2zM18 6h6v60h-6zM28 6h4v60h-4zM36 6h2v60h-2zM44 6h2v60h-2zM50 6h4v60h-4zM58 6h4v60h-4zM64 6h4v60h-4zM72 6h4v60h-4zM82 6h2v60h-2zM86 6h2v60h-2zM94 6h4v60h-4zM102 6h6v60h-6zM112 6h2v60h-2zM116 6h2v60h-2zM122 6h4v60h-4zM132 6h2v60h-2zM138 6h4v60h-4zM146 6h4v60h-4zM152 6h4v60h-4zM160 6h2v60h-2zM166 6h6v60h-6zM176 6h4v60h-4zM182 6h6v60h-6zM192 6h2v60h-2zM198 6h4v60h-4zM204 6h2v60h-2zM210 6h6v60h-6zM220 6h4v60h-4zM226 6h6v60h-6zM234 6h2v60h-2zM238 6h8v60h-8zM248 6h2v60h-2zM254 6h6v60h-6zM264 6h4v60h-4zM270 6h2v60h-2zM274 6h4v60h-4zM286 6h2v60h-2zM292 6h4v60h-4zM302 6h6v60h-6zM310 6h2v60h-2zM314 6h4v60h-4z"/></svg>
-          <p class="tk-num">1001401807011726171</p>
-        </div>
-      </figure>
-
-      <p class="tk-note">⏰ Ingresso a fascia oraria — non presentarsi prima delle 16:30. Museo aperto 10:00–17:50, ultimi ingressi in galleria verso le 17:30.</p>
-      <p class="tk-order">Order ID 7800197 · South Kensington Admission, Natural History Museum</p>
     </div>
   </section>
 
@@ -1377,6 +1418,19 @@
     </div>
   </section>
 
+  <!-- ============ INFO ============ -->
+  <section id="info" aria-labelledby="infoTit">
+    <div class="eyebrow">Info</div>
+    <h2 id="infoTit">Da sapere</h2>
+    <p><button class="dv-badge" type="button" data-dv><span class="dv-n"></span> da verificare</button></p>
+    <div class="card">
+      <h3>🏠 Note sull’alloggio</h3>
+      <p class="ci-co-note">🎒 I due buchi (domenica prima delle 15:00, martedì dopo le 10:30) non sono un problema: <b>si viaggia con il solo bagaglio a mano sotto il sedile</b> e gli zaini restano in spalla. Da sapere però: il check-in è self-service, <b>una reception dove lasciare i bagagli potrebbe non esserci</b> — va chiarito con l’host prima di un eventuale viaggio con la valigia.</p>
+      <p class="meta" style="margin-top:8px">Host confermato: nessuna unità sostitutiva (sarà esattamente l'appartamento fotografato), nessun costo extra, contatto diretto tramite numero Booking.com.</p>
+      <p class="why"><b>Perché questa zona:</b> è il punto di minor cammino cumulativo per la giornata di lunedì (la Royal walk, sette tappe), tutte raggiungibili in 12–21 minuti a piedi, zero attraversamenti del fiume. Si sacrifica la comodità verso Southbank e South Kensington (serve la metro), accettabile perché cadono su giornate più leggere (domenica e martedì).</p>
+    </div>
+  </section>
+
   <!-- ============ BUDGET ============ -->
   <section id="budget">
     <div class="eyebrow">Budget</div>
@@ -1456,6 +1510,14 @@
 
 </div>
 </main>
+
+<!-- barra fissa in basso, a portata di pollice -->
+<nav class="barra" aria-label="Sezioni della pagina">
+  <a href="#ora" data-barra="ora"><span aria-hidden="true">🕒</span>Adesso</a>
+  <a href="#programma" data-barra="programma"><span aria-hidden="true">🗓️</span>Programma</a>
+  <a href="#biglietti" data-barra="biglietti"><span aria-hidden="true">🎟️</span>Biglietti</a>
+  <a href="#info" data-barra="info"><span aria-hidden="true">ℹ️</span>Info</a>
+</nav>
 
 <footer>
   <p class="fam2">Famiglia in viaggio</p>
@@ -1631,65 +1693,89 @@
     }
   })();
 
-  /* ====== QR del parcheggio a schermo pieno ======
-     Il QR è già dentro la pagina (SVG statico, nessuna libreria e nessuna rete):
-     alle 4 del mattino sotto la sbarra non si può dipendere da un CDN.
-     A schermo pieno diventa grande e su fondo bianco, e lo schermo resta acceso. */
-  (function(){
-    var box = document.getElementById('pkBox');
-    if (!box) return;
-    var lock = null;
-    function tieniAcceso(){
-      try {
-        if (navigator.wakeLock && navigator.wakeLock.request) {
-          navigator.wakeLock.request('screen').then(function(l){ lock = l; }, function(){});
-        }
-      } catch (e) { /* niente wake lock: pazienza */ }
-    }
+  /* ====== codici a schermo pieno: QR del parcheggio e biglietti del museo ======
+     Un tocco su un codice (o su una scorciatoia con data-codice) lo apre su fondo bianco, col massimo
+     della dimensione e lo schermo che resta acceso. Uno alla volta, con le frecce (o scorrendo di lato)
+     per passare al successivo. I codici sono gli stessi SVG della pagina, clonati: nessuna copia dei dati.
+     "Mostra l'indirizzo" usa lo stesso schermo per il tassista. */
+  var CODICI = (function(){
+    var lock = null, el = null, idx = 0, prima = null;
+    function tieniAcceso(){ try { if (navigator.wakeLock && navigator.wakeLock.request) navigator.wakeLock.request('screen').then(function(l){ lock = l; }, function(){}); } catch (e) {} }
     function rilascia(){ try { if (lock) lock.release(); } catch (e) {} lock = null; }
-
-    box.addEventListener('click', function(){
-      if (document.querySelector('.pk-full')) return;
-      var el = document.createElement('div');
-      el.className = 'pk-full';
-      el.setAttribute('role', 'dialog');
-      el.setAttribute('aria-label', 'QR del parcheggio a schermo pieno');
-      var qr = box.querySelector('.pk__svg').cloneNode(true);
-      el.appendChild(qr);
-      var cap = document.createElement('p');
-      cap.className = 'pk-full__cap';
-      cap.textContent = 'Prenotazione 3039188 · P1 Bologna';
-      el.appendChild(cap);
-      var hint = document.createElement('p');
-      hint.className = 'pk-full__hint';
-      hint.textContent = 'Alza la luminosità dello schermo e avvicinalo al lettore, a circa 10 cm';
-      el.appendChild(hint);
-      var x = document.createElement('button');
-      x.className = 'pk-full__x'; x.type = 'button';
-      x.setAttribute('aria-label', 'Chiudi'); x.textContent = '✕';
-      el.appendChild(x);
-      document.body.appendChild(el);
-      document.documentElement.classList.add('pk-open');
-      tieniAcceso();
-      /* il wake lock cade quando la pagina va in background: si riprende al rientro */
-      function riprendi(){ if (document.visibilityState === 'visible' && document.body.contains(el)) tieniAcceso(); }
-      document.addEventListener('visibilitychange', riprendi);
-      /* lo schermo intero non c'è ovunque e può essere rifiutato: l'overlay basta da solo */
+    function riprendi(){ if (document.visibilityState === 'visible' && el) tieniAcceso(); }
+    function slides(){
+      var s = [], qr = document.querySelector('#biglietti .pk__svg');
+      if (qr) s.push({ tit: 'Parcheggio P1 · Aeroporto di Bologna', num: 'Prenotazione 3039188', svg: qr, hint: 'Alza la luminosità dello schermo e avvicinalo al lettore, a circa 10 cm' });
+      document.querySelectorAll('#biglietti figure.tk').forEach(function(f, i, tutti){
+        s.push({ tit: 'Natural History Museum · ' + f.querySelector('figcaption').firstChild.textContent.trim() + ' (' + (i + 1) + ' di ' + tutti.length + ')',
+                 num: f.querySelector('.tk-num').textContent.trim(), svg: f.querySelector('.tk-svg'), barcode: true,
+                 hint: 'Alza la luminosità dello schermo e tieni il telefono fermo sotto il lettore' });
+      });
+      return s;
+    }
+    function disegna(){
+      var s = slides(), x = s[idx]; if (!x) return;
+      el.querySelector('.cod-tit').textContent = x.tit;
+      var box = el.querySelector('.cod-code'); box.innerHTML = '';
+      var c = x.svg.cloneNode(true); c.removeAttribute('id');
+      if (x.barcode) c.setAttribute('preserveAspectRatio', 'none');   // si allunga in altezza: barre alte almeno 25 mm
+      box.appendChild(c);
+      el.querySelector('.cod-num').textContent = x.num;
+      el.querySelector('.cod-hint').textContent = x.hint;
+      el.querySelector('.cod-n').textContent = (idx + 1) + ' / ' + s.length;
+      el.querySelector('.cod-prec').disabled = idx === 0;
+      el.querySelector('.cod-succ').disabled = idx === s.length - 1;
+      el.setAttribute('aria-label', x.tit);
+    }
+    function costruisci(soloTesto){
+      el = document.createElement('div'); el.className = 'cod-full'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true');
+      el.innerHTML = '<button class="cod-x" type="button" aria-label="Chiudi">✕</button><p class="cod-tit"></p>'
+        + (soloTesto ? '' : '<div class="cod-code"></div><p class="cod-num"></p>')
+        + '<p class="cod-hint"></p>'
+        + (soloTesto ? '' : '<div class="cod-nav"><button class="cod-prec" type="button">‹ Prima</button><span class="cod-n"></span><button class="cod-succ" type="button">Dopo ›</button></div>');
+      document.body.appendChild(el); document.documentElement.classList.add('cod-aperto');
+      tieniAcceso(); document.addEventListener('visibilitychange', riprendi);
       try { if (el.requestFullscreen) { var p = el.requestFullscreen({ navigationUI: 'hide' }); if (p && p.catch) p.catch(function(){}); } } catch (e) {}
-      function chiudi(){
-        document.removeEventListener('visibilitychange', riprendi);
-        document.removeEventListener('keydown', esci);
-        rilascia();
-        try { if (document.fullscreenElement && document.exitFullscreen) { var q = document.exitFullscreen(); if (q && q.catch) q.catch(function(){}); } } catch (e) {}
-        document.documentElement.classList.remove('pk-open');
-        el.remove();
-        box.focus();
+      el.querySelector('.cod-x').addEventListener('click', chiudi);
+      if (!soloTesto) {
+        el.querySelector('.cod-prec').addEventListener('click', function(){ if (idx > 0) { idx--; disegna(); } });
+        el.querySelector('.cod-succ').addEventListener('click', function(){ if (idx < slides().length - 1) { idx++; disegna(); } });
+        var x0 = null;
+        el.addEventListener('touchstart', function(e){ x0 = e.touches[0].clientX; }, { passive: true });
+        el.addEventListener('touchend', function(e){ if (x0 === null) return; var dx = e.changedTouches[0].clientX - x0; x0 = null;
+          if (Math.abs(dx) > 60) el.querySelector(dx < 0 ? '.cod-succ' : '.cod-prec').click(); });
       }
-      function esci(e){ if (e.key === 'Escape') chiudi(); }
-      document.addEventListener('keydown', esci);
-      el.addEventListener('click', chiudi);
+    }
+    function chiudi(){
+      if (!el) return;
+      document.removeEventListener('visibilitychange', riprendi); rilascia();
+      try { if (document.fullscreenElement && document.exitFullscreen) { var q = document.exitFullscreen(); if (q && q.catch) q.catch(function(){}); } } catch (e) {}
+      document.documentElement.classList.remove('cod-aperto'); el.remove(); el = null;
+      if (prima && prima.focus) prima.focus();
+    }
+    document.addEventListener('keydown', function(e){
+      if (!el) return;
+      if (e.key === 'Escape') chiudi();
+      else if (e.key === 'ArrowRight') { var b = el.querySelector('.cod-succ'); if (b) b.click(); }
+      else if (e.key === 'ArrowLeft') { var a = el.querySelector('.cod-prec'); if (a) a.click(); }
     });
+    return {
+      apri: function(i, da){ if (el) chiudi(); prima = da || document.activeElement; idx = Math.max(0, Math.min(i || 0, slides().length - 1)); costruisci(false); disegna(); },
+      indirizzo: function(da){ if (el) chiudi(); prima = da || document.activeElement; costruisci(true);
+        el.setAttribute('aria-label', 'Indirizzo dell’appartamento per il tassista');
+        el.querySelector('.cod-tit').outerHTML = '<p class="cod-indirizzo">79 Beak Street<br>London W1F 9SU</p>';
+        el.querySelector('.cod-hint').textContent = 'Soho · Bright Carnaby Soho, 3° piano. Mostra questo schermo al tassista.'; },
+      chiudi: chiudi
+    };
   })();
+  document.addEventListener('click', function(e){
+    var t = e.target.closest('[data-codice]'); if (t) { e.preventDefault(); CODICI.apri(+t.dataset.codice, t); return; }
+    var a = e.target.closest('[data-indirizzo]'); if (a) CODICI.indirizzo(a);
+  });
+  document.addEventListener('keydown', function(e){
+    var t = e.target.closest && e.target.closest('[role="button"][data-codice]');
+    if (t && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); CODICI.apri(+t.dataset.codice, t); }
+  });
 
   /* ====== margine delle giornate ======
      Per ogni tratto, dall'orario di inizio al prossimo vincolo fisso, somma le durate stimate delle tappe
@@ -1745,14 +1831,14 @@
      Il toggle accende solo note per-giorno (niente ricalcolo delle durate). Lo stato vive in memoria
      finché la pagina resta aperta: nessuno storage, una ricarica lo rimette su "no". */
   (function(){
-    var btn = document.getElementById('pioveBtn'); if (!btn) return;
+    var btns = document.querySelectorAll('[data-piove]'); if (!btns.length) return;
     var piove = false;
-    btn.addEventListener('click', function(){
+    btns.forEach(function(btn){ btn.addEventListener('click', function(){
       piove = !piove;
       document.documentElement.classList.toggle('piove', piove);
-      btn.setAttribute('aria-pressed', String(piove));
-      document.getElementById('pioveStato').textContent = piove ? 'sì' : 'no';
-    });
+      btns.forEach(function(b){ b.setAttribute('aria-pressed', String(piove)); b.querySelector('.piove-stato').textContent = piove ? 'sì' : 'no'; });
+      document.dispatchEvent(new CustomEvent('piove', { detail: piove }));
+    }); });
   })();
 
   /* ====== DA VERIFICARE: le incertezze aperte, con chi le chiude ======
@@ -1781,18 +1867,17 @@
  }
 ];
   (function(){
-    var btn = document.getElementById('dvApri'), velo = document.getElementById('daVer');
-    if (!btn || !velo) return;
-    if (!DA_VERIFICARE.length) { btn.parentNode.remove(); return; }
-    document.getElementById('dvN').textContent = DA_VERIFICARE.length;
-    btn.setAttribute('aria-label', DA_VERIFICARE.length + ' cose da verificare: apri l’elenco');
+    var btns = document.querySelectorAll('[data-dv]'), velo = document.getElementById('daVer'), btn = btns[0];
+    if (!btns.length || !velo) return;
+    if (!DA_VERIFICARE.length) { btns.forEach(function(b){ b.parentNode.remove(); }); return; }
+    document.querySelectorAll('.dv-n').forEach(function(n){ n.textContent = DA_VERIFICARE.length; });
     var esc = function(s){ return String(s).replace(/[&<>"]/g, function(c){ return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]; }); };
     document.getElementById('dvLista').innerHTML = DA_VERIFICARE.map(function(x){
       return '<article class="nov__voce"><h3>' + esc(x.cosa) + '</h3><ul><li>' + esc(x.contesto) + '</li></ul>'
         + '<p class="dv-come"><b>Chi e come:</b> ' + esc(x.come) + '</p></article>';
     }).join('');
-    function chiudi(){ velo.hidden = true; document.documentElement.classList.remove('nov-aperto'); btn.focus(); }
-    btn.addEventListener('click', function(){ velo.hidden = false; document.documentElement.classList.add('nov-aperto'); document.getElementById('dvOk').focus(); });
+    function chiudi(){ velo.hidden = true; document.documentElement.classList.remove('nov-aperto'); if (btn) btn.focus(); }
+    btns.forEach(function(b){ b.addEventListener('click', function(){ btn = b; velo.hidden = false; document.documentElement.classList.add('nov-aperto'); document.getElementById('dvOk').focus(); }); });
     document.getElementById('dvOk').addEventListener('click', chiudi);
     velo.addEventListener('click', function(e){ if (e.target === velo) chiudi(); });
     document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && !velo.hidden) chiudi(); });
@@ -1865,6 +1950,17 @@
         $('adFoto').setAttribute('src', prossima.foto); $('adPross').hidden = false;
         var l = link(prossima); $('adVai').hidden = !l; if (l) $('adVai').href = l;
       } else { $('adPross').hidden = true; $('adVai').hidden = true; }
+      // scorciatoia al codice giusto: QR attorno alle card con data-mostra="qr" (aeroporto di Bologna),
+      // biglietti del museo da mezz'ora prima dell'ingresso (data-non-prima della card)
+      var cod = $('adCodice'), m = null;
+      [corrente, prossima].forEach(function(x){
+        if (m || !x || !x.el.dataset.mostra) return;
+        var d = x.el.dataset;
+        if (d.mostra === 'nhm' && d.nonPrima && now < OROLOGIO.istante(d.giorno, d.nonPrima, d.fuso || 'Europe/London') - 30 * 6e4) return;
+        m = d.mostra;
+      });
+      if (m) { cod.textContent = m === 'qr' ? '🅿️ Mostra il QR del parcheggio' : '🎟️ Mostra i biglietti del museo'; cod.dataset.codice = m === 'qr' ? '0' : '1'; }
+      cod.hidden = !m;
       mostrata = prossima || corrente;
       $('adScheda').hidden = !mostrata;
       $('adesso').hidden = false;
@@ -1878,9 +1974,33 @@
     if (oggi < '2026-11-15') primaDiPartire();
     else if (oggi <= '2026-11-17') {
       adesso();
-      var piove = $('pioveBtn'); if (piove) piove.addEventListener('click', function(){ setTimeout(adesso, 0); });
+      document.addEventListener('piove', adesso);
       setInterval(adesso, 30000);   // l'orologio (anche quello simulato) va avanti
     }
+  })();
+
+  /* ====== barra in basso ======
+     "Adesso" porta al pannello visibile ("Adesso" nei giorni del viaggio, "Prima di partire" prima, la cima dopo).
+     La voce della sezione che si sta guardando è evidenziata. */
+  (function(){
+    var barra = document.querySelector('.barra'); if (!barra) return;
+    function bersaglio(k){
+      if (k !== 'ora') return document.getElementById(k);
+      var a = document.getElementById('adesso'), p = document.getElementById('primaDiPartire');
+      return a && !a.hidden ? a : p && !p.hidden ? p : document.querySelector('header.hero');
+    }
+    barra.addEventListener('click', function(e){
+      var l = e.target.closest('a[data-barra]'); if (!l) return;
+      var t = bersaglio(l.dataset.barra); if (!t) return;
+      e.preventDefault(); t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+    var voci = [].slice.call(barra.querySelectorAll('a[data-barra]'));
+    function evidenzia(){
+      var y = window.innerHeight * 0.3, att = 'ora';
+      ['programma', 'biglietti', 'info'].forEach(function(k){ var s = document.getElementById(k); if (s && s.getBoundingClientRect().top < y) att = k; });
+      voci.forEach(function(v){ v.setAttribute('aria-current', String(v.dataset.barra === att)); });
+    }
+    window.addEventListener('scroll', evidenzia, { passive: true }); evidenzia();
   })();
 
   /* ====== NOVITÀ: cosa è cambiato dall'ultima visita ======
@@ -1891,6 +2011,11 @@
      dati bloccati) il pannello non compare da solo: uno che non si può chiudere per sempre è peggio di niente.
      Il link in fondo alla pagina lo riapre con tutto lo storico, in ogni caso. */
   var NOVITA = [
+    { v: 16, data: '2026-10-03', titolo: 'Biglietti a portata di pollice', voci: [
+      'Barra in basso: Adesso · Programma · Biglietti · Info',
+      'Nuova sezione Biglietti: QR del parcheggio, i 3 biglietti del museo, i voli e l’appartamento. Un tocco su un codice lo apre a schermo pieno, grande e su fondo bianco, con le frecce per passare al successivo',
+      'Nel pannello «Adesso» compare il QR la domenica mattina e i biglietti del museo dalle 16:00 di lunedì. «Mostra l’indirizzo» apre l’indirizzo dell’appartamento in grande per il tassista',
+      'Testata più piccola; «Piove» è nel pannello «Adesso» e in cima al programma, le cose da verificare in «Prima di partire» e in Info' ] },
     { v: 15, data: '2026-10-03', titolo: 'La pagina sa che giorno è', voci: [
       'Fino al 14 novembre, in cima: quanti giorni mancano e le cose ancora da verificare',
       'Dal 15 al 17, in cima: «Adesso» con la tappa in corso, la prossima, fra quanto, i vincoli (Lina Stores, museo, uscita per Heathrow) e «Portami lì»',
