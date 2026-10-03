@@ -455,7 +455,7 @@ Nel primo schermo **non c'è niente che riguardi il giorno o l'ora**: niente pro
 |---|---|---|---|
 | `<head>` (meta, Open Graph, manifest, font, CSS di Leaflet) | 34 | — | righe 1–34 |
 | **CSS** in un unico `<style>` | **447** | 32 KB | righe 35–481 |
-| **HTML** scritto a mano | ~950 | ~75 KB | righe 482–1431 |
+| **HTML** scritto a mano | ~950 | ~70 KB | righe 482–1431 |
 | Script esterni (Leaflet, JsBarcode) | 5 | — | righe 1432–1436 |
 | **JavaScript** in un unico `<script>`, 11 blocchi | **540** | 31 KB | righe 1437–1976 |
 
@@ -488,7 +488,7 @@ Blocchi JavaScript, in ordine: meteo ora per ora · barcode del museo · QR del 
 
 | Condiviso | Effetto su Londra |
 |---|---|
-| Repository, `package.json`, build Vite (`npm run build`) | Londra è una delle ~40 pagine in `_legacy/` copiate senza elaborazione |
+| Repository, `package.json`, build Vite (`npm run build`) | Londra è una delle 29 pagine HTML in `_legacy/` copiate senza elaborazione |
 | Workflow `.github/workflows/pages.yml` (deploy a ogni push su `main`) | **Ogni commit su `main` ripubblica anche Londra**, compresi quelli che riguardano solo Barcellona o la palestra |
 | Cartella `public/assets/tappe/` | Le foto di Londra stanno nella sottocartella `londra/`; quelle di Barcellona nella cartella madre |
 | `scripts/` | `londra-foto.mjs` e `londra-cards.mjs` sono solo di Londra, ma nella cartella comune; nessuna suite di test per Londra in `scripts/qa/` |
