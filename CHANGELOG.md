@@ -416,6 +416,20 @@ Pagina fuori dal sito, **non linkata da nessuna parte**: `stats-dtcmbsis.html`. 
 - **Risultato: gli obiettivi NON stanno insieme con queste due leve**, e per decisione ci si ferma qui senza toccare le capsule. Con 40/35/25 (`rigori-sweep.mjs`, 600 tiri per riga, fisica vera in node): chi indovina para il 46 % se si tuffa sul tell (prima del calcio) e il 26 % se aspetta 250 ms; Ale contro chi legge il tell segna il 46-52 %; Shootout vinto stimato 68-75 %. Ogni mix che porta Ale al 55-60 % (più tiri alti, che non si parano mai) fa scendere le parate "indovinando" al 35 %. Nel browser (SwiftShader, 60 tiri): 52 % · 47 % · 10 vittorie su 12. La scelta del mix è nel report.
 - `rigori-progress.mjs` portato alla porta in scala: incrocio a (1,85, 1,50), traversa a y 1,92.
 
+## Chiusura · i dieci punti del report tecnico (v42)
+Un commit per punto, suite verdi dopo ognuno. Misure prima/dopo nel report in chat.
+1. **Gioco, timer di uscita**: il `setInterval` da 200 ms che sorvegliava "Esci" restava vivo a ogni partita finita da sola (20 timer dopo 20 partite). Ora si cancella sempre, insieme all'ascoltatore di `modeEnd`.
+2. **Gioco, doppio tocco sul ≡**: ignorato se c'è già un pannello dei menu (`.rg-overlay[data-overlay]`: Pausa, Opzioni, Classifica). Sopra "para tu" e "passa il telefono" del pass-and-play il ≡ apre la Pausa come prima.
+3. **Oggi si ridisegna da solo** una volta al minuto durante il weekend, sul posto: scroll fermo, "Dettagli" aperti e card meteo com'erano (`statoMeteo` + opzione `stato` di `montaMeteo`). Scheda nascosta: niente; al ritorno dopo più di un minuto, subito.
+4. **Mappa smontata davvero**: `destroy()` ferma rotella, trascinamento e zoom animato, toglie i layer e poi la mappa, e svuota i metodi di disegno del renderer canvas (un frame in ritardo dentro una view transition finiva in `clearRect` su un contesto sparito). Il router smonta le viste arrivate in ritardo; la mappa non si crea in un contenitore già staccato.
+5. **Pont del Bisbe alle 11:21** (10:50 + 20 min + 11 min a piedi).
+6. **Papera solo al tocco**: poster (32 kB) con ▶ da 44 px; il video da 898 kB parte solo per chi lo tocca. Oggi al primo caricamento: da 1.169 a 272 kB sul filo.
+7. **`.btn--sm` a 44 px** (era 36): 15 pulsanti su 17 stavano sotto, QR del parcheggio compreso. Nessun overflow.
+8. **Fuso fisso Europe/Madrid** in `now()` (`inFuso`, `adessoReale`): sabato 12:14 visto da New York dava "Prossima 09:45 · tra 3 h 30 min", ora la stessa pagina di Madrid e di Tokyo. `?now=` resta sovrano.
+9. **Gioco in pausa su `visibilitychange`**: loop fermo e `AudioContext` sospeso con lo schermo spento, ripresa al ritorno con una sola catena di frame. Suite `rigori-pausa.mjs`.
+10. **Profilo sconosciuto → "Chi sei?"** invece della pagina senza contenuto.
+- Suite nuove: `scripts/qa/chiusura.mjs` (punti 3, 4, 7, 8, 10), `scripts/qa/rigori-pausa.mjs` (9); aggiornate `canvas.mjs`, `meteo.mjs` (ora di Barcellona), `venerdi.mjs` (11:21), `rigori-incroci.mjs` (campione prima del primo frame del replay ignorato).
+
 ## Domenica con la pioggia · piano Maremagnum (v41)
 - Il toggle "Piove" di domenica ora cambia davvero la giornata: mattina libera, verso le 12:45 taxi a Maremagnum (3 km, 9 min), 13:00 pranzo al Time Out Market (90 min), 14:30 pomeriggio al coperto a Maremagnum fino alle 19:30, taxi al T2 (20 km, 32 min), 20:05 terminal: da lì lounge 20:20 e volo 23:05 come prima. Due venue nuove (`maremagnum`, `timeoutmarket`), due tappe `soloPioggia` (`d1b`, `d1c`); El Mirador e i Bunkers diventano `saltaPioggia` e stanno in fondo, grigi.
 - Avviso obbligatorio in cima alla domenica con "Piove" acceso (`src/ui/pioggia.js`): "El Mirador è prenotato per le 13:30 …", con pulsante "Chiama" (`tel:+34931642022`). Lo stesso avviso sta in Oggi la mattina di domenica, fino alle 13:30, se il toggle è acceso.
