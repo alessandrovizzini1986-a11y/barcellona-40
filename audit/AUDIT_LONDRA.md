@@ -380,3 +380,65 @@ Screenshot: `C-qr-nella-card.png`, `C-barcode-nhm.png`.
 Constatazioni:
 - **Per arrivare ai barcode bisogna scorrere 11,6 schermi.** Dalla card del museo c'è il link "🎟️ I biglietti" (98 × 25 px), che porta alla sezione Biglietti.
 - Il QR ha la modalità a schermo pieno e il blocco dello spegnimento; i barcode no. Con la luminosità automatica bassa (sera di novembre) il telefono non la alza da solo.
+
+---
+
+## STEP D — Scenari d'uso reali
+
+**Come è stato misurato.** Chromium a 390 × 844, come un telefono, con la data del giorno simulata tramite `?now=`. Il meteo dal 5/11 risponde con dati simulati, quindi la card meteo occupa il suo posto come accadrà davvero. Pannello novità già letto, salvo lo scenario 8. Si parte sempre dalla pagina appena aperta, in cima.
+- **Tap** = tocchi necessari, compreso quello finale se apre qualcosa.
+- **Scroll** = distanza totale percorsa scorrendo, in schermi da 844 px, lungo il percorso più corto possibile.
+
+### Il primo schermo, uguale in tutti gli scenari
+
+Screenshot: `D0-primo-schermo.png`.
+
+In ordine: "Viaggio di famiglia", **Londra**, "15–17 novembre 2026 · 3 giorni, 2 notti", "Alessandro, Vale e Olly", il grande pulsante dorato **"Versione per immagini, per Olly"**, il badge **"4 da verificare"**, il pulsante **"🌧️ Piove · NO"**, la skyline, e l'inizio della card **Voli — British Airways** (la tabellina dei voli si intravede in fondo).
+
+Nel primo schermo **non c'è niente che riguardi il giorno o l'ora**: niente programma, niente meteo (la card meteo, nei giorni del viaggio, sta a circa 2,6 schermi), niente QR, niente biglietti. Il pulsante più grande e più evidente è quello della versione per Olly.
+
+### Riepilogo
+
+| # | Scenario | Tap | Scroll (schermi) | L'informazione è nel primo schermo? | Screenshot |
+|---|---|---|---|---|---|
+| 1 | Dom 04:30 · QR del parcheggio alla sbarra | 0 (1 per lo schermo pieno) | **2,8** | no | `D1-qr-parcheggio.png`, `D1b-qr-schermo-pieno.png` |
+| 2 | Dom 09:00 · percorso Heathrow → Southbank | 1 | **4,2** | no | `D2-percorso-heathrow.png` |
+| 3 | Dom 17:30 · dove fare la spesa, a che ora chiude | 0 | **7,0** | no | `D3-spesa-lina-stores.png` |
+| 4 | Lun 11:00 · prossima tappa e percorso a piedi | 2 | **10,6** | no | `D4-prossima-tappa-lunedi.png` |
+| 5 | Lun 16:25 · tre barcode NHM | 0 | **11,5** | no | `D5-barcode-nhm.png` |
+| 6 | Lun mattina, piove · attivare Piove e capire cosa cambia | 2 | **9,3** | solo il pulsante | `D6a-piove-acceso-testata.png`, `D6-piove-lunedi.png` |
+| 7 | Mar 15:00 · quando uscire e come arrivare al T5 | 2 | **10,2** | no | `D7-partenza-heathrow.png` |
+| 8 | Vale dopo una settimana · novità e cose da fare | 3 | **16,9** | il pannello novità copre la pagina | `D8-primo-schermo-novita.png`, `D8-da-verificare.png`, `D8b-checklist.png` |
+| 9 | Numero di prenotazione dell'appartamento e chiave Clevio | 0 | 1,0 | no | `D9-appartamento.png` |
+
+### Dettaglio
+
+**1 · Domenica 04:30, QR del parcheggio.** Domenica è aperta all'avvio, quindi basta scorrere: **2,8 schermi** fino alla card "Parcheggio aeroporto" in cima al giorno. Prima ci sono la testata, "Voli & base", "Sicurezza" (chiusa) e l'intestazione del programma. Il QR nella card è già scansionabile (4 cm); toccandolo diventa 6 cm su fondo bianco, con lo schermo che resta acceso. *Senza rete e con la pagina da ricaricare, il QR non c'è* (vedi B4).
+
+**2 · Domenica 09:00, percorso verso Southbank.** Il pulsante "Percorso · Domenica, Heathrow → Southbank" è il primo dei percorsi, a **4,2 schermi**: dopo il QR, la card dell'aeroporto di Bologna e quella del volo, che a quell'ora sono già passate. Un tocco apre Google Maps coi mezzi.
+
+**3 · Domenica 17:30, la spesa.** La card "Spesa da Lina Stores" (17:15) è a **7 schermi**. Il testo dice "La domenica chiude alle 18:00, quindi è la prima cosa da fare rientrando". **Il piano B (Whole Foods a Piccadilly Circus) non è nella card**: sta solo nella nota della sezione Timeline, altri 9 schermi più in basso.
+
+**4 · Lunedì 11:00, prossima tappa.** La pagina si apre su domenica, aperta, alta 6,4 schermi. Per arrivare a lunedì: **scorrere 9,1 schermi** fino all'intestazione, toccarla, scendere ancora alla card delle 11:30 "Big Ben e il Parlamento" e toccare "Apri in Google Maps". In tutto **2 tocchi e 10,6 schermi**.
+- **La pagina non indica qual è la prossima tappa**: bisogna confrontare l'ora con gli orari delle card. Alle 11:00 si è fra Horse Guards (10:30, 20 min) e Big Ben (11:30).
+- Il link della card apre una **ricerca** ("Big Ben London"), non un percorso a piedi.
+- Il pulsante "Percorso" che copre Big Ben sta in cima a lunedì, tre card più su, e parte da Beak Street. Quello successivo ("Big Ben → St James's → …") sta dopo la card di Big Ben.
+
+**5 · Lunedì 16:25, barcode del museo.**
+- **Percorso più corto:** scorrere **11,5 schermi** fino alla sezione Biglietti. Dopo la Timeline, i tre barcode stanno insieme in uno schermo.
+- **Passando dalla card del museo:** aprire lunedì, scendere alla card delle 16:30 e toccare "🎟️ I biglietti". Sono **2 tocchi e 13,2 schermi**.
+- I barcode **non si possono ingrandire e non tengono acceso lo schermo**. *Con rete scarsa compaiono solo i numeri* (vedi B4).
+
+**6 · Lunedì mattina, piove.** "🌧️ Piove" è nel primo schermo (1 tocco). **Dopo il tocco nel primo schermo cambia solo il pulsante** (NO → SÌ, azzurro): nessun messaggio dice cosa è cambiato o dove guardare. La nota di lunedì ("Mattina tutta all'aperto… Harrods prima, parchi dopo se spiove; il museo resta alle 16:30") è in testa al giorno: bisogna scorrere **9,3 schermi** e aprire lunedì (2° tocco). Le altre conseguenze stanno altrove: Shrek's Adventure al posto del London Eye domenica, "già al riparo" martedì.
+
+**7 · Martedì 15:00, uscita per Heathrow.** Martedì è chiuso: **scorrere 9,2 schermi** oltre domenica (aperta) e lunedì (chiuso), toccare l'intestazione, poi scendere al pulsante "Percorso · Covent Garden → Heathrow T5". Sotto c'è la card "Partenza per Heathrow, 15:15": "Entro le 15:15–15:30… Piccadilly line diretta da Piccadilly Circus o da Covent Garden con un cambio". In tutto **2 tocchi, 10,2 schermi**. L'orario di uscita si trova anche nella Timeline, senza aprire nulla, ma senza il percorso.
+
+**8 · Vale dopo una settimana.**
+- All'apertura **il pannello "Cosa è cambiato" copre la pagina** (692 px su 844) con le voci uscite da allora: con l'ultima versione vista ferma a 9, sono 4. Si chiude con "Ho capito".
+- Il badge **"4 da verificare"** (1 tocco) apre l'elenco delle cose da confermare, con chi deve farle; si chiude con "Chiudi".
+- **La checklist "Da fare prima di partire" è a 16,9 schermi**, quasi in fondo, e mostra **sempre "0 su 9 completate"**: le spunte di Alessandro non arrivano al telefono di Vale e si perdono anche ricaricando. Le due liste hanno voci in comune (cambio della guardia, Winter Market, London Eye + SEA LIFE).
+- In tutto **3 tocchi, 16,9 schermi**, e alla fine Vale non sa cosa è già stato fatto.
+
+**9 · Numero di prenotazione e chiave Clevio.** La card dell'alloggio è a **1 schermo**: indirizzo, €631, cancellazione gratuita, check-in 15:00 e check-out 10:30, la nota "chiave digitale Clevio — arriva via email ~2 giorni prima… verificare che il link/dominio sia legittimo", "contatto diretto tramite numero Booking.com".
+- **Il numero di prenotazione dell'appartamento non è da nessuna parte nella pagina** (c'è solo quello del parcheggio, 3039188).
+- **Della chiave Clevio** c'è solo la descrizione: nessun link all'app o all'email, nessun codice.
