@@ -395,7 +395,7 @@ Screenshot: `D0-primo-schermo.png`.
 
 In ordine: "Viaggio di famiglia", **Londra**, "15–17 novembre 2026 · 3 giorni, 2 notti", "Alessandro, Vale e Olly", il grande pulsante dorato **"Versione per immagini, per Olly"**, il badge **"4 da verificare"**, il pulsante **"🌧️ Piove · NO"**, la skyline, e l'inizio della card **Voli — British Airways** (la tabellina dei voli si intravede in fondo).
 
-Nel primo schermo **non c'è niente che riguardi il giorno o l'ora**: niente programma, niente meteo (la card meteo, nei giorni del viaggio, sta a circa 2,6 schermi), niente QR, niente biglietti. Il pulsante più grande e più evidente è quello della versione per Olly.
+Nel primo schermo **non c'è niente che riguardi il giorno o l'ora**: niente programma, niente meteo (la card meteo, nei giorni del viaggio, sta a 2,5 schermi), niente QR, niente biglietti. Il pulsante più grande e più evidente è quello della versione per Olly.
 
 ### Riepilogo
 
@@ -417,7 +417,7 @@ Nel primo schermo **non c'è niente che riguardi il giorno o l'ora**: niente pro
 
 **2 · Domenica 09:00, percorso verso Southbank.** Il pulsante "Percorso · Domenica, Heathrow → Southbank" è il primo dei percorsi, a **4,2 schermi**: dopo il QR, la card dell'aeroporto di Bologna e quella del volo, che a quell'ora sono già passate. Un tocco apre Google Maps coi mezzi.
 
-**3 · Domenica 17:30, la spesa.** La card "Spesa da Lina Stores" (17:15) è a **7 schermi**. Il testo dice "La domenica chiude alle 18:00, quindi è la prima cosa da fare rientrando". **Il piano B (Whole Foods a Piccadilly Circus) non è nella card**: sta solo nella nota della sezione Timeline, altri 9 schermi più in basso.
+**3 · Domenica 17:30, la spesa.** La card "Spesa da Lina Stores" (17:15) è a **7 schermi**. Il testo dice "La domenica chiude alle 18:00, quindi è la prima cosa da fare rientrando". **Il piano B (Whole Foods a Piccadilly Circus) non è nella card**: sta solo in una nota della sezione Timeline, 3,7 schermi più in basso.
 
 **4 · Lunedì 11:00, prossima tappa.** La pagina si apre su domenica, aperta, alta 6,4 schermi. Per arrivare a lunedì: **scorrere 9,1 schermi** fino all'intestazione, toccarla, scendere ancora alla card delle 11:30 "Big Ben e il Parlamento" e toccare "Apri in Google Maps". In tutto **2 tocchi e 10,6 schermi**.
 - **La pagina non indica qual è la prossima tappa**: bisogna confrontare l'ora con gli orari delle card. Alle 11:00 si è fra Horse Guards (10:30, 20 min) e Big Ben (11:30).
