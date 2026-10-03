@@ -1,6 +1,14 @@
 {
   "entries": [
     {
+      "v": 42,
+      "data": "2026-10-03",
+      "titolo": "Ritocchi finali prima della chiusura",
+      "voci": [
+        "Nel gioco: un doppio tocco sul ≡ non apre più due Pausa una sopra l'altra"
+      ]
+    },
+    {
       "v": 41,
       "data": "2026-10-03",
       "titolo": "Domenica con la pioggia: Time Out Market e Maremagnum, poi taxi al T2",

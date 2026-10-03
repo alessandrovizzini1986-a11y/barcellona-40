@@ -552,7 +552,10 @@ async function runFlow() {
     }
   }
 }
-menuBtn.addEventListener('click', async () => { const v = await overlayMenu(); if (v === 'esci') quitRequested = true })
+// Doppio tocco sul ≡ (o tocco mentre Pausa, Opzioni o Classifica sono aperte): il secondo si ignora, altrimenti
+// si aprivano due Pausa una sopra l'altra e il "Continua" di sotto restava appeso. I pannelli del pass-and-play
+// ("para tu", "passa il telefono") non hanno data-overlay: sopra quelli il ≡ deve continuare ad aprire la Pausa.
+menuBtn.addEventListener('click', async () => { if (game.ui.querySelector('.rg-overlay[data-overlay]')) return; const v = await overlayMenu(); if (v === 'esci') quitRequested = true })
 async function overlayMenu() {
   const v = await overlay(game.ui, `<h2 class="rg-title">Pausa</h2><div class="rg-row"><a class="rg-btn rg-btn--ghost" href="${SITO}" aria-label="Torna al programma del weekend" style="flex:1 0 100%">← Torna al programma</a><button class="rg-btn rg-btn--primary" data-value="continua" aria-label="Continua">Continua</button><button class="rg-btn" data-value="classifica" aria-label="Classifica di serata">Classifica</button><button class="rg-btn" data-value="opzioni" aria-label="Opzioni">Opzioni</button><button class="rg-btn rg-btn--ghost" data-value="esci" aria-label="Esci dalla partita">Esci</button></div>`, { label: 'Pausa', closable: true })
   if (v === 'opzioni') { await openOptions(); return 'continua' }

@@ -42,12 +42,15 @@ const strumenta = (p) => p.evaluate(() => { const A = window.__rigori.audio; win
   const video = await p.evaluate(async () => {
     const R = window.__rigori; const panel = document.createElement('div'); panel.className = 'rg-panel'; panel.innerHTML = '<button class="rg-btn">x</button>'; R.game.ui.appendChild(panel)
     const during = []
-    const iv = setInterval(() => during.push({ ts: R.game.timeScale, blocco: R.game.ui.classList.contains('rg-registrando'), pe: getComputedStyle(panel.querySelector('.rg-btn')).pointerEvents, kick: R.kicker()?.phase, replaying: R.game.juice.replaying }), 150)
+    const iv = setInterval(() => during.push({ frame: R.frames, ts: R.game.timeScale, blocco: R.game.ui.classList.contains('rg-registrando'), pe: getComputedStyle(panel.querySelector('.rg-btn')).pointerEvents, kick: R.kicker()?.phase, replaying: R.game.juice.replaying }), 150)
     const f = await R.registraVideo(); clearInterval(iv); panel.remove()
     await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))) // il tempo riparte al frame dopo la fine del replay
     return { file: !!f, size: f?.size || 0, during, dopo: { ts: R.game.timeScale, blocco: R.game.ui.classList.contains('rg-registrando'), kick: R.kicker()?.phase, replaying: R.game.juice.replaying }, suoni: window.__suoni.slice(), r: R.ultimoReplay }
   })
-  const inReplay = video.during.filter((d) => d.replaying)
+  // timeScale va a 0 al primo frame del replay, non nell'istante in cui parte: un campione preso fra i due
+  // (succede con SwiftShader, dove un frame può durare più di 150 ms) non dice niente sul blocco del tempo
+  const primoFrame = video.during.find((d) => d.replaying)?.frame
+  const inReplay = video.during.filter((d) => d.replaying && d.frame > primoFrame)
   console.log(`  esito ${esito} · replay visto ${JSON.stringify(visto.r)} · campioni durante la registrazione ${video.during.length}, in replay ${inReplay.length}`)
   ok('1. il video usa la stessa finestra e velocità del replay visto', video.r.from === visto.r.from && video.r.to === visto.r.to && video.r.speed === visto.r.speed)
   ok('1. durante la registrazione il tempo di gioco è fermo (timeScale 0) e i pulsanti non rispondono', inReplay.length > 0 && inReplay.every((d) => d.ts === 0 && d.blocco && d.pe === 'none'), JSON.stringify(inReplay[0] || null))
