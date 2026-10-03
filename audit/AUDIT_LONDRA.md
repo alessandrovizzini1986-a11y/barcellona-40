@@ -248,3 +248,135 @@ C'è un `manifest` per aggiungere la pagina alla schermata Home, ma **non c'è n
 | **Rete scarsa**: arriva la pagina ma non i CDN (Leaflet, JsBarcode, Google Fonts, tile della mappa, meteo) | **QR del parcheggio OK** (è disegnato dentro la pagina). **Barcode del museo: riquadri bianchi vuoti**, sotto c'è il numero e "Barcode non caricato: mostra questo numero all'ingresso". **Mappa: rettangolo vuoto** senza messaggio, e un errore JavaScript (`L is not defined`) che però non blocca il resto. Titoli col font di riserva. Piove, badge, durate, Olly e checklist funzionano | `B-rete-scarsa-biglietti.png`, `B-rete-scarsa-mappa.png` |
 | **Rete che cade a pagina già aperta** | All'apertura il telefono ha caricato **1 foto su 31**: le altre sono in lazy loading e arrivano solo scorrendo. Aprendo lunedì dopo che la rete è caduta, **0 foto su 11**: al loro posto il simbolo di immagine rotta, con il testo alternativo sopra il motivo decorativo | `B-offline-lunedi.png` |
 | Link Maps senza rete | Aprono Google Maps, che senza rete non calcola i percorsi | — |
+
+---
+
+## STEP C — Prestazioni e accessibilità
+
+### C1 · Peso e richieste
+
+Misurato sulla **pagina pubblicata** (GitHub Pages), senza cache.
+
+| Momento | Richieste | Peso trasferito |
+|---|---|---|
+| **Primo caricamento** (fino all'evento `load`, senza scroll) | **20** | **588 KiB** |
+| **Tutta la pagina** (scorsa fino in fondo, tre giorni aperti, Piove acceso, i tre giorni di Olly) | **55** | **2.612 KiB** |
+
+Primo caricamento per tipo:
+
+| Tipo | Richieste | KiB | Da dove |
+|---|---|---|---|
+| Immagini | 12 | 415 | **5 JPG della sezione Olly (378 KiB)**, 1 foto del programma (blq, 25 KiB), 6 tile della mappa (CARTO, 17 KiB) |
+| Font | 2 | 77 | Google Fonts (Playfair Display) |
+| JavaScript | 2 | 53 | Leaflet 1.9.4 da unpkg (42 KiB), JsBarcode 3.12.3 da cdnjs (10 KiB) |
+| HTML | 1 | 35 | `londra.html` (139 KB non compressi: tutto CSS e JS sono dentro) |
+| CSS | 2 | 6 | Leaflet da unpkg, CSS di Google Fonts |
+| Altro | 1 | 2 | manifest |
+
+Constatazioni:
+- **Il 64% del primo caricamento sono le foto di Olly.** Le card di Olly usano le foto come `background-image` CSS, che non si possono caricare in differita: le 5 di domenica arrivano subito anche se la sezione è a 12 schermi di distanza. Sono JPG e non WebP, e stanno fuori dal tetto di 1,5 MB, che vale solo per `assets/tappe/londra/`. Le foto del programma invece sono in lazy loading: all'apertura ne arriva una sola.
+- La cartella `_legacy/img/olly/` contiene **3 foto che nessuna pagina usa**: `albero-natale.jpg`, `golden-hinde.jpg`, `tower-bridge.jpg`, 243 KB. Non vengono scaricate, ma sono nel sito pubblicato.
+- La pagina dipende da **6 host esterni**: unpkg, cdnjs, Google Fonts (2 host), CARTO e Open-Meteo dal 5/11.
+
+### C2 · Tempi su 4G simulato
+
+Due metodi, che danno numeri diversi:
+
+| Metodo | Rete | Primo contenuto visibile (FCP) | Pagina caricata |
+|---|---|---|---|
+| **Lighthouse**, simulazione "slow 4G" (modello standard di Lighthouse) | 1,6 Mbit/s, latenza 150 ms + 560 ms per richiesta, CPU ×4 | **3,1 s** | Time to Interactive 4,0 s; LCP 3,9 s; Speed Index 5,4 s |
+| **Chromium con throttling DevTools**, mediana di 3 prove | 1,6 Mbit/s, 150 ms, CPU ×4 | **1,0 s** | DOM pronto 1,9 s · `load` **3,4 s** (3,4–3,7) |
+| Chromium con throttling DevTools, mediana di 3 prove | 4G buono: 9 Mbit/s, 40 ms, CPU ×2 | 0,6 s | DOM pronto 0,8 s · `load` **1,2 s** |
+
+Lighthouse è volutamente pessimista: aggiunge una latenza alta a ogni richiesta, e la pagina ne fa 20 verso 9 host. Il throttling di DevTools rallenta la banda ma non simula quel costo. Una rete scarsa in strada sta fra le due misure.
+
+### C3 · Lighthouse mobile
+
+Report completo: `audit/lighthouse-mobile.html`.
+
+| Categoria | Punteggio |
+|---|---|
+| **Performance** | **74** |
+| **Accessibility** | **95** |
+| **Best Practices** | **100** |
+
+Problemi segnalati.
+
+**Performance**
+
+| Problema | Dettaglio |
+|---|---|
+| Risorse che bloccano il rendering, ~470 ms | CSS di Leaflet (unpkg) e CSS di Google Fonts nell'`<head>` |
+| Immagini fuori schermo non differite, 379 KiB | le 5 foto di Olly e le tile della mappa |
+| Formati moderni, 133 KiB risparmiabili | le stesse 5 foto di Olly in JPG |
+| Cache breve, 371 KiB | GitHub Pages serve tutto con cache di 10 minuti |
+| JavaScript non usato, 24 KiB | parte di Leaflet |
+| DOM molto grande | 1.390 elementi |
+| Lavoro sul thread principale | 3,4 s con CPU ×4; Max Potential First Input Delay 440 ms |
+| Reflow forzati | segnalati senza dettaglio |
+| HTTP/1.1 invece di HTTP/2, 8 richieste | Probabilmente dovuto al proxy dell'ambiente di test: GitHub Pages di norma usa HTTP/2. Da ricontrollare da un telefono |
+
+**Accessibility**
+
+| Problema | Dettaglio |
+|---|---|
+| Attributo ARIA non ammesso | `aria-label="nuovo"` sui pallini rossi del pannello novità: uno `span` senza ruolo |
+| Titoli non in ordine | un `<h3>` (card Voli) senza `<h2>` prima nella stessa sezione |
+| Nome accessibile diverso dal testo visibile | il badge mostra "4 da verificare" ma lo screen reader legge "4 cose da verificare: apri l'elenco"; il QR mostra "Tocca per ingrandire" ma si chiama "Ingrandisci il QR del parcheggio a schermo pieno" |
+
+**Best Practices:** nessun problema.
+
+### C4 · Accessibilità pratica
+
+**Dimensione del testo.** Su 538 testi visibili (con tutti gli accordion aperti):
+
+| Dimensione | Quanti | Dove |
+|---|---|---|
+| **8,5 px** | 3 | le sigle **DOM / LUN / MAR** sotto i numeri dei giorni |
+| 9,5–10,5 px | 14 | etichette maiuscole Prenotazione / Intestatario / Entrata / Uscita del parcheggio, Check-in / Check-out, Data / Ingresso dei biglietti, "no / sì" del pulsante Piove, "Pagato", intestazioni della tabella budget |
+| **11–11,5 px** | 142 | **tutti i "📍 Apri in Google Maps"** (23), tutti i crediti delle foto (30 + 11 link), le pillole "a piedi / con i mezzi" dei percorsi, gli stati del budget |
+| 12–14,5 px | 282 | testo corrente delle card (13,5 px) e delle note |
+| ≥ 15 px | 97 | titoli |
+
+**Contrasto** (WCAG, calcolato sui colori effettivi; testi sopra le foto e titolo sfumato esclusi):
+- **Nessun testo sotto la soglia AA** (4,5:1). I due casi segnalati dal calcolo sono falsi positivi: il titolo "Londra" e il pulsante per Olly, che hanno uno sfondo a gradiente non visibile al calcolo.
+- Il **grigio del testo corrente** `#9aa3b5` (113 testi) sta fra **5,9 e 7,3:1**.
+- Il **grigio dei crediti** `#79839a` (57 testi, 11 px) sta fra **4,6 e 4,9:1**: appena sopra il minimo AA e sotto il livello AAA (7:1).
+
+**Leggibilità al sole**
+- La pagina è **solo in tema scuro**: non c'è una versione chiara né un adattamento al tema del telefono.
+- Su fondo scuro e al sole contano soprattutto il grigio medio a 13,5 px del testo delle card e il grigio dei crediti a 11 px. Entrambi sono sotto il 7:1 che serve per leggere comodamente all'aperto.
+- Le etichette in maiuscolo da 9,5–10,5 px (orari d'ingresso, date) sono le più piccole fra le informazioni operative.
+
+**Bersagli touch.** **101 elementi cliccabili su 125 visibili sono sotto 44 × 44 px.**
+
+| Elemento | Quanti | Misura (px) |
+|---|---|---|
+| Crediti delle foto (programma) | 27 | 13 di altezza |
+| "📍 Apri in Google Maps" | 23 | 169 × 25 |
+| Marker della mappa | 14 | 22 × 22 o 30 × 30 |
+| Crediti delle foto (Olly) | 11 | 14 di altezza |
+| Caselle della checklist | 9 | 22 × 22 |
+| Zoom + / − della mappa | 2 | 30 × 30 |
+| Link dei noleggiatori | 3 | 16 di altezza |
+| Link nel footer | 2 | 15–19 di altezza |
+| Badge "da verificare" | 1 | 144 × 34 |
+| **Pulsante Piove** | 1 | 124 × 33 |
+| Pulsanti Domenica/Lunedì/Martedì di Olly | 3 | 113 × 37 |
+
+Sono sopra i 44 px di altezza i pulsanti "Percorso", le intestazioni dei giorni, il riquadro del QR, "L'ho visto!" e i pulsanti dei pannelli. **Il link "Apri in Google Maps" (25 px) sta sopra la riga dei crediti (13 px)**: due bersagli piccoli e vicini, che portano entrambi fuori dal sito.
+
+### C5 · QR del parcheggio e barcode del museo
+
+Misure fisiche approssimate per un telefono largo 390 px CSS (circa 0,166 mm per px, iPhone da 6,1"). Su un Samsung largo 360–412 px CSS i valori cambiano di ±10%.
+
+| Codice | Dove sta (pagina come si apre) | A schermo | Modulo | Contrasto | Serve altro? |
+|---|---|---|---|---|---|
+| **QR parcheggio**, dentro la card | **2,8 schermi** più in basso dell'inizio, in cima a domenica (aperta di default) | 240 × 240 px ≈ **4 × 4 cm** | 33 moduli con quiet zone, 7,3 px ≈ 1,2 mm | nero su bianco pieno | no: già decodificato a questa misura. Toccandolo diventa 359 px ≈ **6 cm**, fondo bianco, schermo che resta acceso |
+| **3 barcode NHM** (CODE128) | **11,6 schermi** più in basso; se lunedì è aperto, circa 6 schermi in più | 296 × 66 px ≈ **4,9 × 1,1 cm** ciascuno | 156 moduli, **1,83 px ≈ 0,3 mm** per modulo | nero su bianco pieno | **Stanno tutti e tre in uno schermo** (433 px dal primo all'ultimo). Non c'è ingrandimento né schermo pieno né blocco dello spegnimento. Le barre sono basse, circa 1 cm |
+
+Screenshot: `C-qr-nella-card.png`, `C-barcode-nhm.png`.
+
+Constatazioni:
+- **Per arrivare ai barcode bisogna scorrere 11,6 schermi.** Dalla card del museo c'è il link "🎟️ I biglietti" (98 × 25 px), che porta alla sezione Biglietti.
+- Il QR ha la modalità a schermo pieno e il blocco dello spegnimento; i barcode no. Con la luminosità automatica bassa (sera di novembre) il telefono non la alza da solo.
