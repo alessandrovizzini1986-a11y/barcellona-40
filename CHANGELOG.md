@@ -589,3 +589,11 @@ Cercati bug dello stesso tipo di "portiere che si rituffa nel replay": due cambi
 
 ## gym · il service worker non cancella più le cache delle altre app
 - All'attivazione `public/gym/sw.js` cancellava **tutte** le cache del dominio diverse dalla sua. Lo stesso dominio però ospita altre app offline (Londra, soldi), e aprire la palestra dopo un rilascio svuotava le loro cache: verificato in Chromium, la cache di Londra e quella di soldi sparivano. Ora cancella solo quelle che iniziano con `gym-`, come già faceva soldi. Nessun'altra modifica alla palestra; dopo la correzione, aprire `gym/` lascia intatta la cache di Londra.
+
+## Londra · redesign R2: la pagina sa che giorno e che ora è
+- **Attributi sulle 31 card del programma**: `data-giorno`, `data-ora`, `data-tipo` (trasporto · tappa · casa · plus), `data-durata` dove c'era già, `data-fuso="Europe/Rome"` sulle tre card in ora italiana (Aeroporto di Bologna 05:15, Volo BA547 07:00, Atterraggio 21:25) e i vincoli `data-entro`, `data-non-prima`, `data-fine-entro`, `data-vincolo` (Lina Stores, museo, partenza per Heathrow, Shrek).
+- **Orologio unico in ora di Londra** (`OROLOGIO`), qualunque sia il fuso del telefono; i conti si fanno sull'istante vero, quindi le card in ora italiana sono corrette. `?now=` accetta anche l'ora (`?now=2026-11-16T11:00`, ora di Londra) e un fuso esplicito (`?now=2026-11-15T04:30+01:00`). Il meteo ora usa lo stesso orologio.
+- **`MARGINI` tolto**: i tratti del controllo "giornata stretta" si ricavano dalle card. Verificato che il risultato è identico a prima, numero per numero.
+- **Fino al 14/11, "Prima di partire"** in cima: giorni alla partenza e le cose da verificare, più il rimando alla checklist (la lista unica arriva con lo step R4).
+- **Dal 15 al 17, "Adesso"** in cima: ora di Londra, tappa in corso (se c'è e se la sua durata non è passata), la prossima con foto, orario e "tra N min", i vincoli in evidenza, **"Portami lì"** (il link Maps della card, o il percorso subito prima per le card di trasporto) e "Vedi la scheda". Si apre **solo il giorno corrente**; la pagina non scorre da sola. **Dopo il 17** nessun pannello e giorni chiusi.
+- Verificato con `?now=` ai sette momenti richiesti; nessun errore JS; offline dello step R1 ancora completo. Novità v15.
