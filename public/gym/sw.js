@@ -8,7 +8,8 @@ self.addEventListener('install', e => {
 });
 self.addEventListener('activate', e => {
   e.waitUntil(caches.keys()
-    .then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
+    // solo le cache della palestra: lo stesso dominio ospita altre app (Londra, soldi) con le loro cache offline
+    .then(keys => Promise.all(keys.filter(k => k !== CACHE && k.startsWith('gym-')).map(k => caches.delete(k))))
     .then(() => self.clients.claim()));
 });
 /* rete prima per l'HTML (aggiornamenti veloci), cache come rete di sicurezza;
