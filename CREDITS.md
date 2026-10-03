@@ -91,6 +91,7 @@ riga "foto: autore / licenza" sotto ogni card. Le foto sono state ritagliate a 1
 | El Mirador | `public/assets/tappe/elmirador.webp` | Foto di un amico di Alessandro, uso autorizzato |
 | Aparthotel Nàpols | `public/assets/tappe/apt.webp` | Foto fornita da Alessandro, uso autorizzato |
 | Bar Joan | `public/assets/tappe/barjoan.webp` | Foto fornita da Alessandro, uso autorizzato |
+| Brunells | `public/assets/tappe/brunells.webp` | Foto fornita da Alessandro, uso autorizzato |
 | Bodega Biarritz 1881 | `public/assets/tappe/biarritz.webp` | Foto fornita da Alessandro, uso autorizzato |
 | Brasería Sarrià | `public/assets/tappe/braseria.webp` | Foto fornita da Alessandro, uso autorizzato |
 | Sala VIP Canudas | `public/assets/tappe/canudas.webp` | Foto fornita da Alessandro, uso autorizzato |

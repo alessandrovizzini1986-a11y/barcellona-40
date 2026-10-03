@@ -1,268 +1,279 @@
 {
- "venues": {
-  "apt": {
-   "name": "Aparthotel Nàpols – Abapart",
-   "addr": "Carrer de Nàpols 116, Eixample",
-   "lat": 41.395437,
-   "lng": 2.179608,
-   "verified": true
-  },
-  "bcnT2": {
-   "name": "Aeroporto BCN – Terminal 2",
-   "addr": "El Prat de Llobregat",
-   "lat": 41.3033401,
-   "lng": 2.076845,
-   "verified": true
-  },
-  "bcnT1": {
-   "name": "Aeroporto BCN – Terminal 1",
-   "addr": "El Prat de Llobregat",
-   "lat": 41.2891331,
-   "lng": 2.0747619,
-   "verified": true
-  },
-  "sagradaIn": {
-   "name": "Sagrada Família – ingresso Carrer de la Marina",
-   "addr": "Carrer de la Marina (Facciata della Natività)",
-   "lat": 41.4039406,
-   "lng": 2.1751597,
-   "verified": true
-  },
-  "olimpo": {
-   "name": "Vermutería Olimpo",
-   "addr": "Carrer de Mallorca 494",
-   "lat": 41.4066347,
-   "lng": 2.1799385,
-   "verified": true,
-   "rating": 4.6,
-   "reviews": 1238,
-   "hours": "sab 08:00–"
-  },
-  "braseria": {
-   "name": "Braseria Sarrià",
-   "addr": "Sarrià – civico da confermare",
-   "lat": 41.3925995,
-   "lng": 2.1344166,
-   "verified": true
-  },
-  "apolo": {
-   "name": "Sala Apolo",
-   "addr": "Carrer Nou de la Rambla 113",
-   "lat": 41.3744026,
-   "lng": 2.1695739,
-   "verified": true,
-   "rating": 4.2
-  },
-  "monumental": {
-   "name": "Plaza Monumental",
-   "addr": "Gran Via de les Corts Catalanes 749",
-   "lat": 41.4001033,
-   "lng": 2.181227,
-   "verified": true,
-   "rating": 4.2
-  },
-  "terrrazza": {
-   "name": "La Terrrazza",
-   "addr": "Poble Espanyol",
-   "lat": 41.3692036,
-   "lng": 2.1467476,
-   "verified": true,
-   "rating": 4.1
-  },
-  "santantoni": {
-   "name": "Mercat de Sant Antoni",
-   "addr": "Eixample",
-   "lat": 41.3786358,
-   "lng": 2.1620492,
-   "verified": true,
-   "hours": "sab 08:00–20:30, dom chiuso"
-  },
-  "boqueria": {
-   "name": "Mercat de la Boqueria",
-   "addr": "La Rambla 91",
-   "lat": 41.3817399,
-   "lng": 2.1715853,
-   "verified": true,
-   "hours": "sab 08:00–20:30, dom chiuso"
-  },
-  "ciutadella": {
-   "name": "Parc de la Ciutadella",
-   "addr": "Passeig de Picasso 21, Barcelona",
-   "lat": 41.388123,
-   "lng": 2.1860152,
-   "verified": true
-  },
-  "santacaterina": {
-   "name": "Mercat de Santa Caterina",
-   "addr": "Av. de Francesc Cambó 16, Barcelona",
-   "lat": 41.3863611,
-   "lng": 2.1781566,
-   "verified": true,
-   "rating": 4.4,
-   "reviews": 18408,
-   "hours": "ven 07:30–20:00"
-  },
-  "taps": {
-   "name": "Taps Sagrada Familia",
-   "addr": "Carrer de Provença 474, Eixample",
-   "lat": 41.4054703,
-   "lng": 2.1759774,
-   "verified": true,
-   "rating": 4.7,
-   "reviews": 122,
-   "hours": "lun-sab 10:00–14:00 e 16:30–20:30 · dom chiuso",
-   "phone": "+34 938 09 85 83"
-  },
-  "rooftop": {
-   "name": "Rooftop Garden – El Palace Barcelona",
-   "addr": "Gran Via de les Corts Catalanes 668, Barcelona",
-   "lat": 41.3915035,
-   "lng": 2.1715182,
-   "verified": true,
-   "note": "Coordinate verificate via Google Places: El Palace Hotel Barcelona, Gran Via de les Corts Catalanes 668. Il Rooftop Garden è sul tetto dell'hotel."
-  },
-  "biarritz": {
-   "name": "Bodega Biarritz 1881",
-   "addr": "Carrer Nou de Sant Francesc 7, Ciutat Vella",
-   "lat": 41.3791891,
-   "lng": 2.1770567,
-   "verified": true,
-   "rating": 4.7,
-   "reviews": 9353,
-   "hours": "gio-lun 12:30-23:00 · martedì e mercoledì chiuso"
-  },
-  "bunkers": {
-   "name": "Bunkers del Carmel — MUHBA Turó de la Rovira",
-   "addr": "Carrer de Marià Labèrnia s/n, Horta-Guinardó",
-   "lat": 41.4193003,
-   "lng": 2.1618259,
-   "verified": true,
-   "rating": 4.6,
-   "reviews": 17545,
-   "hours": "Belvedere: accesso libero sempre · Spazi museali ott-mag: mer/ven/sab/dom 10:00-14:00",
-   "phone": "+34 932 56 21 22"
-  },
-  "duckstore": {
-   "name": "Barcelona Duck Store",
-   "addr": "Carrer dels Banys Nous 1, Barri Gòtic",
-   "lat": 41.3819198,
-   "lng": 2.1753751,
-   "verified": true,
-   "rating": 4.4,
-   "reviews": 110,
-   "hours": "ven 10:30–20:30 · sab 11:00–20:00 · dom 11:00–15:00 e 16:00–20:00"
-  },
-  "santamaria": {
-   "name": "Basílica de Santa Maria del Mar",
-   "addr": "Plaça de Santa Maria 1, La Ribera",
-   "lat": 41.3838871,
-   "lng": 2.1820711,
-   "verified": true,
-   "rating": 4.7,
-   "reviews": 40513
-  },
-  "montcada": {
-   "name": "Carrer de Montcada",
-   "addr": "La Ribera, Barcelona",
-   "lat": 41.3850135,
-   "lng": 2.1810493,
-   "verified": true,
-   "rating": 4.6,
-   "reviews": 64
-  },
-  "pontbisbe": {
-   "name": "Pont del Bisbe",
-   "addr": "Carrer del Bisbe, Barri Gòtic",
-   "lat": 41.383302,
-   "lng": 2.1764228,
-   "verified": true,
-   "rating": 4.7,
-   "reviews": 2069
-  },
-  "santfelip": {
-   "name": "Plaça de Sant Felip Neri",
-   "addr": "Barri Gòtic, Barcelona",
-   "lat": 41.383452,
-   "lng": 2.1750541,
-   "verified": true
-  },
-  "barjoan": {
-   "name": "Bar Joan",
-   "addr": "Dentro il Mercat de Santa Caterina",
-   "lat": 41.3863611,
-   "lng": 2.1781566,
-   "verified": true,
-   "rating": 4.6,
-   "reviews": 1483,
-   "hours": "lun-sab fino alle 15:30 · domenica chiuso",
-   "note": "Non prende prenotazioni",
-   "tel": "+34 933 10 61 50"
-  },
-  "elborn": {
-   "name": "El Born Centre de Cultura i Memòria",
-   "addr": "Plaça Comercial 12, Ciutat Vella",
-   "lat": 41.3856869,
-   "lng": 2.1836862,
-   "verified": true,
-   "rating": 4.5,
-   "reviews": 16439,
-   "hours": "ven 10:00–20:00",
-   "note": "Ingresso gratuito alla sala"
-  },
-  "debon": {
-   "name": "Xarcuteria Debón",
-   "addr": "Dentro il Mercat de Santa Caterina",
-   "lat": 41.3863611,
-   "lng": 2.1781566,
-   "verified": true,
-   "rating": 5.0,
-   "reviews": 246,
-   "note": "Coordinate del mercato: il banco è al suo interno"
-  },
-  "elmirador": {
-   "name": "El Mirador",
-   "addr": "Carrer de Pasteur 2, Horta-Guinardó",
-   "lat": 41.4169774,
-   "lng": 2.1589342,
-   "verified": true,
-   "rating": 4.5,
-   "reviews": 1386,
-   "tel": "+34 931 64 20 22",
-   "hours": "domenica 12:00–17:00",
-   "note": "Prenotato: domenica 18 alle 13:30, 3 persone"
-  },
-  "casino": {
-   "name": "Casino Barcelona",
-   "addr": "Carrer de la Marina 19-21, Port Olímpic",
-   "lat": 41.3866938,
-   "lng": 2.1970601,
-   "verified": true,
-   "rating": 4.0,
-   "reviews": 8232,
-   "hours": "aperto 24 ore su 24, tutti i giorni",
-   "phone": "+34 932 25 78 78"
-  },
-  "teixido": {
-   "name": "Teixidó Barcelona · Forn de Pa",
-   "addr": "Carrer de Nàpols 194, Eixample",
-   "lat": 41.3989914,
-   "lng": 2.174836,
-   "verified": true,
-   "rating": 4.6,
-   "reviews": 292,
-   "hours": "lun-ven 7:00-20:00 · sab 8:00-14:00 · dom chiuso",
-   "phone": "+34 686 21 08 40"
-  },
-  "bomie": {
-   "name": "BO&MIE Barcelona",
-   "addr": "Carrer de Provença 433, Eixample",
-   "lat": 41.4041701,
-   "lng": 2.1736931,
-   "verified": true,
-   "rating": 4.4,
-   "reviews": 2657,
-   "hours": "tutti i giorni 8:30-20:30",
-   "phone": "+34 934 84 74 60"
+  "venues": {
+    "apt": {
+      "name": "Aparthotel Nàpols – Abapart",
+      "addr": "Carrer de Nàpols 116, Eixample",
+      "lat": 41.395437,
+      "lng": 2.179608,
+      "verified": true
+    },
+    "bcnT2": {
+      "name": "Aeroporto BCN – Terminal 2",
+      "addr": "El Prat de Llobregat",
+      "lat": 41.3033401,
+      "lng": 2.076845,
+      "verified": true
+    },
+    "bcnT1": {
+      "name": "Aeroporto BCN – Terminal 1",
+      "addr": "El Prat de Llobregat",
+      "lat": 41.2891331,
+      "lng": 2.0747619,
+      "verified": true
+    },
+    "sagradaIn": {
+      "name": "Sagrada Família – ingresso Carrer de la Marina",
+      "addr": "Carrer de la Marina (Facciata della Natività)",
+      "lat": 41.4039406,
+      "lng": 2.1751597,
+      "verified": true
+    },
+    "olimpo": {
+      "name": "Vermutería Olimpo",
+      "addr": "Carrer de Mallorca 494",
+      "lat": 41.4066347,
+      "lng": 2.1799385,
+      "verified": true,
+      "rating": 4.6,
+      "reviews": 1238,
+      "hours": "sab 08:00–"
+    },
+    "braseria": {
+      "name": "Braseria Sarrià",
+      "addr": "Sarrià – civico da confermare",
+      "lat": 41.3925995,
+      "lng": 2.1344166,
+      "verified": true
+    },
+    "apolo": {
+      "name": "Sala Apolo",
+      "addr": "Carrer Nou de la Rambla 113",
+      "lat": 41.3744026,
+      "lng": 2.1695739,
+      "verified": true,
+      "rating": 4.2
+    },
+    "monumental": {
+      "name": "Plaza Monumental",
+      "addr": "Gran Via de les Corts Catalanes 749",
+      "lat": 41.4001033,
+      "lng": 2.181227,
+      "verified": true,
+      "rating": 4.2
+    },
+    "terrrazza": {
+      "name": "La Terrrazza",
+      "addr": "Poble Espanyol",
+      "lat": 41.3692036,
+      "lng": 2.1467476,
+      "verified": true,
+      "rating": 4.1
+    },
+    "santantoni": {
+      "name": "Mercat de Sant Antoni",
+      "addr": "Eixample",
+      "lat": 41.3786358,
+      "lng": 2.1620492,
+      "verified": true,
+      "hours": "sab 08:00–20:30, dom chiuso"
+    },
+    "boqueria": {
+      "name": "Mercat de la Boqueria",
+      "addr": "La Rambla 91",
+      "lat": 41.3817399,
+      "lng": 2.1715853,
+      "verified": true,
+      "hours": "sab 08:00–20:30, dom chiuso"
+    },
+    "ciutadella": {
+      "name": "Parc de la Ciutadella",
+      "addr": "Passeig de Picasso 21, Barcelona",
+      "lat": 41.388123,
+      "lng": 2.1860152,
+      "verified": true
+    },
+    "santacaterina": {
+      "name": "Mercat de Santa Caterina",
+      "addr": "Av. de Francesc Cambó 16, Barcelona",
+      "lat": 41.3863611,
+      "lng": 2.1781566,
+      "verified": true,
+      "rating": 4.4,
+      "reviews": 18408,
+      "hours": "ven 07:30–20:00"
+    },
+    "taps": {
+      "name": "Taps Sagrada Familia",
+      "addr": "Carrer de Provença 474, Eixample",
+      "lat": 41.4054703,
+      "lng": 2.1759774,
+      "verified": true,
+      "rating": 4.7,
+      "reviews": 122,
+      "hours": "lun-sab 10:00–14:00 e 16:30–20:30 · dom chiuso",
+      "phone": "+34 938 09 85 83"
+    },
+    "rooftop": {
+      "name": "Rooftop Garden – El Palace Barcelona",
+      "addr": "Gran Via de les Corts Catalanes 668, Barcelona",
+      "lat": 41.3915035,
+      "lng": 2.1715182,
+      "verified": true,
+      "note": "Coordinate verificate via Google Places: El Palace Hotel Barcelona, Gran Via de les Corts Catalanes 668. Il Rooftop Garden è sul tetto dell'hotel."
+    },
+    "biarritz": {
+      "name": "Bodega Biarritz 1881",
+      "addr": "Carrer Nou de Sant Francesc 7, Ciutat Vella",
+      "lat": 41.3791891,
+      "lng": 2.1770567,
+      "verified": true,
+      "rating": 4.7,
+      "reviews": 9353,
+      "hours": "gio-lun 12:30-23:00 · martedì e mercoledì chiuso"
+    },
+    "bunkers": {
+      "name": "Bunkers del Carmel — MUHBA Turó de la Rovira",
+      "addr": "Carrer de Marià Labèrnia s/n, Horta-Guinardó",
+      "lat": 41.4193003,
+      "lng": 2.1618259,
+      "verified": true,
+      "rating": 4.6,
+      "reviews": 17545,
+      "hours": "Belvedere: accesso libero sempre · Spazi museali ott-mag: mer/ven/sab/dom 10:00-14:00",
+      "phone": "+34 932 56 21 22"
+    },
+    "duckstore": {
+      "name": "Barcelona Duck Store",
+      "addr": "Carrer dels Banys Nous 1, Barri Gòtic",
+      "lat": 41.3819198,
+      "lng": 2.1753751,
+      "verified": true,
+      "rating": 4.4,
+      "reviews": 110,
+      "hours": "ven 10:30–20:30 · sab 11:00–20:00 · dom 11:00–15:00 e 16:00–20:00"
+    },
+    "santamaria": {
+      "name": "Basílica de Santa Maria del Mar",
+      "addr": "Plaça de Santa Maria 1, La Ribera",
+      "lat": 41.3838871,
+      "lng": 2.1820711,
+      "verified": true,
+      "rating": 4.7,
+      "reviews": 40513
+    },
+    "montcada": {
+      "name": "Carrer de Montcada",
+      "addr": "La Ribera, Barcelona",
+      "lat": 41.3850135,
+      "lng": 2.1810493,
+      "verified": true,
+      "rating": 4.6,
+      "reviews": 64
+    },
+    "pontbisbe": {
+      "name": "Pont del Bisbe",
+      "addr": "Carrer del Bisbe, Barri Gòtic",
+      "lat": 41.383302,
+      "lng": 2.1764228,
+      "verified": true,
+      "rating": 4.7,
+      "reviews": 2069
+    },
+    "santfelip": {
+      "name": "Plaça de Sant Felip Neri",
+      "addr": "Barri Gòtic, Barcelona",
+      "lat": 41.383452,
+      "lng": 2.1750541,
+      "verified": true
+    },
+    "barjoan": {
+      "name": "Bar Joan",
+      "addr": "Dentro il Mercat de Santa Caterina",
+      "lat": 41.3863611,
+      "lng": 2.1781566,
+      "verified": true,
+      "rating": 4.6,
+      "reviews": 1483,
+      "hours": "lun-sab fino alle 15:30 · domenica chiuso",
+      "note": "Non prende prenotazioni",
+      "tel": "+34 933 10 61 50"
+    },
+    "elborn": {
+      "name": "El Born Centre de Cultura i Memòria",
+      "addr": "Plaça Comercial 12, Ciutat Vella",
+      "lat": 41.3856869,
+      "lng": 2.1836862,
+      "verified": true,
+      "rating": 4.5,
+      "reviews": 16439,
+      "hours": "ven 10:00–20:00",
+      "note": "Ingresso gratuito alla sala"
+    },
+    "debon": {
+      "name": "Xarcuteria Debón",
+      "addr": "Dentro il Mercat de Santa Caterina",
+      "lat": 41.3863611,
+      "lng": 2.1781566,
+      "verified": true,
+      "rating": 5.0,
+      "reviews": 246,
+      "note": "Coordinate del mercato: il banco è al suo interno"
+    },
+    "elmirador": {
+      "name": "El Mirador",
+      "addr": "Carrer de Pasteur 2, Horta-Guinardó",
+      "lat": 41.4169774,
+      "lng": 2.1589342,
+      "verified": true,
+      "rating": 4.5,
+      "reviews": 1386,
+      "tel": "+34 931 64 20 22",
+      "hours": "domenica 12:00–17:00",
+      "note": "Prenotato: domenica 18 alle 13:30, 3 persone"
+    },
+    "casino": {
+      "name": "Casino Barcelona",
+      "addr": "Carrer de la Marina 19-21, Port Olímpic",
+      "lat": 41.3866938,
+      "lng": 2.1970601,
+      "verified": true,
+      "rating": 4.0,
+      "reviews": 8232,
+      "hours": "aperto 24 ore su 24, tutti i giorni",
+      "phone": "+34 932 25 78 78"
+    },
+    "teixido": {
+      "name": "Teixidó Barcelona · Forn de Pa",
+      "addr": "Carrer de Nàpols 194, Eixample",
+      "lat": 41.3989914,
+      "lng": 2.174836,
+      "verified": true,
+      "rating": 4.6,
+      "reviews": 292,
+      "hours": "lun-ven 7:00-20:00 · sab 8:00-14:00 · dom chiuso",
+      "phone": "+34 686 21 08 40"
+    },
+    "bomie": {
+      "name": "BO&MIE Barcelona",
+      "addr": "Carrer de Provença 433, Eixample",
+      "lat": 41.4041701,
+      "lng": 2.1736931,
+      "verified": true,
+      "rating": 4.4,
+      "reviews": 2657,
+      "hours": "tutti i giorni 8:30-20:30",
+      "phone": "+34 934 84 74 60"
+    },
+    "brunells": {
+      "name": "Brunells",
+      "addr": "Carrer de la Princesa, 22, 08003 Barcelona",
+      "lat": 41.3854186,
+      "lng": 2.1806806,
+      "verified": true,
+      "rating": 4.0,
+      "reviews": 2376,
+      "hours": "tutti i giorni 9:00–20:00",
+      "phone": "+34 936 53 64 68"
+    }
   }
- }
 }

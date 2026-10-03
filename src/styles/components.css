@@ -292,3 +292,10 @@ select.input,input.input{ min-height:44px; background:var(--bg-3); border:1px so
 .coro__lines li{ font-family:var(--font-display); font-weight:700; font-size:clamp(30px,8.5vw,52px); line-height:1.05; color:var(--terracotta); letter-spacing:-.01em; }
 .coro__lines .song__shout{ display:block; margin-top:var(--space-2); font-size:.6em; }
 .coro__foot{ color:var(--ink-3); font-size:var(--fs-0); max-width:26ch; }
+
+/* Da dare al tassista: l'indirizzo grande, leggibile mostrando lo schermo */
+.tassista{ display:flex; flex-direction:column; gap:var(--space-1); padding:var(--space-3) var(--space-4); border-radius:var(--radius-s); background:var(--bg-3); border:1px solid var(--line); }
+.tassista__label{ font-size:var(--fs-0); font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-2); }
+.tassista__addr{ font-family:var(--font-display); font-size:var(--fs-3); font-weight:700; line-height:1.15; color:var(--ink); }
+.tassista__nota{ font-size:var(--fs-0); color:var(--ink-2); }
+.tassista .btn{ align-self:flex-start; margin-top:var(--space-2); }

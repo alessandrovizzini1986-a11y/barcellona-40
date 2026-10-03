@@ -9,7 +9,7 @@ const ok = (n, c, x = '') => { out.push(c); if (!c) process.exitCode = 1; consol
 
 // Gli otto link, riscritti qui a mano dal messaggio: se qualcuno li "ripulisce" nel JSON, questo test cade.
 const ATTESI = {
-  'ven-mattina': 'https://www.google.com/maps/dir/?api=1&origin=41.388123,2.1860152&destination=41.386162,2.1786073&travelmode=walking&waypoints=41.3838871,2.1820711|41.3850135,2.1810493|41.383302,2.1764228|41.383452,2.1750541|41.3819198,2.1753751',
+  'ven-mattina': 'https://www.google.com/maps/dir/?api=1&origin=41.3854186,2.1806806&destination=41.386162,2.1786073&travelmode=walking&waypoints=41.388123,2.1860152|41.3838871,2.1820711|41.3850135,2.1810493|41.383302,2.1764228|41.383452,2.1750541|41.3819198,2.1753751',
   'ven-pomeriggio': 'https://www.google.com/maps/dir/?api=1&origin=41.386162,2.1786073&destination=41.3915035,2.1715182&travelmode=walking&waypoints=41.395437,2.179608|41.4054703,2.1759774',
   'ven-cena': 'https://www.google.com/maps/dir/?api=1&origin=41.3915035,2.1715182&destination=41.3925995,2.1344166&travelmode=transit',
   'sab-mattina': 'https://www.google.com/maps/dir/?api=1&origin=41.395437,2.179608&destination=41.4066347,2.1799385&travelmode=walking&waypoints=41.4039406,2.1751597',

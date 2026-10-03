@@ -51,7 +51,7 @@ const text = (p, sel) => p.locator(sel).first().textContent().then((t) => (t || 
   ok('16/10 04:00 · fase durante: timeline del viaggio e bento', await p.locator('.viaggio-oggi').count() === 1 && await p.locator('.bento').count() === 1)
   await ctx.close()
 }
-{ const { p, ctx } = await open('ale', '/?now=2026-10-16T09:00#/oggi'); ok('16/10 09:00 ale: Adesso = f1', (await p.locator('.tile .card[data-stop="f1"]').count()) === 1); await ctx.close() }
+{ const { p, ctx } = await open('ale', '/?now=2026-10-16T09:00#/oggi'); ok('16/10 09:00 ale: Adesso = f1b, la colazione da Brunells', (await p.locator('.tile .card[data-stop="f1b"]').count()) === 1); await ctx.close() }
 { const { p, ctx } = await open('monne', '/?now=2026-10-17T07:50#/oggi'); ok('17/10 07:50 monne: Adesso = s2', (await p.locator('.tile .card[data-stop="s2"]').count()) === 1); ok('banner speedrun', (await p.locator('a[href="#/speedrun"]').count()) >= 1); await ctx.close() }
 { const { p, ctx } = await open('monne', '/?now=2026-10-17T07:50#/missioni'); const cls = await p.locator('.mission__timer').first().getAttribute('class'); ok('07:50 timer giallo (25 min)', cls.includes('warm'), cls); await ctx.close() }
 { const { p, ctx } = await open('monne', '/?now=2026-10-17T08:05#/missioni'); const cls = await p.locator('.mission__timer').first().getAttribute('class'); ok('08:05 timer rosso (10 min)', cls.includes('hot'), cls); ok('timer valore', (await text(p, '.mission__timer')) === '00:10:00'); await ctx.close() }

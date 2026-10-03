@@ -158,7 +158,7 @@ async function vista(person, path) {
 {
   const { p, ctx } = await vista('ale', '/#/programma/ven')
   const conto = await p.locator('.avviso--forte').innerText().catch(() => '')
-  ok('venerdì: il conto della mezza giornata non è cambiato', /Soste 3 h 45 min \+ cammino 54 min/.test(conto), conto.slice(0, 60))
+  ok('venerdì: il conto della mezza giornata non è cambiato', /Soste 4 h 10 min \+ cammino 1 h 2 min/.test(conto), conto.slice(0, 60))
   await ctx.close()
 }
 await b.close()

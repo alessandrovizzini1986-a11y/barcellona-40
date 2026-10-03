@@ -25,6 +25,7 @@ const ALT = {
   'blq.webp': 'Il terminal dell\'aeroporto di Bologna visto dal piazzale',
   'bcn_t2.webp': 'La facciata del Terminal 2 dell\'aeroporto di Barcellona',
   'ciutadella.webp': 'Le fontane della Cascada Monumental al Parc de la Ciutadella',
+  'brunells.webp': "L'ingresso della pasticceria Brunells, con l'insegna rossa e la vetrina del croissant",
   'santamaria.webp': 'La facciata illuminata della Basílica de Santa Maria del Mar, con il rosone e le due torri',
   'montcada.webp': 'La stradina della Placeta de Montcada, nel Born, con i balconi e la palma',
   'pontbisbe.webp': 'Il ponte gotico di Carrer del Bisbe visto dalla strada',
@@ -119,6 +120,11 @@ export function stopCard(stop, { person = null, isNow = false, nowLabel = 'adess
   if (stop.actions?.maps) acts.push(`<a class="btn" data-maps="${stop.id}" href="${mapsUrl(stop)}" target="_blank" rel="noopener">${icon('map-pin')} Maps</a>`)
   if (stop.actions?.taxi) acts.push(`<a class="btn" href="${taxiUrl(stop)}" data-taxi target="_blank" rel="noopener" title="Uber; in alternativa FREE NOW">${icon('taxi')} Taxi</a>`)
   if (stop.actions?.metro) acts.push(`<span class="btn btn--ghost" aria-label="Metro: ${esc(stop.actions.metro)}">${icon('train')} ${esc(stop.actions.metro)}</span>`)
+  // Tappa raggiunta in taxi dall'aeroporto: Bolt e Uber accanto a Maps, con il blocco "da dare al tassista"
+  if (stop.tassista) {
+    acts.push(`<a class="btn" href="${linkBolt()}" data-taxi-bolt data-indirizzo="${esc(stop.tassista.indirizzo)}" title="Copia l'indirizzo e apre Bolt" aria-label="Bolt: copia l'indirizzo e apre l'app">${icon('taxi')} Bolt</a>`)
+    acts.push(`<a class="btn" href="${esc(stop.tassista.uber)}" data-taxi-uber target="_blank" rel="noopener" title="Uber con la destinazione già impostata" aria-label="Uber, con la destinazione già impostata">${icon('taxi')} Uber</a>`)
+  }
   // Il nome del posto si ripete solo se non è già nel titolo: "Basílica de Santa Maria del Mar" due volte no
   const nomeFuoriDalTitolo = v && !stop.title.includes(v.name)
   const indirizzo = v?.addr && v.addr !== 'Barcelona' ? v.addr : ''
@@ -138,6 +144,7 @@ export function stopCard(stop, { person = null, isNow = false, nowLabel = 'adess
     <p class="card__why">${esc(stop.why)}</p>
     <div class="chips">${distChip(stop)}${durataChip(stop)}${voto}${prices}${badgeHtml(badgesFor(stop), reveal)}</div>
     ${stop.avviso ? `<div class="avviso">${icon('alert')}<span>${esc(stop.avviso)}</span></div>` : ''}
+    ${stop.tassista ? tassistaHtml(stop.tassista) : ''}
     ${acts.length ? `<div class="actions">${acts.join('')}</div>` : ''}
     ${details || bloccoStimati ? `<details><summary><span>Dettagli</span>${icon('chevron')}</summary><div class="card__more"><div>${details ? `<ul>${details}</ul>` : ''}${bloccoStimati}</div></div></details>` : ''}
     ${showCheck ? `<label class="check"><input type="checkbox" data-done="${stop.id}" ${done ? 'checked' : ''} aria-label="Fatto: ${esc(stop.title)}"><span>Fatto</span>${missionMine ? `<span class="check__xp">+${mission.xp} XP · ${esc(mission.title)}</span>` : ''}</label>` : ''}
@@ -145,6 +152,29 @@ export function stopCard(stop, { person = null, isNow = false, nowLabel = 'adess
   </article>`
 }
 
+// DA DARE AL TASSISTA: l'indirizzo scritto grande, da mostrare allo schermo, e il pulsante che lo copia.
+function tassistaHtml(t) {
+  return `<div class="tassista" role="group" aria-label="Da dare al tassista">
+    <div class="tassista__label">Da dare al tassista</div>
+    <div class="tassista__addr">${esc(t.indirizzo)}</div>
+    <div class="tassista__nota">${esc(t.nota)}</div>
+    <button class="btn btn--sm" type="button" data-copia-indirizzo="${esc(t.indirizzo)}">${icon('copy')} Copia indirizzo</button>
+  </div>`
+}
+// BOLT. Non esiste un deep link pubblico e documentato che imposti la destinazione: il tocco copia
+// l'indirizzo negli appunti e apre l'app. Android: intent con il pacchetto dell'app (ee.mtakso.client,
+// verificato sul Play Store) e il Play Store come ripiego; iOS: la pagina dell'App Store (id675033630,
+// "Bolt: Request a Ride"); altrove il sito di Bolt.
+export function linkBolt(ua = navigator.userAgent) {
+  if (/Android/i.test(ua)) return 'intent://#Intent;package=ee.mtakso.client;scheme=bolt;S.browser_fallback_url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dee.mtakso.client;end'
+  if (/iPhone|iPad|iPod/i.test(ua)) return 'https://apps.apple.com/app/id675033630'
+  return 'https://bolt.eu/'
+}
+// UBER, con la destinazione già impostata: il link universale ufficiale (m.uber.com/ul) sta nel dato
+// (`tassista.uber`), scritto a mano e verificato come i percorsi: non si rigenera dalle coordinate.
+async function copiaIndirizzo(testo, messaggio) {
+  try { await navigator.clipboard.writeText(testo); toast(messaggio) } catch { toast(`Non riesco a copiare: ${testo}`, 4000) }
+}
 // Eventi delegati: animazione <details>, checkbox Fatto, fallback taxi.
 // `signal` viene dall'AbortController della vista: al cambio vista i listener spariscono.
 // Senza, si accumulavano su #app a ogni render e un tocco faceva più toggle.
@@ -175,6 +205,12 @@ export function bindCards(container, { signal, onChange } = {}) {
         setTimeout(end, 500)
       }
     }
+    const bolt = e.target.closest('[data-taxi-bolt]')
+    if (bolt) { evento('taxi-bolt'); copiaIndirizzo(bolt.dataset.indirizzo, 'Indirizzo copiato: incollalo come destinazione in Bolt') }
+    const uber = e.target.closest('[data-taxi-uber]')
+    if (uber) evento('taxi-uber')
+    const copia = e.target.closest('[data-copia-indirizzo]')
+    if (copia) copiaIndirizzo(copia.dataset.copiaIndirizzo, 'Indirizzo copiato')
     const taxi = e.target.closest('[data-taxi]')
     if (taxi) {
       evento('taxi')

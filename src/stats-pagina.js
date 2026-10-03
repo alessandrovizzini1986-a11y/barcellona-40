@@ -40,6 +40,8 @@ const EVENTI = [
   { id: 'maps-tappa', label: 'Aperta una tappa su Maps' },
   { id: 'maps-percorso', label: 'Aperto un percorso su Maps' },
   { id: 'taxi', label: 'Chiamato un taxi' },
+  { id: 'taxi-bolt', label: 'Bolt per Brunells (indirizzo copiato)' },
+  { id: 'taxi-uber', label: 'Uber per Brunells' },
   { id: 'qr-parcheggio-apri', label: 'Aperto il QR del parcheggio' },
   { id: 'riepilogo-copia', label: 'Copiato il riepilogo del giorno' },
   { id: 'novita-apri', label: 'Aperte le novità' },

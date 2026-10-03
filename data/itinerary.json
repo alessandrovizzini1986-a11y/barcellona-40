@@ -18,7 +18,8 @@
      "why": "FR2097. Il weekend inizia adesso.",
      "details": [
       "Zaini al seguito tutto il giorno: il check-in è alle 15:00.",
-      "Aerobus A2 dal T2 → Plaça Catalunya, oppure taxi"
+      "Taxi dal T2 fino a Brunells: 15,4 km, circa 27 minuti. Atterrati alle 08:05, in taxi verso le 08:30, davanti alla porta alle 09:00.",
+      "In alternativa Aerobus A2 dal T2 → Plaça Catalunya, poi a piedi"
      ],
      "people": [
       "ale",
@@ -37,14 +38,16 @@
      "img": "bcn_t2.webp"
     },
     {
-     "id": "f2",
-     "time": "09:30",
+     "id": "f1b",
+     "time": "09:00",
      "timeStatus": "verificato",
-     "venueId": "ciutadella",
-     "title": "Parc de la Ciutadella",
-     "why": "Cascada Monumental e il mammut. Gratis, entri e esci quando vuoi.",
+     "venueId": "brunells",
+     "title": "Colazione · Brunells",
+     "why": "Il croissant che a Barcellona chiamano il migliore della città. All'angolo di Carrer de Montcada, sulla vostra strada.",
      "details": [
-      "Dall'aeroporto: Aerobus A2 fino a Plaça Catalunya, oppure taxi"
+      "Apre alle 9:00 anche il venerdì",
+      "4,0 su 2.376 recensioni: croissant sfogliato e burroso, cortado fatto bene. Da provare quello al pistacchio",
+      "Pasticceria dal 1852 all'angolo con Carrer de Montcada"
      ],
      "people": [
       "ale",
@@ -58,16 +61,53 @@
       "taxi": false,
       "metro": null
      },
-     "distFromPrevM": 15504,
-     "minFromPrev": 28,
+     "distFromPrevM": 15400,
+     "minFromPrev": 27,
      "distMode": "auto",
-     "img": "ciutadella.webp",
+     "img": "brunells.webp",
      "durataMin": 45,
+     "tassista": {
+      "indirizzo": "Carrer de la Princesa, 22 · 08003 Barcelona",
+      "nota": "Pastisseria Brunells, esquina con Carrer de Montcada",
+      "uber": "https://m.uber.com/ul/?action=setPickup&pickup=my_location&dropoff[latitude]=41.3854186&dropoff[longitude]=2.1806806&dropoff[nickname]=Brunells&dropoff[formatted_address]=Carrer%20de%20la%20Princesa%2022%2C%20Barcelona"
+     },
+     "detailsStimati": [
+      "Circa 6–8 € a testa con croissant e caffè",
+      "Ai tavoli il menu è più ridotto del banco: croissant e caffè ci sono sempre"
+     ]
+    },
+    {
+     "id": "f2",
+     "time": "09:55",
+     "timeStatus": "verificato",
+     "venueId": "ciutadella",
+     "title": "Parc de la Ciutadella",
+     "why": "Cascada Monumental e il mammut. Gratis, entri e esci quando vuoi.",
+     "details": [
+      "Da Brunells a piedi: 677 m, 8 minuti",
+      "Cascada e laghetto, 25 minuti; con la pioggia si taglia a un quarto d'ora"
+     ],
+     "people": [
+      "ale",
+      "monne"
+     ],
+     "badges": [
+      "verificato"
+     ],
+     "actions": {
+      "maps": true,
+      "taxi": false,
+      "metro": null
+     },
+     "distFromPrevM": 677,
+     "minFromPrev": 8,
+     "img": "ciutadella.webp",
+     "durataMin": 25,
      "durataPioggiaMin": 15
     },
     {
      "id": "f2b",
-     "time": "09:53",
+     "time": "10:16",
      "timeStatus": "verificato",
      "venueId": "elborn",
      "title": "El Born Centre de Cultura i Memòria",
@@ -554,10 +594,11 @@
    "percorsi": [
     {
      "id": "ven-mattina",
-     "label": "Ciutadella → Bar Joan",
+     "label": "Brunells → Bar Joan",
      "mode": "walking",
-     "url": "https://www.google.com/maps/dir/?api=1&origin=41.388123,2.1860152&destination=41.386162,2.1786073&travelmode=walking&waypoints=41.3838871,2.1820711|41.3850135,2.1810493|41.383302,2.1764228|41.383452,2.1750541|41.3819198,2.1753751",
+     "url": "https://www.google.com/maps/dir/?api=1&origin=41.3854186,2.1806806&destination=41.386162,2.1786073&travelmode=walking&waypoints=41.388123,2.1860152|41.3838871,2.1820711|41.3850135,2.1810493|41.383302,2.1764228|41.383452,2.1750541|41.3819198,2.1753751",
      "stops": [
+      "f1b",
       "f2",
       "f3",
       "f4",

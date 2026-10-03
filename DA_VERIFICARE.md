@@ -15,6 +15,7 @@ memoria, non pendenze.
 | **Fasce di prezzo della Bodega Biarritz** | all'ingresso, sabato sera | nessuna conseguenza: si sceglie lì |
 | **Civico esatto della Braseria Sarrià** (`c9`) | arrivandoci | nessuna: la prenotazione è a nome, non a civico |
 | **Promozioni del Casino Barcelona** | dal telefono, prima di partire | nessuna: è un'opzione, non un impegno |
+| **Orario di apertura del Parc de la Ciutadella**: alcune fonti dicono 10:00 | all'ingresso, venerdì alle 09:55 | se fosse così, si aspettano 5 minuti all'ingresso o si allunga la colazione da Brunells; se apre prima, nessun problema |
 
 ## Da fare prima di partire
 

@@ -234,6 +234,12 @@
       "file": "assets/tappe/bomie.webp",
       "tappa": "BO&MIE Barcelona",
       "nota": "Foto fornita da Alessandro, uso autorizzato. Per gentile concessione."
+    },
+    {
+      "id": "brunells",
+      "file": "assets/tappe/brunells.webp",
+      "tappa": "Brunells",
+      "nota": "Foto fornita da Alessandro, uso autorizzato. Per gentile concessione."
     }
   ],
   "scartate": []

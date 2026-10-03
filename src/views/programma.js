@@ -33,13 +33,13 @@ function avvisoConto(giorno, key) {
     ? `Restano ${fmtMinutes(c.margine)} di margine, non di più.`
     : 'Non resta margine: ogni sosta più lunga sposta l\'arrivo a casa.'
   // Il consiglio ha senso solo col giro asciutto: sotto la pioggia la Ciutadella è già tagliata a 15 minuti
-  const taglio = key === 'ven' && !piove() ? ' Se slitti, taglia la Ciutadella da 45 a 25 minuti.' : ''
+  const taglio = key === 'ven' && !piove() ? ' Se slitti, taglia la Ciutadella da 25 a 15 minuti.' : ''
   return `<div class="avviso avviso--forte">${icon('clock')}<span>Soste ${fmtMinutes(c.soste)} + cammino ${fmtMinutes(c.cammino)} = ${fmtMinutes(totale)} tra le ${esc(c.inizio)} e le ${esc(c.fine)}. ${margine}${taglio}</span></div>`
 }
 // Il venerdì mattina sta quasi tutto all'aperto e ottobre è il mese più piovoso dell'anno a Barcellona
 function toggleP(on) {
   return `<label class="switch switch--piove" for="piove">
-    <span><b>${icon('rain')} Piove</b><br><span class="faint">Ottobre è il mese più piovoso a Barcellona e sei tappe su otto sono all'aperto. Accendi e il giro cambia.</span></span>
+    <span><b>${icon('rain')} Piove</b><br><span class="faint">Ottobre è il mese più piovoso a Barcellona e sei tappe su nove sono all'aperto. Accendi e il giro cambia.</span></span>
     <input type="checkbox" id="piove" ${on ? 'checked' : ''}>
   </label>`
 }

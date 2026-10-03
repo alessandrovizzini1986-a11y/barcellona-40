@@ -93,9 +93,9 @@ for (const [giorno, id] of [['ven', 'f99'], ['sab', 's99']]) {
 {
   const { p, ctx } = await vista('ale', '/#/programma/ven')
   const testo = await conto(p)
-  ok('venerdì: il conto della giornata resta quello della mattina', /Soste 3 h 45 min \+ cammino 54 min/.test(testo), testo)
+  ok('venerdì: il conto della giornata resta quello della mattina', /Soste 4 h 10 min \+ cammino 1 h 2 min/.test(testo), testo)
   ok('venerdì: il conto non nomina il Casino', !/Casino/i.test(testo))
-  ok('venerdì: intestazione "15 tappe · 1 opzionale"', /15 tappe · 1 opzionale/.test(await p.locator('.day-head .faint').innerText()), await p.locator('.day-head .faint').innerText())
+  ok('venerdì: intestazione "16 tappe · 1 opzionale"', /16 tappe · 1 opzionale/.test(await p.locator('.day-head .faint').innerText()), await p.locator('.day-head .faint').innerText())
   await ctx.close()
 }
 
@@ -113,7 +113,7 @@ for (const [quando, atteso] of [['2026-10-16T21:30', 'f15'], ['2026-10-17T02:00'
 {
   const { p, ctx } = await vista('ale', '/?now=2026-10-16T21:30#/oggi')
   const prog = await p.locator('#progress').innerText()
-  ok('progresso: il denominatore di oggi è 15, non 16', /\b15\b/.test(prog) && !/\b16\b/.test(prog), prog.replace(/\n/g, ' '))
+  ok('progresso: il denominatore di oggi è 16, non 17', /\b16\b/.test(prog) && !/\b17\b/.test(prog), prog.replace(/\n/g, ' '))
   const lista = await p.locator('.timeline .card[data-stop]').last().getAttribute('data-stop')
   ok('oggi: il Casino è in fondo anche nella lista "Oggi per te"', lista === 'f99')
   await ctx.close()

@@ -101,10 +101,13 @@ async function apri(path, { dati = null, fallisce = false, piove = false } = {})
 // 4b. IL CASO DEL TELEFONO: ?now=2026-10-15T10:00 ma i dati sono quelli veri di oggi (27 settembre → 6 ottobre).
 // La data simulata non sta nella previsione: la card deve comparire lo stesso, con l'ora reale e i tre giorni successivi.
 {
-  const { p, ctx, errs } = await apri('/#/oggi?now=2026-10-15T10:00', { dati: fixture('2026-09-27') })
+  // i dati partono da OGGI (reale), come farebbe l'API: la data simulata resta fuori dalla previsione finché non siamo nel weekend
+  const oggi = new Date(), isoOggi = `${oggi.getFullYear()}-${String(oggi.getMonth() + 1).padStart(2, '0')}-${String(oggi.getDate()).padStart(2, '0')}`
+  const NOMI = ['Dom', 'Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab'], attesi = [1, 2, 3].map((i) => NOMI[new Date(oggi.getFullYear(), oggi.getMonth(), oggi.getDate() + i).getDay()]).join(' ')
+  const { p, ctx, errs } = await apri('/#/oggi?now=2026-10-15T10:00', { dati: fixture(isoOggi) })
   ok('?now= fuori dalla previsione: la card compare lo stesso', (await p.locator('[data-meteo]').count()) === 1)
   const st = await p.evaluate(() => { const c = document.querySelector('[data-meteo]'); return { oggi: c?.dataset.oggi, ora: c?.dataset.ora, giorni: [...c.querySelectorAll('.meteo__giorni > span i')].map((e) => e.textContent.trim()).join(' '), chips: [...c.querySelectorAll('[data-meteo-giorno]')].map((e) => e.textContent.trim()).join(' ') } })
-  ok('adesso = ora reale del giorno dei dati, giorni = i tre successivi, chip Oggi + tre', st.oggi === '2026-09-27' && st.giorni === 'Lun Mar Mer' && st.chips === 'Oggi Lun Mar Mer', JSON.stringify(st))
+  ok('adesso = ora reale del giorno dei dati, giorni = i tre successivi, chip Oggi + tre', st.oggi === isoOggi && st.giorni === attesi && st.chips === 'Oggi ' + attesi, JSON.stringify(st) + ' attesi ' + attesi)
   await p.click('[data-meteo-toggle]'); await p.waitForTimeout(150)
   const prima = await p.evaluate(() => document.querySelector('.meteo__col')?.dataset.ora)
   ok('la striscia di Oggi parte dall\'ora reale', prima === String(new Date().getHours()).padStart(2, '0'), `${prima} vs ${new Date().getHours()}`)
