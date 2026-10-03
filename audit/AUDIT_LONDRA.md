@@ -185,7 +185,7 @@ Constatazioni:
 
 ### B1 · Elementi cliccabili
 
-In tutta la pagina ci sono **134 elementi cliccabili**. **69 portano fuori dal sito**: 66 in una nuova scheda, 3 nella stessa.
+In tutta la pagina ci sono **134 elementi cliccabili**. **79 portano fuori dal sito**: 76 in una nuova scheda, 3 nella stessa.
 
 | Dove | Elemento | Quanti | Cosa fa | Esce dal sito |
 |---|---|---|---|---|
