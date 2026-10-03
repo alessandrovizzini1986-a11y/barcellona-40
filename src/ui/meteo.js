@@ -128,7 +128,10 @@ function soleHtml(dati, iso) {
 
 // Monta la card nello slot quando i dati arrivano. `onPiove` accende il toggle del Programma.
 export const slotMeteo = (cls = '') => meteoVisibile() ? `<div${cls ? ` class="${cls}"` : ''} data-meteo-slot hidden></div>` : ''
-export async function montaMeteo(slot, { signal, piove = () => false, onPiove } = {}) {
+// `stato`: com'era la card prima di un ridisegno (Oggi si ridisegna ogni minuto): aperta e su quale giorno.
+// Si rimonta uguale, senza che chi la stava leggendo se la veda richiudere sotto il dito.
+export const statoMeteo = (root) => { const c = root?.querySelector('[data-meteo]'); return c ? { aperta: !c.querySelector('#meteo-dett').hidden, giorno: c.querySelector('[data-meteo-giorno].chip--on')?.dataset.meteoGiorno || null } : null }
+export async function montaMeteo(slot, { signal, piove = () => false, onPiove, stato = null } = {}) {
   if (!slot) return
   if (!meteoVisibile()) { slot.remove(); return }
   const dati = await caricaMeteo({ signal })
@@ -137,17 +140,19 @@ export async function montaMeteo(slot, { signal, piove = () => false, onPiove } 
   if (!html) { slot.remove(); return } // niente dati: la card non compare, e nemmeno lo slot
   slot.outerHTML = html
   const card = document.querySelector('[data-meteo]'); if (!card) return
+  const apri = (on, { traccia = true } = {}) => { const box = card.querySelector('#meteo-dett'); box.hidden = !on; card.querySelector('[data-meteo-toggle]').setAttribute('aria-expanded', String(on)); if (on && traccia) evento('meteo-apri') }
+  const scegli = (g) => {
+    card.querySelectorAll('[data-meteo-giorno]').forEach((b) => { const on = b === g; b.classList.toggle('chip--on', on); b.setAttribute('aria-selected', String(on)) })
+    card.querySelector('[data-meteo-striscia]').innerHTML = strisciaHtml(dati, g.dataset.meteoGiorno, card.dataset.oggi, +card.dataset.ora)
+    card.querySelector('[data-meteo-sole]').innerHTML = soleHtml(dati, g.dataset.meteoGiorno)
+    card.querySelector('[data-meteo-striscia]').scrollLeft = 0
+  }
+  if (stato?.aperta) { apri(true, { traccia: false }); const g = stato.giorno && card.querySelector(`[data-meteo-giorno="${stato.giorno}"]`); if (g) scegli(g) }
   card.addEventListener('click', (e) => {
     const t = e.target.closest('[data-meteo-toggle]')
-    if (t) { const box = card.querySelector('#meteo-dett'); box.hidden = !box.hidden; t.setAttribute('aria-expanded', String(!box.hidden)); if (!box.hidden) evento('meteo-apri'); return }
+    if (t) { apri(card.querySelector('#meteo-dett').hidden); return }
     const g = e.target.closest('[data-meteo-giorno]')
-    if (g) {
-      card.querySelectorAll('[data-meteo-giorno]').forEach((b) => { const on = b === g; b.classList.toggle('chip--on', on); b.setAttribute('aria-selected', String(on)) })
-      card.querySelector('[data-meteo-striscia]').innerHTML = strisciaHtml(dati, g.dataset.meteoGiorno, card.dataset.oggi, +card.dataset.ora)
-      card.querySelector('[data-meteo-sole]').innerHTML = soleHtml(dati, g.dataset.meteoGiorno)
-      card.querySelector('[data-meteo-striscia]').scrollLeft = 0
-      return
-    }
+    if (g) { scegli(g); return }
     const b = e.target.closest('[data-meteo-piove]')
     if (b) { onPiove?.(); card.querySelectorAll('[data-meteo-piano]').forEach((riga) => { riga.innerHTML = `${icon('rain')}<span>${PIANI[riga.dataset.meteoPiano].attivo}</span>` }) }
   }, { signal })

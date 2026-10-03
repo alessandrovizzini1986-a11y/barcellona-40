@@ -16,7 +16,7 @@ import { shareAlbum, bindShareAlbum } from '../ui/share-album.js'
 import { PHOTO_ALBUM } from '../store.js'
 import { timelineViaggio, bindViaggio, voli } from '../ui/viaggio.js'
 import { evento } from '../stats.js'
-import { montaMeteo, slotMeteo } from '../ui/meteo.js'
+import { montaMeteo, slotMeteo, statoMeteo } from '../ui/meteo.js'
 import { avvisoMiradorPioggia, PRENOTAZIONE_MIRADOR } from '../ui/pioggia.js'
 
 const DAY_LABEL = { ven: 'Venerdì 16', sab: 'Sabato 17', dom: 'Domenica 18' }
@@ -52,7 +52,8 @@ export async function copyText(text, okMsg = 'Copiato, incollalo su WhatsApp') {
   }
 }
 
-export async function render(root, { person, header, params }) {
+export async function render(root, opts) {
+  const { person, header } = opts
   const p = personById(person)
   const ph = phase()
   const timers = []
@@ -187,7 +188,7 @@ export async function render(root, { person, header, params }) {
   bindSong(root)
   const ac = new AbortController()
   bindViaggio(root, { signal: ac.signal })
-  montaMeteo(root.querySelector('[data-meteo-slot]'), { signal: ac.signal, piove: () => store.piove, onPiove: () => { store.piove = true } })
+  montaMeteo(root.querySelector('[data-meteo-slot]'), { signal: ac.signal, piove: () => store.piove, onPiove: () => { store.piove = true }, stato: opts._ripristino?.meteo || null })
   const progress = root.querySelector('#progress')
   bindCards(root, { signal: ac.signal, onChange: () => {
     // l'anello e il contatore di oggi si aggiornano subito, senza aspettare il prossimo render
@@ -196,7 +197,26 @@ export async function render(root, { person, header, params }) {
     if (progress) progress.innerHTML = progressHtml(doneAll, mioPiano.length, doneDay, piano.length, DAY_COLOR[key])
   } })
   root.querySelector('#copy')?.addEventListener('click', () => { evento('riepilogo-copia'); copyText(summaryText(person, key)) })
-  return () => { ac.abort(); timers.forEach(clearInterval) }
+  // Durante il weekend la pagina si ridisegna da sola una volta al minuto: "Adesso", "Prossima" e i "tra N min"
+  // seguono l'orologio anche se nessuno la tocca per due ore. Il ridisegno è sul posto (niente router, niente
+  // salto in cima): si tiene lo scroll, i "Dettagli" aperti e la card meteo com'era. Con la scheda nascosta
+  // non si fa niente; al ritorno, se è passato più di un minuto, si ridisegna subito.
+  let pulisci = () => { ac.abort(); timers.forEach(clearInterval) }
+  let ultimo = Date.now()
+  const ridisegna = async () => {
+    if (document.hidden || !root.isConnected) return
+    ultimo = Date.now()
+    const y = scrollY
+    const aperti = [...root.querySelectorAll('details[open]')].map((d) => d.closest('[data-stop]')?.dataset.stop).filter(Boolean)
+    const meteo = statoMeteo(root)
+    pulisci()
+    pulisci = await render(root, { ...opts, _ripristino: { aperti, meteo } })
+    scrollTo({ top: y, behavior: 'instant' })
+  }
+  timers.push(setInterval(ridisegna, 60_000))
+  document.addEventListener('visibilitychange', () => { if (!document.hidden && Date.now() - ultimo > 60_000) ridisegna() }, { signal: ac.signal })
+  for (const id of opts._ripristino?.aperti || []) { const d = root.querySelector(`[data-stop="${id}"] details`); if (d) d.open = true }
+  return () => pulisci()
 }
 
 // Il percorso della mezza giornata in corso: quello del blocco in cui cade la tappa di adesso
