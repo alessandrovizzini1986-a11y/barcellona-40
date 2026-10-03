@@ -1797,12 +1797,10 @@
      Le voci di DA_VERIFICARE si aggiungono in coda con lo stato «da verificare». */
   var PRIMA_DI_PARTIRE = [
     { cosa: 'Check-in online e posti vicini', stato: 'da_fare', nota: 'Si apre 24 ore prima del volo. BA fa sedere i bambini sotto i 12 anni accanto a un adulto: controllarlo al check-in.' },
-    { cosa: 'Passaporto di Olly', stato: 'da_fare', nota: 'Questura di Bologna, con Olly presente, circa 15–20 giorni lavorativi. Dopo la Brexit la carta d’identità non basta.' },
-    { cosa: 'Validità dei passaporti di Alessandro e Vale', stato: 'da_fare' },
-    { cosa: 'UK ETA di Alessandro', stato: 'fatto' },
-    { cosa: 'UK ETA di Vale e Olly', stato: 'da_fare', nota: 'Si fa online, una per persona.' },
+    { cosa: 'Passaporti di tutti e tre, validi', stato: 'fatto' },
+    { cosa: 'UK ETA di tutti e tre', stato: 'fatto' },
     { cosa: 'Prenotare London Eye e SEA LIFE', stato: 'da_fare', nota: 'Il biglietto combinato costa meno di due separati.' },
-    { cosa: 'Assicurazione viaggio', stato: 'da_fare' }
+    { cosa: 'Assicurazione viaggio', stato: 'fatto' }
   ];
   (function(){
     var ETICHETTA = { da_fare: 'da fare', da_verificare: 'da verificare', fatto: '✓ fatto' };
@@ -1990,6 +1988,8 @@
      Il pannello non si apre mai da solo: in cima c'è un banner sottile «N novità», e si apre solo se toccato.
      Il link in fondo alla pagina lo riapre con tutto lo storico, in ogni caso. */
   var NOVITA = [
+    { v: 18, data: '2026-10-03', titolo: 'Documenti a posto', voci: [
+      'Passaporti, UK ETA di tutti e tre e assicurazione viaggio: fatti. In «Prima di partire» restano check-in online e prenotazione di London Eye e SEA LIFE, più le cose da verificare' ] },
     { v: 17, data: '2026-10-03', titolo: 'Pagina più corta', voci: [
       'In cima a ogni giorno la scaletta con gli orari: tocca una riga per andare alla sua card',
       'Le card dicono solo cosa fare sul posto; il resto è in «Dettagli», chiuso',

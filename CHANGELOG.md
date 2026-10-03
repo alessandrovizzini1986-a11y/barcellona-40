@@ -615,3 +615,7 @@ Cercati bug dello stesso tipo di "portiere che si rituffa nel replay": due cambi
 - **Novità**: il pannello non si apre più da solo. In cima c'è un banner sottile "N novità dall'ultima visita" (o "Le novità del sito" alla prima visita) che lo apre solo se toccato; chiudendo, il banner sparisce. Con lo storage bloccato il banner non compare.
 - Correzione di stile: la regola dei titoli dei giorni (`details.acc summary`) si applicava anche ai "Dettagli" annidati; ora vale solo per il titolo del giorno.
 - Novità v17.
+
+## Londra · Prima di partire: documenti fatti
+- Passaporti (Olly compreso, e validità di Alessandro e Vale), UK ETA di tutti e tre e assicurazione viaggio segnati come **fatti**, su conferma di Alessandro. Le due righe ETA sono diventate una. Restano da fare: check-in online, prenotazione London Eye e SEA LIFE. Novità v18.
+- Il budget dice ancora "UK ETA ×3 · stima ~€57": i costi veri arrivano con lo step R9.
