@@ -52,15 +52,25 @@ function ricalcola(giorno) {
   if (i0 < 0) return out
   let t = new Date(out[i0].at)
   for (let i = i0; i < out.length && conOrario(out[i]) && out[i].durataMin != null; i++) {
+    // `apertura`: non si arriva prima che apra (El Born alle 10:00): si aspetta lì, la cascata riparte da lì
+    if (out[i].apertura) { const [h, m] = out[i].apertura.split(':').map(Number); const ap = new Date(t); ap.setHours(h, m, 0, 0); if (ap > t) t = ap }
     out[i].at = new Date(t)
     out[i].time = oraDi(t)
     t = new Date(t.getTime() + (durataDi(out[i]) + (out[i + 1]?.minFromPrev || 0)) * 60000)
   }
   return out
 }
+// Con la pioggia alcune tappe si SALTANO (`saltaPioggia`: la Ciutadella, i Bunkers): escono dalla catena e
+// dai conti, e restano in coda alla giornata, grigie, con il motivo. Altre cambiano orario (`timePioggia`).
+export const attiva = (s) => !s.saltata
 function conPioggia(list) {
   const giorni = [...new Set(list.map((s) => s.dayKey))]
-  return giorni.flatMap((k) => ricalcola(list.filter((s) => s.dayKey === k))).sort((a, b) => a.at - b.at)
+  return giorni.flatMap((k) => {
+    const delGiorno = list.filter((s) => s.dayKey === k)
+    const saltate = delGiorno.filter((s) => s.saltaPioggia).map((s) => ({ ...s, saltata: true }))
+    const vive = delGiorno.filter((s) => !s.saltaPioggia).map((s) => (s.timePioggia ? { ...s, time: s.timePioggia, at: stopDate({ ...s, time: s.timePioggia }, s.day.date) } : s))
+    return [...ricalcola(vive), ...saltate]
+  }).sort((a, b) => (a.saltata ? 1 : 0) - (b.saltata ? 1 : 0) || a.at - b.at)
 }
 
 // Conto della mattina: soste, cammino e margine, tutti calcolati dalle durate reali (mai scritti a mano).
@@ -68,7 +78,7 @@ function conPioggia(list) {
 export function contoDelGiorno(lista) {
   // Le tappe senza orario non fanno parte della giornata: non hanno durata, non hanno cammino,
   // e contarle vorrebbe dire far dipendere il margine da una cosa che forse non si fa.
-  const giorno = lista.filter(conOrario)
+  const giorno = lista.filter(conOrario).filter(attiva)
   const i0 = giorno.findIndex((s) => s.durataMin != null)
   if (i0 < 0) return null
   let i1 = i0
@@ -91,7 +101,7 @@ export const percorsiDi = (dayKey) => days.find((d) => DAY_KEY[d.date] === dayKe
 // Totale del blocco, sommato dalle tappe vere: i tratti a piedi per i percorsi a piedi, quelli in auto
 // o taxi per i percorsi coi mezzi (dove il tempo di Google non è il nostro e non lo si finge).
 export function totaleTratta(percorso, list) {
-  const dentro = list.filter((s) => percorso.stops.includes(s.id))
+  const dentro = list.filter((s) => percorso.stops.includes(s.id) && attiva(s))
   const aPiedi = (s) => s.distMode !== 'auto' && s.distMode !== 'taxi'
   const tratti = dentro.filter((s) => s.distFromPrevM != null && (percorso.mode === 'walking' ? aPiedi(s) : !aPiedi(s)))
   // Tappe che cadono dentro la finestra del blocco ma non sono nel link: succede in modalità pioggia,
@@ -126,7 +136,7 @@ function numera(list) {
   const conta = {}
   // Le tappe opzionali non prendono un numero: sulla mappa sarebbero la "tappa 9" di una giornata
   // che di tappe ne ha otto.
-  return list.map((s) => ({ ...s, order: senzaOrario(s) ? null : (conta[s.dayKey] = (conta[s.dayKey] || 0) + 1) }))
+  return list.map((s) => ({ ...s, order: senzaOrario(s) || s.saltata ? null : (conta[s.dayKey] = (conta[s.dayKey] || 0) + 1) }))
 }
 export function stopsForDay(personId, dayKey) { return stopsFor(personId).filter((s) => s.dayKey === dayKey) }
 // m15 "Coro Ufficiale" è la missione della canzone: dal 19 ottobre sparisce con lei (conteggi e XP compresi)

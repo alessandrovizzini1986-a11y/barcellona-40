@@ -1,6 +1,6 @@
 // Vista Oggi: countdown prima del weekend, bento durante, "Missione compiuta" dopo
 import { now, phase, countdownTo, dayKey, minutesUntil, fmtMinutes, currentStop, nextStop, isOverridden, parseLocal, canzoneVisibile } from '../time.js'
-import { stopsFor, stopsForDay, personById, checks, fmtDist, DAY_COLOR, missionsFor, percorsiDi, conOrario, days, durataDi } from '../data.js'
+import { stopsFor, stopsForDay, personById, checks, fmtDist, DAY_COLOR, missionsFor, percorsiDi, conOrario, days, durataDi, attiva } from '../data.js'
 import { store } from '../store.js'
 import { stopCard, bindCards, percorsoLink } from '../ui/card.js'
 import { ring } from '../ui/ring.js'
@@ -31,7 +31,7 @@ const rigaVolo = (person) => `${VOLO_ANDATA.persone.includes(person) ? '' : 'Il 
 
 export function summaryText(person, key) {
   // Il riepilogo è il piano del giorno: le tappe opzionali restano sulla card, non nel messaggio.
-  const stops = stopsForDay(person, key).filter(conOrario)
+  const stops = stopsForDay(person, key).filter(conOrario).filter(attiva)
   const lines = stops.map((s) => {
     const v = s.venue
     const addr = v?.addr && v.addr !== 'Barcelona' ? v.addr : ''
@@ -115,8 +115,9 @@ export async function render(root, { person, header, params }) {
 
   // Durante il weekend
   const key = dayKey()
-  const mine = stopsFor(person)
-  const todays = stopsForDay(person, key)
+  // le tappe saltate per pioggia restano nel programma, in coda e grigie, ma qui non sono né Adesso né Prossima
+  const mine = stopsFor(person).filter(attiva)
+  const todays = stopsForDay(person, key).filter(attiva)
   // Le tappe opzionali non hanno orario: non possono essere "Adesso" né "Prossima", altrimenti il sito
   // manderebbe la gente al casinò per averlo messo in fondo a una lista.
   const nxt = nextStop(mine.filter(conOrario))

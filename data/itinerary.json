@@ -74,7 +74,8 @@
      "detailsStimati": [
       "Circa 6–8 € a testa con croissant e caffè",
       "Ai tavoli il menu è più ridotto del banco: croissant e caffè ci sono sempre"
-     ]
+     ],
+     "durataPioggiaMin": 55
     },
     {
      "id": "f2",
@@ -85,7 +86,7 @@
      "why": "Cascada Monumental e il mammut. Gratis, entri e esci quando vuoi.",
      "details": [
       "Da Brunells a piedi: 677 m, 8 minuti",
-      "Cascada e laghetto, 25 minuti; con la pioggia si taglia a un quarto d'ora"
+      "Cascada e laghetto, 25 minuti. Con la pioggia si salta: si va dritti a El Born"
      ],
      "people": [
       "ale",
@@ -103,11 +104,12 @@
      "minFromPrev": 8,
      "img": "ciutadella.webp",
      "durataMin": 25,
-     "durataPioggiaMin": 15
+     "saltaPioggia": true,
+     "motivoPioggia": "saltata per pioggia: parco scoperto, zero soste"
     },
     {
      "id": "f2b",
-     "time": "10:16",
+     "time": "10:00",
      "timeStatus": "verificato",
      "venueId": "elborn",
      "title": "El Born Centre de Cultura i Memòria",
@@ -119,9 +121,9 @@
       "Ingresso gratuito alla sala",
       "Non è una visita da museo: entri, guardi, esci in 40 minuti",
       "Ha i bagni",
-      "È sul percorso, non una deviazione",
+      "Da Brunells: 328 m, 4 minuti",
       "4,5 su 16.439 recensioni",
-      "Venerdì aperto 10:00–20:00"
+      "Venerdì aperto 10:00–20:00: si arriva all'apertura"
      ],
      "people": [
       "ale",
@@ -135,8 +137,9 @@
       "taxi": false,
       "metro": null
      },
-     "distFromPrevM": 629,
-     "minFromPrev": 8
+     "distFromPrevM": 328,
+     "minFromPrev": 4,
+     "apertura": "10:00"
     },
     {
      "id": "f3",
@@ -146,7 +149,7 @@
      "title": "Basílica de Santa Maria del Mar",
      "why": "Gotico catalano. Guardala da fuori, in piazza, poi il Passeig del Born.",
      "details": [
-      "4,7 su 40.513 recensioni"
+      "4,7 su 40.610 recensioni"
      ],
      "people": [
       "ale",
@@ -167,7 +170,13 @@
      "distPioggia": {
       "m": 246,
       "min": 3
-     }
+     },
+     "durataPioggiaMin": 30,
+     "whyPioggia": "Con la pioggia si entra: gotico catalano, colonne altissime, luce delle vetrate.",
+     "detailsPioggia": [
+      "Visita interna: venerdì 10:00–18:00, ingresso circa 8 € (da una recensione recente)",
+      "Il tetto con la vista resta chiuso se piove"
+     ]
     },
     {
      "id": "f4",
@@ -194,7 +203,8 @@
      "distFromPrevM": 239,
      "minFromPrev": 4,
      "img": "montcada.webp",
-     "durataMin": 20
+     "durataMin": 20,
+     "durataPioggiaMin": 5
     },
     {
      "id": "f5",
@@ -222,7 +232,8 @@
      "distFromPrevM": 854,
      "minFromPrev": 11,
      "img": "pontbisbe.webp",
-     "durataMin": 10
+     "durataMin": 10,
+     "durataPioggiaMin": 5
     },
     {
      "id": "f6",
@@ -247,7 +258,8 @@
      "distFromPrevM": 185,
      "minFromPrev": 2,
      "img": "santfelip.webp",
-     "durataMin": 10
+     "durataMin": 10,
+     "durataPioggiaMin": 5
     },
     {
      "id": "f7",
@@ -502,7 +514,8 @@
      },
      "img": "elpalace.webp",
      "distFromPrevM": 2099,
-     "minFromPrev": 25
+     "minFromPrev": 25,
+     "avvisoPioggia": "Con la pioggia la terrazza può essere chiusa. Chiama prima: +34 935 10 11 30. Piano B: il bar dell'hotel El Palace al piano terra, stesso edificio."
     },
     {
      "id": "f15",
@@ -608,7 +621,8 @@
       "f8",
       "f9",
       "f10"
-     ]
+     ],
+     "urlPioggia": "https://www.google.com/maps/dir/?api=1&origin=41.3854186,2.1806806&destination=41.386162,2.1786073&travelmode=walking&waypoints=41.3856869,2.1836862|41.3838871,2.1820711|41.3850135,2.1810493|41.383302,2.1764228|41.383452,2.1750541|41.3819198,2.1753751"
     },
     {
      "id": "ven-pomeriggio",
@@ -1096,7 +1110,12 @@
      },
      "distFromPrevM": 4961,
      "minFromPrev": 18,
-     "distMode": "auto"
+     "distMode": "auto",
+     "durataPioggiaMin": 120,
+     "detailsPioggia": [
+      "Piano pioggia: si resta a tavola fino alle 15:30, poi dritti al T2 in taxi",
+      "Niente Bunkers: collina scoperta, terreno scivoloso, niente vista"
+     ]
     },
     {
      "id": "d2",
@@ -1135,7 +1154,9 @@
      "detailsStimati": [
       "Prenota il taxi dall'app mentre sei ancora in cima: qui sopra non ne passano. L'auto ci mette qualche minuto a salire.",
       "Se l'app non trova nessuno: scendi a piedi verso Carrer de Marià Labèrnia e richiama da lì."
-     ]
+     ],
+     "saltaPioggia": true,
+     "motivoPioggia": "saltata per pioggia: collina scoperta, terreno scivoloso, niente vista"
     },
     {
      "id": "d3",
@@ -1164,7 +1185,12 @@
      "distFromPrevM": 22684,
      "minFromPrev": 36,
      "distMode": "auto",
-     "img": "bcn_t2.webp"
+     "img": "bcn_t2.webp",
+     "timePioggia": "15:30",
+     "detailsPioggia": [
+      "Piano pioggia: dal Mirador si va dritti al T2 (circa 35 minuti di taxi) con largo anticipo",
+      "Lounge Canudas dalle 17:00 circa invece delle 20:20: doccia, cena al buffet e tutto il tempo del mondo"
+     ]
     }
    ],
    "percorsi": [

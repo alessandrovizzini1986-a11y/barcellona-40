@@ -11,7 +11,7 @@ const KEYS = ['ven', 'sab', 'dom']
 const LABEL = { ven: 'Ven', sab: 'Sab', dom: 'Dom' }
 
 export async function render(root, { person, header }) {
-  const mine = stopsFor(person)
+  const mine = stopsFor(person).filter((s) => !s.saltata) // le tappe saltate per pioggia non stanno sulla mappa
   const byDay = Object.fromEntries(KEYS.map((k) => [k, mine.filter((s) => s.dayKey === k)]))
   const active = new Set(KEYS.filter((k) => byDay[k].some(hasCoords)))
   const today = dayKey()

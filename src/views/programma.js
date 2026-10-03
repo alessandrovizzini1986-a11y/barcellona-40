@@ -1,5 +1,5 @@
 // Programma: segmented Ven/Sab/Dom + timeline filtrata per persona
-import { stopsForDay, personById, DAY_COLOR, days, contoDelGiorno, piove, percorsiDi, conOrario, senzaOrario } from '../data.js'
+import { stopsForDay, personById, DAY_COLOR, days, contoDelGiorno, piove, percorsiDi, conOrario, senzaOrario, attiva } from '../data.js'
 import { store } from '../store.js'
 import { icon } from '../ui/icons.js'
 import { fmtMinutes } from '../time.js'
@@ -12,7 +12,7 @@ import { evento } from '../stats.js'
 
 const KEYS = ['ven', 'sab', 'dom']
 const conteggio = (stops) => {
-  const n = stops.filter(conOrario).length, o = stops.length - n
+  const n = stops.filter(conOrario).filter(attiva).length, o = stops.filter(senzaOrario).length
   return `${n} ${n === 1 ? 'tappa' : 'tappe'}${o ? ` · ${o} opzionale${o === 1 ? '' : 'i'}` : ''}`
 }
 const LABEL = { ven: 'Ven 16', sab: 'Sab 17', dom: 'Dom 18' }
@@ -36,10 +36,19 @@ function avvisoConto(giorno, key) {
   const taglio = key === 'ven' && !piove() ? ' Se slitti, taglia la Ciutadella da 25 a 15 minuti.' : ''
   return `<div class="avviso avviso--forte">${icon('clock')}<span>Soste ${fmtMinutes(c.soste)} + cammino ${fmtMinutes(c.cammino)} = ${fmtMinutes(totale)} tra le ${esc(c.inizio)} e le ${esc(c.fine)}. ${margine}${taglio}</span></div>`
 }
-// Il venerdì mattina sta quasi tutto all'aperto e ottobre è il mese più piovoso dell'anno a Barcellona
-function toggleP(on) {
+// Il venerdì mattina sta quasi tutto all'aperto e i Bunkers di domenica sono una collina scoperta: ottobre è il
+// mese più piovoso dell'anno a Barcellona. Un solo interruttore per i due giorni: piove o non piove.
+const TESTO_PIOVE = {
+  ven: "Ottobre è il mese più piovoso a Barcellona e sei tappe su nove sono all'aperto. Accendi e il giro cambia: tutto al coperto, la Ciutadella salta.",
+  dom: 'I Bunkers sono una collina scoperta: con la pioggia niente vista e terreno scivoloso. Accendi e il pomeriggio cambia: pranzo lungo al Mirador, poi dritti al T2.'
+}
+const AVVISO_PIOVE = {
+  ven: 'Modalità pioggia: la Ciutadella salta, Santa Maria del Mar si visita dentro, El Born al coperto. Montcada, Pont del Bisbe e Sant Felip Neri sono all\'aperto: con la pioggia si attraversano senza fermarsi.',
+  dom: 'Modalità pioggia: niente Bunkers. Si resta al Mirador fino alle 15:30, poi dritti al T2: lounge Canudas dalle 17:00 circa invece delle 20:20.'
+}
+function toggleP(on, key) {
   return `<label class="switch switch--piove" for="piove">
-    <span><b>${icon('rain')} Piove</b><br><span class="faint">Ottobre è il mese più piovoso a Barcellona e sei tappe su nove sono all'aperto. Accendi e il giro cambia.</span></span>
+    <span><b>${icon('rain')} Piove</b><br><span class="faint">${esc(TESTO_PIOVE[key])}</span></span>
     <input type="checkbox" id="piove" ${on ? 'checked' : ''}>
   </label>`
 }
@@ -55,12 +64,14 @@ export async function render(root, { person, sub, header }) {
   // la prima foto della pagina si carica subito, le altre in lazy
   // La prima foto della pagina è quella della prima tappa in programma: l'eager si aggancia all'id,
   // non alla posizione, perché le opzionali sono una lista a parte che riparte da zero.
-  const primaFoto = stops.filter(conOrario).find(haFoto)?.id
+  const primaFoto = stops.filter(conOrario).filter(attiva).find(haFoto)?.id
   const card = (s) => ({ at: s.at, id: s.id, html: stopCard(s, { person, isNow: cur?.id === s.id, eager: s.id === primaFoto }) })
   // Le tappe opzionali escono dalla timeline cronologica e vanno in coda, dopo la riga tratteggiata:
   // non hanno un orario, quindi non hanno un posto nella fila.
-  const righe = [...stops.filter(conOrario).map(card), ...passi].sort((a, b) => a.at - b.at)
+  const righe = [...stops.filter(conOrario).filter(attiva).map(card), ...passi].sort((a, b) => a.at - b.at)
   const opzionali = stops.filter(senzaOrario).map(card)
+  // le tappe saltate per pioggia stanno in fondo, grigie, sotto la loro riga: si vede cosa si perde e perché
+  const saltate = stops.filter((s) => s.saltata).map(card)
   // Il pulsante del percorso va in cima al suo blocco: si aggancia alla prima tappa del blocco
   // che questa persona vede davvero (chi salta la mattina non deve vedere il percorso della mattina).
   const ancore = new Map()
@@ -76,10 +87,10 @@ export async function render(root, { person, sub, header }) {
       <h2>${esc(day.label)} ${day.date.slice(-2)} ottobre</h2>
       <span class="faint">${conteggio(stops)}${passi.length ? ` · ${passi.length} passi di viaggio` : ''}</span>
     </div>
-    ${key === 'ven' ? toggleP(piove()) : ''}
-    ${key === 'ven' && piove() ? `<div class="avviso">${icon('alert')}<span>Modalità pioggia: una sola tappa scoperta invece di sei. Montcada, Pont del Bisbe e Sant Felip Neri sono vicoli stretti, si cammina quasi sempre riparati.</span></div>` : ''}
+    ${TESTO_PIOVE[key] ? toggleP(piove(), key) : ''}
+    ${TESTO_PIOVE[key] && piove() ? `<div class="avviso">${icon('alert')}<span>${esc(AVVISO_PIOVE[key])}</span></div>` : ''}
     ${avvisoConto(stops, key)}
-    ${righe.length || opzionali.length ? `<ol class="timeline" style="--dc:${DAY_COLOR[key]}">${righe.map((r) => `${r.id && ancore.has(r.id) ? `<li class="timeline__percorso">${ancore.get(r.id)}</li>` : ''}<li>${r.html}</li>`).join('')}${opzionali.length ? `<li class="timeline__opzionale">Opzionale</li>${opzionali.map((r) => `<li class="timeline__opz">${r.html}</li>`).join('')}` : ''}</ol>` : `<div class="empty">${emptyState(person, key)}</div>`}
+    ${righe.length || opzionali.length ? `<ol class="timeline" style="--dc:${DAY_COLOR[key]}">${righe.map((r) => `${r.id && ancore.has(r.id) ? `<li class="timeline__percorso">${ancore.get(r.id)}</li>` : ''}<li>${r.html}</li>`).join('')}${opzionali.length ? `<li class="timeline__opzionale">Opzionale</li>${opzionali.map((r) => `<li class="timeline__opz">${r.html}</li>`).join('')}` : ''}${saltate.length ? `<li class="timeline__opzionale timeline__saltate">Saltata per pioggia</li>${saltate.map((r) => `<li class="timeline__opz timeline__saltata">${r.html}</li>`).join('')}` : ''}</ol>` : `<div class="empty">${emptyState(person, key)}</div>`}
   </section>`
   root.querySelector('#piove')?.addEventListener('change', (e) => {
     if (e.target.checked) evento('piove-attiva')

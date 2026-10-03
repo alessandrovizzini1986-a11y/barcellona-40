@@ -2,7 +2,7 @@
 import { icon } from './icons.js'
 import { badge, badges as badgeHtml } from './badge.js'
 import { esc, escLink } from './html.js'
-import { badgesFor, fmtDist, fmtEur, mapsUrl, taxiUrl, TAXI_FALLBACK, missionByStop, hasCoords, DAY_COLOR, durataDi, totaleTratta } from '../data.js'
+import { badgesFor, fmtDist, fmtEur, mapsUrl, taxiUrl, TAXI_FALLBACK, missionByStop, hasCoords, DAY_COLOR, durataDi, totaleTratta, piove } from '../data.js'
 import { fmtMinutes } from '../time.js'
 import { store } from '../store.js'
 import fotoTappe from '../../data/foto-tappe.json'
@@ -90,7 +90,7 @@ export function percorsoLink(percorso, list) {
   const piedi = percorso.mode === 'walking'
   const totale = piedi && t.m ? `${fmtDist(t.m)} · ${fmtMinutes(t.min)} a piedi` : 'Mezzi pubblici'
   const nota = t.fuoriPercorso.length ? ` · ${t.fuoriPercorso[0]} non è nel percorso` : ''
-  return `<a class="btn btn--ghost btn--block percorso" href="${esc(percorso.url)}" target="_blank" rel="noopener"
+  return `<a class="btn btn--ghost btn--block percorso" href="${esc((piove() && percorso.urlPioggia ? percorso.urlPioggia : percorso.url))}" target="_blank" rel="noopener"
     data-percorso="${esc(percorso.id)}" aria-label="Apri su Google Maps il percorso ${esc(percorso.label)}, ${esc(totale)}">
     ${icon(piedi ? 'route' : 'train')}
     <span class="percorso__txt"><b>Apri il percorso su Maps</b><small>${esc(percorso.label)} · ${esc(totale)}${esc(nota)}</small></span>
@@ -99,6 +99,7 @@ export function percorsoLink(percorso, list) {
 
 // Quanto si sta in una tappa: è un dato, non il buco fra due orari
 export function durataChip(stop) {
+  if (stop.saltata) return '' // saltata per pioggia: zero soste, niente chip
   const m = durataDi(stop)
   return m == null ? '' : `<span class="chip">${icon('clock')} ${fmtMinutes(m)}</span>`
 }
@@ -111,7 +112,11 @@ export function stopCard(stop, { person = null, isNow = false, nowLabel = 'adess
   const prices = (stop.prices || []).map((p) => `<span class="chip chip--price">${esc(p.label)} · ${fmtEur(p.eur)}</span>`).join('')
   // Alcuni venue hanno il voto senza il numero di recensioni: si mostra quello che c'è, senza inventare
   const voto = v?.rating ? `<span class="chip">★ ${String(v.rating).replace('.', ',')}${v.reviews ? ` · ${v.reviews.toLocaleString('it-IT')}` : ''}</span>` : ''
-  const details = (stop.details || []).map((d) => `<li class="${/ATTENZIONE|NON confermato|da verificare|da chiarire/i.test(d) ? 'alert' : ''}">${escLink(d)}</li>`).join('')
+  // Con la pioggia alcune tappe cambiano senso (Santa Maria si visita dentro): testo e dettagli di pioggia
+  const pioggia = piove()
+  const why = pioggia && stop.whyPioggia ? stop.whyPioggia : stop.why
+  const avviso = pioggia && stop.avvisoPioggia ? `<div class="avviso avviso--pioggia">${icon('rain')}<span>${esc(stop.avvisoPioggia)}</span></div>` : (stop.avviso ? `<div class="avviso">${icon('alert')}<span>${esc(stop.avviso)}</span></div>` : '')
+  const details = [...(stop.details || []), ...(pioggia ? (stop.detailsPioggia || []) : [])].map((d) => `<li class="${/ATTENZIONE|NON confermato|da verificare|da chiarire/i.test(d) ? 'alert' : ''}">${escLink(d)}</li>`).join('')
   // Consigli nostri, non dati confermati: stanno nello stesso pannello ma sotto il badge "stimato",
   // così chi legge sa che è un ragionamento sulla zona e non un orario o un numero verificato.
   const stimati = (stop.detailsStimati || []).map((d) => `<li>${escLink(d)}</li>`).join('')
@@ -132,18 +137,18 @@ export function stopCard(stop, { person = null, isNow = false, nowLabel = 'adess
     ? `<div class="card__venue">${[nomeFuoriDalTitolo ? esc(v.name) : '', indirizzo ? esc(indirizzo) : ''].filter(Boolean).join(' · ')}</div>`
     : ''
   const foto = fotoBlocco(stop, eager)
-  return `<article class="card${done ? ' card--done' : ''}${isNow ? ' card--now' : ''}${foto ? ' card--conFoto' : ''}" data-stop="${stop.id}" style="--dc:${DAY_COLOR[stop.dayKey]}" aria-label="${esc(stop.title)}">
+  return `<article class="card${done ? ' card--done' : ''}${isNow ? ' card--now' : ''}${foto ? ' card--conFoto' : ''}${stop.saltata ? ' card--saltata' : ''}" data-stop="${stop.id}" style="--dc:${DAY_COLOR[stop.dayKey]}" aria-label="${esc(stop.title)}${stop.saltata ? ', saltata per pioggia' : ''}">
     ${foto}
     <div class="card__head">
-      ${foto ? (isNow ? `<div class="card__time tnum card__time--adesso">${esc(nowLabel)}</div>` : '') : `<div class="card__time ${stop.time == null ? 'card__time--opz' : 'tnum'}">${esc(etichettaOra(stop))}${isNow ? `<small>${esc(nowLabel)}</small>` : ''}</div>`}
+      ${stop.saltata ? `<div class="card__time card__time--opz card__time--saltata">${esc(stop.motivoPioggia || 'saltata per pioggia')}</div>` : foto ? (isNow ? `<div class="card__time tnum card__time--adesso">${esc(nowLabel)}</div>` : '') : `<div class="card__time ${stop.time == null ? 'card__time--opz' : 'tnum'}">${esc(etichettaOra(stop))}${isNow ? `<small>${esc(nowLabel)}</small>` : ''}</div>`}
       <div class="grow">
         <h3 class="card__title">${esc(stop.title)}</h3>
         ${venueLine}
       </div>
     </div>
-    <p class="card__why">${esc(stop.why)}</p>
+    <p class="card__why">${esc(why)}</p>
     <div class="chips">${distChip(stop)}${durataChip(stop)}${voto}${prices}${badgeHtml(badgesFor(stop), reveal)}</div>
-    ${stop.avviso ? `<div class="avviso">${icon('alert')}<span>${esc(stop.avviso)}</span></div>` : ''}
+    ${avviso}
     ${stop.tassista ? tassistaHtml(stop.tassista) : ''}
     ${acts.length ? `<div class="actions">${acts.join('')}</div>` : ''}
     ${details || bloccoStimati ? `<details><summary><span>Dettagli</span>${icon('chevron')}</summary><div class="card__more"><div>${details ? `<ul>${details}</ul>` : ''}${bloccoStimati}</div></div></details>` : ''}

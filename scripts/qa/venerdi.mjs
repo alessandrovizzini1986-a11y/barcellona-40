@@ -64,7 +64,7 @@ const overflow = (p) => p.evaluate(() => document.documentElement.scrollWidth - 
   const ven = JSON.parse(readFileSync('data/itinerary.json', 'utf8')).days[0].stops
   const fmt = (m) => (m < 60 ? `${m} min` : `${Math.floor(m / 60)} h${m % 60 ? ` ${m % 60} min` : ''}`)
   const conto = (pioggia) => {
-    const list = ven.filter((s) => !s.soloPioggia || pioggia)
+    const list = ven.filter((s) => (!s.soloPioggia || pioggia) && !(pioggia && s.saltaPioggia))
     const i0 = list.findIndex((s) => s.durataMin != null)
     let i1 = i0; while (i1 + 1 < list.length && list[i1 + 1].durataMin != null) i1++
     const catena = list.slice(i0, i1 + 1), dopo = list[i1 + 1]
@@ -92,14 +92,23 @@ const overflow = (p) => p.evaluate(() => document.documentElement.scrollWidth - 
   await p.locator('#piove').check()
   await p.waitForTimeout(600)
   const conP = await p.evaluate(() => [...document.querySelectorAll('.card[data-stop]')].map((c) => [c.dataset.stop, (c.querySelector('.card__foto-time') || c.querySelector('.card__time'))?.textContent.trim()]))
-  ok('pioggia ON · El Born compare dopo la Ciutadella', conP[3][0] === 'f2b', conP.slice(0, 5).map(([id]) => id).join(' '))
-  ok('pioggia ON · la Ciutadella scende a 15 min', /15 min/.test(await p.locator('.card[data-stop="f2"] .chips').innerText()))
-  // dalla colazione delle 09:00: 45 min + 8 a piedi → Ciutadella 09:53 (15 min con la pioggia) + 8 → El Born 10:16 (40) + 3 → 10:59 ...
-  ok('pioggia ON · orari ricalcolati a cascata dalla colazione', JSON.stringify(conP.slice(2, 8).map(([, t]) => t)) === JSON.stringify(['09:53', '10:16', '10:59', '11:18', '11:49', '12:01']), conP.slice(2, 8).map(([, t]) => t).join(' '))
+  ok('pioggia ON · El Born viene subito dopo la colazione', conP[2][0] === 'f2b', conP.slice(0, 4).map(([id]) => id).join(' '))
+  const ciut = await p.evaluate(() => { const c = document.querySelector('.timeline__saltata .card[data-stop="f2"]'); return c ? { grigia: c.classList.contains('card--saltata'), etichetta: c.querySelector('.card__time')?.textContent, chips: c.querySelector('.chips')?.innerText.replace(/\n/g, ' '), ultima: [...document.querySelectorAll('.card[data-stop]')].at(-1)?.dataset.stop } : null })
+  ok('pioggia ON · la Ciutadella è saltata: in coda, grigia, "saltata per pioggia", zero soste', !!ciut && ciut.grigia && /saltata per pioggia/.test(ciut.etichetta) && !/\d+ min\s*★|15 min|25 min/.test(ciut.chips) && ciut.ultima === 'f2', JSON.stringify(ciut))
+  ok('pioggia ON · Santa Maria del Mar si visita dentro: 30 min, testo e dettagli', /30 min/.test(await p.locator('.card[data-stop="f3"] .chips').innerText()) && /si entra/.test(await p.locator('.card[data-stop="f3"] .card__why').innerText()) && /tetto con la vista resta chiuso/.test(await p.locator('.card[data-stop="f3"] details').evaluate((d) => d.textContent)))
+  const soste = await p.evaluate(() => Object.fromEntries([...document.querySelectorAll('.card[data-stop]')].map((c) => [c.dataset.stop, (c.querySelector('.chips')?.innerText || '').match(/(\d+) min(?! a piedi)/g)?.map((x) => parseInt(x)).find((x) => x) ?? null])))
+  ok('pioggia ON · nessuna sosta all\'aperto oltre i 5 minuti (Montcada, Bisbe, Sant Felip a 5; Ciutadella a zero)', soste.f4 === 5 && soste.f5 === 5 && soste.f6 === 5 && soste.f2 === null, JSON.stringify({ f2: soste.f2, f4: soste.f4, f5: soste.f5, f6: soste.f6 }))
+  ok('pioggia ON · la colazione dura 55 min, El Born non prima delle 10:00', /55 min/.test(await p.locator('.card[data-stop="f1b"] .chips').innerText()) && conP[2][1] === '10:00')
+  // dalla colazione delle 09:00: 55 min + 4 a piedi = 09:59, ma El Born apre alle 10:00 → 10:00 (40) + 3 → Santa Maria 10:43 (30) + 4 →
+  // Montcada 11:17 (5) + 11 → Bisbe 11:33 (5) + 2 → Sant Felip 11:40 (5) + 2 → Duck 11:47 (20) + 8 → Santa Caterina 12:15 (20) → Bar Joan 12:35
+  ok('pioggia ON · orari ricalcolati a cascata fino al Bar Joan', JSON.stringify(conP.slice(2, 10).map(([, t]) => t)) === JSON.stringify(['10:00', '10:43', '11:17', '11:33', '11:40', '11:47', '12:15', '12:35']), conP.slice(2, 10).map(([id, t]) => id + ' ' + t).join(' '))
   const c1 = conto(true)
   const testoP = await p.locator('.avviso--forte').innerText()
   ok('pioggia ON · anche qui il conto torna', testoP.includes(fmt(c1.soste)) && testoP.includes(fmt(c1.cammino)), `atteso ${fmt(c1.soste)} + ${fmt(c1.cammino)} · trovato: ${testoP}`)
-  ok('pioggia ON · avviso sulle tappe al coperto', /una sola tappa scoperta invece di sei/.test(await p.locator('.avviso:not(.avviso--forte)').first().innerText()))
+  const avvisoP = await p.locator('.avviso:not(.avviso--forte)').first().innerText()
+  ok('pioggia ON · avviso: i vicoli sono all\'aperto e si attraversano senza fermarsi (via il testo falso)', /si attraversano senza fermarsi/.test(avvisoP) && !/vicoli stretti|quasi sempre riparati/.test(avvisoP), avvisoP)
+  ok('pioggia ON · Rooftop Garden: avviso giallo con telefono e piano B', /\+34 935 10 11 30/.test(await p.locator('.card[data-stop="f14"] .avviso--pioggia').innerText()) && /bar dell'hotel/.test(await p.locator('.card[data-stop="f14"] .avviso--pioggia').innerText()))
+  ok('pioggia ON · il percorso del mattino usa il link di pioggia (da Brunells via El Born)', /origin=41\.3854186,2\.1806806.*waypoints=41\.3856869,2\.1836862/.test(await p.locator('[data-percorso="ven-mattina"]').first().getAttribute('href') || ''))
   ok('pioggia ON · salvata in b40:v1:piove', (await p.evaluate(() => localStorage.getItem('b40:v1:piove'))) === 'true')
   ok('pioggia ON · niente overflow a 380px', await overflow(p) === 0, String(await overflow(p)))
   await p.screenshot({ path: '/tmp/venerdi-pioggia.png', fullPage: true })
@@ -120,6 +129,7 @@ const overflow = (p) => p.evaluate(() => document.documentElement.scrollWidth - 
   const attesiOrari = [['f1b', '09:00'], ['f2', '09:55'], ['f3', '10:30'], ['f4', '10:50'], ['f5', '11:20'], ['f6', '11:35'], ['f7', '11:50'], ['f8', '12:20'], ['f9', '12:45'], ['f10', '14:05'], ['f11', '14:20'], ['f12', '15:00']]
   ok('pioggia OFF · si torna alla tabella degli orari', attesiOrari.every(([id, t]) => (asciutto.find(([x]) => x === id) || [])[1] === t), JSON.stringify(asciutto.filter(([id]) => id !== 'f1').slice(0, 12)))
   ok('pioggia OFF · El Born sparisce', !asciutto.some(([id]) => id === 'f2b'))
+  ok('pioggia OFF · la Ciutadella torna in fila alle 09:55 con 25 min, nessun avviso giallo sul Rooftop', asciutto[2]?.[0] === 'f2' && asciutto[2]?.[1] === '09:55' && (await p2.locator('.card--saltata').count()) === 0 && (await p2.locator('.card[data-stop="f14"] .avviso--pioggia').count()) === 0)
   await ctx2.close()
 }
 

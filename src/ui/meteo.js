@@ -73,6 +73,9 @@ export function meteoCard(dati, { piove = false } = {}) {
   const chips = (!giorni.some((x) => x.iso === oggi) && g.time.includes(oggi) ? [{ iso: oggi, breve: 'Oggi', lungo: 'Oggi', i: g.time.indexOf(oggi) }] : []).concat(giorni)
   if (!chips.length) return ''
   const scelto = chips.find((x) => x.iso === oggi) || chips[0]
+  // Ombrello: se un giorno del weekend presente nei dati supera il 40 % di pioggia
+  const maxWeekend = Math.max(-1, ...giorni.filter((x) => GIORNI.some(([iso]) => iso === x.iso)).map((x) => g.precipitation_probability_max[x.i] ?? -1))
+  const rigaOmbrello = maxWeekend > 40 ? `<div class="meteo__ombrello">${icon('rain')}<span>Previsione pioggia: mettete in valigia un ombrello pieghevole.</span></div>` : ''
   const prob = pioggiaVenerdiMattina(dati)
   const rigaPiove = prob != null && prob >= 50
     ? `<div class="meteo__piove">${icon('rain')}<span>${piove ? 'Piano coperto attivo.' : `Previsione: venerdì mattina ${prob} % di pioggia. Attivo il piano coperto?`}</span>${piove ? '' : '<button class="btn btn--sm" data-meteo-piove>Attiva</button>'}</div>`
@@ -86,6 +89,7 @@ export function meteoCard(dati, { piove = false } = {}) {
       <div class="meteo__chips" role="tablist" aria-label="Giorno">${chips.map((x) => `<button class="chip${x.iso === scelto.iso ? ' chip--on' : ''}" role="tab" data-meteo-giorno="${x.iso}" aria-selected="${x.iso === scelto.iso}">${x.breve}</button>`).join('')}</div>
       <div class="meteo__striscia" data-meteo-striscia>${strisciaHtml(dati, scelto.iso, oggi, ora)}</div>
       <p class="meteo__sole" data-meteo-sole>${soleHtml(dati, scelto.iso)}</p>
+      ${rigaOmbrello}
       ${rigaPiove}
     </div>
   </section>`

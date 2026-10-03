@@ -299,3 +299,10 @@ select.input,input.input{ min-height:44px; background:var(--bg-3); border:1px so
 .tassista__addr{ font-family:var(--font-display); font-size:var(--fs-3); font-weight:700; line-height:1.15; color:var(--ink); }
 .tassista__nota{ font-size:var(--fs-0); color:var(--ink-2); }
 .tassista .btn{ align-self:flex-start; margin-top:var(--space-2); }
+
+/* Tappa saltata per pioggia: resta in coda, grigia, con il motivo al posto dell'orario */
+.card--saltata{ opacity:.55; filter:grayscale(1); }
+.card--saltata .card__time--saltata{ color:var(--ink-2); text-transform:none; }
+.card--saltata .card__foto-time{ display:none; }
+.timeline__saltate{ color:var(--blu); }
+.timeline > li.timeline__saltata::before{ background:var(--bg); border:2px dashed var(--ink-3); }
