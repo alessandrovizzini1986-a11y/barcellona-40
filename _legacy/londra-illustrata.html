@@ -180,5 +180,11 @@
 <script>
   document.getElementById('printBtn').addEventListener('click',function(){ window.print(); });
 </script>
+<script>
+  /* stesso service worker della pagina principale: anche questa si apre senza rete */
+  if ('serviceWorker' in navigator) window.addEventListener('load', function(){
+    navigator.serviceWorker.register('londra-sw.js', { scope: './londra' }).catch(function(){});
+  });
+</script>
 </body>
 </html>
