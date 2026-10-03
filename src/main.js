@@ -72,6 +72,9 @@ async function route({ route, sub, params }) {
   applyDay()
   const my = ++token
   if (typeof cleanup === 'function') { try { cleanup() } catch { /* noop */ } cleanup = null }
+  // Profilo salvato ma sconosciuto (un id di un'altra versione, o scritto a mano): si torna a "Chi sei?",
+  // non a una pagina vuota con la tab bar
+  if (store.person && !personById(store.person)) store.person = null
   if (!store.person) {
     renderTabbar(route, { hideMissions: true, novita: ciSonoNovita() })
     vista('onboarding', 'anonimo')

@@ -102,4 +102,14 @@ const prossima = (p) => p.locator('.tile:has(.tile__label:text-is("Prossima"))')
   ok('con ?now= la data simulata vince anche a New York', (await p.evaluate(() => document.documentElement.dataset.day)) === 'dom' && /13:30/.test(await prossima(p)))
   await ctx.close()
 }
+// 10. Profilo salvato sconosciuto → onboarding, non pagina vuota
+{
+  const { p, ctx, errs } = await apri('/#/oggi', { person: 'mario' })
+  ok('profilo "mario": si vede "Chi sei?"', (await p.locator('text=Chi sei?').count()) >= 1 && (await p.locator('.tile--accent, .hero .countdown').count()) === 0)
+  ok('profilo "mario": il valore sporco è stato tolto', (await p.evaluate(() => localStorage.getItem('b40:v1:person'))) === null || (await p.evaluate(() => localStorage.getItem('b40:v1:person'))) === 'null')
+  await p.locator('[data-person="giulio"], button:has-text("Giulio")').first().click(); await p.waitForTimeout(900)
+  ok('scelto Giulio: Oggi è di Giulio', (await p.evaluate(() => JSON.parse(localStorage.getItem('b40:v1:person')))) === 'giulio' && /Giulio/.test(await p.locator('.header').innerText()))
+  ok('nessun errore JS', errs.length === 0, errs.join(' | '))
+  await ctx.close()
+}
 await b.close(); if (errori.length) { console.error('ERRORI:\n' + errori.join('\n')); process.exit(1) } console.log('OK chiusura')
