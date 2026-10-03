@@ -17,6 +17,7 @@ import { PHOTO_ALBUM } from '../store.js'
 import { timelineViaggio, bindViaggio, voli } from '../ui/viaggio.js'
 import { evento } from '../stats.js'
 import { montaMeteo, slotMeteo } from '../ui/meteo.js'
+import { avvisoMiradorPioggia, PRENOTAZIONE_MIRADOR } from '../ui/pioggia.js'
 
 const DAY_LABEL = { ven: 'Venerdì 16', sab: 'Sabato 17', dom: 'Domenica 18' }
 
@@ -141,7 +142,10 @@ export async function render(root, { person, header, params }) {
   const atterraggio = ripartito && p.departure.landing ? parseLocal(`${p.departure.date}T${p.departure.landing}`) : null
   const aCasa = !!(atterraggio && now() >= atterraggio)
 
+  // Domenica mattina con la pioggia: la prenotazione del Mirador va cancellata, e questa è la pagina che si apre
+  const avvisoMirador = key === 'dom' && store.piove && now() < PRENOTAZIONE_MIRADOR && todays.some((s) => s.id === 'd1b')
   html = header(`${DAY_LABEL[key]} · ${p.name}`) + `<section class="view">
+    ${avvisoMirador ? avvisoMiradorPioggia() : ''}
     ${timelineViaggio(key, person)}
     ${albumBanner({ line: 'Ogni foto che carichi finisce nello stesso posto. Stasera riguardate tutto insieme.' })}
     ${canzoneVisibile() ? songCard({ line: 'Due minuti e quarantacinque. Dopo il terzo ascolto il ritornello non esce più.' }) : ''}

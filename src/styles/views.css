@@ -208,6 +208,11 @@
 /* Avviso di pioggia sulla tappa (Rooftop Garden): giallo, è un piano B da leggere */
 .avviso--pioggia{ color:var(--giallo); border-color:color-mix(in srgb, var(--giallo) 50%, transparent); background:color-mix(in srgb, var(--giallo) 12%, transparent); font-weight:600; }
 .avviso--pioggia svg{ color:var(--giallo); }
+/* Prenotazione del Mirador con la pioggia: il pulsante "Chiama" va a capo da solo sui telefoni stretti */
+.avviso--mirador{ flex-wrap:wrap; align-items:center; }
+.avviso--mirador > span{ flex:1 1 220px; }
+.avviso--mirador .btn{ flex:none; margin-left:auto; }
+.avviso--mirador .btn svg{ width:16px; height:16px; color:currentColor; }
 /* Ombrello nel meteo: blu, come la pioggia nella striscia */
 .meteo__ombrello{ display:flex; align-items:center; gap:var(--space-2); padding:var(--space-2) var(--space-3); border-radius:var(--radius-s); background:color-mix(in srgb, var(--blu) 18%, transparent); color:var(--blu); font-size:var(--fs-0); font-weight:600; }
 .meteo__ombrello svg{ width:18px; height:18px; flex:none; }

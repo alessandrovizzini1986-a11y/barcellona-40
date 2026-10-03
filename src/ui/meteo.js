@@ -51,6 +51,23 @@ export function pioggiaVenerdiMattina(dati) {
   return max
 }
 
+// Probabilità massima di pioggia di domenica fra le 13 e le 19: il pomeriggio dei Bunkers
+export function pioggiaDomenicaPomeriggio(dati) {
+  const h = dati.hourly; let max = null
+  h.time.forEach((t, i) => { if (t.startsWith('2026-10-18T')) { const ora = +t.slice(11, 13); if (ora >= 13 && ora <= 19 && h.precipitation_probability[i] != null) max = Math.max(max ?? 0, h.precipitation_probability[i]) } })
+  return max
+}
+// Le due righe gialle. Il toggle è uno solo (piove o non piove), quindi "Attiva" accende tutti e due i piani:
+// la riga lo dice col nome del suo piano, e dopo il tocco tutte e due passano ad "attivo".
+const PIANI = {
+  ven: { domanda: (p) => `Previsione: venerdì mattina ${p} % di pioggia. Attivo il piano coperto?`, attivo: 'Piano coperto attivo.' },
+  dom: { domanda: (p) => `Previsione: domenica pomeriggio ${p} % di pioggia. Attivo il piano Maremagnum?`, attivo: 'Piano Maremagnum attivo.' }
+}
+function rigaPiano(key, prob, piove) {
+  if (prob == null || prob < 50) return ''
+  return `<div class="meteo__piove" data-meteo-piano="${key}">${icon('rain')}<span>${piove ? PIANI[key].attivo : PIANI[key].domanda(prob)}</span>${piove ? '' : '<button class="btn btn--sm" data-meteo-piove>Attiva</button>'}</div>`
+}
+
 // La card. `piove`: stato del toggle del Programma. Torna '' solo se nei dati non c'è nemmeno un'ora.
 // I DATI SONO SEMPRE REALI: con ?now= la data simulata può non stare nella previsione (il 15 ottobre
 // chiesto il 27 settembre). Allora "adesso" è l'ora reale e i giorni sono i tre successivi disponibili;
@@ -76,10 +93,7 @@ export function meteoCard(dati, { piove = false } = {}) {
   // Ombrello: se un giorno del weekend presente nei dati supera il 40 % di pioggia
   const maxWeekend = Math.max(-1, ...giorni.filter((x) => GIORNI.some(([iso]) => iso === x.iso)).map((x) => g.precipitation_probability_max[x.i] ?? -1))
   const rigaOmbrello = maxWeekend > 40 ? `<div class="meteo__ombrello">${icon('rain')}<span>Previsione pioggia: mettete in valigia un ombrello pieghevole.</span></div>` : ''
-  const prob = pioggiaVenerdiMattina(dati)
-  const rigaPiove = prob != null && prob >= 50
-    ? `<div class="meteo__piove">${icon('rain')}<span>${piove ? 'Piano coperto attivo.' : `Previsione: venerdì mattina ${prob} % di pioggia. Attivo il piano coperto?`}</span>${piove ? '' : '<button class="btn btn--sm" data-meteo-piove>Attiva</button>'}</div>`
-    : ''
+  const rigaPiove = rigaPiano('ven', pioggiaVenerdiMattina(dati), piove) + rigaPiano('dom', pioggiaDomenicaPomeriggio(dati), piove)
   return `<section class="meteo" data-meteo data-oggi="${oggi}" data-ora="${ora}" aria-label="Meteo di Barcellona, previsione">
     <button class="meteo__riga" data-meteo-toggle aria-expanded="false" aria-controls="meteo-dett">
       <span class="meteo__ora">${icon(iconaMeteo(h.weather_code[iOra]))}<span class="meteo__ora__testo"><b class="tnum">${Math.round(h.temperature_2m[iOra])}°</b><span class="meteo__dove">Barcellona, adesso</span></span></span>
@@ -135,6 +149,6 @@ export async function montaMeteo(slot, { signal, piove = () => false, onPiove } 
       return
     }
     const b = e.target.closest('[data-meteo-piove]')
-    if (b) { onPiove?.(); const riga = b.closest('.meteo__piove'); riga.innerHTML = `${icon('rain')}<span>Piano coperto attivo.</span>` }
+    if (b) { onPiove?.(); card.querySelectorAll('[data-meteo-piano]').forEach((riga) => { riga.innerHTML = `${icon('rain')}<span>${PIANI[riga.dataset.meteoPiano].attivo}</span>` }) }
   }, { signal })
 }

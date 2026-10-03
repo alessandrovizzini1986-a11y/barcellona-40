@@ -37,6 +37,8 @@ const ALT = {
   'apolo.webp': 'Un concerto alla Sala Apolo',
   'bunkers.webp': 'La vista su Barcellona dai Bunkers del Carmel',
   'elmirador.webp': 'L\'insegna di El Mirador, con la tenda blu e i tavoli all\'aperto',
+  'timeoutmarket.webp': 'Il palazzo di Maremagnum sul Moll d\'Espanya, che al secondo piano ospita il Time Out Market',
+  'maremagnum.webp': 'Maremagnum e il Port Vell visti dal Moll de la Fusta, con le barche ormeggiate davanti',
   'elborn.webp': 'La sala in ferro e vetro dell\'antico mercato del Born, con le rovine del quartiere del 1714 visibili sotto il piano di calpestio',
   'apt.webp': 'L\'insegna illuminata dell\'Aparthotel Nàpols sopra l\'ingresso, di sera',
   'barjoan.webp': 'Il bancone del Bar Joan dentro il mercato, con le bottiglie alle spalle e la gente sugli sgabelli',
@@ -87,12 +89,13 @@ export function distChip(stop) {
 // Google, è la somma dei tratti delle nostre tappe: se i due numeri divergono, il nostro è verificabile.
 export function percorsoLink(percorso, list) {
   const t = totaleTratta(percorso, list)
-  const piedi = percorso.mode === 'walking'
-  const totale = piedi && t.m ? `${fmtDist(t.m)} · ${fmtMinutes(t.min)} a piedi` : 'Mezzi pubblici'
+  const piedi = percorso.mode === 'walking', taxi = percorso.mode === 'driving'
+  // `percorsiDi` ha già scelto link, etichetta e tappe del caso (asciutto o pioggia): qui si legge e basta
+  const totale = piedi && t.m ? `${fmtDist(t.m)} · ${fmtMinutes(t.min)} a piedi` : taxi && t.m ? `${fmtDist(t.m)} · ${fmtMinutes(t.min)} in taxi` : taxi ? 'In taxi' : 'Mezzi pubblici'
   const nota = t.fuoriPercorso.length ? ` · ${t.fuoriPercorso[0]} non è nel percorso` : ''
-  return `<a class="btn btn--ghost btn--block percorso" href="${esc((piove() && percorso.urlPioggia ? percorso.urlPioggia : percorso.url))}" target="_blank" rel="noopener"
+  return `<a class="btn btn--ghost btn--block percorso" href="${esc(percorso.url)}" target="_blank" rel="noopener"
     data-percorso="${esc(percorso.id)}" aria-label="Apri su Google Maps il percorso ${esc(percorso.label)}, ${esc(totale)}">
-    ${icon(piedi ? 'route' : 'train')}
+    ${icon(piedi ? 'route' : taxi ? 'taxi' : 'train')}
     <span class="percorso__txt"><b>Apri il percorso su Maps</b><small>${esc(percorso.label)} · ${esc(totale)}${esc(nota)}</small></span>
   </a>`
 }

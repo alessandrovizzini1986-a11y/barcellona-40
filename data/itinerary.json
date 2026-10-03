@@ -1111,11 +1111,75 @@
      "distFromPrevM": 4961,
      "minFromPrev": 18,
      "distMode": "auto",
-     "durataPioggiaMin": 120,
-     "detailsPioggia": [
-      "Piano pioggia: si resta a tavola fino alle 15:30, poi dritti al T2 in taxi",
-      "Niente Bunkers: collina scoperta, terreno scivoloso, niente vista"
-     ]
+     "saltaPioggia": true,
+     "motivoPioggia": "saltato per pioggia: il pranzo si sposta al coperto, al Time Out Market. La prenotazione va cancellata entro la mattina"
+    },
+    {
+     "id": "d1b",
+     "time": "13:00",
+     "timeStatus": "verificato",
+     "venueId": "timeoutmarket",
+     "title": "Pranzo · Time Out Market",
+     "img": "timeoutmarket.webp",
+     "soloPioggia": true,
+     "durataMin": 90,
+     "why": "Un piano intero di banchi sotto lo stesso tetto, sul porto: si pranza al coperto e il pomeriggio continua di sotto, senza uscire.",
+     "details": [
+      "Tanti banchi diversi, ognuno sceglie il suo. Citati nelle recensioni: paella di verdure, pizza, fish & chips.",
+      "Si mangia seduti ai tavoli comuni.",
+      "Al 2° piano di Maremagnum, Moll d'Espanya 5",
+      "Dall'appartamento in taxi verso le 12:45: 3 km, circa 9 minuti",
+      "4,6 su 3.067 recensioni",
+      "Aperto tutti i giorni 10:00–00:00",
+      "Tel +34 669 18 96 72"
+     ],
+     "people": [
+      "ale",
+      "giulio",
+      "manuel"
+     ],
+     "badges": [
+      "verificato"
+     ],
+     "actions": {
+      "maps": true,
+      "taxi": true,
+      "metro": null
+     },
+     "distFromPrevM": 3000,
+     "minFromPrev": 9,
+     "distMode": "auto"
+    },
+    {
+     "id": "d1c",
+     "time": "14:30",
+     "timeStatus": "verificato",
+     "venueId": "maremagnum",
+     "title": "Pomeriggio al coperto · Maremagnum",
+     "img": "maremagnum.webp",
+     "soloPioggia": true,
+     "durataMin": 300,
+     "why": "Centro commerciale sul molo, tutto al chiuso: si aspetta la sera senza bagnarsi e il taxi per il T2 parte da qui.",
+     "details": [
+      "Negozi, caffè, terrazza sul porto. Aperto fino alle 22: si esce solo per andare in aeroporto.",
+      "Alle 19:30 taxi al T2: 20 km, circa 32 minuti",
+      "4,2 su 39.563 recensioni",
+      "Tel +34 930 12 91 39"
+     ],
+     "people": [
+      "ale",
+      "giulio",
+      "manuel"
+     ],
+     "badges": [
+      "verificato"
+     ],
+     "actions": {
+      "maps": true,
+      "taxi": true,
+      "metro": null
+     },
+     "distFromPrevM": 0
     },
     {
      "id": "d2",
@@ -1156,7 +1220,7 @@
       "Se l'app non trova nessuno: scendi a piedi verso Carrer de Marià Labèrnia e richiama da lì."
      ],
      "saltaPioggia": true,
-     "motivoPioggia": "saltata per pioggia: collina scoperta, terreno scivoloso, niente vista"
+     "motivoPioggia": "saltati per pioggia: collina scoperta, terreno scivoloso, niente vista"
     },
     {
      "id": "d3",
@@ -1186,11 +1250,14 @@
      "minFromPrev": 36,
      "distMode": "auto",
      "img": "bcn_t2.webp",
-     "timePioggia": "15:30",
+     "timePioggia": "20:05",
      "detailsPioggia": [
-      "Piano pioggia: dal Mirador si va dritti al T2 (circa 35 minuti di taxi) con largo anticipo",
-      "Lounge Canudas dalle 17:00 circa invece delle 20:20: doccia, cena al buffet e tutto il tempo del mondo"
-     ]
+      "Piano pioggia: taxi da Maremagnum alle 19:30, 20 km e circa 32 minuti. Da qui tutto come previsto: lounge Canudas dalle 20:20, volo alle 23:05"
+     ],
+     "distPioggia": {
+      "m": 20000,
+      "min": 32
+     }
     }
    ],
    "percorsi": [
@@ -1201,6 +1268,13 @@
      "url": "https://www.google.com/maps/dir/?api=1&origin=41.395437,2.179608&destination=41.4169774,2.1589342&travelmode=transit",
      "stops": [
       "d1"
+     ],
+     "urlPioggia": "https://www.google.com/maps/dir/?api=1&origin=41.395437,2.179608&destination=41.3746496,2.1823721&travelmode=driving",
+     "labelPioggia": "Appartamento → Maremagnum",
+     "modePioggia": "driving",
+     "stopsPioggia": [
+      "d1b",
+      "d1c"
      ]
     },
     {
@@ -1210,7 +1284,8 @@
      "url": "https://www.google.com/maps/dir/?api=1&origin=41.4169774,2.1589342&destination=41.4193003,2.1618259&travelmode=walking",
      "stops": [
       "d2"
-     ]
+     ],
+     "soloAsciutto": true
     },
     {
      "id": "dom-rientro",
@@ -1218,6 +1293,12 @@
      "mode": "transit",
      "url": "https://www.google.com/maps/dir/?api=1&origin=41.4193003,2.1618259&destination=41.3033401,2.076845&travelmode=transit",
      "stops": [
+      "d3"
+     ],
+     "urlPioggia": "https://www.google.com/maps/dir/?api=1&origin=41.3746496,2.1823721&destination=41.3033401,2.076845&travelmode=driving",
+     "labelPioggia": "Maremagnum → Terminal 2",
+     "modePioggia": "driving",
+     "stopsPioggia": [
       "d3"
      ]
     }

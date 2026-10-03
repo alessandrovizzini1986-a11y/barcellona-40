@@ -7,13 +7,14 @@ const base = process.argv[2] || 'http://localhost:4173'
 const b = await chromium.launch({ executablePath: process.env.CHROME_PATH || '/opt/pw-browsers/chromium-1194/chrome-linux/chrome', args: ['--no-sandbox'] })
 const errori = [], ok = (n, c, x = '') => { console.log((c ? '✓ ' : '✗ ') + n + (x ? ` (${x})` : '')); if (!c) errori.push(n) }
 // Dati finti nella forma di Open-Meteo: 10 giorni dal giorno `da`, pioggia a venerdì mattina secondo `venerdi`
-const fixture = (da, venerdi = 60) => {
+// `venerdi`: % di pioggia venerdì 9–14; `domenica`: % domenica 13–19 (il resto delle ore resta sotto soglia)
+const fixture = (da, venerdi = 60, domenica = 30) => {
   const h = { time: [], temperature_2m: [], precipitation_probability: [], weather_code: [], wind_speed_10m: [] }, d = { time: [], temperature_2m_max: [], temperature_2m_min: [], precipitation_probability_max: [], weather_code: [], sunrise: [], sunset: [] }
   const [y, m, g] = da.split('-').map(Number)
   for (let i = 0; i < 10; i++) {
     const dt = new Date(y, m - 1, g + i); const iso = `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}-${String(dt.getDate()).padStart(2, '0')}`
-    d.time.push(iso); d.temperature_2m_max.push(20 + i); d.temperature_2m_min.push(12 + i); d.precipitation_probability_max.push(iso === '2026-10-16' ? venerdi : 10); d.weather_code.push([0, 2, 3, 61][i % 4]); d.sunrise.push(`${iso}T07:5${i % 10}`); d.sunset.push(`${iso}T19:0${i % 10}`)
-    for (let o = 0; o < 24; o++) { h.time.push(`${iso}T${String(o).padStart(2, '0')}:00`); h.temperature_2m.push(14 + (o % 12)); h.precipitation_probability.push(iso === '2026-10-16' && o >= 9 && o <= 14 ? venerdi : (o % 5 === 0 ? 30 : 5)); h.weather_code.push([0, 1, 3, 61, 95][o % 5]); h.wind_speed_10m.push(10) }
+    d.time.push(iso); d.temperature_2m_max.push(20 + i); d.temperature_2m_min.push(12 + i); d.precipitation_probability_max.push(iso === '2026-10-16' ? venerdi : iso === '2026-10-18' ? domenica : 10); d.weather_code.push([0, 2, 3, 61][i % 4]); d.sunrise.push(`${iso}T07:5${i % 10}`); d.sunset.push(`${iso}T19:0${i % 10}`)
+    for (let o = 0; o < 24; o++) { h.time.push(`${iso}T${String(o).padStart(2, '0')}:00`); h.temperature_2m.push(14 + (o % 12)); h.precipitation_probability.push(iso === '2026-10-16' && o >= 9 && o <= 14 ? venerdi : iso === '2026-10-18' && o >= 13 && o <= 19 ? domenica : (o % 5 === 0 ? 30 : 5)); h.weather_code.push([0, 1, 3, 61, 95][o % 5]); h.wind_speed_10m.push(10) }
   }
   return { hourly: h, daily: d }
 }
@@ -89,6 +90,27 @@ async function apri(path, { dati = null, fallisce = false, piove = false } = {})
   ok('in weekend i chip sono Ven · Sab · Dom, Sab selezionato', (await p.evaluate(() => [...document.querySelectorAll('[data-meteo-giorno]')].map((c) => c.textContent.trim() + (c.classList.contains('chip--on') ? '*' : '')).join(' '))) === 'Ven Sab* Dom')
   ok('pioggia 30 %: nessuna riga gialla', (await p.locator('.meteo__piove').count()) === 0)
   ok('pioggia 30 %: nessun promemoria ombrello (soglia 40 %)', (await p.locator('.meteo__ombrello').count()) === 0)
+  await ctx.close()
+}
+// 3b. domenica pomeriggio piovosa: la seconda riga gialla propone il piano Maremagnum; "Attiva" accende l'unico toggle
+{
+  const { p, ctx, errs } = await apri('/?now=2026-10-15T14:30#/oggi', { dati: fixture('2026-10-15', 60, 65) })
+  await p.click('[data-meteo-toggle]'); await p.waitForTimeout(150)
+  const righe = () => p.evaluate(() => [...document.querySelectorAll('.meteo__piove')].map((r) => r.innerText.replace(/\s+/g, ' ').trim()))
+  ok('venerdì 60 e domenica 65: due righe gialle, venerdì prima', JSON.stringify(await righe()) === JSON.stringify(['Previsione: venerdì mattina 60 % di pioggia. Attivo il piano coperto? Attiva', 'Previsione: domenica pomeriggio 65 % di pioggia. Attivo il piano Maremagnum? Attiva']), JSON.stringify(await righe()))
+  ok('la riga della domenica è gialla', (await p.locator('[data-meteo-piano="dom"]').evaluate((e) => getComputedStyle(e).color)) === (await p.locator('[data-meteo-piano="ven"]').evaluate((e) => getComputedStyle(e).color)))
+  await p.click('[data-meteo-piano="dom"] [data-meteo-piove]'); await p.waitForTimeout(150)
+  ok('"Attiva" sulla domenica accende il toggle e aggiorna tutte e due le righe', await p.evaluate(() => JSON.parse(localStorage.getItem('b40:v1:piove'))) === true && JSON.stringify(await righe()) === JSON.stringify(['Piano coperto attivo.', 'Piano Maremagnum attivo.']), JSON.stringify(await righe()))
+  await p.goto(base + '/?now=2026-10-15T14:30#/programma/dom', { waitUntil: 'networkidle' }); await p.waitForTimeout(300)
+  ok('nel Programma di domenica il toggle è acceso e il Time Out Market c\'è', await p.isChecked('#piove') && (await p.locator('.card[data-stop="d1b"]').count()) === 1)
+  ok('nessun errore JS', errs.length === 0, errs.join(' | '))
+  await ctx.close()
+}
+{
+  const { p, ctx } = await apri('/?now=2026-10-15T14:30#/oggi', { dati: fixture('2026-10-15', 30, 70) })
+  await p.click('[data-meteo-toggle]'); await p.waitForTimeout(150)
+  ok('venerdì asciutto e domenica 70: solo la riga della domenica, con la sua percentuale', (await p.locator('.meteo__piove').count()) === 1 && (await p.locator('[data-meteo-piano="dom"]').innerText()).includes('domenica pomeriggio 70 %'))
+  ok('nessun automatismo: il toggle resta spento finché non si tocca "Attiva"', await p.evaluate(() => localStorage.getItem('b40:v1:piove')) === null)
   await ctx.close()
 }
 // 4. fetch che fallisce: niente card, niente in console

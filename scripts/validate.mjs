@@ -47,8 +47,12 @@ for (const day of it.days) {
 for (const day of it.days) {
   for (const pc of day.percorsi || []) {
     if (!/^https:\/\/www\.google\.com\/maps\/dir\/\?api=1&origin=[-\d.]+,[-\d.]+&destination=[-\d.]+,[-\d.]+&travelmode=(walking|transit)(&waypoints=[-\d.,|]+)?$/.test(pc.url)) errors.push(`percorso ${pc.id}: link non valido`)
+    // Il link di pioggia può essere in taxi (domenica: Maremagnum e poi T2). Se cambia mezzo o tappe, lo dichiara.
     if (pc.urlPioggia) {
-      if (!/^https:\/\/www\.google\.com\/maps\/dir\/\?api=1&origin=[-\d.]+,[-\d.]+&destination=[-\d.]+,[-\d.]+&travelmode=(walking|transit)(&waypoints=[-\d.,|]+)?$/.test(pc.urlPioggia)) errors.push(`percorso ${pc.id} (pioggia): link non valido`)
+      if (!/^https:\/\/www\.google\.com\/maps\/dir\/\?api=1&origin=[-\d.]+,[-\d.]+&destination=[-\d.]+,[-\d.]+&travelmode=(walking|transit|driving)(&waypoints=[-\d.,|]+)?$/.test(pc.urlPioggia)) errors.push(`percorso ${pc.id} (pioggia): link non valido`)
+      if (!pc.urlPioggia.includes(`travelmode=${pc.modePioggia || pc.mode}`)) errors.push(`percorso ${pc.id} (pioggia): mode "${pc.modePioggia || pc.mode}" diverso dal travelmode del link`)
+      for (const id of pc.stopsPioggia || []) if (!day.stops.some((s) => s.id === id)) errors.push(`percorso ${pc.id} (pioggia): tappa "${id}" inesistente in ${day.label}`)
+      if (pc.stopsPioggia && !pc.labelPioggia) errors.push(`percorso ${pc.id} (pioggia): tappe diverse senza etichetta propria`)
     }
     if (!pc.url.includes(`travelmode=${pc.mode}`)) errors.push(`percorso ${pc.id}: mode "${pc.mode}" diverso dal travelmode del link`)
     if (!pc.label) errors.push(`percorso ${pc.id}: manca l'etichetta`)

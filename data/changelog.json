@@ -1,6 +1,18 @@
 {
   "entries": [
     {
+      "v": 41,
+      "data": "2026-10-03",
+      "titolo": "Domenica con la pioggia: Time Out Market e Maremagnum, poi taxi al T2",
+      "voci": [
+        "Con \"Piove\" acceso la domenica cambia: mattina libera, alle 12:45 taxi a Maremagnum, pranzo al Time Out Market, pomeriggio al coperto e taxi al T2 alle 19:30. Dal terminal in poi tutto come prima",
+        "El Mirador e i Bunkers restano in fondo, grigi: il Mirador è prenotato, e in cima c'è l'avviso per cancellare, col pulsante per chiamare",
+        "Lo stesso avviso compare in Oggi la mattina di domenica, se il piano è acceso",
+        "Nel meteo: se domenica pomeriggio la pioggia supera il 50 %, la card propone il piano Maremagnum. Si accende solo se lo tocchi tu",
+        "I percorsi di domenica con la pioggia aprono Maps in taxi: appartamento → Maremagnum, Maremagnum → Terminal 2"
+      ]
+    },
+    {
       "v": 40,
       "data": "2026-10-03",
       "titolo": "Piano pioggia rifatto: venerdì al coperto, domenica con un piano B",

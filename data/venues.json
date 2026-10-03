@@ -275,6 +275,28 @@
       "reviews": 2376,
       "hours": "tutti i giorni 9:00–20:00",
       "phone": "+34 936 53 64 68"
+    },
+    "maremagnum": {
+      "name": "Maremagnum",
+      "addr": "Moll d'Espanya, 5, 08039 Barcelona",
+      "lat": 41.3746496,
+      "lng": 2.1823721,
+      "verified": true,
+      "rating": 4.2,
+      "reviews": 39563,
+      "hours": "tutti i giorni 10:00–22:00",
+      "phone": "+34 930 12 91 39"
+    },
+    "timeoutmarket": {
+      "name": "Time Out Market Barcelona",
+      "addr": "Moll d'Espanya, 5, 2° piano, 08039 Barcelona",
+      "lat": 41.3752689,
+      "lng": 2.1830457,
+      "verified": true,
+      "rating": 4.6,
+      "reviews": 3067,
+      "hours": "tutti i giorni 10:00–00:00",
+      "phone": "+34 669 18 96 72"
     }
   }
 }

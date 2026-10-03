@@ -4,6 +4,7 @@ import { store } from '../store.js'
 import { icon } from '../ui/icons.js'
 import { fmtMinutes } from '../time.js'
 import { stopCard, bindCards, haFoto, percorsoLink } from '../ui/card.js'
+import { avvisoMiradorPioggia } from '../ui/pioggia.js'
 import { dayKey, currentStop } from '../time.js'
 import { esc } from '../ui/html.js'
 import { navigate } from '../router.js'
@@ -40,11 +41,11 @@ function avvisoConto(giorno, key) {
 // mese più piovoso dell'anno a Barcellona. Un solo interruttore per i due giorni: piove o non piove.
 const TESTO_PIOVE = {
   ven: "Ottobre è il mese più piovoso a Barcellona e sei tappe su nove sono all'aperto. Accendi e il giro cambia: tutto al coperto, la Ciutadella salta.",
-  dom: 'I Bunkers sono una collina scoperta: con la pioggia niente vista e terreno scivoloso. Accendi e il pomeriggio cambia: pranzo lungo al Mirador, poi dritti al T2.'
+  dom: 'I Bunkers sono una collina scoperta: con la pioggia niente vista e terreno scivoloso. Accendi e la domenica cambia: mattina libera, pranzo al Time Out Market, pomeriggio al coperto a Maremagnum e taxi al T2 alle 19:30.'
 }
 const AVVISO_PIOVE = {
   ven: 'Modalità pioggia: la Ciutadella salta, Santa Maria del Mar si visita dentro, El Born al coperto. Montcada, Pont del Bisbe e Sant Felip Neri sono all\'aperto: con la pioggia si attraversano senza fermarsi.',
-  dom: 'Modalità pioggia: niente Bunkers. Si resta al Mirador fino alle 15:30, poi dritti al T2: lounge Canudas dalle 17:00 circa invece delle 20:20.'
+  dom: 'Modalità pioggia: mattina libera in appartamento, verso le 12:45 taxi a Maremagnum (3 km, 9 minuti). Pranzo al Time Out Market, pomeriggio al coperto, alle 19:30 taxi al T2: da lì tutto come previsto.'
 }
 function toggleP(on, key) {
   return `<label class="switch switch--piove" for="piove">
@@ -87,10 +88,11 @@ export async function render(root, { person, sub, header }) {
       <h2>${esc(day.label)} ${day.date.slice(-2)} ottobre</h2>
       <span class="faint">${conteggio(stops)}${passi.length ? ` · ${passi.length} passi di viaggio` : ''}</span>
     </div>
+    ${key === 'dom' && piove() ? avvisoMiradorPioggia() : ''}
     ${TESTO_PIOVE[key] ? toggleP(piove(), key) : ''}
     ${TESTO_PIOVE[key] && piove() ? `<div class="avviso">${icon('alert')}<span>${esc(AVVISO_PIOVE[key])}</span></div>` : ''}
     ${avvisoConto(stops, key)}
-    ${righe.length || opzionali.length ? `<ol class="timeline" style="--dc:${DAY_COLOR[key]}">${righe.map((r) => `${r.id && ancore.has(r.id) ? `<li class="timeline__percorso">${ancore.get(r.id)}</li>` : ''}<li>${r.html}</li>`).join('')}${opzionali.length ? `<li class="timeline__opzionale">Opzionale</li>${opzionali.map((r) => `<li class="timeline__opz">${r.html}</li>`).join('')}` : ''}${saltate.length ? `<li class="timeline__opzionale timeline__saltate">Saltata per pioggia</li>${saltate.map((r) => `<li class="timeline__opz timeline__saltata">${r.html}</li>`).join('')}` : ''}</ol>` : `<div class="empty">${emptyState(person, key)}</div>`}
+    ${righe.length || opzionali.length ? `<ol class="timeline" style="--dc:${DAY_COLOR[key]}">${righe.map((r) => `${r.id && ancore.has(r.id) ? `<li class="timeline__percorso">${ancore.get(r.id)}</li>` : ''}<li>${r.html}</li>`).join('')}${opzionali.length ? `<li class="timeline__opzionale">Opzionale</li>${opzionali.map((r) => `<li class="timeline__opz">${r.html}</li>`).join('')}` : ''}${saltate.length ? `<li class="timeline__opzionale timeline__saltate">${saltate.length > 1 ? 'Saltate' : 'Saltata'} per pioggia</li>${saltate.map((r) => `<li class="timeline__opz timeline__saltata">${r.html}</li>`).join('')}` : ''}</ol>` : `<div class="empty">${emptyState(person, key)}</div>`}
   </section>`
   root.querySelector('#piove')?.addEventListener('change', (e) => {
     if (e.target.checked) evento('piove-attiva')

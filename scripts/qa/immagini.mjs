@@ -14,7 +14,7 @@ const ok = (n, c, x = '') => { out.push(c); if (!c) process.exitCode = 1; consol
 const DIR = 'public/assets/tappe'
 const file = readdirSync(DIR)
 const webp = file.filter((f) => f.endsWith('.webp')), svg = file.filter((f) => f.endsWith('.svg'))
-ok('28 foto WebP: 14 da Commons più 14 private', webp.length === 28, webp.length + '')
+ok('30 foto WebP: 16 da Commons più 14 private', webp.length === 30, webp.length + '')
 ok('nessuna card stilizzata: ogni tappa ha la foto vera', svg.length === 0, svg.join(' '))
 const misure = []
 // Le foto di Commons sono tutte 800×450. Le private partono da originali più piccoli e non si
@@ -28,13 +28,13 @@ for (const f of webp) {
 const kb = file.reduce((n, f) => n + statSync(`${DIR}/${f}`).size, 0) / 1024
 // Tetto alzato a 1,3 MB con l'arrivo delle nove foto vere: sono già a qualità 72 e comprimerle di
 // più si vedrebbe. Il saldo rispetto alle card stilizzate che hanno sostituito è di circa +80 kB.
-ok('cartella sotto 1,3 MB', kb < 1331, `${(kb / 1024).toFixed(2)} MB`)
+ok('cartella sotto 1,45 MB (30 foto)', kb < 1485, `${(kb / 1024).toFixed(2)} MB`)
 
 // ---- crediti ----
 const crediti = JSON.parse(readFileSync('data/foto-tappe.json', 'utf8'))
 const privateFile = new Set((crediti.private || []).map((f) => `${f.id}.webp`))
 const cred = readFileSync('CREDITS.md', 'utf8')
-ok('crediti per tutte e 14 le foto di Commons', crediti.foto.length === 14 && crediti.scartate.length === 0)
+ok('crediti per tutte e 16 le foto di Commons', crediti.foto.length === 16 && crediti.scartate.length === 0)
 ok('le quattordici foto private sono dichiarate e fuori dai crediti Commons', crediti.private?.length === 14 && crediti.private.every((f) => f.id && f.file && f.tappa && /concessione/i.test(f.nota) && !crediti.foto.some((c) => c.id === f.id)), String(crediti.private?.length))
 // stanno in CREDITS.md, ma nella tabella delle private: nessuna riga con un link a Commons le nomina
 ok('nessuna foto privata nella tabella Commons di CREDITS.md', crediti.private.every((f) => !cred.split('\n').some((r) => r.includes(f.file) && r.includes('commons.wikimedia.org'))))

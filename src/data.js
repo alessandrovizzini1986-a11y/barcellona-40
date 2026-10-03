@@ -97,7 +97,17 @@ export function contoDelGiorno(lista) {
 // PERCORSI DI MEZZA GIORNATA. I link di Google Maps sono costruiti e verificati a mano e stanno in
 // data/itinerary.json come stringhe: non si rigenerano dalle coordinate, perché una virgola fuori posto
 // in un waypoint manda il percorso da un'altra parte senza che nessuno se ne accorga.
-export const percorsiDi = (dayKey) => days.find((d) => DAY_KEY[d.date] === dayKey)?.percorsi || []
+// Con la pioggia un percorso può cambiare link (venerdì: stesse tappe via El Born), oppure cambiare
+// del tutto (domenica: taxi a Maremagnum e poi al T2, con etichetta, tappe e mezzo propri), oppure
+// sparire (`soloAsciutto`: dal Mirador ai Bunkers a piedi non si va). I campi *Pioggia si sovrappongono
+// a quelli normali solo quando il toggle è acceso: il resto del sito legge sempre `url`, `label`, `stops`, `mode`.
+export function percorsiDi(dayKey) {
+  const lista = days.find((d) => DAY_KEY[d.date] === dayKey)?.percorsi || []
+  if (!piove()) return lista
+  return lista.filter((pc) => !pc.soloAsciutto).map((pc) => (pc.urlPioggia
+    ? { ...pc, url: pc.urlPioggia, label: pc.labelPioggia || pc.label, stops: pc.stopsPioggia || pc.stops, mode: pc.modePioggia || pc.mode }
+    : pc))
+}
 // Totale del blocco, sommato dalle tappe vere: i tratti a piedi per i percorsi a piedi, quelli in auto
 // o taxi per i percorsi coi mezzi (dove il tempo di Google non è il nostro e non lo si finge).
 export function totaleTratta(percorso, list) {
@@ -107,7 +117,7 @@ export function totaleTratta(percorso, list) {
   // Tappe che cadono dentro la finestra del blocco ma non sono nel link: succede in modalità pioggia,
   // dove entra El Born. Meglio dirlo sul pulsante che lasciarlo scoprire a Maps.
   const fuori = dentro.length
-    ? list.filter((s) => !percorso.stops.includes(s.id) && s.at > dentro[0].at && s.at < dentro[dentro.length - 1].at)
+    ? list.filter((s) => !percorso.stops.includes(s.id) && attiva(s) && s.at > dentro[0].at && s.at < dentro[dentro.length - 1].at)
     : []
   return {
     m: tratti.reduce((n, s) => n + s.distFromPrevM, 0),

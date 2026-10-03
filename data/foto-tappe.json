@@ -154,6 +154,28 @@
       "licenzaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
       "pagina": "https://commons.wikimedia.org/wiki/File:Mercat_del_Born_ru%C3%AFnes_-_panoramio.jpg",
       "kb": 68
+    },
+    {
+      "id": "timeoutmarket",
+      "file": "assets/tappe/timeoutmarket.webp",
+      "tappa": "Time Out Market Barcelona",
+      "titolo": "File:Barcelona - Maremagnum 03.JPG",
+      "autore": "Zarateman",
+      "licenza": "CC0",
+      "licenzaUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Barcelona_-_Maremagnum_03.JPG",
+      "kb": 54
+    },
+    {
+      "id": "maremagnum",
+      "file": "assets/tappe/maremagnum.webp",
+      "tappa": "Maremagnum",
+      "titolo": "File:614 Maremàgnum i Port Vell (Barcelona), des del moll de la Fusta.jpg",
+      "autore": "Enric",
+      "licenza": "CC BY 4.0",
+      "licenzaUrl": "https://creativecommons.org/licenses/by/4.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:614_Marem%C3%A0gnum_i_Port_Vell_(Barcelona),_des_del_moll_de_la_Fusta.jpg",
+      "kb": 38
     }
   ],
   "private": [

@@ -75,6 +75,8 @@ il contenuto, con link alla pagina Commons del file.
 | Sala Apolo | `public/assets/tappe/apolo.webp` | Aniol | [CC0](http://creativecommons.org/publicdomain/zero/1.0/deed.en) | [Gatibu a la Sala Apolo de Barcelona 20251101 02.jpg](https://commons.wikimedia.org/wiki/File:Gatibu_a_la_Sala_Apolo_de_Barcelona_20251101_02.jpg) |
 | Bunkers del Carmel | `public/assets/tappe/bunkers.webp` | Alexey Komarov | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | [Barcelona, View from Bunkers del Carmel.jpg](https://commons.wikimedia.org/wiki/File:Barcelona,_View_from_Bunkers_del_Carmel.jpg) |
 | El Born Centre de Cultura i Memòria | `public/assets/tappe/elborn.webp` | Olga Gairin | [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0) | [Mercat del Born ruïnes - panoramio.jpg](https://commons.wikimedia.org/wiki/File:Mercat_del_Born_ru%C3%AFnes_-_panoramio.jpg) |
+| Time Out Market Barcelona (l'edificio di Maremagnum: del mercato non c'è foto libera su Commons) | `public/assets/tappe/timeoutmarket.webp` | Zarateman | [CC0](http://creativecommons.org/publicdomain/zero/1.0/deed.en) | [Barcelona - Maremagnum 03.JPG](https://commons.wikimedia.org/wiki/File:Barcelona_-_Maremagnum_03.JPG) |
+| Maremagnum | `public/assets/tappe/maremagnum.webp` | Enric | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0) | [614 Maremàgnum i Port Vell (Barcelona), des del moll de la Fusta.jpg](https://commons.wikimedia.org/wiki/File:614_Marem%C3%A0gnum_i_Port_Vell_(Barcelona),_des_del_moll_de_la_Fusta.jpg) |
 
 Ultimo aggiornamento: `npm run foto` · 16 foto, 1045 kB in tutto.
 

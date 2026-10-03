@@ -31,7 +31,10 @@ export const FILE = {
   apolo: 'File:Gatibu a la Sala Apolo de Barcelona 20251101 02.jpg',
   sarria: 'File:Carrer Major de Sarrià (Barcelona) 01.jpg',
   bunkers: 'File:Barcelona, View from Bunkers del Carmel.jpg',
-  elborn: 'File:Mercat del Born ruïnes - panoramio.jpg'
+  elborn: 'File:Mercat del Born ruïnes - panoramio.jpg',
+  // del Time Out Market non esiste una foto libera su Commons: si usa l'edificio che lo ospita
+  timeoutmarket: 'File:Barcelona - Maremagnum 03.JPG',
+  maremagnum: 'File:614 Maremàgnum i Port Vell (Barcelona), des del moll de la Fusta.jpg'
 }
 // Quanto spazio verticale lasciare SOPRA il ritaglio: 0,5 = centrato. Più basso = si tiene l'alto,
 // altrimenti le torri finiscono tagliate.
@@ -43,7 +46,8 @@ export const TITOLI = {
   santfelip: 'Plaça de Sant Felip Neri', santacaterina: 'Mercat de Santa Caterina',
   elpalace: 'Rooftop Garden · El Palace', sagrada: 'Sagrada Família', monumental: 'Plaza Monumental',
   pobleespanyol: 'La Terrrazza · Poble Espanyol', apolo: 'Sala Apolo', sarria: 'Sarrià',
-  bunkers: 'Bunkers del Carmel', elborn: 'El Born Centre de Cultura i Memòria'
+  bunkers: 'Bunkers del Carmel', elborn: 'El Born Centre de Cultura i Memòria',
+  timeoutmarket: 'Time Out Market Barcelona', maremagnum: 'Maremagnum'
 }
 const LIBERA = [/^cc0/i, /^cc[- ]by(-sa)?([- ]\d)?/i, /^public domain/i, /^pd/i]
 // Foto NON di Commons: private, usate con permesso. Non hanno licenza libera, quindi non stanno nella
