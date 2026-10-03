@@ -442,3 +442,106 @@ Nel primo schermo **non c'è niente che riguardi il giorno o l'ora**: niente pro
 **9 · Numero di prenotazione e chiave Clevio.** La card dell'alloggio è a **1 schermo**: indirizzo, €631, cancellazione gratuita, check-in 15:00 e check-out 10:30, la nota "chiave digitale Clevio — arriva via email ~2 giorni prima… verificare che il link/dominio sia legittimo", "contatto diretto tramite numero Booking.com".
 - **Il numero di prenotazione dell'appartamento non è da nessuna parte nella pagina** (c'è solo quello del parcheggio, 3039188).
 - **Della chiave Clevio** c'è solo la descrizione: nessun link all'app o all'email, nessun codice.
+
+---
+
+## STEP E — Codice
+
+### E1 · Com'è fatto `londra.html`
+
+**Un solo file**, `_legacy/londra.html`: **1.979 righe, 139 KB**. Non passa dal bundler: la build di Vite lo **copia così com'è** in `dist/` con il plugin `copy-legacy`, insieme alle altre pagine "storiche" del repository. Niente minificazione e niente nomi con hash: la cache la decide GitHub Pages (10 minuti).
+
+| Parte | Righe | Peso | Dove |
+|---|---|---|---|
+| `<head>` (meta, Open Graph, manifest, font, CSS di Leaflet) | 34 | — | righe 1–34 |
+| **CSS** in un unico `<style>` | **447** | 32 KB | righe 35–481 |
+| **HTML** scritto a mano | ~950 | ~75 KB | righe 482–1431 |
+| Script esterni (Leaflet, JsBarcode) | 5 | — | righe 1432–1436 |
+| **JavaScript** in un unico `<script>`, 11 blocchi | **540** | 31 KB | righe 1437–1976 |
+
+Blocchi JavaScript, in ordine: meteo ora per ora · barcode del museo · QR del parcheggio a schermo pieno · margine delle giornate · piano pioggia · da verificare · novità · neve nella testata · checklist · Olly · mappa.
+
+**Dove stanno i dati**
+
+| Dato | Dove | Forma |
+|---|---|---|
+| Tappe dei tre giorni (orari, testi, foto, link Maps, crediti, durate) | HTML | scritto a mano, card per card |
+| Percorsi Maps (11) | HTML | URL fissi negli `href` |
+| QR del parcheggio | HTML | SVG già disegnato (1,3 KB) |
+| Timeline ora per ora | HTML | **seconda copia degli orari**, scritta a mano |
+| Voli, alloggio, sicurezza, budget, checklist, note pratiche, passeggino, Olly | HTML | scritti a mano |
+| Numeri dei biglietti NHM | HTML (numero visibile) + JS `BIGLIETTI` (per disegnare il barcode) | doppi, apposta: il numero resta se la libreria non arriva |
+| Novità | JS `NOVITA` | 13 voci, versione intera |
+| Da verificare | JS `DA_VERIFICARE` + file `DA_VERIFICARE_LONDRA.md` | **due copie da tenere allineate a mano** |
+| Vincoli per il controllo del margine | JS `MARGINI` | **terza copia** di alcuni orari (10:45, 18:00, 09:15, 16:30, 17:50, 11:00, 15:15) |
+| Punti e percorsi della mappa | JS: 14 oggetti luogo, `TAPPE` (marker con note), `ROUTES` (linee) | **terza fonte delle posizioni**, dopo i percorsi Maps e i link delle card |
+| Meteo | API Open-Meteo, in tempo reale | nessun dato salvato |
+| Foto delle tappe | `public/assets/tappe/londra/` (27 file, 1,41 MB) | manifest in `data/foto-tappe-londra.json`, usato solo dagli script |
+| Foto di Olly | `_legacy/img/olly/` (11 JPG, 940 KB, 3 non usati) | caricate come `background-image` CSS |
+| Icone, manifest, immagine Open Graph | `_legacy/` | `londra-manifest.json`, `icon-londra-*`, `og-londra.jpg` |
+
+**Coerenza delle posizioni fra le tre fonti.**
+- I 12 punti della mappa che ho confrontato coincidono con le coordinate dei percorsi, salvo due: **Southbank (83 m di scarto)** e **Horse Guards (73 m)**.
+- Dei 23 link "Apri in Google Maps" sulle card, **18 cercano per nome** (es. `query=Big Ben London`) e 5 per coordinate.
+
+### E2 · Cosa è condiviso con Barcellona
+
+| Condiviso | Effetto su Londra |
+|---|---|
+| Repository, `package.json`, build Vite (`npm run build`) | Londra è una delle ~40 pagine in `_legacy/` copiate senza elaborazione |
+| Workflow `.github/workflows/pages.yml` (deploy a ogni push su `main`) | **Ogni commit su `main` ripubblica anche Londra**, compresi quelli che riguardano solo Barcellona o la palestra |
+| Cartella `public/assets/tappe/` | Le foto di Londra stanno nella sottocartella `londra/`; quelle di Barcellona nella cartella madre |
+| `scripts/` | `londra-foto.mjs` e `londra-cards.mjs` sono solo di Londra, ma nella cartella comune; nessuna suite di test per Londra in `scripts/qa/` |
+| `CREDITS.md`, `CHANGELOG.md` | File comuni, con sezioni per Londra |
+| `CLAUDE.md` | Le sue regole (changelog in `data/changelog.json`, `npm run validate`, suite QA prima del push) valgono per **Barcellona**: Londra ha il suo oggetto `NOVITA` |
+
+**Solo di Londra:** `londra.html`, `londra-illustrata.html` (184 righe, versione per immagini per Olly), `londra-manifest.json`, icone e immagine Open Graph, `DA_VERIFICARE_LONDRA.md`, `assets/tappe/londra/`, `img/olly/`, i due script. **Il codice di Barcellona (`src/`) non è usato**: niente moduli, componenti o CSS comuni, niente statistiche GoatCounter. In comune c'è solo il meta `noindex`.
+
+### E3 · Librerie e servizi esterni
+
+| Cosa | Versione | Da dove | Integrità (SRI) | Se manca |
+|---|---|---|---|---|
+| Leaflet (JS + CSS) | 1.9.4 | **unpkg.com** | sì, sha256 | niente mappa, errore `L is not defined`, il resto funziona |
+| JsBarcode | 3.12.3 | **cdnjs.cloudflare.com** | sì, sha512 | barcode non disegnati, restano i numeri |
+| Playfair Display | variabile 400–800 | **Google Fonts** | — | font di riserva per i titoli |
+| Tile della mappa (dark) | — | **CARTO** (basemaps.cartocdn.com) | — | mappa senza sfondo |
+| Previsioni meteo | API v1 | **Open-Meteo** (api.open-meteo.com), dal 5 al 17 novembre | — | la card meteo non compare |
+| Google Maps | URL `maps/dir` e `maps/search` | link esterni | — | — |
+
+Non ci sono librerie installate dal progetto per questa pagina: tutto arriva da CDN a runtime.
+
+### E4 · Vincoli già attivi che un redesign deve rispettare
+
+1. **Storage**: `localStorage` **solo** per la chiave `londra:novita:vista` (ultima versione delle novità vista). Niente `sessionStorage`, nessun altro dato salvato: checklist, Piove e "L'ho visto!" vivono solo in memoria.
+2. **Foto delle tappe**: cartella `assets/tappe/londra/` **sotto 1,5 MB** (oggi 1,41 MB). Solo licenze libere da Wikimedia Commons, scaricate e guardate prima di sceglierle; niente verticali (eccezioni approvate: Beak Street, Pollock's); ritaglio 16:9 a 800 × 450, WebP q70–80 con effort 6; crediti in `CREDITS.md` e sotto la card; card SVG stilizzata se non c'è niente di adatto. **Eccezioni dichiarate**: foto di famiglia di M&M'S, immagine promozionale di Shrek's Adventure.
+3. **Da verificare**: `DA_VERIFICARE_LONDRA.md` e l'oggetto `DA_VERIFICARE` in pagina vanno **aggiornati insieme**; il badge conta le voci in pagina.
+4. **Novità**: ogni modifica visibile aggiunge una voce in cima a `NOVITA` con `v` incrementato, nello stesso commit, più una sezione in `CHANGELOG.md`.
+5. **Link Maps dei percorsi**: gli 11 URL sono **fissi, carattere per carattere**; non vanno rigenerati dalle coordinate. Coi mezzi solo origine e destinazione; a piedi al massimo due tappe intermedie.
+6. **QR del parcheggio**: payload esatto `$BLQ3039188LGT@`, SVG statico dentro la pagina (funziona senza CDN), quiet zone di 4 moduli, fondo bianco, almeno 200 px, schermo pieno con wake lock.
+7. **Biglietti NHM**: CODE128, fondo bianco pieno, **numeri scritti nell'HTML** come ripiego se JsBarcode non arriva.
+8. **Meteo**: Open-Meteo senza chiave, visibile **solo dal 5 al 17 novembre**, nessun segnaposto né messaggio d'errore, nessuna cache.
+9. **Lingua e nomi**: tutto in italiano, nomi veri (Alessandro, Vale, Olly).
+10. **Pubblicazione**: deploy da `main` con GitHub Pages; pagina `noindex`; la versione per immagini (`londra-illustrata.html`) è una pagina separata, collegata da testata e footer.
+
+---
+
+## Riepilogo: i 10 problemi di usabilità più gravi
+
+Solo constatazioni, nell'ordine di gravità per l'uso in strada.
+
+1. **Senza rete la pagina non si riapre.** Non c'è un service worker: se il browser ricarica la scheda offline compare "No internet", e con la pagina spariscono anche il QR del parcheggio e i biglietti (B4).
+2. **La pagina non sa che giorno e che ora è.** Non indica la tappa attuale né la prossima e si apre sempre con domenica aperta. Lunedì e martedì, per arrivare al proprio giorno servono più di 9 schermi di scroll e un tocco (B3, D4, D7).
+3. **Il primo schermo non contiene niente di operativo.** Ci sono titolo, date, famiglia; l'elemento più grande è il pulsante per la versione di Olly (D0).
+4. **I barcode del museo sono a 11,5 schermi** e non si possono ingrandire né tengono acceso lo schermo. Con rete scarsa restano riquadri bianchi con il solo numero (C5, D5, B4).
+5. **La pagina è lunga 19,5 schermi** (30,9 tutto aperto) e non ha navigazione fissa, indice né "torna su". Badge e pulsante Piove spariscono dopo mezzo schermo. Gli orari compaiono due volte per intero, nelle card e nella Timeline (A1, A3, A5).
+6. **101 elementi cliccabili su 125 sono sotto 44 × 44 px.** I link "Apri in Google Maps" (25 px) stanno sopra i crediti delle foto (13 px), che portano anch'essi fuori dal sito; checklist e marker sono a 22 px (C4).
+7. **Nulla si ricorda e nulla si condivide.** Checklist, Piove e "L'ho visto!" si azzerano a ogni ricarica. Vale vede sempre "0 su 9", e le cose da fare stanno in due liste separate, il badge in testata e la checklist a 16,9 schermi (B2, D8).
+8. **Accendere "Piove" non dà riscontro.** Nel primo schermo cambia solo il pulsante. Gli effetti sono sparsi nei tre giorni, e Timeline, mappa e percorsi continuano a indicare il London Eye (B2, D6).
+9. **Informazioni operative mancanti o lontane da dove servono.** Il numero di prenotazione dell'appartamento non c'è, e della chiave Clevio solo la descrizione. Il piano B della spesa sta nella Timeline, non nella card. 18 link "Apri in Google Maps" su 23 fanno una ricerca per nome invece di un percorso (D3, D9, E1).
+10. **Leggibilità all'aperto.** C'è solo il tema scuro. Il testo delle card è grigio a 13,5 px, sotto 7:1. Informazioni operative come le sigle dei giorni (8,5 px), gli orari d'ingresso e i dati della prenotazione (9,5–10,5 px) e i link Maps (11 px) sono le scritte più piccole (C4).
+
+## File prodotti
+
+- `audit/AUDIT_LONDRA.md` — questo report.
+- `audit/lighthouse-mobile.html` — report completo di Lighthouse 12.8.2, mobile, sulla pagina pubblicata.
+- `audit/screenshots/` — 22 screenshot a 390 × 844: `B-*` (stati e rete), `C-*` (QR e barcode), `D0`–`D9` (scenari).
