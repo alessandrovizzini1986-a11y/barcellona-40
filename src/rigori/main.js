@@ -528,9 +528,15 @@ async function runFlow() {
     while (again) {
       flow = 'gioco'; quitRequested = false; menuBtn.hidden = false; musicBtn.hidden = false; aggiornaMusicBtn(); audio.playMusic('tensione')
       const xpBefore = game.progress?.xp?.() ?? 0
-      const ended = new Promise((res) => { const fn = (e) => { if (e.type === 'modeEnd') { listeners.delete(fn); res(e) } }; listeners.add(fn) })
+      // Fine partita o "Esci" dal menu: in tutti e due i casi il timer che sorveglia l'uscita si cancella
+      // e l'ascoltatore di modeEnd si stacca, altrimenti ne resta uno vivo per ogni partita giocata.
+      let risolvi
+      const fine = (e) => { if (e.type === 'modeEnd') risolvi(e) }
+      const ended = new Promise((res) => { risolvi = res }); listeners.add(fine)
       startMode(choice.id, choice.opts)
-      const e = await Promise.race([ended, new Promise((res) => { const iv = setInterval(() => { if (quitRequested) { clearInterval(iv); res(null) } }, 200) })])
+      let ivUscita = null
+      const e = await Promise.race([ended, new Promise((res) => { ivUscita = setInterval(() => { if (quitRequested) res(null) }, 200) })])
+      clearInterval(ivUscita); listeners.delete(fine)
       menuBtn.hidden = true; musicBtn.hidden = true
       if (!e) { mode = null; clearEsitoTimers(); esitoLock = false; ctx.keeperPassive(false); ctx.forceKeeperZone(null); ctx.showTarget(null); ctx.role('idle'); shot.reset(); keeper?.reset(); kicker?.reset(); hideEsito(game.ui); rig.goTo('dietroTiratore', { instant: true }); break }
       flow = 'risultato'
