@@ -85,4 +85,21 @@ const prossima = (p) => p.locator('.tile:has(.tile__label:text-is("Prossima"))')
   ok('anche in Info i btn--sm sono almeno 44 px, senza overflow', h2.length > 0 && h2.every((x) => x >= 44) && (await p.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)), h2.join(','))
   await ctx.close()
 }
+// 8. Fuso fisso Europe/Madrid: lo stesso istante visto da un telefono su New York dà la stessa pagina
+{
+  const letture = {}
+  for (const tz of ['Europe/Madrid', 'America/New_York', 'Asia/Tokyo']) {
+    const { p, ctx, errs } = await apri('/#/oggi', { timezoneId: tz, clock: '2026-10-17T12:14:30+02:00' })
+    letture[tz] = { prossima: await prossima(p), giorno: await p.evaluate(() => document.documentElement.dataset.day), errs }
+    await ctx.close()
+  }
+  ok('Madrid: sabato 12:14, Prossima alle 13:00 "tra 45 min"', letture['Europe/Madrid'].giorno === 'sab' && /13:00 .* tra 45 min/.test(letture['Europe/Madrid'].prossima), letture['Europe/Madrid'].prossima)
+  ok('New York (06:14 locali): stessa pagina di Madrid', letture['America/New_York'].prossima === letture['Europe/Madrid'].prossima && letture['America/New_York'].giorno === 'sab', letture['America/New_York'].prossima)
+  ok('Tokyo (19:14 locali): stessa pagina di Madrid', letture['Asia/Tokyo'].prossima === letture['Europe/Madrid'].prossima && letture['Asia/Tokyo'].giorno === 'sab', letture['Asia/Tokyo'].prossima)
+  ok('nessun errore JS nei tre fusi', Object.values(letture).every((l) => l.errs.length === 0))
+  // ?now= resta com'è: la data simulata vince sul fuso
+  const { p, ctx } = await apri('/?now=2026-10-18T10:00#/oggi', { timezoneId: 'America/New_York' })
+  ok('con ?now= la data simulata vince anche a New York', (await p.evaluate(() => document.documentElement.dataset.day)) === 'dom' && /13:30/.test(await prossima(p)))
+  await ctx.close()
+}
 await b.close(); if (errori.length) { console.error('ERRORI:\n' + errori.join('\n')); process.exit(1) } console.log('OK chiusura')

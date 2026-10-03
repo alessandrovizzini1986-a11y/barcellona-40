@@ -126,7 +126,9 @@ async function apri(path, { dati = null, fallisce = false, piove = false } = {})
 // La data simulata non sta nella previsione: la card deve comparire lo stesso, con l'ora reale e i tre giorni successivi.
 {
   // i dati partono da OGGI (reale), come farebbe l'API: la data simulata resta fuori dalla previsione finché non siamo nel weekend
-  const oggi = new Date(), isoOggi = `${oggi.getFullYear()}-${String(oggi.getMonth() + 1).padStart(2, '0')}-${String(oggi.getDate()).padStart(2, '0')}`
+  // "oggi" e "adesso" sono quelli di Barcellona (il sito ha il fuso fisso Europe/Madrid, come i dati dell'API), non quelli della macchina di QA
+  const parti = Object.fromEntries(new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Madrid', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', hourCycle: 'h23' }).formatToParts(new Date()).map((x) => [x.type, x.value]))
+  const oggi = new Date(+parti.year, +parti.month - 1, +parti.day), isoOggi = `${parti.year}-${parti.month}-${parti.day}`, oraBarcellona = parti.hour
   const NOMI = ['Dom', 'Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab'], attesi = [1, 2, 3].map((i) => NOMI[new Date(oggi.getFullYear(), oggi.getMonth(), oggi.getDate() + i).getDay()]).join(' ')
   const { p, ctx, errs } = await apri('/#/oggi?now=2026-10-15T10:00', { dati: fixture(isoOggi) })
   ok('?now= fuori dalla previsione: la card compare lo stesso', (await p.locator('[data-meteo]').count()) === 1)
@@ -134,7 +136,7 @@ async function apri(path, { dati = null, fallisce = false, piove = false } = {})
   ok('adesso = ora reale del giorno dei dati, giorni = i tre successivi, chip Oggi + tre', st.oggi === isoOggi && st.giorni === attesi && st.chips === 'Oggi ' + attesi, JSON.stringify(st) + ' attesi ' + attesi)
   await p.click('[data-meteo-toggle]'); await p.waitForTimeout(150)
   const prima = await p.evaluate(() => document.querySelector('.meteo__col')?.dataset.ora)
-  ok('la striscia di Oggi parte dall\'ora reale', prima === String(new Date().getHours()).padStart(2, '0'), `${prima} vs ${new Date().getHours()}`)
+  ok('la striscia di Oggi parte dall\'ora reale di Barcellona', prima === oraBarcellona, `${prima} vs ${oraBarcellona}`)
   ok('nessun errore JS', errs.length === 0, errs.join(' | '))
   await ctx.close()
 }

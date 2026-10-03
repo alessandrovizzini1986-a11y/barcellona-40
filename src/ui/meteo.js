@@ -2,7 +2,7 @@
 // senso, oltre i sette giorni la previsione non c'è. Se la rete manca o la risposta fallisce la card non
 // compare: niente placeholder. Una richiesta ogni 30 minuti al massimo (cache in sessionStorage, anche
 // degli errori). Il testo dice sempre "previsione": è quello che è.
-import { now, todayIso, WEEKEND_END, pad2 } from '../time.js'
+import { now, adessoReale, todayIso, WEEKEND_END, pad2 } from '../time.js'
 import { icon } from './icons.js'
 import { esc } from './html.js'
 import { evento } from '../stats.js'
@@ -77,7 +77,7 @@ const oraIso = (d) => `${isoDi(d)}T${pad2(d.getHours())}:00`
 export function riferimento(dati, simulata = now()) {
   const h = dati.hourly
   let d = simulata, iOra = h.time.indexOf(oraIso(d))
-  if (iOra < 0) { d = new Date(); iOra = h.time.indexOf(oraIso(d)) }
+  if (iOra < 0) { d = adessoReale(); iOra = h.time.indexOf(oraIso(d)) } // ora vera di Barcellona, come i dati
   if (iOra < 0) { iOra = h.time.findIndex((t) => t >= oraIso(d)); if (iOra < 0) iOra = h.time.length - 1 }
   return { iOra, oggi: h.time[iOra].slice(0, 10), ora: +h.time[iOra].slice(11, 13) }
 }

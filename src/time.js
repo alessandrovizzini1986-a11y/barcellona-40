@@ -29,7 +29,22 @@ export function parseLocal(iso) {
   if (!m) return new Date(NaN)
   return new Date(+m[1], +m[2] - 1, +m[3], +(m[4] || 0), +(m[5] || 0), +(m[6] || 0))
 }
-export function now() { return override ? new Date(override) : new Date() }
+// Fuso fisso: gli orari del piano sono ora di Barcellona (Europe/Madrid), e lo devono restare anche se il
+// telefono sta su un altro fuso (roaming strano, fuso manuale). `inFuso` prende l'istante vero e lo
+// riscrive come Date "locale" coi campi dell'orologio di Barcellona, così tutti i confronti con le costanti
+// qui sopra (costruite coi campi locali) tornano. Se Intl manca, resta l'orologio del telefono.
+const FUSO = 'Europe/Madrid'
+let fmtFuso = null
+try { fmtFuso = new Intl.DateTimeFormat('en-GB', { timeZone: FUSO, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23' }) } catch { fmtFuso = null }
+export function inFuso(d) {
+  if (!fmtFuso) return new Date(d)
+  try {
+    const p = {}; for (const { type, value } of fmtFuso.formatToParts(d)) p[type] = value
+    return new Date(+p.year, +p.month - 1, +p.day, +p.hour, +p.minute, +p.second, d.getMilliseconds())
+  } catch { return new Date(d) }
+}
+export const adessoReale = () => inFuso(new Date())
+export function now() { return override ? new Date(override) : adessoReale() }
 export function isOverridden() { return !!override }
 
 // Fase del weekend
