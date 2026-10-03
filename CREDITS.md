@@ -143,10 +143,18 @@ restituisce spesso dettagli irriconoscibili o omonimi sbagliati.
 | Luci di Carnaby Street | `public/assets/tappe/londra/carnaby.webp` | Christine Matthews | [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0) | [Carnaby Street Christmas Lights 2019 - geograph.org.uk - 6329567.jpg](https://commons.wikimedia.org/wiki/File:Carnaby_Street_Christmas_Lights_2019_-_geograph.org.uk_-_6329567.jpg) |
 | Luci di Regent Street | `public/assets/tappe/londra/regent.webp` | Oast House Archive | [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0) | [Regent Street Christmas Lights 2016 - geograph.org.uk - 5233956.jpg](https://commons.wikimedia.org/wiki/File:Regent_Street_Christmas_Lights_2016_-_geograph.org.uk_-_5233956.jpg) |
 | Hintze Hall (per Olly) | `public/assets/tappe/londra/nhm_balena.webp` | APK | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0) | [Hintze Hall, Natural History Museum, London - 4.jpg](https://commons.wikimedia.org/wiki/File:Hintze_Hall,_Natural_History_Museum,_London_-_4.jpg) |
+| Appartamento, 79 Beak Street | `public/assets/tappe/londra/apt.webp` | No Swan So Fine | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | [79 Beak Street, Soho, January 2022.jpg](https://commons.wikimedia.org/wiki/File:79_Beak_Street,_Soho,_January_2022.jpg) |
+| Benjamin Pollock's Toyshop | `public/assets/tappe/londra/pollock.webp` | Jack1956 | [CC0](http://creativecommons.org/publicdomain/zero/1.0/deed.en) | [Benjamin Pollocks Toy Shop exterior.jpg](https://commons.wikimedia.org/wiki/File:Benjamin_Pollocks_Toy_Shop_exterior.jpg) |
 
-Ultimo aggiornamento: `npm run foto:londra` · 23 foto, 1484 kB in tutto.
+Ultimo aggiornamento: `npm run foto:londra` · 25 foto, 1314 kB in tutto.
 
 <!-- foto-londra:end -->
+
+### Eccezione alla regola delle licenze libere (Londra)
+
+| Tappa | File nel sito | Fonte | Licenza |
+|---|---|---|---|
+| Shrek's Adventure! London (solo con "Piove" acceso) | `public/assets/tappe/londra/shrek.webp` | Immagine promozionale di Shrek's Adventure! London, fornita da Alessandro | **Non libera**: materiale promozionale del gestore, non una foto Commons né una foto di famiglia. Usata su richiesta esplicita; per tornare alla card stilizzata basta `npm run cards:londra` e ripuntare la card su `shrek.svg`. |
 
 ## Card stilizzate (originali del progetto)
 

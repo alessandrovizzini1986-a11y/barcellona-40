@@ -15,11 +15,13 @@ const PALETTE = ['#d4a94e', '#c8362b', '#6db3d8', '#e8c87e', '#1f3a5f']
 const ICONE = {
   home: '<path d="M3 11 12 3l9 8M5 10v10h14V10"/><path d="M10 20v-6h4v6"/>',
   plane: '<path d="M10.5 2.5a1.5 1.5 0 0 1 3 0V9l8 4.5v2.5l-8-2.5v4l2.5 2v2L12 20.5 8.5 21.5v-2l2.5-2v-4L3 16v-2.5L10.5 9Z"/>',
+  castle: '<path d="M10 5V3"/><path d="M14 5V3"/><path d="M15 21v-3a3 3 0 0 0-6 0v3"/><path d="M18 3v8"/><path d="M18 5H6"/><path d="M22 11H2"/><path d="M22 9v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9"/><path d="M6 3v8"/>',
   train: '<rect x="5" y="3" width="14" height="13" rx="3"/><path d="M5 10h14"/><circle cx="9" cy="13.5" r=".9" fill="currentColor"/><circle cx="15" cy="13.5" r=".9" fill="currentColor"/><path d="M8 16 6 21M16 16l2 5M7.5 19h9"/>'
 }
 
+// L'appartamento ora ha la foto vera da Commons: la sua card stilizzata non serve più.
 export const CARD = [
-  { id: 'apt', label: '79 Beak Street · Soho', accento: '#d4a94e', icona: 'home' },
+  { id: 'shrek', label: 'Shrek’s Adventure! London', accento: '#d4a94e', icona: 'castle', seme: 2026 },
 ]
 
 // PRNG con seme: stesso seme, stesso mosaico. Un seme diverso per card.
@@ -69,7 +71,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   let totale = 0
   CARD.forEach((c, i) => {
     const dest = path.join(OUT, `${c.id}.svg`)
-    writeFileSync(dest, svg(c, i * 37 + 11))
+    writeFileSync(dest, svg(c, c.seme ?? i * 37 + 11))
     const kb = statSync(dest).size / 1024
     totale += kb
     console.log(`✓ ${c.id}.svg · ${c.icona} · ${c.accento} · ${kb.toFixed(1)} kB`)
