@@ -332,7 +332,7 @@ Problemi segnalati.
 
 | Dimensione | Quanti | Dove |
 |---|---|---|
-| **8,5 px** | 3 | le sigle **DOM / LUN / MAR** sotto i numeri dei giorni |
+| **8,5 px** | 3 | le sigle **DOM / LUN / MAR** sotto i numeri dei giorni, in più con opacità 0,8 (il calcolo del contrasto qui sotto non tiene conto dell'opacità) |
 | 9,5–10,5 px | 14 | etichette maiuscole Prenotazione / Intestatario / Entrata / Uscita del parcheggio, Check-in / Check-out, Data / Ingresso dei biglietti, "no / sì" del pulsante Piove, "Pagato", intestazioni della tabella budget |
 | **11–11,5 px** | 142 | **tutti i "📍 Apri in Google Maps"** (23), tutti i crediti delle foto (30 + 11 link), le pillole "a piedi / con i mezzi" dei percorsi, gli stati del budget |
 | 12–14,5 px | 282 | testo corrente delle card (13,5 px) e delle note |
