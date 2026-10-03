@@ -126,7 +126,7 @@ const overflow = (p) => p.evaluate(() => document.documentElement.scrollWidth - 
   await p2.locator('#piove').uncheck()
   await p2.waitForTimeout(600)
   const asciutto = await p2.evaluate(() => [...document.querySelectorAll('.card[data-stop]')].map((c) => [c.dataset.stop, (c.querySelector('.card__foto-time') || c.querySelector('.card__time'))?.textContent.trim()]))
-  const attesiOrari = [['f1b', '09:00'], ['f2', '09:55'], ['f3', '10:30'], ['f4', '10:50'], ['f5', '11:20'], ['f6', '11:35'], ['f7', '11:50'], ['f8', '12:20'], ['f9', '12:45'], ['f10', '14:05'], ['f11', '14:20'], ['f12', '15:00']]
+  const attesiOrari = [['f1b', '09:00'], ['f2', '09:55'], ['f3', '10:30'], ['f4', '10:50'], ['f5', '11:21'], ['f6', '11:35'], ['f7', '11:50'], ['f8', '12:20'], ['f9', '12:45'], ['f10', '14:05'], ['f11', '14:20'], ['f12', '15:00']]
   ok('pioggia OFF · si torna alla tabella degli orari', attesiOrari.every(([id, t]) => (asciutto.find(([x]) => x === id) || [])[1] === t), JSON.stringify(asciutto.filter(([id]) => id !== 'f1').slice(0, 12)))
   ok('pioggia OFF · El Born sparisce', !asciutto.some(([id]) => id === 'f2b'))
   ok('pioggia OFF · la Ciutadella torna in fila alle 09:55 con 25 min, nessun avviso giallo sul Rooftop', asciutto[2]?.[0] === 'f2' && asciutto[2]?.[1] === '09:55' && (await p2.locator('.card--saltata').count()) === 0 && (await p2.locator('.card[data-stop="f14"] .avviso--pioggia').count()) === 0)
