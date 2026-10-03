@@ -619,3 +619,12 @@ Cercati bug dello stesso tipo di "portiere che si rituffa nel replay": due cambi
 ## Londra · Prima di partire: documenti fatti
 - Passaporti (Olly compreso, e validità di Alessandro e Vale), UK ETA di tutti e tre e assicurazione viaggio segnati come **fatti**, su conferma di Alessandro. Le due righe ETA sono diventate una. Restano da fare: check-in online, prenotazione London Eye e SEA LIFE. Novità v18.
 - Il budget dice ancora "UK ETA ×3 · stima ~€57": i costi veri arrivano con lo step R9.
+
+## Londra · redesign R5: mappe e link
+- **"🧭 Portami qui" su ogni card**: un solo pulsante Maps alto 44 px, `maps/dir` con **solo la destinazione in coordinate** (parte dalla posizione attuale). Basta ricerche per nome. Coordinate prese dagli 11 percorsi, così card, percorsi e mappa puntano allo stesso posto.
+- **Coi mezzi** le tappe lontane da dove si arriva: Southbank Centre (da Heathrow), Harrods (da Green Park), Luci di Regent Street (dal museo), Heathrow Terminal 5. **A piedi** tutte le altre. **In auto** l'aeroporto di Bologna (terminal, Via del Triumvirato 84, coordinate OpenStreetMap).
+- **Card dei trasporti**: "Portami qui" anche su Aeroporto di Bologna, In metro verso il centro (→ Southbank), Partenza per Heathrow e Heathrow T5. Senza pulsante i due voli, l'arrivo a Heathrow (ci si è già) e l'atterraggio a Bologna. Anche l'appartamento nel portafoglio ha "Portami qui". Il "Portami lì" del pannello "Adesso" usa questi link.
+- **Crediti delle foto**: sotto la card resta "foto: Autore / licenza" come testo, non cliccabile. I link stanno in Info → Crediti foto, nella nuova lista "Foto delle tappe" (24 foto Commons, più Shrek e M&M'S), sopra quella del viaggio di Olly.
+- **Mappa**: alta 300 px; sul telefono con un dito si scorre la pagina, con due dita si sposta e si zooma la mappa (con un dito compare "Usa due dita per spostare la mappa"); col mouse si trascina come prima. Ogni marker ha "Portami qui" nel popup; con "Piove" il London Eye diventa Shrek's Adventure. Link di attribuzione in nuova scheda. Coordinate di Southbank, Horse Guards, Big Ben e museo allineate a quelle dei percorsi.
+- **Sfondo della mappa**: le tile CARTO ora rispondono con l'immagine "API KEY REQUIRED" al posto delle strade. Su scelta di Alessandro si passa a **Esri World Dark Gray** (sfondo e nomi delle strade), senza chiave, con l'attribuzione richiesta. La mappa di Barcellona usa ancora CARTO ed è rotta allo stesso modo: segnalato, non toccato.
+- Gli 11 URL dei percorsi sono invariati carattere per carattere. Novità v19.
