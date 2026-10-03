@@ -73,4 +73,16 @@ const prossima = (p) => p.locator('.tile:has(.tile__label:text-is("Prossima"))')
   ok('nessun errore JS', errs.length === 0, errs.join(' | '))
   await ctx.close()
 }
+// 7. I pulsanti piccoli sono alti 44 px: il QR del parcheggio si tocca alle 4 del mattino
+{
+  const { p, ctx } = await apri('/#/programma/dom') // il ritiro dell'auto al P2 (lunedì 01:10) sta nella timeline di domenica
+  const qr = await p.locator('.btn--sm[data-qr]').boundingBox()
+  ok('"QR del parcheggio" (btn--sm) è alto 44 px', qr && qr.height >= 44, JSON.stringify(qr))
+  const h = await p.evaluate(() => [...document.querySelectorAll('.btn--sm')].map((b) => Math.round(b.getBoundingClientRect().height)))
+  ok('ogni btn--sm della pagina è almeno 44 px', h.length > 0 && h.every((x) => x >= 44), h.join(','))
+  await p.goto(base + '/#/info', { waitUntil: 'networkidle' }); await p.waitForTimeout(300)
+  const h2 = await p.evaluate(() => [...document.querySelectorAll('.btn--sm')].map((b) => Math.round(b.getBoundingClientRect().height)))
+  ok('anche in Info i btn--sm sono almeno 44 px, senza overflow', h2.length > 0 && h2.every((x) => x >= 44) && (await p.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)), h2.join(','))
+  await ctx.close()
+}
 await b.close(); if (errori.length) { console.error('ERRORI:\n' + errori.join('\n')); process.exit(1) } console.log('OK chiusura')
