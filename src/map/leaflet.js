@@ -66,7 +66,16 @@ export function createMap(el, stopsByDay, { theme = 'dark' } = {}) {
       try { clearTimeout(map.scrollWheelZoom?._timer); map.scrollWheelZoom?.disable() } catch { /* handler già via */ }
       try { map.dragging?.disable() } catch { /* un trascinamento a metà si chiude qui */ }
       try { map.stop(); map._animatingZoom = false } catch { /* nessuna animazione in corso */ }
+      // prima le linee e i marker, poi la mappa: così il renderer canvas è ancora vivo quando le linee chiedono
+      // l'ultimo ridisegno, e quel ridisegno lo cancella lui stesso uscendo (altrimenti: "clearRect" su un contesto sparito)
+      for (const g of Object.values(layers)) { try { map.removeLayer(g) } catch { /* già via */ } }
+      // Il renderer canvas ha quasi sempre un ridisegno in coda (requestAnimationFrame). map.remove() lo cancella,
+      // ma se la pagina cambia dentro una view transition (frame congelati) quel frame parte lo stesso dopo la
+      // rimozione e cerca un contesto che non c'è più ("clearRect" del report). Il frame chiama _redraw già
+      // legato all'istanza, quindi si svuotano i metodi che userebbe: un ridisegno in ritardo non fa niente.
+      const renderer = [map._renderer, ...Object.values(map._paneRenderers || {})].filter(Boolean)
       map.remove()
+      for (const r of renderer) { r._clear = () => {}; r._draw = () => {}; r._redraw = () => {}; r._requestRedraw = () => {}; r._update = () => {} }
     }
   }
 }
