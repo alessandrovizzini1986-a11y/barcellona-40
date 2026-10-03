@@ -605,3 +605,13 @@ Cercati bug dello stesso tipo di "portiere che si rituffa nel replay": due cambi
 - **Scorciatoie nel pannello "Adesso"**: "Mostra il QR del parcheggio" attorno alle card dell'aeroporto di Bologna (domenica mattina, martedì dopo il decollo) e "Mostra i biglietti del museo" da 30 minuti prima dell'ingresso, cioè dalle 16:00 di lunedì. Le finestre si ricavano dalle card (`data-mostra`, `data-non-prima`), senza nuove copie degli orari. Nella card del museo, "Mostra i biglietti" apre direttamente i codici.
 - **Testata compatta**: 274 px, meno di un terzo di schermo; il link alla versione per Olly è un link piccolo. "Piove" è nel pannello "Adesso" e in cima al programma (i due pulsanti restano allineati); il badge "da verificare" è in "Prima di partire" e in Info.
 - Novità v16. Offline dello step R1 ancora completo (17/17).
+
+## Londra · redesign R4: asciugare
+- **Timeline tolta.** In cima a ogni giorno una **scaletta** (ora · nome, una riga per card, righe alte 44 px): un tocco porta alla card. Le card in ora italiana hanno la nota "ora ita"; con "Piove" acceso la riga del London Eye diventa Shrek's Adventure, come la card.
+- **Una sola lista "Prima di partire"** al posto di Checklist + Da verificare, **senza caselle**: lo stato di ogni voce (fatto · da fare · da verificare) è scritto in `PRIMA_DI_PARTIRE` nella pagina e si aggiorna con un commit. Le voci "da verificare" vengono da `DA_VERIFICARE` (allineato a `DA_VERIFICARE_LONDRA.md`) con "Chi e come" a scomparsa. In cima alla pagina, fino al 14/11, solo le voci aperte; in Info la lista completa con i conti. Tolte le voci superate o doppie: "cambio della guardia ~3 mesi prima" e "mercatino Southbank" (sono già tra le cose da verificare), "piano B passeggino" (è in Note pratiche). Tolti il badge e il pannello "da verificare".
+- **Info** raccoglie in fondo: Prima di partire, note sull'alloggio, Sicurezza, Budget, Note pratiche (con il passeggino), Crediti foto.
+- **Card più corte**: al massimo ~35 parole visibili (la più lunga, Shrek's Adventure, ne ha 35); il resto in "Dettagli", chiuso. Il piano B di Lina Stores (Whole Foods) è dentro la card.
+- **M&M'S e Pollock's**: una riga "✨ Se avanza tempo" (M&M'S in tutti e tre i giorni, Pollock's martedì) che apre l'unica scheda completa in un foglio dal basso.
+- **Novità**: il pannello non si apre più da solo. In cima c'è un banner sottile "N novità dall'ultima visita" (o "Le novità del sito" alla prima visita) che lo apre solo se toccato; chiudendo, il banner sparisce. Con lo storage bloccato il banner non compare.
+- Correzione di stile: la regola dei titoli dei giorni (`details.acc summary`) si applicava anche ai "Dettagli" annidati; ora vale solo per il titolo del giorno.
+- Novità v17.

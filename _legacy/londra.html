@@ -15,7 +15,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-londra-32.png">
 <link rel="apple-touch-icon" href="apple-touch-icon-londra.png">
 <title>Londra · 15–17 novembre 2026</title>
-<meta name="description" content="Il nostro viaggio a Londra: 15–17 novembre 2026. Alessandro, Vale e Olly. Programma, mappa, budget e checklist.">
+<meta name="description" content="Il nostro viaggio a Londra: 15–17 novembre 2026. Alessandro, Vale e Olly. Programma, mappa, biglietti e budget.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/londra.html">
 <meta property="og:title" content="Londra · 15–17 novembre 2026">
@@ -136,9 +136,9 @@
   details.acc{background:linear-gradient(180deg,var(--night-1),var(--night-2));border:1px solid var(--line);
     border-radius:18px;box-shadow:var(--shadow-card);margin-top:14px;overflow:hidden}
   details.acc[open]{border-color:var(--line-gold)}
-  details.acc summary{list-style:none;cursor:pointer;display:block;padding:16px 18px;
+  details.acc > summary{list-style:none;cursor:pointer;display:block;padding:16px 18px;
     -webkit-tap-highlight-color:transparent}
-  details.acc summary::-webkit-details-marker{display:none}
+  details.acc > summary::-webkit-details-marker{display:none}
   .srow{display:flex;align-items:center;gap:13px}
 
   /* meteo ora per ora (modello Barcellona): una card sola in cima al programma.
@@ -345,20 +345,6 @@
   .pass{display:inline-flex;align-items:center;gap:6px;margin-top:12px;font-size:12.5px;font-weight:600;
     color:#8fe0b6;background:rgba(79,174,124,.1);border:1px solid rgba(79,174,124,.35);border-radius:999px;padding:6px 13px}
 
-  /* checklist */
-  .clist{list-style:none;margin-top:6px}
-  .clist li{border-top:1px solid var(--line)}
-  .clist li:first-child{border-top:0}
-  .clist label{display:flex;align-items:flex-start;gap:12px;padding:12px 2px;cursor:pointer;-webkit-tap-highlight-color:transparent}
-  .clist input{appearance:none;-webkit-appearance:none;flex:none;width:22px;height:22px;margin-top:1px;border-radius:7px;
-    border:1.5px solid var(--line-gold);background:var(--night-0);cursor:pointer;position:relative;transition:.15s}
-  .clist input:checked{background:var(--gold);border-color:var(--gold)}
-  .clist input:checked::after{content:"✓";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-    color:#0d1321;font-size:14px;font-weight:800}
-  .clist .lt{flex:1;font-size:14.5px;line-height:1.45}
-  .clist .lt small{display:block;color:var(--muted);font-size:12.5px;margin-top:1px}
-  .clist input:checked ~ .lt{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--gold-dim)}
-  .clist input:checked ~ .lt small{text-decoration:none}
   .prio{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;
     color:#fff;background:var(--bus);border-radius:5px;padding:1px 7px;margin-left:6px;vertical-align:1px}
   .cprog{font-size:12.5px;color:var(--muted);margin-top:10px}
@@ -499,9 +485,47 @@
     border:1px solid var(--line-gold);box-shadow:var(--shadow-card)}
   .ora-pan[hidden]{display:none}
   .ora-tit{font-family:"Playfair Display",Georgia,serif;font-size:24px;line-height:1.2;margin-top:6px}
-  .pp-lista{list-style:none;margin-top:10px;display:flex;flex-direction:column;gap:8px}
-  .pp-lista li{font-size:15px;line-height:1.4;padding-left:26px;position:relative}
-  .pp-lista li::before{content:"🔎";position:absolute;left:0}
+  /* lista unica "Prima di partire": lo stato lo scrive Alessandro con un commit, niente caselle */
+  .pp-voci{list-style:none;margin-top:10px;display:flex;flex-direction:column;gap:8px}
+  .pp-voce{display:flex;align-items:flex-start;gap:10px;font-size:15px;line-height:1.4}
+  .pp-voce small{display:block;margin-top:2px;font-size:13px;line-height:1.45;color:var(--muted)}
+  .pp-voce .det{margin-top:4px}
+  .pp-stato{flex:none;min-width:94px;margin-top:1px;padding:2px 8px;border-radius:999px;font-size:11.5px;font-weight:800;
+    letter-spacing:.04em;text-align:center;text-transform:uppercase;border:1px solid}
+  .pp-stato--da_fare{color:var(--gold-soft);border-color:var(--line-gold);background:rgba(212,169,78,.1)}
+  .pp-stato--da_verificare{color:#ffb3ac;border-color:rgba(200,54,43,.55);background:rgba(200,54,43,.12)}
+  .pp-stato--fatto{color:var(--ok);border-color:rgba(79,174,124,.45);background:rgba(79,174,124,.1)}
+  .pp-voce--fatto > span:last-child{color:var(--muted)}
+  .pp-conti{margin-top:4px;font-size:13px;color:var(--muted)}
+  /* "Dettagli" chiusi nelle card: quello che serve sul posto resta fuori */
+  .det{margin-top:8px;font-size:13.5px;line-height:1.5;color:var(--muted)}
+  .det summary{display:inline-flex;align-items:center;min-height:44px;color:var(--gold-soft);font-weight:700;font-size:14px;cursor:pointer;list-style:none}
+  .det summary::-webkit-details-marker{display:none}
+  .det summary::after{content:"▾";margin-left:6px;font-size:12px}
+  .det[open] summary::after{content:"▴"}
+  .det p{margin-top:2px}
+  /* scaletta in cima a ogni giorno: un colpo d'occhio, ogni riga porta alla sua card */
+  .scaletta{list-style:none;margin:2px 0 14px;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .scaletta li + li{border-top:1px solid var(--line)}
+  .sc-riga{display:flex;align-items:center;gap:12px;min-height:44px;padding:6px 14px;color:var(--ink);text-decoration:none;font-size:15px}
+  .sc-ora{flex:none;min-width:46px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--gold-soft)}
+  .sc-ora small{display:block;font-size:10.5px;font-weight:700;color:var(--muted);letter-spacing:.02em}
+  .scaletta .solo-pioggia{display:none}
+  html.piove .scaletta .solo-pioggia{display:block}
+  html.piove .scaletta .solo-asciutto{display:none}
+  .tcard[id]{scroll-margin-top:12px}
+  /* tappe "se avanza tempo": una riga, la scheda si apre al tocco */
+  .plus-riga{display:flex;align-items:center;gap:10px;width:100%;min-height:48px;margin:4px 0 10px;padding:10px 14px;text-align:left;
+    border:1px dashed var(--line-gold);border-radius:14px;background:none;color:var(--ink);font:inherit;font-size:14.5px;cursor:pointer}
+  .plus-riga > span:last-child{margin-left:auto;font-size:22px;color:var(--gold)}
+  .plus-foglio .nov__lista{padding-top:16px}
+  .plus-foglio .tcard{margin:0}
+  /* novità: un banner sottile, si apre solo se toccato */
+  .nov-banner{display:flex;align-items:center;gap:8px;width:100%;min-height:44px;margin:14px 0 0;padding:8px 14px;
+    border:1px solid var(--line-gold);border-radius:999px;background:rgba(212,169,78,.1);color:var(--gold-soft);
+    font:inherit;font-size:14px;font-weight:700;text-align:left;cursor:pointer}
+  .nov-banner[hidden]{display:none}
+  .nov-banner span:last-child{margin-left:auto;font-size:20px}
   .pp-link{display:flex;align-items:center;min-height:44px;margin-top:6px;color:var(--gold-soft);font-weight:700;font-size:15px}
   .ad-testa{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
   .ad-testa .eyebrow{flex:1}
@@ -546,11 +570,6 @@
   html.piove .tcard.solo-asciutto{display:none}
   .tcard__body .pioggia-nota{margin-top:8px;font-size:12.5px;line-height:1.45;color:var(--sky)}
   .pioggia-nota--blocco{margin:2px 0 14px;background:rgba(109,179,216,.1);border:1px solid rgba(109,179,216,.35);color:var(--ink)}
-  .dv-badge{margin-top:14px;display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(200,54,43,.55);
-    background:rgba(200,54,43,.12);color:#ffb3ac;border-radius:999px;padding:6px 13px;font:inherit;font-size:12.5px;font-weight:700;cursor:pointer}
-  .dv-n{display:inline-grid;place-items:center;min-width:20px;height:20px;border-radius:999px;background:var(--bus);color:#fff;font-size:11.5px}
-  .dv-come{margin-top:6px;font-size:13px;line-height:1.45;color:var(--ink)}
-  .dv-come b{color:var(--gold-soft)}
   .nov__testa code{font-size:12px;color:var(--gold-soft)}
   .nov-link{background:none;border:0;color:var(--gold-soft);font:inherit;font-size:12.5px;text-decoration:underline;cursor:pointer;padding:0}
 </style>
@@ -589,15 +608,16 @@
 <main>
 <div class="wrap">
 
+  <button class="nov-banner" id="novBanner" type="button" hidden></button>
+
   <!-- ============ PRIMA DI PARTIRE / ADESSO ============
        Uno solo dei due è visibile: "Prima di partire" fino al 14 novembre, "Adesso" dal 15 al 17.
        Contenuto calcolato dalle card del programma, con l'ora di Londra. -->
   <section class="ora-pan" id="primaDiPartire" hidden aria-labelledby="ppTit">
     <div class="eyebrow">Prima di partire</div>
     <h2 class="ora-tit" id="ppTit"><span id="ppGiorni"></span></h2>
-    <ul class="pp-lista" id="ppLista"></ul>
-    <a class="pp-link" href="#checklist" id="ppCheck"></a>
-    <p><button class="dv-badge" type="button" data-dv><span class="dv-n"></span> da verificare: chi fa cosa</button></p>
+    <div id="ppLista"></div>
+    <a class="pp-link" href="#listaPartenza">Tutta la lista, con le cose già fatte ↓</a>
   </section>
   <section class="ora-pan" id="adesso" hidden aria-labelledby="adTit">
     <div class="ad-testa"><span class="eyebrow" id="adTit">Adesso</span><span class="ad-orologio" id="adOrologio"></span></div>
@@ -616,27 +636,6 @@
       <button class="ad-scheda" id="adScheda" type="button">Vedi la scheda ↓</button>
     </div>
     <p class="ad-piove"><button class="piove-btn" type="button" data-piove aria-pressed="false" id="pioveBtnAd"><span class="piove-ic">🌧️</span> Piove <span class="piove-stato">no</span></button></p>
-  </section>
-
-  <!-- ============ SICUREZZA ============ -->
-  <section id="sicurezza">
-    <div class="eyebrow">Sicurezza</div>
-    <details class="acc">
-      <summary>
-        <span class="daynum" style="color:var(--bus);background:rgba(200,54,43,.14);border-color:rgba(200,54,43,.45)">⚠️</span>
-        <span class="dtit"><h3>Verifica prenotazione</h3><p>Controlli anti-phishing prima di partire</p></span>
-        <span class="chev">▼</span>
-      </summary>
-      <div class="dbody">
-        <ul class="notes">
-          <li><span class="ic">✅</span><span>Confermare tramite l'app o il sito ufficiale <b>Booking.com</b> che la prenotazione risulti attiva e il pagamento gestito dalla piattaforma.</span></li>
-          <li><span class="ic">🚫</span><span><b>Non cliccare né rispondere a link di conferma ricevuti fuori da Booking.com</b> — un tentativo di phishing è già stato individuato e bloccato durante la pianificazione di questo viaggio.</span></li>
-          <li><span class="ic">☎️</span><span>Prima dell'arrivo, contattare la struttura per confermare: indirizzo esatto, che l'unità sia quella prenotata (non un'altra), modalità di check-in, nessun pagamento extra richiesto fuori piattaforma.</span></li>
-          <li><span class="ic">🛑</span><span>Regola generale: qualunque richiesta di pagamento o "conferma" tramite link esterno è una truffa — va segnalata subito a Booking.com.</span></li>
-          <li><span class="ic">✅</span><span>Verifica Bright Carnaby Soho completata: host affidabile, indirizzo reale confermato, sistema Clevio legittimo.</span></li>
-        </ul>
-      </div>
-    </details>
   </section>
 
   <!-- ============ PROGRAMMA ============ -->
@@ -671,7 +670,7 @@
           </div>
           <div class="tcard__body">
             <h4>Aeroporto di Bologna</h4>
-            <p>Al Marconi due ore prima del volo: banco British Airways, controlli e gate.</p>
+            <p>Due ore prima del volo: banco British Airways, controlli e gate.</p>
           </div>
           <p class="tcard__credito">foto: <a href="https://commons.wikimedia.org/wiki/File:Bologna_Guglielmo_Marconi_Airport_Terminal.jpg" target="_blank" rel="noopener">Threecharlie / CC BY-SA 3.0</a></p>
         </article>
@@ -682,7 +681,8 @@
           </div>
           <div class="tcard__body">
             <h4>Volo BA547</h4>
-            <p>BLQ → LHR su Airbus A320neo: 2 ore e 40 di volo, ma a Londra sono le 08:40 perché si guadagna un’ora di fuso.</p>
+            <p>BLQ → LHR · 2 h 40 di volo. Si atterra alle 08:40, ora di Londra.</p>
+            <details class="det"><summary>Dettagli</summary><p>Airbus A320neo. A Londra l’orologio va indietro di un’ora: si guadagna un’ora di fuso.</p></details>
           </div>
           <p class="tcard__credito">foto: <a href="https://commons.wikimedia.org/wiki/File:20251011_British_Airways_G-TTNN_EGLL.jpg" target="_blank" rel="noopener">Alex Noble / CC0</a></p>
         </article>
@@ -698,7 +698,7 @@
           </div>
           <div class="tcard__body">
             <h4>Arrivo a Heathrow</h4>
-            <p>Terminal 5, quello di British Airways. Solo controllo passaporti: senza bagaglio in stiva non c’è nessun nastro da aspettare.</p>
+            <p>Terminal 5. Solo controllo passaporti: senza bagaglio in stiva, niente nastro da aspettare.</p>
           </div>
           <p class="tcard__credito">foto: <a href="https://commons.wikimedia.org/wiki/File:Terminal_5_at_London_Heathrow_Airport,_2008.jpg" target="_blank" rel="noopener">Warren Rohner / CC BY-SA 2.0</a></p>
         </article>
@@ -709,7 +709,8 @@
           </div>
           <div class="tcard__body">
             <h4>In metro verso il centro</h4>
-            <p>Piccadilly line diretta da Heathrow a Piccadilly Circus, circa 50 minuti; lì si passa sulla Bakerloo, diretta fino a Waterloo. Si tira dritto a Southbank: con gli zaini in spalla non serve passare da casa.</p>
+            <p>Piccadilly line fino a Piccadilly Circus (circa 50 min), poi Bakerloo fino a Waterloo.</p>
+            <details class="det"><summary>Dettagli</summary><p>Si tira dritto a Southbank: con gli zaini in spalla non serve passare da casa.</p></details>
           </div>
           <p class="tcard__credito">foto: <a href="https://commons.wikimedia.org/wiki/File:Edgware_Road-Bakerloo_Line-Northbound.jpg" target="_blank" rel="noopener">Chris McKenna (Thryduulf) / CC BY-SA 4.0</a></p>
         </article>
@@ -727,7 +728,8 @@
           <div class="tcard__body">
             <h4>Southbank Centre e Winter Market</h4>
             <p class="tdur">⏱️ 45 min</p>
-            <p>Pranzo con lo street food del mercatino di Natale, lungo il fiume. Si arriva un’ora prima di quanto previsto all’inizio, perché non si passa da casa: se le bancarelle non hanno ancora aperto, il lungofiume regge l’attesa.</p>
+            <p>Pranzo con lo street food del mercatino di Natale, lungo il fiume.</p>
+            <details class="det"><summary>Dettagli</summary><p>Si arriva un’ora prima di quanto previsto all’inizio, perché non si passa da casa: se le bancarelle non hanno ancora aperto, il lungofiume regge l’attesa.</p></details>
             <a class="gmap" href="https://www.google.com/maps/search/?api=1&amp;query=Southbank%20Centre%20London" target="_blank" rel="noopener">📍 Apri in Google Maps</a>
           </div>
           <p class="tcard__credito">foto: <a href="https://commons.wikimedia.org/wiki/File:Yellow_steps_at_the_Southbank_Centre,_London_-_geograph.org.uk_-_7261180.jpg" target="_blank" rel="noopener">Robin Stott / CC BY-SA 2.0</a></p>
@@ -740,7 +742,8 @@
           <div class="tcard__body">
             <h4>SEA LIFE London Aquarium</h4>
             <p class="tdur">⏱️ 1 h 45</p>
-            <p>Squali, pinguini e il tunnel sottomarino, dentro County Hall. Zaini fino a 30 litri si portano dentro; guardaroba non c’è, ma il deposito ufficiale è nello stesso edificio, alla biglietteria del London Eye: 5 £ a collo, ritiro entro le 19:00.</p>
+            <p>Zaini fino a 30 litri ammessi; guardaroba non c’è.</p>
+            <details class="det"><summary>Dettagli</summary><p>Squali, pinguini e il tunnel sottomarino, dentro County Hall. Il deposito ufficiale è nello stesso edificio, alla biglietteria del London Eye: 5 £ a collo, ritiro entro le 19:00.</p></details>
             <a class="gmap" href="https://www.google.com/maps/search/?api=1&amp;query=SEA%20LIFE%20London%20Aquarium" target="_blank" rel="noopener">📍 Apri in Google Maps</a>
           </div>
           <p class="tcard__credito">foto: <a href="https://commons.wikimedia.org/wiki/File:Underwater_Walk_of_Sea_Life_London_Aquarium.jpg" target="_blank" rel="noopener">ʘx / CC BY-SA 4.0</a></p>
@@ -753,7 +756,8 @@
           <div class="tcard__body">
             <h4>London Eye</h4>
             <p class="tdur">⏱️ 30 min</p>
-            <p>Giro di mezz’ora. A metà novembre il sole cala verso le 16:10: si sale con la luce e si scende con la città accesa. A bordo sono ammesse borse fino a 46 × 33 × 20 cm.</p>
+            <p>Giro di mezz’ora, col tramonto verso le 16:10. Borse fino a 46 × 33 × 20 cm.</p>
+            <details class="det"><summary>Dettagli</summary><p>Si sale con la luce e si scende con la città accesa.</p></details>
             <a class="gmap" href="https://www.google.com/maps/search/?api=1&amp;query=London%20Eye" target="_blank" rel="noopener">📍 Apri in Google Maps</a>
           </div>
           <p class="tcard__credito">foto: <a href="https://commons.wikimedia.org/wiki/File:London_Eye_by_Day.jpg" target="_blank" rel="noopener">Danbu14 / CC BY-SA 3.0</a></p>
@@ -765,12 +769,9 @@
           </div>
           <div class="tcard__body">
             <h4>Shrek’s Adventure! London</h4>
-            <p>🌧️ Con la pioggia, al posto della ruota: è nello stesso edificio di SEA LIFE, dentro County Hall, tutto al coperto. La ruota girerebbe anche con la pioggia, ma dall’alto si vedrebbe poco.</p>
-            <div class="plus-meta">
-              <span>📍 Riverside Building, County Hall, SE1 7PB</span>
-              <span>🕙 domenica 10:00–16:00</span>
-            </div>
-            <p class="plus-warn">⚠️ La domenica chiude alle 16:00: alle 15:30 resterebbe mezz’ora scarsa. Se piove davvero, conviene entrare subito dopo SEA LIFE, che è nello stesso edificio. Durata della visita e prezzo sono ancora da verificare.</p>
+            <p>🌧️ Al posto della ruota: stesso edificio di SEA LIFE, al coperto.</p>
+            <p class="plus-warn">⚠️ La domenica chiude alle 16:00: con la pioggia conviene entrare subito dopo SEA LIFE.</p>
+            <details class="det"><summary>Dettagli</summary><p>Alle 15:30 resterebbe mezz’ora scarsa. Riverside Building, County Hall, SE1 7PB; la domenica è aperto dalle 10:00 alle 16:00. La ruota girerebbe anche con la pioggia, ma dall’alto si vedrebbe poco. Durata della visita e prezzo sono ancora da verificare.</p></details>
             <a class="gmap" href="https://www.google.com/maps/search/?api=1&amp;query=51.5018817,-0.1193734" target="_blank" rel="noopener">📍 Apri in Google Maps</a>
           </div>
           <p class="tcard__credito">foto: immagine promozionale di Shrek’s Adventure! London</p>
@@ -787,7 +788,8 @@
           </div>
           <div class="tcard__body">
             <h4>Spesa da Lina Stores</h4>
-            <p>Gastronomia italiana in Brewer Street, 2 minuti da casa: pasta fresca, salumi, sughi. La domenica chiude alle 18:00, quindi è la prima cosa da fare rientrando.</p>
+            <p>In Brewer Street, 2 minuti da casa. La domenica chiude alle 18:00. Piano B: Whole Foods a Piccadilly Circus, aperto fino alle 18:00.</p>
+            <details class="det"><summary>Dettagli</summary><p>Gastronomia italiana: pasta fresca, salumi, sughi. È la prima cosa da fare rientrando; Whole Foods è sulla via del rientro.</p></details>
             <a class="gmap" href="https://www.google.com/maps/search/?api=1&amp;query=Lina%20Stores%20Brewer%20Street%20London" target="_blank" rel="noopener">📍 Apri in Google Maps</a>
           </div>
           <p class="tcard__credito">foto: <a href="https://commons.wikimedia.org/wiki/File:Lina_Stores,_Soho,_W1.jpg" target="_blank" rel="noopener">Ewan-M / CC BY-SA 2.0</a></p>
@@ -799,7 +801,7 @@
           </div>
           <div class="tcard__body">
             <h4>Luci di Carnaby Street</h4>
-            <p>Sono la via di casa: due minuti a piedi, e a quell’ora sono accese da un pezzo — a metà novembre buio alle 16:15.</p>
+            <p>Sulla via di casa, due minuti a piedi: a quell’ora sono accese da un pezzo (buio alle 16:15).</p>
             <a class="gmap" href="https://www.google.com/maps/search/?api=1&amp;query=Carnaby%20Street%20London" target="_blank" rel="noopener">📍 Apri in Google Maps</a>
           </div>
           <p class="tcard__credito">foto: <a href="https://commons.wikimedia.org/wiki/File:Carnaby_Street_Christmas_Lights_2019_-_geograph.org.uk_-_6329567.jpg" target="_blank" rel="noopener">Christine Matthews / CC BY-SA 2.0</a></p>
@@ -811,28 +813,13 @@
           </div>
           <div class="tcard__body">
             <h4>Check-in, zaini giù e cena</h4>
-            <p>Chiave digitale Clevio, ingresso libero. Gli zaini si posano solo adesso, dopo averli portati tutto il giorno. Cena in appartamento con la spesa di Lina Stores.</p>
+            <p>Chiave digitale Clevio, ingresso libero. Cena in appartamento con la spesa di Lina Stores.</p>
+            <details class="det"><summary>Dettagli</summary><p>Gli zaini si posano solo adesso, dopo averli portati tutto il giorno.</p></details>
             <a class="gmap" href="https://www.google.com/maps/search/?api=1&amp;query=79%20Beak%20Street%2C%20Soho%2C%20London%20W1F%209SU" target="_blank" rel="noopener">📍 Apri in Google Maps</a>
           </div>
           <p class="tcard__credito">foto: <a href="https://commons.wikimedia.org/wiki/File:79_Beak_Street,_Soho,_January_2022.jpg" target="_blank" rel="noopener">No Swan So Fine / CC BY-SA 4.0</a></p>
         </article>
-        <article class="tcard tcard--plus" data-giorno="2026-11-15" data-tipo="plus">
-          <div class="tcard__foto">
-            <img src="assets/tappe/londra/mms.webp" width="800" height="450" alt="La vetrina gialla del negozio M&amp;M’S a Swiss Court, vicino a Leicester Square" loading="lazy" decoding="async">
-            <span class="plus-badge">✨ Plus — se avanza tempo</span>
-          </div>
-          <div class="tcard__body">
-            <h4>M&amp;M’S London</h4>
-            <p>Quattro piani, il Pick &amp; Mix a peso e un sacco da vedere. Non è nel programma di nessun giorno: ci si passa quando capita.</p>
-            <div class="plus-meta">
-              <span>🚶 7 min da casa · 0,57 km</span>
-              <span>📍 1 Swiss Ct, W1D 6AP</span>
-            </div>
-            <p class="plus-warn">⚠️ Prezzi alti segnalati nelle recensioni: bello da girare, occhio al Pick &amp; Mix a peso.</p>
-            <a class="gmap" href="https://www.google.com/maps/search/?api=1&amp;query=51.5106715,-0.1312887&amp;query_place_id=ChIJv_CbOtIEdkgR-XVC-Vkqj3g" target="_blank" rel="noopener">📍 Apri in Google Maps</a>
-          </div>
-          <p class="tcard__credito">foto di famiglia</p>
-        </article>
+        <button class="plus-riga" type="button" data-plus="mms"><span aria-hidden="true">✨</span><span>Se avanza tempo: <b>M&amp;M’S London</b>, 7 min a piedi</span><span aria-hidden="true">›</span></button>
       </div>
     </details>
 
@@ -871,7 +858,8 @@
           <div class="tcard__body">
             <h4>Trafalgar Square</h4>
             <p class="tdur">⏱️ 15 min</p>
-            <p>I leoni, le fontane e la National Gallery. L’albero norvegese di solito arriva a inizio dicembre: il 16 novembre potrebbe non esserci ancora.</p>
+            <p>I leoni, le fontane e la National Gallery.</p>
+            <details class="det"><summary>Dettagli</summary><p>L’albero norvegese di solito arriva a inizio dicembre: il 16 novembre potrebbe non esserci ancora.</p></details>
             <a class="gmap" href="https://www.google.com/maps/search/?api=1&amp;query=Trafalgar%20Square%20London" target="_blank" rel="noopener">📍 Apri in Google Maps</a>
           </div>
           <p class="tcard__credito">foto: <a href="https://commons.wikimedia.org/wiki/File:Trafalgar_Square,_London_2_-_Jun_2009.jpg" target="_blank" rel="noopener">Diliff / CC BY-SA 3.0</a></p>
@@ -884,7 +872,8 @@
           <div class="tcard__body">
             <h4>Whitehall e Horse Guards</h4>
             <p class="tdur">⏱️ 20 min</p>
-            <p>Le sentinelle a cavallo nel cortile. Il cambio della guardia a cavallo è alle 11:00 (10:00 la domenica): calendario da confermare.</p>
+            <p>Le sentinelle a cavallo nel cortile. Cambio della guardia a cavallo alle 11:00: calendario da confermare.</p>
+            <details class="det"><summary>Dettagli</summary><p>La domenica il cambio è alle 10:00.</p></details>
             <a class="gmap" href="https://www.google.com/maps/search/?api=1&amp;query=Horse%20Guards%20Parade%20London" target="_blank" rel="noopener">📍 Apri in Google Maps</a>
           </div>
           <p class="tcard__credito">foto: <a href="https://commons.wikimedia.org/wiki/File:London_,_Westminster_-_Horse_Guards_Parade_-_geograph.org.uk_-_2546769.jpg" target="_blank" rel="noopener">Lewis Clarke / CC BY-SA 2.0</a></p>
@@ -959,7 +948,8 @@
           <div class="tcard__body">
             <h4>Harrods</h4>
             <p class="tdur">⏱️ 1 h</p>
-            <p>Piccadilly line diretta da Green Park a Knightsbridge, zero cambi. Vetrine di Natale e tè alle Tea Rooms.</p>
+            <p>Piccadilly line diretta da Green Park a Knightsbridge, zero cambi.</p>
+            <details class="det"><summary>Dettagli</summary><p>Vetrine di Natale e tè alle Tea Rooms.</p></details>
             <a class="gmap" href="https://www.google.com/maps/search/?api=1&amp;query=Harrods%20London" target="_blank" rel="noopener">📍 Apri in Google Maps</a>
           </div>
           <p class="tcard__credito">foto: <a href="https://commons.wikimedia.org/wiki/File:Harrods_Knightsbridge_exterior_Christmas_decorations_in_November_2022.jpg" target="_blank" rel="noopener">Editor5807 / CC BY-SA 4.0</a></p>
@@ -977,7 +967,8 @@
           <div class="tcard__body">
             <h4>Natural History Museum</h4>
             <p class="tdur">⏱️ 1 h 15</p>
-            <p>Dieci minuti a piedi da Harrods. I tre biglietti sono già presi, con ingresso a fascia oraria alle 16:30: non si entra prima. Il museo chiude alle 17:50.</p>
+            <p>Ingresso a fascia oraria alle 16:30, non prima. Chiude alle 17:50. Dieci minuti a piedi da Harrods.</p>
+            <details class="det"><summary>Dettagli</summary><p>I tre biglietti sono già presi: sono nella sezione Biglietti, da mostrare allo schermo.</p></details>
             <a class="gmap" href="https://www.google.com/maps/search/?api=1&amp;query=Natural%20History%20Museum%20London" target="_blank" rel="noopener">📍 Apri in Google Maps</a>
             <button class="gmap gmap--btn" type="button" data-codice="1">🎟️ Mostra i biglietti</button>
           </div>
@@ -1005,23 +996,7 @@
           </div>
           <p class="tcard__credito">foto: <a href="https://commons.wikimedia.org/wiki/File:Regent_Street_Christmas_Lights_2016_-_geograph.org.uk_-_5233956.jpg" target="_blank" rel="noopener">Oast House Archive / CC BY-SA 2.0</a></p>
         </article>
-        <article class="tcard tcard--plus" data-giorno="2026-11-16" data-tipo="plus">
-          <div class="tcard__foto">
-            <img src="assets/tappe/londra/mms.webp" width="800" height="450" alt="La vetrina gialla del negozio M&amp;M’S a Swiss Court, vicino a Leicester Square" loading="lazy" decoding="async">
-            <span class="plus-badge">✨ Plus — se avanza tempo</span>
-          </div>
-          <div class="tcard__body">
-            <h4>M&amp;M’S London</h4>
-            <p>Quattro piani, il Pick &amp; Mix a peso e un sacco da vedere. Non è nel programma di nessun giorno: ci si passa quando capita.</p>
-            <div class="plus-meta">
-              <span>🚶 7 min da casa · 0,57 km</span>
-              <span>📍 1 Swiss Ct, W1D 6AP</span>
-            </div>
-            <p class="plus-warn">⚠️ Prezzi alti segnalati nelle recensioni: bello da girare, occhio al Pick &amp; Mix a peso.</p>
-            <a class="gmap" href="https://www.google.com/maps/search/?api=1&amp;query=51.5106715,-0.1312887&amp;query_place_id=ChIJv_CbOtIEdkgR-XVC-Vkqj3g" target="_blank" rel="noopener">📍 Apri in Google Maps</a>
-          </div>
-          <p class="tcard__credito">foto di famiglia</p>
-        </article>
+        <button class="plus-riga" type="button" data-plus="mms"><span aria-hidden="true">✨</span><span>Se avanza tempo: <b>M&amp;M’S London</b>, 7 min a piedi</span><span aria-hidden="true">›</span></button>
       </div>
     </details>
 
@@ -1046,7 +1021,8 @@
           </div>
           <div class="tcard__body">
             <h4>Check-out, zaini in spalla</h4>
-            <p>La camera si lascia alle 10:30. Con solo bagaglio a mano non serve nessun deposito: gli zaini vengono a Covent Garden e poi in aeroporto.</p>
+            <p>Camera da lasciare alle 10:30. Zaini in spalla: si va a Covent Garden e poi in aeroporto.</p>
+            <details class="det"><summary>Dettagli</summary><p>Con solo bagaglio a mano non serve nessun deposito.</p></details>
             <a class="gmap" href="https://www.google.com/maps/search/?api=1&amp;query=79%20Beak%20Street%2C%20Soho%2C%20London%20W1F%209SU" target="_blank" rel="noopener">📍 Apri in Google Maps</a>
           </div>
           <p class="tcard__credito">foto: <a href="https://commons.wikimedia.org/wiki/File:79_Beak_Street,_Soho,_January_2022.jpg" target="_blank" rel="noopener">No Swan So Fine / CC BY-SA 4.0</a></p>
@@ -1077,7 +1053,8 @@
           </div>
           <div class="tcard__body">
             <h4>Partenza per Heathrow</h4>
-            <p>Entro le 15:15–15:30, limite per stare larghi. Gli zaini sono già con voi dal check-out, quindi si parte da dove siete: Piccadilly line diretta da Piccadilly Circus o da Covent Garden con un cambio.</p>
+            <p>Uscire entro le 15:15–15:30. Piccadilly line da Piccadilly Circus, o da Covent Garden con un cambio.</p>
+            <details class="det"><summary>Dettagli</summary><p>È il limite per stare larghi. Gli zaini sono già con voi dal check-out, quindi si parte da dove siete.</p></details>
           </div>
           <p class="tcard__credito">foto: <a href="https://commons.wikimedia.org/wiki/File:Edgware_Road-Bakerloo_Line-Northbound.jpg" target="_blank" rel="noopener">Chris McKenna (Thryduulf) / CC BY-SA 4.0</a></p>
         </article>
@@ -1088,7 +1065,7 @@
           </div>
           <div class="tcard__body">
             <h4>Heathrow, Terminal 5 · BA546</h4>
-            <p>Circa 50 minuti di metro dal centro. Check-in, controlli e gate: il volo parte dal Terminal 5.</p>
+            <p>Circa 50 minuti di metro dal centro. Check-in, controlli e gate al Terminal 5.</p>
           </div>
           <p class="tcard__credito">foto: <a href="https://commons.wikimedia.org/wiki/File:Departures_Terminal_5,_London_Heathrow_Airport_(33215594911).jpg" target="_blank" rel="noopener">Andrew Milligan sumo / CC BY 2.0</a></p>
         </article>
@@ -1099,7 +1076,8 @@
           </div>
           <div class="tcard__body">
             <h4>Volo BA546</h4>
-            <p>LHR → BLQ su Airbus A320: 2 ore e 15 di volo. In Italia si riporta avanti l’orologio di un’ora.</p>
+            <p>LHR → BLQ · 2 h 15 di volo. In Italia l’orologio va avanti di un’ora.</p>
+            <details class="det"><summary>Dettagli</summary><p>Airbus A320.</p></details>
           </div>
           <p class="tcard__credito">foto: <a href="https://commons.wikimedia.org/wiki/File:20251011_British_Airways_G-TTNN_EGLL.jpg" target="_blank" rel="noopener">Alex Noble / CC0</a></p>
         </article>
@@ -1114,39 +1092,8 @@
           </div>
           <p class="tcard__credito">foto: <a href="https://commons.wikimedia.org/wiki/File:Bologna_Guglielmo_Marconi_Airport_aerial.jpg" target="_blank" rel="noopener">Ex13 / CC BY-SA 3.0</a></p>
         </article>
-        <article class="tcard tcard--plus" data-giorno="2026-11-17" data-tipo="plus">
-          <div class="tcard__foto">
-            <img src="assets/tappe/londra/pollock.webp" width="800" height="450" alt="L’ingresso di Benjamin Pollock’s Toy Shop sotto i portici del mercato di Covent Garden: insegna rossa, porte rosse e figurine di carta" loading="lazy" decoding="async">
-            <span class="plus-badge">✨ Plus — se avanza tempo</span>
-          </div>
-          <div class="tcard__body">
-            <h4>Benjamin Pollock’s Toyshop</h4>
-            <p>Negozio storico di teatrini di carta, con i personaggi da ritagliare e montare. È dentro il mercato coperto di Covent Garden: si passa lì davanti comunque, zero deviazione.</p>
-            <div class="plus-meta">
-              <span>🚶 dentro Covent Garden Market</span>
-              <span>📍 Covent Garden Piazza</span>
-            </div>
-            <a class="gmap" href="https://www.google.com/maps/search/?api=1&amp;query=51.5119629,-0.1226650" target="_blank" rel="noopener">📍 Apri in Google Maps</a>
-          </div>
-          <p class="tcard__credito">foto: <a href="https://commons.wikimedia.org/wiki/File:Benjamin_Pollocks_Toy_Shop_exterior.jpg" target="_blank" rel="noopener">Jack1956 / CC0</a></p>
-        </article>
-        <article class="tcard tcard--plus" data-giorno="2026-11-17" data-tipo="plus">
-          <div class="tcard__foto">
-            <img src="assets/tappe/londra/mms.webp" width="800" height="450" alt="La vetrina gialla del negozio M&amp;M’S a Swiss Court, vicino a Leicester Square" loading="lazy" decoding="async">
-            <span class="plus-badge">✨ Plus — se avanza tempo</span>
-          </div>
-          <div class="tcard__body">
-            <h4>M&amp;M’S London</h4>
-            <p>Quattro piani, il Pick &amp; Mix a peso e un sacco da vedere. Non è nel programma di nessun giorno: ci si passa quando capita.</p>
-            <div class="plus-meta">
-              <span>🚶 7 min da casa · 0,57 km</span>
-              <span>📍 1 Swiss Ct, W1D 6AP</span>
-            </div>
-            <p class="plus-warn">⚠️ Prezzi alti segnalati nelle recensioni: bello da girare, occhio al Pick &amp; Mix a peso.</p>
-            <a class="gmap" href="https://www.google.com/maps/search/?api=1&amp;query=51.5106715,-0.1312887&amp;query_place_id=ChIJv_CbOtIEdkgR-XVC-Vkqj3g" target="_blank" rel="noopener">📍 Apri in Google Maps</a>
-          </div>
-          <p class="tcard__credito">foto di famiglia</p>
-        </article>
+        <button class="plus-riga" type="button" data-plus="pollock"><span aria-hidden="true">✨</span><span>Se avanza tempo: <b>Benjamin Pollock’s Toyshop</b>, dentro il mercato</span><span aria-hidden="true">›</span></button>
+        <button class="plus-riga" type="button" data-plus="mms"><span aria-hidden="true">✨</span><span>Se avanza tempo: <b>M&amp;M’S London</b>, 7 min a piedi</span><span aria-hidden="true">›</span></button>
       </div>
     </details>
   </section>
@@ -1245,63 +1192,6 @@
     </div>
   </section>
 
-  <!-- ============ PROGRAMMA ORA PER ORA ============ -->
-  <section id="orario">
-    <div class="eyebrow">Programma ora per ora</div>
-    <h2>Timeline dei tre giorni</h2>
-    <p class="sub2">Colpo d’occhio su orari e passaggi, giorno per giorno.</p>
-
-    <div class="hp-day dom">
-      <span class="hp-badge dom">Domenica 15 — Southbank</span>
-      <ul class="hp-tl">
-        <li><span class="hp-t">05:15</span><span class="hp-d">Aeroporto di Bologna</span></li>
-        <li><span class="hp-t">07:00</span><span class="hp-d">Volo BA547, BLQ → LHR</span></li>
-        <li><span class="hp-t">08:40</span><span class="hp-d">Arrivo a Heathrow, Terminal 5</span></li>
-        <li><span class="hp-t">09:30</span><span class="hp-d">In metro: Piccadilly, poi Bakerloo</span></li>
-        <li><span class="hp-t">10:45</span><span class="hp-d">Southbank Centre e Winter Market</span></li>
-        <li><span class="hp-t">12:45</span><span class="hp-d">SEA LIFE London Aquarium</span></li>
-        <li><span class="hp-t">15:30</span><span class="hp-d">London Eye</span></li>
-        <li><span class="hp-t">17:15</span><span class="hp-d">Spesa da Lina Stores</span></li>
-        <li><span class="hp-t">17:45</span><span class="hp-d">Luci di Carnaby Street</span></li>
-        <li><span class="hp-t">18:15</span><span class="hp-d">Check-in, zaini giù e cena</span></li>
-      </ul>
-    </div>
-
-    <div class="hp-day lun">
-      <span class="hp-badge lun">Lunedì 16 — Royal walk e museo</span>
-      <ul class="hp-tl">
-        <li><span class="hp-t">09:15</span><span class="hp-d">Si parte da Soho</span></li>
-        <li><span class="hp-t">09:45</span><span class="hp-d">Trafalgar Square</span></li>
-        <li><span class="hp-t">10:30</span><span class="hp-d">Whitehall e Horse Guards</span></li>
-        <li><span class="hp-t">11:30</span><span class="hp-d">Big Ben e il Parlamento</span></li>
-        <li><span class="hp-t">12:00</span><span class="hp-d">St James’s Park</span></li>
-        <li><span class="hp-t">12:45</span><span class="hp-d">Buckingham Palace</span></li>
-        <li><span class="hp-t">13:15</span><span class="hp-d">Green Park</span></li>
-        <li><span class="hp-t">14:30</span><span class="hp-d">Harrods</span></li>
-        <li><span class="hp-t">16:30</span><span class="hp-d">Natural History Museum · ingresso a fascia oraria</span></li>
-        <li><span class="hp-t">18:00</span><span class="hp-d">Luci di Regent Street</span></li>
-      </ul>
-    </div>
-
-    <div class="hp-day mar">
-      <span class="hp-badge mar">Martedì 17 — Covent Garden e rientro</span>
-      <ul class="hp-tl">
-        <li><span class="hp-t">10:30</span><span class="hp-d">Check-out, zaini in spalla</span></li>
-        <li><span class="hp-t">11:00</span><span class="hp-d">Covent Garden</span></li>
-        <li><span class="hp-t">15:15</span><span class="hp-d">Partenza per Heathrow</span></li>
-        <li><span class="hp-t">16:10</span><span class="hp-d">Heathrow, Terminal 5</span></li>
-        <li><span class="hp-t">18:10</span><span class="hp-d">Volo BA546, LHR → BLQ</span></li>
-        <li><span class="hp-t">21:25</span><span class="hp-d">Atterraggio a Bologna</span></li>
-      </ul>
-    </div>
-
-    <div class="hp-notes">
-      <div class="hp-note warn">⚠️ Lina Stores la domenica chiude alle 18:00 — la spesa va fatta al rientro dal London Eye, entro le 17:30-17:45. Piano B: Whole Foods a Piccadilly Circus, aperto fino alle 18:00 di domenica e sulla via del rientro.</div>
-      <div class="hp-note info">ℹ️ Il check-in è self-service con chiave digitale Clevio, senza orario limite: non serve rientrare alle 15:00 in punto, si fa alle 18:00 tornando da Southbank.</div>
-      <div class="hp-note info">ℹ️ Orari proposti, non prenotati: gli unici vincoli fissi sono i voli (BA547 alle 07:00 e BA546 alle 18:10, entrambi dal Terminal 5) e il check-out delle 10:30.</div>
-    </div>
-  </section>
-
   <!-- ============ IL VIAGGIO DI OLLY ============ -->
   <section id="olly">
     <div class="eyebrow">Per Olly</div>
@@ -1378,28 +1268,6 @@
       </article>
     </div>
 
-    <details class="acc" style="margin-top:18px">
-      <summary>
-        <span class="daynum" style="color:var(--gold);background:rgba(212,169,78,.1);font-size:15px">📷</span>
-        <span class="dtit"><h3>Crediti fotografici</h3><p>Foto da Wikimedia Commons</p></span>
-        <span class="chev">▼</span>
-      </summary>
-      <div class="dbody">
-        <ul class="notes credits" id="ollyCredits">
-          <li><span class="ic">✈️</span><span><b>Aeroplano</b> — Alf van Beem, Public Domain (CC0) <small><a href="https://commons.wikimedia.org/wiki/File:G-EUXF_British_Airways_Airbus_A321-231_takeoff_from_Schiphol_(AMS_-_EHAM),_The_Netherlands,_11june2014,_pic-1.JPG" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
-          <li><span class="ic">🦈</span><span><b>Squali dell'acquario</b> — City Dweller 2, CC BY-SA 4.0 <small><a href="https://commons.wikimedia.org/wiki/File:Georgia_Aquarium_Hammerhead_Shark_swimming_in_tank_December_29,_2025.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
-          <li><span class="ic">🐧</span><span><b>Pinguini dell'acquario</b> — Antoine Lamielle, CC BY-SA 4.0 <small><a href="https://commons.wikimedia.org/wiki/File:2020-11_Kerguelen_Islands_-_Gentoo_penguin_01.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
-          <li><span class="ic">🎡</span><span><b>La ruota panoramica</b> — Peter S / Geograph Britain and Ireland, CC BY-SA 2.0 <small><a href="https://commons.wikimedia.org/wiki/File:The_London_Eye_illuminated_at_night_-_geograph.org.uk_-_2198478.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
-          <li><span class="ic">🐿️</span><span><b>Scoiattolo grigio</b> — Diliff, CC BY-SA 3.0 <small><a href="https://commons.wikimedia.org/wiki/File:Eastern_Grey_Squirrel_in_St_James%27s_Park,_London_-_Nov_2006_edit.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
-          <li><span class="ic">🦢</span><span><b>Pellicano</b> — Rmpbedford, CC BY-SA 4.0 <small><a href="https://commons.wikimedia.org/wiki/File:Pelicans_in_St_James%27s_Park,_London.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
-          <li><span class="ic">👑</span><span><b>Buckingham Palace</b> — Cristian Bortes, CC BY 2.0 <small><a href="https://commons.wikimedia.org/wiki/File:London_(6489481669).jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
-          <li><span class="ic">✨</span><span><b>Le luci di Natale</b> — The wub, CC BY-SA 4.0 <small><a href="https://commons.wikimedia.org/wiki/File:Christmas_lights_in_Carnaby_Street,_London,_2022.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
-                  <li><span class="ic">💂</span><span><b>La guardia con l'elmo</b> — Lewis Clarke, CC BY-SA 2.0 <small><a href="https://commons.wikimedia.org/wiki/File:London_,_Westminster_-_Horse_Guards_Parade_-_geograph.org.uk_-_2546769.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
-          <li><span class="ic">🐋</span><span><b>La balena del museo</b> — APK, CC BY 4.0 <small><a href="https://commons.wikimedia.org/wiki/File:Hintze_Hall,_Natural_History_Museum,_London_-_4.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
-          <li><span class="ic">🎪</span><span><b>Il mercato coperto</b> — Dietmar Rabich, CC BY-SA 4.0 <small><a href="https://commons.wikimedia.org/wiki/File:London,_Covent_Garden_--_2016_--_4878.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
-        </ul>
-      </div>
-    </details>
   </section>
 
   <!-- ============ MAPPA ============ -->
@@ -1422,7 +1290,11 @@
   <section id="info" aria-labelledby="infoTit">
     <div class="eyebrow">Info</div>
     <h2 id="infoTit">Da sapere</h2>
-    <p><button class="dv-badge" type="button" data-dv><span class="dv-n"></span> da verificare</button></p>
+    <div class="card" id="listaPartenza">
+      <h3>📋 Prima di partire</h3>
+      <p class="pp-conti" id="ppConti"></p>
+      <div id="ppTutta"></div>
+    </div>
     <div class="card">
       <h3>🏠 Note sull’alloggio</h3>
       <p class="ci-co-note">🎒 I due buchi (domenica prima delle 15:00, martedì dopo le 10:30) non sono un problema: <b>si viaggia con il solo bagaglio a mano sotto il sedile</b> e gli zaini restano in spalla. Da sapere però: il check-in è self-service, <b>una reception dove lasciare i bagagli potrebbe non esserci</b> — va chiarito con l’host prima di un eventuale viaggio con la valigia.</p>
@@ -1430,6 +1302,28 @@
       <p class="why"><b>Perché questa zona:</b> è il punto di minor cammino cumulativo per la giornata di lunedì (la Royal walk, sette tappe), tutte raggiungibili in 12–21 minuti a piedi, zero attraversamenti del fiume. Si sacrifica la comodità verso Southbank e South Kensington (serve la metro), accettabile perché cadono su giornate più leggere (domenica e martedì).</p>
     </div>
   </section>
+
+  <!-- ============ SICUREZZA ============ -->
+  <section id="sicurezza">
+    <div class="eyebrow">Sicurezza</div>
+    <details class="acc">
+      <summary>
+        <span class="daynum" style="color:var(--bus);background:rgba(200,54,43,.14);border-color:rgba(200,54,43,.45)">⚠️</span>
+        <span class="dtit"><h3>Verifica prenotazione</h3><p>Controlli anti-phishing prima di partire</p></span>
+        <span class="chev">▼</span>
+      </summary>
+      <div class="dbody">
+        <ul class="notes">
+          <li><span class="ic">✅</span><span>Confermare tramite l'app o il sito ufficiale <b>Booking.com</b> che la prenotazione risulti attiva e il pagamento gestito dalla piattaforma.</span></li>
+          <li><span class="ic">🚫</span><span><b>Non cliccare né rispondere a link di conferma ricevuti fuori da Booking.com</b> — un tentativo di phishing è già stato individuato e bloccato durante la pianificazione di questo viaggio.</span></li>
+          <li><span class="ic">☎️</span><span>Prima dell'arrivo, contattare la struttura per confermare: indirizzo esatto, che l'unità sia quella prenotata (non un'altra), modalità di check-in, nessun pagamento extra richiesto fuori piattaforma.</span></li>
+          <li><span class="ic">🛑</span><span>Regola generale: qualunque richiesta di pagamento o "conferma" tramite link esterno è una truffa — va segnalata subito a Booking.com.</span></li>
+          <li><span class="ic">✅</span><span>Verifica Bright Carnaby Soho completata: host affidabile, indirizzo reale confermato, sistema Clevio legittimo.</span></li>
+        </ul>
+      </div>
+    </details>
+  </section>
+
 
   <!-- ============ BUDGET ============ -->
   <section id="budget">
@@ -1458,33 +1352,6 @@
     </details>
   </section>
 
-  <!-- ============ CHECKLIST ============ -->
-  <section id="checklist">
-    <div class="eyebrow">Checklist</div>
-    <details class="acc" open>
-      <summary>
-        <span class="daynum" style="color:var(--gold);background:rgba(212,169,78,.1)">📋</span>
-        <span class="dtit"><h3>Da fare prima di partire</h3><p id="clCount">0 su 9 completate</p></span>
-        <span class="chev">▼</span>
-      </summary>
-      <div class="dbody">
-        <ul class="clist" id="clist">
-          <li><label><input type="checkbox" data-ck="checkin"><span class="lt">Check-in online e posti insieme<small>Si apre 24 ore prima. BA siede i bambini sotto i 12 anni accanto a un adulto: verificare al check-in.</small></span></label></li>
-          <li><label><input type="checkbox" data-ck="passaporto-olly"><span class="lt">Avviare pratica passaporto Olly<small>Questura Bologna, bimba presente, ~15–20 gg lavorativi. La CIE NON basta post-Brexit.</small></span></label></li>
-          <li><label><input type="checkbox" data-ck="passaporti"><span class="lt">Verificare validità passaporti Alessandro e Vale</span></label></li>
-          <li><label><input type="checkbox" data-ck="eta"><span class="lt">UK ETA per tutti e tre<small>Si fa online.</small></span></label></li>
-          <li><label><input type="checkbox" data-ck="guardia"><span class="lt">Verificare calendario cambio della guardia<small>~3 mesi prima.</small></span></label></li>
-          <li><label><input type="checkbox" data-ck="mercatino"><span class="lt">Verificare apertura mercatino Natale Southbank per il 15/11</span></label></li>
-          <li><label><input type="checkbox" data-ck="biglietti"><span class="lt">Prenotare online London Eye e SEA LIFE<small>Il biglietto combinato costa meno di due separati.</small></span></label></li>
-          <li><label><input type="checkbox" data-ck="assicurazione"><span class="lt">Assicurazione viaggio</span></label></li>
-          <li><label><input type="checkbox" data-ck="passeggino"><span class="lt">Piano B passeggino<small>Noleggio con consegna in appartamento.</small></span></label></li>
-        </ul>
-        <p class="cprog">Completate: <b id="clDone">0</b> / <b>9</b></p>
-        <p class="cnote">Le spunte restano solo finché la pagina è aperta.</p>
-      </div>
-    </details>
-  </section>
-
   <!-- ============ NOTE PRATICHE ============ -->
   <section id="note">
     <div class="eyebrow">Note pratiche</div>
@@ -1508,6 +1375,76 @@
     </div>
   </section>
 
+  <!-- ============ CREDITI ============ -->
+  <section id="crediti">
+    <div class="eyebrow">Crediti foto</div>
+    <details class="acc" style="margin-top:14px">
+      <summary>
+        <span class="daynum" style="color:var(--gold);background:rgba(212,169,78,.1);font-size:15px">📷</span>
+        <span class="dtit"><h3>Crediti fotografici</h3><p>Foto da Wikimedia Commons</p></span>
+        <span class="chev">▼</span>
+      </summary>
+      <div class="dbody">
+        <ul class="notes credits" id="ollyCredits">
+          <li><span class="ic">✈️</span><span><b>Aeroplano</b> — Alf van Beem, Public Domain (CC0) <small><a href="https://commons.wikimedia.org/wiki/File:G-EUXF_British_Airways_Airbus_A321-231_takeoff_from_Schiphol_(AMS_-_EHAM),_The_Netherlands,_11june2014,_pic-1.JPG" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
+          <li><span class="ic">🦈</span><span><b>Squali dell'acquario</b> — City Dweller 2, CC BY-SA 4.0 <small><a href="https://commons.wikimedia.org/wiki/File:Georgia_Aquarium_Hammerhead_Shark_swimming_in_tank_December_29,_2025.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
+          <li><span class="ic">🐧</span><span><b>Pinguini dell'acquario</b> — Antoine Lamielle, CC BY-SA 4.0 <small><a href="https://commons.wikimedia.org/wiki/File:2020-11_Kerguelen_Islands_-_Gentoo_penguin_01.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
+          <li><span class="ic">🎡</span><span><b>La ruota panoramica</b> — Peter S / Geograph Britain and Ireland, CC BY-SA 2.0 <small><a href="https://commons.wikimedia.org/wiki/File:The_London_Eye_illuminated_at_night_-_geograph.org.uk_-_2198478.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
+          <li><span class="ic">🐿️</span><span><b>Scoiattolo grigio</b> — Diliff, CC BY-SA 3.0 <small><a href="https://commons.wikimedia.org/wiki/File:Eastern_Grey_Squirrel_in_St_James%27s_Park,_London_-_Nov_2006_edit.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
+          <li><span class="ic">🦢</span><span><b>Pellicano</b> — Rmpbedford, CC BY-SA 4.0 <small><a href="https://commons.wikimedia.org/wiki/File:Pelicans_in_St_James%27s_Park,_London.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
+          <li><span class="ic">👑</span><span><b>Buckingham Palace</b> — Cristian Bortes, CC BY 2.0 <small><a href="https://commons.wikimedia.org/wiki/File:London_(6489481669).jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
+          <li><span class="ic">✨</span><span><b>Le luci di Natale</b> — The wub, CC BY-SA 4.0 <small><a href="https://commons.wikimedia.org/wiki/File:Christmas_lights_in_Carnaby_Street,_London,_2022.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
+                  <li><span class="ic">💂</span><span><b>La guardia con l'elmo</b> — Lewis Clarke, CC BY-SA 2.0 <small><a href="https://commons.wikimedia.org/wiki/File:London_,_Westminster_-_Horse_Guards_Parade_-_geograph.org.uk_-_2546769.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
+          <li><span class="ic">🐋</span><span><b>La balena del museo</b> — APK, CC BY 4.0 <small><a href="https://commons.wikimedia.org/wiki/File:Hintze_Hall,_Natural_History_Museum,_London_-_4.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
+          <li><span class="ic">🎪</span><span><b>Il mercato coperto</b> — Dietmar Rabich, CC BY-SA 4.0 <small><a href="https://commons.wikimedia.org/wiki/File:London,_Covent_Garden_--_2016_--_4878.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
+        </ul>
+      </div>
+    </details>
+  </section>
+
+  <!-- schede complete delle tappe "se avanza tempo": una copia sola, si aprono dalle righe dei giorni -->
+  <template id="plusSchede">
+        <article class="tcard tcard--plus" data-plus-id="pollock" data-giorno="2026-11-17" data-tipo="plus">
+          <div class="tcard__foto">
+            <img src="assets/tappe/londra/pollock.webp" width="800" height="450" alt="L’ingresso di Benjamin Pollock’s Toy Shop sotto i portici del mercato di Covent Garden: insegna rossa, porte rosse e figurine di carta" loading="lazy" decoding="async">
+            <span class="plus-badge">✨ Plus — se avanza tempo</span>
+          </div>
+          <div class="tcard__body">
+            <h4>Benjamin Pollock’s Toyshop</h4>
+            <p>Teatrini di carta storici, con i personaggi da ritagliare e montare. È dentro il mercato coperto: zero deviazione.</p>
+            <div class="plus-meta">
+              <span>🚶 dentro Covent Garden Market</span>
+              <span>📍 Covent Garden Piazza</span>
+            </div>
+            <a class="gmap" href="https://www.google.com/maps/search/?api=1&amp;query=51.5119629,-0.1226650" target="_blank" rel="noopener">📍 Apri in Google Maps</a>
+          </div>
+          <p class="tcard__credito">foto: <a href="https://commons.wikimedia.org/wiki/File:Benjamin_Pollocks_Toy_Shop_exterior.jpg" target="_blank" rel="noopener">Jack1956 / CC0</a></p>
+        </article>
+        <article class="tcard tcard--plus" data-plus-id="mms" data-giorno="2026-11-15" data-tipo="plus">
+          <div class="tcard__foto">
+            <img src="assets/tappe/londra/mms.webp" width="800" height="450" alt="La vetrina gialla del negozio M&amp;M’S a Swiss Court, vicino a Leicester Square" loading="lazy" decoding="async">
+            <span class="plus-badge">✨ Plus — se avanza tempo</span>
+          </div>
+          <div class="tcard__body">
+            <h4>M&amp;M’S London</h4>
+            <p>Quattro piani e il Pick &amp; Mix a peso: ci si passa quando capita.</p>
+            <div class="plus-meta">
+              <span>🚶 7 min da casa · 0,57 km</span>
+              <span>📍 1 Swiss Ct, W1D 6AP</span>
+            </div>
+            <p class="plus-warn">⚠️ Prezzi alti segnalati nelle recensioni: occhio al Pick &amp; Mix a peso.</p>
+            <a class="gmap" href="https://www.google.com/maps/search/?api=1&amp;query=51.5106715,-0.1312887&amp;query_place_id=ChIJv_CbOtIEdkgR-XVC-Vkqj3g" target="_blank" rel="noopener">📍 Apri in Google Maps</a>
+          </div>
+          <p class="tcard__credito">foto di famiglia</p>
+        </article>
+  </template>
+  <div class="nov-velo" id="plusVelo" hidden>
+    <section class="nov plus-foglio" role="dialog" aria-modal="true" aria-label="Se avanza tempo">
+      <div class="nov__lista" id="plusCorpo"></div>
+      <div class="nov__piede"><button class="nov__ok" type="button" id="plusOk">Chiudi</button></div>
+    </section>
+  </div>
+
 </div>
 </main>
 
@@ -1526,18 +1463,6 @@
   <p style="margin-top:10px"><button class="nov-link" type="button" id="novApri">📋 Cosa è cambiato nel sito</button></p>
   <p class="ver-sito" id="verSito"></p>
 </footer>
-
-<div class="nov-velo" id="daVer" hidden>
-  <section class="nov" role="dialog" aria-modal="true" aria-labelledby="dvTit">
-    <div class="nov__testa">
-      <div class="eyebrow">Da verificare</div>
-      <h2 id="dvTit">Cose ancora da confermare</h2>
-      <p>Aperte prima della partenza, con chi le chiude. Stesso elenco del file <code>DA_VERIFICARE_LONDRA.md</code> nel repository.</p>
-    </div>
-    <div class="nov__lista" id="dvLista"></div>
-    <div class="nov__piede"><button class="nov__ok" type="button" id="dvOk">Chiudi</button></div>
-  </section>
-</div>
 
 <div class="nov-velo" id="novita" hidden>
   <section class="nov" role="dialog" aria-modal="true" aria-labelledby="novTit">
@@ -1843,7 +1768,7 @@
 
   /* ====== DA VERIFICARE: le incertezze aperte, con chi le chiude ======
      Allineato a DA_VERIFICARE_LONDRA.md nella radice del repository: chiudendone una, si toglie da
-     entrambi. Il numero nel badge si conta da qui; se l'elenco è vuoto il badge sparisce. */
+     entrambi. Entrano nella lista "Prima di partire" con lo stato «da verificare». */
   var DA_VERIFICARE = [
  {
   "cosa": "Apertura del Winter Market del Southbank Centre il 15/11/2026",
@@ -1857,7 +1782,7 @@
  },
  {
   "cosa": "Tariffe bambino di London Eye e SEA LIFE",
-  "contesto": "I biglietti non sono ancora comprati: nel budget c’è una stima (~€189, badge «stima») e la checklist ha ancora «Prenotare online London Eye e SEA LIFE». L’età di Olly (5 anni) dovrebbe cadere nella fascia bambino, ma prezzo e fascia vanno letti sul sito ufficiale.",
+  "contesto": "I biglietti non sono ancora comprati: nel budget c’è una stima (~€189, badge «stima») e la lista «Prima di partire» ha ancora «Prenotare London Eye e SEA LIFE». L’età di Olly (5 anni) dovrebbe cadere nella fascia bambino, ma prezzo e fascia vanno letti sul sito ufficiale.",
   "come": "Alessandro o Vale: al momento dell’acquisto, sul sito ufficiale del biglietto combinato London Eye + SEA LIFE, controllare fascia d’età e prezzo bambino, poi aggiornare il budget da «stima» a «prenotato»."
  },
  {
@@ -1866,19 +1791,77 @@
   "come": "Alessandro o Vale: sul sito ufficiale di Shrek’s Adventure! London controllare durata, prezzo (adulti e bambino) e orario dell’ultimo ingresso di domenica 15. Se piove, valutare di entrare subito dopo SEA LIFE."
  }
 ];
+
+  /* ====== PRIMA DI PARTIRE: una lista sola, con lo stato scritto qui ======
+     Niente caselle da spuntare: lo stato (fatto / da_fare) lo aggiorna Alessandro con un commit.
+     Le voci di DA_VERIFICARE si aggiungono in coda con lo stato «da verificare». */
+  var PRIMA_DI_PARTIRE = [
+    { cosa: 'Check-in online e posti vicini', stato: 'da_fare', nota: 'Si apre 24 ore prima del volo. BA fa sedere i bambini sotto i 12 anni accanto a un adulto: controllarlo al check-in.' },
+    { cosa: 'Passaporto di Olly', stato: 'da_fare', nota: 'Questura di Bologna, con Olly presente, circa 15–20 giorni lavorativi. Dopo la Brexit la carta d’identità non basta.' },
+    { cosa: 'Validità dei passaporti di Alessandro e Vale', stato: 'da_fare' },
+    { cosa: 'UK ETA di Alessandro', stato: 'fatto' },
+    { cosa: 'UK ETA di Vale e Olly', stato: 'da_fare', nota: 'Si fa online, una per persona.' },
+    { cosa: 'Prenotare London Eye e SEA LIFE', stato: 'da_fare', nota: 'Il biglietto combinato costa meno di due separati.' },
+    { cosa: 'Assicurazione viaggio', stato: 'da_fare' }
+  ];
   (function(){
-    var btns = document.querySelectorAll('[data-dv]'), velo = document.getElementById('daVer'), btn = btns[0];
-    if (!btns.length || !velo) return;
-    if (!DA_VERIFICARE.length) { btns.forEach(function(b){ b.parentNode.remove(); }); return; }
-    document.querySelectorAll('.dv-n').forEach(function(n){ n.textContent = DA_VERIFICARE.length; });
+    var ETICHETTA = { da_fare: 'da fare', da_verificare: 'da verificare', fatto: '✓ fatto' };
+    var ORDINE = { da_fare: 0, da_verificare: 1, fatto: 2 };
     var esc = function(s){ return String(s).replace(/[&<>"]/g, function(c){ return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]; }); };
-    document.getElementById('dvLista').innerHTML = DA_VERIFICARE.map(function(x){
-      return '<article class="nov__voce"><h3>' + esc(x.cosa) + '</h3><ul><li>' + esc(x.contesto) + '</li></ul>'
-        + '<p class="dv-come"><b>Chi e come:</b> ' + esc(x.come) + '</p></article>';
-    }).join('');
-    function chiudi(){ velo.hidden = true; document.documentElement.classList.remove('nov-aperto'); if (btn) btn.focus(); }
-    btns.forEach(function(b){ b.addEventListener('click', function(){ btn = b; velo.hidden = false; document.documentElement.classList.add('nov-aperto'); document.getElementById('dvOk').focus(); }); });
-    document.getElementById('dvOk').addEventListener('click', chiudi);
+    var voci = PRIMA_DI_PARTIRE.concat(DA_VERIFICARE.map(function(x){ return { cosa: x.cosa, stato: 'da_verificare', contesto: x.contesto, come: x.come }; }))
+      .map(function(v, i){ v.i = i; return v; })
+      .sort(function(a, b){ return ORDINE[a.stato] - ORDINE[b.stato] || a.i - b.i; });
+    function riga(v, completa){
+      var dettaglio = '';
+      if (completa && v.nota) dettaglio = '<small>' + esc(v.nota) + '</small>';
+      if (completa && v.come) dettaglio = '<details class="det"><summary>Chi e come</summary><p>' + esc(v.contesto) + '</p><p><b>' + esc(v.come) + '</b></p></details>';
+      return '<li class="pp-voce pp-voce--' + v.stato + '"><span class="pp-stato pp-stato--' + v.stato + '">' + ETICHETTA[v.stato] + '</span>'
+        + '<span>' + esc(v.cosa) + dettaglio + '</span></li>';
+    }
+    var aperte = voci.filter(function(v){ return v.stato !== 'fatto'; });
+    var conta = function(st){ return voci.filter(function(v){ return v.stato === st; }).length; };
+    var tutta = document.getElementById('ppTutta'), cima = document.getElementById('ppLista'), conti = document.getElementById('ppConti');
+    if (tutta) tutta.innerHTML = '<ul class="pp-voci">' + voci.map(function(v){ return riga(v, true); }).join('') + '</ul>';
+    if (conti) conti.textContent = conta('da_fare') + ' da fare · ' + conta('da_verificare') + ' da verificare · ' + conta('fatto') + (conta('fatto') === 1 ? ' fatta' : ' fatte');
+    if (cima) cima.innerHTML = aperte.length ? '<ul class="pp-voci">' + aperte.map(function(v){ return riga(v, false); }).join('') + '</ul>' : '<p class="pp-conti">Tutto fatto.</p>';
+  })();
+
+  /* ====== scaletta in cima a ogni giorno ======
+     Una riga per card con l'ora: si legge la giornata senza scorrere e un tocco porta alla card.
+     Le card che cambiano con "Piove" hanno la riga gemella con la stessa classe, e il CSS sceglie. */
+  (function(){
+    document.querySelectorAll('#programma details.acc .dbody').forEach(function(body){
+      var card = body.querySelectorAll('article.tcard[data-ora]'); if (!card.length) return;
+      var ul = document.createElement('ul'); ul.className = 'scaletta'; ul.setAttribute('aria-label', 'Scaletta del giorno');
+      [].forEach.call(card, function(c){
+        if (!c.id) c.id = 'c-' + c.dataset.giorno.slice(8) + '-' + (c.dataset.tappa || c.dataset.ora.replace(':', ''));
+        var li = document.createElement('li');
+        if (c.classList.contains('solo-pioggia')) li.className = 'solo-pioggia';
+        if (c.classList.contains('solo-asciutto')) li.className = 'solo-asciutto';
+        var a = document.createElement('a'); a.className = 'sc-riga'; a.href = '#' + c.id;
+        var o = document.createElement('span'); o.className = 'sc-ora'; o.textContent = c.dataset.ora;
+        if (c.dataset.fuso === 'Europe/Rome') { var it = document.createElement('small'); it.textContent = 'ora ita'; o.appendChild(it); }
+        var n = document.createElement('span'); n.textContent = c.querySelector('h4').textContent;
+        a.appendChild(o); a.appendChild(n); li.appendChild(a); ul.appendChild(li);
+      });
+      body.insertBefore(ul, body.firstChild);
+    });
+  })();
+
+  /* ====== tappe "se avanza tempo": la scheda completa si apre in un foglio ====== */
+  (function(){
+    var tpl = document.getElementById('plusSchede'), velo = document.getElementById('plusVelo'), corpo = document.getElementById('plusCorpo');
+    if (!tpl || !velo) return;
+    var da = null;
+    function chiudi(){ velo.hidden = true; corpo.innerHTML = ''; document.documentElement.classList.remove('nov-aperto'); if (da) da.focus(); }
+    document.addEventListener('click', function(e){
+      var b = e.target.closest('[data-plus]'); if (!b) return;
+      var sch = tpl.content.querySelector('[data-plus-id="' + b.dataset.plus + '"]'); if (!sch) return;
+      da = b; corpo.innerHTML = ''; var k = sch.cloneNode(true); k.querySelectorAll('img').forEach(function(i){ i.loading = 'eager'; }); corpo.appendChild(k);
+      velo.hidden = false; document.documentElement.classList.add('nov-aperto');
+      document.getElementById('plusOk').focus();
+    });
+    document.getElementById('plusOk').addEventListener('click', chiudi);
     velo.addEventListener('click', function(e){ if (e.target === velo) chiudi(); });
     document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && !velo.hidden) chiudi(); });
   })();
@@ -1900,11 +1883,6 @@
     function primaDiPartire(){
       var p = oggi.split('-').map(Number), giorni = Math.round((Date.UTC(2026, 10, 15) - Date.UTC(p[0], p[1] - 1, p[2])) / 864e5);
       $('ppGiorni').textContent = giorni === 1 ? 'Si parte domani' : 'Mancano ' + giorni + ' giorni alla partenza';
-      // fino allo step R4 la lista è quella delle cose da verificare; la checklist resta più in basso
-      $('ppLista').innerHTML = '';
-      (window.DA_VERIFICARE || []).forEach(function(x){ var li = document.createElement('li'); li.textContent = x.cosa; $('ppLista').appendChild(li); });
-      var n = document.querySelectorAll('#clist input[type=checkbox]').length;
-      $('ppCheck').textContent = '📋 Checklist: ' + n + ' cose da fare prima di partire ↓';
       $('primaDiPartire').hidden = false;
     }
 
@@ -2008,9 +1986,16 @@
      a NOVITA, con v = ultimo v + 1, nello stesso commit. Senza la voce l'aggiornamento passa inosservato.
      È l'unico punto della pagina che usa localStorage, ed è voluto: una chiave sola per dispositivo,
      con l'ultima versione vista. Se il localStorage non si può leggere o scrivere (navigazione privata,
-     dati bloccati) il pannello non compare da solo: uno che non si può chiudere per sempre è peggio di niente.
+     dati bloccati) il banner non compare: uno che non si può chiudere per sempre è peggio di niente.
+     Il pannello non si apre mai da solo: in cima c'è un banner sottile «N novità», e si apre solo se toccato.
      Il link in fondo alla pagina lo riapre con tutto lo storico, in ogni caso. */
   var NOVITA = [
+    { v: 17, data: '2026-10-03', titolo: 'Pagina più corta', voci: [
+      'In cima a ogni giorno la scaletta con gli orari: tocca una riga per andare alla sua card',
+      'Le card dicono solo cosa fare sul posto; il resto è in «Dettagli», chiuso',
+      'Una lista sola «Prima di partire», con scritto cosa è fatto, cosa è da fare e cosa è da verificare. Niente più caselle da spuntare',
+      'M&M’S e Pollock’s sono una riga «Se avanza tempo»: la scheda si apre al tocco. La timeline doppia è sparita',
+      'Le novità non coprono più lo schermo: un banner sottile, si aprono solo se lo tocchi' ] },
     { v: 16, data: '2026-10-03', titolo: 'Biglietti a portata di pollice', voci: [
       'Barra in basso: Adesso · Programma · Biglietti · Info',
       'Nuova sezione Biglietti: QR del parcheggio, i 3 biglietti del museo, i voli e l’appartamento. Un tocco su un codice lo apre a schermo pieno, grande e su fondo bianco, con le frecce per passare al successivo',
@@ -2095,6 +2080,7 @@
     // qualunque modo di chiudere segna come viste: così il pannello non insegue nessuno
     function chiudi(){
       salva();
+      if (banner) banner.hidden = true;
       velo.hidden = true;
       document.documentElement.classList.remove('nov-aperto');
     }
@@ -2103,9 +2089,16 @@
     document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && !velo.hidden) chiudi(); });
     document.getElementById('novApri').addEventListener('click', function(){ apri(false); });
 
+    var banner = document.getElementById('novBanner');
     var vista = leggi();
-    if (vista === undefined) return;                       // storage bloccato: niente pannello automatico
-    if (vista === null || vista < ultima) apri(true);
+    if (vista === undefined || !banner) return;            // storage bloccato: niente banner
+    if (vista === null || vista < ultima) {
+      var n = NOVITA.filter(function(e){ return e.v > (vista || 0); }).length;
+      banner.innerHTML = '<span aria-hidden="true">✨</span><span>' + (vista === null ? 'Le novità del sito'
+        : n === 1 ? '1 novità dall’ultima visita' : n + ' novità dall’ultima visita') + '</span><span aria-hidden="true">›</span>';
+      banner.hidden = false;
+      banner.addEventListener('click', function(){ apri(true); });
+    }
   })();
 
   /* ====== offline: service worker di Londra ======
@@ -2143,25 +2136,6 @@
       f.style.animationDelay=(-Math.random()*15).toFixed(1)+'s';
       box.appendChild(f);
     }
-  })();
-
-  /* ====== checklist: stato SOLO in memoria (niente localStorage) ====== */
-  var checklistState={};
-  (function(){
-    var boxes=document.querySelectorAll('#clist input[type=checkbox]');
-    var done=document.getElementById('clDone'), count=document.getElementById('clCount');
-    function refresh(){
-      var n=0; boxes.forEach(function(b){ if(checklistState[b.dataset.ck]) n++; });
-      done.textContent=n;
-      count.textContent=n+' su '+boxes.length+' completate';
-    }
-    boxes.forEach(function(b){
-      b.addEventListener('change',function(){
-        checklistState[b.dataset.ck]=b.checked;
-        refresh();
-      });
-    });
-    refresh();
   })();
 
   /* ====== Il viaggio di Olly: nav per giorno + "L'ho visto!" in memoria ====== */
