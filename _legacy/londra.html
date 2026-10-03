@@ -10,6 +10,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Londra 2026">
 <link rel="manifest" href="londra-manifest.json">
+<link rel="preload" href="vendor/fonts/playfair-display-700-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="icon" type="image/png" sizes="192x192" href="icon-londra-192.png">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-londra-32.png">
 <link rel="apple-touch-icon" href="apple-touch-icon-londra.png">
@@ -27,12 +28,13 @@
 <meta property="og:locale" content="it_IT">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/og-londra.jpg">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="vendor/leaflet/leaflet.css"
   integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=">
 <style>
+  /* Playfair Display servito dal sito (licenza OFL in vendor/fonts/): solo i due stili usati, caratteri latini.
+     Niente Google Fonts, così i titoli restano uguali anche senza rete. */
+  @font-face{font-family:"Playfair Display";font-style:normal;font-weight:700;font-display:swap;src:url(vendor/fonts/playfair-display-700-latin.woff2) format("woff2")}
+  @font-face{font-family:"Playfair Display";font-style:italic;font-weight:400;font-display:swap;src:url(vendor/fonts/playfair-display-400-italic-latin.woff2) format("woff2")}
   *{margin:0;padding:0;box-sizing:border-box}
   :root{
     /* LONDON WINTER NIGHT — design tokens */
