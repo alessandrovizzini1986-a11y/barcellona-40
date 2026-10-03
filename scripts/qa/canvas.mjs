@@ -15,8 +15,20 @@ async function open(person, path, opts = {}) {
 }
 {
   const { p, ctx, errs, reqs } = await open('ale', '/#/info')
+  // prima del tocco: poster e ▶, niente <video>, niente mp4 in rete
+  ok('all\'apertura non c\'è nessun <video> canvas', (await p.locator('[data-song-canvas]').count()) === 0)
+  const still = p.locator('[data-song-canvas-still]')
+  ok('all\'apertura c\'è il poster', (await still.count()) === 1 && (await still.evaluate((e) => getComputedStyle(e).backgroundImage)).includes('disonesti-canvas-poster.jpg'))
+  ok('il canvas mp4 NON viene scaricato all\'apertura', !reqs.some((u) => u.endsWith('disonesti-canvas.mp4')))
+  const play = p.locator('[data-song-canvas-play]')
+  const pb = await play.boundingBox()
+  ok('il ▶ c\'è, in alto a destra della card, almeno 44 px', (await play.count()) === 1 && pb.width >= 44 && pb.height >= 44 && pb.y - (await p.locator('.song').boundingBox()).y < 60, JSON.stringify(pb))
+  ok('il ▶ ha un nome', (await play.getAttribute('aria-label')) === 'Fai partire la papera')
+  // al tocco: il video prende il posto del poster, parte, e il ▶ sparisce
+  await play.click(); await p.waitForTimeout(700)
   const v = p.locator('[data-song-canvas]')
-  ok('video canvas presente', (await v.count()) === 1)
+  ok('dopo il tocco: video canvas presente, poster e ▶ spariti', (await v.count()) === 1 && (await still.count()) === 0 && (await play.count()) === 0)
+  ok('dopo il tocco il canvas mp4 viene scaricato', reqs.some((u) => u.endsWith('disonesti-canvas.mp4')))
   for (const a of ['autoplay', 'muted', 'loop', 'playsinline']) ok(`attributo ${a}`, (await v.getAttribute(a)) !== null)
   ok('muted anche come proprietà', await v.evaluate((e) => e.muted === true))
   ok('poster = CANVAS_POSTER', (await v.getAttribute('poster')).endsWith('/media/disonesti-canvas-poster.jpg'))
@@ -31,7 +43,6 @@ async function open(person, path, opts = {}) {
   // Il muso della papera sta nel 45% alto del video: deve restare sopra il titolo
   ok('titolo e pulsanti in basso, muso della papera libero in alto', await p.evaluate(() => { const s = document.querySelector('.song').getBoundingClientRect(), v = document.querySelector('.song__canvas').getBoundingClientRect(), t = document.querySelector('.song__head').getBoundingClientRect(); return (t.top - s.top) >= 0.45 * v.height && Math.abs(v.top - s.top) <= 3 /* bordo 2px */ }))
   ok('su telefono il video tiene il 3:4, non copre tutta la card', await p.evaluate(() => { const s = document.querySelector('.song').getBoundingClientRect(), v = document.querySelector('.song__canvas').getBoundingClientRect(); return Math.abs(v.width / v.height - 540 / 720) < 0.02 && v.height < s.height }))
-  ok('il canvas viene richiesto (autoplay)', reqs.some((u) => u.endsWith('disonesti-canvas.mp4')))
   ok('il video grande resta a preload none', !reqs.some((u) => u.endsWith('vizzo_barcellona_hit.mp4')))
   const href = await p.locator('.song a[aria-label*="Manda l\'inno"]').getAttribute('href')
   ok('condivisione punta a canzone.html', decodeURIComponent(href).includes('/canzone.html'))
@@ -43,12 +54,13 @@ async function open(person, path, opts = {}) {
   const ctx = await b.newContext({ viewport: { width: 1100, height: 700 } }); const p = await ctx.newPage()
   await p.goto(base + '/'); await p.evaluate(() => { localStorage.clear(); localStorage.setItem('b40:v1:lastSeenVersion', '999'); localStorage.setItem('b40:v1:person', JSON.stringify('ale')) })
   await p.goto(base + '/#/info', { waitUntil: 'networkidle' }); await p.waitForTimeout(500)
+  await p.click('[data-song-canvas-play]'); await p.waitForTimeout(500)
   ok('desktop: il video copre tutta la card', await p.evaluate(() => { const s = document.querySelector('.song').getBoundingClientRect(), v = document.querySelector('.song__canvas').getBoundingClientRect(); return Math.abs(v.height - s.height) <= 5 /* bordo 2px per lato */ }))
   await ctx.close()
 }
 {
   const { p, ctx, reqs } = await open('ale', '/#/info', { reducedMotion: 'reduce' })
-  ok('reduced motion: nessun <video> canvas', (await p.locator('[data-song-canvas]').count()) === 0)
+  ok('reduced motion: nessun <video> canvas e nessun ▶', (await p.locator('[data-song-canvas], [data-song-canvas-play]').count()) === 0)
   const still = p.locator('.song__canvas--still')
   ok('reduced motion: poster statico', (await still.count()) === 1 && (await still.evaluate((e) => getComputedStyle(e).backgroundImage)).includes('disonesti-canvas-poster.jpg'))
   ok('reduced motion: il canvas mp4 non viene scaricato', !reqs.some((u) => u.endsWith('disonesti-canvas.mp4')))
@@ -63,7 +75,7 @@ async function open(person, path, opts = {}) {
 }
 {
   const { p, ctx } = await open('giulio', '/?now=2026-10-17T10:00#/oggi')
-  ok('canvas anche nella card di Oggi', (await p.locator('.song [data-song-canvas], .song .song__canvas--still').count()) === 1)
+  ok('poster e ▶ anche nella card di Oggi, video solo al tocco', (await p.locator('.song [data-song-canvas-still]').count()) === 1 && (await p.locator('.song [data-song-canvas-play]').count()) === 1 && (await p.locator('.song [data-song-canvas]').count()) === 0)
   await ctx.close()
 }
 await b.close()

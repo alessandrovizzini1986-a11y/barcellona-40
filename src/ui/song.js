@@ -40,13 +40,25 @@ function lyricsHtml() {
   </div>`).join('')
 }
 
-// Sfondo animato: video muto in loop. Con prefers-reduced-motion o risparmio dati resta il poster.
-function canvasHtml() {
-  const still = matchMedia('(prefers-reduced-motion: reduce)').matches || navigator.connection?.saveData === true
-  if (still) return `<div class="song__canvas song__canvas--still" style="background-image:url('${CANVAS_POSTER}')" aria-hidden="true"></div>`
-  return `<video class="song__canvas" data-song-canvas autoplay muted loop playsinline preload="metadata" poster="${CANVAS_POSTER}" aria-hidden="true" tabindex="-1" disablepictureinpicture disableremoteplayback>
+// Sfondo animato: video muto in loop, ma SOLO al tocco. Al weekend si gira col 4G e la papera pesa 900 kB:
+// all'apertura c'è il poster (32 kB) con un pulsante ▶ in alto a destra; chi lo tocca scarica il video, gli
+// altri no. Con prefers-reduced-motion o risparmio dati resta il poster e basta, senza pulsante.
+const posterHtml = () => `<div class="song__canvas song__canvas--still" data-song-canvas-still style="background-image:url('${CANVAS_POSTER}')" aria-hidden="true"></div>`
+const videoHtml = () => `<video class="song__canvas" data-song-canvas autoplay muted loop playsinline preload="auto" poster="${CANVAS_POSTER}" aria-hidden="true" tabindex="-1" disablepictureinpicture disableremoteplayback>
     <source src="${CANVAS_MP4}" type="video/mp4">
   </video>`
+function canvasHtml() {
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches || navigator.connection?.saveData === true
+  if (still) return posterHtml()
+  return posterHtml() + `<button class="song__play" type="button" data-song-canvas-play aria-label="Fai partire la papera">${icon('play')}</button>`
+}
+// Il canvas gira solo quando la card è sullo schermo: batteria e banda
+function osservaCanvas(canvas) {
+  if (!canvas || !('IntersectionObserver' in window)) return
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) { if (e.isIntersecting) canvas.play().catch(() => {}); else canvas.pause() }
+  }, { threshold: 0.1 })
+  io.observe(canvas)
 }
 
 export function songCard({ line = "L'inno ufficiale dei quaranta. Alza il volume." } = {}) {
@@ -95,14 +107,14 @@ export function bindSong(container) {
   const toggle = container.querySelector('[data-song-toggle]')
   if (!audio) return
 
-  // Il canvas gira solo quando la card è sullo schermo: batteria e banda
-  const canvas = container.querySelector('[data-song-canvas]')
-  if (canvas && 'IntersectionObserver' in window) {
-    const io = new IntersectionObserver((entries) => {
-      for (const e of entries) { if (e.isIntersecting) canvas.play().catch(() => {}); else canvas.pause() }
-    }, { threshold: 0.1 })
-    io.observe(canvas)
-  }
+  // ▶ sul poster: il video prende il posto del poster e parte; il pulsante sparisce
+  container.querySelector('[data-song-canvas-play]')?.addEventListener('click', (e) => {
+    const btn = e.currentTarget, still = container.querySelector('[data-song-canvas-still]')
+    if (!still) return
+    still.insertAdjacentHTML('beforebegin', videoHtml()); still.remove(); btn.remove()
+    const canvas = container.querySelector('[data-song-canvas]')
+    canvas.play().catch(() => {}); osservaCanvas(canvas)
+  })
 
   const spin = (on) => disc?.classList.toggle('song__disc--spin', on)
   audio.addEventListener('play', () => { video?.pause(); spin(true); evento('canzone-play') })

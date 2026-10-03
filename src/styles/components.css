@@ -248,6 +248,9 @@ select.input,input.input{ min-height:44px; background:var(--bg-3); border:1px so
    che alta (desktop), max-height lo limita alla card e il ritaglio verticale al 60% tiene la papera. */
 .song__canvas{ position:absolute; top:0; left:0; z-index:0; width:100%; height:auto; aspect-ratio:540/720; max-height:100%; object-fit:cover; object-position:center 60%; background-color:#0E1116; pointer-events:none; -webkit-mask-image:linear-gradient(180deg, #000 62%, transparent 100%); mask-image:linear-gradient(180deg, #000 62%, transparent 100%); }
 .song__canvas--still{ background-position:center 60%; background-size:cover; background-repeat:no-repeat; }
+/* ▶ della papera: in alto a destra, sopra lo sfumato, dove il video non copre niente di scritto */
+.song.song .song__play{ position:absolute; top:var(--space-3); right:var(--space-3); z-index:3; width:44px; height:44px; padding:0; border-radius:50%; display:flex; align-items:center; justify-content:center; background:rgba(14,17,22,.55); color:#fff; border:1px solid rgba(255,255,255,.4); cursor:pointer; }
+.song__play svg{ width:22px; height:22px; margin-left:2px; }
 /* Gradiente: denso in basso dove stanno titolo e pulsanti, leggero in alto dove resta la papera */
 .song__shade{ position:absolute; inset:0; z-index:1; background:linear-gradient(180deg, rgba(14,17,22,.25) 0%, rgba(14,17,22,.55) 45%, rgba(14,17,22,.88) 100%); pointer-events:none; }
 .song__stage{ flex:1 1 auto; min-height:240px; }

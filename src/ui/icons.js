@@ -49,8 +49,9 @@ import CloudLightning from 'lucide/dist/esm/icons/cloud-lightning.mjs'
 import CloudFog from 'lucide/dist/esm/icons/cloud-fog.mjs'
 import Sunrise from 'lucide/dist/esm/icons/sunrise.mjs'
 import Sunset from 'lucide/dist/esm/icons/sunset.mjs'
+import Play from 'lucide/dist/esm/icons/play.mjs'
 
-const ICONS = { sun: Sun, list: List, map: MapIcon, trophy: Trophy, info: Info, 'map-pin': MapPin, taxi: CarTaxiFront, train: TrainFront, copy: Copy, check: Check, alarm: AlarmClock, locate: Locate, alert: TriangleAlert, chevron: ChevronDown, walk: Footprints, zap: Zap, download: Download, upload: Upload, sparkles: Sparkles, user: User, phone: Phone, clock: Clock, x: X, refresh: RefreshCw, camera: Camera, whatsapp: MessageCircle, share: Share2, disc: Disc3, music: Music, goal: Goal, 'plane-takeoff': PlaneTakeoff, 'plane-landing': PlaneLanding, car: Car, bus: Bus, luggage: Luggage, coffee: Coffee, 'door-open': DoorOpen, shower: ShowerHead, utensils: Utensils, qr: QrCode, maximize: Maximize, rain: CloudRain, route: Route, 'cloud-sun': CloudSun, cloud: Cloud, 'cloud-lightning': CloudLightning, 'cloud-fog': CloudFog, sunrise: Sunrise, sunset: Sunset }
+const ICONS = { play: Play, sun: Sun, list: List, map: MapIcon, trophy: Trophy, info: Info, 'map-pin': MapPin, taxi: CarTaxiFront, train: TrainFront, copy: Copy, check: Check, alarm: AlarmClock, locate: Locate, alert: TriangleAlert, chevron: ChevronDown, walk: Footprints, zap: Zap, download: Download, upload: Upload, sparkles: Sparkles, user: User, phone: Phone, clock: Clock, x: X, refresh: RefreshCw, camera: Camera, whatsapp: MessageCircle, share: Share2, disc: Disc3, music: Music, goal: Goal, 'plane-takeoff': PlaneTakeoff, 'plane-landing': PlaneLanding, car: Car, bus: Bus, luggage: Luggage, coffee: Coffee, 'door-open': DoorOpen, shower: ShowerHead, utensils: Utensils, qr: QrCode, maximize: Maximize, rain: CloudRain, route: Route, 'cloud-sun': CloudSun, cloud: Cloud, 'cloud-lightning': CloudLightning, 'cloud-fog': CloudFog, sunrise: Sunrise, sunset: Sunset }
 
 export function icon(name, attrs = {}) {
   const node = ICONS[name]
