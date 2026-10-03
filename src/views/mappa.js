@@ -41,6 +41,8 @@ export async function render(root, { person, header }) {
     const el = root.querySelector('#map')
     if (!el) return () => {}
     ctl = createMap(el, byDay, { theme: store.theme })
+    // si è cambiata pagina mentre Leaflet arrivava: la mappa è nata in un albero staccato, si smonta subito
+    if (!el.isConnected) { ctl.destroy(); return () => {} }
     KEYS.forEach((k) => ctl.show(k, active.has(k)))
     ctl.fit([...active])
     root.querySelector('#map-skel')?.remove()

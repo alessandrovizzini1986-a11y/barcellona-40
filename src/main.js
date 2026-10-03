@@ -86,8 +86,10 @@ async function route({ route, sub, params }) {
   vista(route)
   const mod = await views[route]()
   if (my !== token) return
-  cleanup = await mod.render(app, { route, sub, params, person: store.person, header })
-  if (my !== token) return
+  const pulisci = await mod.render(app, { route, sub, params, person: store.person, header })
+  // nel frattempo si è andati altrove: quello che questa vista ha montato si smonta subito, senza restare orfano
+  if (my !== token) { try { pulisci?.() } catch { /* noop */ } return }
+  cleanup = pulisci
   if (!sub) scrollTo({ top: 0, behavior: 'instant' })
   easterEgg(document.getElementById('site-title'))
 }

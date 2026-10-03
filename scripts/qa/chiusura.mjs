@@ -45,4 +45,32 @@ const prossima = (p) => p.locator('.tile:has(.tile__label:text-is("Prossima"))')
   ok('nessun errore JS', errs.length === 0, errs.join(' | '))
   await ctx.close()
 }
+// 4. Mappa: si smonta davvero anche se si cambia pagina mentre Leaflet sta ancora arrivando (caos del report)
+{
+  const { p, ctx, errs } = await apri('/#/oggi')
+  for (const attesa of [0, 30, 80, 150, 400, 900]) {
+    await p.evaluate(() => { location.hash = '#/mappa' }); await p.waitForTimeout(attesa)
+    await p.evaluate(() => { location.hash = '#/programma/ven' }); await p.waitForTimeout(700)
+    await p.evaluate(() => { location.hash = '#/oggi' }); await p.waitForTimeout(400)
+  }
+  await p.waitForTimeout(1500)
+  ok('mappa aperta e lasciata sei volte a tempi diversi: nessun errore Leaflet', !errs.some((e) => /_leaflet_pos|leaflet/i.test(e)), errs.find((e) => /leaflet/i.test(e)) || '')
+  // le tre sequenze che sul sito di prima facevano saltare Leaflet: zoom con la rotella, trascinamento a metà, doppio tap
+  const viaDurante = async (azione) => {
+    await p.evaluate(() => { location.hash = '#/mappa' }); await p.waitForSelector('.leaflet-container', { timeout: 10000 }); await p.waitForTimeout(600)
+    await azione(); await p.evaluate(() => { location.hash = '#/oggi' }); await p.waitForTimeout(1200)
+  }
+  await viaDurante(async () => { await p.mouse.move(190, 400); await p.mouse.wheel(0, -300) })
+  ok('zoom con la rotella e via subito: nessun errore', !errs.some((e) => /_leaflet_pos/.test(e)), errs.join(' | '))
+  await viaDurante(async () => { await p.mouse.move(190, 400); await p.mouse.down(); await p.mouse.move(150, 300) }); await p.mouse.move(100, 200); await p.mouse.up()
+  ok('trascinamento a metà e via: nessun errore', !errs.some((e) => /classList|_leaflet_pos/.test(e)), errs.join(' | '))
+  await viaDurante(async () => { await p.touchscreen.tap(190, 400); await p.touchscreen.tap(190, 400) })
+  ok('doppio tap (zoom animato) e via subito: nessun errore', !errs.some((e) => /_leaflet_pos/.test(e)), errs.join(' | '))
+  ok('nessun contenitore della mappa rimasto in giro', (await p.evaluate(() => document.querySelectorAll('.leaflet-container').length)) === 0)
+  await p.evaluate(() => { location.hash = '#/mappa' }); await p.waitForSelector('.leaflet-container', { timeout: 10000 }); await p.waitForTimeout(800)
+  await p.evaluate(() => { location.hash = '#/oggi' }); await p.waitForTimeout(600)
+  ok('dopo una mappa completa, al cambio pagina il contenitore è smontato', (await p.evaluate(() => document.querySelectorAll('.leaflet-container').length)) === 0)
+  ok('nessun errore JS', errs.length === 0, errs.join(' | '))
+  await ctx.close()
+}
 await b.close(); if (errori.length) { console.error('ERRORI:\n' + errori.join('\n')); process.exit(1) } console.log('OK chiusura')

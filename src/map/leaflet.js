@@ -59,7 +59,15 @@ export function createMap(el, stopsByDay, { theme = 'dark' } = {}) {
         toast('Eccoti. Sei qui.')
       }, () => toast('Posizione non disponibile, apri Google Maps'), { enableHighAccuracy: true, timeout: 8000, maximumAge: 30000 })
     },
-    destroy() { map.remove() }
+    // Smontaggio completo. map.remove() da solo non basta: lo zoom con la rotella resta in coda su un timer
+    // (wheelDebounceTime) e lo zoom animato aspetta il transitionend del proxy; se la pagina cambia in quel
+    // momento tutti e due tornano a cercare i pannelli che non ci sono più ("_leaflet_pos" del report).
+    destroy() {
+      try { clearTimeout(map.scrollWheelZoom?._timer); map.scrollWheelZoom?.disable() } catch { /* handler già via */ }
+      try { map.dragging?.disable() } catch { /* un trascinamento a metà si chiude qui */ }
+      try { map.stop(); map._animatingZoom = false } catch { /* nessuna animazione in corso */ }
+      map.remove()
+    }
   }
 }
 function cssVar(expr) {
