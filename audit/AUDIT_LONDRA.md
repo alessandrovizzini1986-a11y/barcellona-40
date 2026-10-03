@@ -178,3 +178,73 @@ Constatazioni:
 - **Le "cose da fare prima di partire" stanno in due posti che non si parlano**: la Checklist in fondo alla pagina (9 voci, spunte che si perdono ricaricando) e il pannello "4 da verificare" in testata. Tre voci sono in entrambi.
 - La voce di checklist **"Verificare calendario cambio della guardia — ~3 mesi prima"** è ferma a un'indicazione temporale ormai superata: a oggi mancano 6 settimane.
 - La sezione **Timeline** ripete per intero il programma, ma senza link né percorsi.
+
+---
+
+## STEP B — Interazioni e stati
+
+### B1 · Elementi cliccabili
+
+In tutta la pagina ci sono **134 elementi cliccabili**. **69 portano fuori dal sito**: 66 in una nuova scheda, 3 nella stessa.
+
+| Dove | Elemento | Quanti | Cosa fa | Esce dal sito |
+|---|---|---|---|---|
+| Testata | "🖼️ Versione per immagini, per Olly →" | 1 | apre `londra-illustrata.html` nella stessa scheda | no (altra pagina) |
+| Testata | Badge **"4 da verificare"** | 1 | apre il pannello "Cose ancora da confermare" | no |
+| Testata | **"🌧️ Piove · NO/SÌ"** | 1 | accende/spegne il piano pioggia (vedi B2) | no |
+| Voli & base | "📍 Apri in Google Maps" (appartamento) | 1 | Maps su 79 Beak Street | **sì**, nuova scheda / app Maps |
+| Sicurezza | intestazione accordion | 1 | apre/chiude le regole anti-phishing | no |
+| Programma | intestazioni dei tre giorni | 3 | aprono/chiudono il giorno; **più giorni possono essere aperti insieme** | no |
+| Programma | riquadro QR del parcheggio | 1 | apre il QR **a schermo pieno** su fondo bianco, con wake lock; si chiude con ✕, Esc o tocco | no |
+| Programma | pulsanti **"🗺️ Percorso · …"** | 11 | aprono un percorso in Google Maps (a piedi o coi mezzi) | **sì**, nuova scheda |
+| Programma | "📍 Apri in Google Maps" sulle card | 23 | aprono la singola tappa in Maps | **sì**, nuova scheda |
+| Programma | crediti delle foto ("foto: Autore / Licenza") | 27 | aprono la pagina del file su Wikimedia Commons | **sì**, nuova scheda |
+| Programma | "🎟️ I biglietti" (card del museo) | 1 | salta alla sezione Biglietti (`#biglietti`) | no |
+| Olly | Domenica / Lunedì / Martedì | 3 | cambiano il gruppo di card mostrate | no |
+| Olly | "L'ho visto!" | 11 | segnano la cosa come vista e aggiornano il contatore | no |
+| Olly | crediti fotografici (accordion + 11 link) | 12 | aprono i crediti / le pagine Commons | **sì** per i link |
+| Mappa | marker | 14 | aprono un popup con nome, giorno e una nota; **nessun link a Maps nel popup** | no |
+| Mappa | zoom + / − | 2 | zoom della mappa | no |
+| Mappa | attribuzioni Leaflet / OpenStreetMap / CARTO | 3 | aprono i siti delle attribuzioni **nella stessa scheda** | **sì, e si perde la pagina** |
+| Budget, Checklist | intestazioni accordion | 2 | aprono/chiudono | no |
+| Checklist | caselle | 9 | spuntano la voce e aggiornano "N su 9 completate" | no |
+| Note pratiche | Baboodle, London Baby Equipment Hire, Babonbo | 3 | siti dei noleggiatori | **sì**, nuova scheda |
+| Footer | "Versione per immagini" + **"📋 Cosa è cambiato nel sito"** | 2 | altra pagina / pannello novità con tutto lo storico | no |
+| Pannelli | "Ho capito", "Chiudi" | 2 | chiudono il pannello (anche Esc o tocco fuori) | no |
+
+Constatazioni:
+- **I tre barcode del museo non hanno un "tocca per ingrandire"**, a differenza del QR del parcheggio. Nella card del museo c'è il link "🎟️ I biglietti", che porta più in basso nella pagina.
+- I **27 link ai crediti** stanno nelle card, sotto i link Maps.
+- La **mappa** è alta 420 px, cioè metà schermo. Lo zoom con la rotella è disattivato, ma **il trascinamento è attivo**: col dito su quella metà di schermo si sposta la mappa invece di scorrere la pagina.
+- I **tre link di attribuzione** della mappa sono gli unici che lasciano il sito nella stessa scheda.
+
+### B2 · Stati del sito
+
+| Stato | Come si attiva | Cosa cambia | Sopravvive a una ricarica |
+|---|---|---|---|
+| **Piove · SÌ** | pulsante in testata | Domenica: la card **London Eye → Shrek's Adventure** (stessa ora 15:30, con indirizzo, orario e avviso "chiude alle 16:00"). Lunedì: nota azzurra in testa alla mattina. Martedì: nota "già al riparo" su Covent Garden. Il pulsante diventa azzurro, "SÌ" | **no**, torna su NO |
+| Piove: cosa **non** cambia | — | Timeline (dice ancora *London Eye* alle 15:30), mappa (marker del London Eye), percorsi Maps (sempre verso l'Eye), sezione Note pratiche | — |
+| **Meteo** | data del telefono fra il 5 e il 17 novembre, oppure `?now=AAAA-MM-GG` | Fuori finestra (oggi, 3 ottobre) la card non esiste e l'API non viene chiamata. Con `?now=2026-11-16` la pagina chiama Open-Meteo: **oggi l'API risponde 400 "start_date fuori dall'intervallo"** (accetta date fino al 18 ottobre) e la card sparisce. Con una risposta valida simulata la card compare in cima al Programma: "🌤️ 9° Londra, adesso" + Dom/Lun/Mar; toccandola si apre la striscia ora per ora già posizionata su **Lun 16** | non serve: si ricalcola a ogni apertura |
+| **Novità** | prima visita, o versione salvata inferiore all'ultima (oggi 13) | Pannello dal basso, alto **692 px su 844**: copre quasi tutto lo schermo finché non si tocca "Ho capito" | sì (`localStorage`, unica chiave della pagina) |
+| **Badge "N da verificare"** | sempre | Oggi **4**, uguale alle voci del pannello e del file `DA_VERIFICARE_LONDRA.md` | non ha stato |
+| **Accordion** | tocco sull'intestazione | All'apertura sempre: domenica aperta, lunedì e martedì chiusi, budget e checklist aperti, sicurezza e crediti chiusi. Non sono esclusivi | **no**, si ritorna allo stato iniziale |
+| **Checklist** | caselle | Contatore "N su 9 completate" | **no**: verificato, 1 su 9 → 0 su 9 dopo la ricarica |
+| **Olly "L'ho visto!"** | pulsanti | Contatore "N cose viste su 11" | **no**: 1 su 11 → 0 su 11 dopo la ricarica |
+| **QR a schermo pieno** | tocco sul QR | Overlay bianco, schermo che resta acceso | — |
+
+Screenshot: `B-novita-prima-visita.png` (pannello alla prima visita), `B-meteo-16nov.png` (card meteo aperta il 16, con dati simulati).
+
+### B3 · "Adesso / prossima tappa"
+
+**Non esiste.** La pagina non usa l'ora per nient'altro che il meteo: non evidenzia la tappa in corso, non apre il giorno corrente, non scorre fino a "adesso". L'unica cosa legata all'ora è la striscia del meteo, che il giorno stesso parte dall'ora attuale; il meteo però si vede solo dal 5 novembre. L'unica occorrenza della parola "adesso" nel programma è "gli zaini si posano solo adesso" (card del check-in), oltre a "Londra, adesso" nella card meteo.
+
+### B4 · Senza rete
+
+C'è un `manifest` per aggiungere la pagina alla schermata Home, ma **non c'è nessun service worker**: niente viene salvato per l'uso offline.
+
+| Situazione | Cosa si vede | Screenshot |
+|---|---|---|
+| **Ricarica senza rete** (pagina già visitata, poi telefono offline, poi ricarica o riapertura) | **La pagina non si carica affatto**: schermata "No internet" del browser. Niente QR del parcheggio, niente biglietti, niente programma | `B-offline-ricarica.png` |
+| **Rete scarsa**: arriva la pagina ma non i CDN (Leaflet, JsBarcode, Google Fonts, tile della mappa, meteo) | **QR del parcheggio OK** (è disegnato dentro la pagina). **Barcode del museo: riquadri bianchi vuoti**, sotto c'è il numero e "Barcode non caricato: mostra questo numero all'ingresso". **Mappa: rettangolo vuoto** senza messaggio, e un errore JavaScript (`L is not defined`) che però non blocca il resto. Titoli col font di riserva. Piove, badge, durate, Olly e checklist funzionano | `B-rete-scarsa-biglietti.png`, `B-rete-scarsa-mappa.png` |
+| **Rete che cade a pagina già aperta** | All'apertura il telefono ha caricato **1 foto su 31**: le altre sono in lazy loading e arrivano solo scorrendo. Aprendo lunedì dopo che la rete è caduta, **0 foto su 11**: al loro posto il simbolo di immagine rotta, con il testo alternativo sopra il motivo decorativo | `B-offline-lunedi.png` |
+| Link Maps senza rete | Aprono Google Maps, che senza rete non calcola i percorsi | — |
