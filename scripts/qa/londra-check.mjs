@@ -3,7 +3,7 @@
 //
 //   npm run build && npm run preview &   poi   node scripts/qa/londra-check.mjs [http://localhost:4173]
 //
-// Controlla: i 15 percorsi identici al riferimento, il payload del QR e i 3 barcode (decodificati
+// Controlla: i 18 percorsi identici al riferimento, il payload del QR e i 3 barcode (decodificati
 // dagli SVG, non letti dal testo), le voci «da verificare» uguali fra pagina e DA_VERIFICARE_LONDRA.md,
 // nessuna chiave di storage oltre londra:novita:vista, cartella foto sotto 1,5 MB, alt su tutte le
 // immagini, nessun controllo sotto 44 px, service worker che non copre le pagine di Barcellona.
@@ -32,8 +32,11 @@ const PERCORSI = [
   'https://www.google.com/maps/dir/?api=1&origin=51.4994055,-0.1632344&destination=51.4967150,-0.1763672&travelmode=walking',
   'https://www.google.com/maps/dir/?api=1&origin=51.4967150,-0.1763672&destination=51.5098,-0.1342&travelmode=transit',
   'https://www.google.com/maps/dir/?api=1&origin=51.5098,-0.1342&destination=51.5129114,-0.1364381&waypoints=51.5131,-0.1400&travelmode=walking',
-  // martedì (3)
-  'https://www.google.com/maps/dir/?api=1&origin=51.5129114,-0.1364381&destination=51.5122737,-0.1234492&travelmode=walking',
+  // martedì (6): C4, il piano B, sta dentro la card di Camden, quindi viene prima di C2
+  'https://www.google.com/maps/dir/?api=1&origin=51.5129114,-0.1364381&destination=51.539292,-0.14274&travelmode=transit',
+  'https://www.google.com/maps/dir/?api=1&origin=51.539292,-0.14274&destination=51.4723,-0.4887&travelmode=transit',
+  'https://www.google.com/maps/dir/?api=1&origin=51.539292,-0.14274&destination=51.5409723,-0.143961&travelmode=walking',
+  'https://www.google.com/maps/dir/?api=1&origin=51.539292,-0.14274&destination=51.5122737,-0.1234492&travelmode=transit',
   'https://www.google.com/maps/dir/?api=1&origin=51.5122737,-0.1234492&destination=51.516018,-0.130888&travelmode=walking',
   'https://www.google.com/maps/dir/?api=1&origin=51.5122737,-0.1234492&destination=51.4723,-0.4887&travelmode=transit'
 ]
@@ -114,7 +117,7 @@ await p.goto(PAGINA + '?now=2026-11-16T15:00', { waitUntil: 'load' }); await p.w
 
 const percorsi = await p.$$eval('a.percorso', (a) => a.map((x) => x.getAttribute('href')))
 const diversi = PERCORSI.filter((u, i) => percorsi[i] !== u).length
-ok('15 percorsi identici al riferimento, carattere per carattere, nessuno in più', percorsi.length === PERCORSI.length && diversi === 0, `${percorsi.length} trovati, ${diversi} diversi`)
+ok('18 percorsi identici al riferimento, carattere per carattere, nessuno in più', percorsi.length === PERCORSI.length && diversi === 0, `${percorsi.length} trovati, ${diversi} diversi`)
 
 const qr = await p.evaluate(() => { const s = document.querySelector('#biglietti .pk__svg'); return { vb: s.getAttribute('viewBox'), d: s.querySelector('path[stroke]').getAttribute('d'), sfondo: s.querySelector('path[fill]')?.getAttribute('fill') } })
 const lato = +qr.vb.split(/\s+/)[2], quiet = 4, nMod = lato - 2 * quiet

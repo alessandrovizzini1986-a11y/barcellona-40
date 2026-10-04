@@ -298,6 +298,10 @@
   .ad-regola{white-space:pre-line;margin-top:12px;padding:10px 12px;border-radius:12px;font-size:15px;line-height:1.45;font-weight:700;
     color:var(--ink);background:rgba(109,179,216,.12);border:1px solid rgba(109,179,216,.45)}
   .ad-regola[hidden]{display:none}
+  .pianob{margin-top:10px;padding:10px 12px;border-radius:12px;font-size:14px;line-height:1.45;color:var(--ink);
+    background:rgba(212,169,78,.1);border:1px dashed var(--line-gold)}
+  .tcard__body .percorso--secondario{margin:8px 0 0;padding:8px 12px;opacity:.9}
+  .tcard__body .percorso--secondario .percorso__txt b{font-size:12px}
   .plus-warn{margin-top:8px;font-size:12px;line-height:1.45;color:var(--rosso-testo)}
 
   /* biglietti: il riquadro del barcode resta bianco, serve contrasto per lo scanner */
@@ -1163,15 +1167,16 @@
       <summary>
         <span class="srow">
           <span class="daynum">17<small>MAR</small></span>
-          <span class="dtit"><h3>Covent Garden e rientro</h3><p>Mattina leggera, poi Heathrow</p></span>
+          <span class="dtit"><h3>Camden, Covent Garden e rientro</h3><p>Canale, fish &amp; chips, mercato, poi Heathrow</p></span>
           <span class="chev">▼</span>
         </span>
       </summary>
       <div class="dbody">
-        <a class="percorso" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.5129114,-0.1364381&amp;destination=51.5122737,-0.1234492&amp;travelmode=walking" target="_blank" rel="noopener" data-percorso="Martedì · Beak St → Covent Garden">
+        <div class="hp-note pioggia-nota pioggia-nota--blocco" id="pioggia-mar" data-giorno="2026-11-17" data-fino="13:30">🌧️ I mercati di Camden sono in parte all’aperto: con pioggia forte accorciate Camden e anticipate Covent Garden, che ha il mercato coperto.</div>
+        <a class="percorso" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.5129114,-0.1364381&amp;destination=51.539292,-0.14274&amp;travelmode=transit" target="_blank" rel="noopener" data-percorso="Martedì · Beak St → Camden Town">
           <span class="percorso__ic" aria-hidden="true">🗺️</span>
-          <span class="percorso__txt"><b>Percorso · Martedì</b><span>Beak St → Covent Garden</span></span>
-          <span class="percorso__modo">🚶 a piedi</span>
+          <span class="percorso__txt"><b>Percorso · Martedì</b><span>Beak St → Camden Town</span></span>
+          <span class="percorso__modo">🚇 con i mezzi</span>
         </a>
         <article class="tcard" data-giorno="2026-11-17" data-ora="10:30" data-tipo="casa">
           <div class="tcard__foto">
@@ -1180,22 +1185,81 @@
           </div>
           <div class="tcard__body">
             <h4>Check-out, zaini in spalla</h4>
-            <p>Camera da lasciare alle 10:30. Zaini in spalla: si va a Covent Garden e poi in aeroporto.</p>
+            <p>Camera da lasciare alle 10:30. Zaini in spalla: si va a Camden, poi Covent Garden e l’aeroporto.</p>
             <details class="det"><summary>Dettagli</summary><p>Con solo bagaglio a mano non serve nessun deposito.</p></details>
             <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5129114,-0.1364381&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
           </div>
           <p class="tcard__credito">foto: No Swan So Fine / CC BY-SA 4.0</p>
         </article>
-        <article class="tcard" data-tappa="covent" data-durata="60-120" data-comprimibile data-giorno="2026-11-17" data-ora="11:00" data-tipo="tappa">
+        <article class="tcard tcard--nofoto" data-giorno="2026-11-17" data-ora="10:35" data-tipo="trasporto" data-durata="25-25">
+          <div class="tcard__body">
+            <span class="tcard__ora">10:35</span>
+            <h4>Verso Camden</h4>
+            <p class="tdur">⏱️ ~25 min</p>
+            <p>15 min a piedi fino a Tottenham Court Road, poi <b>Northern line diretta</b> fino a Camden Town (9 min). Arrivo ~11:00. ~£3 a testa, Olly gratis.</p>
+            <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.539292,-0.14274&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚇 coi mezzi</span></a>
+          </div>
+        </article>
+        <article class="tcard" data-tappa="camden" data-durata="75-75" data-comprimibile data-giorno="2026-11-17" data-ora="11:00" data-tipo="tappa">
           <div class="tcard__foto">
-            <img src="assets/tappe/londra/covent.webp" width="800" height="450" alt="La galleria coperta di Covent Garden, con il tetto in ferro e vetro verde e i carretti di fiori" loading="lazy" decoding="async">
+            <img src="assets/tappe/londra/camden.webp" width="800" height="450" alt="Barche ormeggiate sul Regent’s Canal a Camden Lock, con gli edifici del mercato sull’acqua" loading="lazy" decoding="async">
             <span class="tcard__ora">11:00</span>
           </div>
           <div class="tcard__body">
+            <h4>Camden Town e Camden Lock</h4>
+            <p class="tdur">⏱️ 1 h 15</p>
+            <p>Il canale con le barche e i mercati, da vedere la mattina con poca folla. Orari dei mercati non verificati: di solito dalle 10:00.</p>
+            <p class="pianob">↪️ In ritardo? Saltate Covent Garden: Northern line fino a Tottenham Court Road (7 min), poi Elizabeth line fino a Heathrow T5 (36 min). Per esempio, partendo alle 14:49 si arriva alle 15:36.</p>
+        <a class="percorso percorso--secondario" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.539292,-0.14274&amp;destination=51.4723,-0.4887&amp;travelmode=transit" target="_blank" rel="noopener" data-percorso="Martedì · Piano B: Camden Town → Heathrow T5">
+          <span class="percorso__ic" aria-hidden="true">🗺️</span>
+          <span class="percorso__txt"><b>Percorso · Martedì</b><span>Piano B: Camden Town → Heathrow T5</span></span>
+          <span class="percorso__modo">🚇 con i mezzi</span>
+        </a>
+            <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.539292,-0.14274&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚇 coi mezzi</span></a>
+          </div>
+          <p class="tcard__credito">foto: Can Pac Swire / CC BY-SA 2.0</p>
+        </article>
+        <a class="percorso" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.539292,-0.14274&amp;destination=51.5409723,-0.143961&amp;travelmode=walking" target="_blank" rel="noopener" data-percorso="Martedì · Camden Town → Poppies">
+          <span class="percorso__ic" aria-hidden="true">🗺️</span>
+          <span class="percorso__txt"><b>Percorso · Martedì</b><span>Camden Town → Poppies</span></span>
+          <span class="percorso__modo">🚶 a piedi</span>
+        </a>
+        <article class="tcard" data-tappa="poppies" data-durata="60-60" data-giorno="2026-11-17" data-ora="12:15" data-tipo="tappa">
+          <div class="tcard__foto">
+            <img src="assets/tappe/londra/poppies.webp" width="800" height="450" alt="L’ingresso di Poppies Fish &amp; Chips a Camden, con l’insegna sopra la facciata" loading="lazy" decoding="async">
+            <span class="tcard__ora">12:15</span>
+          </div>
+          <div class="tcard__body">
+            <h4>Pranzo da Poppies Fish &amp; Chips</h4>
+            <p class="tdur">⏱️ 1 h</p>
+            <p>30 Hawley Crescent, martedì 11:00–22:00. Locale anni ’50, 4,2 su ~6.000 recensioni Google. Fish &amp; chips: il piatto più tipico di Londra, semplice per Olly.</p>
+            <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5409723,-0.143961&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
+          </div>
+          <p class="tcard__credito">foto: Robert Lamb / CC BY-SA 2.0</p>
+        </article>
+        <a class="percorso" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.539292,-0.14274&amp;destination=51.5122737,-0.1234492&amp;travelmode=transit" target="_blank" rel="noopener" data-percorso="Martedì · Camden Town → Covent Garden">
+          <span class="percorso__ic" aria-hidden="true">🗺️</span>
+          <span class="percorso__txt"><b>Percorso · Martedì</b><span>Camden Town → Covent Garden</span></span>
+          <span class="percorso__modo">🚇 con i mezzi</span>
+        </a>
+        <article class="tcard tcard--nofoto" data-giorno="2026-11-17" data-ora="13:15" data-tipo="trasporto" data-durata="15-15" data-vincolo="Lasciare Camden entro le 13:15" data-vincolo-da="12:50" data-piano-b="In ritardo? Saltate Covent Garden: Northern line fino a Tottenham Court Road (7 min), poi Elizabeth line fino a Heathrow T5 (36 min). Per esempio, partendo alle 14:49 si arriva alle 15:36." data-piano-b-dopo>
+          <div class="tcard__body">
+            <span class="tcard__ora">13:15</span>
+            <h4>Verso Covent Garden</h4>
+            <p class="tdur">⏱️ ~15 min</p>
+            <p><b>Northern line diretta</b> Camden Town → Leicester Square (8 min), poi 5 min a piedi. ~£3 a testa, Olly gratis.</p>
+            <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5122737,-0.1234492&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚇 coi mezzi</span></a>
+          </div>
+        </article>
+        <article class="tcard" data-tappa="covent" data-durata="105-105" data-comprimibile data-giorno="2026-11-17" data-ora="13:30" data-tipo="tappa">
+          <div class="tcard__foto">
+            <img src="assets/tappe/londra/covent.webp" width="800" height="450" alt="La galleria coperta di Covent Garden, con il tetto in ferro e vetro verde e i carretti di fiori" loading="lazy" decoding="async">
+            <span class="tcard__ora">13:30</span>
+          </div>
+          <div class="tcard__body">
             <h4>Covent Garden</h4>
-            <p class="tdur">⏱️ 1–2 h, flessibile</p>
-            <p>Dieci minuti a piedi da Beak Street: il mercato coperto, gli artisti di strada e il pranzo.</p>
-            <p class="pioggia-nota">🌧️ Già al riparo: il mercato di Covent Garden è coperto, il programma del martedì non cambia.</p>
+            <p class="tdur">⏱️ 1 h 45</p>
+            <p>Dalla metro di Leicester Square, 5 minuti a piedi: il mercato coperto e gli artisti di strada. Il pranzo è già fatto a Camden.</p>
             <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5122737,-0.1234492&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
           </div>
           <p class="tcard__credito">foto: Dietmar Rabich / CC BY-SA 4.0</p>
@@ -1375,7 +1439,7 @@
     <div class="eyebrow">Per Olly</div>
     <h2>Il viaggio di Olly</h2>
     <p class="olly-lede">Da sfogliare insieme prima di partire: guardare le foto vere di ciò che vedrà l'aiuta ad anticipare, riconoscere e nominare.</p>
-    <div class="olly-count"><b id="ollySeen">0</b> cose viste su <b>11</b>! 🌟</div>
+    <div class="olly-count"><b id="ollySeen">0</b> cose viste su <b>12</b>! 🌟</div>
     <div class="olly-nav">
       <button class="dom active" data-og="dom" type="button">Domenica</button>
       <button class="lun" data-og="lun" type="button">Lunedì</button>
@@ -1439,6 +1503,11 @@
     </div>
 
     <div class="olly-grid" data-og-group="mar" hidden>
+      <article class="olly-card">
+        <img class="oc-photo" src="img/olly/canale.webp" width="800" height="600" alt="Le barche sul canale" loading="lazy" decoding="async">
+        <div class="oc-name">Le barche sul canale</div>
+        <button class="oc-seen" data-oid="canale" type="button"><span class="seen-dot"></span>L'ho visto!</button>
+      </article>
       <article class="olly-card">
         <img class="oc-photo" src="assets/tappe/londra/covent.webp" width="800" height="450" alt="Il mercato coperto" loading="lazy" decoding="async">
         <div class="oc-name">Il mercato coperto</div>
@@ -1510,7 +1579,7 @@
     <details class="acc" open>
       <summary>
         <span class="daynum" style="color:var(--gold);background:rgba(212,169,78,.1)">💶</span>
-        <span class="dtit"><h3>Quanto ci costa</h3><p>Stima ~€1.481 con la Piccadilly, ~€1.528 con l’Elizabeth</p></span>
+        <span class="dtit"><h3>Quanto ci costa</h3><p>Stima ~€1.496 con la Piccadilly, ~€1.543 con l’Elizabeth</p></span>
         <span class="chev">▼</span>
       </summary>
       <div class="dbody">
@@ -1519,11 +1588,11 @@
           <tbody>
             <tr><td>Voli (BA547/BA546)</td><td><span class="st ok">✅ pagato</span></td><td class="imp">€433,39</td></tr>
             <tr><td>Alloggio (Bright Carnaby Soho)<small class="bnota">£538,90 addebitati in euro</small></td><td><span class="st ok">✅ pagato</span></td><td class="imp">€648,82</td></tr>
-            <tr><td>Transfer e mezzi<small class="bnota">tariffe TfL contactless, Olly gratis: ~€48 con la Piccadilly, ~€95 con l’Elizabeth andata e ritorno</small></td><td><span class="st est">💶 stima</span></td><td class="imp">~€48 · ~€95</td></tr>
+            <tr><td>Transfer e mezzi<small class="bnota">tariffe TfL contactless, Olly gratis, con la Northern line per Camden (+£12, ~€15): ~€63 con la Piccadilly, ~€110 con l’Elizabeth andata e ritorno</small></td><td><span class="st est">💶 stima</span></td><td class="imp">~€63 · ~€110</td></tr>
             <tr><td>UK ETA ×3<small class="bnota">£20 a persona · tutte e tre fatte; Alessandro €24,31, Vale e Olly importo in euro da confermare</small></td><td><span class="st est">💶 stima</span></td><td class="imp">~€73</td></tr>
             <tr><td>SEA LIFE<small class="bnota">3 × €32,57 «a partire da», prezzo bambino da verificare</small></td><td><span class="st est">💶 stima</span></td><td class="imp">~€98</td></tr>
             <tr><td>Spesa e pasti</td><td><span class="st est">💶 stima</span></td><td class="imp">~€180</td></tr>
-            <tr class="tot"><td>Totale<small class="bnota">con la Piccadilly · con l’Elizabeth A/R</small></td><td></td><td class="imp">~€1.481 · ~€1.528</td></tr>
+            <tr class="tot"><td>Totale<small class="bnota">con la Piccadilly · con l’Elizabeth A/R</small></td><td></td><td class="imp">~€1.496 · ~€1.543</td></tr>
           </tbody>
         </table>
         <p class="meta" style="margin-top:8px">Acquisti da Hamleys esclusi dal budget.</p>
@@ -1586,6 +1655,8 @@
           <li><span class="ic">📷</span><span><b>Natural History Museum</b> — Diliff / CC BY-SA 3.0 <small><a href="https://commons.wikimedia.org/wiki/File:Natural_History_Museum_London_Jan_2006.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
           <li><span class="ic">📷</span><span><b>Luci di Regent Street</b> — Oast House Archive / CC BY-SA 2.0 <small><a href="https://commons.wikimedia.org/wiki/File:Regent_Street_Christmas_Lights_2016_-_geograph.org.uk_-_5233956.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
           <li><span class="ic">📷</span><span><b>Covent Garden</b> — Dietmar Rabich / CC BY-SA 4.0 <small><a href="https://commons.wikimedia.org/wiki/File:London,_Covent_Garden_--_2016_--_4878.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
+          <li><span class="ic">📷</span><span><b>Camden Town e Camden Lock</b> — Can Pac Swire / CC BY-SA 2.0 <small><a href="https://commons.wikimedia.org/wiki/File:Camden_Lock_2007-09-19.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
+          <li><span class="ic">📷</span><span><b>Pranzo da Poppies Fish &amp; Chips</b> — Robert Lamb / CC BY-SA 2.0 <small><a href="https://commons.wikimedia.org/wiki/File:View_of_Poppies_Fish_%5E_Chips_from_Hawley_Crescent_-_geograph.org.uk_-_5425614.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
           <li><span class="ic">📷</span><span><b>Partenza per Heathrow</b> — DiscoA340 / CC BY-SA 4.0 <small><a href="https://commons.wikimedia.org/wiki/File:Piccadilly_Circus_Underground_Station_(January_2024)_02.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
           <li><span class="ic">📷</span><span><b>Heathrow, Terminal 5 · BA546</b> — Andrew Milligan sumo / CC BY 2.0 <small><a href="https://commons.wikimedia.org/wiki/File:Departures_Terminal_5,_London_Heathrow_Airport_(33215594911).jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
           <li><span class="ic">📷</span><span><b>Atterraggio a Bologna</b> — Ex13 / CC BY-SA 3.0 <small><a href="https://commons.wikimedia.org/wiki/File:Bologna_Guglielmo_Marconi_Airport_aerial.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
@@ -1604,6 +1675,7 @@
           <li><span class="ic">🎺</span><span><b>La banda dei soldati</b> — APK, CC BY 4.0 <small><a href="https://commons.wikimedia.org/wiki/File:Band_of_the_Grenadier_Guards_marching_in_front_of_Buckingham_Palace.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
                   <li><span class="ic">💂</span><span><b>La guardia con l'elmo</b> — Lewis Clarke, CC BY-SA 2.0 <small><a href="https://commons.wikimedia.org/wiki/File:London_,_Westminster_-_Horse_Guards_Parade_-_geograph.org.uk_-_2546769.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
           <li><span class="ic">🐋</span><span><b>La balena del museo</b> — APK, CC BY 4.0 <small><a href="https://commons.wikimedia.org/wiki/File:Hintze_Hall,_Natural_History_Museum,_London_-_4.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
+          <li><span class="ic">🛶</span><span><b>Le barche sul canale</b> — Paul Gillett, CC BY-SA 2.0 <small><a href="https://commons.wikimedia.org/wiki/File:Boat_passing_Hawley_Lock_-_geograph.org.uk_-_4008673.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
           <li><span class="ic">🎪</span><span><b>Il mercato coperto</b> — Dietmar Rabich, CC BY-SA 4.0 <small><a href="https://commons.wikimedia.org/wiki/File:London,_Covent_Garden_--_2016_--_4878.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
         </ul>
       </div>
@@ -1976,7 +2048,7 @@
     var CAMBI = [
       { g: 'Domenica', testo: 'pranzo dentro il Southbank Centre; acquario e Hamleys sono al coperto', sel: '#pioggia-dom' },
       { g: 'Lunedì', testo: 'cerimonia a rischio, controllare @HQHouseholdDiv; in alternativa Harrods prima', sel: '#pioggia-lun' },
-      { g: 'Martedì', testo: 'nessun cambio, Covent Garden è al coperto', sel: 'article[data-tappa="covent"]' }
+      { g: 'Martedì', testo: 'con pioggia forte Camden più corta e Covent Garden prima, che è al coperto', sel: '#pioggia-mar' }
     ];
     function vaiA(el){
       var d = el.closest('details'); if (d) d.open = true;
@@ -2046,6 +2118,11 @@
   "cosa": "Data di accensione delle luci di Regent Street 2026",
   "contesto": "Domenica sera (Hamleys e il rientro) e lunedì sera (Regent Street) contano sulle luci di Natale già accese: la data del 2026 non è ancora nota.",
   "come": "Alessandro: controllare la data di accensione quando viene annunciata, di solito a inizio novembre."
+ },
+ {
+  "cosa": "Orari di apertura dei mercati di Camden (di solito dalle 10:00, non verificati)",
+  "contesto": "Martedì si arriva a Camden Lock verso le 11:00: se qualche mercato apre più tardi, si vede meno.",
+  "come": "Alessandro: controllare gli orari del martedì sul sito di Camden Market la settimana prima."
  }
 ];
 
@@ -2175,12 +2252,18 @@
       $('adOrologio').textContent = SIGLE[new Date(Date.UTC(dt[0], dt[1] - 1, dt[2])).getUTCDay()] + ' ' + dt[2] + ' nov · ' + pad(lo.h) + ':' + pad(lo.m) + ' a Londra';
       var c = $('adCorso');
       if (corrente) { c.innerHTML = ''; c.append('In corso dalle ' + ora(corrente) + ' · '); var b = document.createElement('b'); b.textContent = corrente.nome; c.append(b); c.hidden = false; } else c.hidden = true;
+      // un vincolo con data-vincolo-da compare solo da quell'ora (es. «lasciare Camden entro le 13:15» dalle 12:50)
+      var vincoloAttivo = function(x){ var da = x.el.dataset.vincoloDa; return !da || now >= OROLOGIO.istante(x.giorno, da, x.fuso || 'Europe/London'); };
       var v = [];
-      if (corrente && corrente.vincolo) v.push(corrente.vincolo);
-      if (prossima && prossima.vincolo && v.indexOf(prossima.vincolo) < 0) v.push(prossima.vincolo);
+      if (corrente && corrente.vincolo && vincoloAttivo(corrente)) v.push(corrente.vincolo);
+      if (prossima && prossima.vincolo && vincoloAttivo(prossima) && v.indexOf(prossima.vincolo) < 0) v.push(prossima.vincolo);
       var righe = v.map(function(s){ return '⏰ ' + s; });
       // piano B scritto sulla card (data-piano-b): compare insieme al suo vincolo
-      [corrente, prossima].forEach(function(x){ if (x && x.el.dataset.pianoB && x.vincolo) righe.push('↪️ Piano B: ' + x.el.dataset.pianoB); });
+      [corrente, prossima].forEach(function(x){
+        if (!x || !x.el.dataset.pianoB || !x.vincolo) return;
+        if (x.el.hasAttribute('data-piano-b-dopo') && x !== corrente) return;   // solo dopo l'ora della card (si è ancora lì)
+        righe.push('↪️ Piano B: ' + x.el.dataset.pianoB);
+      });
       $('adVincolo').textContent = righe.join('\n'); $('adVincolo').hidden = !righe.length;
       // regola dei trasferimenti (Elizabeth o Piccadilly), scritta sulla card con data-regola
       var reg = (prossima && prossima.el.dataset.regola) || (corrente && corrente.el.dataset.regola) || '';
@@ -2278,6 +2361,11 @@
      Il pannello non si apre mai da solo: in cima c'è un banner sottile «N novità», e si apre solo se toccato.
      Il link in fondo alla pagina lo riapre con tutto lo storico, in ogni caso. */
   var NOVITA = [
+    { v: 28, data: '2026-10-04', titolo: 'Martedì mattina a Camden', voci: [
+      'Dopo il check-out, Northern line fino a Camden Town: il canale con le barche e i mercati alle 11:00, poi fish & chips da Poppies alle 12:15',
+      'Alle 13:15 di nuovo in metro fino a Leicester Square e Covent Garden alle 13:30, per un’ora e tre quarti. La partenza per Heathrow resta alle 15:15',
+      'In «Adesso», dalle 12:50, il promemoria «lasciare Camden entro le 13:15»; se si è in ritardo, il piano B va a Heathrow direttamente da Camden',
+      'Per Olly, al martedì: le barche sul canale' ] },
     { v: 27, data: '2026-10-04', titolo: 'Olly, mappa e budget allineati al programma nuovo', voci: [
       'Nel viaggio di Olly: via la ruota, lo scoiattolo è quello di St James’s Park e al lunedì c’è «La banda dei soldati»',
       'Mappa: Hamleys e Wellington Barracks al posto di London Eye, Shrek e Green Park, con le linee dei percorsi nuovi',
@@ -2514,6 +2602,8 @@
   var HORSEGUARDS={n:'Horse Guards Parade', lat:51.5047752, lng:-0.1272358};
   var BIGBEN={n:'Big Ben e Parlamento', lat:51.5007292, lng:-0.1246254};
   var COVENT={n:'Covent Garden', lat:51.5122737, lng:-0.1234492};
+  var CAMDEN={n:'Camden Town e Camden Lock', lat:51.539292, lng:-0.14274, modo:'transit'};
+  var POPPIES={n:'Poppies Fish & Chips', lat:51.5409723, lng:-0.143961};
   var HARRODS={n:'Harrods', lat:51.4994055, lng:-0.1632344, modo:'transit'};
   var NHM={n:'Natural History Museum', lat:51.4967150, lng:-0.1763672};
 
@@ -2530,7 +2620,9 @@
     {p:BIGBEN,      g:'lun', note:'12:25 · Parliament Square e Westminster Bridge 🕰️'},
     {p:HARRODS,     g:'lun', note:'14:10 · vetrine di Natale + tè alle Tea Rooms ☕'},
     {p:NHM,         g:'lun', note:'Ingresso gratuito · chiude alle 17:50 🦕'},
-    {p:COVENT,      g:'mar', note:'Mercato coperto e artisti di strada 🎭'}
+    {p:CAMDEN,      g:'mar', note:'11:00 · il canale con le barche e i mercati 🛶'},
+    {p:POPPIES,     g:'mar', note:'12:15 · fish & chips, 30 Hawley Crescent 🍟'},
+    {p:COVENT,      g:'mar', note:'13:30 · mercato coperto e artisti di strada 🎭'}
   ];
 
   /* percorsi: sequenza di tappe con la modalità del tragitto che porta al punto */
@@ -2545,7 +2637,7 @@
       {p:HARRODS, mode:'metro'}, {p:NHM, mode:'walk'}, {p:CASA, mode:'metro'}
     ]},
     {g:'mar', stops:[
-      {p:CASA}, {p:COVENT, mode:'walk'}, {p:CASA, mode:'walk'}
+      {p:CASA}, {p:CAMDEN, mode:'metro'}, {p:POPPIES, mode:'walk'}, {p:COVENT, mode:'metro'}
     ]}
   ];
 

@@ -181,6 +181,30 @@
       "qualita": 70
     },
     {
+      "id": "camden",
+      "file": "assets/tappe/londra/camden.webp",
+      "tappa": "Camden Town e Camden Lock",
+      "titolo": "File:Camden Lock 2007-09-19.jpg",
+      "autore": "Can Pac Swire",
+      "licenza": "CC BY-SA 2.0",
+      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Camden_Lock_2007-09-19.jpg",
+      "kb": 72,
+      "qualita": 70
+    },
+    {
+      "id": "poppies",
+      "file": "assets/tappe/londra/poppies.webp",
+      "tappa": "Poppies Fish & Chips",
+      "titolo": "File:View of Poppies Fish ^ Chips from Hawley Crescent - geograph.org.uk - 5425614.jpg",
+      "autore": "Robert Lamb",
+      "licenza": "CC BY-SA 2.0",
+      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:View_of_Poppies_Fish_%5E_Chips_from_Hawley_Crescent_-_geograph.org.uk_-_5425614.jpg",
+      "kb": 58,
+      "qualita": 70
+    },
+    {
       "id": "piccadilly",
       "file": "assets/tappe/londra/piccadilly.webp",
       "tappa": "Piccadilly Circus (partenza per Heathrow)",
