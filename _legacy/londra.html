@@ -4,8 +4,9 @@
 <meta charset="UTF-8">
     <meta name="robots" content="noindex, nofollow, noarchive" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="color-scheme" content="dark">
-<meta name="theme-color" content="#0d1321">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#0d1321" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f6f3ee" media="(prefers-color-scheme: light)">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Londra 2026">
@@ -40,11 +41,37 @@
     /* LONDON WINTER NIGHT — design tokens */
     --night-0:#0d1321;--night-1:#1a2332;--night-2:#212c40;
     --gold:#d4a94e;--gold-soft:#e8c87e;--gold-dim:rgba(212,169,78,.28);
-    --bus:#c8362b;--sky:#6db3d8;
-    --ink:#f5f0e8;--muted:#9aa3b5;
-    --ok:#4fae7c;
+    --bus:#c8362b;--sky:#8fcbeb;
+    --ink:#f5f0e8;--muted:#bec5d2;
+    --ok:#7dd3a4;
     --line:rgba(245,240,232,.09);--line-gold:rgba(212,169,78,.3);
     --shadow-card:0 18px 44px -20px rgba(0,0,0,.75);
+    /* riempimenti (uguali nei due temi) e testi colorati (cambiano col tema) */
+    --gold-fill:#d4a94e;--sky-fill:#6db3d8;--on-accent:#0d1321;
+    --rosso-testo:#ffb3ac;--verde-testo:#8fe0b6;--info-testo:#bcdcee;
+    color-scheme:dark;
+  }
+  /* Tema chiaro automatico quando il telefono è in modalità chiara: utile al sole. Nessun interruttore. */
+  @media (prefers-color-scheme: light){
+    :root{
+      --night-0:#f6f3ee;--night-1:#ffffff;--night-2:#f3efe8;
+      --gold:#5f4205;--gold-soft:#553b04;--gold-dim:rgba(138,100,20,.22);
+      --bus:#b3281e;--sky:#17496a;
+      --ink:#141a26;--muted:#3f4757;
+      --ok:#0f4a2e;
+      --line:rgba(20,26,38,.13);--line-gold:rgba(138,100,20,.38);
+      --shadow-card:0 12px 30px -20px rgba(20,26,38,.45);
+      --rosso-testo:#7d1d15;--verde-testo:#0f4a2e;--info-testo:#17496a;
+      color-scheme:light;
+    }
+    .aurora{background:var(--night-0)!important}
+    .percorso__modo{background:rgba(20,26,38,.06)!important}
+    .tcard__credito{color:var(--muted)!important}
+    .skyline{color:#1a2332!important}
+    .barra{background:rgba(255,255,255,.96)!important}
+    .pk{background:linear-gradient(180deg,rgba(212,169,78,.12),var(--night-1))!important}
+    .tcard--plus{background:var(--night-1)!important}
+    .nov__piede{background:linear-gradient(180deg,rgba(255,255,255,0),var(--night-1) 30%)!important}
   }
   html{scroll-behavior:smooth;background:var(--night-0)}
   body{background:var(--night-0);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
@@ -66,7 +93,7 @@
   .hero{position:relative;text-align:center;padding:22px 18px 0;overflow:hidden}
   .hero .badge{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line-gold);border-radius:999px;
     padding:7px 15px;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
-  .hero .badge .dot{width:7px;height:7px;border-radius:50%;background:var(--gold);animation:pulse 2s infinite}
+  .hero .badge .dot{width:7px;height:7px;border-radius:50%;background:var(--gold-fill);animation:pulse 2s infinite}
   @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(212,169,78,.55)}70%{box-shadow:0 0 0 9px rgba(212,169,78,0)}100%{box-shadow:0 0 0 0 rgba(212,169,78,0)}}
   .hero h1{font-size:clamp(44px,13vw,64px);font-weight:700;margin-top:10px;
     background:linear-gradient(180deg,#fdf6e3 20%,var(--gold-soft) 60%,var(--gold) 100%);
@@ -76,7 +103,7 @@
   .hero .sub b{color:var(--ink);font-weight:600}
   .hero .fam{margin-top:6px;font-family:"Playfair Display",serif;font-style:italic;font-size:17px;color:var(--gold-soft)}
   .pics-btn{display:inline-flex;align-items:center;gap:7px;margin-top:22px;font-weight:700;font-size:14px;
-    color:#0d1321;background:linear-gradient(135deg,var(--gold-soft),var(--gold));border-radius:999px;
+    color:#0d1321;background:linear-gradient(135deg,#e8c87e,#d4a94e);border-radius:999px;
     padding:11px 20px;text-decoration:none;box-shadow:0 12px 30px -12px rgba(212,169,78,.55)}
   .pics-btn:active{transform:scale(.97)}
   /* skyline decorativa (SVG inline, leggerissima) */
@@ -99,8 +126,8 @@
   /* badge di stato */
   .st{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;letter-spacing:.05em;
     text-transform:uppercase;border-radius:999px;padding:3px 10px;white-space:nowrap;vertical-align:middle}
-  .st.ok{color:#8fe0b6;background:rgba(79,174,124,.14);border:1px solid rgba(79,174,124,.4)}
-  .st.todo{color:#ff9d94;background:rgba(200,54,43,.16);border:1px solid rgba(200,54,43,.5)}
+  .st.ok{color:var(--verde-testo);background:rgba(79,174,124,.14);border:1px solid rgba(79,174,124,.4)}
+  .st.todo{color:var(--rosso-testo);background:rgba(200,54,43,.16);border:1px solid rgba(200,54,43,.5)}
   .st.est{color:var(--gold-soft);background:rgba(212,169,78,.12);border:1px solid var(--line-gold)}
 
   /* card generica */
@@ -162,7 +189,7 @@
   .meteo__chips{display:flex;gap:8px}
   .meteo__chips button{border:1px solid var(--line-gold);background:none;color:var(--muted);font:inherit;font-size:12.5px;font-weight:700;
     border-radius:999px;padding:5px 12px;cursor:pointer}
-  .meteo__chips button[aria-selected="true"]{background:var(--gold);border-color:var(--gold);color:var(--night-0)}
+  .meteo__chips button[aria-selected="true"]{background:var(--gold-fill);border-color:var(--gold);color:var(--on-accent)}
   .meteo__striscia{display:flex;gap:2px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;
     overscroll-behavior-x:contain;scrollbar-width:none;margin:0 -14px;padding:0 14px}
   .meteo__striscia::-webkit-scrollbar{display:none}
@@ -177,7 +204,7 @@
     font-family:"Playfair Display",serif;font-weight:700;font-size:19px;line-height:1;border:1px solid var(--line-gold)}
   .daynum small{font-family:system-ui,sans-serif;font-weight:600;font-size:8.5px;letter-spacing:.1em;margin-top:2px;opacity:.8}
   .acc.dom .daynum{color:var(--gold);background:rgba(212,169,78,.1)}
-  .acc.lun .daynum{color:#ff9d94;background:rgba(200,54,43,.14);border-color:rgba(200,54,43,.45)}
+  .acc.lun .daynum{color:var(--rosso-testo);background:rgba(200,54,43,.14);border-color:rgba(200,54,43,.45)}
   .acc.mar .daynum{color:var(--sky);background:rgba(109,179,216,.1);border-color:rgba(109,179,216,.4)}
   .dtit{flex:1;min-width:0}
   .dtit h3{font-size:18.5px}
@@ -231,7 +258,7 @@
   .tcard__body{padding:14px 16px 2px}
   .tcard__body h4{font-family:"Playfair Display",Georgia,serif;font-size:19px;font-weight:700;line-height:1.15}
   .tcard__body p{color:var(--muted);font-size:13.5px;line-height:1.5;margin-top:5px}
-  .tcard__credito{padding:10px 16px 14px;font-size:11px;color:#79839a;line-height:1.35}
+  .tcard__credito{padding:10px 16px 14px;font-size:12px;color:var(--muted);line-height:1.35}
   .tcard__credito a{color:inherit}
   /* durata stimata della visita: solo sulle tappe fisse che ce l'hanno */
   .tcard__body .tdur{display:inline-block;margin-top:6px;font-size:12px;font-weight:700;color:var(--gold-soft);
@@ -256,12 +283,12 @@
   .tcard--plus .tcard__body h4{font-size:17px}
   .tcard--plus .tcard__body p{font-size:13px}
   .plus-badge{position:absolute;bottom:8px;right:12px;z-index:1;font-size:10.5px;font-weight:700;
-    letter-spacing:.08em;text-transform:uppercase;color:#0d1321;background:var(--gold);
+    letter-spacing:.08em;text-transform:uppercase;color:#0d1321;background:var(--gold-fill);
     border-radius:999px;padding:4px 10px;box-shadow:0 2px 10px rgba(0,0,0,.5)}
   .plus-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
   .plus-meta span{font-size:11.5px;color:var(--muted);background:rgba(245,240,232,.06);
     border:1px solid var(--line);border-radius:999px;padding:3px 9px}
-  .plus-warn{margin-top:8px;font-size:12px;line-height:1.45;color:#ffb3ac}
+  .plus-warn{margin-top:8px;font-size:12px;line-height:1.45;color:var(--rosso-testo)}
 
   /* biglietti: il riquadro del barcode resta bianco, serve contrasto per lo scanner */
   .tk-when{display:flex;gap:10px;margin-top:4px}
@@ -277,7 +304,7 @@
   .tk-svg{display:block;width:100%;max-width:330px;height:auto;margin:0 auto}
   .tk-num{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13.5px;font-weight:700;
     color:#000;letter-spacing:.06em;margin-top:6px;font-variant-numeric:tabular-nums}
-  .tk-note{margin-top:16px;font-size:12.5px;line-height:1.55;color:#ffb3ac;
+  .tk-note{margin-top:16px;font-size:12.5px;line-height:1.55;color:var(--rosso-testo);
     background:rgba(200,54,43,.1);border:1px solid rgba(200,54,43,.35);border-radius:12px;padding:11px 13px}
   .tk-order{margin-top:10px;font-size:11px;color:var(--muted);text-align:center}
 
@@ -317,10 +344,10 @@
     background:var(--night-1);border-radius:inherit}
   /* sul telefono la mappa si sposta con due dita: con un dito si scorre la pagina */
   .map-hint{position:absolute;inset:0;z-index:1000;display:grid;place-items:center;padding:20px;text-align:center;
-    font-size:16px;font-weight:700;color:#fff;background:rgba(5,8,15,.55);border-radius:inherit;pointer-events:none;
+    font-size:16px;font-weight:700;color:#fff;background:rgba(5,8,15,.72);border-radius:inherit;pointer-events:none;
     opacity:0;transition:opacity .25s}
   .map-hint.on{opacity:1}
-  #map .leaflet-control-attribution{font-size:10px;line-height:1.35}
+  #map .leaflet-control-attribution{font-size:12px;line-height:1.35}
   .pop-vai{display:inline-flex;align-items:center;min-height:44px;margin-top:4px;font-weight:700;font-size:14px}
   .legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;font-size:12px;font-weight:600}
   .legend span{display:inline-flex;align-items:center;gap:6px;background:var(--night-1);border:1px solid var(--line);
@@ -354,7 +381,7 @@
     font-size:17px;font-weight:700}
   .btable tr.tot td.imp{color:var(--gold-soft)}
   .pass{display:inline-flex;align-items:center;gap:6px;margin-top:12px;font-size:12.5px;font-weight:600;
-    color:#8fe0b6;background:rgba(79,174,124,.1);border:1px solid rgba(79,174,124,.35);border-radius:999px;padding:6px 13px}
+    color:var(--verde-testo);background:rgba(79,174,124,.1);border:1px solid rgba(79,174,124,.35);border-radius:999px;padding:6px 13px}
 
   .prio{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;
     color:#fff;background:var(--bus);border-radius:5px;padding:1px 7px;margin-left:6px;vertical-align:1px}
@@ -368,7 +395,7 @@
   .hp-badge{display:inline-flex;align-items:center;font-family:"Playfair Display",serif;font-weight:700;font-size:15px;
     padding:6px 16px;border-radius:999px;margin-bottom:12px}
   .hp-badge.dom{background:rgba(212,169,78,.15);color:var(--gold-soft);border:1px solid var(--line-gold)}
-  .hp-badge.lun{background:rgba(200,54,43,.16);color:#ff9d94;border:1px solid rgba(200,54,43,.45)}
+  .hp-badge.lun{background:rgba(200,54,43,.16);color:var(--rosso-testo);border:1px solid rgba(200,54,43,.45)}
   .hp-badge.mar{background:rgba(109,179,216,.14);color:var(--sky);border:1px solid rgba(109,179,216,.4)}
   .hp-tl{list-style:none;padding-left:16px;border-left:2px solid var(--line)}
   .hp-day.dom .hp-tl{border-left-color:rgba(212,169,78,.4)}
@@ -378,13 +405,13 @@
   .hp-tl li:not(:last-child){border-bottom:1px solid var(--line)}
   .hp-t{flex:none;width:50px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-weight:700;
     font-size:12.5px;color:var(--gold-soft);padding-top:1px}
-  .hp-day.lun .hp-t{color:#ff9d94}
+  .hp-day.lun .hp-t{color:var(--rosso-testo)}
   .hp-day.mar .hp-t{color:var(--sky)}
-  .hp-d{flex:1;color:#e7e2d8}
+  .hp-d{flex:1;color:var(--ink)}
   .hp-notes{margin-top:20px;display:flex;flex-direction:column;gap:10px}
   .hp-note{font-size:13px;line-height:1.55;border-radius:12px;padding:11px 13px}
-  .hp-note.warn{background:rgba(200,54,43,.1);border:1px solid rgba(200,54,43,.35);color:#ffb3ac}
-  .hp-note.info{background:rgba(109,179,216,.1);border:1px solid rgba(109,179,216,.35);color:#bcdcee}
+  .hp-note.warn{background:rgba(200,54,43,.1);border:1px solid rgba(200,54,43,.35);color:var(--rosso-testo)}
+  .hp-note.info{background:rgba(109,179,216,.1);border:1px solid rgba(109,179,216,.35);color:var(--info-testo)}
 
   /* sezione Olly */
   .olly-count{text-align:center;font-family:"Playfair Display",serif;font-weight:700;font-size:17px;
@@ -394,9 +421,9 @@
   .olly-nav button{flex:1;font-family:inherit;font-weight:700;font-size:13px;padding:10px 6px;border-radius:12px;
     cursor:pointer;background:var(--night-1);border:1px solid var(--line);color:var(--muted);transition:.15s}
   .olly-nav button.active{color:#0d1321}
-  .olly-nav button.dom.active{background:var(--gold);border-color:var(--gold)}
+  .olly-nav button.dom.active{background:var(--gold-fill);border-color:var(--gold)}
   .olly-nav button.lun.active{background:var(--bus);border-color:var(--bus);color:#fff}
-  .olly-nav button.mar.active{background:var(--sky);border-color:var(--sky)}
+  .olly-nav button.mar.active{background:var(--sky-fill);border-color:var(--sky-fill)}
   .olly-grid{display:flex;flex-direction:column;gap:16px}
   .olly-grid[hidden]{display:none}
   .olly-card{background:linear-gradient(180deg,var(--night-1),var(--night-2));border:1px solid var(--line);
@@ -409,7 +436,7 @@
   .oc-seen .seen-dot{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--line-gold);flex:none;
     display:flex;align-items:center;justify-content:center;transition:.15s}
   .oc-seen.seen{background:rgba(212,169,78,.14);border-color:var(--gold)}
-  .oc-seen.seen .seen-dot{background:var(--gold);border-color:var(--gold)}
+  .oc-seen.seen .seen-dot{background:var(--gold-fill);border-color:var(--gold)}
   .oc-seen.seen .seen-dot::after{content:"✓";color:#0d1321;font-size:13px;font-weight:800}
   .olly-lede{font-size:13.5px;color:var(--muted);line-height:1.6;margin-bottom:16px}
   .credits li small{display:block;color:var(--muted);font-size:11.5px;margin-top:2px}
@@ -417,7 +444,7 @@
 
   /* note pratiche */
   .notes{list-style:none;margin-top:8px}
-  .notes li{display:flex;gap:11px;padding:9px 0;font-size:13.5px;color:#c9cfdd;border-top:1px solid var(--line)}
+  .notes li{display:flex;gap:11px;padding:9px 0;font-size:13.5px;color:var(--ink);border-top:1px solid var(--line)}
   .notes li:first-child{border-top:0}
   .notes .ic{flex:none}
 
@@ -441,7 +468,7 @@
   .nov__voce ul{margin-top:6px;padding-left:16px;display:flex;flex-direction:column;gap:4px;font-size:13.5px;line-height:1.45;color:var(--muted)}
   .nov__piede{position:sticky;bottom:0;padding:12px 20px calc(14px + env(safe-area-inset-bottom));
     background:linear-gradient(180deg,rgba(26,35,50,0),var(--night-1) 30%)}
-  .nov__ok{width:100%;border:0;border-radius:14px;padding:14px;background:var(--gold);color:var(--night-0);
+  .nov__ok{width:100%;border:0;border-radius:14px;padding:14px;background:var(--gold-fill);color:var(--on-accent);
     font:inherit;font-weight:800;font-size:15px;cursor:pointer}
   html.nov-aperto{overflow:hidden}
   /* testata compatta: il link per Olly c'è, ma non è la cosa più evidente della pagina */
@@ -467,7 +494,7 @@
   .gmap--btn{border:0;font:inherit;cursor:pointer}
   .casa-indirizzo{font-family:"Playfair Display",Georgia,serif;font-size:24px;line-height:1.2;margin-top:8px}
   .casa-azioni{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;align-items:center}
-  .casa-mostra{min-height:48px;padding:0 16px;border-radius:12px;border:0;background:var(--gold);color:var(--night-0);font:inherit;font-weight:800;font-size:15px;cursor:pointer}
+  .casa-mostra{min-height:48px;padding:0 16px;border-radius:12px;border:0;background:var(--gold-fill);color:var(--on-accent);font:inherit;font-weight:800;font-size:15px;cursor:pointer}
   /* Piove e badge nei nuovi posti */
   .prog-azioni{margin-top:8px}
   .ad-piove{margin-top:10px}
@@ -504,7 +531,7 @@
   .pp-stato{flex:none;min-width:94px;margin-top:1px;padding:2px 8px;border-radius:999px;font-size:11.5px;font-weight:800;
     letter-spacing:.04em;text-align:center;text-transform:uppercase;border:1px solid}
   .pp-stato--da_fare{color:var(--gold-soft);border-color:var(--line-gold);background:rgba(212,169,78,.1)}
-  .pp-stato--da_verificare{color:#ffb3ac;border-color:rgba(200,54,43,.55);background:rgba(200,54,43,.12)}
+  .pp-stato--da_verificare{color:var(--rosso-testo);border-color:rgba(200,54,43,.55);background:rgba(200,54,43,.12)}
   .pp-stato--fatto{color:var(--ok);border-color:rgba(79,174,124,.45);background:rgba(79,174,124,.1)}
   .pp-voce--fatto > span:last-child{color:var(--muted)}
   .pp-conti{margin-top:4px;font-size:13px;color:var(--muted)}
@@ -549,14 +576,14 @@
   .ad-quando{font-size:14px;font-weight:700;color:var(--gold-soft);font-variant-numeric:tabular-nums}
   .ad-nome{font-family:"Playfair Display",Georgia,serif;font-size:21px;line-height:1.2;margin-top:2px}
   .ad-vincolo{white-space:pre-line;margin-top:12px;padding:10px 12px;border-radius:12px;font-size:15px;line-height:1.4;font-weight:700;
-    color:#ffd0cb;background:rgba(200,54,43,.16);border:1px solid rgba(200,54,43,.45)}
+    color:var(--rosso-testo);background:rgba(200,54,43,.16);border:1px solid rgba(200,54,43,.45)}
   .ad-azioni{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
   .ad-vai{flex:1 1 180px;display:flex;align-items:center;justify-content:center;min-height:56px;border-radius:14px;
-    background:var(--gold);color:var(--night-0);font-weight:800;font-size:17px;text-decoration:none}
+    background:var(--gold-fill);color:var(--on-accent);font-weight:800;font-size:17px;text-decoration:none}
   .ad-scheda{flex:0 1 auto;min-height:56px;padding:0 16px;border-radius:14px;border:1px solid var(--line-gold);
     background:none;color:var(--ink);font:inherit;font-weight:700;font-size:15px;cursor:pointer}
   /* offline: indicatore discreto in testata, versione in fondo */
-  .offline-ok{margin-top:8px;font-size:12.5px;font-weight:700;color:#8fe0b6;letter-spacing:.02em}
+  .offline-ok{margin-top:8px;font-size:12.5px;font-weight:700;color:var(--verde-testo);letter-spacing:.02em}
   .offline-ok[hidden]{display:none}
   .ver-sito{margin-top:10px;font-size:12px;color:var(--muted)}
   /* passeggino a noleggio: piano B, nelle note pratiche */
@@ -571,8 +598,8 @@
   .piove-btn{margin-top:10px;display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(109,179,216,.45);
     background:rgba(109,179,216,.08);color:var(--ink);border-radius:999px;padding:6px 13px;font:inherit;font-size:12.5px;font-weight:700;cursor:pointer}
   .piove-stato{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border-left:1px solid var(--line);padding-left:7px}
-  .piove-btn[aria-pressed="true"]{background:var(--sky);border-color:var(--sky);color:var(--night-0)}
-  .piove-btn[aria-pressed="true"] .piove-stato{color:var(--night-0);border-color:rgba(13,19,33,.3)}
+  .piove-btn[aria-pressed="true"]{background:var(--sky-fill);border-color:var(--sky);color:var(--on-accent)}
+  .piove-btn[aria-pressed="true"] .piove-stato{color:var(--on-accent);border-color:rgba(13,19,33,.3)}
   /* riepilogo del piano pioggia, sotto il pulsante appena toccato */
   .piove-riepilogo{position:relative;margin:10px 0 4px;padding:12px 48px 10px 14px;border-radius:14px;
     background:rgba(109,179,216,.12);border:1px solid rgba(109,179,216,.45);font-size:15px;line-height:1.4}
@@ -587,7 +614,7 @@
   .ad-proposta{margin-top:12px;padding:12px;border-radius:12px;border:1px solid rgba(109,179,216,.45);background:rgba(109,179,216,.08);font-size:15px;line-height:1.4}
   .ad-proposta__az{display:flex;gap:10px;margin-top:10px}
   .ad-proposta__az button{flex:1;min-height:48px;border-radius:12px;font:inherit;font-weight:700;cursor:pointer}
-  .ad-proposta__si{border:0;background:var(--sky);color:var(--night-0)}
+  .ad-proposta__si{border:0;background:var(--sky-fill);color:var(--on-accent)}
   .ad-proposta__no{border:1px solid var(--line);background:none;color:var(--ink)}
   .pioggia-nota{display:none}
   html.piove .pioggia-nota{display:block}
@@ -599,6 +626,24 @@
   .pioggia-nota--blocco{margin:2px 0 14px;background:rgba(109,179,216,.1);border:1px solid rgba(109,179,216,.35);color:var(--ink)}
   .nov__testa code{font-size:12px;color:var(--gold-soft)}
   .nov-link{background:none;border:0;color:var(--gold-soft);font:inherit;font-size:12.5px;text-decoration:underline;cursor:pointer;padding:0}
+  /* ====== R7: leggibilità e tocchi ======
+     corpo delle card 15 px, nessun testo sotto 12 px, etichette operative 14 px; ogni controllo almeno 44 × 44 */
+  .tcard__body p,.tcard--plus .tcard__body p{font-size:15px}
+  .tcard__body .tdur{font-size:14px}
+  .tcard__body .plus-warn,.tcard__body .pioggia-nota{font-size:14px}
+  .eyebrow,.hero .badge,.st,.pk__eyebrow,.pk__paid,.pp-stato,.btable th,.percorso__modo,.piove-stato{font-size:12px}
+  .daynum small,.sc-ora small,.credits li small,.flight .ap small,.flight .t small,.tk figcaption small{font-size:12px}
+  .ci-co .chip2 .k,.tk-when .k,.pk__grid .k{font-size:12px}
+  .tk-order{font-size:14px}
+  .nov__data,.plus-badge,.plus-meta span{font-size:12px}
+  .leaflet-container .leaflet-control-attribution{font-size:12px}
+  .piove-btn,.olly-nav button,.nov-link{min-height:44px}
+  .nov-link{display:inline-flex;align-items:center}
+  .leaflet-touch .leaflet-bar a{width:44px;height:44px;line-height:44px;font-size:22px}
+  .pin-hit{width:44px;height:44px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:4px}
+  .pin-home-hit{width:44px;height:44px;display:grid;place-items:center}
+  #map .leaflet-control-attribution{background:rgba(13,19,33,.85);color:#c9cfdd}
+  #map .leaflet-control-attribution a{color:#8fcbeb}
 </style>
 </head>
 <body>
@@ -653,7 +698,7 @@
       <img class="ad-foto" id="adFoto" alt="" width="96" height="54" decoding="async">
       <div class="ad-testo">
         <p class="ad-quando" id="adQuando"></p>
-        <h3 class="ad-nome" id="adNome"></h3>
+        <h2 class="ad-nome" id="adNome"></h2>
       </div>
     </div>
     <p class="ad-vincolo" id="adVincolo" hidden></p>
@@ -1142,12 +1187,12 @@
 
       <article class="pk" aria-labelledby="pkTit">
     <p class="pk__eyebrow">🅿️ Parcheggio aeroporto · domenica all’ingresso, martedì sera all’uscita</p>
-    <h4 class="pk__tit" id="pkTit">P1 · Aeroporto di Bologna</h4>
+    <h3 class="pk__tit" id="pkTit">P1 · Aeroporto di Bologna</h3>
     <div class="pk__grid">
     <div><span class="k">Prenotazione</span><span class="v">3039188</span></div>
     <div><span class="k">Intestatario</span><span class="v">Alessandro Vizzini</span></div>
     </div>
-    <button class="pk__box" type="button" id="pkBox" data-codice="0" aria-label="Ingrandisci il QR del parcheggio a schermo pieno">
+    <button class="pk__box" type="button" id="pkBox" data-codice="0" aria-label="Tocca per ingrandire il QR del parcheggio, a schermo pieno">
     <svg class="pk__svg" viewBox="0 0 33 33" shape-rendering="crispEdges" role="img" aria-label="QR code della prenotazione parcheggio 3039188" xmlns="http://www.w3.org/2000/svg"><path fill="#fff" d="M0 0h33v33h-33z"/><path stroke="#000" d="M4 4.5h7m2 0h2m1 0h1m2 0h2m1 0h7m-25 1h1m5 0h1m1 0h1m1 0h2m2 0h2m2 0h1m5 0h1m-25 1h1m1 0h3m1 0h1m1 0h2m1 0h5m2 0h1m1 0h3m1 0h1m-25 1h1m1 0h3m1 0h1m2 0h1m2 0h1m5 0h1m1 0h3m1 0h1m-25 1h1m1 0h3m1 0h1m2 0h5m4 0h1m1 0h3m1 0h1m-25 1h1m5 0h1m4 0h1m2 0h1m1 0h1m1 0h1m5 0h1m-25 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-16 1h6m-14 1h3m1 0h2m3 0h2m1 0h2m1 0h1m5 0h2m-23 1h2m6 0h1m1 0h2m2 0h1m1 0h1m4 0h1m1 0h1m-21 1h1m1 0h1m1 0h1m1 0h1m3 0h1m2 0h4m-21 1h1m1 0h2m4 0h1m2 0h1m1 0h2m1 0h1m2 0h1m1 0h2m1 0h1m-24 1h1m1 0h1m1 0h2m2 0h1m5 0h1m2 0h3m3 0h1m-22 1h3m2 0h1m2 0h3m2 0h1m1 0h1m1 0h1m2 0h1m-23 1h1m1 0h2m1 0h3m4 0h1m2 0h1m1 0h1m2 0h3m-24 1h1m2 0h2m2 0h10m1 0h1m1 0h2m2 0h1m-23 1h3m1 0h2m3 0h1m1 0h2m1 0h7m-15 1h1m1 0h1m1 0h2m1 0h2m3 0h1m1 0h1m1 0h1m-25 1h7m2 0h2m2 0h4m1 0h1m1 0h1m1 0h1m1 0h1m-25 1h1m5 0h1m1 0h2m3 0h1m1 0h2m3 0h1m3 0h1m-25 1h1m1 0h3m1 0h1m2 0h1m1 0h1m1 0h1m2 0h6m1 0h2m-25 1h1m1 0h3m1 0h1m1 0h1m1 0h4m2 0h6m2 0h1m-25 1h1m1 0h3m1 0h1m1 0h6m1 0h1m1 0h1m2 0h1m2 0h1m-24 1h1m5 0h1m1 0h1m3 0h1m1 0h1m1 0h3m1 0h1m1 0h1m-23 1h7m2 0h1m1 0h2m5 0h1m3 0h3"/></svg>
     <span class="pk__cta">Tocca per ingrandire</span>
     </button>
@@ -1168,7 +1213,7 @@
 
       <figure class="tk">
         <figcaption>Adulto 1 <small>Adult · Free</small></figcaption>
-        <div class="tk-box" role="button" tabindex="0" data-codice="1" aria-label="Mostra a schermo pieno il biglietto 1">
+        <div class="tk-box" role="button" tabindex="0" data-codice="1" aria-label="1001401807011726169: mostra a schermo pieno il biglietto 1">
           <svg class="tk-svg" id="ticket-1" viewBox="0 0 324 72" shape-rendering="crispEdges" role="img" aria-label="Codice a barre del biglietto 1001401807011726169" xmlns="http://www.w3.org/2000/svg"><rect width="324" height="72" fill="#fff"/><path fill="#000" d="M6 6h4v60h-4zM12 6h2v60h-2zM18 6h6v60h-6zM28 6h4v60h-4zM36 6h2v60h-2zM44 6h2v60h-2zM50 6h4v60h-4zM58 6h4v60h-4zM64 6h4v60h-4zM72 6h4v60h-4zM82 6h2v60h-2zM86 6h2v60h-2zM94 6h4v60h-4zM102 6h6v60h-6zM112 6h2v60h-2zM116 6h2v60h-2zM122 6h4v60h-4zM132 6h2v60h-2zM138 6h4v60h-4zM146 6h4v60h-4zM152 6h4v60h-4zM160 6h2v60h-2zM166 6h6v60h-6zM176 6h4v60h-4zM182 6h6v60h-6zM192 6h2v60h-2zM198 6h4v60h-4zM204 6h2v60h-2zM210 6h6v60h-6zM218 6h4v60h-4zM226 6h6v60h-6zM234 6h2v60h-2zM238 6h8v60h-8zM248 6h6v60h-6zM258 6h2v60h-2zM262 6h4v60h-4zM270 6h2v60h-2zM274 6h6v60h-6zM286 6h4v60h-4zM292 6h4v60h-4zM302 6h6v60h-6zM310 6h2v60h-2zM314 6h4v60h-4z"/></svg>
           <p class="tk-num">1001401807011726169</p>
         </div>
@@ -1176,7 +1221,7 @@
 
       <figure class="tk">
         <figcaption>Adulto 2 <small>Adult · Free</small></figcaption>
-        <div class="tk-box" role="button" tabindex="0" data-codice="2" aria-label="Mostra a schermo pieno il biglietto 2">
+        <div class="tk-box" role="button" tabindex="0" data-codice="2" aria-label="1001401807011726170: mostra a schermo pieno il biglietto 2">
           <svg class="tk-svg" id="ticket-2" viewBox="0 0 324 72" shape-rendering="crispEdges" role="img" aria-label="Codice a barre del biglietto 1001401807011726170" xmlns="http://www.w3.org/2000/svg"><rect width="324" height="72" fill="#fff"/><path fill="#000" d="M6 6h4v60h-4zM12 6h2v60h-2zM18 6h6v60h-6zM28 6h4v60h-4zM36 6h2v60h-2zM44 6h2v60h-2zM50 6h4v60h-4zM58 6h4v60h-4zM64 6h4v60h-4zM72 6h4v60h-4zM82 6h2v60h-2zM86 6h2v60h-2zM94 6h4v60h-4zM102 6h6v60h-6zM112 6h2v60h-2zM116 6h2v60h-2zM122 6h4v60h-4zM132 6h2v60h-2zM138 6h4v60h-4zM146 6h4v60h-4zM152 6h4v60h-4zM160 6h2v60h-2zM166 6h6v60h-6zM176 6h4v60h-4zM182 6h6v60h-6zM192 6h2v60h-2zM198 6h4v60h-4zM204 6h2v60h-2zM210 6h6v60h-6zM220 6h4v60h-4zM226 6h6v60h-6zM234 6h2v60h-2zM238 6h8v60h-8zM248 6h2v60h-2zM254 6h6v60h-6zM262 6h4v60h-4zM270 6h6v60h-6zM282 6h4v60h-4zM288 6h2v60h-2zM292 6h4v60h-4zM302 6h6v60h-6zM310 6h2v60h-2zM314 6h4v60h-4z"/></svg>
           <p class="tk-num">1001401807011726170</p>
         </div>
@@ -1184,7 +1229,7 @@
 
       <figure class="tk">
         <figcaption>Bambina (Olly) <small>Child · Free</small></figcaption>
-        <div class="tk-box" role="button" tabindex="0" data-codice="3" aria-label="Mostra a schermo pieno il biglietto 3">
+        <div class="tk-box" role="button" tabindex="0" data-codice="3" aria-label="1001401807011726171: mostra a schermo pieno il biglietto 3">
           <svg class="tk-svg" id="ticket-3" viewBox="0 0 324 72" shape-rendering="crispEdges" role="img" aria-label="Codice a barre del biglietto 1001401807011726171" xmlns="http://www.w3.org/2000/svg"><rect width="324" height="72" fill="#fff"/><path fill="#000" d="M6 6h4v60h-4zM12 6h2v60h-2zM18 6h6v60h-6zM28 6h4v60h-4zM36 6h2v60h-2zM44 6h2v60h-2zM50 6h4v60h-4zM58 6h4v60h-4zM64 6h4v60h-4zM72 6h4v60h-4zM82 6h2v60h-2zM86 6h2v60h-2zM94 6h4v60h-4zM102 6h6v60h-6zM112 6h2v60h-2zM116 6h2v60h-2zM122 6h4v60h-4zM132 6h2v60h-2zM138 6h4v60h-4zM146 6h4v60h-4zM152 6h4v60h-4zM160 6h2v60h-2zM166 6h6v60h-6zM176 6h4v60h-4zM182 6h6v60h-6zM192 6h2v60h-2zM198 6h4v60h-4zM204 6h2v60h-2zM210 6h6v60h-6zM220 6h4v60h-4zM226 6h6v60h-6zM234 6h2v60h-2zM238 6h8v60h-8zM248 6h2v60h-2zM254 6h6v60h-6zM264 6h4v60h-4zM270 6h2v60h-2zM274 6h4v60h-4zM286 6h2v60h-2zM292 6h4v60h-4zM302 6h6v60h-6zM310 6h2v60h-2zM314 6h4v60h-4z"/></svg>
           <p class="tk-num">1001401807011726171</p>
         </div>
@@ -2115,6 +2160,11 @@
      Il pannello non si apre mai da solo: in cima c'è un banner sottile «N novità», e si apre solo se toccato.
      Il link in fondo alla pagina lo riapre con tutto lo storico, in ogni caso. */
   var NOVITA = [
+    { v: 21, data: '2026-10-04', titolo: 'Si legge meglio, anche al sole', voci: [
+      'Testo delle card più grande (15 px), nessuna scritta sotto i 12 px, orari e numeri delle prenotazioni ben leggibili',
+      'Contrasti più forti: i grigi e gli azzurri sono più chiari',
+      'Se il telefono è in modalità chiara la pagina diventa chiara da sola, comoda in pieno sole. In modalità scura resta «London Winter Night»',
+      'Tutti i pulsanti, i punti della mappa e i + e − dello zoom si toccano bene col pollice' ] },
     { v: 20, data: '2026-10-04', titolo: 'Piove 2.0', voci: [
       'Toccando «🌧️ Piove» compare subito lì sotto cosa cambia: domenica Shrek’s Adventure al posto del London Eye, lunedì Harrods prima dei parchi, martedì niente. Ogni voce porta alla card',
       'Con «Piove» acceso, il pannello «Adesso» mostra la versione con pioggia della prossima tappa',
@@ -2205,7 +2255,7 @@
         ? (nuove === 1 ? 'Un aggiornamento dall’ultima visita.' : nuove + ' aggiornamenti dall’ultima visita.')
         : 'Tutti gli aggiornamenti, dal più recente.';
       document.getElementById('novLista').innerHTML = elenco.map(function(e){
-        return '<article class="nov__voce"><div class="nov__data">' + (e.v > soglia ? '<span class="nov__punto" aria-label="nuovo"></span>' : '')
+        return '<article class="nov__voce"><div class="nov__data">' + (e.v > soglia ? '<span class="nov__punto" role="img" aria-label="nuovo"></span>' : '')
           + dataIt(e.data) + '</div><h3>' + esc(e.titolo) + '</h3><ul>'
           + e.voci.map(function(x){ return '<li>' + esc(x) + '</li>'; }).join('') + '</ul></article>';
       }).join('');
@@ -2394,14 +2444,14 @@
   function pinIcon(color){
     return L.divIcon({
       className:'',
-      html:'<div class="pin" style="background:'+color+'"></div>',
-      iconSize:[22,22], iconAnchor:[11,22], popupAnchor:[0,-22]
+      html:'<div class="pin-hit"><div class="pin" style="background:'+color+'"></div></div>',
+      iconSize:[44,44], iconAnchor:[22,40], popupAnchor:[0,-36]
     });
   }
   var homeIcon=L.divIcon({
     className:'',
-    html:'<div class="pin-home">🏠</div>',
-    iconSize:[30,30], iconAnchor:[15,15], popupAnchor:[0,-18]
+    html:'<div class="pin-home-hit"><div class="pin-home">🏠</div></div>',
+    iconSize:[44,44], iconAnchor:[22,22], popupAnchor:[0,-18]
   });
 
   var bounds=[];
