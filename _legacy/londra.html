@@ -1200,20 +1200,31 @@
           </div>
           <p class="tcard__credito">foto: Dietmar Rabich / CC BY-SA 4.0</p>
         </article>
+        <a class="percorso" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.5122737,-0.1234492&amp;destination=51.516018,-0.130888&amp;travelmode=walking" target="_blank" rel="noopener" data-percorso="Martedì · Covent Garden → Tottenham Court Road (per l’Elizabeth line)">
+          <span class="percorso__ic" aria-hidden="true">🗺️</span>
+          <span class="percorso__txt"><b>Percorso · Martedì</b><span>Covent Garden → Tottenham Court Road (per l’Elizabeth line)</span></span>
+          <span class="percorso__modo">🚶 a piedi</span>
+        </a>
         <a class="percorso" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.5122737,-0.1234492&amp;destination=51.4723,-0.4887&amp;travelmode=transit" target="_blank" rel="noopener" data-percorso="Martedì · Covent Garden → Heathrow T5">
           <span class="percorso__ic" aria-hidden="true">🗺️</span>
           <span class="percorso__txt"><b>Percorso · Martedì</b><span>Covent Garden → Heathrow T5</span></span>
           <span class="percorso__modo">🚇 con i mezzi</span>
         </a>
-        <article class="tcard" data-giorno="2026-11-17" data-ora="15:15" data-tipo="trasporto" data-entro="15:15" data-vincolo="Uscire entro le 15:15: il volo BA546 parte alle 18:10">
+        <article class="tcard" data-giorno="2026-11-17" data-ora="15:15" data-tipo="trasporto" data-durata="46-56" data-entro="15:15" data-vincolo="Uscire entro le 15:15: il volo BA546 parte alle 18:10" data-regola="Volo alle 18:10: puntate ad arrivare a T5 verso le 16:10. Alle 15:10 guardate TfL Go: se l&#8217;Elizabeth delle 15:30 da Tottenham Court Road è confermata, andate a piedi fin lì; altrimenti prendete la Piccadilly delle 15:25 da Covent Garden.">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/piccadilly.webp" width="800" height="450" alt="Una banchina della stazione di Piccadilly Circus, col nome sul muro e un treno della metropolitana in arrivo" loading="lazy" decoding="async">
             <span class="tcard__ora">15:15</span>
           </div>
           <div class="tcard__body">
             <h4>Partenza per Heathrow</h4>
-            <p>Uscire entro le 15:15–15:30. Piccadilly line da Piccadilly Circus, o da Covent Garden con un cambio.</p>
-            <details class="det"><summary>Dettagli</summary><p>È il limite per stare larghi. Gli zaini sono già con voi dal check-out, quindi si parte da dove siete.</p></details>
+            <p class="tdur">⏱️ 46–56 min · due opzioni</p>
+            <ul class="opzioni">
+              <li><b>🚄 Elizabeth line</b> — prima scelta, se si prende quella giusta. Da Covent Garden ~10 min a piedi fino a Tottenham Court Road, poi diretta fino a Heathrow T5 (36 min). Ogni ~30 min. <b>£15,50 a testa.</b></li>
+              <li><b>🚇 Piccadilly line</b> — diretta da Covent Garden, senza cambi. 56 min, ogni ~12 min. <b>£5,90 a testa.</b></li>
+            </ul>
+            <p class="regola">📌 Volo alle 18:10: puntate ad arrivare a T5 verso le 16:10. Alle 15:10 guardate TfL Go: se l’Elizabeth delle 15:30 da Tottenham Court Road è confermata, andate a piedi fin lì; altrimenti prendete la Piccadilly delle 15:25 da Covent Garden.</p>
+            <p>Olly gratis in entrambi i casi.</p>
+            <details class="det"><summary>Dettagli</summary><p>Elizabeth: per esempio 15:30 → 16:06, 16:00 → 16:36. Piccadilly: per esempio 15:25 → 16:21, 15:37 → 16:34. Gli zaini sono già con voi dal check-out, quindi si parte da dove siete.</p></details>
             <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.4723,-0.4887&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚇 coi mezzi</span></a>
           </div>
           <p class="tcard__credito">foto: DiscoA340 / CC BY-SA 4.0</p>
@@ -2255,6 +2266,9 @@
      Il pannello non si apre mai da solo: in cima c'è un banner sottile «N novità», e si apre solo se toccato.
      Il link in fondo alla pagina lo riapre con tutto lo storico, in ogni caso. */
   var NOVITA = [
+    { v: 26, data: '2026-10-04', titolo: 'Martedì: verso Heathrow in due modi', voci: [
+      'Da Covent Garden la Piccadilly line è diretta fino a Heathrow T5, senza cambi (prima la card diceva «con un cambio»: era sbagliato)',
+      'In alternativa l’Elizabeth line da Tottenham Court Road, 10 minuti a piedi: più veloce ma più cara. La regola per scegliere alle 15:10 è sulla card e in «Adesso»' ] },
     { v: 25, data: '2026-10-04', titolo: 'Lunedì rifatto: la banda a Wellington Barracks', voci: [
       'Si parte alle 09:25: Trafalgar, poi a piedi per The Mall fino a St James’s Park e alle 10:15 a Wellington Barracks, dove la nuova guardia si schiera con la banda. In prima fila entro le 10:20',
       'Alle 11:05 Buckingham seguendo la banda, poi il parco coi pellicani, Horse Guards, Big Ben e il pranzo a Westminster. Alle 13:45 District line fino a South Kensington e Harrods alle 14:10 per quasi due ore',

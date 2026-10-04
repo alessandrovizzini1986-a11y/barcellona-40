@@ -701,3 +701,9 @@ Cercati bug dello stesso tipo di "portiere che si rituffa nel replay": due cambi
 - **Piove, lunedì**: "Con pioggia forte la cerimonia può essere ridotta o annullata: controllate @HQHouseholdDiv. In alternativa anticipate Harrods; il museo resta alle 16:30" (in testa al giorno, nel riepilogo di Piove e in "Adesso" fino alle 14:10).
 - **Percorsi di lunedì (8)**: M1 Beak St → Trafalgar → St James's Park → Wellington Barracks; M2 Wellington → Buckingham; M3 Buckingham → St James's Park → Horse Guards → Big Ben; M4 Westminster → South Kensington (metro); M5 South Kensington → Harrods; M6 Harrods → museo, M7 museo → Piccadilly Circus, M8 Piccadilly Circus → Regent Street → casa invariati. Tolti i tre vecchi (Beak St → Big Ben, Big Ben → Green Park, Green Park → Harrods).
 - Il vincolo "entro le 10:20" di Wellington Barracks è scritto sulla card (`data-vincolo`) e compare in "Adesso". Novità v25.
+
+## Londra · itinerario V4, blocco C: martedì
+- Cambia solo il trasferimento verso Heathrow. **Corretto un errore**: la card diceva "da Covent Garden con un cambio", ma Covent Garden è sulla Piccadilly line ed è **diretta** fino a Heathrow T5.
+- **Card "Partenza per Heathrow" (15:15) con due opzioni**, Elizabeth per prima: da Covent Garden ~10 min a piedi fino a Tottenham Court Road, poi Elizabeth line diretta fino a T5 (36 min, ogni ~30 min, £15,50); oppure **Piccadilly line diretta da Covent Garden** (56 min, ogni ~12 min, £5,90). La **regola** in evidenza ("Volo alle 18:10: puntate ad arrivare a T5 verso le 16:10. Alle 15:10 guardate TfL Go…") è sulla card (`data-regola`) e in "Adesso" quando la partenza è la prossima tappa. Olly gratis. Orari d'esempio in "Dettagli". Il vincolo "uscire entro le 15:15" resta.
+- **Percorsi di martedì (3)**: T1 Beak St → Covent Garden invariato; **T2 Covent Garden → Tottenham Court Road (per l'Elizabeth line)** nuovo; T3 Covent Garden → Heathrow T5 invariato.
+- Novità v26.
