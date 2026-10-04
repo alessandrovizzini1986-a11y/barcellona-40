@@ -128,27 +128,29 @@ restituisce spesso dettagli irriconoscibili o omonimi sbagliati.
 | Linea Bakerloo | `public/assets/tappe/londra/bakerloo.webp` | Chris McKenna (Thryduulf) | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | [Edgware Road-Bakerloo Line-Northbound.jpg](https://commons.wikimedia.org/wiki/File:Edgware_Road-Bakerloo_Line-Northbound.jpg) |
 | Southbank Centre | `public/assets/tappe/londra/southbank.webp` | Robin Stott | [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0) | [Yellow steps at the Southbank Centre, London - geograph.org.uk - 7261180.jpg](https://commons.wikimedia.org/wiki/File:Yellow_steps_at_the_Southbank_Centre,_London_-_geograph.org.uk_-_7261180.jpg) |
 | SEA LIFE London Aquarium | `public/assets/tappe/londra/sealife.webp` | ʘx | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | [Underwater Walk of Sea Life London Aquarium.jpg](https://commons.wikimedia.org/wiki/File:Underwater_Walk_of_Sea_Life_London_Aquarium.jpg) |
-| London Eye | `public/assets/tappe/londra/eye.webp` | Danbu14 | [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0) | [London Eye by Day.jpg](https://commons.wikimedia.org/wiki/File:London_Eye_by_Day.jpg) |
 | Lina Stores | `public/assets/tappe/londra/lina.webp` | Ewan-M | [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0) | [Lina Stores, Soho, W1.jpg](https://commons.wikimedia.org/wiki/File:Lina_Stores,_Soho,_W1.jpg) |
-| Soho | `public/assets/tappe/londra/soho.webp` | Philafrenzy | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | [Dean Street - Old Compton Street corner.JPG](https://commons.wikimedia.org/wiki/File:Dean_Street_-_Old_Compton_Street_corner.JPG) |
+| Piccadilly Circus (partenza per Heathrow) | `public/assets/tappe/londra/piccadilly.webp` | DiscoA340 | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | [Piccadilly Circus Underground Station (January 2024) 02.jpg](https://commons.wikimedia.org/wiki/File:Piccadilly_Circus_Underground_Station_(January_2024)_02.jpg) |
 | Trafalgar Square | `public/assets/tappe/londra/trafalgar.webp` | Diliff | [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0) | [Trafalgar Square, London 2 - Jun 2009.jpg](https://commons.wikimedia.org/wiki/File:Trafalgar_Square,_London_2_-_Jun_2009.jpg) |
 | Horse Guards Parade | `public/assets/tappe/londra/horseguards.webp` | Lewis Clarke | [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0) | [London , Westminster - Horse Guards Parade - geograph.org.uk - 2546769.jpg](https://commons.wikimedia.org/wiki/File:London_,_Westminster_-_Horse_Guards_Parade_-_geograph.org.uk_-_2546769.jpg) |
 | Big Ben e Parlamento | `public/assets/tappe/londra/bigben.webp` | Domob | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | [Palace of Westminster and Elizabeth Tower 20250522.jpg](https://commons.wikimedia.org/wiki/File:Palace_of_Westminster_and_Elizabeth_Tower_20250522.jpg) |
 | St James's Park | `public/assets/tappe/londra/stjames.webp` | Colin | [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0) | [St James's Park Lake – East from the Blue Bridge - 2012-10-06.jpg](https://commons.wikimedia.org/wiki/File:St_James%27s_Park_Lake_%E2%80%93_East_from_the_Blue_Bridge_-_2012-10-06.jpg) |
 | Buckingham Palace | `public/assets/tappe/londra/buckingham.webp` | Diliff | [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0) | [Buckingham Palace from gardens, London, UK - Diliff.jpg](https://commons.wikimedia.org/wiki/File:Buckingham_Palace_from_gardens,_London,_UK_-_Diliff.jpg) |
-| Green Park | `public/assets/tappe/londra/greenpark.webp` | LondonHistoryatHome | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | [View from Green Park towards Victoria Memorial.jpg](https://commons.wikimedia.org/wiki/File:View_from_Green_Park_towards_Victoria_Memorial.jpg) |
+| Wellington Barracks | `public/assets/tappe/londra/wellington.webp` | Adrian Snood | [CC BY 2.0](https://creativecommons.org/licenses/by/2.0) | [The Band of the Grenadier Guards leaving Wellington Barracks for Changing the Guard at Buckingham Palace.jpg](https://commons.wikimedia.org/wiki/File:The_Band_of_the_Grenadier_Guards_leaving_Wellington_Barracks_for_Changing_the_Guard_at_Buckingham_Palace.jpg) |
 | Harrods | `public/assets/tappe/londra/harrods.webp` | Editor5807 | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | [Harrods Knightsbridge exterior Christmas decorations in November 2022.jpg](https://commons.wikimedia.org/wiki/File:Harrods_Knightsbridge_exterior_Christmas_decorations_in_November_2022.jpg) |
 | Natural History Museum | `public/assets/tappe/londra/nhm.webp` | Diliff | [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0) | [Natural History Museum London Jan 2006.jpg](https://commons.wikimedia.org/wiki/File:Natural_History_Museum_London_Jan_2006.jpg) |
 | Covent Garden | `public/assets/tappe/londra/covent.webp` | Dietmar Rabich | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | [London, Covent Garden -- 2016 -- 4878.jpg](https://commons.wikimedia.org/wiki/File:London,_Covent_Garden_--_2016_--_4878.jpg) |
+| Camden Town e Camden Lock | `public/assets/tappe/londra/camden.webp` | Can Pac Swire | [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0) | [Camden Lock 2007-09-19.jpg](https://commons.wikimedia.org/wiki/File:Camden_Lock_2007-09-19.jpg) |
+| Poppies Fish & Chips | `public/assets/tappe/londra/poppies.webp` | Robert Lamb | [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0) | [View of Poppies Fish ^ Chips from Hawley Crescent - geograph.org.uk - 5425614.jpg](https://commons.wikimedia.org/wiki/File:View_of_Poppies_Fish_%5E_Chips_from_Hawley_Crescent_-_geograph.org.uk_-_5425614.jpg) |
 | Partenza da Heathrow | `public/assets/tappe/londra/lhr_dep.webp` | Andrew Milligan sumo | [CC BY 2.0](https://creativecommons.org/licenses/by/2.0) | [Departures Terminal 5, London Heathrow Airport (33215594911).jpg](https://commons.wikimedia.org/wiki/File:Departures_Terminal_5,_London_Heathrow_Airport_(33215594911).jpg) |
 | Atterraggio a Bologna | `public/assets/tappe/londra/blq_arr.webp` | Ex13 | [CC BY-SA 3.0](http://creativecommons.org/licenses/by-sa/3.0/) | [Bologna Guglielmo Marconi Airport aerial.jpg](https://commons.wikimedia.org/wiki/File:Bologna_Guglielmo_Marconi_Airport_aerial.jpg) |
+| Hamleys | `public/assets/tappe/londra/hamleys.webp` | DAVID HOLT from London, England | [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0) | [Hamleys, Regent Street, London, 22 June 2014.jpg](https://commons.wikimedia.org/wiki/File:Hamleys,_Regent_Street,_London,_22_June_2014.jpg) |
 | Luci di Carnaby Street | `public/assets/tappe/londra/carnaby.webp` | Christine Matthews | [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0) | [Carnaby Street Christmas Lights 2019 - geograph.org.uk - 6329567.jpg](https://commons.wikimedia.org/wiki/File:Carnaby_Street_Christmas_Lights_2019_-_geograph.org.uk_-_6329567.jpg) |
 | Luci di Regent Street | `public/assets/tappe/londra/regent.webp` | Oast House Archive | [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0) | [Regent Street Christmas Lights 2016 - geograph.org.uk - 5233956.jpg](https://commons.wikimedia.org/wiki/File:Regent_Street_Christmas_Lights_2016_-_geograph.org.uk_-_5233956.jpg) |
 | Hintze Hall (per Olly) | `public/assets/tappe/londra/nhm_balena.webp` | APK | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0) | [Hintze Hall, Natural History Museum, London - 4.jpg](https://commons.wikimedia.org/wiki/File:Hintze_Hall,_Natural_History_Museum,_London_-_4.jpg) |
 | Appartamento, 79 Beak Street | `public/assets/tappe/londra/apt.webp` | No Swan So Fine | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | [79 Beak Street, Soho, January 2022.jpg](https://commons.wikimedia.org/wiki/File:79_Beak_Street,_Soho,_January_2022.jpg) |
 | Benjamin Pollock's Toyshop | `public/assets/tappe/londra/pollock.webp` | Jack1956 | [CC0](http://creativecommons.org/publicdomain/zero/1.0/deed.en) | [Benjamin Pollocks Toy Shop exterior.jpg](https://commons.wikimedia.org/wiki/File:Benjamin_Pollocks_Toy_Shop_exterior.jpg) |
 
-Ultimo aggiornamento: `npm run foto:londra` · 25 foto, 1314 kB in tutto.
+Ultimo aggiornamento: `npm run foto:londra` · 27 foto, 1432 kB in tutto.
 
 <!-- foto-londra:end -->
 
@@ -156,7 +158,6 @@ Ultimo aggiornamento: `npm run foto:londra` · 25 foto, 1314 kB in tutto.
 
 | Tappa | File nel sito | Fonte | Licenza |
 |---|---|---|---|
-| Shrek's Adventure! London (solo con "Piove" acceso) | `public/assets/tappe/londra/shrek.webp` | Immagine promozionale di Shrek's Adventure! London, fornita da Alessandro | **Non libera**: materiale promozionale del gestore, non una foto Commons né una foto di famiglia. Usata su richiesta esplicita; per tornare alla card stilizzata basta `npm run cards:londra` e ripuntare la card su `shrek.svg`. |
 
 ## Card stilizzate (originali del progetto)
 
@@ -174,3 +175,12 @@ Londra continua ad avere la sua card dell'appartamento (`public/assets/tappe/lon
 
 ## Librerie
 - Three.js 0.186.0 (MIT), Draco decoder incluso in Three.js (Apache 2.0).
+
+## Foto del viaggio di Olly (`_legacy/img/olly/`)
+
+Le foto della sezione «Il viaggio di Olly» sono accreditate, con i link, nella pagina stessa (Info → Crediti foto). Aggiunta con l’itinerario V4:
+
+| Card | File | Autore | Licenza | Originale su Commons |
+|---|---|---|---|---|
+| La banda dei soldati | `_legacy/img/olly/banda.webp` | APK | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0) | [Band of the Grenadier Guards marching in front of Buckingham Palace.jpg](https://commons.wikimedia.org/wiki/File:Band_of_the_Grenadier_Guards_marching_in_front_of_Buckingham_Palace.jpg) |
+| Le barche sul canale | `_legacy/img/olly/canale.webp` | Paul Gillett | [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0) | [Boat passing Hawley Lock - geograph.org.uk - 4008673.jpg](https://commons.wikimedia.org/wiki/File:Boat_passing_Hawley_Lock_-_geograph.org.uk_-_4008673.jpg) |

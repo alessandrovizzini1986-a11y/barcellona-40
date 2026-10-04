@@ -68,17 +68,6 @@
       "kb": 21
     },
     {
-      "id": "eye",
-      "file": "assets/tappe/londra/eye.webp",
-      "tappa": "London Eye",
-      "titolo": "File:London Eye by Day.jpg",
-      "autore": "Danbu14",
-      "licenza": "CC BY-SA 3.0",
-      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-      "pagina": "https://commons.wikimedia.org/wiki/File:London_Eye_by_Day.jpg",
-      "kb": 40
-    },
-    {
       "id": "lina",
       "file": "assets/tappe/londra/lina.webp",
       "tappa": "Lina Stores",
@@ -88,17 +77,6 @@
       "licenzaUrl": "https://creativecommons.org/licenses/by-sa/2.0",
       "pagina": "https://commons.wikimedia.org/wiki/File:Lina_Stores,_Soho,_W1.jpg",
       "kb": 51
-    },
-    {
-      "id": "soho",
-      "file": "assets/tappe/londra/soho.webp",
-      "tappa": "Soho",
-      "titolo": "File:Dean Street - Old Compton Street corner.JPG",
-      "autore": "Philafrenzy",
-      "licenza": "CC BY-SA 4.0",
-      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-      "pagina": "https://commons.wikimedia.org/wiki/File:Dean_Street_-_Old_Compton_Street_corner.JPG",
-      "kb": 56
     },
     {
       "id": "trafalgar",
@@ -156,15 +134,15 @@
       "kb": 74
     },
     {
-      "id": "greenpark",
-      "file": "assets/tappe/londra/greenpark.webp",
-      "tappa": "Green Park",
-      "titolo": "File:View from Green Park towards Victoria Memorial.jpg",
-      "autore": "LondonHistoryatHome",
-      "licenza": "CC BY-SA 4.0",
-      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-      "pagina": "https://commons.wikimedia.org/wiki/File:View_from_Green_Park_towards_Victoria_Memorial.jpg",
-      "kb": 98,
+      "id": "wellington",
+      "file": "assets/tappe/londra/wellington.webp",
+      "tappa": "Wellington Barracks",
+      "titolo": "File:The Band of the Grenadier Guards leaving Wellington Barracks for Changing the Guard at Buckingham Palace.jpg",
+      "autore": "Adrian Snood",
+      "licenza": "CC BY 2.0",
+      "licenzaUrl": "https://creativecommons.org/licenses/by/2.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:The_Band_of_the_Grenadier_Guards_leaving_Wellington_Barracks_for_Changing_the_Guard_at_Buckingham_Palace.jpg",
+      "kb": 84,
       "qualita": 70
     },
     {
@@ -203,6 +181,42 @@
       "qualita": 70
     },
     {
+      "id": "camden",
+      "file": "assets/tappe/londra/camden.webp",
+      "tappa": "Camden Town e Camden Lock",
+      "titolo": "File:Camden Lock 2007-09-19.jpg",
+      "autore": "Can Pac Swire",
+      "licenza": "CC BY-SA 2.0",
+      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Camden_Lock_2007-09-19.jpg",
+      "kb": 72,
+      "qualita": 70
+    },
+    {
+      "id": "poppies",
+      "file": "assets/tappe/londra/poppies.webp",
+      "tappa": "Poppies Fish & Chips",
+      "titolo": "File:View of Poppies Fish ^ Chips from Hawley Crescent - geograph.org.uk - 5425614.jpg",
+      "autore": "Robert Lamb",
+      "licenza": "CC BY-SA 2.0",
+      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:View_of_Poppies_Fish_%5E_Chips_from_Hawley_Crescent_-_geograph.org.uk_-_5425614.jpg",
+      "kb": 58,
+      "qualita": 70
+    },
+    {
+      "id": "piccadilly",
+      "file": "assets/tappe/londra/piccadilly.webp",
+      "tappa": "Piccadilly Circus (partenza per Heathrow)",
+      "titolo": "File:Piccadilly Circus Underground Station (January 2024) 02.jpg",
+      "autore": "DiscoA340",
+      "licenza": "CC BY-SA 4.0",
+      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Piccadilly_Circus_Underground_Station_(January_2024)_02.jpg",
+      "kb": 46,
+      "qualita": 70
+    },
+    {
       "id": "lhr_dep",
       "file": "assets/tappe/londra/lhr_dep.webp",
       "tappa": "Partenza da Heathrow",
@@ -223,6 +237,18 @@
       "licenzaUrl": "http://creativecommons.org/licenses/by-sa/3.0/",
       "pagina": "https://commons.wikimedia.org/wiki/File:Bologna_Guglielmo_Marconi_Airport_aerial.jpg",
       "kb": 25
+    },
+    {
+      "id": "hamleys",
+      "file": "assets/tappe/londra/hamleys.webp",
+      "tappa": "Hamleys",
+      "titolo": "File:Hamleys, Regent Street, London, 22 June 2014.jpg",
+      "autore": "DAVID HOLT from London, England",
+      "licenza": "CC BY-SA 2.0",
+      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Hamleys,_Regent_Street,_London,_22_June_2014.jpg",
+      "kb": 52,
+      "qualita": 70
     },
     {
       "id": "carnaby",
