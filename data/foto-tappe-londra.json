@@ -90,17 +90,6 @@
       "kb": 51
     },
     {
-      "id": "soho",
-      "file": "assets/tappe/londra/soho.webp",
-      "tappa": "Soho",
-      "titolo": "File:Dean Street - Old Compton Street corner.JPG",
-      "autore": "Philafrenzy",
-      "licenza": "CC BY-SA 4.0",
-      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-      "pagina": "https://commons.wikimedia.org/wiki/File:Dean_Street_-_Old_Compton_Street_corner.JPG",
-      "kb": 56
-    },
-    {
       "id": "trafalgar",
       "file": "assets/tappe/londra/trafalgar.webp",
       "tappa": "Trafalgar Square",
@@ -200,6 +189,18 @@
       "licenzaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
       "pagina": "https://commons.wikimedia.org/wiki/File:London,_Covent_Garden_--_2016_--_4878.jpg",
       "kb": 83,
+      "qualita": 70
+    },
+    {
+      "id": "piccadilly",
+      "file": "assets/tappe/londra/piccadilly.webp",
+      "tappa": "Piccadilly Circus (partenza per Heathrow)",
+      "titolo": "File:Piccadilly Circus Underground Station (January 2024) 02.jpg",
+      "autore": "DiscoA340",
+      "licenza": "CC BY-SA 4.0",
+      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Piccadilly_Circus_Underground_Station_(January_2024)_02.jpg",
+      "kb": 46,
       "qualita": 70
     },
     {

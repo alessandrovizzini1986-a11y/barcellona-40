@@ -428,7 +428,7 @@
   .olly-grid[hidden]{display:none}
   .olly-card{background:linear-gradient(180deg,var(--night-1),var(--night-2));border:1px solid var(--line);
     border-radius:20px;overflow:hidden;box-shadow:var(--shadow-card)}
-  .oc-photo{width:100%;aspect-ratio:4/3;background-size:cover;background-position:center;background-color:var(--night-2)}
+  .oc-photo{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:cover;object-position:center;background-color:var(--night-2)}
   .oc-name{font-family:"Playfair Display",serif;font-weight:700;font-size:25px;text-align:center;padding:16px 16px 4px}
   .oc-seen{display:flex;align-items:center;justify-content:center;gap:9px;width:calc(100% - 32px);margin:6px 16px 16px;
     padding:12px;border-radius:999px;font-family:inherit;font-weight:700;font-size:14px;cursor:pointer;
@@ -919,7 +919,7 @@
         </a>
         <article class="tcard" data-giorno="2026-11-16" data-ora="09:15" data-tipo="tappa">
           <div class="tcard__foto">
-            <img src="assets/tappe/londra/soho.webp" width="800" height="450" alt="L’angolo fra Dean Street e Old Compton Street, nel cuore di Soho" loading="lazy" decoding="async">
+            <img src="assets/tappe/londra/apt.webp" width="800" height="450" alt="Il civico 79 di Beak Street: la vetrina verde di John Wilkes e, a sinistra, la porta col numero 79" loading="lazy" decoding="async">
             <span class="tcard__ora">09:15</span>
           </div>
           <div class="tcard__body">
@@ -927,7 +927,7 @@
             <p>Colazione in zona e via a piedi: Trafalgar Square è a un quarto d’ora.</p>
             <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5129114,-0.1364381&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
           </div>
-          <p class="tcard__credito">foto: Philafrenzy / CC BY-SA 4.0</p>
+          <p class="tcard__credito">foto: No Swan So Fine / CC BY-SA 4.0</p>
         </article>
         <article class="tcard" data-tappa="trafalgar" data-durata="15-15" data-giorno="2026-11-16" data-ora="09:45" data-tipo="tappa">
           <div class="tcard__foto">
@@ -1127,7 +1127,7 @@
         </a>
         <article class="tcard" data-giorno="2026-11-17" data-ora="15:15" data-tipo="trasporto" data-entro="15:15" data-vincolo="Uscire entro le 15:15: il volo BA546 parte alle 18:10">
           <div class="tcard__foto">
-            <img src="assets/tappe/londra/bakerloo.webp" width="800" height="450" alt="Una banchina della metropolitana di Londra con il treno fermo e il cartello della stazione" loading="lazy" decoding="async">
+            <img src="assets/tappe/londra/piccadilly.webp" width="800" height="450" alt="Una banchina della stazione di Piccadilly Circus, col nome sul muro e un treno della metropolitana in arrivo" loading="lazy" decoding="async">
             <span class="tcard__ora">15:15</span>
           </div>
           <div class="tcard__body">
@@ -1136,7 +1136,7 @@
             <details class="det"><summary>Dettagli</summary><p>È il limite per stare larghi. Gli zaini sono già con voi dal check-out, quindi si parte da dove siete.</p></details>
             <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.4723,-0.4887&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚇 coi mezzi</span></a>
           </div>
-          <p class="tcard__credito">foto: Chris McKenna (Thryduulf) / CC BY-SA 4.0</p>
+          <p class="tcard__credito">foto: DiscoA340 / CC BY-SA 4.0</p>
         </article>
         <article class="tcard" data-giorno="2026-11-17" data-ora="16:10" data-tipo="trasporto">
           <div class="tcard__foto">
@@ -1287,27 +1287,27 @@
 
     <div class="olly-grid" data-og-group="dom">
       <article class="olly-card">
-        <div class="oc-photo" style="background-image:url(img/olly/aereo-ba.jpg)"></div>
+        <img class="oc-photo" src="img/olly/aereo-ba.webp" width="800" height="600" alt="" loading="lazy" decoding="async">
         <div class="oc-name">Aeroplano</div>
         <button class="oc-seen" data-oid="aereo" type="button"><span class="seen-dot"></span>L'ho visto!</button>
       </article>
       <article class="olly-card">
-        <div class="oc-photo" style="background-image:url(img/olly/squalo.jpg)"></div>
+        <img class="oc-photo" src="img/olly/squalo.webp" width="800" height="600" alt="" loading="lazy" decoding="async">
         <div class="oc-name">Squali dell'acquario</div>
         <button class="oc-seen" data-oid="squalo" type="button"><span class="seen-dot"></span>L'ho visto!</button>
       </article>
       <article class="olly-card">
-        <div class="oc-photo" style="background-image:url(img/olly/pinguino.jpg)"></div>
+        <img class="oc-photo" src="img/olly/pinguino.webp" width="599" height="449" alt="" loading="lazy" decoding="async">
         <div class="oc-name">Pinguini dell'acquario</div>
         <button class="oc-seen" data-oid="pinguino" type="button"><span class="seen-dot"></span>L'ho visto!</button>
       </article>
       <article class="olly-card">
-        <div class="oc-photo" style="background-image:url(img/olly/london-eye.jpg)"></div>
+        <img class="oc-photo" src="img/olly/london-eye.webp" width="800" height="600" alt="" loading="lazy" decoding="async">
         <div class="oc-name">La ruota panoramica</div>
         <button class="oc-seen" data-oid="eye" type="button"><span class="seen-dot"></span>L'ho visto!</button>
       </article>
       <article class="olly-card">
-        <div class="oc-photo" style="background-image:url(img/olly/luci-natale.jpg)"></div>
+        <img class="oc-photo" src="img/olly/luci-natale.webp" width="800" height="600" alt="" loading="lazy" decoding="async">
         <div class="oc-name">Le luci di Natale</div>
         <button class="oc-seen" data-oid="luci" type="button"><span class="seen-dot"></span>L'ho visto!</button>
       </article>
@@ -1315,27 +1315,27 @@
 
     <div class="olly-grid" data-og-group="lun" hidden>
       <article class="olly-card">
-        <div class="oc-photo" style="background-image:url(img/olly/scoiattolo.jpg)"></div>
+        <img class="oc-photo" src="img/olly/scoiattolo.webp" width="800" height="600" alt="" loading="lazy" decoding="async">
         <div class="oc-name">Scoiattolo grigio</div>
         <button class="oc-seen" data-oid="scoiattolo" type="button"><span class="seen-dot"></span>L'ho visto!</button>
       </article>
       <article class="olly-card">
-        <div class="oc-photo" style="background-image:url(img/olly/pellicano.jpg)"></div>
+        <img class="oc-photo" src="img/olly/pellicano.webp" width="800" height="600" alt="" loading="lazy" decoding="async">
         <div class="oc-name">Pellicano</div>
         <button class="oc-seen" data-oid="pellicano" type="button"><span class="seen-dot"></span>L'ho visto!</button>
       </article>
       <article class="olly-card">
-        <div class="oc-photo" style="background-image:url(img/olly/buckingham.jpg)"></div>
+        <img class="oc-photo" src="img/olly/buckingham.webp" width="711" height="533" alt="" loading="lazy" decoding="async">
         <div class="oc-name">Buckingham Palace</div>
         <button class="oc-seen" data-oid="buckingham" type="button"><span class="seen-dot"></span>L'ho visto!</button>
       </article>
       <article class="olly-card">
-        <div class="oc-photo" style="background-image:url(assets/tappe/londra/horseguards.webp)"></div>
+        <img class="oc-photo" src="assets/tappe/londra/horseguards.webp" width="800" height="450" alt="" loading="lazy" decoding="async">
         <div class="oc-name">La guardia con l'elmo</div>
         <button class="oc-seen" data-oid="guardia" type="button"><span class="seen-dot"></span>L'ho visto!</button>
       </article>
       <article class="olly-card">
-        <div class="oc-photo" style="background-image:url(assets/tappe/londra/nhm_balena.webp)"></div>
+        <img class="oc-photo" src="assets/tappe/londra/nhm_balena.webp" width="800" height="450" alt="" loading="lazy" decoding="async">
         <div class="oc-name">La balena del museo</div>
         <button class="oc-seen" data-oid="balena" type="button"><span class="seen-dot"></span>L'ho visto!</button>
       </article>
@@ -1343,7 +1343,7 @@
 
     <div class="olly-grid" data-og-group="mar" hidden>
       <article class="olly-card">
-        <div class="oc-photo" style="background-image:url(assets/tappe/londra/covent.webp)"></div>
+        <img class="oc-photo" src="assets/tappe/londra/covent.webp" width="800" height="450" alt="" loading="lazy" decoding="async">
         <div class="oc-name">Il mercato coperto</div>
         <button class="oc-seen" data-oid="covent" type="button"><span class="seen-dot"></span>L'ho visto!</button>
       </article>
@@ -1356,7 +1356,7 @@
     <div class="eyebrow">Mappa</div>
     <h2>Dove andiamo</h2>
     <p class="sub2">Un colore per ogni giornata. Linea piena = a piedi, tratteggiata = metro.</p>
-    <div id="map" aria-label="Mappa delle tappe del viaggio"></div>
+    <div id="map" role="region" aria-label="Mappa delle tappe del viaggio"></div>
     <div class="legend">
       <span><i style="background:#d4a94e"></i>Domenica</span>
       <span><i style="background:#c8362b"></i>Lunedì</span>
@@ -1477,8 +1477,7 @@
           <li><span class="ic">📷</span><span><b>London Eye</b> — Danbu14 / CC BY-SA 3.0 <small><a href="https://commons.wikimedia.org/wiki/File:London_Eye_by_Day.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
           <li><span class="ic">📷</span><span><b>Spesa da Lina Stores</b> — Ewan-M / CC BY-SA 2.0 <small><a href="https://commons.wikimedia.org/wiki/File:Lina_Stores,_Soho,_W1.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
           <li><span class="ic">📷</span><span><b>Luci di Carnaby Street</b> — Christine Matthews / CC BY-SA 2.0 <small><a href="https://commons.wikimedia.org/wiki/File:Carnaby_Street_Christmas_Lights_2019_-_geograph.org.uk_-_6329567.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
-          <li><span class="ic">📷</span><span><b>Check-in, zaini giù e cena</b> — No Swan So Fine / CC BY-SA 4.0 <small><a href="https://commons.wikimedia.org/wiki/File:79_Beak_Street,_Soho,_January_2022.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
-          <li><span class="ic">📷</span><span><b>Si parte da Soho</b> — Philafrenzy / CC BY-SA 4.0 <small><a href="https://commons.wikimedia.org/wiki/File:Dean_Street_-_Old_Compton_Street_corner.JPG" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
+          <li><span class="ic">📷</span><span><b>Check-in, Si parte da Soho e Check-out</b> — No Swan So Fine / CC BY-SA 4.0 <small><a href="https://commons.wikimedia.org/wiki/File:79_Beak_Street,_Soho,_January_2022.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
           <li><span class="ic">📷</span><span><b>Trafalgar Square</b> — Diliff / CC BY-SA 3.0 <small><a href="https://commons.wikimedia.org/wiki/File:Trafalgar_Square,_London_2_-_Jun_2009.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
           <li><span class="ic">📷</span><span><b>Whitehall e Horse Guards</b> — Lewis Clarke / CC BY-SA 2.0 <small><a href="https://commons.wikimedia.org/wiki/File:London_,_Westminster_-_Horse_Guards_Parade_-_geograph.org.uk_-_2546769.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
           <li><span class="ic">📷</span><span><b>Big Ben e il Parlamento</b> — Domob / CC BY-SA 4.0 <small><a href="https://commons.wikimedia.org/wiki/File:Palace_of_Westminster_and_Elizabeth_Tower_20250522.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
@@ -1489,6 +1488,7 @@
           <li><span class="ic">📷</span><span><b>Natural History Museum</b> — Diliff / CC BY-SA 3.0 <small><a href="https://commons.wikimedia.org/wiki/File:Natural_History_Museum_London_Jan_2006.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
           <li><span class="ic">📷</span><span><b>Luci di Regent Street</b> — Oast House Archive / CC BY-SA 2.0 <small><a href="https://commons.wikimedia.org/wiki/File:Regent_Street_Christmas_Lights_2016_-_geograph.org.uk_-_5233956.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
           <li><span class="ic">📷</span><span><b>Covent Garden</b> — Dietmar Rabich / CC BY-SA 4.0 <small><a href="https://commons.wikimedia.org/wiki/File:London,_Covent_Garden_--_2016_--_4878.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
+          <li><span class="ic">📷</span><span><b>Partenza per Heathrow</b> — DiscoA340 / CC BY-SA 4.0 <small><a href="https://commons.wikimedia.org/wiki/File:Piccadilly_Circus_Underground_Station_(January_2024)_02.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
           <li><span class="ic">📷</span><span><b>Heathrow, Terminal 5 · BA546</b> — Andrew Milligan sumo / CC BY 2.0 <small><a href="https://commons.wikimedia.org/wiki/File:Departures_Terminal_5,_London_Heathrow_Airport_(33215594911).jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
           <li><span class="ic">📷</span><span><b>Atterraggio a Bologna</b> — Ex13 / CC BY-SA 3.0 <small><a href="https://commons.wikimedia.org/wiki/File:Bologna_Guglielmo_Marconi_Airport_aerial.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
           <li><span class="ic">📷</span><span><b>Benjamin Pollock’s Toyshop</b> — Jack1956 / CC0 <small><a href="https://commons.wikimedia.org/wiki/File:Benjamin_Pollocks_Toy_Shop_exterior.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
@@ -1587,7 +1587,7 @@
   </section>
 </div>
 
-<script src="vendor/leaflet/leaflet.js"
+<script defer src="vendor/leaflet/leaflet.js"
   integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="></script>
 <script>
   /* ====== orologio del viaggio ======
@@ -2160,6 +2160,10 @@
      Il pannello non si apre mai da solo: in cima c'è un banner sottile «N novità», e si apre solo se toccato.
      Il link in fondo alla pagina lo riapre con tutto lo storico, in ogni caso. */
   var NOVITA = [
+    { v: 22, data: '2026-10-04', titolo: 'Più leggera, e due foto nuove', voci: [
+      'La pagina pesa meno: le foto di Olly sono più leggere e si caricano solo quando ci arrivi, la mappa parte solo quando ci scorri vicino',
+      '«Si parte da Soho» ha la foto vera di casa, 79 Beak Street',
+      '«Partenza per Heathrow» ha la foto della stazione di Piccadilly Circus, da cui parte la metro per l’aeroporto' ] },
     { v: 21, data: '2026-10-04', titolo: 'Si legge meglio, anche al sole', voci: [
       'Testo delle card più grande (15 px), nessuna scritta sotto i 12 px, orari e numeri delle prenotazioni ben leggibili',
       'Contrasti più forti: i grigi e gli azzurri sono più chiari',
@@ -2353,7 +2357,9 @@
     });
   })();
 
-  /* ====== mappa Leaflet — tile scure CARTO, marker per giorno ====== */
+  /* ====== mappa Leaflet — sfondo Esri grigio scuro, marker per giorno ======
+     Si accende solo quando la sezione sta per entrare nello schermo: chi non scorre fin lì non paga
+     né l'avvio di Leaflet né le tile. Leaflet è caricato con defer, quindi qui si aspetta che ci sia. */
   var COLORS={dom:'#d4a94e',lun:'#c8362b',mar:'#6db3d8'};
   var GIORNI={dom:'Domenica 15',lun:'Lunedì 16',mar:'Martedì 17'};
   var CASA={n:'Bright Carnaby Soho — 79 Beak Street', lat:51.5129114, lng:-0.1364381, note:'La nostra base a Soho · 2 notti'};
@@ -2408,7 +2414,14 @@
      Se per qualunque motivo Leaflet non c'è, il messaggio compare e il resto della pagina va avanti. */
   var mapBox=document.getElementById('map');
   function mappaOffline(si){ mapBox.classList.toggle('map-offline', !!si); }
-  if (typeof L === 'undefined') { mappaOffline(true); } else {
+  var mappaAvviata = false;
+  function avviaMappa(){
+  if (mappaAvviata) return;
+  if (typeof L === 'undefined') {
+    if (document.readyState !== 'complete') { window.addEventListener('load', avviaMappa, { once: true }); return; }
+    mappaOffline(true); return;
+  }
+  mappaAvviata = true;
   // touch: niente trascinamento con un dito (la pagina scorre); due dita spostano e zoomano
   var touch = !!(window.matchMedia && window.matchMedia('(pointer:coarse)').matches);
   var map=L.map('map',{scrollWheelZoom:false, dragging:!touch});
@@ -2476,17 +2489,27 @@
     bounds.push([t.p.lat,t.p.lng]);
   });
   // con "Piove" il London Eye cede il posto a Shrek's Adventure, come nel programma
-  document.addEventListener('piove',function(e){
+  function eyeOShrek(piove){
     if (!markerEye) return;
-    var p=e.detail?SHREK:EYE, note=e.detail?'~15:30, al coperto · la domenica chiude alle 16:00':'~15:30, si scende con le luci accese 🎡';
+    var p=piove?SHREK:EYE, note=piove?'~15:30, al coperto · la domenica chiude alle 16:00':'~15:30, si scende con le luci accese 🎡';
     markerEye.setLatLng([p.lat,p.lng]).setPopupContent(popup(p,'dom',note));
+    markerEye.options.title=p.n;   // prima del primo disegno l'elemento non c'è ancora
     if (markerEye.getElement()) markerEye.getElement().title=p.n;
-  });
+  }
+  document.addEventListener('piove',function(e){ eyeOShrek(e.detail); });
+  // se "Piove" era già acceso prima che la mappa partisse
+  if (document.documentElement.classList.contains('piove')) eyeOShrek(true);
   L.marker([CASA.lat,CASA.lng],{icon:homeIcon,title:CASA.n,zIndexOffset:500}).addTo(map)
     .bindPopup('<b>🏠 '+CASA.n+'</b><br><small>'+CASA.note+'</small>'+vai(CASA));
   bounds.push([CASA.lat,CASA.lng]);
   map.fitBounds(bounds,{padding:[30,30]});
   }
+  if ('IntersectionObserver' in window) {
+    var oss = new IntersectionObserver(function(voci){
+      if (voci.some(function(v){ return v.isIntersecting; })) { oss.disconnect(); avviaMappa(); }
+    }, { rootMargin: '600px 0px' });
+    oss.observe(mapBox);
+  } else avviaMappa();
 </script>
 </body>
 </html>
