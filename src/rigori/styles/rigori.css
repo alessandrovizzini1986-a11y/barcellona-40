@@ -48,6 +48,8 @@ html,body{ margin:0; height:100%; background:var(--bg); color:var(--ink); font-f
 /* A destra del ≡ (10 + 48 + 8 px): con i testi lunghi dello Shootout il pulsante copriva le prime lettere */
 .rg-modehud{ position:absolute; top:calc(12px + env(safe-area-inset-top, 0px)); left:66px; right:66px; text-align:center; padding:8px 14px; border-radius:999px; background:color-mix(in srgb, var(--bg) 72%, transparent); color:var(--ink); font-weight:600; font-size:var(--fs-0); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .rg-modehud:empty{ display:none; }
+/* schermata appena nata: per 350 ms non riceve tocchi (vedi guardia() in overlay.js) */
+.rg-overlay--nata, .rg-overlay--nata *{ pointer-events:none !important; }
 .rg-overlay{ position:absolute; inset:0; z-index:30; display:flex; align-items:center; justify-content:center; padding:var(--space-4); background:color-mix(in srgb, var(--bg) 88%, transparent); }
 .rg-panel{ width:100%; max-width:420px; display:flex; flex-direction:column; gap:var(--space-4); padding:var(--space-5); border-radius:var(--radius-l); background:var(--bg-2); border:1px solid color-mix(in srgb, var(--ink) 14%, transparent); }
 .rg-title{ margin:0; font-family:var(--font-display); font-weight:700; font-size:var(--fs-3); line-height:1.05; }
@@ -63,6 +65,10 @@ a.rg-btn{ text-decoration:none; }
 .rg-vignette{ position:absolute; inset:0; pointer-events:none; background:radial-gradient(ellipse at center 45%, transparent 48%, rgba(6,8,18,.55) 100%); }
 
 /* Schermate */
+/* Chi tira?: il pannello riempie lo schermo e "Torna al programma" sta in fondo, mai nella zona dove c'era
+   "Tocca per iniziare" (il tocco che apre questa schermata finisce proprio lì) */
+.rg-overlay--chi .rg-panel{ min-height:100%; }
+.rg-overlay--chi .rg-sito{ margin-top:auto; }
 .rg-overlay--top{ align-items:flex-start; padding-top:calc(var(--space-6) + env(safe-area-inset-top, 0px)); overflow:auto; }
 .rg-close{ position:absolute; top:8px; right:8px; min-height:44px; width:44px; padding:0; }
 .rg-panel{ position:relative; }

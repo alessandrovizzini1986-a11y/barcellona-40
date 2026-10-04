@@ -660,8 +660,14 @@ manager.onLoad = () => {
   const go = () => { el.classList.add('rg-loading--out'); setTimeout(() => el.remove(), 500); if (!window.__rigori.noFlow) runFlow() }
   // "Tocca per iniziare": il primo tocco sblocca l'AudioContext (iOS lo richiede dentro un gesto utente)
   const tap = el.querySelector('.rg-loading__tap'); tap.hidden = false; el.querySelector('.rg-loading__bar').hidden = true; el.querySelector('.rg-loading__pct').hidden = true
-  const start = (ev) => { ev?.preventDefault?.(); el.removeEventListener('pointerdown', start); el.removeEventListener('keydown', start); audio.unlock(); go() }
-  el.addEventListener('pointerdown', start); el.addEventListener('keydown', (ev) => { if (ev.key === 'Enter' || ev.key === ' ') start(ev) }); tap.focus()
+  // Si parte sul CLICK (dito sollevato), non sul pointerdown: altrimenti la schermata sparisce sotto il dito e
+  // il click atterra sul pulsante che "Chi tira?" ha nello stesso punto ("Torna al programma"). Lo sblocco
+  // dell'audio resta al pointerdown (ascoltatore in cattura più sopra). Niente focus programmatico: da
+  // tastiera basta Invio o spazio, al tocco il focus porterebbe l'anello giallo sulla schermata dopo.
+  let partito = false
+  const start = (ev) => { if (partito) return; partito = true; ev?.preventDefault?.(); document.removeEventListener('keydown', daTastiera); audio.unlock(); go() }
+  const daTastiera = (ev) => { if (ev.key === 'Enter' || ev.key === ' ') start(ev) }
+  el.addEventListener('click', start); document.addEventListener('keydown', daTastiera)
   if (window.__rigori.noFlow) { document.addEventListener('pointerdown', () => audio.unlock(), { once: true }); start() }
 }
 // Se non c'è nulla da caricare il manager non chiama onLoad da solo

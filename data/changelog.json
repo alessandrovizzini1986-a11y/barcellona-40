@@ -1,6 +1,16 @@
 {
   "entries": [
     {
+      "v": 43,
+      "data": "2026-10-04",
+      "titolo": "Gioco: niente più tocchi fantasma all'avvio",
+      "voci": [
+        "\"Tocca per iniziare\" non ti manda più al programma: la schermata nuova ignora il dito che si solleva, e vale per ogni passaggio (Chi tira?, Modalità, risultato, Pausa, pass-and-play)",
+        "In \"Chi tira?\" il bordo giallo è solo \"Sei tu\": con profilo Alessandro non compare su nessuno",
+        "\"Torna al programma\" di \"Chi tira?\" sta in fondo allo schermo"
+      ]
+    },
+    {
       "v": 42,
       "data": "2026-10-03",
       "titolo": "Ritocchi finali prima della chiusura",

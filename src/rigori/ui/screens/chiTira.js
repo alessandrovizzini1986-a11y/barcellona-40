@@ -25,5 +25,5 @@ export function chiTira(ui, ASSETS, { profilo = null, statsDi = () => null } = {
   }).join('')
   const sub = io ? `In porta c'è ${esc(ale.nome)}, e parla troppo.` : `Tocca il tuo nome. In porta c'è ${esc(ale.nome)}, e parla troppo.`
   const primario = io ? `<p class="rg-chi__hint">Tocca un altro nome per far tirare lui</p><button class="rg-btn rg-btn--giallo rg-btn--block" data-value="${io.id}" data-tira-io aria-label="Tira come ${esc(io.nome)}">Tira come ${esc(io.nome)} →</button>` : ''
-  return overlay(ui, `<h2 class="rg-title">Chi tira?</h2><p class="rg-sub">${sub}</p><div class="rg-cards">${cards}</div>${primario}<div class="rg-row"><button class="rg-btn rg-btn--ghost" data-value="__classifica" aria-label="Classifica di serata">Classifica di serata</button></div>`, { label: 'Scelta del tiratore', cls: 'rg-overlay--top', sito: true })
+  return overlay(ui, `<h2 class="rg-title">Chi tira?</h2><p class="rg-sub">${sub}</p><div class="rg-cards">${cards}</div>${primario}<div class="rg-row"><button class="rg-btn rg-btn--ghost" data-value="__classifica" aria-label="Classifica di serata">Classifica di serata</button></div>`, { label: 'Scelta del tiratore', cls: 'rg-overlay--top rg-overlay--chi', sito: true })
 }
