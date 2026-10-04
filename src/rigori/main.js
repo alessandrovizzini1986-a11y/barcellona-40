@@ -222,6 +222,7 @@ let trace = null
 shot.onFrame = (t) => { if (trace) trace.push({ t, ...window.__rigori.pose() }) }
 function onShotEvent(e) {
   if (e.type === 'windup') { hint.hidden = true; audio.play('step', { volume: .5 }) }
+  if (e.type === 'kick') etichette(false)
   if (e.type === 'kick') { clearEsitoTimers(); audio.play(e.aim.power > 0.95 ? 'kick2' : 'kick', { volume: 0.6 + Math.min(0.4, e.aim.power * 0.4) }); hint.hidden = true; replayPending = true; kicker?.onKick(); rig.followLook(ball.mesh) }
   if (e.type === 'result') kicker?.react(e.result)
   if (e.type === 'result') { esitoLock = true; sequenzaConsumata = false; esitoDa = performance.now(); skipBtn.hidden = false; dopoEsito(); keeper?.react(e.result); const rec = shot.record; const sfotto = game.tauntFor(rec); rec.sfotto = sfotto; ultimoTiro = rec; showEsito(game.ui, { outcome: rec.outcome, corner: rec.corner, shooterId: rec.ruoli.tiratore.id, taunt: sfotto }); audio.duck(true); audio.vo(rec.corner ? 'corner' : rec.outcome) }
@@ -380,6 +381,41 @@ function ruoliDalTurno(r) {
     : { tiratore: { id: io.id, nome: io.nome, utente: true }, portiere: { id: ale.id, nome: ale.nome, utente: false } }
 }
 let mode = null, role = 'idle', difficulty = 'normale' // la difficoltà è della partita, non del singolo controller (che viene riusato)
+// Etichette dei due in campo: tiratore (nome + numero nel colore della maglia) e portiere (nome). Compaiono a
+// inizio tiro e spariscono al calcio; stanno sopra la testa dei modelli, proiettata dalla camera a ogni frame.
+const tagKicker = document.createElement('div'), tagKeeper = document.createElement('div')
+tagKicker.className = 'rg-tag rg-tag--tiratore'; tagKeeper.className = 'rg-tag rg-tag--portiere'
+tagKicker.hidden = tagKeeper.hidden = true; tagKicker.setAttribute('aria-hidden', 'true'); tagKeeper.setAttribute('aria-hidden', 'true')
+document.getElementById('rg-ui').append(tagKicker, tagKeeper)
+const colorePrimo = (p) => p?.maglia?.colore || p?.maglia?.colori?.[0] || '#444'
+function etichette(on) {
+  if (!on) { tagKicker.hidden = tagKeeper.hidden = true; return }
+  const ru = shot.ruoli, t = byId(ru.tiratore.id), k = byId(ru.portiere.id)
+  tagKicker.innerHTML = `<span class="rg-tag__nome">${ru.tiratore.nome}</span>${t?.numero ? `<span class="rg-tag__num" style="background:${colorePrimo(t)};color:${t.maglia?.numeroColore || '#fff'}">${t.numero}</span>` : ''}`
+  tagKeeper.innerHTML = `<span class="rg-tag__nome">${ru.portiere.nome}</span>`
+  tagKeeper.style.setProperty('--maglia', colorePrimo(k)); tagKicker.style.setProperty('--maglia', colorePrimo(t))
+  tagKicker.hidden = tagKeeper.hidden = false
+}
+const _tv = new THREE.Vector3()
+// Posizione a schermo sopra la testa; l'etichetta non esce mai dai bordi. Torna la profondità (per la precedenza).
+function piazzaEtichetta(el, group, altezza) {
+  if (el.hidden || !group) return null
+  _tv.copy(group.position); _tv.y += altezza; _tv.project(rig.camera)
+  if (_tv.z > 1) { el.style.opacity = '0'; return null }
+  const W = R.size.w, H = R.size.h, w = el.offsetWidth || 80
+  const x = Math.max(w / 2 + 6, Math.min(W - w / 2 - 6, (_tv.x + 1) / 2 * W)), y = Math.max(44, Math.min(H - 20, (1 - _tv.y) / 2 * H))
+  el.style.opacity = '1'; el.style.left = `${x}px`; el.style.top = `${y}px`
+  return { x, y, z: _tv.z, w, h: el.offsetHeight || 32 }
+}
+systems.push({ update() {
+  const a = piazzaEtichetta(tagKicker, kicker?.group, 2.05), b = piazzaEtichetta(tagKeeper, keeper?.group, 2.25)
+  // se le due etichette si coprono (turno da portiere: il tiratore sta proprio dietro il portiere), quella più
+  // lontana sale sopra l'altra, così nessuna delle due finisce su una faccia
+  if (a && b && Math.abs(a.x - b.x) < (a.w + b.w) / 2 + 8 && Math.abs(a.y - b.y) < a.h + 16) {
+    const lontana = a.z > b.z ? tagKicker : tagKeeper, vicina = lontana === tagKicker ? b : a
+    lontana.style.top = `${vicina.y - vicina.h - 18}px`
+  }
+} })
 const modeHud = document.createElement('div'); modeHud.className = 'rg-modehud'; modeHud.setAttribute('aria-live', 'polite'); document.getElementById('rg-ui').appendChild(modeHud)
 const target = new THREE.Mesh(new THREE.RingGeometry(0.42, 0.55, 32), new THREE.MeshBasicMaterial({ color: 0xF2B705, transparent: true, opacity: .9, side: THREE.DoubleSide, depthTest: false })); target.renderOrder = 8; target.visible = false; scene.add(target)
 const xpLog = []
@@ -395,6 +431,7 @@ const ctx = {
     if (r === 'shooter') { hint.textContent = 'Trascina dal pallone'; hint.hidden = false; rig.goTo('dietroTiratore', { instant: was === 'keeper' }) }
     else if (r === 'keeper') { hint.textContent = 'Trascina verso la zona in cui tuffarti'; hint.hidden = false; rig.goTo('dietroPortiere', { instant: true }) }
     else hint.hidden = true
+    etichette(mode && r !== 'idle')
   },
   setDifficulty(d) { difficulty = d; keeper?.setDifficulty(d) },
   // Le modalità con più persone (pass-and-play) impongono i propri nomi; le altre usano il turno.

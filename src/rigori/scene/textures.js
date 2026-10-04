@@ -3,7 +3,8 @@ import * as THREE from 'three'
 function canvas(w, h) { const c = document.createElement('canvas'); c.width = w; c.height = h; return c }
 export function grassTexture() {
   const c = canvas(512, 512), g = c.getContext('2d')
-  for (let i = 0; i < 8; i++) { g.fillStyle = i % 2 ? '#2e8b45' : '#33994c'; g.fillRect(0, i * 64, 512, 64) }
+  // bande alternate chiara/scura lungo z (il tile copre 15,6 m: 8 bande da 1,9 m), come il taglio del prato vero
+  for (let i = 0; i < 8; i++) { g.fillStyle = i % 2 ? '#2a7d3e' : '#3aa352'; g.fillRect(0, i * 64, 512, 64) }
   const img = g.getImageData(0, 0, 512, 512), d = img.data
   for (let i = 0; i < d.length; i += 4) { const n = (Math.random() - .5) * 5; d[i] += n; d[i + 1] += n; d[i + 2] += n * .6 }
   g.putImageData(img, 0, 0)

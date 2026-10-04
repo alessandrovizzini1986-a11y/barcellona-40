@@ -1,6 +1,16 @@
 {
   "entries": [
     {
+      "v": 44,
+      "data": "2026-10-04",
+      "titolo": "Gioco: inquadratura nuova, nomi in campo, erba a strisce",
+      "voci": [
+        "Il tiro si vede da dietro e di lato: porta al centro, tiratore in basso a sinistra che non copre mai il portiere",
+        "Sopra i due in campo compaiono nome e numero (\"Monne 27\", \"Ale\"): a inizio tiro, via al calcio",
+        "Il prato ha le strisce. La meccanica del gioco è identica a prima"
+      ]
+    },
+    {
       "v": 43,
       "data": "2026-10-04",
       "titolo": "Gioco: niente più tocchi fantasma all'avvio",

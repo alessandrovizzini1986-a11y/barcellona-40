@@ -4,8 +4,13 @@ import * as THREE from 'three'
 export const PRESETS = {
   // Le camere seguono la porta in scala (4,60 × 1,90) e il dischetto a 8,5 m: più basse e più vicine
   // di quelle di prima, altrimenti la porta resterebbe un francobollo in fondo al campo.
-  dietroTiratore:  { pos: [0, 1.95, 13.6], look: [0, 0.95, 0] },
-  dietroPortiere:  { pos: [0, 3.1, -7.4],  look: [0, 0.75, 5], fov: 74 }, // abbastanza indietro da tenere i pali nel quadro portrait
+  // Inquadratura del tiro: dietro e a destra del tiratore, che aspetta a (0,55, 12,7) e appare in basso a sinistra
+  // sotto la linea di porta; porta centrata; al calcio il tiratore sta sotto l'angolo sinistro e mai sul portiere.
+  // Misurato (380×820): porta ≈ 175 px larga e centrata, tiratore in quadro al 96 % in attesa, copertura del portiere
+  // 0 % in attesa e nella rincorsa, ≤ 6 % del suo rettangolo nell'istante del calcio (sta sotto l'angolo sinistro).
+  dietroTiratore:  { pos: [1.5, 2.9, 15.8], look: [-0.08, 0.5, 0], fov: 66 },
+  // Turno da portiere: dietro la porta, un po' di lato e più bassa di prima: pali nel quadro, tiratore leggibile
+  dietroPortiere:  { pos: [0.4, 2.3, -7.6],  look: [0, 0.9, 5.5], fov: 72 },
   lateraleReplay:  { pos: [-6.4, 1.3, 3.5], look: [0, 0.9, 1.2] },
   drone:           { pos: [0, 10.5, 9.5],  look: [0, 0.5, 1.6] },
   dischetto:       { pos: [0.3, 0.32, 9.1], look: [0, 1.0, 0] },

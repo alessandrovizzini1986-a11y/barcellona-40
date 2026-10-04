@@ -48,6 +48,14 @@ html,body{ margin:0; height:100%; background:var(--bg); color:var(--ink); font-f
 /* A destra del ≡ (10 + 48 + 8 px): con i testi lunghi dello Shootout il pulsante copriva le prime lettere */
 .rg-modehud{ position:absolute; top:calc(12px + env(safe-area-inset-top, 0px)); left:66px; right:66px; text-align:center; padding:8px 14px; border-radius:999px; background:color-mix(in srgb, var(--bg) 72%, transparent); color:var(--ink); font-weight:600; font-size:var(--fs-0); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .rg-modehud:empty{ display:none; }
+/* Etichette nome e numero sopra i due in campo: fondo scuro, nome bianco, numero nel colore della maglia */
+.rg-tag{ position:absolute; z-index:5; display:inline-flex; align-items:stretch; transform:translate(-50%, calc(-100% - 10px)); font-family:var(--font-display, inherit); font-weight:800; font-size:17px; line-height:1; letter-spacing:.01em; white-space:nowrap; filter:drop-shadow(0 2px 4px rgba(0,0,0,.45)); pointer-events:none; transition:opacity .15s; }
+.rg-tag[hidden]{ display:none; }
+.rg-tag__nome{ padding:7px 11px; background:#15181d; color:#fff; border-radius:4px 0 0 4px; }
+.rg-tag__num{ padding:7px 9px; min-width:34px; text-align:center; border-radius:0 4px 4px 0; }
+.rg-tag--portiere .rg-tag__nome{ border-radius:4px; border-bottom:3px solid var(--maglia, #444); }
+.rg-tag--tiratore .rg-tag__nome:only-child{ border-radius:4px; }
+.rg-tag::after{ content:""; position:absolute; left:50%; bottom:-7px; width:14px; height:7px; transform:translateX(-50%); background:#15181d; clip-path:polygon(0 0, 100% 0, 50% 100%); }
 /* schermata appena nata: per 350 ms non riceve tocchi (vedi guardia() in overlay.js) */
 .rg-overlay--nata, .rg-overlay--nata *{ pointer-events:none !important; }
 .rg-overlay{ position:absolute; inset:0; z-index:30; display:flex; align-items:center; justify-content:center; padding:var(--space-4); background:color-mix(in srgb, var(--bg) 88%, transparent); }
