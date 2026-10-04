@@ -148,7 +148,7 @@ restituisce spesso dettagli irriconoscibili o omonimi sbagliati.
 | Appartamento, 79 Beak Street | `public/assets/tappe/londra/apt.webp` | No Swan So Fine | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | [79 Beak Street, Soho, January 2022.jpg](https://commons.wikimedia.org/wiki/File:79_Beak_Street,_Soho,_January_2022.jpg) |
 | Benjamin Pollock's Toyshop | `public/assets/tappe/londra/pollock.webp` | Jack1956 | [CC0](http://creativecommons.org/publicdomain/zero/1.0/deed.en) | [Benjamin Pollocks Toy Shop exterior.jpg](https://commons.wikimedia.org/wiki/File:Benjamin_Pollocks_Toy_Shop_exterior.jpg) |
 
-Ultimo aggiornamento: `npm run foto:londra` · 25 foto, 1304 kB in tutto.
+Ultimo aggiornamento: `npm run foto:londra` · 25 foto, 1302 kB in tutto.
 
 <!-- foto-londra:end -->
 
@@ -173,3 +173,11 @@ Londra continua ad avere la sua card dell'appartamento (`public/assets/tappe/lon
 
 ## Librerie
 - Three.js 0.186.0 (MIT), Draco decoder incluso in Three.js (Apache 2.0).
+
+## Foto del viaggio di Olly (`_legacy/img/olly/`)
+
+Le foto della sezione «Il viaggio di Olly» sono accreditate, con i link, nella pagina stessa (Info → Crediti foto). Aggiunta con l’itinerario V4:
+
+| Card | File | Autore | Licenza | Originale su Commons |
+|---|---|---|---|---|
+| La banda dei soldati | `_legacy/img/olly/banda.webp` | APK | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0) | [Band of the Grenadier Guards marching in front of Buckingham Palace.jpg](https://commons.wikimedia.org/wiki/File:Band_of_the_Grenadier_Guards_marching_in_front_of_Buckingham_Palace.jpg) |

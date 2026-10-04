@@ -3,7 +3,7 @@
 //
 //   npm run build && npm run preview &   poi   node scripts/qa/londra-check.mjs [http://localhost:4173]
 //
-// Controlla: gli 11 percorsi identici al riferimento, il payload del QR e i 3 barcode (decodificati
+// Controlla: i 15 percorsi identici al riferimento, il payload del QR e i 3 barcode (decodificati
 // dagli SVG, non letti dal testo), le voci «da verificare» uguali fra pagina e DA_VERIFICARE_LONDRA.md,
 // nessuna chiave di storage oltre londra:novita:vista, cartella foto sotto 1,5 MB, alt su tutte le
 // immagini, nessun controllo sotto 44 px, service worker che non copre le pagine di Barcellona.
@@ -18,16 +18,23 @@ const ok = (n, c, x = '') => { if (!c) process.exitCode = 1; console.log(`${c ? 
 
 // Riferimenti scritti a mano: se qualcuno li "ripulisce" nella pagina, il controllo cade.
 const PERCORSI = [
+  // domenica (4)
   'https://www.google.com/maps/dir/?api=1&origin=51.4723,-0.4887&destination=51.5054668,-0.1171985&travelmode=transit',
-  'https://www.google.com/maps/dir/?api=1&origin=51.5054668,-0.1171985&destination=51.5031864,-0.1195192&waypoints=51.501558,-0.119506&travelmode=walking',
-  'https://www.google.com/maps/dir/?api=1&origin=51.5031864,-0.1195192&destination=51.5129114,-0.1364381&waypoints=51.5123401,-0.1342553%7C51.5133,-0.1391&travelmode=walking',
-  'https://www.google.com/maps/dir/?api=1&origin=51.5129114,-0.1364381&destination=51.5007292,-0.1246254&waypoints=51.508039,-0.128069%7C51.5047752,-0.1272358&travelmode=walking',
-  'https://www.google.com/maps/dir/?api=1&origin=51.5007292,-0.1246254&destination=51.5039416,-0.1434016&waypoints=51.502967,-0.1339534%7C51.501364,-0.14189&travelmode=walking',
-  'https://www.google.com/maps/dir/?api=1&origin=51.5039416,-0.1434016&destination=51.4994055,-0.1632344&travelmode=transit',
+  'https://www.google.com/maps/dir/?api=1&origin=51.5054668,-0.1171985&destination=51.501558,-0.119506&travelmode=walking',
+  'https://www.google.com/maps/dir/?api=1&origin=51.501558,-0.119506&destination=51.5123401,-0.1342553&travelmode=transit',
+  'https://www.google.com/maps/dir/?api=1&origin=51.5129114,-0.1364381&destination=51.5133,-0.1391&waypoints=51.51283,-0.1400828&travelmode=walking',
+  // lunedì (8)
+  'https://www.google.com/maps/dir/?api=1&origin=51.5129114,-0.1364381&destination=51.5003309,-0.1356875&waypoints=51.508039,-0.128069%7C51.502967,-0.1339534&travelmode=walking',
+  'https://www.google.com/maps/dir/?api=1&origin=51.5003309,-0.1356875&destination=51.501364,-0.14189&travelmode=walking',
+  'https://www.google.com/maps/dir/?api=1&origin=51.501364,-0.14189&destination=51.5007292,-0.1246254&waypoints=51.502967,-0.1339534%7C51.5047752,-0.1272358&travelmode=walking',
+  'https://www.google.com/maps/dir/?api=1&origin=51.501603,-0.125984&destination=51.494094,-0.174138&travelmode=transit',
+  'https://www.google.com/maps/dir/?api=1&origin=51.494094,-0.174138&destination=51.4994055,-0.1632344&travelmode=walking',
   'https://www.google.com/maps/dir/?api=1&origin=51.4994055,-0.1632344&destination=51.4967150,-0.1763672&travelmode=walking',
   'https://www.google.com/maps/dir/?api=1&origin=51.4967150,-0.1763672&destination=51.5098,-0.1342&travelmode=transit',
   'https://www.google.com/maps/dir/?api=1&origin=51.5098,-0.1342&destination=51.5129114,-0.1364381&waypoints=51.5131,-0.1400&travelmode=walking',
+  // martedì (3)
   'https://www.google.com/maps/dir/?api=1&origin=51.5129114,-0.1364381&destination=51.5122737,-0.1234492&travelmode=walking',
+  'https://www.google.com/maps/dir/?api=1&origin=51.5122737,-0.1234492&destination=51.516018,-0.130888&travelmode=walking',
   'https://www.google.com/maps/dir/?api=1&origin=51.5122737,-0.1234492&destination=51.4723,-0.4887&travelmode=transit'
 ]
 const QR_PAYLOAD = '$BLQ3039188LGT@'
@@ -107,7 +114,7 @@ await p.goto(PAGINA + '?now=2026-11-16T15:00', { waitUntil: 'load' }); await p.w
 
 const percorsi = await p.$$eval('a.percorso', (a) => a.map((x) => x.getAttribute('href')))
 const diversi = PERCORSI.filter((u, i) => percorsi[i] !== u).length
-ok('11 percorsi identici al riferimento, carattere per carattere', percorsi.length === 11 && diversi === 0, `${percorsi.length} trovati, ${diversi} diversi`)
+ok('15 percorsi identici al riferimento, carattere per carattere, nessuno in più', percorsi.length === PERCORSI.length && diversi === 0, `${percorsi.length} trovati, ${diversi} diversi`)
 
 const qr = await p.evaluate(() => { const s = document.querySelector('#biglietti .pk__svg'); return { vb: s.getAttribute('viewBox'), d: s.querySelector('path[stroke]').getAttribute('d'), sfondo: s.querySelector('path[fill]')?.getAttribute('fill') } })
 const lato = +qr.vb.split(/\s+/)[2], quiet = 4, nMod = lato - 2 * quiet
