@@ -497,7 +497,6 @@
   .casa-mostra{min-height:48px;padding:0 16px;border-radius:12px;border:0;background:var(--gold-fill);color:var(--on-accent);font:inherit;font-weight:800;font-size:15px;cursor:pointer}
   /* Piove e badge nei nuovi posti */
   .prog-azioni{margin-top:8px}
-  .ad-piove{margin-top:10px}
   .ad-codice{display:flex;align-items:center;justify-content:center;width:100%;min-height:56px;margin-top:12px;border-radius:14px;
     border:2px solid #fff;background:#fff;color:#0d1321;font:inherit;font-weight:800;font-size:17px;cursor:pointer}
   .ad-codice[hidden]{display:none}
@@ -578,6 +577,7 @@
   .ad-vincolo{white-space:pre-line;margin-top:12px;padding:10px 12px;border-radius:12px;font-size:15px;line-height:1.4;font-weight:700;
     color:var(--rosso-testo);background:rgba(200,54,43,.16);border:1px solid rgba(200,54,43,.45)}
   .ad-azioni{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+  .ad-azioni .piove-btn{margin-top:0;min-height:56px;padding:0 16px;border-radius:14px}
   .ad-vai{flex:1 1 180px;display:flex;align-items:center;justify-content:center;min-height:56px;border-radius:14px;
     background:var(--gold-fill);color:var(--on-accent);font-weight:800;font-size:17px;text-decoration:none}
   .ad-scheda{flex:0 1 auto;min-height:56px;padding:0 16px;border-radius:14px;border:1px solid var(--line-gold);
@@ -636,6 +636,10 @@
   .ci-co .chip2 .k,.tk-when .k,.pk__grid .k{font-size:12px}
   .tk-order{font-size:14px}
   .nov__data,.plus-badge,.plus-meta span{font-size:12px}
+  .big-casa{text-decoration:none}
+  #casaCard{scroll-margin-top:12px}
+  .bnota{display:block;margin-top:2px;font-size:12px;line-height:1.4;color:var(--muted)}
+  .casa-num{font-variant-numeric:tabular-nums;letter-spacing:.02em;user-select:all;-webkit-user-select:all}
   .leaflet-container .leaflet-control-attribution{font-size:12px}
   .piove-btn,.olly-nav button,.nov-link{min-height:44px}
   .nov-link{display:inline-flex;align-items:center}
@@ -707,12 +711,12 @@
     <div class="ad-azioni">
       <a class="ad-vai" id="adVai" target="_blank" rel="noopener" hidden>🧭 Portami lì</a>
       <button class="ad-scheda" id="adScheda" type="button">Vedi la scheda ↓</button>
+      <button class="piove-btn" type="button" data-piove aria-pressed="false" id="pioveBtnAd"><span class="piove-ic">🌧️</span> Piove <span class="piove-stato">no</span></button>
     </div>
     <div class="ad-proposta" id="adProposta" hidden>
       <p id="adPropostaTesto"></p>
       <div class="ad-proposta__az"><button type="button" class="ad-proposta__si" id="adPropostaSi">Sì, attiva</button><button type="button" class="ad-proposta__no" id="adPropostaNo">No</button></div>
     </div>
-    <p class="ad-piove"><button class="piove-btn" type="button" data-piove aria-pressed="false" id="pioveBtnAd"><span class="piove-ic">🌧️</span> Piove <span class="piove-stato">no</span></button></p>
   </section>
 
   <!-- ============ PROGRAMMA ============ -->
@@ -860,7 +864,7 @@
           <span class="percorso__txt"><b>Percorso · Domenica</b><span>London Eye → Lina Stores → Carnaby → casa</span></span>
           <span class="percorso__modo">🚶 a piedi</span>
         </a>
-        <article class="tcard" data-giorno="2026-11-15" data-ora="17:15" data-tipo="tappa" data-entro="18:00" data-vincolo="Lina Stores la domenica chiude alle 18:00">
+        <article class="tcard" data-giorno="2026-11-15" data-ora="17:15" data-tipo="tappa" data-entro="18:00" data-vincolo="Lina Stores la domenica chiude alle 18:00" data-piano-b="Whole Foods a Piccadilly Circus, aperto fino alle 18:00">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/lina.webp" width="800" height="450" alt="La vetrina verde di Lina Stores con l’insegna bianca sopra l’ingresso" loading="lazy" decoding="async">
             <span class="tcard__ora">17:15</span>
@@ -1184,6 +1188,7 @@
     <div class="eyebrow">Biglietti</div>
     <h2 id="bigTit">Portafoglio</h2>
     <p class="sub2">Tocca un codice per aprirlo a schermo pieno. Funzionano anche senza rete.</p>
+    <a class="pk-riga big-casa" href="#casaCard"><span class="pk-riga__ic" aria-hidden="true">🏠</span><span><b>Appartamento · Booking 5946777151</b><small>79 Beak Street, W1F 9SU · indirizzo per il taxi più sotto</small></span><span aria-hidden="true">›</span></a>
 
       <article class="pk" aria-labelledby="pkTit">
     <p class="pk__eyebrow">🅿️ Parcheggio aeroporto · domenica all’ingresso, martedì sera all’uscita</p>
@@ -1256,7 +1261,7 @@
       </div>
     </div>
 
-    <div class="card casa-card">
+    <div class="card casa-card" id="casaCard">
       <h3>🏠 Appartamento <span class="st ok">✅ prenotato</span></h3>
       <p class="casa-indirizzo">79 Beak Street<br>London W1F 9SU</p>
       <p class="meta">Bright Carnaby Soho · 3° piano · Soho · 2 notti, 15–17 novembre</p>
@@ -1265,6 +1270,11 @@
         <div class="chip2"><div class="k">Check-in</div><div class="v">15:00</div></div>
         <div class="chip2"><div class="k">Check-out</div><div class="v">10:30</div></div>
       </div>
+      <div class="ci-co">
+        <div class="chip2"><div class="k">Prenotazione Booking</div><div class="v casa-num">5946777151</div></div>
+        <div class="chip2"><div class="k">Totale</div><div class="v">£538,90</div></div>
+      </div>
+      <p class="meta">📶 Wi-Fi gratuito in tutto l’appartamento. Il PIN della prenotazione non è scritto qui: sta nell’app e nell’email di Booking.</p>
       <p class="ci-co-note">🔑 Check-in autonomo con chiave digitale <b>Clevio</b> — arriva via email ~2 giorni prima dell'arrivo, ingresso libero dopo le 15:00. Verificare che il link/dominio sia legittimo (<b>clevio.io</b> o dominio ufficiale) e che non venga richiesto alcun pagamento in quel passaggio.</p>
       <div class="casa-azioni">
         <button class="casa-mostra" type="button" data-indirizzo>🚕 Mostra l’indirizzo</button>
@@ -1287,27 +1297,27 @@
 
     <div class="olly-grid" data-og-group="dom">
       <article class="olly-card">
-        <img class="oc-photo" src="img/olly/aereo-ba.webp" width="800" height="600" alt="" loading="lazy" decoding="async">
+        <img class="oc-photo" src="img/olly/aereo-ba.webp" width="800" height="600" alt="Aeroplano" loading="lazy" decoding="async">
         <div class="oc-name">Aeroplano</div>
         <button class="oc-seen" data-oid="aereo" type="button"><span class="seen-dot"></span>L'ho visto!</button>
       </article>
       <article class="olly-card">
-        <img class="oc-photo" src="img/olly/squalo.webp" width="800" height="600" alt="" loading="lazy" decoding="async">
+        <img class="oc-photo" src="img/olly/squalo.webp" width="800" height="600" alt="Squali dell’acquario" loading="lazy" decoding="async">
         <div class="oc-name">Squali dell'acquario</div>
         <button class="oc-seen" data-oid="squalo" type="button"><span class="seen-dot"></span>L'ho visto!</button>
       </article>
       <article class="olly-card">
-        <img class="oc-photo" src="img/olly/pinguino.webp" width="599" height="449" alt="" loading="lazy" decoding="async">
+        <img class="oc-photo" src="img/olly/pinguino.webp" width="599" height="449" alt="Pinguini dell’acquario" loading="lazy" decoding="async">
         <div class="oc-name">Pinguini dell'acquario</div>
         <button class="oc-seen" data-oid="pinguino" type="button"><span class="seen-dot"></span>L'ho visto!</button>
       </article>
       <article class="olly-card">
-        <img class="oc-photo" src="img/olly/london-eye.webp" width="800" height="600" alt="" loading="lazy" decoding="async">
+        <img class="oc-photo" src="img/olly/london-eye.webp" width="800" height="600" alt="La ruota panoramica" loading="lazy" decoding="async">
         <div class="oc-name">La ruota panoramica</div>
         <button class="oc-seen" data-oid="eye" type="button"><span class="seen-dot"></span>L'ho visto!</button>
       </article>
       <article class="olly-card">
-        <img class="oc-photo" src="img/olly/luci-natale.webp" width="800" height="600" alt="" loading="lazy" decoding="async">
+        <img class="oc-photo" src="img/olly/luci-natale.webp" width="800" height="600" alt="Le luci di Natale" loading="lazy" decoding="async">
         <div class="oc-name">Le luci di Natale</div>
         <button class="oc-seen" data-oid="luci" type="button"><span class="seen-dot"></span>L'ho visto!</button>
       </article>
@@ -1315,27 +1325,27 @@
 
     <div class="olly-grid" data-og-group="lun" hidden>
       <article class="olly-card">
-        <img class="oc-photo" src="img/olly/scoiattolo.webp" width="800" height="600" alt="" loading="lazy" decoding="async">
+        <img class="oc-photo" src="img/olly/scoiattolo.webp" width="800" height="600" alt="Scoiattolo grigio" loading="lazy" decoding="async">
         <div class="oc-name">Scoiattolo grigio</div>
         <button class="oc-seen" data-oid="scoiattolo" type="button"><span class="seen-dot"></span>L'ho visto!</button>
       </article>
       <article class="olly-card">
-        <img class="oc-photo" src="img/olly/pellicano.webp" width="800" height="600" alt="" loading="lazy" decoding="async">
+        <img class="oc-photo" src="img/olly/pellicano.webp" width="800" height="600" alt="Pellicano" loading="lazy" decoding="async">
         <div class="oc-name">Pellicano</div>
         <button class="oc-seen" data-oid="pellicano" type="button"><span class="seen-dot"></span>L'ho visto!</button>
       </article>
       <article class="olly-card">
-        <img class="oc-photo" src="img/olly/buckingham.webp" width="711" height="533" alt="" loading="lazy" decoding="async">
+        <img class="oc-photo" src="img/olly/buckingham.webp" width="711" height="533" alt="Buckingham Palace" loading="lazy" decoding="async">
         <div class="oc-name">Buckingham Palace</div>
         <button class="oc-seen" data-oid="buckingham" type="button"><span class="seen-dot"></span>L'ho visto!</button>
       </article>
       <article class="olly-card">
-        <img class="oc-photo" src="assets/tappe/londra/horseguards.webp" width="800" height="450" alt="" loading="lazy" decoding="async">
+        <img class="oc-photo" src="assets/tappe/londra/horseguards.webp" width="800" height="450" alt="La guardia con l’elmo" loading="lazy" decoding="async">
         <div class="oc-name">La guardia con l'elmo</div>
         <button class="oc-seen" data-oid="guardia" type="button"><span class="seen-dot"></span>L'ho visto!</button>
       </article>
       <article class="olly-card">
-        <img class="oc-photo" src="assets/tappe/londra/nhm_balena.webp" width="800" height="450" alt="" loading="lazy" decoding="async">
+        <img class="oc-photo" src="assets/tappe/londra/nhm_balena.webp" width="800" height="450" alt="La balena del museo" loading="lazy" decoding="async">
         <div class="oc-name">La balena del museo</div>
         <button class="oc-seen" data-oid="balena" type="button"><span class="seen-dot"></span>L'ho visto!</button>
       </article>
@@ -1343,7 +1353,7 @@
 
     <div class="olly-grid" data-og-group="mar" hidden>
       <article class="olly-card">
-        <img class="oc-photo" src="assets/tappe/londra/covent.webp" width="800" height="450" alt="" loading="lazy" decoding="async">
+        <img class="oc-photo" src="assets/tappe/londra/covent.webp" width="800" height="450" alt="Il mercato coperto" loading="lazy" decoding="async">
         <div class="oc-name">Il mercato coperto</div>
         <button class="oc-seen" data-oid="covent" type="button"><span class="seen-dot"></span>L'ho visto!</button>
       </article>
@@ -1379,6 +1389,7 @@
     <div class="card">
       <h3>🏠 Note sull’alloggio</h3>
       <p class="ci-co-note">🎒 I due buchi (domenica prima delle 15:00, martedì dopo le 10:30) non sono un problema: <b>si viaggia con il solo bagaglio a mano sotto il sedile</b> e gli zaini restano in spalla. Da sapere però: il check-in è self-service, <b>una reception dove lasciare i bagagli potrebbe non esserci</b> — va chiarito con l’host prima di un eventuale viaggio con la valigia.</p>
+      <p class="meta" style="margin-top:8px">Prenotazione Booking <b>5946777151</b> · totale <b>£538,90</b>, addebitati €648,82 · Wi-Fi gratuito in tutto l’appartamento.</p>
       <p class="meta" style="margin-top:8px">Host confermato: nessuna unità sostitutiva (sarà esattamente l'appartamento fotografato), nessun costo extra, contatto diretto tramite numero Booking.com.</p>
       <p class="why"><b>Perché questa zona:</b> è il punto di minor cammino cumulativo per la giornata di lunedì (la Royal walk, sette tappe), tutte raggiungibili in 12–21 minuti a piedi, zero attraversamenti del fiume. Si sacrifica la comodità verso Southbank e South Kensington (serve la metro), accettabile perché cadono su giornate più leggere (domenica e martedì).</p>
     </div>
@@ -1412,7 +1423,7 @@
     <details class="acc" open>
       <summary>
         <span class="daynum" style="color:var(--gold);background:rgba(212,169,78,.1)">💶</span>
-        <span class="dtit"><h3>Quanto ci costa</h3><p>Stima totale ~€1.550</p></span>
+        <span class="dtit"><h3>Quanto ci costa</h3><p>Stima totale ~€1.568</p></span>
         <span class="chev">▼</span>
       </summary>
       <div class="dbody">
@@ -1420,12 +1431,12 @@
           <thead><tr><th>Voce</th><th>Stato</th><th style="text-align:right">Importo</th></tr></thead>
           <tbody>
             <tr><td>Voli (BA547/BA546)</td><td><span class="st ok">✅ prenotato</span></td><td class="imp">€433,39</td></tr>
-            <tr><td>Alloggio (Carnaby Soho)</td><td><span class="st ok">✅ prenotato</span></td><td class="imp">€631</td></tr>
-            <tr><td>Transfer LHR↔casa A/R</td><td><span class="st est">💶 stima</span></td><td class="imp">~€60</td></tr>
-            <tr><td>UK ETA ×3</td><td><span class="st est">💶 stima</span></td><td class="imp">~€57</td></tr>
+            <tr><td>Alloggio (Carnaby Soho)<small class="bnota">£538,90 addebitati in euro</small></td><td><span class="st ok">✅ pagato</span></td><td class="imp">€648,82</td></tr>
+            <tr><td>Transfer LHR↔casa A/R<small class="bnota">tariffe TfL contactless: £35,80 per due adulti, Olly gratis</small></td><td><span class="st est">💶 stima</span></td><td class="imp">~€44</td></tr>
+            <tr><td>UK ETA ×3<small class="bnota">£20 a persona · Alessandro €24,31 pagata · Vale e Olly fatte, importo in euro da confermare</small></td><td><span class="st est">💶 stima</span></td><td class="imp">~€73</td></tr>
             <tr><td>London Eye + SEA LIFE</td><td><span class="st est">💶 stima</span></td><td class="imp">~€189</td></tr>
             <tr><td>Spesa/pasti</td><td><span class="st est">💶 stima</span></td><td class="imp">~€180</td></tr>
-            <tr class="tot"><td>Totale</td><td></td><td class="imp">~€1.550</td></tr>
+            <tr class="tot"><td>Totale</td><td></td><td class="imp">~€1.568</td></tr>
           </tbody>
         </table>
         <span class="pass">✅ PASS sul tetto 1.500–2.000 €</span>
@@ -1904,12 +1915,20 @@
       box.appendChild(x);
       btn.parentNode.insertAdjacentElement('afterend', box);
     }
+    // è la risposta al tocco: se il riepilogo finisce sotto la barra, lo si porta in vista (solo il minimo).
+    // Si misura dopo l'evento "piove", che può allungare il pannello "Adesso" con la nota pioggia.
+    function inVista(){
+      var box = document.querySelector('.piove-riepilogo'); if (!box) return;
+      var r = box.getBoundingClientRect(), barra = document.querySelector('.barra'), fondo = window.innerHeight - (barra ? barra.offsetHeight : 0);
+      if (r.bottom > fondo) window.scrollBy({ top: Math.min(r.bottom - fondo + 12, r.top - 12), behavior: 'smooth' });
+    }
     btns.forEach(function(btn){ btn.addEventListener('click', function(){
       piove = !piove;
       document.documentElement.classList.toggle('piove', piove);
       btns.forEach(function(b){ b.setAttribute('aria-pressed', String(piove)); b.querySelector('.piove-stato').textContent = piove ? 'sì' : 'no'; });
       riepilogo(btn);
       document.dispatchEvent(new CustomEvent('piove', { detail: piove }));
+      inVista();
     }); });
   })();
 
@@ -2066,7 +2085,10 @@
       var v = [];
       if (corrente && corrente.vincolo) v.push(corrente.vincolo);
       if (prossima && prossima.vincolo && v.indexOf(prossima.vincolo) < 0) v.push(prossima.vincolo);
-      $('adVincolo').textContent = v.map(function(s){ return '⏰ ' + s; }).join('\n'); $('adVincolo').hidden = !v.length;
+      var righe = v.map(function(s){ return '⏰ ' + s; });
+      // piano B scritto sulla card (data-piano-b): compare insieme al suo vincolo
+      [corrente, prossima].forEach(function(x){ if (x && x.el.dataset.pianoB && x.vincolo) righe.push('↪️ Piano B: ' + x.el.dataset.pianoB); });
+      $('adVincolo').textContent = righe.join('\n'); $('adVincolo').hidden = !righe.length;
       // con "Piove" acceso: la nota pioggia della prossima tappa (o del suo blocco di giornata, fino all'ora indicata)
       var pg = '';
       if (piove() && prossima) {
@@ -2160,6 +2182,11 @@
      Il pannello non si apre mai da solo: in cima c'è un banner sottile «N novità», e si apre solo se toccato.
      Il link in fondo alla pagina lo riapre con tutto lo storico, in ogni caso. */
   var NOVITA = [
+    { v: 23, data: '2026-10-04', titolo: 'Numero di prenotazione e budget aggiornato', voci: [
+      'Nella card dell’appartamento (Biglietti) e nelle note sull’alloggio: numero di prenotazione Booking 5946777151, totale £538,90, Wi-Fi gratuito. Il PIN resta solo nell’app di Booking',
+      'Budget: alloggio €648,82 pagato, UK ETA ~€73, transfer da Heathrow ~€44. Totale circa €1.568',
+      'In cima a Biglietti una riga con l’appartamento e il numero di prenotazione: un tocco su «Biglietti» e c’è',
+      'Domenica pomeriggio «Adesso» ricorda anche il piano B di Lina Stores (Whole Foods); il pulsante «Piove» sta accanto a «Vedi la scheda» e il riepilogo si vede subito' ] },
     { v: 22, data: '2026-10-04', titolo: 'Più leggera, e due foto nuove', voci: [
       'La pagina pesa meno: le foto di Olly sono più leggere e si caricano solo quando ci arrivi, la mappa parte solo quando ci scorri vicino',
       '«Si parte da Soho» ha la foto vera di casa, 79 Beak Street',
