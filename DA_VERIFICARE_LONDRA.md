@@ -1,7 +1,7 @@
 # DA VERIFICARE · Londra 2026
 
 Incertezze ancora aperte del viaggio a Londra (15–17 novembre 2026), con il contesto e chi le chiude.
-Il sito le mostra nel badge «da verificare» in testata: **l’elenco in pagina (`DA_VERIFICARE` in `_legacy/londra.html`) va tenuto allineato a questo file** — chiudendone una qui, si toglie anche lì, e viceversa.
+Il sito le mostra nella lista «Prima di partire» (in cima alla pagina fino al 14/11, e in Info), con lo stato «da verificare»: **l’elenco in pagina (`DA_VERIFICARE` in `_legacy/londra.html`) va tenuto allineato a questo file** — chiudendone una qui, si toglie anche lì, e viceversa.
 
 ## Aperte (4)
 
@@ -17,7 +17,7 @@ Il sito le mostra nel badge «da verificare» in testata: **l’elenco in pagina
 
 ### 3. Tariffe bambino di London Eye e SEA LIFE
 
-- **Contesto:** I biglietti non sono ancora comprati: nel budget c’è una stima (~€189, badge «stima») e la checklist ha ancora «Prenotare online London Eye e SEA LIFE». L’età di Olly (5 anni) dovrebbe cadere nella fascia bambino, ma prezzo e fascia vanno letti sul sito ufficiale.
+- **Contesto:** I biglietti non sono ancora comprati: nel budget c’è una stima (~€189, badge «stima») e la lista «Prima di partire» ha ancora «Prenotare London Eye e SEA LIFE». L’età di Olly (5 anni) dovrebbe cadere nella fascia bambino, ma prezzo e fascia vanno letti sul sito ufficiale.
 - **Chi e come:** Alessandro o Vale: al momento dell’acquisto, sul sito ufficiale del biglietto combinato London Eye + SEA LIFE, controllare fascia d’età e prezzo bambino, poi aggiornare il budget da «stima» a «prenotato».
 
 ### 4. Durata e prezzo di Shrek’s Adventure! London
@@ -27,7 +27,7 @@ Il sito le mostra nel badge «da verificare» in testata: **l’elenco in pagina
 
 ## Risolte
 
-Tenute per memoria, non contano nel badge.
+Tenute per memoria, non compaiono più nella pagina.
 
 - ~~Deposito bagagli assistito al Bright Carnaby Soho~~ — Superato: si viaggia con il solo bagaglio a mano sotto il sedile, quindi non serve nessun deposito. Il sito è già aggiornato in tre punti (nota check-in/check-out, card del check-out di martedì, note pratiche).
 - ~~Prezzo esatto della Tower Bridge Exhibition~~ — Non più rilevante: Tower Bridge non è nell’itinerario V3 e il sito non lo cita da nessuna parte, né come tappa né nel budget. Compare solo nel disegno decorativo dello skyline in testata, senza prezzi.

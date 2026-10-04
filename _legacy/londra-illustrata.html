@@ -11,10 +11,11 @@
 <meta name="apple-mobile-web-app-title" content="Londra per Olly">
 <title>Londra per Olly · le figure del viaggio</title>
 <meta name="description" content="Il programma del viaggio a Londra spiegato per immagini, stampabile, per Olly.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet">
 <style>
+  /* Playfair Display servito dal sito (licenza OFL in vendor/fonts/): solo i due stili usati, caratteri latini.
+     Niente Google Fonts, così i titoli restano uguali anche senza rete. */
+  @font-face{font-family:"Playfair Display";font-style:normal;font-weight:700;font-display:swap;src:url(vendor/fonts/playfair-display-700-latin.woff2) format("woff2")}
+  @font-face{font-family:"Playfair Display";font-style:italic;font-weight:400;font-display:swap;src:url(vendor/fonts/playfair-display-400-italic-latin.woff2) format("woff2")}
   *{margin:0;padding:0;box-sizing:border-box}
   :root{
     --night-0:#0d1321;--night-1:#1a2332;--night-2:#212c40;
@@ -179,6 +180,12 @@
 
 <script>
   document.getElementById('printBtn').addEventListener('click',function(){ window.print(); });
+</script>
+<script>
+  /* stesso service worker della pagina principale: anche questa si apre senza rete */
+  if ('serviceWorker' in navigator) window.addEventListener('load', function(){
+    navigator.serviceWorker.register('londra-sw.js', { scope: './londra' }).catch(function(){});
+  });
 </script>
 </body>
 </html>

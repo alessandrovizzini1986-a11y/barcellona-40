@@ -2,6 +2,7 @@ import { defineConfig } from 'vite'
 import { cpSync, existsSync, mkdirSync, readdirSync, statSync, copyFileSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 import { avvisa } from './scripts/changelog-check.mjs'
+import { swLondra } from './scripts/londra-sw-build.mjs'
 
 // File di root del sito precedente che NON vanno ripubblicati:
 // - index.html: la home è quella nuova
@@ -63,7 +64,8 @@ function promemoriaChangelog() {
 
 export default defineConfig({
   base: process.env.BASE_PATH || '/',
-  plugins: [copyLegacy(), metaAssoluti(), promemoriaChangelog()],
+  // swLondra per ultimo: completa londra-sw.js leggendo le pagine già copiate in dist/
+  plugins: [copyLegacy(), metaAssoluti(), promemoriaChangelog(), swLondra()],
   // Data e ora della build, mostrata in fondo alla vista Info
   define: {
     __BUILD_ID__: JSON.stringify(new Date().toISOString().slice(0, 16).replace('T', ' ')),

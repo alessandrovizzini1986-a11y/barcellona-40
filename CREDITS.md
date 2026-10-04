@@ -130,7 +130,7 @@ restituisce spesso dettagli irriconoscibili o omonimi sbagliati.
 | SEA LIFE London Aquarium | `public/assets/tappe/londra/sealife.webp` | ʘx | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | [Underwater Walk of Sea Life London Aquarium.jpg](https://commons.wikimedia.org/wiki/File:Underwater_Walk_of_Sea_Life_London_Aquarium.jpg) |
 | London Eye | `public/assets/tappe/londra/eye.webp` | Danbu14 | [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0) | [London Eye by Day.jpg](https://commons.wikimedia.org/wiki/File:London_Eye_by_Day.jpg) |
 | Lina Stores | `public/assets/tappe/londra/lina.webp` | Ewan-M | [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0) | [Lina Stores, Soho, W1.jpg](https://commons.wikimedia.org/wiki/File:Lina_Stores,_Soho,_W1.jpg) |
-| Soho | `public/assets/tappe/londra/soho.webp` | Philafrenzy | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | [Dean Street - Old Compton Street corner.JPG](https://commons.wikimedia.org/wiki/File:Dean_Street_-_Old_Compton_Street_corner.JPG) |
+| Piccadilly Circus (partenza per Heathrow) | `public/assets/tappe/londra/piccadilly.webp` | DiscoA340 | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | [Piccadilly Circus Underground Station (January 2024) 02.jpg](https://commons.wikimedia.org/wiki/File:Piccadilly_Circus_Underground_Station_(January_2024)_02.jpg) |
 | Trafalgar Square | `public/assets/tappe/londra/trafalgar.webp` | Diliff | [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0) | [Trafalgar Square, London 2 - Jun 2009.jpg](https://commons.wikimedia.org/wiki/File:Trafalgar_Square,_London_2_-_Jun_2009.jpg) |
 | Horse Guards Parade | `public/assets/tappe/londra/horseguards.webp` | Lewis Clarke | [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0) | [London , Westminster - Horse Guards Parade - geograph.org.uk - 2546769.jpg](https://commons.wikimedia.org/wiki/File:London_,_Westminster_-_Horse_Guards_Parade_-_geograph.org.uk_-_2546769.jpg) |
 | Big Ben e Parlamento | `public/assets/tappe/londra/bigben.webp` | Domob | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | [Palace of Westminster and Elizabeth Tower 20250522.jpg](https://commons.wikimedia.org/wiki/File:Palace_of_Westminster_and_Elizabeth_Tower_20250522.jpg) |
@@ -148,7 +148,7 @@ restituisce spesso dettagli irriconoscibili o omonimi sbagliati.
 | Appartamento, 79 Beak Street | `public/assets/tappe/londra/apt.webp` | No Swan So Fine | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | [79 Beak Street, Soho, January 2022.jpg](https://commons.wikimedia.org/wiki/File:79_Beak_Street,_Soho,_January_2022.jpg) |
 | Benjamin Pollock's Toyshop | `public/assets/tappe/londra/pollock.webp` | Jack1956 | [CC0](http://creativecommons.org/publicdomain/zero/1.0/deed.en) | [Benjamin Pollocks Toy Shop exterior.jpg](https://commons.wikimedia.org/wiki/File:Benjamin_Pollocks_Toy_Shop_exterior.jpg) |
 
-Ultimo aggiornamento: `npm run foto:londra` · 25 foto, 1314 kB in tutto.
+Ultimo aggiornamento: `npm run foto:londra` · 25 foto, 1304 kB in tutto.
 
 <!-- foto-londra:end -->
 
