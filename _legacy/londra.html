@@ -573,6 +573,22 @@
   .piove-stato{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border-left:1px solid var(--line);padding-left:7px}
   .piove-btn[aria-pressed="true"]{background:var(--sky);border-color:var(--sky);color:var(--night-0)}
   .piove-btn[aria-pressed="true"] .piove-stato{color:var(--night-0);border-color:rgba(13,19,33,.3)}
+  /* riepilogo del piano pioggia, sotto il pulsante appena toccato */
+  .piove-riepilogo{position:relative;margin:10px 0 4px;padding:12px 48px 10px 14px;border-radius:14px;
+    background:rgba(109,179,216,.12);border:1px solid rgba(109,179,216,.45);font-size:15px;line-height:1.4}
+  .piove-riepilogo ul{list-style:none;margin-top:4px}
+  .piove-riepilogo a{display:flex;align-items:center;gap:6px;min-height:44px;color:var(--ink);text-decoration:none}
+  .piove-riepilogo a b{color:var(--sky);min-width:76px}
+  .piove-riepilogo a::after{content:"›";margin-left:auto;font-size:20px;color:var(--sky)}
+  .piove-riepilogo__x{position:absolute;top:2px;right:2px;width:44px;height:44px;border:0;background:none;color:var(--muted);font-size:20px;cursor:pointer}
+  .ad-pioggia{margin-top:12px;padding:10px 12px;border-radius:12px;font-size:15px;line-height:1.4;
+    background:rgba(109,179,216,.12);border:1px solid rgba(109,179,216,.45);color:var(--ink)}
+  .ad-pioggia[hidden],.ad-proposta[hidden]{display:none}
+  .ad-proposta{margin-top:12px;padding:12px;border-radius:12px;border:1px solid rgba(109,179,216,.45);background:rgba(109,179,216,.08);font-size:15px;line-height:1.4}
+  .ad-proposta__az{display:flex;gap:10px;margin-top:10px}
+  .ad-proposta__az button{flex:1;min-height:48px;border-radius:12px;font:inherit;font-weight:700;cursor:pointer}
+  .ad-proposta__si{border:0;background:var(--sky);color:var(--night-0)}
+  .ad-proposta__no{border:1px solid var(--line);background:none;color:var(--ink)}
   .pioggia-nota{display:none}
   html.piove .pioggia-nota{display:block}
   /* con "Piove" acceso una card può cedere il posto a un'alternativa al coperto */
@@ -641,10 +657,15 @@
       </div>
     </div>
     <p class="ad-vincolo" id="adVincolo" hidden></p>
+    <p class="ad-pioggia" id="adPioggia" hidden></p>
     <button class="ad-codice" id="adCodice" type="button" hidden></button>
     <div class="ad-azioni">
       <a class="ad-vai" id="adVai" target="_blank" rel="noopener" hidden>🧭 Portami lì</a>
       <button class="ad-scheda" id="adScheda" type="button">Vedi la scheda ↓</button>
+    </div>
+    <div class="ad-proposta" id="adProposta" hidden>
+      <p id="adPropostaTesto"></p>
+      <div class="ad-proposta__az"><button type="button" class="ad-proposta__si" id="adPropostaSi">Sì, attiva</button><button type="button" class="ad-proposta__no" id="adPropostaNo">No</button></div>
     </div>
     <p class="ad-piove"><button class="piove-btn" type="button" data-piove aria-pressed="false" id="pioveBtnAd"><span class="piove-ic">🌧️</span> Piove <span class="piove-stato">no</span></button></p>
   </section>
@@ -845,7 +866,7 @@
         </span>
       </summary>
       <div class="dbody">
-        <div class="hp-note pioggia-nota pioggia-nota--blocco">🌧️ <b>Mattina tutta all’aperto</b> (Trafalgar → Green Park): con la pioggia, considerare di invertire — Harrods prima, al coperto, e i parchi dopo, se spiove. Il Natural History Museum resta alle 16:30: i biglietti sono a fascia oraria e prima non si entra.</div>
+        <div class="hp-note pioggia-nota pioggia-nota--blocco" id="pioggia-lun" data-giorno="2026-11-16" data-fino="14:30">🌧️ <b>Mattina tutta all’aperto</b> (Trafalgar → Green Park): con la pioggia, considerare di invertire — Harrods prima, al coperto, e i parchi dopo, se spiove. Il Natural History Museum resta alle 16:30: i biglietti sono a fascia oraria e prima non si entra.</div>
         <a class="percorso" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.5129114,-0.1364381&amp;destination=51.5007292,-0.1246254&amp;waypoints=51.508039,-0.128069%7C51.5047752,-0.1272358&amp;travelmode=walking" target="_blank" rel="noopener" data-percorso="Lunedì · Beak St → Trafalgar → Whitehall → Big Ben">
           <span class="percorso__ic" aria-hidden="true">🗺️</span>
           <span class="percorso__txt"><b>Percorso · Lunedì</b><span>Beak St → Trafalgar → Whitehall → Big Ben</span></span>
@@ -1567,7 +1588,7 @@
 
     var URL = 'https://api.open-meteo.com/v1/forecast?latitude=51.5129&longitude=-0.1364'
       + '&hourly=temperature_2m,precipitation_probability,weathercode'
-      + '&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset'
+      + '&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset,precipitation_probability_max'
       + '&timezone=Europe/London&start_date=2026-11-15&end_date=2026-11-17'
       + '&current=temperature_2m,weathercode';
     var GIORNI = [['2026-11-15', 'Dom'], ['2026-11-16', 'Lun'], ['2026-11-17', 'Mar']];
@@ -1633,6 +1654,12 @@
         disegna(b.dataset.giorno);
       });
       card.hidden = false;
+
+      // probabilità di pioggia di ogni giorno (massimo della giornata): la usa il pannello "Adesso" per proporre il piano pioggia
+      var pioggia = {};
+      giorni.forEach(function(x){ var p = (g.precipitation_probability_max || [])[x.i]; if (p != null) pioggia[x.iso] = p; });
+      window.METEO_PIOGGIA = pioggia;
+      document.dispatchEvent(new CustomEvent('meteo', { detail: pioggia }));
 
       // icona del giorno: il codice più "grave" fra le 8 e le 20, le ore che si passano fuori
       function maxCodice(iso){
@@ -1803,10 +1830,40 @@
   (function(){
     var btns = document.querySelectorAll('[data-piove]'); if (!btns.length) return;
     var piove = false;
+    // cosa cambia con la pioggia, giorno per giorno: ogni voce porta alla card (o alla nota) che cambia
+    var CAMBI = [
+      { g: 'Domenica', testo: 'Shrek’s Adventure al posto del London Eye', sel: 'article[data-tappa="shrek"]' },
+      { g: 'Lunedì', testo: 'Harrods prima dei parchi', sel: '#pioggia-lun' },
+      { g: 'Martedì', testo: 'nessun cambio, Covent Garden è al coperto', sel: 'article[data-tappa="covent"]' }
+    ];
+    function vaiA(el){
+      var d = el.closest('details'); if (d) d.open = true;
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    function riepilogo(btn){
+      document.querySelectorAll('.piove-riepilogo').forEach(function(x){ x.remove(); });
+      if (!piove) return;
+      var box = document.createElement('div'); box.className = 'piove-riepilogo'; box.setAttribute('role', 'status');
+      var t = document.createElement('b'); t.textContent = 'Piano pioggia attivo'; box.appendChild(t);
+      var ul = document.createElement('ul');
+      CAMBI.forEach(function(c){
+        var el = document.querySelector(c.sel); if (!el) return;
+        var li = document.createElement('li'), a = document.createElement('a'), g = document.createElement('b');
+        a.href = '#' + (el.id || ''); g.textContent = c.g; a.appendChild(g); a.append(c.testo);
+        a.addEventListener('click', function(e){ e.preventDefault(); vaiA(el); });
+        li.appendChild(a); ul.appendChild(li);
+      });
+      box.appendChild(ul);
+      var x = document.createElement('button'); x.type = 'button'; x.className = 'piove-riepilogo__x'; x.setAttribute('aria-label', 'Chiudi il riepilogo'); x.textContent = '×';
+      x.addEventListener('click', function(){ box.remove(); btn.focus(); });
+      box.appendChild(x);
+      btn.parentNode.insertAdjacentElement('afterend', box);
+    }
     btns.forEach(function(btn){ btn.addEventListener('click', function(){
       piove = !piove;
       document.documentElement.classList.toggle('piove', piove);
       btns.forEach(function(b){ b.setAttribute('aria-pressed', String(piove)); b.querySelector('.piove-stato').textContent = piove ? 'sì' : 'no'; });
+      riepilogo(btn);
       document.dispatchEvent(new CustomEvent('piove', { detail: piove }));
     }); });
   })();
@@ -1965,6 +2022,17 @@
       if (corrente && corrente.vincolo) v.push(corrente.vincolo);
       if (prossima && prossima.vincolo && v.indexOf(prossima.vincolo) < 0) v.push(prossima.vincolo);
       $('adVincolo').textContent = v.map(function(s){ return '⏰ ' + s; }).join('\n'); $('adVincolo').hidden = !v.length;
+      // con "Piove" acceso: la nota pioggia della prossima tappa (o del suo blocco di giornata, fino all'ora indicata)
+      var pg = '';
+      if (piove() && prossima) {
+        var n = prossima.el.querySelector('.pioggia-nota');
+        if (n) pg = n.textContent;
+        else [].forEach.call(document.querySelectorAll('.pioggia-nota--blocco[data-giorno="' + prossima.giorno + '"]'), function(b){
+          if (!b.dataset.fino || prossima.ora < b.dataset.fino) pg = b.textContent;
+        });
+      }
+      $('adPioggia').textContent = pg.trim(); $('adPioggia').hidden = !pg;
+      proposta();
       if (prossima) {
         $('adQuando').textContent = 'Prossima · ' + fraQuanto(prossima.t - now, prossima, lo.data);
         $('adNome').textContent = prossima.nome;
@@ -1991,6 +2059,20 @@
       var d = mostrata.el.closest('details'); if (d) d.open = true;
       mostrata.el.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
+
+    // proposta del piano pioggia: se il meteo dà pioggia >= 60% per oggi. Non lo accende mai da sola;
+    // "No" la nasconde finché la pagina resta aperta (in memoria, nessuno storage)
+    var rifiutata = false;
+    function piove(){ return document.documentElement.classList.contains('piove'); }
+    function proposta(){
+      var oggiL = OROLOGIO.parti(OROLOGIO.adesso()).data, p = (window.METEO_PIOGGIA || {})[oggiL];
+      var si = p != null && p >= 60 && !piove() && !rifiutata;
+      if (si) $('adPropostaTesto').textContent = '🌧️ Oggi è prevista pioggia (' + p + '%): attivo il piano pioggia?';
+      $('adProposta').hidden = !si;
+    }
+    $('adPropostaSi').addEventListener('click', function(){ $('pioveBtnAd').click(); });
+    $('adPropostaNo').addEventListener('click', function(){ rifiutata = true; proposta(); });
+    document.addEventListener('meteo', proposta);
 
     if (oggi < '2026-11-15') primaDiPartire();
     else if (oggi <= '2026-11-17') {
@@ -2033,6 +2115,10 @@
      Il pannello non si apre mai da solo: in cima c'è un banner sottile «N novità», e si apre solo se toccato.
      Il link in fondo alla pagina lo riapre con tutto lo storico, in ogni caso. */
   var NOVITA = [
+    { v: 20, data: '2026-10-04', titolo: 'Piove 2.0', voci: [
+      'Toccando «🌧️ Piove» compare subito lì sotto cosa cambia: domenica Shrek’s Adventure al posto del London Eye, lunedì Harrods prima dei parchi, martedì niente. Ogni voce porta alla card',
+      'Con «Piove» acceso, il pannello «Adesso» mostra la versione con pioggia della prossima tappa',
+      'Dal 15 al 17, se il meteo dà pioggia al 60% o più per oggi, «Adesso» chiede se attivare il piano pioggia. Non lo attiva mai da solo' ] },
     { v: 19, data: '2026-10-03', titolo: 'Portami qui', voci: [
       'Su ogni card un solo pulsante grande «🧭 Portami qui»: Google Maps parte da dove sei, a piedi per le tappe vicine e coi mezzi per Southbank, Harrods, Regent Street (dal museo) e Heathrow',
       'Ce l’hanno anche le card dei trasporti: aeroporto di Bologna (in auto), metro verso il centro, partenza per Heathrow e Terminal 5',
