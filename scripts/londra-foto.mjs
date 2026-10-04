@@ -40,6 +40,8 @@ export const FILE = {
   harrods: 'File:Harrods Knightsbridge exterior Christmas decorations in November 2022.jpg',
   nhm: 'File:Natural History Museum London Jan 2006.jpg',
   covent: 'File:London, Covent Garden -- 2016 -- 4878.jpg',
+  camden: 'File:Camden Lock 2007-09-19.jpg',
+  poppies: 'File:View of Poppies Fish ^ Chips from Hawley Crescent - geograph.org.uk - 5425614.jpg',
   lhr_dep: 'File:Departures Terminal 5, London Heathrow Airport (33215594911).jpg',
   blq_arr: 'File:Bologna Guglielmo Marconi Airport aerial.jpg',
   carnaby: 'File:Carnaby Street Christmas Lights 2019 - geograph.org.uk - 6329567.jpg',
@@ -53,7 +55,7 @@ export const FILE = {
 // Quanto spazio verticale lasciare SOPRA il ritaglio: 0,5 = centrato. Più basso = si tiene l'alto,
 // altrimenti torri, insegne e luminarie appese finiscono tagliate.
 const BIAS = {
-  hamleys: 0.45, wellington: 0.55, lina: 0.1, nhm: 0.15, regent: 0.2, sealife: 0.3, trafalgar: 0.25, buckingham: 0.25,
+  hamleys: 0.45, wellington: 0.55, poppies: 0.4, lina: 0.1, nhm: 0.15, regent: 0.2, sealife: 0.3, trafalgar: 0.25, buckingham: 0.25,
   piccadilly: 0.4, covent: 0.3, southbank: 0.35, horseguards: 0.4, nhm_balena: 0.25, bakerloo: 0.45, apt: 0.8, pollock: 0.2
 }
 // Nome umano della tappa, per i crediti
@@ -63,7 +65,7 @@ export const TITOLI = {
   hamleys: 'Hamleys', lina: 'Lina Stores', piccadilly: 'Piccadilly Circus (partenza per Heathrow)', trafalgar: 'Trafalgar Square',
   horseguards: 'Horse Guards Parade', bigben: 'Big Ben e Parlamento', stjames: "St James's Park",
   buckingham: 'Buckingham Palace', wellington: 'Wellington Barracks', harrods: 'Harrods',
-  nhm: 'Natural History Museum', covent: 'Covent Garden', lhr_dep: 'Partenza da Heathrow',
+  nhm: 'Natural History Museum', covent: 'Covent Garden', camden: 'Camden Town e Camden Lock', poppies: 'Poppies Fish & Chips', lhr_dep: 'Partenza da Heathrow',
   blq_arr: 'Atterraggio a Bologna', carnaby: 'Luci di Carnaby Street', regent: 'Luci di Regent Street',
   nhm_balena: 'Hintze Hall (per Olly)', apt: 'Appartamento, 79 Beak Street', pollock: "Benjamin Pollock's Toyshop"
 }

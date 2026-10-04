@@ -3,7 +3,7 @@
 Incertezze ancora aperte del viaggio a Londra (15–17 novembre 2026), con il contesto e chi le chiude.
 Il sito le mostra nella lista «Prima di partire» (in cima alla pagina fino al 14/11, e in Info), con lo stato «da verificare»: **l’elenco in pagina (`DA_VERIFICARE` in `_legacy/londra.html`) va tenuto allineato a questo file** — chiudendone una qui, si toglie anche lì, e viceversa.
 
-## Aperte (5)
+## Aperte (6)
 
 ### 1. Apertura del Winter Market del Southbank Centre il 15/11/2026
 
@@ -29,6 +29,11 @@ Il sito le mostra nella lista «Prima di partire» (in cima alla pagina fino al 
 
 - **Contesto:** Domenica sera (Hamleys e il rientro) e lunedì sera (Regent Street) contano sulle luci di Natale già accese: la data del 2026 non è ancora nota.
 - **Chi e come:** Alessandro: controllare la data di accensione quando viene annunciata, di solito a inizio novembre.
+
+### 6. Orari di apertura dei mercati di Camden (di solito dalle 10:00, non verificati)
+
+- **Contesto:** Martedì si arriva a Camden Lock verso le 11:00: se qualche mercato apre più tardi, si vede meno.
+- **Chi e come:** Alessandro: controllare gli orari del martedì sul sito di Camden Market la settimana prima.
 
 ## Risolte
 

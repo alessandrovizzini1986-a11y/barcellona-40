@@ -139,6 +139,8 @@ restituisce spesso dettagli irriconoscibili o omonimi sbagliati.
 | Harrods | `public/assets/tappe/londra/harrods.webp` | Editor5807 | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | [Harrods Knightsbridge exterior Christmas decorations in November 2022.jpg](https://commons.wikimedia.org/wiki/File:Harrods_Knightsbridge_exterior_Christmas_decorations_in_November_2022.jpg) |
 | Natural History Museum | `public/assets/tappe/londra/nhm.webp` | Diliff | [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0) | [Natural History Museum London Jan 2006.jpg](https://commons.wikimedia.org/wiki/File:Natural_History_Museum_London_Jan_2006.jpg) |
 | Covent Garden | `public/assets/tappe/londra/covent.webp` | Dietmar Rabich | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | [London, Covent Garden -- 2016 -- 4878.jpg](https://commons.wikimedia.org/wiki/File:London,_Covent_Garden_--_2016_--_4878.jpg) |
+| Camden Town e Camden Lock | `public/assets/tappe/londra/camden.webp` | Can Pac Swire | [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0) | [Camden Lock 2007-09-19.jpg](https://commons.wikimedia.org/wiki/File:Camden_Lock_2007-09-19.jpg) |
+| Poppies Fish & Chips | `public/assets/tappe/londra/poppies.webp` | Robert Lamb | [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0) | [View of Poppies Fish ^ Chips from Hawley Crescent - geograph.org.uk - 5425614.jpg](https://commons.wikimedia.org/wiki/File:View_of_Poppies_Fish_%5E_Chips_from_Hawley_Crescent_-_geograph.org.uk_-_5425614.jpg) |
 | Partenza da Heathrow | `public/assets/tappe/londra/lhr_dep.webp` | Andrew Milligan sumo | [CC BY 2.0](https://creativecommons.org/licenses/by/2.0) | [Departures Terminal 5, London Heathrow Airport (33215594911).jpg](https://commons.wikimedia.org/wiki/File:Departures_Terminal_5,_London_Heathrow_Airport_(33215594911).jpg) |
 | Atterraggio a Bologna | `public/assets/tappe/londra/blq_arr.webp` | Ex13 | [CC BY-SA 3.0](http://creativecommons.org/licenses/by-sa/3.0/) | [Bologna Guglielmo Marconi Airport aerial.jpg](https://commons.wikimedia.org/wiki/File:Bologna_Guglielmo_Marconi_Airport_aerial.jpg) |
 | Hamleys | `public/assets/tappe/londra/hamleys.webp` | DAVID HOLT from London, England | [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0) | [Hamleys, Regent Street, London, 22 June 2014.jpg](https://commons.wikimedia.org/wiki/File:Hamleys,_Regent_Street,_London,_22_June_2014.jpg) |
@@ -148,7 +150,7 @@ restituisce spesso dettagli irriconoscibili o omonimi sbagliati.
 | Appartamento, 79 Beak Street | `public/assets/tappe/londra/apt.webp` | No Swan So Fine | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) | [79 Beak Street, Soho, January 2022.jpg](https://commons.wikimedia.org/wiki/File:79_Beak_Street,_Soho,_January_2022.jpg) |
 | Benjamin Pollock's Toyshop | `public/assets/tappe/londra/pollock.webp` | Jack1956 | [CC0](http://creativecommons.org/publicdomain/zero/1.0/deed.en) | [Benjamin Pollocks Toy Shop exterior.jpg](https://commons.wikimedia.org/wiki/File:Benjamin_Pollocks_Toy_Shop_exterior.jpg) |
 
-Ultimo aggiornamento: `npm run foto:londra` · 25 foto, 1302 kB in tutto.
+Ultimo aggiornamento: `npm run foto:londra` · 27 foto, 1432 kB in tutto.
 
 <!-- foto-londra:end -->
 
@@ -181,3 +183,4 @@ Le foto della sezione «Il viaggio di Olly» sono accreditate, con i link, nella
 | Card | File | Autore | Licenza | Originale su Commons |
 |---|---|---|---|---|
 | La banda dei soldati | `_legacy/img/olly/banda.webp` | APK | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0) | [Band of the Grenadier Guards marching in front of Buckingham Palace.jpg](https://commons.wikimedia.org/wiki/File:Band_of_the_Grenadier_Guards_marching_in_front_of_Buckingham_Palace.jpg) |
+| Le barche sul canale | `_legacy/img/olly/canale.webp` | Paul Gillett | [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0) | [Boat passing Hawley Lock - geograph.org.uk - 4008673.jpg](https://commons.wikimedia.org/wiki/File:Boat_passing_Hawley_Lock_-_geograph.org.uk_-_4008673.jpg) |
