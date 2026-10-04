@@ -28,7 +28,7 @@ export const FILE = {
   bakerloo: 'File:Edgware Road-Bakerloo Line-Northbound.jpg',
   southbank: 'File:Yellow steps at the Southbank Centre, London - geograph.org.uk - 7261180.jpg',
   sealife: 'File:Underwater Walk of Sea Life London Aquarium.jpg',
-  eye: 'File:London Eye by Day.jpg',
+  hamleys: 'File:Hamleys, Regent Street, London, 22 June 2014.jpg',
   lina: 'File:Lina Stores, Soho, W1.jpg',
   piccadilly: 'File:Piccadilly Circus Underground Station (January 2024) 02.jpg',
   trafalgar: 'File:Trafalgar Square, London 2 - Jun 2009.jpg',
@@ -53,14 +53,14 @@ export const FILE = {
 // Quanto spazio verticale lasciare SOPRA il ritaglio: 0,5 = centrato. Più basso = si tiene l'alto,
 // altrimenti torri, insegne e luminarie appese finiscono tagliate.
 const BIAS = {
-  eye: 0.15, lina: 0.1, nhm: 0.15, regent: 0.2, sealife: 0.3, trafalgar: 0.25, buckingham: 0.25,
+  hamleys: 0.45, lina: 0.1, nhm: 0.15, regent: 0.2, sealife: 0.3, trafalgar: 0.25, buckingham: 0.25,
   piccadilly: 0.4, covent: 0.3, southbank: 0.35, horseguards: 0.4, nhm_balena: 0.25, bakerloo: 0.45, apt: 0.8, pollock: 0.2
 }
 // Nome umano della tappa, per i crediti
 export const TITOLI = {
   blq: 'Aeroporto di Bologna', ba: 'Volo British Airways', lhr: 'Arrivo a Heathrow',
   bakerloo: 'Linea Bakerloo', southbank: 'Southbank Centre', sealife: 'SEA LIFE London Aquarium',
-  eye: 'London Eye', lina: 'Lina Stores', piccadilly: 'Piccadilly Circus (partenza per Heathrow)', trafalgar: 'Trafalgar Square',
+  hamleys: 'Hamleys', lina: 'Lina Stores', piccadilly: 'Piccadilly Circus (partenza per Heathrow)', trafalgar: 'Trafalgar Square',
   horseguards: 'Horse Guards Parade', bigben: 'Big Ben e Parlamento', stjames: "St James's Park",
   buckingham: 'Buckingham Palace', greenpark: 'Green Park', harrods: 'Harrods',
   nhm: 'Natural History Museum', covent: 'Covent Garden', lhr_dep: 'Partenza da Heathrow',

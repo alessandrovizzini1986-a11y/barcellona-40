@@ -288,6 +288,16 @@
   .plus-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
   .plus-meta span{font-size:11.5px;color:var(--muted);background:rgba(245,240,232,.06);
     border:1px solid var(--line);border-radius:999px;padding:3px 9px}
+  /* card di trasferimento: due opzioni e la regola in evidenza; alcune senza foto */
+  .opzioni{list-style:none;margin-top:8px;display:flex;flex-direction:column;gap:8px}
+  .opzioni li{font-size:15px;line-height:1.45;color:var(--ink);padding-left:10px;border-left:3px solid rgba(109,179,216,.45)}
+  .regola{margin-top:10px;padding:10px 12px;border-radius:12px;font-size:15px;line-height:1.45;font-weight:700;color:var(--ink);
+    background:rgba(109,179,216,.12);border:1px solid rgba(109,179,216,.45)}
+  .tcard--nofoto .tcard__body{padding-top:14px}
+  .tcard--nofoto .tcard__ora{position:static;display:inline-block;margin-bottom:4px;font-size:18px;color:var(--gold-soft);text-shadow:none}
+  .ad-regola{white-space:pre-line;margin-top:12px;padding:10px 12px;border-radius:12px;font-size:15px;line-height:1.45;font-weight:700;
+    color:var(--ink);background:rgba(109,179,216,.12);border:1px solid rgba(109,179,216,.45)}
+  .ad-regola[hidden]{display:none}
   .plus-warn{margin-top:8px;font-size:12px;line-height:1.45;color:var(--rosso-testo)}
 
   /* biglietti: il riquadro del barcode resta bianco, serve contrasto per lo scanner */
@@ -706,6 +716,7 @@
       </div>
     </div>
     <p class="ad-vincolo" id="adVincolo" hidden></p>
+    <p class="ad-regola" id="adRegola" hidden></p>
     <p class="ad-pioggia" id="adPioggia" hidden></p>
     <button class="ad-codice" id="adCodice" type="button" hidden></button>
     <div class="ad-azioni">
@@ -738,11 +749,12 @@
       <summary>
         <span class="srow">
           <span class="daynum">15<small>DOM</small></span>
-          <span class="dtit"><h3>Southbank</h3><p>Arrivo, acquario e ruota al tramonto</p></span>
+          <span class="dtit"><h3>Southbank</h3><p>Arrivo, acquario, riposo e Hamleys col buio</p></span>
           <span class="chev">▼</span>
         </span>
       </summary>
       <div class="dbody">
+        <div class="hp-note pioggia-nota pioggia-nota--blocco" id="pioggia-dom" data-giorno="2026-11-15" data-fino="12:30">🌧️ Domenica è già quasi tutta al coperto (SEA LIFE, Hamleys): con la pioggia il pranzo si fa dentro il Southbank Centre.</div>
         <button class="pk-riga" type="button" data-codice="0"><span class="pk-riga__ic" aria-hidden="true">🅿️</span><span><b>QR del parcheggio P1</b><small>Tocca per mostrarlo alla sbarra, anche senza rete</small></span><span aria-hidden="true">›</span></button>
         <article class="tcard" data-giorno="2026-11-15" data-ora="05:15" data-tipo="trasporto" data-fuso="Europe/Rome" data-mostra="qr">
           <div class="tcard__foto">
@@ -780,129 +792,148 @@
           </div>
           <div class="tcard__body">
             <h4>Arrivo a Heathrow</h4>
-            <p>Terminal 5. Solo controllo passaporti: senza bagaglio in stiva, niente nastro da aspettare.</p>
+            <p>Terminal 5. Passaporti <b>allo sportello con l’agente</b>: i varchi automatici sono dai 10 anni in su. Niente nastro bagagli, solo bagaglio a mano.</p>
           </div>
           <p class="tcard__credito">foto: Warren Rohner / CC BY-SA 2.0</p>
         </article>
-        <article class="tcard" data-giorno="2026-11-15" data-ora="09:30" data-tipo="trasporto">
+        <article class="tcard" data-giorno="2026-11-15" data-ora="09:50" data-tipo="trasporto" data-durata="50-60" data-regola="Appena superati i passaporti, aprite TfL Go o Google Maps: se c&#8217;è un&#8217;Elizabeth line entro una decina di minuti, prendetela; se il prossimo è fra mezz&#8217;ora, prendete la Piccadilly: arrivate alla stessa ora e spendete meno.">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/bakerloo.webp" width="800" height="450" alt="Una banchina della metropolitana di Londra con il treno fermo e il cartello della stazione" loading="lazy" decoding="async">
-            <span class="tcard__ora">09:30</span>
+            <span class="tcard__ora">09:50</span>
           </div>
           <div class="tcard__body">
-            <h4>In metro verso il centro</h4>
-            <p>Piccadilly line fino a Piccadilly Circus (circa 50 min), poi Bakerloo fino a Waterloo.</p>
-            <details class="det"><summary>Dettagli</summary><p>Si tira dritto a Southbank: con gli zaini in spalla non serve passare da casa.</p></details>
+            <h4>Trasferimento verso Southbank</h4>
+            <p class="tdur">⏱️ 50–60 min · due opzioni</p>
+            <ul class="opzioni">
+              <li><b>🚄 Elizabeth line</b> — prima scelta, se il treno passa entro ~10 minuti. T5 → Tottenham Court Road 42 min, poi Northern fino a Waterloo 5 min. Ogni ~30 min. <b>£15,50 a testa.</b></li>
+              <li><b>🚇 Piccadilly line</b> — se l’Elizabeth è lontana. T5 → Piccadilly Circus 54 min, poi Bakerloo fino a Waterloo 4 min. Ogni ~12 min. <b>£5,90 a testa.</b></li>
+            </ul>
+            <p class="regola">📌 Appena superati i passaporti, aprite TfL Go o Google Maps: se c’è un’Elizabeth line entro una decina di minuti, prendetela; se il prossimo è fra mezz’ora, prendete la Piccadilly: arrivate alla stessa ora e spendete meno.</p>
+            <p>Olly gratis in entrambi i casi. Contactless o telefono, una carta per adulto.</p>
+            <details class="det"><summary>Dettagli</summary><p>Elizabeth la domenica: per esempio 09:49 → Waterloo 10:40, poi 10:20 → 11:07. Treni nuovi e spaziosi. Piccadilly: per esempio 09:53 → Waterloo 10:54, poi 10:05, 10:17. Si tira dritto a Southbank: con gli zaini in spalla non serve passare da casa.</p></details>
             <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5054668,-0.1171985&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚇 coi mezzi</span></a>
           </div>
           <p class="tcard__credito">foto: Chris McKenna (Thryduulf) / CC BY-SA 4.0</p>
         </article>
         
-        <a class="percorso" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.5054668,-0.1171985&amp;destination=51.5031864,-0.1195192&amp;waypoints=51.501558,-0.119506&amp;travelmode=walking" target="_blank" rel="noopener" data-percorso="Domenica · Southbank Centre → SEA LIFE → London Eye">
+        <a class="percorso" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.5054668,-0.1171985&amp;destination=51.501558,-0.119506&amp;travelmode=walking" target="_blank" rel="noopener" data-percorso="Domenica · Southbank Centre → SEA LIFE">
           <span class="percorso__ic" aria-hidden="true">🗺️</span>
-          <span class="percorso__txt"><b>Percorso · Domenica</b><span>Southbank Centre → SEA LIFE → London Eye</span></span>
+          <span class="percorso__txt"><b>Percorso · Domenica</b><span>Southbank Centre → SEA LIFE</span></span>
           <span class="percorso__modo">🚶 a piedi</span>
         </a>
-        <article class="tcard" data-tappa="southbank" data-durata="45-45" data-comprimibile data-giorno="2026-11-15" data-ora="10:45" data-tipo="tappa">
+        <article class="tcard" data-tappa="southbank" data-durata="75-75" data-comprimibile data-giorno="2026-11-15" data-ora="10:45" data-tipo="tappa">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/southbank.webp" width="800" height="450" alt="Le scale gialle del Southbank Centre, con il palazzo in cemento e la gente che passa" loading="lazy" decoding="async">
             <span class="tcard__ora">10:45</span>
           </div>
           <div class="tcard__body">
             <h4>Southbank Centre e Winter Market</h4>
-            <p class="tdur">⏱️ 45 min</p>
-            <p>Pranzo con lo street food del mercatino di Natale, lungo il fiume.</p>
-            <details class="det"><summary>Dettagli</summary><p>Si arriva un’ora prima di quanto previsto all’inizio, perché non si passa da casa: se le bancarelle non hanno ancora aperto, il lungofiume regge l’attesa.</p></details>
+            <p class="tdur">⏱️ 1 h 15</p>
+            <p>Lungofiume e pranzo. Winter Market se è già aperto: la data non è confermata.</p>
+            <details class="det"><summary>Dettagli</summary><p>Se le bancarelle non ci sono ancora, il pranzo si fa dentro il Southbank Centre o lungo il fiume.</p></details>
             <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5054668,-0.1171985&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚇 coi mezzi</span></a>
           </div>
           <p class="tcard__credito">foto: Robin Stott / CC BY-SA 2.0</p>
         </article>
-        <article class="tcard" data-tappa="sealife" data-durata="105-105" data-giorno="2026-11-15" data-ora="12:45" data-tipo="tappa">
+        <article class="tcard" data-tappa="sealife" data-durata="120-120" data-giorno="2026-11-15" data-ora="12:30" data-tipo="tappa">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/sealife.webp" width="800" height="450" alt="Il tunnel sottomarino dell’acquario, con la volta di vetro e i pesci sopra la testa" loading="lazy" decoding="async">
-            <span class="tcard__ora">12:45</span>
+            <span class="tcard__ora">12:30</span>
           </div>
           <div class="tcard__body">
             <h4>SEA LIFE London Aquarium</h4>
-            <p class="tdur">⏱️ 1 h 45</p>
-            <p>Zaini fino a 30 litri ammessi; guardaroba non c’è.</p>
-            <details class="det"><summary>Dettagli</summary><p>Squali, pinguini e il tunnel sottomarino, dentro County Hall. Il deposito ufficiale è nello stesso edificio, alla biglietteria del London Eye: 5 £ a collo, ritiro entro le 19:00.</p></details>
+            <p class="tdur">⏱️ 2 h</p>
+            <p>Domenica 10:00–17:00, fascia oraria da prenotare online. Zaini fino a 30 litri; guardaroba non c’è.</p>
+            <details class="det"><summary>Dettagli</summary><p>Squali, pinguini e il tunnel sottomarino, dentro County Hall.</p></details>
             <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.501558,-0.119506&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
           </div>
           <p class="tcard__credito">foto: ʘx / CC BY-SA 4.0</p>
         </article>
-        <article class="tcard solo-asciutto" data-tappa="eye" data-durata="30-30" data-giorno="2026-11-15" data-ora="15:30" data-tipo="tappa">
-          <div class="tcard__foto">
-            <img src="assets/tappe/londra/eye.webp" width="800" height="450" alt="La ruota panoramica del London Eye per intero, con County Hall accanto" loading="lazy" decoding="async">
-            <span class="tcard__ora">15:30</span>
-          </div>
-          <div class="tcard__body">
-            <h4>London Eye</h4>
-            <p class="tdur">⏱️ 30 min</p>
-            <p>Giro di mezz’ora, col tramonto verso le 16:10. Borse fino a 46 × 33 × 20 cm.</p>
-            <details class="det"><summary>Dettagli</summary><p>Si sale con la luce e si scende con la città accesa.</p></details>
-            <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5031864,-0.1195192&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
-          </div>
-          <p class="tcard__credito">foto: Danbu14 / CC BY-SA 3.0</p>
-        </article>
-        <article class="tcard solo-pioggia" data-tappa="shrek" data-giorno="2026-11-15" data-ora="15:30" data-tipo="tappa" data-vincolo="La domenica chiude alle 16:00">
-          <div class="tcard__foto">
-            <img src="assets/tappe/londra/shrek.webp" width="800" height="450" alt="Famiglie con gli occhiali 3D sul carro di Shrek’s Adventure, con Ciuchino in primo piano e l’insegna Far Far Away" loading="lazy" decoding="async">
-            <span class="tcard__ora">15:30</span>
-          </div>
-          <div class="tcard__body">
-            <h4>Shrek’s Adventure! London</h4>
-            <p>🌧️ Al posto della ruota: stesso edificio di SEA LIFE, al coperto.</p>
-            <p class="plus-warn">⚠️ La domenica chiude alle 16:00: con la pioggia conviene entrare subito dopo SEA LIFE.</p>
-            <details class="det"><summary>Dettagli</summary><p>Alle 15:30 resterebbe mezz’ora scarsa. Riverside Building, County Hall, SE1 7PB; la domenica è aperto dalle 10:00 alle 16:00. La ruota girerebbe anche con la pioggia, ma dall’alto si vedrebbe poco. Durata della visita e prezzo sono ancora da verificare.</p></details>
-            <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5018817,-0.1193734&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
-          </div>
-          <p class="tcard__credito">foto: immagine promozionale di Shrek’s Adventure! London</p>
-        </article>
-        <a class="percorso" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.5031864,-0.1195192&amp;destination=51.5129114,-0.1364381&amp;waypoints=51.5123401,-0.1342553%7C51.5133,-0.1391&amp;travelmode=walking" target="_blank" rel="noopener" data-percorso="Domenica · London Eye → Lina Stores → Carnaby → casa">
+                        <a class="percorso" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.501558,-0.119506&amp;destination=51.5123401,-0.1342553&amp;travelmode=transit" target="_blank" rel="noopener" data-percorso="Domenica · SEA LIFE → Lina Stores">
           <span class="percorso__ic" aria-hidden="true">🗺️</span>
-          <span class="percorso__txt"><b>Percorso · Domenica</b><span>London Eye → Lina Stores → Carnaby → casa</span></span>
-          <span class="percorso__modo">🚶 a piedi</span>
+          <span class="percorso__txt"><b>Percorso · Domenica</b><span>SEA LIFE → Lina Stores</span></span>
+          <span class="percorso__modo">🚌 con i mezzi</span>
         </a>
-        <article class="tcard" data-giorno="2026-11-15" data-ora="17:15" data-tipo="tappa" data-entro="18:00" data-vincolo="Lina Stores la domenica chiude alle 18:00" data-piano-b="Whole Foods a Piccadilly Circus, aperto fino alle 18:00">
+        <article class="tcard tcard--nofoto" data-giorno="2026-11-15" data-ora="14:35" data-tipo="trasporto" data-durata="25-25">
+          <div class="tcard__body">
+            <span class="tcard__ora">14:35</span>
+            <h4>Bus 12 verso Piccadilly Circus</h4>
+            <p class="tdur">⏱️ ~25 min</p>
+            <p>Fermata St Thomas’ Hospital / County Hall (3 min a piedi), bus 12 fino a Piccadilly Circus (14 min), poi 8 min a piedi. Olly gratis.</p>
+            <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5123401,-0.1342553&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚌 coi mezzi</span></a>
+          </div>
+        </article>
+        <article class="tcard" data-giorno="2026-11-15" data-ora="15:00" data-tipo="tappa" data-durata="15-15" data-entro="18:00" data-vincolo="Lina Stores la domenica chiude alle 18:00" data-piano-b="Whole Foods a Piccadilly Circus, aperto fino alle 18:00">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/lina.webp" width="800" height="450" alt="La vetrina verde di Lina Stores con l’insegna bianca sopra l’ingresso" loading="lazy" decoding="async">
-            <span class="tcard__ora">17:15</span>
+            <span class="tcard__ora">15:00</span>
           </div>
           <div class="tcard__body">
             <h4>Spesa da Lina Stores</h4>
-            <p>In Brewer Street, 2 minuti da casa. La domenica chiude alle 18:00. Piano B: Whole Foods a Piccadilly Circus, aperto fino alle 18:00.</p>
-            <details class="det"><summary>Dettagli</summary><p>Gastronomia italiana: pasta fresca, salumi, sughi. È la prima cosa da fare rientrando; Whole Foods è sulla via del rientro.</p></details>
+            <p class="tdur">⏱️ 15 min</p>
+            <p>18 Brewer Street, 2 minuti da casa. Domenica 11:00–18:00. Piano B: Whole Foods a Piccadilly Circus, aperto fino alle 18:00.</p>
+            <details class="det"><summary>Dettagli</summary><p>Gastronomia italiana: pasta fresca, salumi, sughi. Si compra prima di salire a casa, così la cena è già in frigo.</p></details>
             <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5123401,-0.1342553&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
           </div>
           <p class="tcard__credito">foto: Ewan-M / CC BY-SA 2.0</p>
         </article>
-        <article class="tcard" data-giorno="2026-11-15" data-ora="17:45" data-tipo="tappa">
-          <div class="tcard__foto">
-            <img src="assets/tappe/londra/carnaby.webp" width="800" height="450" alt="L’arco luminoso con la scritta Carnaby sopra la strada affollata, di sera" loading="lazy" decoding="async">
-            <span class="tcard__ora">17:45</span>
-          </div>
-          <div class="tcard__body">
-            <h4>Luci di Carnaby Street</h4>
-            <p>Sulla via di casa, due minuti a piedi: a quell’ora sono accese da un pezzo (buio alle 16:15).</p>
-            <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5133,-0.1391&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
-          </div>
-          <p class="tcard__credito">foto: Christine Matthews / CC BY-SA 2.0</p>
-        </article>
-<article class="tcard" data-giorno="2026-11-15" data-ora="18:15" data-tipo="casa">
+        <article class="tcard" data-giorno="2026-11-15" data-ora="15:15" data-tipo="casa" data-durata="75-75">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/apt.webp" width="800" height="450" alt="Il civico 79 di Beak Street: la vetrina verde di John Wilkes e, a sinistra, la porta col numero 79" loading="lazy" decoding="async">
-            <span class="tcard__ora">18:15</span>
+            <span class="tcard__ora">15:15</span>
           </div>
           <div class="tcard__body">
-            <h4>Check-in, zaini giù e cena</h4>
-            <p>Chiave digitale Clevio, ingresso libero. Cena in appartamento con la spesa di Lina Stores.</p>
-            <details class="det"><summary>Dettagli</summary><p>Gli zaini si posano solo adesso, dopo averli portati tutto il giorno.</p></details>
+            <h4>Check-in Clevio e riposo</h4>
+            <p class="tdur">⏱️ 1 h 15</p>
+            <p>Chiave digitale Clevio, ingresso libero dopo le 15:00. Zaini giù e riposo vero, dopo la sveglia all’alba.</p>
             <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5129114,-0.1364381&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
           </div>
           <p class="tcard__credito">foto: No Swan So Fine / CC BY-SA 4.0</p>
         </article>
-        <button class="plus-riga" type="button" data-plus="mms"><span aria-hidden="true">✨</span><span>Se avanza tempo: <b>M&amp;M’S London</b>, 7 min a piedi</span><span aria-hidden="true">›</span></button>
+        <a class="percorso" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.5129114,-0.1364381&amp;destination=51.5133,-0.1391&amp;waypoints=51.51283,-0.1400828&amp;travelmode=walking" target="_blank" rel="noopener" data-percorso="Domenica · Casa → Hamleys → luci di Carnaby">
+          <span class="percorso__ic" aria-hidden="true">🗺️</span>
+          <span class="percorso__txt"><b>Percorso · Domenica</b><span>Casa → Hamleys → luci di Carnaby</span></span>
+          <span class="percorso__modo">🚶 a piedi</span>
+        </a>
+        <article class="tcard" data-tappa="hamleys" data-durata="60-60" data-giorno="2026-11-15" data-ora="16:30" data-tipo="tappa">
+          <div class="tcard__foto">
+            <img src="assets/tappe/londra/hamleys.webp" width="800" height="450" alt="La facciata di Hamleys su Regent Street, con le tende rosse e l’insegna sopra le vetrine" loading="lazy" decoding="async">
+            <span class="tcard__ora">16:30</span>
+          </div>
+          <div class="tcard__body">
+            <h4>Hamleys</h4>
+            <p class="tdur">⏱️ 1 h</p>
+            <p>188-196 Regent Street, 3-4 minuti a piedi. Domenica 12:00–18:00. La sorpresa per Olly, dopo il riposo e col buio (tramonto ~16:10).</p>
+            <details class="det"><summary>Dettagli</summary><p>Con le luci di Regent Street, se sono già accese. Le dimostrazioni dei commessi sono visive.</p></details>
+            <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.51283,-0.1400828&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
+          </div>
+          <p class="tcard__credito">foto: DAVID HOLT / CC BY-SA 2.0</p>
+        </article>
+        <article class="tcard" data-giorno="2026-11-15" data-ora="17:30" data-tipo="tappa">
+          <div class="tcard__foto">
+            <img src="assets/tappe/londra/carnaby.webp" width="800" height="450" alt="L’arco luminoso con la scritta Carnaby sopra la strada affollata, di sera" loading="lazy" decoding="async">
+            <span class="tcard__ora">17:30</span>
+          </div>
+          <div class="tcard__body">
+            <h4>Luci di Carnaby Street</h4>
+            <p>Sulla via di casa da Hamleys, due minuti a piedi: a quell’ora sono accese da un pezzo.</p>
+            <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5133,-0.1391&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
+          </div>
+          <p class="tcard__credito">foto: Christine Matthews / CC BY-SA 2.0</p>
+        </article>
+        <article class="tcard" data-giorno="2026-11-15" data-ora="18:00" data-tipo="casa">
+          <div class="tcard__foto">
+            <img src="assets/tappe/londra/apt.webp" width="800" height="450" alt="Il civico 79 di Beak Street: la vetrina verde di John Wilkes e, a sinistra, la porta col numero 79" loading="lazy" decoding="async">
+            <span class="tcard__ora">18:00</span>
+          </div>
+          <div class="tcard__body">
+            <h4>Cena in appartamento</h4>
+            <p>Con la spesa di Lina Stores, già in frigo dal pomeriggio.</p>
+            <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5129114,-0.1364381&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
+          </div>
+          <p class="tcard__credito">foto: No Swan So Fine / CC BY-SA 4.0</p>
+        </article>
+<span aria-hidden="true">✨</span><span>Se avanza tempo: <b>M&amp;M’S London</b>, 7 min a piedi</span><span aria-hidden="true">›</span></button>
       </div>
     </details>
 
@@ -1485,8 +1516,8 @@
           <li><span class="ic">📷</span><span><b>In metro verso il centro</b> — Chris McKenna (Thryduulf) / CC BY-SA 4.0 <small><a href="https://commons.wikimedia.org/wiki/File:Edgware_Road-Bakerloo_Line-Northbound.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
           <li><span class="ic">📷</span><span><b>Southbank Centre e Winter Market</b> — Robin Stott / CC BY-SA 2.0 <small><a href="https://commons.wikimedia.org/wiki/File:Yellow_steps_at_the_Southbank_Centre,_London_-_geograph.org.uk_-_7261180.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
           <li><span class="ic">📷</span><span><b>SEA LIFE London Aquarium</b> — ʘx / CC BY-SA 4.0 <small><a href="https://commons.wikimedia.org/wiki/File:Underwater_Walk_of_Sea_Life_London_Aquarium.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
-          <li><span class="ic">📷</span><span><b>London Eye</b> — Danbu14 / CC BY-SA 3.0 <small><a href="https://commons.wikimedia.org/wiki/File:London_Eye_by_Day.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
           <li><span class="ic">📷</span><span><b>Spesa da Lina Stores</b> — Ewan-M / CC BY-SA 2.0 <small><a href="https://commons.wikimedia.org/wiki/File:Lina_Stores,_Soho,_W1.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
+          <li><span class="ic">📷</span><span><b>Hamleys</b> — DAVID HOLT / CC BY-SA 2.0 <small><a href="https://commons.wikimedia.org/wiki/File:Hamleys,_Regent_Street,_London,_22_June_2014.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
           <li><span class="ic">📷</span><span><b>Luci di Carnaby Street</b> — Christine Matthews / CC BY-SA 2.0 <small><a href="https://commons.wikimedia.org/wiki/File:Carnaby_Street_Christmas_Lights_2019_-_geograph.org.uk_-_6329567.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
           <li><span class="ic">📷</span><span><b>Check-in, Si parte da Soho e Check-out</b> — No Swan So Fine / CC BY-SA 4.0 <small><a href="https://commons.wikimedia.org/wiki/File:79_Beak_Street,_Soho,_January_2022.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
           <li><span class="ic">📷</span><span><b>Trafalgar Square</b> — Diliff / CC BY-SA 3.0 <small><a href="https://commons.wikimedia.org/wiki/File:Trafalgar_Square,_London_2_-_Jun_2009.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
@@ -1503,7 +1534,6 @@
           <li><span class="ic">📷</span><span><b>Heathrow, Terminal 5 · BA546</b> — Andrew Milligan sumo / CC BY 2.0 <small><a href="https://commons.wikimedia.org/wiki/File:Departures_Terminal_5,_London_Heathrow_Airport_(33215594911).jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
           <li><span class="ic">📷</span><span><b>Atterraggio a Bologna</b> — Ex13 / CC BY-SA 3.0 <small><a href="https://commons.wikimedia.org/wiki/File:Bologna_Guglielmo_Marconi_Airport_aerial.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
           <li><span class="ic">📷</span><span><b>Benjamin Pollock’s Toyshop</b> — Jack1956 / CC0 <small><a href="https://commons.wikimedia.org/wiki/File:Benjamin_Pollocks_Toy_Shop_exterior.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></span></li>
-          <li><span class="ic">📷</span><span><b>Shrek’s Adventure! London</b> — immagine promozionale di Shrek’s Adventure! London</span></li>
           <li><span class="ic">📷</span><span><b>M&amp;M’S London</b> — foto di famiglia</span></li>
         </ul>
         <h4 class="cred-tit">Il viaggio di Olly</h4>
@@ -1848,7 +1878,7 @@
         if (d.entro) chiudi(d.entro, d.vincolo);
         if (d.nonPrima) { chiudi(d.nonPrima, d.vincolo); t = { da: d.nonPrima, tappe: [c] }; if (d.fineEntro) chiudi(d.fineEntro, d.vincolo); return; }
         if (!t) { if (d.tipo === 'trasporto' || d.tipo === 'casa' || d.entro) return; t = { da: d.ora, tappe: [] }; }
-        if (d.durata) t.tappe.push(c);
+        if (d.durata && d.tipo !== 'trasporto') t.tappe.push(c);   // gli spostamenti hanno una durata, ma non sono visite
       });
     });
     return out;
@@ -1888,7 +1918,7 @@
     var piove = false;
     // cosa cambia con la pioggia, giorno per giorno: ogni voce porta alla card (o alla nota) che cambia
     var CAMBI = [
-      { g: 'Domenica', testo: 'Shrek’s Adventure al posto del London Eye', sel: 'article[data-tappa="shrek"]' },
+      { g: 'Domenica', testo: 'pranzo dentro il Southbank Centre; acquario e Hamleys sono al coperto', sel: '#pioggia-dom' },
       { g: 'Lunedì', testo: 'Harrods prima dei parchi', sel: '#pioggia-lun' },
       { g: 'Martedì', testo: 'nessun cambio, Covent Garden è al coperto', sel: 'article[data-tappa="covent"]' }
     ];
@@ -1947,14 +1977,9 @@
   "come": "Alessandro: ricontrollare su householddivision.org.uk, con i promemoria del 20/10 e del 5/11. Se il 16 c’è la cerimonia a Buckingham, decidere se anticipare il palazzo o restare a Horse Guards."
  },
  {
-  "cosa": "Tariffe bambino di London Eye e SEA LIFE",
-  "contesto": "I biglietti non sono ancora comprati: nel budget c’è una stima (~€189, badge «stima») e la lista «Prima di partire» ha ancora «Prenotare London Eye e SEA LIFE». L’età di Olly (5 anni) dovrebbe cadere nella fascia bambino, ma prezzo e fascia vanno letti sul sito ufficiale.",
-  "come": "Alessandro o Vale: al momento dell’acquisto, sul sito ufficiale del biglietto combinato London Eye + SEA LIFE, controllare fascia d’età e prezzo bambino, poi aggiornare il budget da «stima» a «prenotato»."
- },
- {
-  "cosa": "Durata e prezzo di Shrek’s Adventure! London",
-  "contesto": "Con «Piove» acceso, la domenica alle 15:30 propone Shrek’s Adventure al posto del London Eye. Durata della visita e prezzo non sono verificati, e la domenica chiude alle 16:00: alle 15:30 resterebbe mezz’ora scarsa, meno se l’ultimo ingresso è prima della chiusura.",
-  "come": "Alessandro o Vale: sul sito ufficiale di Shrek’s Adventure! London controllare durata, prezzo (adulti e bambino) e orario dell’ultimo ingresso di domenica 15. Se piove, valutare di entrare subito dopo SEA LIFE."
+  "cosa": "SEA LIFE: prezzo bambino e prenotazione della fascia delle 12:30",
+  "contesto": "I biglietti non sono ancora comprati: nel budget c’è una stima (3 × €32,57 «a partire da») e la lista «Prima di partire» ha «Prenotare SEA LIFE, domenica fascia 12:30». L’età di Olly (5 anni) dovrebbe cadere nella fascia bambino, ma prezzo e fascia vanno letti sul sito ufficiale.",
+  "come": "Alessandro o Vale: al momento dell’acquisto, sul sito ufficiale di SEA LIFE London, prenotare la fascia delle 12:30 di domenica 15, controllare fascia d’età e prezzo bambino, poi aggiornare il budget da «stima» a «prenotato»."
  }
 ];
 
@@ -1965,7 +1990,7 @@
     { cosa: 'Check-in online e posti vicini', stato: 'da_fare', nota: 'Si apre 24 ore prima del volo. BA fa sedere i bambini sotto i 12 anni accanto a un adulto: controllarlo al check-in.' },
     { cosa: 'Passaporti di tutti e tre, validi', stato: 'fatto' },
     { cosa: 'UK ETA di tutti e tre', stato: 'fatto' },
-    { cosa: 'Prenotare London Eye e SEA LIFE', stato: 'da_fare', nota: 'Il biglietto combinato costa meno di due separati.' },
+    { cosa: 'Prenotare SEA LIFE, domenica fascia 12:30', stato: 'da_fare' },
     { cosa: 'Assicurazione viaggio', stato: 'fatto' }
   ];
   (function(){
@@ -2089,6 +2114,9 @@
       // piano B scritto sulla card (data-piano-b): compare insieme al suo vincolo
       [corrente, prossima].forEach(function(x){ if (x && x.el.dataset.pianoB && x.vincolo) righe.push('↪️ Piano B: ' + x.el.dataset.pianoB); });
       $('adVincolo').textContent = righe.join('\n'); $('adVincolo').hidden = !righe.length;
+      // regola dei trasferimenti (Elizabeth o Piccadilly), scritta sulla card con data-regola
+      var reg = (prossima && prossima.el.dataset.regola) || (corrente && corrente.el.dataset.regola) || '';
+      $('adRegola').textContent = reg ? '📌 ' + reg : ''; $('adRegola').hidden = !reg;
       // con "Piove" acceso: la nota pioggia della prossima tappa (o del suo blocco di giornata, fino all'ora indicata)
       var pg = '';
       if (piove() && prossima) {
@@ -2182,6 +2210,11 @@
      Il pannello non si apre mai da solo: in cima c'è un banner sottile «N novità», e si apre solo se toccato.
      Il link in fondo alla pagina lo riapre con tutto lo storico, in ogni caso. */
   var NOVITA = [
+    { v: 24, data: '2026-10-04', titolo: 'Domenica rifatta: riposo e Hamleys', voci: [
+      'Da Heathrow due opzioni per arrivare a Southbank, Elizabeth line o Piccadilly line, con la regola per scegliere al momento: la vedi anche in «Adesso» appena atterrati',
+      'SEA LIFE alle 12:30 per due ore, poi bus 12 fino a Piccadilly Circus, spesa da Lina Stores alle 15:00 e check-in alle 15:15 con un’ora di riposo',
+      'Alle 16:30 Hamleys, la sorpresa per Olly, col buio e le luci di Regent Street; poi Carnaby e cena. Il London Eye e Shrek’s Adventure non ci sono più',
+      'Con «Piove» la domenica cambia solo il pranzo, al coperto nel Southbank Centre' ] },
     { v: 23, data: '2026-10-04', titolo: 'Numero di prenotazione e budget aggiornato', voci: [
       'Nella card dell’appartamento (Biglietti) e nelle note sull’alloggio: numero di prenotazione Booking 5946777151, totale £538,90, Wi-Fi gratuito. Il PIN resta solo nell’app di Booking',
       'Budget: alloggio €648,82 pagato, UK ETA ~€73, transfer da Heathrow ~€44. Totale circa €1.568',

@@ -3,7 +3,7 @@
 Incertezze ancora aperte del viaggio a Londra (15–17 novembre 2026), con il contesto e chi le chiude.
 Il sito le mostra nella lista «Prima di partire» (in cima alla pagina fino al 14/11, e in Info), con lo stato «da verificare»: **l’elenco in pagina (`DA_VERIFICARE` in `_legacy/londra.html`) va tenuto allineato a questo file** — chiudendone una qui, si toglie anche lì, e viceversa.
 
-## Aperte (4)
+## Aperte (3)
 
 ### 1. Apertura del Winter Market del Southbank Centre il 15/11/2026
 
@@ -15,15 +15,10 @@ Il sito le mostra nella lista «Prima di partire» (in cima alla pagina fino al 
 - **Contesto:** Il calendario del Changing of the Guard esce con poco anticipo e non tutti i giorni c’è la cerimonia. Oggi l’itinerario porta a Horse Guards alle 10:30 (il cambio delle sentinelle a cavallo è indicato alle 11:00, «calendario da confermare») e a Buckingham solo alle 12:45: se la cerimonia a Buckingham c’è ed è alle 11:00, con questi orari si perde.
 - **Chi e come:** Alessandro: ricontrollare su householddivision.org.uk, con i promemoria del 20/10 e del 5/11. Se il 16 c’è la cerimonia a Buckingham, decidere se anticipare il palazzo o restare a Horse Guards.
 
-### 3. Tariffe bambino di London Eye e SEA LIFE
+### 3. SEA LIFE: prezzo bambino e prenotazione della fascia delle 12:30
 
-- **Contesto:** I biglietti non sono ancora comprati: nel budget c’è una stima (~€189, badge «stima») e la lista «Prima di partire» ha ancora «Prenotare London Eye e SEA LIFE». L’età di Olly (5 anni) dovrebbe cadere nella fascia bambino, ma prezzo e fascia vanno letti sul sito ufficiale.
-- **Chi e come:** Alessandro o Vale: al momento dell’acquisto, sul sito ufficiale del biglietto combinato London Eye + SEA LIFE, controllare fascia d’età e prezzo bambino, poi aggiornare il budget da «stima» a «prenotato».
-
-### 4. Durata e prezzo di Shrek’s Adventure! London
-
-- **Contesto:** Con «Piove» acceso, la domenica alle 15:30 propone Shrek’s Adventure al posto del London Eye. Durata della visita e prezzo non sono verificati, e la domenica chiude alle 16:00: alle 15:30 resterebbe mezz’ora scarsa, meno se l’ultimo ingresso è prima della chiusura.
-- **Chi e come:** Alessandro o Vale: sul sito ufficiale di Shrek’s Adventure! London controllare durata, prezzo (adulti e bambino) e orario dell’ultimo ingresso di domenica 15. Se piove, valutare di entrare subito dopo SEA LIFE.
+- **Contesto:** I biglietti non sono ancora comprati: nel budget c’è una stima (3 × €32,57 «a partire da») e la lista «Prima di partire» ha «Prenotare SEA LIFE, domenica fascia 12:30». L’età di Olly (5 anni) dovrebbe cadere nella fascia bambino, ma prezzo e fascia vanno letti sul sito ufficiale.
+- **Chi e come:** Alessandro o Vale: al momento dell’acquisto, sul sito ufficiale di SEA LIFE London, prenotare la fascia delle 12:30 di domenica 15, controllare fascia d’età e prezzo bambino, poi aggiornare il budget da «stima» a «prenotato».
 
 ## Risolte
 

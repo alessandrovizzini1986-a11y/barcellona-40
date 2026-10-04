@@ -68,17 +68,6 @@
       "kb": 21
     },
     {
-      "id": "eye",
-      "file": "assets/tappe/londra/eye.webp",
-      "tappa": "London Eye",
-      "titolo": "File:London Eye by Day.jpg",
-      "autore": "Danbu14",
-      "licenza": "CC BY-SA 3.0",
-      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-      "pagina": "https://commons.wikimedia.org/wiki/File:London_Eye_by_Day.jpg",
-      "kb": 40
-    },
-    {
       "id": "lina",
       "file": "assets/tappe/londra/lina.webp",
       "tappa": "Lina Stores",
@@ -224,6 +213,18 @@
       "licenzaUrl": "http://creativecommons.org/licenses/by-sa/3.0/",
       "pagina": "https://commons.wikimedia.org/wiki/File:Bologna_Guglielmo_Marconi_Airport_aerial.jpg",
       "kb": 25
+    },
+    {
+      "id": "hamleys",
+      "file": "assets/tappe/londra/hamleys.webp",
+      "tappa": "Hamleys",
+      "titolo": "File:Hamleys, Regent Street, London, 22 June 2014.jpg",
+      "autore": "DAVID HOLT from London, England",
+      "licenza": "CC BY-SA 2.0",
+      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Hamleys,_Regent_Street,_London,_22_June_2014.jpg",
+      "kb": 52,
+      "qualita": 70
     },
     {
       "id": "carnaby",
