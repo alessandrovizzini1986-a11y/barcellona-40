@@ -68,17 +68,6 @@
       "kb": 21
     },
     {
-      "id": "eye",
-      "file": "assets/tappe/londra/eye.webp",
-      "tappa": "London Eye",
-      "titolo": "File:London Eye by Day.jpg",
-      "autore": "Danbu14",
-      "licenza": "CC BY-SA 3.0",
-      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
-      "pagina": "https://commons.wikimedia.org/wiki/File:London_Eye_by_Day.jpg",
-      "kb": 40
-    },
-    {
       "id": "lina",
       "file": "assets/tappe/londra/lina.webp",
       "tappa": "Lina Stores",
@@ -145,15 +134,15 @@
       "kb": 74
     },
     {
-      "id": "greenpark",
-      "file": "assets/tappe/londra/greenpark.webp",
-      "tappa": "Green Park",
-      "titolo": "File:View from Green Park towards Victoria Memorial.jpg",
-      "autore": "LondonHistoryatHome",
-      "licenza": "CC BY-SA 4.0",
-      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-      "pagina": "https://commons.wikimedia.org/wiki/File:View_from_Green_Park_towards_Victoria_Memorial.jpg",
-      "kb": 98,
+      "id": "wellington",
+      "file": "assets/tappe/londra/wellington.webp",
+      "tappa": "Wellington Barracks",
+      "titolo": "File:The Band of the Grenadier Guards leaving Wellington Barracks for Changing the Guard at Buckingham Palace.jpg",
+      "autore": "Adrian Snood",
+      "licenza": "CC BY 2.0",
+      "licenzaUrl": "https://creativecommons.org/licenses/by/2.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:The_Band_of_the_Grenadier_Guards_leaving_Wellington_Barracks_for_Changing_the_Guard_at_Buckingham_Palace.jpg",
+      "kb": 84,
       "qualita": 70
     },
     {
@@ -224,6 +213,18 @@
       "licenzaUrl": "http://creativecommons.org/licenses/by-sa/3.0/",
       "pagina": "https://commons.wikimedia.org/wiki/File:Bologna_Guglielmo_Marconi_Airport_aerial.jpg",
       "kb": 25
+    },
+    {
+      "id": "hamleys",
+      "file": "assets/tappe/londra/hamleys.webp",
+      "tappa": "Hamleys",
+      "titolo": "File:Hamleys, Regent Street, London, 22 June 2014.jpg",
+      "autore": "DAVID HOLT from London, England",
+      "licenza": "CC BY-SA 2.0",
+      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Hamleys,_Regent_Street,_London,_22_June_2014.jpg",
+      "kb": 52,
+      "qualita": 70
     },
     {
       "id": "carnaby",
