@@ -16,8 +16,6 @@ memoria, non pendenze.
 | **Civico esatto della Braseria Sarrià** (`c9`) | arrivandoci | nessuna: la prenotazione è a nome, non a civico |
 | **Promozioni del Casino Barcelona** | dal telefono, prima di partire | nessuna: è un'opzione, non un impegno |
 | **Rooftop Garden con la pioggia: chiude o ha una parte coperta?** | chiamando prima, +34 935 10 11 30 | piano B: il bar dell'hotel El Palace al piano terra (il nome del bar non è sul sito ufficiale) |
-| **Casa Batlló** (se si accende il toggle): prenotare la fascia delle 17:30 online. Se la fascia non c'è, prendere la più vicina e cambiare l'orario della tappa (`apertura` di `f12b`) | dal telefono, prima di venerdì | si entra alla fascia più vicina e il pomeriggio slitta di conseguenza |
-| **Prezzo del biglietto Casa Batlló**: non verificato | sul sito ufficiale | nessuna: la tappa è opzionale |
 | **Orario di apertura del Parc de la Ciutadella**: alcune fonti dicono 10:00 | all'ingresso, venerdì alle 09:55 | se fosse così, si aspettano 5 minuti all'ingresso o si allunga la colazione da Brunells; se apre prima, nessun problema |
 
 ## Da fare prima di partire

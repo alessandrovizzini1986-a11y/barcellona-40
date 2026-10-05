@@ -477,7 +477,7 @@
      "img": "taps.webp",
      "distFromPrevM": 1536,
      "minFromPrev": 19,
-     "batllo": {
+     "macaya": {
       "durataMin": 10
      }
     },
@@ -488,12 +488,11 @@
      "venueId": "apt",
      "title": "Pausa casa · bottiglie in frigo",
      "img": "apt.webp",
-     "soloBatllo": true,
      "mini": true,
-     "durataMin": 5,
-     "why": "Si posano le bottiglie di Taps e si riparte a mani libere verso Casa Batlló.",
+     "durataMin": 15,
+     "why": "Si posano le bottiglie di Taps e si riparte a mani libere verso il Palau Macaya.",
      "details": [
-      "Cinque minuti: frigo, chiavi, via"
+      "Un quarto d'ora: frigo, chiavi, via"
      ],
      "people": [
       "ale",
@@ -508,29 +507,29 @@
       "metro": null
      },
      "distFromPrevM": 1539,
-     "minFromPrev": 19
+     "minFromPrev": 19,
+     "soloMacaya": true
     },
     {
      "id": "f12b",
      "time": "17:30",
      "timeStatus": "verificato",
-     "venueId": "batllo",
-     "title": "Casa Batlló",
-     "img": "batllo.webp",
-     "soloBatllo": true,
-     "durataMin": 75,
-     "apertura": "17:30",
-     "why": "La casa-drago di Gaudí: facciata a scaglie, nessuna linea dritta. A nove minuti a piedi dal Rooftop.",
+     "venueId": "macaya",
+     "title": "Palau Macaya",
+     "img": "macaya.webp",
+     "durataMin": 30,
+     "why": "Un palazzo modernista bianco, gratis, esattamente sulla strada tra casa e il Rooftop. Mezz'ora e si riparte.",
      "details": [
-      "Aperta tutti i giorni 8:30–22:30",
-      "4,7 su 220.602 recensioni",
-      "Biglietto a fascia oraria: va prenotato online",
-      "Le recensioni consigliano il biglietto Gold: iPad con audioguida e realtà aumentata",
-      "Al coperto: con la pioggia è la tappa giusta"
+      "Ingresso libero, nessuna prenotazione",
+      "Venerdì aperto fino alle 20:00",
+      "4,5 su 1.611 recensioni",
+      "Di Puig i Cadafalch, 1901: lo stesso architetto di Casa Amatller",
+      "Cosa si vede: il cortile interno, la grande scala con le ceramiche e le sculture in pietra, la facciata bianca con i bassorilievi",
+      "I piani superiori non si visitano: è un centro culturale CaixaForum. Le mostre temporanee, quando ci sono, sono gratuite",
+      "Tutto al coperto: va bene anche con la pioggia"
      ],
      "detailsStimati": [
-      "Visita di circa 60–75 minuti",
-      "Prezzo da verificare sul sito ufficiale"
+      "Visita di 20–30 minuti: è una sosta, non un museo"
      ],
      "people": [
       "ale",
@@ -544,8 +543,9 @@
       "taxi": false,
       "metro": null
      },
-     "distFromPrevM": 1649,
-     "minFromPrev": 20
+     "distFromPrevM": 1104,
+     "minFromPrev": 14,
+     "soloMacaya": true
     },
     {
      "id": "f14",
@@ -585,11 +585,11 @@
      "distFromPrevM": 2099,
      "minFromPrev": 25,
      "avvisoPioggia": "Con la pioggia la terrazza può essere chiusa. Chiama prima: +34 935 10 11 30. Piano B: il bar dell'hotel El Palace al piano terra, stesso edificio.",
-     "batllo": {
-      "durataMin": 75,
+     "macaya": {
+      "durataMin": 115,
       "dist": {
-       "m": 764,
-       "min": 9
+       "m": 1261,
+       "min": 15
       }
      }
     },
@@ -637,7 +637,7 @@
      "distFromPrevM": 4580,
      "minFromPrev": 15,
      "distMode": "auto",
-     "batllo": {
+     "macaya": {
       "dist": {
        "m": 4585,
        "min": 15
@@ -717,8 +717,8 @@
       "f13",
       "f14"
      ],
-     "urlBatllo": "https://www.google.com/maps/dir/?api=1&origin=41.386162,2.1786073&destination=41.3915035,2.1715182&travelmode=walking&waypoints=41.395437,2.179608|41.4054703,2.1759774|41.395437,2.179608|41.3917,2.164918",
-     "stopsBatllo": [
+     "urlMacaya": "https://www.google.com/maps/dir/?api=1&origin=41.386162,2.1786073&destination=41.3915035,2.1715182&travelmode=walking&waypoints=41.395437,2.179608|41.4054703,2.1759774|41.395437,2.179608|41.3997726,2.1694894",
+     "stopsMacaya": [
       "f11",
       "f12",
       "f13",

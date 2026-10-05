@@ -34,12 +34,11 @@ export const FILE = {
   elborn: 'File:Mercat del Born ruïnes - panoramio.jpg',
   // del Time Out Market non esiste una foto libera su Commons: si usa l'edificio che lo ospita
   timeoutmarket: 'File:Barcelona - Maremagnum 03.JPG',
-  maremagnum: 'File:614 Maremàgnum i Port Vell (Barcelona), des del moll de la Fusta.jpg',
-  batllo: 'File:Casa Batllo Overview Barcelona Spain.jpg'
+  maremagnum: 'File:614 Maremàgnum i Port Vell (Barcelona), des del moll de la Fusta.jpg'
 }
 // Quanto spazio verticale lasciare SOPRA il ritaglio: 0,5 = centrato. Più basso = si tiene l'alto,
 // altrimenti le torri finiscono tagliate.
-const BIAS = { sagrada: 0.1, santamaria: 0.15, monumental: 0.35, elpalace: 0.25, elborn: 0.45, batllo: 0.15 }
+const BIAS = { sagrada: 0.1, santamaria: 0.15, monumental: 0.35, elpalace: 0.25, elborn: 0.45 }
 // Nome umano della tappa, per i crediti e per l'alt
 export const TITOLI = {
   blq: 'Aeroporto di Bologna', bcn_t2: 'Barcellona T2', ciutadella: 'Parc de la Ciutadella',
@@ -48,7 +47,7 @@ export const TITOLI = {
   elpalace: 'Rooftop Garden · El Palace', sagrada: 'Sagrada Família', monumental: 'Plaza Monumental',
   pobleespanyol: 'La Terrrazza · Poble Espanyol', apolo: 'Sala Apolo', sarria: 'Sarrià',
   bunkers: 'Bunkers del Carmel', elborn: 'El Born Centre de Cultura i Memòria',
-  timeoutmarket: 'Time Out Market Barcelona', maremagnum: 'Maremagnum', batllo: 'Casa Batlló'
+  timeoutmarket: 'Time Out Market Barcelona', maremagnum: 'Maremagnum', macaya: 'Palau Macaya'
 }
 const LIBERA = [/^cc0/i, /^cc[- ]by(-sa)?([- ]\d)?/i, /^public domain/i, /^pd/i]
 // Foto NON di Commons: private, usate con permesso. Non hanno licenza libera, quindi non stanno nella
@@ -56,7 +55,8 @@ const LIBERA = [/^cc0/i, /^cc[- ]by(-sa)?([- ]\d)?/i, /^public domain/i, /^pd/i]
 // questo script: sta nel repo e basta. Elencarle qui serve a `npm run validate`, che così sa che quella
 // .webp è a posto anche senza crediti da Commons.
 const PRIVATE = [
-  { id: 'elmirador', file: 'assets/tappe/elmirador.webp', tappa: 'El Mirador', nota: 'Foto di un amico di Alessandro, uso autorizzato. Per gentile concessione.' }
+  { id: 'elmirador', file: 'assets/tappe/elmirador.webp', tappa: 'El Mirador', nota: 'Foto di un amico di Alessandro, uso autorizzato. Per gentile concessione.' },
+  { id: 'macaya', file: 'assets/tappe/macaya.webp', tappa: 'Palau Macaya', nota: 'Foto di un amico di Alessandro, uso autorizzato. Per gentile concessione.' }
 ]
 const testo = (v) => String(v || '').replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim()
 const attesa = (ms) => new Promise((r) => setTimeout(r, ms))

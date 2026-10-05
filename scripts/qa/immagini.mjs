@@ -14,7 +14,7 @@ const ok = (n, c, x = '') => { out.push(c); if (!c) process.exitCode = 1; consol
 const DIR = 'public/assets/tappe'
 const file = readdirSync(DIR)
 const webp = file.filter((f) => f.endsWith('.webp')), svg = file.filter((f) => f.endsWith('.svg'))
-ok('31 foto WebP: 17 da Commons più 14 private', webp.length === 31, webp.length + '')
+ok('31 foto WebP: 16 da Commons più 15 private', webp.length === 31, webp.length + '')
 ok('nessuna card stilizzata: ogni tappa ha la foto vera', svg.length === 0, svg.join(' '))
 const misure = []
 // Le foto di Commons sono tutte 800×450. Le private partono da originali più piccoli e non si
@@ -34,8 +34,8 @@ ok('cartella sotto 1,55 MB (31 foto)', kb < 1587, `${(kb / 1024).toFixed(2)} MB`
 const crediti = JSON.parse(readFileSync('data/foto-tappe.json', 'utf8'))
 const privateFile = new Set((crediti.private || []).map((f) => `${f.id}.webp`))
 const cred = readFileSync('CREDITS.md', 'utf8')
-ok('crediti per tutte e 17 le foto di Commons', crediti.foto.length === 17 && crediti.scartate.length === 0)
-ok('le quattordici foto private sono dichiarate e fuori dai crediti Commons', crediti.private?.length === 14 && crediti.private.every((f) => f.id && f.file && f.tappa && /concessione/i.test(f.nota) && !crediti.foto.some((c) => c.id === f.id)), String(crediti.private?.length))
+ok('crediti per tutte e 16 le foto di Commons', crediti.foto.length === 16 && crediti.scartate.length === 0)
+ok('le quindici foto private sono dichiarate e fuori dai crediti Commons', crediti.private?.length === 15 && crediti.private.every((f) => f.id && f.file && f.tappa && /concessione/i.test(f.nota) && !crediti.foto.some((c) => c.id === f.id)), String(crediti.private?.length))
 // stanno in CREDITS.md, ma nella tabella delle private: nessuna riga con un link a Commons le nomina
 ok('nessuna foto privata nella tabella Commons di CREDITS.md', crediti.private.every((f) => !cred.split('\n').some((r) => r.includes(f.file) && r.includes('commons.wikimedia.org'))))
 ok('CREDITS.md elenca tutte le foto private', crediti.private.every((f) => cred.includes(f.file)))

@@ -141,14 +141,14 @@
 @media (max-width:360px){ .viaggio-step time{ min-width:42px; } .card--viaggio .card__time{ min-width:50px; } }
 
 /* Toggle "Piove" sopra la timeline del venerdì */
-.switch--piove, .switch--batllo{ align-items:flex-start; padding:var(--space-3) var(--space-4); background:var(--bg-2); border:1px solid var(--line); border-radius:var(--radius-m); }
-.switch--piove b, .switch--batllo b{ display:inline-flex; align-items:center; gap:6px; font-size:var(--fs-1); }
+.switch--piove, .switch--macaya{ align-items:flex-start; padding:var(--space-3) var(--space-4); background:var(--bg-2); border:1px solid var(--line); border-radius:var(--radius-m); }
+.switch--piove b, .switch--macaya b{ display:inline-flex; align-items:center; gap:6px; font-size:var(--fs-1); }
 .switch--piove b svg{ width:18px; height:18px; color:var(--blu); }
-.switch--batllo b svg{ width:18px; height:18px; color:var(--terracotta); }
+.switch--macaya b svg{ width:18px; height:18px; color:var(--terracotta); }
 :root[data-theme="light"] .switch--piove b svg{ color:var(--blu); }
-.switch--piove input, .switch--batllo input{ margin-top:2px; }
-.switch--piove .faint, .switch--batllo .faint{ display:block; margin-top:2px; }
-.switch--batllo{ margin-top:var(--space-2); }
+.switch--piove input, .switch--macaya input{ margin-top:2px; }
+.switch--piove .faint, .switch--macaya .faint{ display:block; margin-top:2px; }
+.switch--macaya{ margin-top:var(--space-2); }
 
 /* Pulsante del percorso di mezza giornata */
 .percorso{ justify-content:flex-start; gap:var(--space-3); min-height:56px; padding:var(--space-2) var(--space-4); text-align:left; }

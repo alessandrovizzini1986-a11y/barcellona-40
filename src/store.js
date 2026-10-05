@@ -71,9 +71,9 @@ export const store = {
   // Modalità pioggia del venerdì: ottobre è il mese più piovoso a Barcellona
   get piove() { return read('piove', false) },
   set piove(v) { write('piove', !!v) },
-  // Casa Batlló nel pomeriggio di venerdì: tappa opzionale con orario, che sposta il pomeriggio (toggle, non card)
-  get batllo() { return read('batllo', false) },
-  set batllo(v) { write('batllo', !!v) },
+  // Palau Macaya nel pomeriggio di venerdì: tappa opzionale con orario, che sposta il pomeriggio (toggle, non card)
+  get macaya() { return read('macaya', false) },
+  set macaya(v) { write('macaya', !!v) },
   // Ultima versione del changelog letta da questa persona, su questo telefono
   get lastSeenVersion() { return read('lastSeenVersion', null) },
   set lastSeenVersion(v) { write('lastSeenVersion', v) },

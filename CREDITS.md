@@ -77,7 +77,6 @@ il contenuto, con link alla pagina Commons del file.
 | El Born Centre de Cultura i Memòria | `public/assets/tappe/elborn.webp` | Olga Gairin | [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0) | [Mercat del Born ruïnes - panoramio.jpg](https://commons.wikimedia.org/wiki/File:Mercat_del_Born_ru%C3%AFnes_-_panoramio.jpg) |
 | Time Out Market Barcelona (l'edificio di Maremagnum: del mercato non c'è foto libera su Commons) | `public/assets/tappe/timeoutmarket.webp` | Zarateman | [CC0](http://creativecommons.org/publicdomain/zero/1.0/deed.en) | [Barcelona - Maremagnum 03.JPG](https://commons.wikimedia.org/wiki/File:Barcelona_-_Maremagnum_03.JPG) |
 | Maremagnum | `public/assets/tappe/maremagnum.webp` | Enric | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0) | [614 Maremàgnum i Port Vell (Barcelona), des del moll de la Fusta.jpg](https://commons.wikimedia.org/wiki/File:614_Marem%C3%A0gnum_i_Port_Vell_(Barcelona),_des_del_moll_de_la_Fusta.jpg) |
-| Casa Batlló | `public/assets/tappe/batllo.webp` | ChristianSchd | [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0) | [Casa Batllo Overview Barcelona Spain.jpg](https://commons.wikimedia.org/wiki/File:Casa_Batllo_Overview_Barcelona_Spain.jpg) |
 
 Ultimo aggiornamento: `npm run foto` · 16 foto, 1045 kB in tutto.
 
@@ -95,6 +94,7 @@ riga "foto: autore / licenza" sotto ogni card. Le foto sono state ritagliate a 1
 | Aparthotel Nàpols | `public/assets/tappe/apt.webp` | Foto fornita da Alessandro, uso autorizzato |
 | Bar Joan | `public/assets/tappe/barjoan.webp` | Foto fornita da Alessandro, uso autorizzato |
 | Brunells | `public/assets/tappe/brunells.webp` | Foto fornita da Alessandro, uso autorizzato |
+| Palau Macaya | `public/assets/tappe/macaya.webp` | Foto di un amico di Alessandro, uso autorizzato. Per gentile concessione |
 | Bodega Biarritz 1881 | `public/assets/tappe/biarritz.webp` | Foto fornita da Alessandro, uso autorizzato |
 | Brasería Sarrià | `public/assets/tappe/braseria.webp` | Foto fornita da Alessandro, uso autorizzato |
 | Sala VIP Canudas | `public/assets/tappe/canudas.webp` | Foto fornita da Alessandro, uso autorizzato |

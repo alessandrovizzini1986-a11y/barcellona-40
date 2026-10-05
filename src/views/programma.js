@@ -1,5 +1,5 @@
 // Programma: segmented Ven/Sab/Dom + timeline filtrata per persona
-import { stopsForDay, personById, DAY_COLOR, days, contoDelGiorno, piove, batllo, percorsiDi, conOrario, senzaOrario, attiva } from '../data.js'
+import { stopsForDay, personById, DAY_COLOR, days, contoDelGiorno, piove, macaya, percorsiDi, conOrario, senzaOrario, attiva } from '../data.js'
 import { store } from '../store.js'
 import { icon } from '../ui/icons.js'
 import { fmtMinutes } from '../time.js'
@@ -35,7 +35,7 @@ function avvisoConto(giorno, key) {
     : 'Non resta margine: ogni sosta più lunga sposta l\'arrivo a casa.'
   // Il consiglio ha senso solo col giro asciutto: sotto la pioggia la Ciutadella è già tagliata a 15 minuti
   const taglio = key === 'ven' && !piove() ? ' Se slitti, taglia la Ciutadella da 25 a 15 minuti.' : ''
-  const dove = key === 'ven-pomeriggio' ? 'Pomeriggio con Casa Batlló: s' : 'S'
+  const dove = key === 'ven-pomeriggio' ? 'Pomeriggio con Palau Macaya: s' : 'S'
   return `<div class="avviso avviso--forte">${icon('clock')}<span>${dove}oste ${fmtMinutes(c.soste)} + cammino ${fmtMinutes(c.cammino)} = ${fmtMinutes(totale)} tra le ${esc(c.inizio)} e le ${esc(c.fine)}. ${margine}${taglio}</span></div>`
 }
 // Il venerdì mattina sta quasi tutto all'aperto e i Bunkers di domenica sono una collina scoperta: ottobre è il
@@ -48,16 +48,16 @@ const AVVISO_PIOVE = {
   ven: 'Modalità pioggia: la Ciutadella salta, Santa Maria del Mar si visita dentro, El Born al coperto. Montcada, Pont del Bisbe e Sant Felip Neri sono all\'aperto: con la pioggia si attraversano senza fermarsi.',
   dom: 'Modalità pioggia: mattina libera in appartamento, verso le 12:45 taxi a Maremagnum (3 km, 9 minuti). Pranzo al Time Out Market, pomeriggio al coperto, alle 19:30 taxi al T2: da lì tutto come previsto.'
 }
-// Casa Batlló: secondo interruttore del venerdì, sotto "Piove". Spento (default) il pomeriggio è quello di sempre;
-// acceso entra la tappa delle 17:30 e il pomeriggio si ricalcola. Solo chi c'è il venerdì lo vede.
-const TESTO_BATLLO = 'Opzionale, con orario: se si fa, il pomeriggio cambia. Taps alle 16:30 di corsa, bottiglie a casa, Casa Batlló alle 17:30, Rooftop dalle 18:55, cena invariata.'
-function toggleB(on) {
-  return `<label class="switch switch--batllo" for="batllo">
-    <span><b>${icon('map-pin')} Casa Batlló</b><br><span class="faint">${esc(TESTO_BATLLO)}</span></span>
-    <input type="checkbox" id="batllo" ${on ? 'checked' : ''}>
+// Palau Macaya: secondo interruttore del venerdì, sotto "Piove". Spento (default) il pomeriggio è quello di sempre;
+// acceso entra la tappa delle 17:30 (gratis, al coperto) e il pomeriggio si ricalcola. Solo chi c'è il venerdì lo vede.
+const TESTO_MACAYA = 'Opzionale, gratis e al coperto, sulla strada tra casa e il Rooftop. Accendi e il pomeriggio cambia: Taps alle 16:30 di corsa, bottiglie a casa, Palau Macaya alle 17:30, Rooftop dalle 18:15, cena invariata.'
+function toggleM(on) {
+  return `<label class="switch switch--macaya" for="macaya">
+    <span><b>${icon('map-pin')} Palau Macaya</b><br><span class="faint">${esc(TESTO_MACAYA)}</span></span>
+    <input type="checkbox" id="macaya" ${on ? 'checked' : ''}>
   </label>`
 }
-const cardBatlloOff = () => `<article class="card card--batllo-off" data-batllo-off><span>Casa Batlló · opzionale · attivala per inserirla nel programma</span><button class="btn btn--sm" type="button" data-batllo-on>Attiva</button></article>`
+const cardMacayaOff = () => `<article class="card card--macaya-off" data-macaya-off><span>Palau Macaya · opzionale · gratis, sulla strada per il Rooftop · attivala per inserirla</span><button class="btn btn--sm" type="button" data-macaya-on>Attiva</button></article>`
 function toggleP(on, key) {
   return `<label class="switch switch--piove" for="piove">
     <span><b>${icon('rain')} Piove</b><br><span class="faint">${esc(TESTO_PIOVE[key])}</span></span>
@@ -84,9 +84,9 @@ export async function render(root, { person, sub, header }) {
   const opzionali = stops.filter(senzaOrario).map(card)
   // le tappe saltate per pioggia stanno in fondo, grigie, sotto la loro riga: si vede cosa si perde e perché
   const saltate = stops.filter((s) => s.saltata).map(card)
-  // Casa Batlló spenta: la card grigia sta in fondo al pomeriggio, dopo l'ultima tappa con orario del venerdì
-  const vedeBatllo = key === 'ven' && stops.some((s) => s.id === 'f13')
-  if (vedeBatllo && !batllo()) { const ultima = righe[righe.length - 1]; if (ultima) righe.push({ at: new Date(ultima.at.getTime() + 60000), id: null, html: cardBatlloOff() }) }
+  // Palau Macaya spento: la card grigia sta in fondo al pomeriggio, dopo l'ultima tappa con orario del venerdì
+  const vedeMacaya = key === 'ven' && stops.some((s) => s.id === 'f13')
+  if (vedeMacaya && !macaya()) { const ultima = righe[righe.length - 1]; if (ultima) righe.push({ at: new Date(ultima.at.getTime() + 60000), id: null, html: cardMacayaOff() }) }
   // Il pulsante del percorso va in cima al suo blocco: si aggancia alla prima tappa del blocco
   // che questa persona vede davvero (chi salta la mattina non deve vedere il percorso della mattina).
   const ancore = new Map()
@@ -105,17 +105,17 @@ export async function render(root, { person, sub, header }) {
     ${key === 'dom' && piove() ? avvisoMiradorPioggia() : ''}
     ${TESTO_PIOVE[key] ? toggleP(piove(), key) : ''}
     ${TESTO_PIOVE[key] && piove() ? `<div class="avviso">${icon('alert')}<span>${esc(AVVISO_PIOVE[key])}</span></div>` : ''}
-    ${vedeBatllo ? toggleB(batllo()) : ''}
+    ${vedeMacaya ? toggleM(macaya()) : ''}
     ${avvisoConto(stops, key)}
-    ${vedeBatllo && batllo() ? avvisoConto(stops.slice(stops.findIndex((s) => s.id === 'f13')), 'ven-pomeriggio') : ''}
+    ${vedeMacaya && macaya() ? avvisoConto(stops.slice(stops.findIndex((s) => s.id === 'f13')), 'ven-pomeriggio') : ''}
     ${righe.length || opzionali.length ? `<ol class="timeline" style="--dc:${DAY_COLOR[key]}">${righe.map((r) => `${r.id && ancore.has(r.id) ? `<li class="timeline__percorso">${ancore.get(r.id)}</li>` : ''}<li>${r.html}</li>`).join('')}${opzionali.length ? `<li class="timeline__opzionale">Opzionale</li>${opzionali.map((r) => `<li class="timeline__opz">${r.html}</li>`).join('')}` : ''}${saltate.length ? `<li class="timeline__opzionale timeline__saltate">${saltate.length > 1 ? 'Saltate' : 'Saltata'} per pioggia</li>${saltate.map((r) => `<li class="timeline__opz timeline__saltata">${r.html}</li>`).join('')}` : ''}</ol>` : `<div class="empty">${emptyState(person, key)}</div>`}
   </section>`
-  root.querySelector('#batllo')?.addEventListener('change', (e) => {
-    if (e.target.checked) evento('batllo-attiva')
-    store.batllo = e.target.checked // salvato in b40:v1:batllo
+  root.querySelector('#macaya')?.addEventListener('change', (e) => {
+    if (e.target.checked) evento('macaya-attiva')
+    store.macaya = e.target.checked // salvato in b40:v1:macaya
     navigate('programma', key)
   })
-  root.querySelector('[data-batllo-on]')?.addEventListener('click', () => { evento('batllo-attiva'); store.batllo = true; navigate('programma', key) })
+  root.querySelector('[data-macaya-on]')?.addEventListener('click', () => { evento('macaya-attiva'); store.macaya = true; navigate('programma', key) })
   root.querySelector('#piove')?.addEventListener('change', (e) => {
     if (e.target.checked) evento('piove-attiva')
     store.piove = e.target.checked // la preferenza resta sul telefono

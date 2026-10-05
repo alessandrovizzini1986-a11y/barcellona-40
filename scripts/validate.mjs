@@ -54,10 +54,10 @@ for (const day of it.days) {
       for (const id of pc.stopsPioggia || []) if (!day.stops.some((s) => s.id === id)) errors.push(`percorso ${pc.id} (pioggia): tappa "${id}" inesistente in ${day.label}`)
       if (pc.stopsPioggia && !pc.labelPioggia) errors.push(`percorso ${pc.id} (pioggia): tappe diverse senza etichetta propria`)
     }
-    if (pc.urlBatllo) {
-      if (!/^https:\/\/www\.google\.com\/maps\/dir\/\?api=1&origin=[-\d.]+,[-\d.]+&destination=[-\d.]+,[-\d.]+&travelmode=(walking|transit)(&waypoints=[-\d.,|]+)?$/.test(pc.urlBatllo)) errors.push(`percorso ${pc.id} (Batlló): link non valido`)
-      if (!pc.urlBatllo.includes(`travelmode=${pc.mode}`)) errors.push(`percorso ${pc.id} (Batlló): mezzo diverso dal percorso normale`)
-      for (const id of pc.stopsBatllo || []) if (!day.stops.some((s) => s.id === id)) errors.push(`percorso ${pc.id} (Batlló): tappa "${id}" inesistente in ${day.label}`)
+    if (pc.urlMacaya) {
+      if (!/^https:\/\/www\.google\.com\/maps\/dir\/\?api=1&origin=[-\d.]+,[-\d.]+&destination=[-\d.]+,[-\d.]+&travelmode=(walking|transit)(&waypoints=[-\d.,|]+)?$/.test(pc.urlMacaya)) errors.push(`percorso ${pc.id} (Macaya): link non valido`)
+      if (!pc.urlMacaya.includes(`travelmode=${pc.mode}`)) errors.push(`percorso ${pc.id} (Macaya): mezzo diverso dal percorso normale`)
+      for (const id of pc.stopsMacaya || []) if (!day.stops.some((s) => s.id === id)) errors.push(`percorso ${pc.id} (Macaya): tappa "${id}" inesistente in ${day.label}`)
     }
     if (!pc.url.includes(`travelmode=${pc.mode}`)) errors.push(`percorso ${pc.id}: mode "${pc.mode}" diverso dal travelmode del link`)
     if (!pc.label) errors.push(`percorso ${pc.id}: manca l'etichetta`)

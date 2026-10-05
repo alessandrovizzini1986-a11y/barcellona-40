@@ -37,7 +37,7 @@ const ALT = {
   'apolo.webp': 'Un concerto alla Sala Apolo',
   'bunkers.webp': 'La vista su Barcellona dai Bunkers del Carmel',
   'elmirador.webp': 'L\'insegna di El Mirador, con la tenda blu e i tavoli all\'aperto',
-  'batllo.webp': 'La facciata di Casa Batlló di giorno, con i balconi a maschera e il tetto a scaglie',
+  'macaya.webp': 'La facciata bianca del Palau Macaya, con i bassorilievi in pietra e il portale',
   'timeoutmarket.webp': 'Il palazzo di Maremagnum sul Moll d\'Espanya, che al secondo piano ospita il Time Out Market',
   'maremagnum.webp': 'Maremagnum e il Port Vell visti dal Moll de la Fusta, con le barche ormeggiate davanti',
   'elborn.webp': 'La sala in ferro e vetro dell\'antico mercato del Born, con le rovine del quartiere del 1714 visibili sotto il piano di calpestio',
