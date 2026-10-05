@@ -476,7 +476,76 @@
      },
      "img": "taps.webp",
      "distFromPrevM": 1536,
+     "minFromPrev": 19,
+     "batllo": {
+      "durataMin": 10
+     }
+    },
+    {
+     "id": "f12c",
+     "time": "17:00",
+     "timeStatus": "stimato",
+     "venueId": "apt",
+     "title": "Pausa casa · bottiglie in frigo",
+     "img": "apt.webp",
+     "soloBatllo": true,
+     "mini": true,
+     "durataMin": 5,
+     "why": "Si posano le bottiglie di Taps e si riparte a mani libere verso Casa Batlló.",
+     "details": [
+      "Cinque minuti: frigo, chiavi, via"
+     ],
+     "people": [
+      "ale",
+      "monne"
+     ],
+     "badges": [
+      "stimato"
+     ],
+     "actions": {
+      "maps": false,
+      "taxi": false,
+      "metro": null
+     },
+     "distFromPrevM": 1539,
      "minFromPrev": 19
+    },
+    {
+     "id": "f12b",
+     "time": "17:30",
+     "timeStatus": "verificato",
+     "venueId": "batllo",
+     "title": "Casa Batlló",
+     "img": "batllo.webp",
+     "soloBatllo": true,
+     "durataMin": 75,
+     "apertura": "17:30",
+     "why": "La casa-drago di Gaudí: facciata a scaglie, nessuna linea dritta. A nove minuti a piedi dal Rooftop.",
+     "details": [
+      "Aperta tutti i giorni 8:30–22:30",
+      "4,7 su 220.602 recensioni",
+      "Biglietto a fascia oraria: va prenotato online",
+      "Le recensioni consigliano il biglietto Gold: iPad con audioguida e realtà aumentata",
+      "Al coperto: con la pioggia è la tappa giusta"
+     ],
+     "detailsStimati": [
+      "Visita di circa 60–75 minuti",
+      "Prezzo da verificare sul sito ufficiale"
+     ],
+     "people": [
+      "ale",
+      "monne"
+     ],
+     "badges": [
+      "verificato"
+     ],
+     "actions": {
+      "maps": true,
+      "taxi": false,
+      "metro": null
+     },
+     "distFromPrevM": 1649,
+     "minFromPrev": 20
     },
     {
      "id": "f14",
@@ -515,7 +584,14 @@
      "img": "elpalace.webp",
      "distFromPrevM": 2099,
      "minFromPrev": 25,
-     "avvisoPioggia": "Con la pioggia la terrazza può essere chiusa. Chiama prima: +34 935 10 11 30. Piano B: il bar dell'hotel El Palace al piano terra, stesso edificio."
+     "avvisoPioggia": "Con la pioggia la terrazza può essere chiusa. Chiama prima: +34 935 10 11 30. Piano B: il bar dell'hotel El Palace al piano terra, stesso edificio.",
+     "batllo": {
+      "durataMin": 75,
+      "dist": {
+       "m": 764,
+       "min": 9
+      }
+     }
     },
     {
      "id": "f15",
@@ -560,7 +636,13 @@
      "img": "braseria.webp",
      "distFromPrevM": 4580,
      "minFromPrev": 15,
-     "distMode": "auto"
+     "distMode": "auto",
+     "batllo": {
+      "dist": {
+       "m": 4585,
+       "min": 15
+      }
+     }
     },
     {
      "id": "f99",
@@ -633,6 +715,15 @@
       "f11",
       "f12",
       "f13",
+      "f14"
+     ],
+     "urlBatllo": "https://www.google.com/maps/dir/?api=1&origin=41.386162,2.1786073&destination=41.3915035,2.1715182&travelmode=walking&waypoints=41.395437,2.179608|41.4054703,2.1759774|41.395437,2.179608|41.3917,2.164918",
+     "stopsBatllo": [
+      "f11",
+      "f12",
+      "f13",
+      "f12c",
+      "f12b",
       "f14"
      ]
     },

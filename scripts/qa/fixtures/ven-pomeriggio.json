@@ -1,0 +1,60 @@
+{
+ "card": [
+  {
+   "id": "f11",
+   "ora": "14:20",
+   "chips": "1,4 km · 17 min a piedi VERIFICATO",
+   "titolo": "Verso l'appartamento"
+  },
+  {
+   "id": "f12",
+   "ora": "15:00",
+   "chips": "stesso posto Appartamento (2 notti) · €430 VERIFICATO",
+   "dettagli": "DettagliPrenotazione #6178165481 · €430 totali · 2 camere, 70 m²Reception 24h: Giulio e Manuel possono fare check-in da soli sabatoFrigo in cucina: metti subito il jamónVenerdì notte in due, sabato in tre€65 per il letto extra di sabato, si pagano in reception",
+   "titolo": "Check-in · Aparthotel Nàpols 116"
+  },
+  {
+   "id": "f13",
+   "ora": "16:30",
+   "chips": "1,5 km · 19 min a piedi ★ 4,7 · 122 VERIFICATO",
+   "dettagli": "DettagliEnoteca, non bar: si compra la bottiglia. Riapre alle 16:30.Carrer de Provença 474 · 4,7 su 122 recensioniTel +34 938 09 85 83",
+   "titolo": "Taps Sagrada Familia · una bollicina"
+  },
+  {
+   "id": "f14",
+   "ora": "~18:00",
+   "chips": "2,1 km · 25 min a piedi Recaredo Terrers (bottiglia) · €60 Ruinart Rosé (calice) · €25 VERIFICATO",
+   "dettagli": "DettagliRecaredo Terrers, Corpinnat: metodo classico, miglior qualità/prezzo della cartaAlternative a calice: Ruinart Rosé €25, Mirgin Cava €12Cocktail: St. Germain Spritz €16, Trencadís €21, Espresso Martini €20",
+   "titolo": "Rooftop Garden · El Palace"
+  },
+  {
+   "id": "f15",
+   "ora": "~20:30",
+   "chips": "4,6 km · 15 min Entrecot 60gg 500 g · €39 Costilla vaca vieja 450 g · €28,5 Bai Gorri ½ L · €22,5 VERIFICATO",
+   "dettagli": "DettagliVoce 41: entrecot con osso, maturazione 60 giorni, 500 gVoce 47: costilla de vaca vieja, 450 g — la fiorentina spagnola (bassa temperatura + salsa, non brace pura)Vino: Bai Gorri ½ L, Rioja Tempranillo — il formato giusto per non esagerareUn bicchiere d'acqua per ogni calice. Niente digestivi. Domani alle 10:30 sei alla SagradaPrenotato per 2, venerdì sera",
+   "titolo": "Cena · Braseria Sarrià"
+  }
+ ],
+ "percorsi": [
+  {
+   "id": "ven-mattina",
+   "href": "https://www.google.com/maps/dir/?api=1&origin=41.3854186,2.1806806&destination=41.386162,2.1786073&travelmode=walking&waypoints=41.388123,2.1860152|41.3838871,2.1820711|41.3850135,2.1810493|41.383302,2.1764228|41.383452,2.1750541|41.3819198,2.1753751",
+   "testo": "Brunells → Bar Joan · 3,6 km · 45 min a piedi"
+  },
+  {
+   "id": "ven-pomeriggio",
+   "href": "https://www.google.com/maps/dir/?api=1&origin=41.386162,2.1786073&destination=41.3915035,2.1715182&travelmode=walking&waypoints=41.395437,2.179608|41.4054703,2.1759774",
+   "testo": "Mercato → appartamento → Taps → El Palace · 5,0 km · 1 h 1 min a piedi"
+  },
+  {
+   "id": "ven-cena",
+   "href": "https://www.google.com/maps/dir/?api=1&origin=41.3915035,2.1715182&destination=41.3925995,2.1344166&travelmode=transit",
+   "testo": "El Palace → Braseria Sarrià · Mezzi pubblici"
+  }
+ ],
+ "avvisi": [
+  "Soste 4 h 10 min + cammino 1 h 2 min = 5 h 12 min tra le 09:00 e le 14:20. Restano 8 min di margine, non di più. Se slitti, taglia la Ciutadella da 25 a 15 minuti.",
+  "Non si prenota. Alle 13:15 sei dentro, alle 13:30 sei in coda.",
+  "Venerdì avete gli zaini: quelli grandi non entrano in sala e il guardaroba per gli oggetti ingombranti è a pagamento. Valutate di passare prima dall'appartamento."
+ ]
+}

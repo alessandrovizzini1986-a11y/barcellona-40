@@ -34,11 +34,12 @@ export const FILE = {
   elborn: 'File:Mercat del Born ruïnes - panoramio.jpg',
   // del Time Out Market non esiste una foto libera su Commons: si usa l'edificio che lo ospita
   timeoutmarket: 'File:Barcelona - Maremagnum 03.JPG',
-  maremagnum: 'File:614 Maremàgnum i Port Vell (Barcelona), des del moll de la Fusta.jpg'
+  maremagnum: 'File:614 Maremàgnum i Port Vell (Barcelona), des del moll de la Fusta.jpg',
+  batllo: 'File:Casa Batllo Overview Barcelona Spain.jpg'
 }
 // Quanto spazio verticale lasciare SOPRA il ritaglio: 0,5 = centrato. Più basso = si tiene l'alto,
 // altrimenti le torri finiscono tagliate.
-const BIAS = { sagrada: 0.1, santamaria: 0.15, monumental: 0.35, elpalace: 0.25, elborn: 0.45 }
+const BIAS = { sagrada: 0.1, santamaria: 0.15, monumental: 0.35, elpalace: 0.25, elborn: 0.45, batllo: 0.15 }
 // Nome umano della tappa, per i crediti e per l'alt
 export const TITOLI = {
   blq: 'Aeroporto di Bologna', bcn_t2: 'Barcellona T2', ciutadella: 'Parc de la Ciutadella',
@@ -47,7 +48,7 @@ export const TITOLI = {
   elpalace: 'Rooftop Garden · El Palace', sagrada: 'Sagrada Família', monumental: 'Plaza Monumental',
   pobleespanyol: 'La Terrrazza · Poble Espanyol', apolo: 'Sala Apolo', sarria: 'Sarrià',
   bunkers: 'Bunkers del Carmel', elborn: 'El Born Centre de Cultura i Memòria',
-  timeoutmarket: 'Time Out Market Barcelona', maremagnum: 'Maremagnum'
+  timeoutmarket: 'Time Out Market Barcelona', maremagnum: 'Maremagnum', batllo: 'Casa Batlló'
 }
 const LIBERA = [/^cc0/i, /^cc[- ]by(-sa)?([- ]\d)?/i, /^public domain/i, /^pd/i]
 // Foto NON di Commons: private, usate con permesso. Non hanno licenza libera, quindi non stanno nella

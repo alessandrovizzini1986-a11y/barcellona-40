@@ -34,6 +34,9 @@ export const stops = days.flatMap((day, di) => day.stops.map((s, i) => ({
 // all'aperto: col toggle acceso entra El Born CCM (al coperto), la Ciutadella scende a un quarto d'ora e
 // TUTTI gli orari successivi si ricalcolano a cascata dalle durate. Nessun orario di pioggia è scritto a mano.
 export const piove = () => !!store.get('piove', false)
+// Secondo interruttore, solo venerdì: Casa Batlló. Non è un'opzionale senza orario come il Casinò: se si fa, ha
+// la sua fascia e sposta il pomeriggio. Spento, il pomeriggio è byte per byte quello di sempre.
+export const batllo = () => !!store.get('batllo', false)
 
 // TAPPE OPZIONALI. Non hanno orario: sono posti dove si può finire, non impegni. Non entrano nei totali
 // della giornata, non diventano mai "Adesso" o "Prossima", e in fondo alla timeline stanno sotto una riga
@@ -102,11 +105,13 @@ export function contoDelGiorno(lista) {
 // sparire (`soloAsciutto`: dal Mirador ai Bunkers a piedi non si va). I campi *Pioggia si sovrappongono
 // a quelli normali solo quando il toggle è acceso: il resto del sito legge sempre `url`, `label`, `stops`, `mode`.
 export function percorsiDi(dayKey) {
-  const lista = days.find((d) => DAY_KEY[d.date] === dayKey)?.percorsi || []
-  if (!piove()) return lista
-  return lista.filter((pc) => !pc.soloAsciutto).map((pc) => (pc.urlPioggia
+  let lista = days.find((d) => DAY_KEY[d.date] === dayKey)?.percorsi || []
+  if (piove()) lista = lista.filter((pc) => !pc.soloAsciutto).map((pc) => (pc.urlPioggia
     ? { ...pc, url: pc.urlPioggia, label: pc.labelPioggia || pc.label, stops: pc.stopsPioggia || pc.stops, mode: pc.modePioggia || pc.mode }
     : pc))
+  // Casa Batlló: il pomeriggio di venerdì passa dall'appartamento e da Passeig de Gràcia (link verificato a mano)
+  if (batllo()) lista = lista.map((pc) => (pc.urlBatllo ? { ...pc, url: pc.urlBatllo, stops: pc.stopsBatllo || pc.stops } : pc))
+  return lista
 }
 // Totale del blocco, sommato dalle tappe vere: i tratti a piedi per i percorsi a piedi, quelli in auto
 // o taxi per i percorsi coi mezzi (dove il tempo di Google non è il nostro e non lo si finge).
@@ -134,11 +139,27 @@ export const missionByStop = (stopId) => missions.find((m) => m.stopId === stopI
 // Tappe visibili per una persona (people della tappa + skips della persona)
 export function stopsFor(personId) {
   const p = personById(personId)
-  const pioggia = piove()
-  let list = stops.filter((s) => !s.soloPioggia || pioggia)
+  const pioggia = piove(), casaBatllo = batllo()
+  let list = stops.filter((s) => (!s.soloPioggia || pioggia) && (!s.soloBatllo || casaBatllo))
   if (p) list = list.filter((s) => s.people.includes(personId) && !p.skips.includes(s.id))
+  if (casaBatllo) list = conBatllo(list)
   if (pioggia) list = conPioggia(list)
   return numera(list)
+}
+// Casa Batlló acceso: le tappe del pomeriggio prendono durate e tratti del piano con Batlló (campo `batllo`),
+// e la cascata riparte dalla prima tappa toccata (Taps, 16:30) fino a dove le durate finiscono (la Braseria
+// delle 20:30 resta dov'è, prenotata). Spento, nessun campo `batllo` viene letto.
+function conBatllo(list) {
+  const out = list.map((s) => (s.batllo ? { ...s, ...(s.batllo.durataMin != null ? { durataMin: s.batllo.durataMin } : {}), ...(s.batllo.dist ? { distFromPrevM: s.batllo.dist.m, minFromPrev: s.batllo.dist.min } : {}) } : s))
+  const giorni = [...new Set(out.filter((s) => s.batllo || s.soloBatllo).map((s) => s.dayKey))]
+  for (const k of giorni) {
+    const idx = out.map((s, i) => (s.dayKey === k && (s.batllo || s.soloBatllo) ? i : -1)).filter((i) => i >= 0)
+    const i0 = idx[0]; let i1 = i0
+    while (i1 + 1 < out.length && out[i1 + 1].dayKey === k && conOrario(out[i1 + 1]) && out[i1 + 1].durataMin != null) i1++
+    const blocco = ricalcola(out.slice(i0, i1 + 1))
+    out.splice(i0, blocco.length, ...blocco)
+  }
+  return out
 }
 // Il numero della tappa (quello dei marker sulla mappa) conta solo quelle che vedi davvero:
 // senza pioggia El Born non c'è, e la numerazione non deve saltare un numero.

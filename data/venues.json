@@ -297,6 +297,17 @@
       "reviews": 3067,
       "hours": "tutti i giorni 10:00–00:00",
       "phone": "+34 669 18 96 72"
+    },
+    "batllo": {
+      "name": "Casa Batlló",
+      "addr": "Passeig de Gràcia, 43, 08007 Barcelona",
+      "lat": 41.3917,
+      "lng": 2.164918,
+      "verified": true,
+      "rating": 4.7,
+      "reviews": 220602,
+      "hours": "tutti i giorni 8:30–22:30",
+      "phone": "+34 932 16 03 06"
     }
   }
 }

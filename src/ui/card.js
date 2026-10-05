@@ -37,6 +37,7 @@ const ALT = {
   'apolo.webp': 'Un concerto alla Sala Apolo',
   'bunkers.webp': 'La vista su Barcellona dai Bunkers del Carmel',
   'elmirador.webp': 'L\'insegna di El Mirador, con la tenda blu e i tavoli all\'aperto',
+  'batllo.webp': 'La facciata di Casa Batlló di giorno, con i balconi a maschera e il tetto a scaglie',
   'timeoutmarket.webp': 'Il palazzo di Maremagnum sul Moll d\'Espanya, che al secondo piano ospita il Time Out Market',
   'maremagnum.webp': 'Maremagnum e il Port Vell visti dal Moll de la Fusta, con le barche ormeggiate davanti',
   'elborn.webp': 'La sala in ferro e vetro dell\'antico mercato del Born, con le rovine del quartiere del 1714 visibili sotto il piano di calpestio',
@@ -53,7 +54,7 @@ const ALT = {
   'teixido.webp': 'L\'interno di Teixidó, con l\'insegna in metallo Forners i Pastissers e il banco del pane in vista',
   'duckstore.webp': 'La vetrina del Barcelona Duck Store, con la Sagrada Família di mattoncini e le paperelle in fila'
 }
-export const haFoto = (stop) => !!stop.img
+export const haFoto = (stop) => !!stop.img && !stop.mini // la mini-tappa (Pausa casa) è compatta, senza foto
 
 // Blocco immagine in cima alla card: 16:9, orario in sovrimpressione, mosaico se il file non carica
 export function immagineCard(img, etichetta, { eager = false, classe = '', oraDebole = false } = {}) {
@@ -140,7 +141,7 @@ export function stopCard(stop, { person = null, isNow = false, nowLabel = 'adess
     ? `<div class="card__venue">${[nomeFuoriDalTitolo ? esc(v.name) : '', indirizzo ? esc(indirizzo) : ''].filter(Boolean).join(' · ')}</div>`
     : ''
   const foto = fotoBlocco(stop, eager)
-  return `<article class="card${done ? ' card--done' : ''}${isNow ? ' card--now' : ''}${foto ? ' card--conFoto' : ''}${stop.saltata ? ' card--saltata' : ''}" data-stop="${stop.id}" style="--dc:${DAY_COLOR[stop.dayKey]}" aria-label="${esc(stop.title)}${stop.saltata ? ', saltata per pioggia' : ''}">
+  return `<article class="card${done ? ' card--done' : ''}${isNow ? ' card--now' : ''}${foto ? ' card--conFoto' : ''}${stop.saltata ? ' card--saltata' : ''}${stop.mini ? ' card--mini' : ''}" data-stop="${stop.id}" style="--dc:${DAY_COLOR[stop.dayKey]}" aria-label="${esc(stop.title)}${stop.saltata ? ', saltata per pioggia' : ''}">
     ${foto}
     <div class="card__head">
       ${stop.saltata ? `<div class="card__time card__time--opz card__time--saltata">${esc(stop.motivoPioggia || 'saltata per pioggia')}</div>` : foto ? (isNow ? `<div class="card__time tnum card__time--adesso">${esc(nowLabel)}</div>` : '') : `<div class="card__time ${stop.time == null ? 'card__time--opz' : 'tnum'}">${esc(etichettaOra(stop))}${isNow ? `<small>${esc(nowLabel)}</small>` : ''}</div>`}

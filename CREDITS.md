@@ -77,6 +77,7 @@ il contenuto, con link alla pagina Commons del file.
 | El Born Centre de Cultura i Memòria | `public/assets/tappe/elborn.webp` | Olga Gairin | [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0) | [Mercat del Born ruïnes - panoramio.jpg](https://commons.wikimedia.org/wiki/File:Mercat_del_Born_ru%C3%AFnes_-_panoramio.jpg) |
 | Time Out Market Barcelona (l'edificio di Maremagnum: del mercato non c'è foto libera su Commons) | `public/assets/tappe/timeoutmarket.webp` | Zarateman | [CC0](http://creativecommons.org/publicdomain/zero/1.0/deed.en) | [Barcelona - Maremagnum 03.JPG](https://commons.wikimedia.org/wiki/File:Barcelona_-_Maremagnum_03.JPG) |
 | Maremagnum | `public/assets/tappe/maremagnum.webp` | Enric | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0) | [614 Maremàgnum i Port Vell (Barcelona), des del moll de la Fusta.jpg](https://commons.wikimedia.org/wiki/File:614_Marem%C3%A0gnum_i_Port_Vell_(Barcelona),_des_del_moll_de_la_Fusta.jpg) |
+| Casa Batlló | `public/assets/tappe/batllo.webp` | ChristianSchd | [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0) | [Casa Batllo Overview Barcelona Spain.jpg](https://commons.wikimedia.org/wiki/File:Casa_Batllo_Overview_Barcelona_Spain.jpg) |
 
 Ultimo aggiornamento: `npm run foto` · 16 foto, 1045 kB in tutto.
 

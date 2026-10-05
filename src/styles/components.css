@@ -305,6 +305,14 @@ select.input,input.input{ min-height:44px; background:var(--bg-3); border:1px so
 
 /* Tappa saltata per pioggia: resta in coda, grigia, con il motivo al posto dell'orario */
 .card--saltata{ opacity:.55; filter:grayscale(1); }
+/* Mini-tappa (Pausa casa): compatta, senza foto */
+.card--mini{ padding:var(--space-3) var(--space-4); }
+.card--mini .card__title{ font-size:var(--fs-1); }
+.card--mini .card__why, .card--mini details, .card--mini .actions{ display:none; }
+/* Casa Batlló spenta: card grigia compatta in fondo al pomeriggio, con il pulsante che accende il toggle */
+.card--batllo-off{ opacity:.7; filter:grayscale(.6); display:flex; align-items:center; gap:var(--space-3); flex-wrap:wrap; padding:var(--space-3) var(--space-4); }
+.card--batllo-off span{ flex:1 1 180px; color:var(--ink-2); font-size:var(--fs-0); }
+.card--batllo-off .btn{ flex:none; }
 .card--saltata .card__time--saltata{ color:var(--ink-2); text-transform:none; }
 .card--saltata .card__foto-time{ display:none; }
 .timeline__saltate{ color:var(--blu); }
