@@ -1,6 +1,6 @@
 {
  "v": 2,
- "aggiornato": "2026-10-01T19:10:38.469910Z",
+ "aggiornato": "2026-10-05T19:15:27.456820Z",
  "scheda": {
   "giorni": [
    {
@@ -21,14 +21,14 @@
       "serie": 4,
       "target": [
        {
-        "kg": 80,
-        "rip": 12,
+        "kg": 90,
+        "rip": 10,
         "ripMax": null,
         "max": false
        },
        {
-        "kg": 90,
-        "rip": 10,
+        "kg": 100,
+        "rip": 8,
         "ripMax": null,
         "max": false
        },
@@ -46,7 +46,7 @@
        }
       ],
       "repMin": 6,
-      "repMax": 12
+      "repMax": 10
      },
      {
       "id": "pull-up-ass",
@@ -63,31 +63,31 @@
       "target": [
        {
         "kg": -55,
-        "rip": 8,
+        "rip": 9,
         "ripMax": null,
         "max": false
        },
        {
         "kg": -55,
-        "rip": 8,
+        "rip": 9,
         "ripMax": null,
         "max": false
        },
        {
         "kg": -55,
-        "rip": 8,
+        "rip": 9,
         "ripMax": null,
         "max": false
        },
        {
         "kg": -55,
-        "rip": 8,
+        "rip": 9,
         "ripMax": null,
         "max": false
        }
       ],
-      "repMin": 8,
-      "repMax": 8
+      "repMin": 9,
+      "repMax": 9
      },
      {
       "id": "leg-extension",
@@ -97,41 +97,6 @@
       "recTxt": "1'30",
       "note": "Fermo 2\" in alto, in massima contrazione.",
       "desc": "Fermo 2\" in alto, in massima contrazione.",
-      "tipo": "carico",
-      "perMano": false,
-      "assist": false,
-      "serie": 3,
-      "target": [
-       {
-        "kg": 30,
-        "rip": 8,
-        "ripMax": null,
-        "max": false
-       },
-       {
-        "kg": 30,
-        "rip": 8,
-        "ripMax": null,
-        "max": false
-       },
-       {
-        "kg": 30,
-        "rip": 8,
-        "ripMax": null,
-        "max": false
-       }
-      ],
-      "repMin": 8,
-      "repMax": 8
-     },
-     {
-      "id": "pulley-triangolo",
-      "nome": "Pulley con triangolo",
-      "gruppo": "dorso",
-      "rec": 90,
-      "recTxt": "1'30",
-      "note": "",
-      "desc": "",
       "tipo": "carico",
       "perMano": false,
       "assist": false,
@@ -160,6 +125,41 @@
       "repMax": 9
      },
      {
+      "id": "pulley-triangolo",
+      "nome": "Pulley con triangolo",
+      "gruppo": "dorso",
+      "rec": 90,
+      "recTxt": "1'30",
+      "note": "",
+      "desc": "",
+      "tipo": "carico",
+      "perMano": false,
+      "assist": false,
+      "serie": 3,
+      "target": [
+       {
+        "kg": 30,
+        "rip": 10,
+        "ripMax": null,
+        "max": false
+       },
+       {
+        "kg": 30,
+        "rip": 10,
+        "ripMax": null,
+        "max": false
+       },
+       {
+        "kg": 30,
+        "rip": 10,
+        "ripMax": null,
+        "max": false
+       }
+      ],
+      "repMin": 10,
+      "repMax": 10
+     },
+     {
       "id": "chest-press",
       "nome": "Chest Press",
       "gruppo": "petto",
@@ -174,31 +174,31 @@
       "target": [
        {
         "kg": 40,
-        "rip": 6,
+        "rip": 7,
         "ripMax": null,
         "max": false
        },
        {
         "kg": 40,
-        "rip": 6,
+        "rip": 7,
         "ripMax": null,
         "max": false
        },
        {
         "kg": 40,
-        "rip": 6,
+        "rip": 7,
         "ripMax": null,
         "max": false
        },
        {
         "kg": 40,
-        "rip": 6,
+        "rip": 7,
         "ripMax": null,
         "max": false
        }
       ],
-      "repMin": 6,
-      "repMax": 6
+      "repMin": 7,
+      "repMax": 7
      },
      {
       "id": "push-down",
@@ -246,8 +246,14 @@
       "tipo": "tempo",
       "perMano": false,
       "assist": false,
-      "serie": 3,
+      "serie": 4,
       "target": [
+       {
+        "kg": 0,
+        "rip": 40,
+        "ripMax": null,
+        "max": false
+       },
        {
         "kg": 0,
         "rip": 40,
@@ -290,32 +296,32 @@
       "serie": 4,
       "target": [
        {
-        "kg": 6,
-        "rip": 12,
-        "ripMax": null,
-        "max": false
-       },
-       {
-        "kg": 8,
-        "rip": 10,
-        "ripMax": null,
+        "kg": 10,
+        "rip": 8,
+        "ripMax": 10,
         "max": false
        },
        {
         "kg": 10,
         "rip": 8,
-        "ripMax": null,
+        "ripMax": 10,
         "max": false
        },
        {
-        "kg": 6,
-        "rip": null,
-        "ripMax": null,
-        "max": true
+        "kg": 10,
+        "rip": 8,
+        "ripMax": 10,
+        "max": false
+       },
+       {
+        "kg": 10,
+        "rip": 8,
+        "ripMax": 10,
+        "max": false
        }
       ],
       "repMin": 8,
-      "repMax": 12
+      "repMax": 10
      },
      {
       "id": "lat-prona",
@@ -332,19 +338,19 @@
       "target": [
        {
         "kg": 35,
-        "rip": 13,
+        "rip": 14,
         "ripMax": null,
         "max": false
        },
        {
         "kg": 40,
-        "rip": 11,
+        "rip": 12,
         "ripMax": null,
         "max": false
        },
        {
         "kg": 45,
-        "rip": 9,
+        "rip": 10,
         "ripMax": null,
         "max": false
        },
@@ -355,8 +361,8 @@
         "max": true
        }
       ],
-      "repMin": 9,
-      "repMax": 13
+      "repMin": 10,
+      "repMax": 14
      },
      {
       "id": "leg-curl",
@@ -373,25 +379,25 @@
       "target": [
        {
         "kg": 40,
-        "rip": 8,
+        "rip": 9,
         "ripMax": null,
         "max": false
        },
        {
         "kg": 40,
-        "rip": 8,
+        "rip": 9,
         "ripMax": null,
         "max": false
        },
        {
         "kg": 40,
-        "rip": 8,
+        "rip": 9,
         "ripMax": null,
         "max": false
        }
       ],
-      "repMin": 8,
-      "repMax": 8
+      "repMin": 9,
+      "repMax": 9
      },
      {
       "id": "low-row",
@@ -408,25 +414,25 @@
       "target": [
        {
         "kg": 35,
-        "rip": 9,
+        "rip": 10,
         "ripMax": null,
         "max": false
        },
        {
         "kg": 35,
-        "rip": 9,
+        "rip": 10,
         "ripMax": null,
         "max": false
        },
        {
         "kg": 35,
-        "rip": 9,
+        "rip": 10,
         "ripMax": null,
         "max": false
        }
       ],
-      "repMin": 9,
-      "repMax": 9
+      "repMin": 10,
+      "repMax": 10
      },
      {
       "id": "push-up-ginocchia",
@@ -442,7 +448,7 @@
       "serie": 1,
       "target": [
        {
-        "rt": 45
+        "rt": 50
        }
       ],
       "repMin": 30,
@@ -468,8 +474,8 @@
         "max": false
        },
        {
-        "kg": 8,
-        "rip": 10,
+        "kg": 10,
+        "rip": 8,
         "ripMax": null,
         "max": false
        },
@@ -1706,6 +1712,156 @@
    "luogoId": "au2vmbf",
    "luogoNome": "Mcfit",
    "warmOpen": false
+  },
+  {
+   "id": "2026-10-05-pho5jzw",
+   "data": "2026-10-05",
+   "giorno": "B",
+   "settimana": 6,
+   "chiusa": true,
+   "inizio": 1791223341201,
+   "fine": 1791227646777,
+   "esercizi": {
+    "affondi-indietro": [
+     {
+      "kg": 10,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 10,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 10,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 10,
+      "reps": 8,
+      "fatta": true
+     }
+    ],
+    "lat-prona": [
+     {
+      "kg": 35,
+      "reps": 14,
+      "fatta": true
+     },
+     {
+      "kg": 40,
+      "reps": 12,
+      "fatta": true
+     },
+     {
+      "kg": 45,
+      "reps": 10,
+      "fatta": true
+     },
+     {
+      "kg": 35,
+      "reps": 10,
+      "fatta": true
+     }
+    ],
+    "leg-curl": [
+     {
+      "kg": 40,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 40,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 40,
+      "reps": 8,
+      "fatta": true
+     }
+    ],
+    "low-row": [
+     {
+      "kg": 35,
+      "reps": 9,
+      "fatta": true
+     },
+     {
+      "kg": 35,
+      "reps": 9,
+      "fatta": true
+     },
+     {
+      "kg": 35,
+      "reps": 12,
+      "fatta": true
+     }
+    ],
+    "push-up-ginocchia": [
+     {
+      "kg": null,
+      "reps": null,
+      "fatta": false
+     }
+    ],
+    "curl-manubri": [
+     {
+      "kg": 10,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 10,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 10.5,
+      "reps": 8,
+      "fatta": true
+     }
+    ],
+    "alzate-laterali": [
+     {
+      "kg": 6,
+      "reps": 10,
+      "fatta": true
+     },
+     {
+      "kg": 6,
+      "reps": 10,
+      "fatta": true
+     },
+     {
+      "kg": 6,
+      "reps": 10,
+      "fatta": true
+     }
+    ]
+   },
+   "luogoId": "au2vmbf",
+   "luogoNome": "Mcfit",
+   "rt": {
+    "push-up-ginocchia": {
+     "reps": 55,
+     "sec": 354,
+     "start": null
+    }
+   },
+   "warm": {
+    "w0": true,
+    "w1": true,
+    "stretch": true
+   },
+   "pt": true,
+   "warmOpen": false,
+   "ptEx": {
+    "leg-curl": true,
+    "low-row": true
+   }
   }
  ],
  "luoghi": [
