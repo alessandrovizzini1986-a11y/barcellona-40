@@ -103,6 +103,24 @@ for (const [key, t] of Object.entries(viaggio.timeline)) {
 const chiaveOk = /^[a-z:]+$/.test(viaggio.checklist.chiave)
 if (!chiaveOk) errors.push(`checklist: chiave "${viaggio.checklist.chiave}" non valida`)
 
+// Bagni puliti (data/bagni.json): ogni tappa ha una riga; gli id esistono; coordinate, discrezione e campi di testo
+// ci sono; ogni coppia tappa → hotel ha la distanza di Valhalla (scripts/bagni-distanze.mjs), mai inventata.
+const bagniJson = readJson('bagni.json')
+const bagnoIds = new Set(bagniJson.bagni.map((b) => b.id))
+for (const b of bagniJson.bagni) {
+  if (b.lat == null || b.lng == null) errors.push(`bagno ${b.id}: senza coordinate`)
+  if (!(Number.isInteger(b.discrezione) && b.discrezione >= 1 && b.discrezione <= 5)) errors.push(`bagno ${b.id}: discrezione "${b.discrezione}" fuori da 1-5`)
+  for (const k of ['nome', 'breve', 'cat', 'addr', 'orario', 'orarioBreve', 'come', 'dove', 'fonte']) if (!b[k]) errors.push(`bagno ${b.id}: manca "${k}"`)
+}
+for (const id of stopIds) if (!bagniJson.tappe[id]) errors.push(`${id}: nessuna riga "bagno più vicino" in data/bagni.json`)
+for (const [id, t] of Object.entries(bagniJson.tappe)) {
+  if (!stopIds.has(id)) errors.push(`bagni: tappa "${id}" inesistente`)
+  if (!t.prima && !t.semplice) errors.push(`bagni ${id}: né "prima" né "semplice"`)
+  for (const k of ['prima', 'seconda']) if (t[k] && !bagnoIds.has(t[k]) && !bagniJson.semplici[t[k]]) errors.push(`bagni ${id}: ${k} "${t[k]}" sconosciuto`)
+  for (const k of [t.prima, t.seconda]) if (k && bagnoIds.has(k) && !(t.dist?.[k]?.m >= 0)) errors.push(`bagni ${id}: manca la distanza verso ${k} (node scripts/bagni-distanze.mjs)`)
+}
+for (const id of bagniJson.daTenereAMente) if (!bagnoIds.has(id)) errors.push(`bagni: "${id}" fra quelli da tenere a mente non esiste`)
+
 if (errors.length) {
   console.error(`✗ validate: ${errors.length} errori`)
   for (const e of errors) console.error('  - ' + e)
@@ -110,4 +128,4 @@ if (errors.length) {
 }
 const svgCard = readdirSync('public/assets/tappe').filter((f) => f.endsWith('.svg')).length
 const nPercorsi = it.days.reduce((n, d) => n + (d.percorsi?.length || 0), 0)
-console.log(`✓ validate: ${nPercorsi} percorsi, ${fotoIds.size} foto, ${svgCard} card stilizzate, ${stopIds.size} tappe, ${Object.keys(venues).length} venue, ${missions.length} missioni, ${checks.length} check, ${viaggio.voli.length} voli, ${Object.values(viaggio.timeline).reduce((n, t) => n + t.step.length, 0)} passi di viaggio. Tutto ok.`)
+console.log(`✓ validate: ${nPercorsi} percorsi, ${fotoIds.size} foto, ${svgCard} card stilizzate, ${stopIds.size} tappe, ${Object.keys(venues).length} venue, ${missions.length} missioni, ${checks.length} check, ${viaggio.voli.length} voli, ${Object.values(viaggio.timeline).reduce((n, t) => n + t.step.length, 0)} passi di viaggio, ${bagniJson.bagni.length} bagni. Tutto ok.`)

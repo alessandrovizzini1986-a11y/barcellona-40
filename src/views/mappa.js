@@ -6,6 +6,7 @@ import { icon } from '../ui/icons.js'
 import { badges } from '../ui/badge.js'
 import { esc } from '../ui/html.js'
 import { toast } from '../ui/toast.js'
+import { BAGNI, apriBagno } from '../ui/bagno.js'
 
 const KEYS = ['ven', 'sab', 'dom']
 const LABEL = { ven: 'Ven', sab: 'Sab', dom: 'Dom' }
@@ -26,6 +27,7 @@ export async function render(root, { person, header }) {
         <div class="seg" role="group" aria-label="Giorni sulla mappa">
           ${KEYS.map((k) => `<button type="button" data-day="${k}" aria-pressed="${active.has(k)}" aria-selected="${active.has(k)}" style="--sc:${DAY_COLOR[k]}" ${byDay[k].some(hasCoords) ? '' : 'disabled'}>${LABEL[k]}</button>`).join('')}
         </div>
+        <button class="btn btn--sm map-bagni" type="button" data-bagni aria-pressed="false" aria-label="Mostra i bagni puliti sulla mappa">${icon('bath')} Bagni</button>
       </div>
       <button class="btn btn--icon map-locate" id="locate" aria-label="Dove sono">${icon('locate')}</button>
     </div>
@@ -42,7 +44,8 @@ export async function render(root, { person, header }) {
     if (!el) return () => {}
     // si è cambiata pagina mentre Leaflet arrivava: in un albero staccato la mappa non si crea nemmeno
     if (!el.isConnected) return () => {}
-    ctl = createMap(el, byDay, { theme: store.theme })
+    // i bagni sono un layer a parte: spento all'apertura, fuori dalle linee del giro e dai percorsi
+    ctl = createMap(el, byDay, { theme: store.theme, bagni: BAGNI, onBagno: (id) => apriBagno(id) })
     KEYS.forEach((k) => ctl.show(k, active.has(k)))
     ctl.fit([...active])
     root.querySelector('#map-skel')?.remove()
@@ -60,6 +63,11 @@ export async function render(root, { person, header }) {
     b.setAttribute('aria-pressed', active.has(k)); b.setAttribute('aria-selected', active.has(k))
     ctl.show(k, active.has(k))
     ctl.fit([...active])
+  })
+  root.querySelector('[data-bagni]').addEventListener('click', (e) => {
+    const on = e.currentTarget.getAttribute('aria-pressed') !== 'true'
+    e.currentTarget.setAttribute('aria-pressed', String(on))
+    ctl.show('bagni', on)
   })
   root.querySelector('#locate').addEventListener('click', () => ctl.locate())
   return () => { try { ctl?.destroy() } catch { /* noop */ } }

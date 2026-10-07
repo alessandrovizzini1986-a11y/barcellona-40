@@ -107,7 +107,7 @@ for (const [giorno, attesi] of [['ven', ['ven-mattina', 'ven-pomeriggio', 'ven-c
 {
   const { p, ctx } = await vista('ale', '/?now=2026-10-18T16:30#/oggi')
   ok('Oggi · domenica pomeriggio: percorso dei Bunkers', (await p.locator('.tile--accent .percorso').getAttribute('data-percorso')) === 'dom-pomeriggio')
-  ok('Oggi · avviso dei Bunkers visibile nella card di adesso', /belvedere è sempre aperto/.test(await p.locator('.tile--accent .avviso').innerText()))
+  ok('Oggi · avviso dei Bunkers visibile nella card di adesso', /belvedere è sempre aperto/.test(await p.locator('.tile--accent .avviso:not(.avviso--orario)').innerText()) && /chiude alle 17:30/.test(await p.locator('.tile--accent .avviso--orario').innerText())) // dal 07/10 sopra c'è anche l'avviso giallo sull'orario
   await ctx.close()
 }
 // Chi non c'è non vede il percorso di quella mezza giornata

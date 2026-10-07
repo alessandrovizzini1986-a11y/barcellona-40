@@ -189,7 +189,7 @@ const overflow = (p) => p.evaluate(() => document.documentElement.scrollWidth - 
 {
   const { p, ctx, errs } = await apri('ale', '/#/info')
   const ids = await p.evaluate(() => [...document.querySelectorAll('.acc > details')].map((d) => d.id))
-  ok('restano otto sezioni, nell'+"'"+'ordine giusto', JSON.stringify(ids) === JSON.stringify(['sec-novita', 'sec-viaggio', 'sec-foto', 'sec-canzone', 'sec-extra', 'sec-apt', 'sec-profilo', 'sec-verifiche']), ids.join(' '))
+  ok('restano nove sezioni, nell'+"'"+'ordine giusto (Bagni puliti dopo Appartamento)', JSON.stringify(ids) === JSON.stringify(['sec-novita', 'sec-viaggio', 'sec-foto', 'sec-canzone', 'sec-extra', 'sec-apt', 'sec-bagni', 'sec-profilo', 'sec-verifiche']), ids.join(' '))
   for (const [via, id] of [['Documenti', 'doc'], ['eSIM', 'esim'], ['Regole anti-mal di testa', 'rules'], ['Numeri utili', 'num']])
     ok(`sezione rimossa: ${via}`, await p.locator(`#sec-${id}`).count() === 0)
   ok('Info senza errori JS', errs.length === 0, errs.join(' | '))

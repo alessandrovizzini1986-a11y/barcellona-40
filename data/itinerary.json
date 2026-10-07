@@ -1311,7 +1311,8 @@
       "Se l'app non trova nessuno: scendi a piedi verso Carrer de Marià Labèrnia e richiama da lì."
      ],
      "saltaPioggia": true,
-     "motivoPioggia": "saltati per pioggia: collina scoperta, terreno scivoloso, niente vista"
+     "motivoPioggia": "saltati per pioggia: collina scoperta, terreno scivoloso, niente vista",
+     "avvisoOrario": "Orario da confermare: una fonte ufficiale dice che in ottobre l'area chiude alle 17:30."
     },
     {
      "id": "d3",

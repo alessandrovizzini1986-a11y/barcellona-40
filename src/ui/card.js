@@ -10,6 +10,7 @@ import { setStopDone } from '../game.js'
 import { toast } from './toast.js'
 import { short as confettiShort } from './confetti.js'
 import { evento, eventoGlobale } from '../stats.js'
+import { rigaBagno, montaBagni } from './bagno.js'
 
 // Immagini delle tappe. Il file da mostrare sta nel dato (`img` in data/itinerary.json e data/viaggio.json)
 // e sono tutte foto vere: da Wikimedia Commons, con autore e licenza sotto la card, oppure private,
@@ -119,6 +120,8 @@ export function stopCard(stop, { person = null, isNow = false, nowLabel = 'adess
   // Con la pioggia alcune tappe cambiano senso (Santa Maria si visita dentro): testo e dettagli di pioggia
   const pioggia = piove()
   const why = pioggia && stop.whyPioggia ? stop.whyPioggia : stop.why
+  // Orario da confermare (Bunkers): avviso giallo, forte, sopra a tutto il resto; il dato resta com'è finché non si decide
+  const avvisoOrario = stop.avvisoOrario ? `<div class="avviso avviso--forte avviso--orario">${icon('clock')}<span>${esc(stop.avvisoOrario)}</span></div>` : ''
   const avviso = pioggia && stop.avvisoPioggia ? `<div class="avviso avviso--pioggia">${icon('rain')}<span>${esc(stop.avvisoPioggia)}</span></div>` : (stop.avviso ? `<div class="avviso">${icon('alert')}<span>${esc(stop.avviso)}</span></div>` : '')
   const details = [...(stop.details || []), ...(pioggia ? (stop.detailsPioggia || []) : [])].map((d) => `<li class="${/ATTENZIONE|NON confermato|da verificare|da chiarire/i.test(d) ? 'alert' : ''}">${escLink(d)}</li>`).join('')
   // Consigli nostri, non dati confermati: stanno nello stesso pannello ma sotto il badge "stimato",
@@ -152,10 +155,11 @@ export function stopCard(stop, { person = null, isNow = false, nowLabel = 'adess
     </div>
     <p class="card__why">${esc(why)}</p>
     <div class="chips">${distChip(stop)}${durataChip(stop)}${voto}${prices}${badgeHtml(badgesFor(stop), reveal)}</div>
-    ${avviso}
+    ${avvisoOrario}${avviso}
     ${stop.tassista ? tassistaHtml(stop.tassista) : ''}
     ${acts.length ? `<div class="actions">${acts.join('')}</div>` : ''}
     ${details || bloccoStimati ? `<details><summary><span>Dettagli</span>${icon('chevron')}</summary><div class="card__more"><div>${details ? `<ul>${details}</ul>` : ''}${bloccoStimati}</div></div></details>` : ''}
+    ${rigaBagno(stop)}
     ${showCheck ? `<label class="check"><input type="checkbox" data-done="${stop.id}" ${done ? 'checked' : ''} aria-label="Fatto: ${esc(stop.title)}"><span>Fatto</span>${missionMine ? `<span class="check__xp">+${mission.xp} XP · ${esc(mission.title)}</span>` : ''}</label>` : ''}
     ${attribuzione(stop)}
   </article>`
@@ -188,6 +192,7 @@ async function copiaIndirizzo(testo, messaggio) {
 // `signal` viene dall'AbortController della vista: al cambio vista i listener spariscono.
 // Senza, si accumulavano su #app a ogni render e un tocco faceva più toggle.
 export function bindCards(container, { signal, onChange } = {}) {
+  montaBagni() // la riga "Bagno più vicino" apre il suo pannello: un ascoltatore solo, sul documento
   container.addEventListener('error', (e) => {
     const img = e.target.closest?.('.card__foto img')
     if (!img) return

@@ -19,6 +19,7 @@ Test delle date: aggiungi `?now=2026-10-17T07:50` all'URL (prima dell'hash), es.
 ## Come aggiornare il piano
 
 1. Modifica `data/itinerary.json` (tappe), `data/venues.json` (luoghi), `data/people.json`, `data/missions.json`, `data/checks.json`.
+   I bagni puliti vicino a ogni tappa stanno in `data/bagni.json` (posti + mappatura tappa → bagno); le distanze a piedi le scrive `node scripts/bagni-distanze.mjs` (Valhalla pedonale), solo per le coppie che non le hanno ancora.
    - Per una tappa nuova lascia `distFromPrevM: null` e `minFromPrev: null`: li calcola lo script.
    - Per un luogo nuovo lascia `lat`/`lng` a `null` e `verified:false`: lo geocodifica lo script. Se conosci le coordinate, mettile e segna `verified:true`.
    - I prezzi ammessi da `validate.mjs` sono in `scripts/validate.mjs` (`ALLOWED_PRICES`): aggiungi lì un prezzo nuovo prima di usarlo.

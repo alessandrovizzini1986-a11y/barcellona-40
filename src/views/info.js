@@ -14,12 +14,13 @@ import { sezioneViaggio, bindViaggio } from '../ui/viaggio.js'
 import { sezioneNovita } from '../ui/novita.js'
 import { canzoneVisibile } from '../time.js'
 import { nonLette } from '../novita.js'
+import { BAGNI, REGOLA, DA_TENERE, PULIZIA, bagnoById, voceBagno, montaBagni } from '../ui/bagno.js'
 
 const sec = (id, title, body, open = false) => `<details id="sec-${id}" ${open ? 'open' : ''}><summary>${esc(title)}${icon('chevron')}</summary><div class="acc__body">${body}</div></details>`
 
 export async function render(root, { person, sub, header }) {
   const p = personById(person)
-  const openId = ['profilo', 'verifiche', 'foto', 'canzone', 'viaggio', 'novita'].includes(sub) ? sub : null
+  const openId = ['profilo', 'verifiche', 'foto', 'canzone', 'viaggio', 'novita', 'bagni'].includes(sub) ? sub : null
   const nuove = nonLette().length
   const openChecks = checks.filter((c) => !store.isChecked(c.id)).length
 
@@ -52,6 +53,13 @@ export async function render(root, { person, sub, header }) {
         <li>Venerdì notte in due, sabato in tre: <strong>€65</strong> per il letto extra di sabato, si pagano in reception</li>
       </ul>
       <a class="btn" href="https://www.google.com/maps/dir/?api=1&destination=41.395437,2.179608&travelmode=walking" target="_blank" rel="noopener">${icon('map-pin')} Apri in Maps</a>`)}
+    ${sec('bagni', 'Bagni puliti', `
+      <p>${REGOLA.map(esc).join(' ')}</p>
+      <h3 class="section-title">Da tenere a mente <small>${DA_TENERE.length}</small></h3>
+      <div class="list bagni-lista">${DA_TENERE.map((id) => voceBagno(bagnoById(id))).join('')}</div>
+      <h3 class="section-title">Tutti <small>${BAGNI.length}</small></h3>
+      <div class="list bagni-lista">${BAGNI.map(voceBagno).join('')}</div>
+      <p class="faint">${esc(PULIZIA)}</p>`, openId === 'bagni')}
     ${sec('profilo', 'Profilo', `
       <div class="field"><label for="person">Chi sei</label>
         <select class="input" id="person">${people.map((x) => `<option value="${x.id}" ${x.id === person ? 'selected' : ''}>${esc(x.name)} · ${esc(x.role)}</option>`).join('')}</select></div>
@@ -77,6 +85,7 @@ export async function render(root, { person, sub, header }) {
 
   bindAlbum(root)
   bindSong(root)
+  montaBagni()
   if (person === 'ale') bindShareAlbum(root)
   if (openId) root.querySelector(`#sec-${openId}`)?.scrollIntoView({ block: 'start' })
   root.querySelector('#person').addEventListener('change', (e) => {

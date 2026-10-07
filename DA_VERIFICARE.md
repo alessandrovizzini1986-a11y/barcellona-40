@@ -2,6 +2,33 @@
 
 Generato in parte dagli script dati (`npm run data`). Le sezioni tra marker vengono riscritte a ogni esecuzione.
 
+## URGENTE · Orario dei Bunkers domenica 18 ottobre: due versioni ufficiali (07/10/2026)
+
+**Decide Alessandro. L'itinerario non è stato toccato**: la tappa d2 resta alle 16:00 con 210 minuti e il
+tramonto delle 19:07; sulla card c'è solo l'avviso giallo "Orario da confermare".
+
+Il problema: se vale la versione A, **domenica 18 ottobre il recinto chiude alle 17:30** e la città che si
+accende (18:58) non si vede da lassù. Con la versione B si resta fino a quando si vuole.
+
+| | Versione A: recinto con orario | Versione B: accesso libero |
+|---|---|---|
+| **Fonte** | guia.barcelona.cat, scheda "Turó de la Rovira. Museu d'Història de Barcelona" (`guia.barcelona.cat/detall/muhba-museu-d-historia-de-barcelona-turo-de-la-rovira_99400267435.html`), letta il 07/10/2026; la pagina non espone una data di aggiornamento | barcelona.cat/museuhistoria, pagina "Turó de la Rovira" (`barcelona.cat/museuhistoria/ca/turo-de-la-rovira`), letta il 07/10/2026; il testo cita "A partir de l'1 d'agost de 2026", quindi è stata aggiornata nel 2026 |
+| **Testo esatto** | "De l'1 maig al 30 setembre · Cada dia de 09.00 h a 19.30 h · Entrada Gratuïta · Fora d'aquest horari recinte arqueològic de l'entorn de la bateria antiaèria del Turó de la Rovira estarà tancat. · De l'1 octubre al 30 abril de 09.00 h a 17.30 h" | "El Turó de la Rovira és un espai de lliure accés. L'horari fa referència només als espais amb museografia que expliquen la Barcelona en temps de guerra i la ciutat informal de la postguerra. A partir de l'1 d'agost de 2026: D'octubre a maig: Dimecres, divendres, dissabtes i diumenges, de 10 a 14 h." |
+| **Cosa vuol dire il 18/10** | 09:00–17:30, poi la Guàrdia Urbana fa uscire tutti | nessun orario per il belvedere; 10–14 solo per i bunker musealizzati |
+
+Le notizie e le guide (2023–2025) stanno con la versione A:
+- betevé, "Els búnquers del Carmel tancaran al vespre a partir del 2 de maig: no s'hi podran veure postes de sol" (2023): recinto aperto "entre 9 i 19.30 h a l'estiu", 9–17:30 d'inverno; tanca d'acciaio alta 2 m, sei accessi, 1,6 milioni di euro.
+- Catalan News, "Barcelona will close Carmel Bunkers at night from May 2" (2023): stesse fasce, chiusura dal 2 maggio 2023.
+- El Nacional (2023): dopo la chiusura i salti della recinzione sono "occasionali e sporadici", sgomberi della Guàrdia Urbana.
+- barcelonahacks.com "Bunkers del Carmel: How to Get There + New 2025 Hours" e bunker-del-carmel.de/en/opening-hours (2025): "Summer 9:00–19:30, Winter 9:00–17:30", "sunset viewing is no longer possible as the gates close before sunset".
+- Nessuna notizia 2024–2026 trovata che annunci la fine della chiusura serale; il turó resta "lliure accés" nel senso di gratuito, non di sempre aperto.
+
+Lettura nostra (non è una decisione): le due pagine non si contraddicono sul biglietto (gratis in entrambe), si contraddicono
+sull'orario. La pagina del museo parla degli spazi museali e ha sempre scritto "lliure accés" anche dopo il 2023; la scheda
+della guida cittadina descrive il recinto. Il peso delle fonti sta con le 17:30. Alternative se vale la A: salire alle 16:00
+e scendere alle 17:30 con la luce del giorno (vista sì, città accesa no), oppure spostare il tramonto su un belvedere senza
+recinto (da scegliere). Serve una telefonata al 93 256 21 22 (lun–gio 9–15, ven 9–15 e 16–19) per chiudere.
+
 ## Restano aperte: solo cose che si risolvono sul posto (20/09/2026)
 
 Il sito è chiuso. Quello che resta non è verificabile da qui: sono quattro cose da guardare con gli occhi,

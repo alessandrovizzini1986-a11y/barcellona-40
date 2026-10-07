@@ -1,0 +1,597 @@
+{
+ "_nota": "Bagni puliti vicino a ogni tappa: hall di hotel 4-5★ dove si prende un caffè e si usano i bagni, più i pochi posti con biglietto che valgono. Coordinate, voti e telefoni da Google Places (estrazione di Alessandro, 07/10/2026): NON ricalcolarle. Le distanze (tappe[id].dist) le scrive scripts/bagni-distanze.mjs con Valhalla pedonale, dal venue della tappa al bagno; per rifarne una, cancella la voce.",
+ "regola": [
+  "Hall di hotel 4-5 stelle: entri dal bar, prendi un caffè, chiedi del bagno.",
+  "Sempre un caffè: così sei un cliente.",
+  "Evita le 11-12, orario dei check-out."
+ ],
+ "daTenereAMente": [
+  "edition",
+  "neri",
+  "mercer",
+  "sercotel",
+  "elpalace",
+  "maremagnum"
+ ],
+ "pulizia": "Puliti per regola, non per recensione: nessuna recensione parla dei bagni delle hall.",
+ "semplici": {
+  "appartamento": "Appartamento",
+  "t2": "Bagni del T2"
+ },
+ "bagni": [
+  {
+   "id": "edition",
+   "nome": "The Barcelona EDITION · bar Veraz",
+   "breve": "EDITION · bar Veraz",
+   "cat": "Hotel 5★ (Marriott)",
+   "addr": "Av. de Francesc Cambó, 14",
+   "lat": 41.385944,
+   "lng": 2.1778103,
+   "orario": "bar 7:30–24:00 tutti i giorni",
+   "orarioBreve": "7:30–24",
+   "dove": "Bagni del bar Veraz, piano terra",
+   "come": "Entri dal bar Veraz (ingresso dalla strada), prendi un caffè, chiedi del bagno",
+   "discrezione": 5,
+   "rating": 4.4,
+   "reviews": 763,
+   "tel": "+34 936 26 33 30",
+   "fonte": "Google Places, 07/10/2026",
+   "nota": "Il più utile del weekend: a 50 m dal mercato di Santa Caterina, 425 m da Brunells"
+  },
+  {
+   "id": "h10montcada",
+   "nome": "H10 Montcada · Travellers Bar",
+   "breve": "H10 Montcada",
+   "cat": "Hotel 4★ (H10)",
+   "addr": "Via Laietana, 24",
+   "lat": 41.3843884,
+   "lng": 2.1785174,
+   "orario": "reception 24h, bar della hall",
+   "orarioBreve": "24h",
+   "dove": "Bagno al piano terra, accanto alla hall",
+   "come": "Bar nella hall, caffè, bagno al piano terra",
+   "discrezione": 4,
+   "rating": 4.6,
+   "reviews": 1423,
+   "tel": "+34 932 68 85 70",
+   "fonte": "Google Places, 07/10/2026",
+   "nota": "Hall piccola, reception a vista"
+  },
+  {
+   "id": "grandcentral",
+   "nome": "Grand Hotel Central",
+   "breve": "Grand Hotel Central",
+   "cat": "Hotel 5★",
+   "addr": "Via Laietana, 30",
+   "lat": 41.3849706,
+   "lng": 2.1777654,
+   "orario": "caffetteria dalle 7:00 nei feriali",
+   "orarioBreve": "dalle 7",
+   "dove": "Bagni della caffetteria, piano terra",
+   "come": "Caffetteria accanto alla hall",
+   "discrezione": 3,
+   "rating": 4.5,
+   "reviews": 1809,
+   "tel": "+34 932 95 79 00",
+   "fonte": "Google Places, 07/10/2026"
+  },
+  {
+   "id": "neri",
+   "nome": "Hotel Neri · A Restaurant",
+   "breve": "Hotel Neri",
+   "cat": "Hotel 5★ (Relais & Châteaux)",
+   "addr": "Carrer de Sant Sever, 5 · Plaça de Sant Felip Neri",
+   "lat": 41.3831717,
+   "lng": 2.1753815,
+   "orario": "bar dalle 11:00 (colazione 7:30–11:00)",
+   "orarioBreve": "dalle 11",
+   "dove": "Bagno al piano terra",
+   "come": "Caffè o vermut al bar, bagno al piano terra",
+   "discrezione": 4,
+   "rating": 4.5,
+   "reviews": 697,
+   "tel": "+34 933 04 06 55",
+   "fonte": "Google Places, 07/10/2026",
+   "nota": "È sulla piazza di Sant Felip Neri: copre Pont del Bisbe e Duck Store"
+  },
+  {
+   "id": "mercer",
+   "nome": "Mercer Hotel · Cocktail Bar",
+   "breve": "Mercer Hotel",
+   "cat": "Hotel 5★",
+   "addr": "Carrer dels Lledó, 7",
+   "lat": 41.3825393,
+   "lng": 2.1789669,
+   "orario": "cocktail bar 16:00–23:00; caffè al mattino nel patio",
+   "orarioBreve": "bar 16–23",
+   "dove": "Bagno della hall",
+   "come": "Un drink al bar, bagno della hall",
+   "discrezione": 3,
+   "rating": 4.6,
+   "reviews": 469,
+   "tel": "+34 933 10 74 80",
+   "fonte": "Google Places, 07/10/2026",
+   "nota": "Hotel piccolo: un non ospite si nota"
+  },
+  {
+   "id": "sercotel",
+   "nome": "Sercotel Rosellón",
+   "breve": "Sercotel",
+   "cat": "Hotel 4★ (Sercotel)",
+   "addr": "Carrer del Rosselló, 390",
+   "lat": 41.4047659,
+   "lng": 2.1727455,
+   "orario": "reception 24h, ristorante 10:00–22:30, caffetteria 13:30–23:00",
+   "orarioBreve": "24h",
+   "dove": "Bagno della hall",
+   "come": "Caffè al bar, bagno della hall",
+   "discrezione": 3,
+   "rating": 4.2,
+   "reviews": 4209,
+   "tel": "+34 936 00 92 00",
+   "fonte": "Google Places, 07/10/2026",
+   "nota": "Zona Sagrada: copre BO&MIE, Taps e Olimpo"
+  },
+  {
+   "id": "elpalace",
+   "nome": "El Palace · hall e Rooftop",
+   "breve": "El Palace",
+   "cat": "Hotel 5★",
+   "addr": "Gran Via, 668",
+   "lat": 41.3915035,
+   "lng": 2.1715182,
+   "orario": "hall 24h; rooftop con orari variabili",
+   "orarioBreve": "24h",
+   "dove": "Bagni del rooftop o della hall",
+   "come": "Siete già clienti del Rooftop: bagni del rooftop o della hall",
+   "discrezione": 5,
+   "rating": 4.6,
+   "reviews": 2804,
+   "tel": "+34 935 10 11 30",
+   "fonte": "Google Places, 07/10/2026"
+  },
+  {
+   "id": "nhconstanza",
+   "nome": "NH Collection Constanza",
+   "breve": "NH Constanza",
+   "cat": "Hotel 4★ (NH)",
+   "addr": "Carrer de Déu i Mata, 69-99",
+   "lat": 41.388855,
+   "lng": 2.136275,
+   "orario": "reception 24h, bar della hall",
+   "orarioBreve": "24h",
+   "dove": "Bagno della hall",
+   "come": "Caffè o drink al bar, bagno della hall",
+   "discrezione": 4,
+   "rating": 4.4,
+   "reviews": 3756,
+   "tel": "+34 916 00 81 46",
+   "fonte": "Google Places, 07/10/2026",
+   "nota": "Hotel business grande, molto passaggio: nessuno ti nota"
+  },
+  {
+   "id": "arts",
+   "nome": "Hotel Arts (Ritz-Carlton) · lobby bar",
+   "breve": "Hotel Arts",
+   "cat": "Hotel 5★",
+   "addr": "Carrer de la Marina, 19-21",
+   "lat": 41.3870567,
+   "lng": 2.1964207,
+   "orario": "lobby bar fino alle 3:00",
+   "orarioBreve": "fino alle 3",
+   "dove": "Bagni della lobby",
+   "come": "Stesso complesso del Casino. Drink al lobby bar",
+   "discrezione": 4,
+   "rating": 4.5,
+   "reviews": 4774,
+   "tel": "+34 932 21 10 00",
+   "fonte": "Google Places, 07/10/2026",
+   "nota": "Lavori in corso nel 2025-26, lobby bar operativo",
+   "stimato": true
+  },
+  {
+   "id": "santpau",
+   "nome": "Recinte Modernista de Sant Pau",
+   "breve": "Sant Pau",
+   "cat": "Museo con biglietto",
+   "addr": "Carrer de Sant Antoni Maria Claret, 167",
+   "lat": 41.4117072,
+   "lng": 2.1743395,
+   "orario": "9:30–18:30, ultimo ingresso 18:00",
+   "orarioBreve": "9:30–18:30",
+   "dove": "Bagni interni del recinto",
+   "come": "Biglietto ~17 €: bagni puliti garantiti, ma lontano dai Bunkers",
+   "discrezione": 5,
+   "rating": 4.6,
+   "reviews": 62259,
+   "fonte": "Google Places, 07/10/2026",
+   "nota": "Piano C per la domenica: 1,9 km a piedi dai Bunkers, 24 minuti"
+  },
+  {
+   "id": "maremagnum",
+   "nome": "Maremagnum · bagni 1° e 2° piano",
+   "breve": "Maremagnum",
+   "cat": "Centro commerciale",
+   "addr": "Moll d'Espanya, 5",
+   "lat": 41.3746496,
+   "lng": 2.1823721,
+   "orario": "10:00–22:00 tutti i giorni",
+   "orarioBreve": "10–22",
+   "dove": "1° e 2° piano gratuiti; piano terra a pagamento",
+   "come": "Piano terra a pagamento 1,50 €; 1° e 2° piano gratuiti. Se c'è coda, quello a pagamento",
+   "discrezione": 5,
+   "rating": 4.2,
+   "reviews": 39563,
+   "fonte": "Google Places, 07/10/2026",
+   "nota": "Piano pioggia della domenica"
+  },
+  {
+   "id": "sagrada",
+   "nome": "Sagrada Família · bagni interni",
+   "breve": "Sagrada, dentro",
+   "cat": "Monumento con biglietto",
+   "addr": "dentro, vicino agli ingressi, piano inferiore",
+   "lat": 41.4039406,
+   "lng": 2.1751597,
+   "orario": "durante la visita",
+   "orarioBreve": "col biglietto",
+   "dove": "Vicino agli ingressi, piano inferiore",
+   "come": "Usali appena entrati: non si esce e rientra",
+   "discrezione": 5,
+   "fonte": "Sito ufficiale, 07/10/2026",
+   "nota": "Solo sabato con il biglietto"
+  },
+  {
+   "id": "canudas",
+   "nome": "Sala VIP Canudas",
+   "breve": "Sala VIP Canudas",
+   "cat": "Lounge aeroporto",
+   "addr": "T2, piano 1, area imbarchi porte U",
+   "lat": 41.3033401,
+   "lng": 2.076845,
+   "orario": "6:00–22:00 (una fonte dice 21:00)",
+   "orarioBreve": "6–22",
+   "dove": "Dentro la lounge",
+   "come": "Solo in partenza, domenica sera",
+   "discrezione": 5,
+   "fonte": "data/viaggio.json (lounge), 07/10/2026",
+   "nota": "Docce 'subject to availability': non contarci al 100 %",
+   "stimato": true
+  }
+ ],
+ "tappe": {
+  "f1": {
+   "semplice": "Bagni della sala bagagli",
+   "nota": "Nessuna lounge agli arrivi: usa il bagno dell'aereo prima della discesa"
+  },
+  "f1b": {
+   "prima": "edition",
+   "seconda": "h10montcada",
+   "critico": true,
+   "nota": "Il momento critico: l'EDITION apre alle 7:30, Brunells alle 9:00. Prima caffè e bagno al Veraz, poi croissant",
+   "dist": {
+    "edition": {
+     "m": 425,
+     "min": 5
+    },
+    "h10montcada": {
+     "m": 243,
+     "min": 3
+    }
+   }
+  },
+  "f2": {
+   "prima": "edition",
+   "nota": "Nessun hotel vicino al parco: vai prima di entrare",
+   "dist": {
+    "edition": {
+     "m": 1118,
+     "min": 14
+    }
+   }
+  },
+  "f2b": {
+   "prima": "edition",
+   "seconda": "h10montcada",
+   "dist": {
+    "edition": {
+     "m": 756,
+     "min": 9
+    },
+    "h10montcada": {
+     "m": 574,
+     "min": 7
+    }
+   }
+  },
+  "f3": {
+   "prima": "h10montcada",
+   "seconda": "mercer",
+   "dist": {
+    "h10montcada": {
+     "m": 345,
+     "min": 4
+    },
+    "mercer": {
+     "m": 510,
+     "min": 6
+    }
+   }
+  },
+  "f4": {
+   "prima": "h10montcada",
+   "seconda": "mercer",
+   "dist": {
+    "h10montcada": {
+     "m": 276,
+     "min": 3
+    },
+    "mercer": {
+     "m": 484,
+     "min": 6
+    }
+   }
+  },
+  "f5": {
+   "prima": "neri",
+   "seconda": "grandcentral",
+   "dist": {
+    "neri": {
+     "m": 130,
+     "min": 2
+    },
+    "grandcentral": {
+     "m": 370,
+     "min": 5
+    }
+   }
+  },
+  "f6": {
+   "prima": "neri",
+   "nota": "È sulla piazza",
+   "dist": {
+    "neri": {
+     "m": 39,
+     "min": 0
+    }
+   }
+  },
+  "f7": {
+   "prima": "neri",
+   "seconda": "mercer",
+   "dist": {
+    "neri": {
+     "m": 196,
+     "min": 2
+    },
+    "mercer": {
+     "m": 398,
+     "min": 5
+    }
+   }
+  },
+  "f8": {
+   "prima": "edition",
+   "nota": "A 50 m dal mercato",
+   "dist": {
+    "edition": {
+     "m": 52,
+     "min": 1
+    }
+   }
+  },
+  "f9": {
+   "prima": "edition",
+   "dist": {
+    "edition": {
+     "m": 52,
+     "min": 1
+    }
+   }
+  },
+  "f10": {
+   "prima": "edition",
+   "dist": {
+    "edition": {
+     "m": 52,
+     "min": 1
+    }
+   }
+  },
+  "f11": {
+   "semplice": "Appartamento"
+  },
+  "f12": {
+   "semplice": "Appartamento"
+  },
+  "f13": {
+   "prima": "sercotel",
+   "seconda": "appartamento",
+   "dist": {
+    "sercotel": {
+     "m": 364,
+     "min": 4
+    }
+   }
+  },
+  "f12c": {
+   "semplice": "Appartamento"
+  },
+  "f12b": {
+   "semplice": "Bagni interni del centro culturale",
+   "stimato": true,
+   "nota": "Centro culturale: bagni interni probabili, non verificati"
+  },
+  "f14": {
+   "prima": "elpalace",
+   "nota": "Siete clienti",
+   "dist": {
+    "elpalace": {
+     "m": 0,
+     "min": 0
+    }
+   }
+  },
+  "f15": {
+   "semplice": "Ristorante",
+   "seconda": "nhconstanza",
+   "dist": {
+    "nhconstanza": {
+     "m": 607,
+     "min": 7
+    }
+   }
+  },
+  "f99": {
+   "semplice": "Bagni del casinò",
+   "seconda": "arts",
+   "dist": {
+    "arts": {
+     "m": 66,
+     "min": 1
+    }
+   }
+  },
+  "s1": {
+   "semplice": "Appartamento"
+  },
+  "s2": {
+   "semplice": "Bagni del T2, dopo i controlli"
+  },
+  "s3": {
+   "prima": "sercotel",
+   "dist": {
+    "sercotel": {
+     "m": 808,
+     "min": 10
+    }
+   }
+  },
+  "s3c": {
+   "prima": "sercotel",
+   "seconda": "appartamento",
+   "dist": {
+    "sercotel": {
+     "m": 255,
+     "min": 3
+    }
+   }
+  },
+  "s4": {
+   "prima": "sagrada",
+   "nota": "Appena entrati",
+   "dist": {
+    "sagrada": {
+     "m": 0,
+     "min": 0
+    }
+   }
+  },
+  "s5": {
+   "prima": "sercotel",
+   "nota": "O i bagni della Sagrada all'uscita",
+   "dist": {
+    "sercotel": {
+     "m": 808,
+     "min": 10
+    }
+   }
+  },
+  "s5b": {
+   "semplice": "Appartamento"
+  },
+  "s6": {
+   "semplice": "Appartamento"
+  },
+  "s7": {
+   "semplice": "Appartamento",
+   "seconda": "sercotel",
+   "dist": {
+    "sercotel": {
+     "m": 1174,
+     "min": 15
+    }
+   }
+  },
+  "s8": {
+   "prima": "mercer",
+   "seconda": "neri",
+   "nota": "Aperitivo al Mercer alle 19:00 è anche un bel ponte",
+   "dist": {
+    "mercer": {
+     "m": 515,
+     "min": 7
+    },
+    "neri": {
+     "m": 588,
+     "min": 7
+    }
+   }
+  },
+  "s9": {
+   "prima": "mercer",
+   "nota": "Prima di uscire",
+   "dist": {
+    "mercer": {
+     "m": 1409,
+     "min": 18
+    }
+   }
+  },
+  "s99": {
+   "semplice": "Bagni del casinò",
+   "seconda": "arts",
+   "dist": {
+    "arts": {
+     "m": 66,
+     "min": 1
+    }
+   }
+  },
+  "d1": {
+   "semplice": "Ristorante",
+   "nota": "Usalo prima di uscire: dopo non c'è niente"
+  },
+  "d1b": {
+   "prima": "maremagnum",
+   "nota": "Il Time Out Market sta dentro Maremagnum",
+   "dist": {
+    "maremagnum": {
+     "m": 245,
+     "min": 3
+    }
+   }
+  },
+  "d1c": {
+   "prima": "maremagnum",
+   "dist": {
+    "maremagnum": {
+     "m": 0,
+     "min": 0
+    }
+   }
+  },
+  "d2": {
+   "semplice": "Nessuno quassù",
+   "seconda": "santpau",
+   "nota": "Collina senza servizi. Sant Pau è a 1,9 km a piedi (24 min). Vedi l'avviso sull'orario",
+   "dist": {
+    "santpau": {
+     "m": 1944,
+     "min": 24
+    }
+   }
+  },
+  "d3": {
+   "prima": "canudas",
+   "seconda": "t2",
+   "nota": "In alternativa i bagni del T2",
+   "dist": {
+    "canudas": {
+     "m": 0,
+     "min": 0
+    }
+   }
+  }
+ }
+}

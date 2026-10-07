@@ -15,7 +15,7 @@ const TILES = {
   light: `https://{s}.basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}{r}.png?key=${CARTO_KEY}`
 }
 
-export function createMap(el, stopsByDay, { theme = 'dark' } = {}) {
+export function createMap(el, stopsByDay, { theme = 'dark', bagni = [], onBagno = null } = {}) {
   const map = L.map(el, { preferCanvas: true, zoomControl: false, attributionControl: false, tap: false })
   L.control.zoom({ position: 'bottomleft' }).addTo(map)
   L.control.attribution({ prefix: false }).addTo(map)
@@ -38,6 +38,17 @@ export function createMap(el, stopsByDay, { theme = 'dark' } = {}) {
     })
     if (pts.length > 1) g.addLayer(L.polyline(pts, { color: DAY_COLOR[key].startsWith('var') ? cssVar(DAY_COLOR[key]) : DAY_COLOR[key], weight: 3, opacity: .7 }))
     layers[key] = g
+  }
+  // Layer "Bagni": marker blu con l'icona del bagno, nessuna linea, nessun numero; il tap apre il pannello
+  // del bagno (non un popup). Non entra in fit(): la mappa si inquadra sulle tappe, non sui bagni.
+  if (bagni.length) {
+    const g = L.layerGroup()
+    bagni.filter((b) => b.lat != null && b.lng != null).forEach((b) => {
+      const m = L.marker([b.lat, b.lng], { icon: L.divIcon({ className: '', html: `<div class="marker marker--bagno" data-bagno-marker="${esc(b.id)}">${icon('bath')}</div>`, iconSize: [26, 26], iconAnchor: [13, 13] }), alt: `Bagno: ${b.nome}`, keyboard: true })
+      m.on('click', () => onBagno?.(b.id))
+      g.addLayer(m)
+    })
+    layers.bagni = g
   }
   if (all.length) map.fitBounds(L.latLngBounds(all).pad(.15)); else map.setView([41.39, 2.17], 13)
 
