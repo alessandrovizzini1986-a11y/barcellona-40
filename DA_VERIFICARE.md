@@ -31,6 +31,12 @@ della guida cittadina descrive il recinto. Il peso delle fonti sta con le 17:30.
 e scendere alle 17:30 con la luce del giorno (vista sì, città accesa no), oppure spostare il tramonto su un belvedere senza
 recinto (da scegliere). Serve una telefonata al 93 256 21 22 (lun–gio 9–15, ven 9–15 e 16–19) per chiudere.
 
+## Statistiche con orari (pagina privata) · 07/10/2026
+
+- **CORS verificato, API usabile dal browser**: `OPTIONS` e `GET` su `barcellona40.goatcounter.com/api/v0/stats/hits` rispondono con `Access-Control-Allow-Origin: *` e `Access-Control-Allow-Headers: Authorization, Content-Type`; un token sbagliato dà `401` leggibile (corpo HTML, non JSON). Quindi niente proxy, niente fallback: la pagina chiama l'API direttamente con il token salvato nel telefono (`b40:v1:gc-token`). Il token non è nel repo.
+- **Alessandro: controlla timezone Europe/Rome in GoatCounter** (Settings → Site), altrimenti le ore sono UTC (−2h). Da qui non si può leggere: le impostazioni richiedono il login. La pagina non converte le ore lato client.
+- Il permesso del token deve essere "Read statistics" e basta: niente altro.
+
 ## Bagni puliti: cosa resta aperto dopo la verifica del 07/10/2026
 
 Confermati dai siti ufficiali: Mercer cocktail bar 16–23; Sercotel ristorante 10–22:30 e caffetteria 13:30–23;

@@ -2,6 +2,8 @@
 // scrivendo l'indirizzo. Legge i contatori pubblici di GoatCounter — /counter/<path>.json, aperti
 // senza token perché nelle impostazioni è attivo "Allow adding visitor counts" — quindi qui dentro
 // non c'è nessuna chiave e non c'è niente da tenere segreto se non l'indirizzo stesso.
+// La sezione "Quando entrano" (stats-orari.js) è l'eccezione: usa l'API autenticata con un token che sta
+// solo nel localStorage del telefono di Alessandro, mai nel repo.
 //
 // Il 404 di quell'endpoint NON è un errore: vuol dire "questo percorso non l'ha mai aperto nessuno",
 // e infatti risponde con gli zeri. Dati non disponibili sono solo gli errori di rete e i 5xx.
@@ -12,6 +14,7 @@ import people from '../data/people.json'
 import itinerary from '../data/itinerary.json'
 import { esc } from './ui/html.js'
 import { mosaicDataUri } from './ui/mosaic.js'
+import { montaOrari } from './stats-orari.js'
 
 const BASE = 'https://barcellona40.goatcounter.com/counter/'
 const TTL = 5 * 60 * 1000
@@ -200,6 +203,7 @@ function pagina(res) {
       <p class="s-head__sub">Barcelona 40 · pagina privata</p>
     </header>
     <main class="s-main">
+      <div id="orari"></div>
       ${tuttoGiu ? `<section class="s-giu">
         <h2>Dati non disponibili</h2>
         <p class="muted">GoatCounter non risponde: nessuna delle ${n(res.totali)} richieste è arrivata. Non vuol dire zero visite, vuol dire che adesso non si può sapere.</p>
@@ -234,12 +238,14 @@ let lista = percorsi()
 
 async function disegna({ forza = false } = {}) {
   const cache = forza ? null : daCache()
-  if (cache) { root.innerHTML = pagina(cache); return }
-  root.innerHTML = `<header class="s-head"><h1>Statistiche</h1><p class="s-head__sub">Sto leggendo ${n(lista.length)} contatori…</p></header><main class="s-main">${scheletro()}</main>`
+  if (cache) { root.innerHTML = pagina(cache); montaOrari(root.querySelector('#orari')); return }
+  root.innerHTML = `<header class="s-head"><h1>Statistiche</h1><p class="s-head__sub">Sto leggendo ${n(lista.length)} contatori…</p></header><main class="s-main"><div id="orari"></div>${scheletro()}</main>`
+  montaOrari(root.querySelector('#orari'))
   const sub = root.querySelector('.s-head__sub')
   const res = await scarica(lista, (fatti, tot) => { if (sub) sub.textContent = `Sto leggendo i contatori… ${fatti}/${tot}` })
   if (res.errori !== res.totali) inCache(res)
   root.innerHTML = pagina(res)
+  montaOrari(root.querySelector('#orari')) // la sezione "Quando entrano" ha il suo stato e la sua cache
 }
 
 root.addEventListener('click', (e) => {
