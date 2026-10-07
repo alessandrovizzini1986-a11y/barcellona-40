@@ -65,15 +65,16 @@
    "addr": "Via Laietana, 30",
    "lat": 41.3849706,
    "lng": 2.1777654,
-   "orario": "caffetteria dalle 7:00 nei feriali",
-   "orarioBreve": "dalle 7",
+   "orario": "caffetteria dalle 7:00 nei feriali (non confermato dal sito ufficiale)",
+   "orarioBreve": "dalle 7, da conf.",
    "dove": "Bagni della caffetteria, piano terra",
    "come": "Caffetteria accanto alla hall",
    "discrezione": 3,
    "rating": 4.5,
    "reviews": 1809,
    "tel": "+34 932 95 79 00",
-   "fonte": "Google Places, 07/10/2026"
+   "fonte": "Google Places 07/10/2026; orari non trovati sul sito ufficiale (ricerca del 07/10/2026)",
+   "stimato": true
   },
   {
    "id": "neri",
@@ -83,16 +84,17 @@
    "addr": "Carrer de Sant Sever, 5 · Plaça de Sant Felip Neri",
    "lat": 41.3831717,
    "lng": 2.1753815,
-   "orario": "bar dalle 11:00 (colazione 7:30–11:00)",
-   "orarioBreve": "dalle 11",
+   "orario": "ristorante 7:30–11:00, 13:00–15:30, 19:30–23:00 (Time Out, 2018); fra le 11 e le 13 il bar potrebbe essere chiuso",
+   "orarioBreve": "7:30–11 · 13–15:30",
    "dove": "Bagno al piano terra",
    "come": "Caffè o vermut al bar, bagno al piano terra",
    "discrezione": 4,
    "rating": 4.5,
    "reviews": 697,
    "tel": "+34 933 04 06 55",
-   "fonte": "Google Places, 07/10/2026",
-   "nota": "È sulla piazza di Sant Felip Neri: copre Pont del Bisbe e Duck Store"
+   "fonte": "Google Places 07/10/2026; orari da Time Out (2018), non dal sito ufficiale",
+   "nota": "È sulla piazza di Sant Felip Neri: copre Pont del Bisbe e Duck Store. Attenzione: alle 11:21–11:50 siamo nel buco fra colazione e pranzo",
+   "stimato": true
   },
   {
    "id": "mercer",
@@ -102,16 +104,16 @@
    "addr": "Carrer dels Lledó, 7",
    "lat": 41.3825393,
    "lng": 2.1789669,
-   "orario": "cocktail bar 16:00–23:00; caffè al mattino nel patio",
-   "orarioBreve": "bar 16–23",
+   "orario": "cocktail bar 16:00–23:00, tutti i giorni (sito ufficiale); al mattino niente di confermato per chi non dorme lì",
+   "orarioBreve": "16–23",
    "dove": "Bagno della hall",
    "come": "Un drink al bar, bagno della hall",
    "discrezione": 3,
    "rating": 4.6,
    "reviews": 469,
    "tel": "+34 933 10 74 80",
-   "fonte": "Google Places, 07/10/2026",
-   "nota": "Hotel piccolo: un non ospite si nota"
+   "fonte": "Google Places 07/10/2026; orari dal sito ufficiale mercerbarcelona.com, letto il 07/10/2026",
+   "nota": "Hotel piccolo: un non ospite si nota. Solo dal pomeriggio"
   },
   {
    "id": "sercotel",
@@ -121,15 +123,15 @@
    "addr": "Carrer del Rosselló, 390",
    "lat": 41.4047659,
    "lng": 2.1727455,
-   "orario": "reception 24h, ristorante 10:00–22:30, caffetteria 13:30–23:00",
-   "orarioBreve": "24h",
+   "orario": "ristorante 10:00–22:30, caffetteria 13:30–23:00, tutti i giorni (sito ufficiale)",
+   "orarioBreve": "10–22:30",
    "dove": "Bagno della hall",
    "come": "Caffè al bar, bagno della hall",
    "discrezione": 3,
    "rating": 4.2,
    "reviews": 4209,
    "tel": "+34 936 00 92 00",
-   "fonte": "Google Places, 07/10/2026",
+   "fonte": "Google Places 07/10/2026; orari dal sito ufficiale sercotelhoteles.com, letto il 07/10/2026",
    "nota": "Zona Sagrada: copre BO&MIE, Taps e Olimpo"
   },
   {
@@ -249,13 +251,13 @@
    "addr": "T2, piano 1, area imbarchi porte U",
    "lat": 41.3033401,
    "lng": 2.076845,
-   "orario": "6:00–22:00 (una fonte dice 21:00)",
-   "orarioBreve": "6–22",
+   "orario": "6:00–23:00 secondo Aena (sito ufficiale); 6:00–21:00 secondo LoungePair (set 2026)",
+   "orarioBreve": "6–23",
    "dove": "Dentro la lounge",
    "come": "Solo in partenza, domenica sera",
    "discrezione": 5,
-   "fonte": "data/viaggio.json (lounge), 07/10/2026",
-   "nota": "Docce 'subject to availability': non contarci al 100 %",
+   "fonte": "Aena serviciosvip.aena.es e LoungePair, letti il 07/10/2026",
+   "nota": "Docce gratuite ma 'subject to availability': non contarci al 100 %. Entra entro le 20:30",
    "stimato": true
   }
  ],
@@ -306,43 +308,43 @@
   },
   "f3": {
    "prima": "h10montcada",
-   "seconda": "mercer",
+   "seconda": "edition",
    "dist": {
     "h10montcada": {
      "m": 345,
      "min": 4
     },
-    "mercer": {
-     "m": 510,
-     "min": 6
+    "edition": {
+     "m": 554,
+     "min": 7
     }
    }
   },
   "f4": {
    "prima": "h10montcada",
-   "seconda": "mercer",
+   "seconda": "edition",
    "dist": {
     "h10montcada": {
      "m": 276,
      "min": 3
     },
-    "mercer": {
-     "m": 484,
-     "min": 6
+    "edition": {
+     "m": 458,
+     "min": 5
     }
    }
   },
   "f5": {
    "prima": "neri",
-   "seconda": "grandcentral",
+   "seconda": "h10montcada",
    "dist": {
     "neri": {
      "m": 130,
      "min": 2
     },
-    "grandcentral": {
-     "m": 370,
-     "min": 5
+    "h10montcada": {
+     "m": 298,
+     "min": 4
     }
    }
   },
@@ -358,14 +360,14 @@
   },
   "f7": {
    "prima": "neri",
-   "seconda": "mercer",
+   "seconda": "h10montcada",
    "dist": {
     "neri": {
      "m": 196,
      "min": 2
     },
-    "mercer": {
-     "m": 398,
+    "h10montcada": {
+     "m": 417,
      "min": 5
     }
    }
@@ -420,7 +422,7 @@
   "f12b": {
    "semplice": "Bagni interni del centro culturale",
    "stimato": true,
-   "nota": "Centro culturale: bagni interni probabili, non verificati"
+   "nota": "Aperto venerdì 8–14 e 16–20 (sito Fundació la Caixa): bagni interni probabili, non confermati da nessuna fonte"
   },
   "f14": {
    "prima": "elpalace",

@@ -22,12 +22,27 @@ Le notizie e le guide (2023–2025) stanno con la versione A:
 - El Nacional (2023): dopo la chiusura i salti della recinzione sono "occasionali e sporadici", sgomberi della Guàrdia Urbana.
 - barcelonahacks.com "Bunkers del Carmel: How to Get There + New 2025 Hours" e bunker-del-carmel.de/en/opening-hours (2025): "Summer 9:00–19:30, Winter 9:00–17:30", "sunset viewing is no longer possible as the gates close before sunset".
 - Nessuna notizia 2024–2026 trovata che annunci la fine della chiusura serale; il turó resta "lliure accés" nel senso di gratuito, non di sempre aperto.
+- RAC1, 24/04/2023 (seconda ricerca, 07/10/2026 sera): "I a l'hivern, l'hora de tancament s'avançarà a dos quarts de sis de la tarda" (17:30). Ancora nessuna fonte 2025–2026 che dica il contrario.
+- Telefono MUHBA: 93 256 21 22. La pagina del museo dice lun–gio 9–15 e ven 9–15 / 16–19; un PDF terzo dice lun–ven 10–14 e 16–19: chiamare fra le 10 e le 14 va bene con tutte e due.
 
 Lettura nostra (non è una decisione): le due pagine non si contraddicono sul biglietto (gratis in entrambe), si contraddicono
 sull'orario. La pagina del museo parla degli spazi museali e ha sempre scritto "lliure accés" anche dopo il 2023; la scheda
 della guida cittadina descrive il recinto. Il peso delle fonti sta con le 17:30. Alternative se vale la A: salire alle 16:00
 e scendere alle 17:30 con la luce del giorno (vista sì, città accesa no), oppure spostare il tramonto su un belvedere senza
 recinto (da scegliere). Serve una telefonata al 93 256 21 22 (lun–gio 9–15, ven 9–15 e 16–19) per chiudere.
+
+## Bagni puliti: cosa resta aperto dopo la verifica del 07/10/2026
+
+Confermati dai siti ufficiali: Mercer cocktail bar 16–23; Sercotel ristorante 10–22:30 e caffetteria 13:30–23;
+Palau Macaya venerdì 8–14 e 16–20; Sala VIP Canudas 6–23 (Aena). Restano `stimato` in `data/bagni.json`:
+
+| Cosa | Perché | Effetto sul piano |
+|---|---|---|
+| **Hotel Neri fra le 11 e le 13** | l'unica fonte (Time Out, 2018) dà il ristorante 7:30–11, 13–15:30, 19:30–23: alle 11:21–11:50 (Pont del Bisbe, Sant Felip Neri, Duck Store) potremmo trovare chiuso | seconda scelta spostata sull'H10 Montcada (24h, 300–420 m) |
+| **Grand Hotel Central** | orari della caffetteria non trovati sul sito ufficiale | tolto dalle seconde scelte, resta nell'elenco di Info |
+| **Bagni del Palau Macaya** | nessuna fonte li cita | la riga di f12b resta "probabili" |
+| **Canudas 21:00 o 23:00** | Aena dice 23, LoungePair (set 2026) dice 21 | nessuno: si entra alle 20 |
+| **Mercer al mattino** | il caffè nel patio per i non ospiti non risulta: tolto dal dato | f3, f4 e f7 passano all'EDITION o all'H10 come seconda scelta |
 
 ## Restano aperte: solo cose che si risolvono sul posto (20/09/2026)
 
