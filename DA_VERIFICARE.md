@@ -36,7 +36,7 @@ recinto (da scegliere). Serve una telefonata al 93 256 21 22 (lun–gio 9–15, 
 - **CORS verificato, API usabile dal browser**: `OPTIONS` e `GET` su `barcellona40.goatcounter.com/api/v0/stats/hits` rispondono con `Access-Control-Allow-Origin: *` e `Access-Control-Allow-Headers: Authorization, Content-Type`; un token sbagliato dà `401` leggibile (corpo HTML, non JSON). Quindi niente proxy, niente fallback: la pagina chiama l'API direttamente con il token salvato nel telefono (`b40:v1:gc-token`). Il token non è nel repo.
 - **Fuso verificato il 07/10/2026 via API (`/api/v0/me`)**: `timezone: IT.Europe/Rome` sull'utente di Alessandro (in GoatCounter il fuso è un'impostazione dell'utente, non del sito: le ore dell'API seguono l'utente del token). La pagina non converte nulla.
 - Dalla stessa prova: l'API risponde senza `count_unique` (GoatCounter non conta più gli unici dalla 2.5), quindi la tessera "Visitatori unici" resta nascosta per disegno; 29 percorsi e 69 hit negli ultimi 7 giorni, `hourly` da 24 valori per giorno, come previsto.
-- **Il primo token è stato incollato in chat e aveva tutti i permessi: va revocato** (menu utente → API → Delete) e rifatto con il solo "Read statistics", poi incollato nella pagina dal telefono.
+- Il token creato il 07/10 ha tutti i permessi (non solo "Read statistics") ed è passato in una chat: Alessandro ha scelto di tenerlo lo stesso. Sta solo nel suo telefono (campo della pagina stats → `b40:v1:gc-token`), mai nel repo. Se un giorno compare traffico strano nei contatori, è il primo da revocare.
 - Il permesso del token deve essere "Read statistics" e basta: niente altro.
 
 ## Bagni puliti: cosa resta aperto dopo la verifica del 07/10/2026
