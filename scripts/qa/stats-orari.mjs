@@ -1,7 +1,8 @@
 // QA della sezione "Quando entrano" della pagina privata delle statistiche (src/stats-orari.js).
 // GoatCounter è finta: /counter/ risponde zeri, /api/v0/stats/hits risponde con una fixture oraria
-// (o 401 con corpo HTML se il token è quello sbagliato). Si controlla: niente fetch senza token; token
-// errato → messaggio, nessun crash; una sola richiesta per cambio periodo; heatmap a 380 px senza
+// (o 401 con corpo HTML se il token non è quello accettato). Il token di default sta nel repo (decisione di
+// Alessandro del 07/10): si controlla che la pagina lo usi senza chiedere niente, che un 401 mostri il campo,
+// che un token salvato dal telefono abbia la precedenza; una sola richiesta per cambio periodo; heatmap a 380 px senza
 // scorrimento della pagina e con scorrimento laterale suo; tap su cella e su riga; cache "rete assente";
 // il token non finisce in nessun file della build.
 //   node scripts/qa/stats-orari.mjs [url base]
@@ -9,6 +10,8 @@ import { chromium } from 'playwright-core'
 import { readFileSync, readdirSync } from 'node:fs'
 const base = process.argv[2] || 'http://localhost:4173'
 const PAGINA = 'stats-dtcmbsis.html', TOKEN = 'tok-prova-9f3a1c-NONDEVEFINIRENELLABUILD', SBAGLIATO = 'tok-sbagliato'
+// il token del repo, letto dal sorgente: la suite non lo ripete
+const TOKEN_REPO = readFileSync('src/stats-orari.js', 'utf8').match(/const TOKEN_REPO = '([^']+)'/)[1]
 const b = await chromium.launch({ executablePath: process.env.CHROME_PATH || '/opt/pw-browsers/chromium-1194/chrome-linux/chrome', args: ['--no-sandbox'] })
 const errori = [], ok = (n, c, x = '') => { console.log((c ? '✓ ' : '✗ ') + n + (x ? ` (${x})` : '')); if (!c) errori.push(n) }
 const pad = (x) => String(x).padStart(2, '0'), iso = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
@@ -37,31 +40,35 @@ const FINTA = ({ hits, token, rompiApi }) => {
     res(new Response(JSON.stringify({ count: '0', count_unique: '0' }), { status: 404, headers: { 'Content-Type': 'application/json' } }))
   }, 15))
 }
-async function apri({ token = null, rompiApi = false, mem = null } = {}) {
+async function apri({ token = null, rompiApi = false, mem = null, accetta = null } = {}) {
   const ctx = await b.newContext({ viewport: { width: 380, height: 900 }, isMobile: true, hasTouch: true })
   const p = await ctx.newPage(); const errs = []
   p.on('pageerror', (e) => errs.push(e.message))
   await p.addInitScript(({ token, mem }) => { try { if (sessionStorage.getItem('qa:init')) return; sessionStorage.setItem('qa:init', '1'); localStorage.clear(); sessionStorage.removeItem('b40:stats:orari:v1'); if (token) localStorage.setItem('b40:v1:gc-token', token); if (mem) sessionStorage.setItem('b40:stats:orari:v1', mem) } catch {} }, { token, mem })
-  await p.addInitScript(FINTA, { hits: HITS, token: TOKEN, rompiApi })
+  await p.addInitScript(FINTA, { hits: HITS, token: accetta || token || TOKEN_REPO, rompiApi })
   await p.goto(`${base}/${PAGINA}`, { waitUntil: 'load' }); await p.waitForSelector('.s-foot', { timeout: 20000 }); await p.waitForTimeout(400)
   return { p, ctx, errs }
 }
 const api = (p) => p.evaluate(() => window.__log.api.length)
 
-// 1. token assente: campo visibile, nessuna chiamata all'API
+// 1. niente in localStorage: la pagina usa il token del repo, senza chiedere niente
 {
-  const { p, ctx, errs } = await apri()
-  ok('token assente: campo password "Token GoatCounter" + Salva, in cima', (await p.locator('#orari input#gc-token[type="password"]').count()) === 1 && (await p.locator('#orari button[type="submit"]').innerText()).trim() === 'Salva' && /Settings → API tokens → permesso 'Read statistics'\. Resta solo su questo telefono\./.test(await p.locator('.tok__hint').innerText()))
-  ok('token assente: nessuna fetch all\'API', (await api(p)) === 0)
+  const { p, ctx, errs } = await apri({ accetta: TOKEN_REPO })
+  ok('senza token salvato: nessun campo, la pagina chiama l\'API con il token del repo', (await p.locator('#gc-token').count()) === 0 && (await api(p)) === 1 && (await p.evaluate(() => window.__log.auth[0])) === 'Bearer ' + TOKEN_REPO && (await p.locator('.kpi__t').count()) === 3)
   ok('la pagina non carica lo script di GoatCounter (non si traccia da sola)', (await p.locator('script[src*="gc.zgo.at"], script[data-goatcounter]').count()) === 0)
-  // si inserisce il token sbagliato: 401 → messaggio, campo di nuovo, niente crash
+  ok('nessun errore JS', errs.length === 0, errs.join(' | '))
+  await ctx.close()
+}
+// 1b. token del repo rifiutato (revocato): campo con messaggio; un token nuovo si salva e ha la precedenza
+{
+  const { p, ctx, errs } = await apri({ accetta: TOKEN })
+  ok('token del repo rifiutato: "Token non valido … (revocato?)", campo per inserirne uno, nessun crash', /Token non valido: GoatCounter rifiuta quello del repo \(revocato\?\)/.test(await p.locator('#orari').innerText()) && (await p.locator('#gc-token[type="password"]').count()) === 1 && /Settings → API tokens → permesso 'Read statistics'\. Resta solo su questo telefono\./.test(await p.locator('.tok__hint').innerText()) && errs.length === 0, errs.join(' | '))
   await p.fill('#gc-token', SBAGLIATO); await p.click('#orari button[type="submit"]'); await p.waitForTimeout(600)
-  ok('token errato: "Token non valido", campo per reinserirlo, nessun crash', /Token non valido/.test(await p.locator('#orari').innerText()) && (await p.locator('#gc-token').count()) === 1 && errs.length === 0, errs.join(' | '))
-  ok('token errato: viene scartato dal telefono', (await p.evaluate(() => localStorage.getItem('b40:v1:gc-token'))) === null)
-  // poi quello giusto
+  ok('token errato: "Token non valido", campo di nuovo, e viene scartato dal telefono', /Token non valido: GoatCounter lo rifiuta\. Reinseriscilo\./.test(await p.locator('#orari').innerText()) && (await p.locator('#gc-token').count()) === 1 && (await p.evaluate(() => localStorage.getItem('b40:v1:gc-token'))) === null)
   await p.fill('#gc-token', TOKEN); await p.click('#orari button[type="submit"]'); await p.waitForTimeout(800)
-  ok('token giusto: salvato in b40:v1:gc-token, campo sparito, link "Cambia token" in fondo', (await p.evaluate(() => localStorage.getItem('b40:v1:gc-token'))) === TOKEN && (await p.locator('#gc-token').count()) === 0 && (await p.locator('[data-cambia-token]').count()) === 1)
-  ok('il token viaggia solo nell\'header Authorization, mai nell\'URL', await p.evaluate((t) => window.__log.api.every((u) => !u.includes(t)) && window.__log.auth.at(-1) === 'Bearer ' + t, TOKEN))
+  ok('token giusto: salvato in b40:v1:gc-token, campo sparito, "Cambia token" in fondo, usato al posto di quello del repo', (await p.evaluate(() => localStorage.getItem('b40:v1:gc-token'))) === TOKEN && (await p.locator('#gc-token').count()) === 0 && (await p.locator('[data-cambia-token]').count()) === 1 && (await p.evaluate(() => window.__log.auth.at(-1))) === 'Bearer ' + TOKEN)
+  ok('il token viaggia solo nell\'header Authorization, mai nell\'URL', await p.evaluate((t) => window.__log.api.every((u) => !u.includes(t[0]) && !u.includes(t[1])), [TOKEN, TOKEN_REPO]))
+  ok('nessun errore JS', errs.length === 0, errs.join(' | '))
   await ctx.close()
 }
 // 2. con il token: KPI, heatmap, per pagina, chi e quando, cambio periodo
@@ -117,6 +124,8 @@ const api = (p) => p.evaluate(() => window.__log.api.length)
   ok('nessun file della build contiene il token di prova', conToken.length === 0, conToken.join(' '))
   const conBearer = tutti.filter((f) => /Bearer|gc-token/.test(readFileSync(f, 'utf8')))
   ok('"Bearer" e "gc-token" compaiono solo nel codice della pagina stats (nome dell\'header e chiave), in nessun altro file', conBearer.length === 1 && /stats-.*\.js$/.test(conBearer[0]), conBearer.join(' '))
+  const conRepo = tutti.filter((f) => readFileSync(f, 'utf8').includes(TOKEN_REPO))
+  ok('il token del repo sta solo nel chunk della pagina stats (decisione di Alessandro), non nel bundle del sito', conRepo.length === 1 && /stats-.*\.js$/.test(conRepo[0]), conRepo.join(' '))
   ok('lo script della pagina non logga il token', !/console\.(log|info|debug)\(.*token/i.test(readFileSync('src/stats-orari.js', 'utf8')))
 }
 await b.close(); if (errori.length) { console.error('ERRORI:\n' + errori.join('\n')); process.exit(1) } console.log('OK stats-orari')

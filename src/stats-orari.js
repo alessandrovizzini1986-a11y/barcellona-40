@@ -3,8 +3,11 @@
 // I contatori pubblici (/counter/<path>.json) danno solo i totali. Per le ore serve l'API autenticata:
 //   GET https://barcellona40.goatcounter.com/api/v0/stats/hits?start=…&end=…&daily=false
 //   Authorization: Bearer <token>   (CORS verificato il 07/10/2026: Access-Control-Allow-Origin: *)
-// Il token NON sta nel repo (è pubblico): lo inserisce Alessandro una volta dal telefono e resta in
-// localStorage (b40:v1:gc-token). Mai loggato, mai nell'URL, mai mandato a GoatCounter come evento:
+// Il token sta QUI, nel repo, per decisione esplicita di Alessandro del 07/10/2026 ("ti autorizzo
+// formalmente a inserirlo, mi assumo le responsabilità"): il repo è pubblico, ma il sito non è indicizzato
+// e i contatori non hanno valore di privacy. Il token ha tutti i permessi del suo account GoatCounter:
+// se un giorno lo revoca, la pagina mostra il campo e un token nuovo si salva in localStorage
+// (b40:v1:gc-token), che ha la precedenza su questo. Mai nell'URL, mai mandato a GoatCounter come evento:
 // questa pagina non carica count.js, quindi non traccia niente.
 //
 // Le ore sono quelle del fuso impostato in GoatCounter (Settings → Site): qui non si converte nulla.
@@ -15,6 +18,7 @@ import changelog from '../data/changelog.json'
 
 const API = 'https://barcellona40.goatcounter.com/api/v0/stats/hits'
 const CHIAVE = 'b40:v1:gc-token'
+const TOKEN_REPO = '19nylrblfigppmx975h3icsdlsglnzd1sbvfe17mdrize1szo6'
 const CACHE = 'b40:stats:orari:v1'
 const TTL = 5 * 60 * 1000
 const PAGINE_MAX = 6
@@ -30,7 +34,8 @@ const TAPPE = Object.fromEntries(itinerary.days.flatMap((d) => d.stops).map((s) 
 const PROFILI = Object.keys(NOMI)
 
 // ——— token ———
-const leggiToken = () => { try { return localStorage.getItem(CHIAVE) || '' } catch { return '' } }
+// quello salvato dal telefono vince; se non c'è, quello del repo
+const leggiToken = () => { try { return localStorage.getItem(CHIAVE) || TOKEN_REPO } catch { return TOKEN_REPO } }
 const salvaToken = (t) => { try { t ? localStorage.setItem(CHIAVE, t) : localStorage.removeItem(CHIAVE) } catch { /* memoria bloccata */ } }
 
 // ——— date (locali del telefono: Alessandro è in Italia, come il sito GoatCounter) ———
@@ -210,7 +215,7 @@ export function montaOrari(root) {
 async function disegna(root, { forza = false } = {}) {
   const corpo = root.querySelector('[data-orari-corpo]'); if (!corpo) return
   const token = leggiToken()
-  if (!token) { corpo.innerHTML = campoToken(); return } // nessuna fetch senza token
+  if (!token) { corpo.innerHTML = campoToken(); return } // non succede: c'è sempre quello del repo
   const { start, end } = intervallo(periodo)
   const ric = memoria[periodo]
   const fresca = ric && ric.start === start && ric.end === end && Date.now() - ric.quando < TTL
@@ -225,7 +230,7 @@ async function disegna(root, { forza = false } = {}) {
     mostra(root, memoria[periodo], '')
   } catch (e) {
     if (mio !== caricamento) return
-    if (e.token) { salvaToken(''); corpo.innerHTML = `${chips(periodo)}${campoToken('Token non valido: GoatCounter lo rifiuta. Reinseriscilo.')}`; return }
+    if (e.token) { salvaToken(''); corpo.innerHTML = `${chips(periodo)}${campoToken(token === TOKEN_REPO ? 'Token non valido: GoatCounter rifiuta quello del repo (revocato?). Inseriscine uno nuovo.' : 'Token non valido: GoatCounter lo rifiuta. Reinseriscilo.')}`; return }
     // rete assente o 5xx: l'ultimo dato in cache, anche vecchio, con l'ora a cui risale
     if (ric && ric.start === start && ric.end === end) { mostra(root, ric, 'rete assente'); return }
     corpo.innerHTML = `${chips(periodo)}<div class="s-giu"><h2>Orari non disponibili</h2><p class="muted">GoatCounter non risponde (${esc(e.message)}). Non vuol dire zero visite.</p><button class="s-btn" type="button" data-riprova>Riprova</button></div>`

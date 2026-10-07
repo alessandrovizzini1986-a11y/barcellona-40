@@ -48,6 +48,9 @@ for (const p of ['/manuel/oggi', 'manuel/missione-completata', '/giulio/oggi']) 
 const FINTA = (dati) => {
   window.__fetchLog = { chiamate: [], inVolo: 0, picco: 0 }
   window.fetch = (url) => {
+    // la sezione "Quando entrano" (stats-orari.js) chiama l'API autenticata: qui risponde vuota e non entra
+    // nel conteggio delle richieste ai contatori, che è quello che questa suite misura
+    if (String(url).includes('/api/v0/')) return Promise.resolve(new Response(JSON.stringify({ hits: [], more: false }), { status: 200, headers: { 'Content-Type': 'application/json' } }))
     const L = window.__fetchLog
     L.chiamate.push(String(url))
     L.inVolo++; L.picco = Math.max(L.picco, L.inVolo)
@@ -154,8 +157,8 @@ const RICHIESTE = 4 * 6 + 1 + (23 * 4 - 3) + 1 + TAPPE_MAPS // 23 eventi in EVEN
 // ——— 5. GoatCounter irraggiungibile ———
 {
   const { p, ctx, errs } = await apri({ mappa: MAPPA, rompiTutto: true })
-  ok('tutto giù → "Dati non disponibili"', (await p.locator('.s-giu h2').innerText()).includes('Dati non disponibili'))
-  ok('tutto giù → non spaccia il guasto per zero visite', (await p.locator('.s-giu').innerText()).includes('vuol dire che adesso non si può sapere'))
+  ok('tutto giù → "Dati non disponibili"', (await p.locator('.s-main > .s-giu h2').innerText()).includes('Dati non disponibili')) // #orari ha il suo riquadro di guasto, separato
+  ok('tutto giù → non spaccia il guasto per zero visite', (await p.locator('.s-main > .s-giu').innerText()).includes('vuol dire che adesso non si può sapere'))
   ok('tutto giù → c\'è il pulsante Riprova', (await p.locator('[data-aggiorna]').count()) >= 1)
   ok('tutto giù → nessun errore JS', errs.length === 0, errs.join(' | '))
   await ctx.close()
