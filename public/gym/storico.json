@@ -1,6 +1,6 @@
 {
  "v": 2,
- "aggiornato": "2026-10-05T19:15:27.456820Z",
+ "aggiornato": "2026-10-08T19:14:44.073660Z",
  "scheda": {
   "giorni": [
    {
@@ -1862,6 +1862,162 @@
     "leg-curl": true,
     "low-row": true
    }
+  },
+  {
+   "id": "2026-10-08-mpvu7i8",
+   "data": "2026-10-08",
+   "giorno": "A",
+   "settimana": 6,
+   "chiusa": true,
+   "inizio": 1791483181371,
+   "fine": 1791486690085,
+   "esercizi": {
+    "leg-press": [
+     {
+      "kg": 90,
+      "reps": 10,
+      "fatta": true
+     },
+     {
+      "kg": 100,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 100,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 110,
+      "reps": 6,
+      "fatta": true
+     }
+    ],
+    "pull-up-ass": [
+     {
+      "kg": -55,
+      "reps": 9,
+      "fatta": true
+     },
+     {
+      "kg": -55,
+      "reps": 9,
+      "fatta": true
+     },
+     {
+      "kg": -55,
+      "reps": 9,
+      "fatta": true
+     },
+     {
+      "kg": -55,
+      "reps": 9,
+      "fatta": true
+     }
+    ],
+    "leg-extension": [
+     {
+      "kg": 30,
+      "reps": 9,
+      "fatta": true
+     },
+     {
+      "kg": 30,
+      "reps": 9,
+      "fatta": true
+     },
+     {
+      "kg": 30,
+      "reps": 9,
+      "fatta": true
+     }
+    ],
+    "pulley-triangolo": [
+     {
+      "kg": 30,
+      "reps": 10,
+      "fatta": true
+     },
+     {
+      "kg": 30,
+      "reps": 10,
+      "fatta": true
+     },
+     {
+      "kg": 30,
+      "reps": 10,
+      "fatta": true
+     }
+    ],
+    "chest-press": [
+     {
+      "kg": 40,
+      "reps": 7,
+      "fatta": true
+     },
+     {
+      "kg": 40,
+      "reps": 7,
+      "fatta": true
+     },
+     {
+      "kg": 40,
+      "reps": 7,
+      "fatta": true
+     },
+     {
+      "kg": 40,
+      "reps": 7,
+      "fatta": true
+     }
+    ],
+    "push-down": [
+     {
+      "kg": 17.5,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 17.5,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 17.5,
+      "reps": 8,
+      "fatta": true
+     }
+    ],
+    "plank": [
+     {
+      "kg": 0,
+      "reps": 40,
+      "fatta": true
+     },
+     {
+      "kg": 0,
+      "reps": 40,
+      "fatta": true
+     },
+     {
+      "kg": 0,
+      "reps": 40,
+      "fatta": true
+     },
+     {
+      "kg": 0,
+      "reps": 40,
+      "fatta": true
+     }
+    ]
+   },
+   "warm": {
+    "w0": true,
+    "stretch": true
+   },
+   "luogoId": "au2vmbf",
+   "luogoNome": "Mcfit"
   }
  ],
  "luoghi": [
