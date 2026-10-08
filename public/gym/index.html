@@ -274,6 +274,39 @@ header.top .place.on{border-color:rgba(214,255,62,.4);color:var(--acc);backgroun
 #timerbar.due .t{font-size:12px;animation:tblink 1s steps(1) infinite}
 @keyframes tblink{50%{opacity:.25}}
 
+#timerbar.due .t{line-height:1.05;flex-direction:column}
+#timerbar.due .t i{font-style:normal;font-size:9px;letter-spacing:.06em}
+
+/* --- VAI CAVALLO: a fine recupero il cavallo sfonda lo schermo --- */
+#cavallata{position:fixed;inset:0;z-index:82;pointer-events:none;display:flex;
+  align-items:center;justify-content:center;flex-direction:column;
+  background:radial-gradient(60% 50% at 50% 46%,rgba(5,6,8,.88),rgba(5,6,8,.5) 62%,transparent 80%);
+  animation:cvfade 1.9s var(--ease) forwards}
+@keyframes cvfade{0%{opacity:0}10%{opacity:1}72%{opacity:1}100%{opacity:0}}
+#cavallata .horse{width:min(78vw,340px);filter:drop-shadow(0 26px 46px rgba(0,0,0,.85));
+  transform-origin:50% 58%;animation:cvburst 1.9s cubic-bezier(.16,1.2,.3,1) forwards}
+#cavallata .horse svg{width:100%;height:auto;display:block}
+#cavallata .horse .emo{font-size:min(60vw,260px);line-height:1;text-align:center}
+@keyframes cvburst{
+  0%{opacity:0;transform:scale(.18) translateY(70px) rotate(-16deg)}
+  14%{opacity:1;transform:scale(1.26) translateY(-6px) rotate(5deg)}
+  24%{transform:scale(1.02) translateY(0) rotate(-3deg)}
+  32%{transform:scale(1.12) rotate(2deg)}
+  40%{transform:scale(1.04) rotate(-1deg)}
+  70%{transform:scale(1.08) rotate(0)}
+  100%{opacity:0;transform:scale(1.85) rotate(2deg)}}
+#cavallata .grido{margin-top:10px;font-size:clamp(26px,9vw,40px);font-weight:900;letter-spacing:-.02em;
+  text-transform:uppercase;white-space:nowrap;
+  background:linear-gradient(96deg,var(--c1),var(--c4));-webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:cvgrido 1.9s var(--ease) forwards}
+@keyframes cvgrido{0%{opacity:0;transform:translateY(26px) scale(.8)}
+  20%{opacity:1;transform:translateY(0) scale(1.08)}28%{transform:scale(1)}
+  74%{opacity:1}100%{opacity:0;transform:scale(1.1)}}
+#cavallata b{position:absolute;left:50%;top:46%;width:3px;height:26px;border-radius:2px;background:var(--acc);
+  transform-origin:50% 0;opacity:0;animation:cvscheggia .9s ease-out forwards}
+@keyframes cvscheggia{0%{opacity:0;transform:rotate(var(--a)) translateY(0) scaleY(.3)}
+  12%{opacity:1}100%{opacity:0;transform:rotate(var(--a)) translateY(var(--d,180px)) scaleY(1.4)}}
+
 /* ---------------- SHEET ---------------- */
 .sheet{position:fixed;inset:0;z-index:60;display:flex;align-items:flex-end;
   background:rgba(0,0,0,.66);backdrop-filter:blur(4px);animation:fade .22s}
@@ -1048,6 +1081,25 @@ function recordVolume(escludiSessId){
     best=Math.max(best,statSessione(s).vol);
   }
   return best;
+}
+/* ---- VAI CAVALLO: il cavallo imbizzarrito che sfonda lo schermo a
+   fine recupero. Niente suoni: galoppo nelle vibrazioni. ---- */
+const HAP_GALOPPO=[70,60,40,50,180,90,230];
+/* il disegno vero arriva al prossimo commit: intanto il cavallo c'è */
+const CAVALLO_SVG='<div class="emo">🐴</div>';
+function cavallata(){
+  buzz(HAP_GALOPPO);
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  const vecchio=$('#cavallata');if(vecchio)vecchio.remove();
+  const el=document.createElement('div');el.id='cavallata';
+  let schegge='';
+  for(let i=0;i<14;i++){
+    const a=(i/14)*360+(Math.random()*18-9), d=140+Math.random()*120;
+    schegge+='<b style="--a:'+a.toFixed(0)+'deg;--d:'+d.toFixed(0)+'px;animation-delay:'+(Math.random()*.12).toFixed(2)+'s"></b>';
+  }
+  el.innerHTML=schegge+'<div class="horse">'+CAVALLO_SVG+'</div><div class="grido">Vai cavallo!</div>';
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),2000);
 }
 /* ---- CELEBRAZIONE: coriandoli + medaglia, e la vibrazione giusta ---- */
 function festa(icona,testo,pattern,n){
@@ -1901,12 +1953,13 @@ function tickTimer(){
   bar.hidden=false;
   $('#timerEx').textContent=(t.modo==='plank'?'⏱️ ':'')+(t.label||'Recupero');
   if(ms<=0){
-    bar.classList.add('due');$('#timerT').textContent='VAI!';
+    bar.classList.add('due');$('#timerT').innerHTML='VAI<i>CAVALLO</i>';
     $('#timerSub').textContent='recupero finito';
     $('#timerRing').setAttribute('stroke-dashoffset','0');
     if(!t.beep){
       t.beep=1;localStorage.setItem(K_TIMER,JSON.stringify(t));
-      buzz(t.modo==='plank'?HAP.esercizio:HAP.recupero);   // niente suoni: parla la vibrazione
+      if(t.modo==='plank')buzz(HAP.esercizio);             // niente suoni: parla la vibrazione
+      else cavallata();                                    // fine recupero: VAI CAVALLO
       /* plank finito: segno la serie da solo, così non tocchi il telefono da terra */
       if(t.modo==='plank'){
         const s=sessioneAperta(true), arr=s.esercizi[t.exId];
