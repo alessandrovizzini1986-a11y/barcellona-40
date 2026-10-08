@@ -7,6 +7,8 @@
 // dagli SVG, non letti dal testo), le voci «da verificare» uguali fra pagina e DA_VERIFICARE_LONDRA.md,
 // nessuna chiave di storage oltre londra:novita:vista, cartella foto sotto 1,5 MB, alt su tutte le
 // immagini, nessun controllo sotto 44 px, service worker che non copre le pagine di Barcellona.
+// Bagni puliti: ogni data-bagno esiste nel JSON, ogni tappa ha principale e riserva, il JSON è nel precache e nella cache
+// del service worker, le righe ci sono, i controlli dei pannelli sono da 44 px e a 375 px non si scorre di lato.
 import { chromium } from 'playwright-core'
 import { readFileSync, readdirSync, statSync } from 'node:fs'
 import path from 'node:path'
@@ -161,5 +163,30 @@ for (const u of ['/', '/index.html', '/gym/', '/soldi/', '/rigori.html']) {
   if (c) fuori.push(u); await q.close()
 }
 ok('service worker con scope solo su /londra…, nessuna pagina di Barcellona controllata', /\/londra$/.test(reg) && !fuori.length, `scope ${reg}${fuori.length ? ' · controlla ' + fuori.join(', ') : ''}`)
+// ---------- bagni puliti (data/bagni-londra.json) ----------
+const bagni = await p.evaluate(async () => { const r = await fetch('data/bagni-londra.json'); return r.ok ? r.json() : null })
+const idTappe = bagni ? bagni.tappe.map((t) => t.tappa) : []
+const dataBagno = await p.$$eval('#programma article.tcard[data-bagno]', (c) => c.map((x) => x.dataset.bagno))
+const orfani = dataBagno.filter((id) => !idTappe.includes(id))
+ok('bagni: ogni data-bagno esiste nel JSON', !!bagni && dataBagno.length > 0 && !orfani.length, `${dataBagno.length} card, ${orfani.length} senza tappa${orfani.length ? ': ' + orfani.join(', ') : ''}`)
+const incompleti = idTappe.length ? bagni.tappe.filter((t) => !(t.principale && t.principale.id && t.principale.nome && Number.isFinite(t.principale.lat)) || !(t.riserva && t.riserva.id && t.riserva.nome && Number.isFinite(t.riserva.lat))).map((t) => t.tappa) : ['JSON assente']
+ok('bagni: ogni tappa del JSON ha principale e riserva', !incompleti.length, `${idTappe.length} tappe${incompleti.length ? ' · incomplete: ' + incompleti.join(', ') : ''}`)
+const sw = await p.evaluate(async () => {
+  const testo = await (await fetch('londra-sw.js')).text()
+  const nelleCache = []; for (const k of await caches.keys()) if (k.startsWith('londra-')) nelleCache.push(!!(await (await caches.open(k)).match('data/bagni-londra.json')))
+  return { lista: /"data\/bagni-londra\.json"/.test(testo), cache: nelleCache.some(Boolean) }
+})
+ok('bagni: il JSON è nel precache del service worker (nella lista e nella cache)', sw.lista && sw.cache, JSON.stringify(sw))
+const righe = await p.$$eval('#programma article.tcard[data-bagno]', (c) => c.filter((x) => x.querySelector('.bagno-box .bagno-riga')).length)
+ok('bagni: ogni card con data-bagno ha la sua riga «🚻»', righe === dataBagno.length, `${righe}/${dataBagno.length}`)
+// «i 18 URL Maps esistenti non sono stati toccati»: è il controllo dei percorsi qui sopra, e i bagni non ne aggiungono
+// (i loro link Maps sono ricerche per coordinate dentro i pannelli, non «a.percorso»)
+await p.evaluate(() => { document.querySelectorAll('details').forEach((d) => (d.open = true)); document.querySelectorAll('.bagno-riga').forEach((r) => { if (document.getElementById(r.getAttribute('aria-controls')).hidden) r.click() }) })
+const bassi = await p.$$eval('.bagno-riga, .bagno-maps', (e) => e.filter((x) => x.offsetParent).map((x) => x.getBoundingClientRect().height).filter((h) => h < 44).length)
+ok('bagni: righe e link Maps dei pannelli alti almeno 44 px', bassi === 0, `${bassi} sotto 44`)
+await p.setViewportSize({ width: 375, height: 812 }); await p.waitForTimeout(300)
+const largo = await p.evaluate(() => ({ larghezza: innerWidth, scroll: document.documentElement.scrollWidth }))
+ok('bagni: a 375 px, con tutto aperto, la pagina non scorre di lato', largo.scroll <= largo.larghezza, JSON.stringify(largo))
+await p.setViewportSize({ width: 390, height: 844 })
 ok('nessun errore JavaScript', !errori.length, errori.join(' | '))
 await b.close()
