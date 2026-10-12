@@ -1,6 +1,24 @@
 {
- "aggiornato": null,
- "finestra": { "inizio": "2026-10-15T00:00", "fine": "2026-10-19T06:00", "fuso": "Europe/Rome" },
- "attive": [],
- "errori": []
+ "aggiornato": "2026-10-12T20:24:26+00:00",
+ "finestra": {
+  "inizio": "2026-10-15T00:00",
+  "fine": "2026-10-19T06:00",
+  "fuso": "Europe/Rome"
+ },
+ "attive": [
+  {
+   "id": "prova:barcellona:pioggia:arancione",
+   "zona": "barcellona",
+   "area": "Litoral de Barcelona",
+   "livello": "arancione",
+   "tipo": "pioggia",
+   "evento": "Severe rain warning (PROVA)",
+   "inizio": "2026-10-12T20:24:26+00:00",
+   "fine": "2026-10-12T21:09:26+00:00",
+   "fonte": "https://meteoalarm.org?region=ES",
+   "titolo": "Orange Rain Warning issued for Spain - Litoral de Barcelona (PROVA)"
+  }
+ ],
+ "errori": [],
+ "prova": "allerta di prova del 12/10, si spegne da sola alle 21:09 UTC"
 }
