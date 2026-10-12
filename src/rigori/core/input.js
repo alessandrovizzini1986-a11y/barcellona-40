@@ -24,7 +24,7 @@ export function createInput(el, { camera, getBallWorld, size, enabled = () => tr
   const down = (e) => {
     if (!enabled() || active) return
     if (e.clientY < size.h * 0.45) { if (mode === 'shooter') emit('reject', { x: e.clientX, y: e.clientY, ball: ballOnScreen() }); return } // metà bassa dello schermo, per tutti e due i ruoli
-    active = { id: e.pointerId, pts: [{ x: e.clientX, y: e.clientY, t: e.timeStamp }] }
+    active = { id: e.pointerId, mode, pts: [{ x: e.clientX, y: e.clientY, t: e.timeStamp }] } // il ruolo in cui il gesto è nato
     el.setPointerCapture?.(e.pointerId); e.preventDefault()
     emit('start', { x: e.clientX, y: e.clientY })
   }
@@ -36,7 +36,10 @@ export function createInput(el, { camera, getBallWorld, size, enabled = () => tr
   const up = (e) => {
     if (!active || e.pointerId !== active.id) return
     active.pts.push({ x: e.clientX, y: e.clientY, t: e.timeStamp })
-    const r = analyze(active.pts); active = null
+    const r = analyze(active.pts), nato = active.mode; active = null
+    // Un gesto che finisce in un ruolo diverso da quello in cui è nato si butta: il tuffo arrivato tardi (la palla
+    // era già in rete, il turno è passato) diventava il tiro del turno dopo, con una mira che nessuno aveva dato.
+    if (nato !== mode) return
     emit('end', r)
   }
   el.addEventListener('pointerdown', down); el.addEventListener('pointermove', move)

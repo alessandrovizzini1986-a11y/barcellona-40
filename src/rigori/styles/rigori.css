@@ -205,3 +205,31 @@ button.rg-unlock{ cursor:pointer; }
 .rg-record{ margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:4px; }
 .rg-record li{ display:flex; justify-content:space-between; gap:var(--space-3); font-size:var(--fs-0); color:var(--ink-2); }
 .rg-record b{ color:var(--ink); text-align:right; }
+
+/* Tastiera (desktop): mirino nella porta, barra di potenza, zona del tuffo, riquadro dei tasti */
+.rg-mirino{ position:absolute; z-index:6; width:34px; height:34px; transform:translate(-50%, -50%); pointer-events:none; color:var(--giallo); }
+.rg-mirino[hidden]{ display:none; }
+.rg-mirino__c{ position:absolute; inset:0; border:3px solid var(--giallo); border-radius:50%; box-shadow:0 0 0 2px rgba(0,0,0,.45), inset 0 0 0 2px rgba(0,0,0,.35); }
+.rg-mirino__c::before, .rg-mirino__c::after{ content:""; position:absolute; left:50%; top:50%; background:var(--giallo); transform:translate(-50%, -50%); }
+.rg-mirino__c::before{ width:3px; height:12px; }
+.rg-mirino__c::after{ width:12px; height:3px; }
+.rg-mirino__curva{ position:absolute; left:50%; top:-28px; transform:translateX(-50%); display:none; filter:drop-shadow(0 1px 2px rgba(0,0,0,.6)); }
+.rg-mirino--curva .rg-mirino__curva{ display:block; }
+.rg-mirino--sx .rg-mirino__curva{ transform:translateX(-50%) scaleX(-1); }
+.rg-mirino--forte .rg-mirino__curva{ color:var(--terracotta); }
+.rg-potenza{ position:absolute; left:18px; bottom:calc(22% + var(--safe-b)); z-index:6; display:flex; flex-direction:column; align-items:center; gap:6px; pointer-events:none; }
+.rg-potenza[hidden]{ display:none; }
+.rg-potenza__track{ position:relative; width:18px; height:170px; border-radius:999px; background:color-mix(in srgb, var(--bg) 75%, transparent); border:1px solid color-mix(in srgb, var(--ink) 30%, transparent); overflow:hidden; }
+.rg-potenza__ok{ position:absolute; left:0; right:0; bottom:70%; height:15%; background:color-mix(in srgb, var(--acqua) 55%, transparent); }
+.rg-potenza__cur{ position:absolute; left:0; right:0; height:6px; margin-bottom:-3px; background:var(--giallo); box-shadow:0 0 6px var(--giallo); }
+.rg-potenza--ok .rg-potenza__cur{ background:var(--acqua); box-shadow:0 0 8px var(--acqua); }
+.rg-potenza__lab{ font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-2); }
+.rg-zona{ position:absolute; left:50%; bottom:calc(16% + var(--safe-b)); transform:translateX(-50%); z-index:6; display:grid; grid-template-columns:repeat(3, 26px); gap:4px; padding:6px; border-radius:8px; background:color-mix(in srgb, var(--bg) 70%, transparent); pointer-events:none; }
+.rg-zona[hidden]{ display:none; }
+.rg-zona i{ display:block; height:18px; border-radius:3px; background:color-mix(in srgb, var(--ink) 18%, transparent); }
+.rg-zona i.rg-zona--on{ background:var(--giallo); box-shadow:0 0 6px var(--giallo); }
+.rg-tasti{ position:absolute; left:50%; bottom:calc(10px + var(--safe-b)); transform:translateX(-50%); z-index:7; display:flex; flex-wrap:wrap; justify-content:center; gap:4px 14px; max-width:min(92vw, 720px); padding:8px 14px; border-radius:10px; background:color-mix(in srgb, var(--bg) 78%, transparent); border:1px solid color-mix(in srgb, var(--ink) 18%, transparent); color:var(--ink-2); font-size:12px; line-height:1.5; pointer-events:none; }
+.rg-tasti[hidden]{ display:none; }
+.rg-tasti b{ color:var(--ink); }
+.rg-tasti kbd{ display:inline-block; min-width:18px; padding:0 5px; margin-right:2px; border-radius:4px; border:1px solid color-mix(in srgb, var(--ink) 35%, transparent); background:var(--bg-3); color:var(--ink); font:inherit; font-size:11px; font-weight:700; text-align:center; }
+@media (hover: none), (pointer: coarse){ .rg-tasti{ display:none; } }

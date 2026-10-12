@@ -12,6 +12,7 @@ import { createLights } from './scene/lights.js'
 import { createPostFx } from './scene/postfx.js'
 import { createBall } from './game/ball.js'
 import { createInput } from './core/input.js'
+import { createTastiera } from './core/tastiera.js'
 import { createShot, aimFromGesture, renderShotAt } from './game/shot.js'
 import { createTiming } from './game/timing.js'
 import { createGhost } from './game/ghost.js'
@@ -188,25 +189,48 @@ const chiudiTempismo = (perfetto) => {
   tTempismo = setTimeout(() => { timingEl.hidden = true; timingEl.classList.remove('rg-timing--ok') }, 650)
 }
 // Tiratore: solo a palla ferma. Portiere: anche durante rincorsa e volo (deve reagire al tell), non a esito già deciso
-const input = createInput(stage, { camera: rig.camera, getBallWorld: () => ball.mesh.position, size: R.size, enabled: () => window.__rigori.ready && !esitoLock && (input.mode === 'keeper' ? (shot.state === 'idle' || shot.state === 'windup' || shot.state === 'flying') && !shot.resolved : !shot.busy) })
+const puoTuffarsi = () => window.__rigori.ready && !esitoLock && (shot.state === 'idle' || shot.state === 'windup' || shot.state === 'flying') && !shot.resolved
+const puoTirare = () => window.__rigori.ready && !esitoLock && !shot.busy
+const input = createInput(stage, { camera: rig.camera, getBallWorld: () => ball.mesh.position, size: R.size, enabled: () => !tastiera?.carica && (input.mode === 'keeper' ? puoTuffarsi() : puoTirare()) })
+// Tiro e tuffo: un punto solo, per lo swipe (sotto) e per la tastiera (tastiera.js). Stessi parametri, stessa fisica.
+function eseguiTiro(aim, tempismoOk) {
+  chiudiTempismo(tempismoOk)
+  shot.fire(aim, { timingPerfect: tempismoOk, delay: kicker ? KICK_DELAY : 0 })
+  kicker?.windup()
+}
+function eseguiTuffo(zona) { if (!keeper) return; shot.playerDive(zona); hint.hidden = true }
 input.on('start', () => { if (timingEnabled && input.mode === 'shooter') { timing.start(); timingEl.hidden = false } hint.hidden = true })
 input.on('move', (g) => { if (g.ok && input.mode === 'shooter') ghost.show(aimFromGesture(g, R.size)) })
 input.on('end', (g) => {
   ghost.hide(); timing.stop()
   const tempismoOk = timingEnabled && input.mode === 'shooter' && g.ok && timing.perfect
-  chiudiTempismo(tempismoOk)
   if (input.mode === 'keeper') {
+    chiudiTempismo(false)
     // portiere: direzione dello swipe → zona; il tempismo è tutto (troppo presto: la CPU cambia lato)
     if (!g.ok || !keeper) return
     // la camera è dietro la porta e guarda verso il dischetto: la destra dello schermo è x<0 (colonna 0)
     const col = g.dx > 40 ? 0 : g.dx < -40 ? 2 : 1, row = -g.dy > 60 ? 0 : 1
-    shot.playerDive(row * 3 + col); hint.hidden = true
+    eseguiTuffo(row * 3 + col)
     return
   }
-  if (!g.ok) { hint.hidden = false; return }
-  shot.fire(aimFromGesture(g, R.size), { timingPerfect: tempismoOk, delay: kicker ? KICK_DELAY : 0 })
-  kicker?.windup()
+  if (!g.ok) { chiudiTempismo(false); hint.hidden = false; return }
+  eseguiTiro(aimFromGesture(g, R.size), tempismoOk)
 })
+// Tastiera (desktop): stessi parametri del tiro swipe, stesso tuffo. Spazio tenuto = barra di potenza; la finestra
+// 70–85 % vale come il tempismo perfetto. Mentre si carica lo swipe è disattivato (nessun doppio tiro).
+const tastiera = createTastiera({
+  ui: document.getElementById('rg-ui'), camera: rig.camera, size: R.size, GOAL,
+  puoTirare: () => puoTirare() && !input.active, puoTuffarsi: () => puoTuffarsi() && !input.active,
+  ruolo: () => role,
+  tira: (aim, perfetto) => { ghost.hide(); eseguiTiro(aim, timingEnabled && perfetto) },
+  tuffa: (zona) => eseguiTuffo(zona),
+  azioni: {
+    inizioCarica: () => { hint.hidden = true },
+    pausa: () => { if (!menuBtn.hidden) menuBtn.click() },
+    musica: () => { settings.audio = settings.audio === false; applySettings(); toast(game.ui, settings.audio === false ? 'Audio spento' : 'Audio acceso', 1400) }
+  }
+})
+systems.push({ update: (dt) => tastiera.update(dt) })
 input.on('reject', () => { hint.hidden = false; hint.classList.remove('rg-hint--pulse'); void hint.offsetWidth; hint.classList.add('rg-hint--pulse') })
 const shake = (amp, dur) => { if (!settings.reduceFx) rig.shake(amp, dur) }
 let replayPending = false
@@ -222,7 +246,7 @@ let trace = null
 shot.onFrame = (t) => { if (trace) trace.push({ t, ...window.__rigori.pose() }) }
 function onShotEvent(e) {
   if (e.type === 'windup') { hint.hidden = true; audio.play('step', { volume: .5 }) }
-  if (e.type === 'kick') etichette(false)
+  if (e.type === 'kick') { etichette(false); tastiera.nascondi(); tastiera.mostraAiuto(false) } // dopo il primo tiro il riquadro dei tasti sparisce (H lo riapre)
   if (e.type === 'kick') { clearEsitoTimers(); audio.play(e.aim.power > 0.95 ? 'kick2' : 'kick', { volume: 0.6 + Math.min(0.4, e.aim.power * 0.4) }); hint.hidden = true; replayPending = true; kicker?.onKick(); rig.followLook(ball.mesh) }
   if (e.type === 'result') kicker?.react(e.result)
   if (e.type === 'result') { esitoLock = true; sequenzaConsumata = false; esitoDa = performance.now(); skipBtn.hidden = false; dopoEsito(); keeper?.react(e.result); const rec = shot.record; const sfotto = game.tauntFor(rec); rec.sfotto = sfotto; ultimoTiro = rec; showEsito(game.ui, { outcome: rec.outcome, corner: rec.corner, shooterId: rec.ruoli.tiratore.id, taunt: sfotto }); audio.duck(true); audio.vo(rec.corner ? 'corner' : rec.outcome) }
@@ -424,6 +448,7 @@ const ctx = {
     const was = role; role = r; input.setMode(r === 'keeper' ? 'keeper' : 'shooter')
     if (kit && (r === 'keeper') !== (was === 'keeper')) { if (r === 'keeper') setPair(byId(shooterId), keeperData()); else setPair(keeperData(), byId(shooterId)) }
     keeper?.setPlayable(r === 'keeper')
+    tastiera.ruolo(r) // mirino al centro, effetto a zero, guardia di 350 ms
     // Ruoli del turno: chi tira e chi para finiscono nel record, e da lì li leggono HUD, sfottò, punteggio e XP.
     if (r !== 'idle') ctx.setRuoli(ruoliDalTurno(r))
     if (mode && r !== 'idle') audio.whistle() // fischio a ogni tiro, anche quando il ruolo non cambia (Sfida Ale, Skill)
@@ -686,6 +711,7 @@ window.__rigori = {
   kitReady, startMode, mode: () => mode, role: () => role, xpLog, ctx, chars, rig, keeper: () => keeper, kicker: () => kicker, get frames() { return frames },
   setPrecision: (v) => shot.setPrecision(v), audio, events, get esitoLocked() { return esitoLock }, shotState: () => shot.state, lastResult: () => [...events].reverse().find((e) => e.type === 'result')?.result || null,
   get inPausa() { return inPausa },
+  tastiera, // QA: stato dei controlli da tastiera (mira, potenza, curva, zona, desktop, riquadro)
   info: () => ({ fps: +perf.fps.toFixed(1), level: perf.level, quality: { ...quality }, frames, draws: R.renderer.info.render.calls, tris: R.renderer.info.render.triangles, camera: rig.current })
 }
 
