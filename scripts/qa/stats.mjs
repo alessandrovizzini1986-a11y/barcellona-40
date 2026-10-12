@@ -18,6 +18,7 @@ async function open(path, { person = 'ale', novitaLette = true } = {}) {
   const p = await ctx.newPage()
   const errs = []
   p.on('pageerror', (e) => errs.push(e.message))
+  await p.route('**/gc.zgo.at/**', (r) => r.abort()) // "script bloccato": qui GoatCounter non deve mai caricarsi (la rete della sandbox ora lo raggiunge)
   await p.goto(base + '/')
   await p.evaluate(([x, n]) => {
     localStorage.clear()

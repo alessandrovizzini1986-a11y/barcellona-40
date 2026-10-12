@@ -1,11 +1,11 @@
 // Programma: segmented Ven/Sab/Dom + timeline filtrata per persona
-import { stopsForDay, personById, DAY_COLOR, days, contoDelGiorno, piove, macaya, percorsiDi, conOrario, senzaOrario, attiva } from '../data.js'
+import { stopsForDay, personById, DAY_COLOR, days, contoDelGiorno, piove, macaya, sole, percorsiDi, conOrario, senzaOrario, attiva } from '../data.js'
 import { store } from '../store.js'
 import { icon } from '../ui/icons.js'
 import { fmtMinutes } from '../time.js'
 import { stopCard, bindCards, haFoto, percorsoLink } from '../ui/card.js'
-import { avvisoMiradorPioggia } from '../ui/pioggia.js'
-import { dayKey, currentStop } from '../time.js'
+import { avvisoMiradorPioggia, PRENOTAZIONE_MIRADOR } from '../ui/pioggia.js'
+import { dayKey, currentStop, now } from '../time.js'
 import { esc } from '../ui/html.js'
 import { navigate } from '../router.js'
 import { stepCards, bindViaggio } from '../ui/viaggio.js'
@@ -42,11 +42,19 @@ function avvisoConto(giorno, key) {
 // mese più piovoso dell'anno a Barcellona. Un solo interruttore per i due giorni: piove o non piove.
 const TESTO_PIOVE = {
   ven: "Ottobre è il mese più piovoso a Barcellona e sei tappe su nove sono all'aperto. Accendi e il giro cambia: tutto al coperto, la Ciutadella salta.",
-  dom: 'I Bunkers sono una collina scoperta: con la pioggia niente vista e terreno scivoloso. Accendi e la domenica cambia: mattina libera, pranzo al Time Out Market, pomeriggio al coperto a Maremagnum e taxi al T2 alle 19:30.'
 }
 const AVVISO_PIOVE = {
   ven: 'Modalità pioggia: la Ciutadella salta, Santa Maria del Mar si visita dentro, El Born al coperto. Montcada, Pont del Bisbe e Sant Felip Neri sono all\'aperto: con la pioggia si attraversano senza fermarsi.',
-  dom: 'Modalità pioggia: mattina libera in appartamento, verso le 12:45 taxi a Maremagnum (3 km, 9 minuti). Pranzo al Time Out Market, pomeriggio al coperto, alle 19:30 taxi al T2: da lì tutto come previsto.'
+}
+// Domenica: il programma principale è al coperto (Casa Batlló, Bar Celta, Maremagnum). "Se torna il sole" rimette
+// El Mirador alle 13:30 e i Bunkers, con l'avviso giallo sull'orario del recinto che resta.
+const TESTO_SOLE = "Il programma di domenica è al coperto: Casa Batlló, polpo al Bar Celta, pomeriggio a Maremagnum. Accendi e torna quello di prima: pranzo al Mirador alle 13:30 e la città che si accende dai Bunkers."
+const AVVISO_SOLE = "Variante sole: El Mirador alle 13:30 (prenotato), Bunkers dalle 16:00, taxi al T2 dai Bunkers alle 19:30. Occhio all'orario del recinto: una fonte ufficiale dice che da ottobre chiude alle 17:30."
+function toggleS(on) {
+  return `<label class="switch switch--sole" for="sole">
+    <span><b>${icon('sun')} Se torna il sole</b><br><span class="faint">${esc(TESTO_SOLE)}</span></span>
+    <input type="checkbox" id="sole" ${on ? 'checked' : ''}>
+  </label>`
 }
 // Palau Macaya: secondo interruttore del venerdì, sotto "Piove". Spento (default) il pomeriggio è quello di sempre;
 // acceso entra la tappa delle 17:30 (gratis, al coperto) e il pomeriggio si ricalcola. Solo chi c'è il venerdì lo vede.
@@ -102,10 +110,12 @@ export async function render(root, { person, sub, header }) {
       <h2>${esc(day.label)} ${day.date.slice(-2)} ottobre</h2>
       <span class="faint">${conteggio(stops)}${passi.length ? ` · ${passi.length} passi di viaggio` : ''}</span>
     </div>
-    ${key === 'dom' && piove() ? avvisoMiradorPioggia() : ''}
+    ${key === 'dom' && !sole() && now() < PRENOTAZIONE_MIRADOR ? avvisoMiradorPioggia() : ''}
     ${TESTO_PIOVE[key] ? toggleP(piove(), key) : ''}
     ${TESTO_PIOVE[key] && piove() ? `<div class="avviso">${icon('alert')}<span>${esc(AVVISO_PIOVE[key])}</span></div>` : ''}
     ${vedeMacaya ? toggleM(macaya()) : ''}
+    ${key === 'dom' ? toggleS(sole()) : ''}
+    ${key === 'dom' && sole() ? `<div class="avviso">${icon('sun')}<span>${esc(AVVISO_SOLE)}</span></div>` : ''}
     ${avvisoConto(stops, key)}
     ${vedeMacaya && macaya() ? avvisoConto(stops.slice(stops.findIndex((s) => s.id === 'f13')), 'ven-pomeriggio') : ''}
     ${righe.length || opzionali.length ? `<ol class="timeline" style="--dc:${DAY_COLOR[key]}">${righe.map((r) => `${r.id && ancore.has(r.id) ? `<li class="timeline__percorso">${ancore.get(r.id)}</li>` : ''}<li>${r.html}</li>`).join('')}${opzionali.length ? `<li class="timeline__opzionale">Opzionale</li>${opzionali.map((r) => `<li class="timeline__opz">${r.html}</li>`).join('')}` : ''}${saltate.length ? `<li class="timeline__opzionale timeline__saltate">${saltate.length > 1 ? 'Saltate' : 'Saltata'} per pioggia</li>${saltate.map((r) => `<li class="timeline__opz timeline__saltata">${r.html}</li>`).join('')}` : ''}</ol>` : `<div class="empty">${emptyState(person, key)}</div>`}
@@ -116,6 +126,11 @@ export async function render(root, { person, sub, header }) {
     navigate('programma', key)
   })
   root.querySelector('[data-macaya-on]')?.addEventListener('click', () => { evento('macaya-attiva'); store.macaya = true; navigate('programma', key) })
+  root.querySelector('#sole')?.addEventListener('change', (e) => {
+    if (e.target.checked) evento('sole-attiva')
+    store.sole = e.target.checked // salvato in b40:v1:sole
+    navigate('programma', key)
+  })
   root.querySelector('#piove')?.addEventListener('change', (e) => {
     if (e.target.checked) evento('piove-attiva')
     store.piove = e.target.checked // la preferenza resta sul telefono

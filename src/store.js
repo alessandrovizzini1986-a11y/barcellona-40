@@ -74,6 +74,9 @@ export const store = {
   // Palau Macaya nel pomeriggio di venerdì: tappa opzionale con orario, che sposta il pomeriggio (toggle, non card)
   get macaya() { return read('macaya', false) },
   set macaya(v) { write('macaya', !!v) },
+  // Domenica "Se torna il sole": El Mirador e i Bunkers al posto di Casa Batlló, Bar Celta e Maremagnum
+  get sole() { return read('sole', false) },
+  set sole(v) { write('sole', !!v) },
   // Ultima versione del changelog letta da questa persona, su questo telefono
   get lastSeenVersion() { return read('lastSeenVersion', null) },
   set lastSeenVersion(v) { write('lastSeenVersion', v) },

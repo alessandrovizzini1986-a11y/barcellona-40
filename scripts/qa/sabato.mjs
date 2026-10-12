@@ -78,7 +78,7 @@ ok('cena: il meccanismo delle fasce resta un dato verificato', stops.s8.details.
 // il pomeriggio di sabato non insegue più eventi che nessuno ha confermato
 ok('pomeriggio libero: niente eventi non confermati', stops.s7.title === 'Pomeriggio libero' && !JSON.stringify(stops.s7).includes('NON confermato') && !/SOUNDIT|Resident Advisor/.test(JSON.stringify(stops.s7)))
 ok('pomeriggio libero: badge stimato, non da verificare', JSON.stringify(stops.s7.badges) === JSON.stringify(['stimato']))
-ok('nessuna tappa porta più il badge da_verificare', !sab.concat(it.days.flatMap((d) => d.stops)).some((s) => (s.badges || []).includes('da_verificare')))
+ok('nessuna tappa porta più il badge da_verificare (tranne Casa Batlló, finché il biglietto non è comprato)', !sab.concat(it.days.flatMap((d) => d.stops)).some((s) => s.id !== 'd0' && (s.badges || []).includes('da_verificare')))
 ok('cena: sabato 17 è dentro la finestra di apertura', stops.s8.details.some((d) => /sabato 17 siete nella finestra giusta/.test(d)))
 ok('cena: nessun badge di coordinate automatiche', !stops.s8.badges.includes('geocoded'))
 // Nessun venue del sito ha più coordinate automatiche

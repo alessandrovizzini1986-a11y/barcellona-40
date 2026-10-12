@@ -195,8 +195,8 @@
     "dom": {
       "giorno": "dom",
       "data": "2026-10-18",
-      "titolo": "Ritorno · dai Bunkers a casa",
-      "sottotitolo": "La città che si accende dai Bunkers, doccia e cena in lounge, poi il volo delle 23:05",
+      "titolo": "Ritorno · da Port Vell a casa",
+      "sottotitolo": "Pomeriggio al coperto a Maremagnum, taxi al T2, doccia e cena in lounge, poi il volo delle 23:05",
       "avviso": "Canudas chiude alle 23:00: entra entro le 20:30 o rischi di non trovare la doccia libera.",
       "persone": [
         "ale"
@@ -208,17 +208,17 @@
         {
           "id": "d1",
           "ora": "19:30",
-          "titolo": "Fine Bunkers del Carmel",
+          "titolo": "Fine pomeriggio a Maremagnum",
           "icona": "clock",
           "inProgramma": false,
-          "dettaglio": "Dalle 18:58 la città si colora: si scende dopo il meglio."
+          "dettaglio": "Se torna il sole: fine Bunkers, dopo che la città si è accesa (18:58)."
         },
         {
           "id": "d2",
           "ora": "19:30",
           "titolo": "Taxi verso il T2",
           "icona": "taxi",
-          "dettaglio": "Circa 30-35 minuti. Il taxi si prenota dall'app mentre si è ancora in cima."
+          "dettaglio": "Da Port Vell circa 30-35 minuti. Con allerta meteo arancione o rossa si parte alle 18:45. Se torna il sole, dai Bunkers: il taxi si prenota dall'app mentre si è ancora in cima."
         },
         {
           "id": "d3",

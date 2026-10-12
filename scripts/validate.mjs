@@ -46,7 +46,13 @@ for (const day of it.days) {
 // Percorsi di mezza giornata: link verificati a mano, tappe esistenti, modo dichiarato
 for (const day of it.days) {
   for (const pc of day.percorsi || []) {
-    if (!/^https:\/\/www\.google\.com\/maps\/dir\/\?api=1&origin=[-\d.]+,[-\d.]+&destination=[-\d.]+,[-\d.]+&travelmode=(walking|transit)(&waypoints=[-\d.,|]+)?$/.test(pc.url)) errors.push(`percorso ${pc.id}: link non valido`)
+    // La domenica ha due tratti in taxi (Batlló → Celta, Maremagnum → T2): il link principale può essere in auto
+    if (!/^https:\/\/www\.google\.com\/maps\/dir\/\?api=1&origin=[-\d.]+,[-\d.]+&destination=[-\d.]+,[-\d.]+&travelmode=(walking|transit|driving)(&waypoints=[-\d.,|]+)?$/.test(pc.url)) errors.push(`percorso ${pc.id}: link non valido`)
+    if (pc.urlSole) {
+      if (!/^https:\/\/www\.google\.com\/maps\/dir\/\?api=1&origin=[-\d.]+,[-\d.]+&destination=[-\d.]+,[-\d.]+&travelmode=(walking|transit|driving)(&waypoints=[-\d.,|]+)?$/.test(pc.urlSole)) errors.push(`percorso ${pc.id} (sole): link non valido`)
+      if (!pc.urlSole.includes(`travelmode=${pc.modeSole || pc.mode}`)) errors.push(`percorso ${pc.id} (sole): mode diverso dal travelmode del link`)
+      for (const id of pc.stopsSole || []) if (!day.stops.some((s) => s.id === id)) errors.push(`percorso ${pc.id} (sole): tappa "${id}" inesistente in ${day.label}`)
+    }
     // Il link di pioggia può essere in taxi (domenica: Maremagnum e poi T2). Se cambia mezzo o tappe, lo dichiara.
     if (pc.urlPioggia) {
       if (!/^https:\/\/www\.google\.com\/maps\/dir\/\?api=1&origin=[-\d.]+,[-\d.]+&destination=[-\d.]+,[-\d.]+&travelmode=(walking|transit|driving)(&waypoints=[-\d.,|]+)?$/.test(pc.urlPioggia)) errors.push(`percorso ${pc.id} (pioggia): link non valido`)

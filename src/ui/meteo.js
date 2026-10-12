@@ -57,15 +57,16 @@ export function pioggiaDomenicaPomeriggio(dati) {
   h.time.forEach((t, i) => { if (t.startsWith('2026-10-18T')) { const ora = +t.slice(11, 13); if (ora >= 13 && ora <= 19 && h.precipitation_probability[i] != null) max = Math.max(max ?? 0, h.precipitation_probability[i]) } })
   return max
 }
-// Le due righe gialle. Il toggle è uno solo (piove o non piove), quindi "Attiva" accende tutti e due i piani:
-// la riga lo dice col nome del suo piano, e dopo il tocco tutte e due passano ad "attivo".
+// Le righe gialle. Il venerdì ha il toggle "Piove": "Attiva" lo accende. La domenica (dal 12/10) è già al coperto di
+// suo (Casa Batlló, Bar Celta, Maremagnum): la riga informa e basta, senza pulsante.
 const PIANI = {
-  ven: { domanda: (p) => `Previsione: venerdì mattina ${p} % di pioggia. Attivo il piano coperto?`, attivo: 'Piano coperto attivo.' },
-  dom: { domanda: (p) => `Previsione: domenica pomeriggio ${p} % di pioggia. Attivo il piano Maremagnum?`, attivo: 'Piano Maremagnum attivo.' }
+  ven: { domanda: (p) => `Previsione: venerdì mattina ${p} % di pioggia. Attivo il piano coperto?`, attivo: 'Piano coperto attivo.', azione: true },
+  dom: { domanda: (p) => `Previsione: domenica pomeriggio ${p} % di pioggia. La domenica è già al coperto.`, attivo: null, azione: false }
 }
 function rigaPiano(key, prob, piove) {
   if (prob == null || prob < 50) return ''
-  return `<div class="meteo__piove" data-meteo-piano="${key}">${icon('rain')}<span>${piove ? PIANI[key].attivo : PIANI[key].domanda(prob)}</span>${piove ? '' : '<button class="btn btn--sm" data-meteo-piove>Attiva</button>'}</div>`
+  const P = PIANI[key], acceso = piove && P.azione
+  return `<div class="meteo__piove" data-meteo-piano="${key}">${icon('rain')}<span>${acceso ? P.attivo : P.domanda(prob)}</span>${!acceso && P.azione ? '<button class="btn btn--sm" data-meteo-piove>Attiva</button>' : ''}</div>`
 }
 
 // La card. `piove`: stato del toggle del Programma. Torna '' solo se nei dati non c'è nemmeno un'ora.
@@ -154,6 +155,6 @@ export async function montaMeteo(slot, { signal, piove = () => false, onPiove, s
     const g = e.target.closest('[data-meteo-giorno]')
     if (g) { scegli(g); return }
     const b = e.target.closest('[data-meteo-piove]')
-    if (b) { onPiove?.(); card.querySelectorAll('[data-meteo-piano]').forEach((riga) => { riga.innerHTML = `${icon('rain')}<span>${PIANI[riga.dataset.meteoPiano].attivo}</span>` }) }
+    if (b) { onPiove?.(); card.querySelectorAll('[data-meteo-piano]').forEach((riga) => { if (PIANI[riga.dataset.meteoPiano].azione) riga.innerHTML = `${icon('rain')}<span>${PIANI[riga.dataset.meteoPiano].attivo}</span>` }) }
   }, { signal })
 }

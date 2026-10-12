@@ -14,9 +14,11 @@ const ATTESI = {
   'ven-cena': 'https://www.google.com/maps/dir/?api=1&origin=41.3915035,2.1715182&destination=41.3925995,2.1344166&travelmode=transit',
   'sab-mattina': 'https://www.google.com/maps/dir/?api=1&origin=41.395437,2.179608&destination=41.4066347,2.1799385&travelmode=walking&waypoints=41.4039406,2.1751597',
   'sab-sera': 'https://www.google.com/maps/dir/?api=1&origin=41.395437,2.179608&destination=41.3744026,2.1695739&travelmode=walking&waypoints=41.3791891,2.1770567',
-  'dom-mattina': 'https://www.google.com/maps/dir/?api=1&origin=41.395437,2.179608&destination=41.4169774,2.1589342&travelmode=transit',
-  'dom-pomeriggio': 'https://www.google.com/maps/dir/?api=1&origin=41.4169774,2.1589342&destination=41.4193003,2.1618259&travelmode=walking',
-  'dom-rientro': 'https://www.google.com/maps/dir/?api=1&origin=41.4193003,2.1618259&destination=41.3033401,2.076845&travelmode=transit'
+  // domenica al coperto (dal 12/10): a piedi a Casa Batlló, taxi al Bar Celta, a piedi a Maremagnum, taxi al T2
+  'dom-mattina': 'https://www.google.com/maps/dir/?api=1&origin=41.395437,2.179608&destination=41.3917,2.164918&travelmode=walking',
+  'dom-pranzo': 'https://www.google.com/maps/dir/?api=1&origin=41.3917,2.164918&destination=41.379925,2.180095&travelmode=driving',
+  'dom-pomeriggio': 'https://www.google.com/maps/dir/?api=1&origin=41.379925,2.180095&destination=41.3746496,2.1823721&travelmode=walking',
+  'dom-rientro': 'https://www.google.com/maps/dir/?api=1&origin=41.3746496,2.1823721&destination=41.3033401,2.076845&travelmode=driving'
 }
 const it = JSON.parse(readFileSync('data/itinerary.json', 'utf8'))
 const venues = JSON.parse(readFileSync('data/venues.json', 'utf8')).venues
@@ -30,6 +32,7 @@ ok('Taps: orari e telefono', /16:30/.test(venues.taps.hours) && venues.taps.phon
 ok('Taps: la tappa non è più da verificare e ha la distanza', stops.f13.badges.join() === 'verificato' && stops.f13.distFromPrevM > 0, `${stops.f13.distFromPrevM} m · ${stops.f13.minFromPrev} min`)
 ok('Bunkers: nome MUHBA e orario vero (belvedere libero, museo fino alle 14)', venues.bunkers.name.includes('MUHBA Turó de la Rovira') && /accesso libero sempre/.test(venues.bunkers.hours) && /10:00-14:00/.test(venues.bunkers.hours), venues.bunkers.hours)
 ok('Bunkers: coordinate verificate', venues.bunkers.verified === true && venues.bunkers.lat === 41.4193003 && !venues.bunkers.geocoded)
+ok('Bunkers: la tappa sta nella variante sole', stops.d2.soloSole === true && stops.d1.soloSole === true)
 ok('Bunkers: avviso sul belvedere libero e sul museo chiuso', /belvedere è sempre aperto e gratuito/.test(stops.d2.avviso || '') && /chiude alle 14:00/.test(stops.d2.avviso || ''))
 ok('Bunkers: niente più finestra 16:00–19:00 come vincolo', !/16:00[–-]19:00/.test(JSON.stringify(stops.d2)))
 ok('domenica: si sale alle 16:00 e si scende dopo il tramonto (210 min)', stops.d2.durataMin === 210 && stops.d2.time === '16:00' && stops.d1.time === '13:30')
@@ -53,19 +56,19 @@ ok('domenica: taxi 19:30 e arrivo T2 20:05', passo('d2').ora === '19:30' && pass
 ok('domenica: Canudas alle 20:20 invariato', dom.step.some((x) => x.ora === '20:20' && /Canudas/.test(x.titolo)))
 
 // ---- link ----
-ok('otto percorsi in tutto', percorsi.length === 8, String(percorsi.length))
+ok('nove percorsi in tutto (la domenica ne ha quattro)', percorsi.length === 9, String(percorsi.length))
 for (const pc of percorsi) ok(`link copiato alla lettera: ${pc.id}`, pc.url === ATTESI[pc.id], pc.url === ATTESI[pc.id] ? '' : pc.url)
 ok('ogni percorso punta a tappe vere', percorsi.every((pc) => pc.stops.every((id) => stops[id])))
 
 // ---- nel browser ----
 const b = await chromium.launch({ executablePath: exe, args: ['--no-sandbox'] })
-async function vista(person, path) {
+async function vista(person, path, { sole = false } = {}) {
   const ctx = await b.newContext({ viewport: { width: 380, height: 820 }, isMobile: true, hasTouch: true })
   const p = await ctx.newPage()
   const errs = []
   p.on('pageerror', (e) => errs.push(e.message))
   await p.goto(base + '/')
-  await p.evaluate((x) => { localStorage.clear(); localStorage.setItem('b40:v1:lastSeenVersion', '999'); localStorage.setItem('b40:v1:person', JSON.stringify(x)); localStorage.setItem('b40:v1:onboarded', 'true') }, person)
+  await p.evaluate(({ x, sole }) => { localStorage.clear(); localStorage.setItem('b40:v1:lastSeenVersion', '999'); localStorage.setItem('b40:v1:person', JSON.stringify(x)); localStorage.setItem('b40:v1:onboarded', 'true'); if (sole) localStorage.setItem('b40:v1:sole', 'true') }, { x: person, sole })
   await p.goto(base + path, { waitUntil: 'networkidle' })
   await p.waitForTimeout(500)
   return { p, ctx, errs }
@@ -79,7 +82,7 @@ function totale(pc) {
   const t = dentro.filter((s) => s.distFromPrevM != null && (pc.mode === 'walking' ? aPiedi(s) : !aPiedi(s)))
   return { m: t.reduce((n, s) => n + s.distFromPrevM, 0), min: t.reduce((n, s) => n + (s.minFromPrev || 0), 0) }
 }
-for (const [giorno, attesi] of [['ven', ['ven-mattina', 'ven-pomeriggio', 'ven-cena']], ['sab', ['sab-mattina', 'sab-sera']], ['dom', ['dom-mattina', 'dom-pomeriggio', 'dom-rientro']]]) {
+for (const [giorno, attesi] of [['ven', ['ven-mattina', 'ven-pomeriggio', 'ven-cena']], ['sab', ['sab-mattina', 'sab-sera']], ['dom', ['dom-mattina', 'dom-pranzo', 'dom-pomeriggio', 'dom-rientro']]]) {
   const { p, ctx, errs } = await vista('ale', `/#/programma/${giorno}`)
   const bottoni = await p.evaluate(() => [...document.querySelectorAll('.percorso')].map((a) => ({
     id: a.dataset.percorso, href: a.getAttribute('href'), testo: a.querySelector('small').textContent,
@@ -92,7 +95,7 @@ for (const [giorno, attesi] of [['ven', ['ven-mattina', 'ven-pomeriggio', 'ven-c
   for (const x of bottoni) {
     const pc = percorsi.find((q) => q.id === x.id)
     const t = totale(pc)
-    const atteso = pc.mode === 'walking' && t.m ? `${fmtDist(t.m)} · ${fmtMin(t.min)} a piedi` : 'Mezzi pubblici'
+    const atteso = pc.mode === 'walking' && t.m ? `${fmtDist(t.m)} · ${fmtMin(t.min)} a piedi` : pc.mode === 'driving' && t.m ? `${fmtDist(t.m)} · ${fmtMin(t.min)} in taxi` : pc.mode === 'driving' ? 'In taxi' : 'Mezzi pubblici'
     ok(`${x.id}: il totale coincide con la somma delle tappe`, x.testo.includes(atteso), `atteso "${atteso}" · trovato "${x.testo}"`)
   }
   ok(`${giorno}: nessun errore JS`, errs.length === 0, errs.join(' | '))
@@ -105,7 +108,7 @@ for (const [giorno, attesi] of [['ven', ['ven-mattina', 'ven-pomeriggio', 'ven-c
   await ctx.close()
 }
 {
-  const { p, ctx } = await vista('ale', '/?now=2026-10-18T16:30#/oggi')
+  const { p, ctx } = await vista('ale', '/?now=2026-10-18T16:30#/oggi', { sole: true }) // i Bunkers stanno nella variante "Se torna il sole"
   ok('Oggi · domenica pomeriggio: percorso dei Bunkers', (await p.locator('.tile--accent .percorso').getAttribute('data-percorso')) === 'dom-pomeriggio')
   ok('Oggi · avviso dei Bunkers visibile nella card di adesso', /belvedere è sempre aperto/.test(await p.locator('.tile--accent .avviso:not(.avviso--orario)').innerText()) && /chiude alle 17:30/.test(await p.locator('.tile--accent .avviso--orario').innerText())) // dal 07/10 sopra c'è anche l'avviso giallo sull'orario
   await ctx.close()
@@ -118,7 +121,7 @@ for (const [giorno, attesi] of [['ven', ['ven-mattina', 'ven-pomeriggio', 'ven-c
 }
 // Il consiglio stimato compare nella card, separato dai dati verificati
 {
-  const { p, ctx } = await vista('ale', '/#/programma/dom')
+  const { p, ctx } = await vista('ale', '/#/programma/dom', { sole: true }) // i Bunkers stanno nella variante "Se torna il sole"
   const card = p.locator('.card[data-stop="d2"]').first()
   await card.locator('summary').click()
   await p.waitForTimeout(400)

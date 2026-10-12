@@ -90,6 +90,7 @@
 .badge--da_verificare{ background:color-mix(in srgb, var(--giallo) 22%, transparent); color:var(--giallo); }
 :root[data-theme="light"] .badge--da_verificare{ color:#8A6800; }
 .badge--geocoded{ background:color-mix(in srgb, var(--ink-3) 25%, transparent); color:var(--ink-2); }
+.badge--consigliato{ background:color-mix(in srgb, var(--terracotta) 22%, transparent); color:var(--terracotta); text-transform:none; letter-spacing:0; }
 .badge--opzionale{ background:color-mix(in srgb, var(--blu) 55%, transparent); color:#CBD9EC; }
 :root[data-theme="light"] .badge--opzionale{ background:color-mix(in srgb, var(--blu) 18%, transparent); color:var(--blu); }
 .badge--reveal{ animation:badge-in var(--dur-3) var(--ease) both; }

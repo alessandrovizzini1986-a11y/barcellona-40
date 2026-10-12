@@ -1,6 +1,6 @@
 // Vista Oggi: countdown prima del weekend, bento durante, "Missione compiuta" dopo
 import { now, phase, countdownTo, dayKey, minutesUntil, fmtMinutes, currentStop, nextStop, isOverridden, parseLocal, canzoneVisibile } from '../time.js'
-import { stopsFor, stopsForDay, personById, checks, fmtDist, DAY_COLOR, missionsFor, percorsiDi, conOrario, days, durataDi, attiva } from '../data.js'
+import { stopsFor, stopsForDay, personById, checks, fmtDist, DAY_COLOR, missionsFor, percorsiDi, conOrario, days, durataDi, attiva, sole } from '../data.js'
 import { store } from '../store.js'
 import { stopCard, bindCards, percorsoLink } from '../ui/card.js'
 import { ring } from '../ui/ring.js'
@@ -143,8 +143,10 @@ export async function render(root, opts) {
   const atterraggio = ripartito && p.departure.landing ? parseLocal(`${p.departure.date}T${p.departure.landing}`) : null
   const aCasa = !!(atterraggio && now() >= atterraggio)
 
-  // Domenica mattina con la pioggia: la prenotazione del Mirador va cancellata, e questa è la pagina che si apre
-  const avvisoMirador = key === 'dom' && store.piove && now() < PRENOTAZIONE_MIRADOR && todays.some((s) => s.id === 'd1b')
+  // La domenica al coperto è il programma: la prenotazione del Mirador va cancellata entro sabato (l'avviso sta in
+  // Programma › Domenica e in DA_VERIFICARE). Qui compare domenica mattina, finché la variante sole è spenta e le
+  // 13:30 non sono passate: il sabato il primo blocco di Oggi resta l'album.
+  const avvisoMirador = key === 'dom' && !sole() && now() < PRENOTAZIONE_MIRADOR && person !== 'monne'
   html = header(`${DAY_LABEL[key]} · ${p.name}`) + `<section class="view">
     ${avvisoMirador ? avvisoMiradorPioggia() : ''}
     ${timelineViaggio(key, person)}

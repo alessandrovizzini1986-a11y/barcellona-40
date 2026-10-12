@@ -14,7 +14,7 @@ const ok = (n, c, x = '') => { out.push(c); if (!c) process.exitCode = 1; consol
 const DIR = 'public/assets/tappe'
 const file = readdirSync(DIR)
 const webp = file.filter((f) => f.endsWith('.webp')), svg = file.filter((f) => f.endsWith('.svg'))
-ok('31 foto WebP: 16 da Commons più 15 private', webp.length === 31, webp.length + '')
+ok('33 foto WebP: 18 da Commons più 15 private', webp.length === 33, webp.length + '')
 ok('nessuna card stilizzata: ogni tappa ha la foto vera', svg.length === 0, svg.join(' '))
 const misure = []
 // Le foto di Commons sono tutte 800×450. Le private partono da originali più piccoli e non si
@@ -28,13 +28,13 @@ for (const f of webp) {
 const kb = file.reduce((n, f) => n + statSync(`${DIR}/${f}`).size, 0) / 1024
 // Tetto alzato a 1,3 MB con l'arrivo delle nove foto vere: sono già a qualità 72 e comprimerle di
 // più si vedrebbe. Il saldo rispetto alle card stilizzate che hanno sostituito è di circa +80 kB.
-ok('cartella sotto 1,55 MB (31 foto)', kb < 1587, `${(kb / 1024).toFixed(2)} MB`)
+ok('cartella sotto 1,8 MB (33 foto)', kb < 1843, `${(kb / 1024).toFixed(2)} MB`)
 
 // ---- crediti ----
 const crediti = JSON.parse(readFileSync('data/foto-tappe.json', 'utf8'))
 const privateFile = new Set((crediti.private || []).map((f) => `${f.id}.webp`))
 const cred = readFileSync('CREDITS.md', 'utf8')
-ok('crediti per tutte e 16 le foto di Commons', crediti.foto.length === 16 && crediti.scartate.length === 0)
+ok('crediti per tutte e 18 le foto di Commons', crediti.foto.length === 18 && crediti.scartate.length === 0)
 ok('le quindici foto private sono dichiarate e fuori dai crediti Commons', crediti.private?.length === 15 && crediti.private.every((f) => f.id && f.file && f.tappa && /concessione/i.test(f.nota) && !crediti.foto.some((c) => c.id === f.id)), String(crediti.private?.length))
 // stanno in CREDITS.md, ma nella tabella delle private: nessuna riga con un link a Commons le nomina
 ok('nessuna foto privata nella tabella Commons di CREDITS.md', crediti.private.every((f) => !cred.split('\n').some((r) => r.includes(f.file) && r.includes('commons.wikimedia.org'))))
@@ -55,13 +55,13 @@ ok('voli, parcheggio e lounge hanno la loro immagine', [...viaggio.voli, viaggio
 
 // ---- nel browser ----
 const b = await chromium.launch({ executablePath: exe, args: ['--no-sandbox'] })
-async function vista(person, path) {
+async function vista(person, path, { sole = false } = {}) {
   const ctx = await b.newContext({ viewport: { width: 380, height: 820 }, isMobile: true, hasTouch: true })
   const p = await ctx.newPage()
   const errs = []
   p.on('pageerror', (e) => errs.push(e.message))
   await p.goto(base + '/')
-  await p.evaluate((x) => { localStorage.clear(); localStorage.setItem('b40:v1:lastSeenVersion', '999'); localStorage.setItem('b40:v1:person', JSON.stringify(x)); localStorage.setItem('b40:v1:onboarded', 'true') }, person)
+  await p.evaluate(({ x, sole }) => { localStorage.clear(); localStorage.setItem('b40:v1:lastSeenVersion', '999'); localStorage.setItem('b40:v1:person', JSON.stringify(x)); localStorage.setItem('b40:v1:onboarded', 'true'); if (sole) localStorage.setItem('b40:v1:sole', 'true') }, { x: person, sole })
   await p.goto(base + path, { waitUntil: 'networkidle' })
   await p.evaluate(async () => { for (let y = 0; y < document.body.scrollHeight; y += 400) { window.scrollTo(0, y); await new Promise((r) => setTimeout(r, 60)) } window.scrollTo(0, 0) })
   await p.waitForFunction(() => [...document.querySelectorAll('.card__foto img')].every((i) => i.complete), null, { timeout: 25000 }).catch(() => {})
@@ -69,7 +69,7 @@ async function vista(person, path) {
   return { p, ctx, errs }
 }
 // Ogni tappa ha la sua foto, e ogni foto la sua attribuzione: i due numeri coincidono
-for (const [giorno, attese, crediti0] of [['ven', 17, 17], ['sab', 9, 9], ['dom', 3, 3]]) {
+for (const [giorno, attese, crediti0] of [['ven', 17, 17], ['sab', 9, 9], ['dom', 4, 4]]) { // domenica al coperto (dal 12/10): Batlló, Celta, Maremagnum, rientro
   const { p, ctx, errs } = await vista('ale', `/#/programma/${giorno}`)
   const st = await p.evaluate(() => ({
     img: [...document.querySelectorAll('.card[data-stop] .card__foto img')].map((i) => ({ src: i.getAttribute('src').split('/').pop(), nat: i.naturalWidth, lazy: i.getAttribute('loading'), alt: i.getAttribute('alt'), ratio: +(i.getBoundingClientRect().width / i.getBoundingClientRect().height).toFixed(2) })),
@@ -111,7 +111,7 @@ for (const [giorno, attese, crediti0] of [['ven', 17, 17], ['sab', 9, 9], ['dom'
 }
 // La foto privata porta l'attribuzione giusta: "per gentile concessione", senza link e senza nome
 {
-  const { p, ctx } = await vista('ale', '/#/programma/dom')
+  const { p, ctx } = await vista('ale', '/#/programma/dom', { sole: true }) // El Mirador sta nella variante "Se torna il sole"
   const card = await p.evaluate(() => {
     const c = document.querySelector('.card[data-stop="d1"]')
     return { img: c.querySelector('.card__foto img')?.getAttribute('src').split('/').pop(), credito: !!c.querySelector('.card__credito'), titolo: c.querySelector('.card__title').textContent.trim() }

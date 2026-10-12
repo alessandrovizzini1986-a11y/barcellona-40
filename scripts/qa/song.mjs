@@ -31,7 +31,7 @@ async function open(person, path, opts = {}) {
 {
   const { p, ctx } = await open('ale', '/?now=2026-10-15T20:00#/oggi')
   const order = await p.evaluate(() => [...document.querySelector('.view').children].map((e) => e.className.split(' ')[0]))
-  ok('prima del weekend: inno dopo album e countdown', order.indexOf('song') === 2, order.slice(0, 4).join(' → '))
+  ok('prima del weekend: inno subito dopo l\'album', order.indexOf('song') === order.indexOf('album') + 1 && order.indexOf('album') >= 1, order.slice(0, 4).join(' → '))
   await ctx.close()
 }
 {

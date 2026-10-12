@@ -176,6 +176,28 @@
       "licenzaUrl": "https://creativecommons.org/licenses/by/4.0",
       "pagina": "https://commons.wikimedia.org/wiki/File:614_Marem%C3%A0gnum_i_Port_Vell_(Barcelona),_des_del_moll_de_la_Fusta.jpg",
       "kb": 38
+    },
+    {
+      "id": "batllo",
+      "file": "assets/tappe/batllo.webp",
+      "tappa": "Casa Batlló",
+      "titolo": "File:Casa Batllo Overview Barcelona Spain.jpg",
+      "autore": "ChristianSchd",
+      "licenza": "CC BY-SA 3.0",
+      "licenzaUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Casa_Batllo_Overview_Barcelona_Spain.jpg",
+      "kb": 88
+    },
+    {
+      "id": "celta",
+      "file": "assets/tappe/celta.webp",
+      "tappa": "Bar Celta Pulpería",
+      "titolo": "File:Polbo a Feira con cachelos (4629216132).jpg",
+      "autore": "José Antonio Gil Martínez",
+      "licenza": "CC BY 2.0",
+      "licenzaUrl": "https://creativecommons.org/licenses/by/2.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Polbo_a_Feira_con_cachelos_(4629216132).jpg",
+      "kb": 25
     }
   ],
   "private": [

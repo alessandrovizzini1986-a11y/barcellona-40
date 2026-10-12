@@ -683,7 +683,8 @@
      "detailsStimati": [
       "Il casinò ha una pagina promozioni, ma il contenuto non è leggibile da qui: controllala dal telefono qualche giorno prima. https://www.casinobarcelona.com/barcelona/promociones"
      ],
-     "avviso": "Venerdì avete gli zaini: quelli grandi non entrano in sala e il guardaroba per gli oggetti ingombranti è a pagamento. Valutate di passare prima dall'appartamento."
+     "avviso": "Venerdì avete gli zaini: quelli grandi non entrano in sala e il guardaroba per gli oggetti ingombranti è a pagamento. Valutate di passare prima dall'appartamento.",
+     "distMode": "auto"
     }
    ],
    "percorsi": [
@@ -1170,6 +1171,43 @@
    ],
    "stops": [
     {
+     "id": "d0",
+     "time": "12:30",
+     "timeStatus": "da_verificare",
+     "venueId": "batllo",
+     "title": "Casa Batlló",
+     "img": "batllo.webp",
+     "durataMin": 75,
+     "why": "Il capolavoro di Gaudí al coperto: facciata a scaglie, pozzo di luce, tetto drago. Settantacinque minuti e si è già verso il porto.",
+     "details": [
+      "Passeig de Gràcia 43: dall'appartamento 1,7 km, 20 minuti a piedi (o metro L2 Monumental → Passeig de Gràcia)",
+      "Biglietto a fascia oraria, da comprare online: prezzo dinamico, cambia col giorno e con l'ora",
+      "Visita con audioguida in realtà aumentata, inclusa",
+      "4,7 su 220.602 recensioni",
+      "Aperto tutti i giorni 8:30–22:30",
+      "Tel +34 932 16 03 06"
+     ],
+     "detailsStimati": [
+      "Il biglietto va comprato entro giovedì 15 per la fascia delle 12:30: senza, la mattina diventa libera e il pranzo resta alle 14:00 (vedi DA_VERIFICARE)"
+     ],
+     "people": [
+      "ale",
+      "giulio",
+      "manuel"
+     ],
+     "badges": [
+      "da_verificare"
+     ],
+     "actions": {
+      "maps": true,
+      "taxi": false,
+      "metro": "L2 Passeig de Gràcia"
+     },
+     "distFromPrevM": 1651,
+     "minFromPrev": 20,
+     "saltaSole": true
+    },
+    {
      "id": "d1",
      "time": "13:30",
      "timeStatus": "verificato",
@@ -1202,27 +1240,26 @@
      "distFromPrevM": 4961,
      "minFromPrev": 18,
      "distMode": "auto",
-     "saltaPioggia": true,
-     "motivoPioggia": "saltato per pioggia: il pranzo si sposta al coperto, al Time Out Market. La prenotazione va cancellata entro la mattina"
+     "soloSole": true
     },
     {
      "id": "d1b",
-     "time": "13:00",
+     "time": "14:00",
      "timeStatus": "verificato",
-     "venueId": "timeoutmarket",
-     "title": "Pranzo · Time Out Market",
-     "img": "timeoutmarket.webp",
-     "soloPioggia": true,
+     "venueId": "celta",
+     "title": "Pranzo · Bar Celta Pulpería",
+     "img": "celta.webp",
      "durataMin": 90,
-     "why": "Un piano intero di banchi sotto lo stesso tetto, sul porto: si pranza al coperto e il pomeriggio continua di sotto, senza uscire.",
+     "why": "Polpo alla gallega, patate, pimientos de Padrón e un bianco galiziano. Locale storico, ci vanno quelli del quartiere.",
      "details": [
-      "Tanti banchi diversi, ognuno sceglie il suo. Citati nelle recensioni: paella di verdure, pizza, fish & chips.",
-      "Si mangia seduti ai tavoli comuni.",
-      "Al 2° piano di Maremagnum, Moll d'Espanya 5",
-      "Dall'appartamento in taxi verso le 12:45: 3 km, circa 9 minuti",
-      "4,6 su 3.067 recensioni",
-      "Aperto tutti i giorni 10:00–00:00",
-      "Tel +34 669 18 96 72"
+      "La sede vicino al porto, Carrer de Simó Oller 3: NON quella di Carrer de la Princesa",
+      "Domenica 12:00–24:00",
+      "Da Casa Batlló in taxi: circa 8–10 minuti",
+      "4,0 su 2.982 recensioni",
+      "Tel +34 933 15 00 06"
+     ],
+     "detailsStimati": [
+      "Prendete polpo e vino al bicchiere. Evitate la sangria in caraffa: è piena di ghiaccio."
      ],
      "people": [
       "ale",
@@ -1230,30 +1267,38 @@
       "manuel"
      ],
      "badges": [
-      "verificato"
+      "verificato",
+      "consigliato"
      ],
      "actions": {
       "maps": true,
       "taxi": true,
       "metro": null
      },
-     "distFromPrevM": 3000,
-     "minFromPrev": 9,
-     "distMode": "auto"
+     "distFromPrevM": 2376,
+     "minFromPrev": 10,
+     "distMode": "taxi",
+     "saltaSole": true,
+     "tassista": {
+      "indirizzo": "Carrer de Simó Oller, 3 · 08003 Barcelona",
+      "nota": "Bar Celta Pulpería, la sede vicino al porto (non quella di Carrer de la Princesa)",
+      "uber": "https://m.uber.com/ul/?action=setPickup&pickup=my_location&dropoff[latitude]=41.379925&dropoff[longitude]=2.180095&dropoff[nickname]=Bar%20Celta%20Pulperia&dropoff[formatted_address]=Carrer%20de%20Sim%C3%B3%20Oller%203%2C%20Barcelona"
+     }
     },
     {
      "id": "d1c",
-     "time": "14:30",
+     "time": "15:30",
      "timeStatus": "verificato",
      "venueId": "maremagnum",
      "title": "Pomeriggio al coperto · Maremagnum",
      "img": "maremagnum.webp",
-     "soloPioggia": true,
-     "durataMin": 300,
+     "durataMin": 240,
      "why": "Centro commerciale sul molo, tutto al chiuso: si aspetta la sera senza bagnarsi e il taxi per il T2 parte da qui.",
      "details": [
-      "Negozi, caffè, terrazza sul porto. Aperto fino alle 22: si esce solo per andare in aeroporto.",
-      "Alle 19:30 taxi al T2: 20 km, circa 32 minuti",
+      "Dal Bar Celta a piedi sul ponte Rambla de Mar: 935 m, circa 11 minuti. Se diluvia, taxi breve",
+      "Negozi, caffè, terrazza sul porto. Aperto fino alle 22: si esce solo per andare in aeroporto",
+      "Bagni gratuiti al 1° e 2° piano",
+      "Alle 19:30 taxi al T2: 20 km, circa 32 minuti. Con allerta arancione o rossa si parte alle 18:45",
       "4,2 su 39.563 recensioni",
       "Tel +34 930 12 91 39"
      ],
@@ -1270,7 +1315,9 @@
       "taxi": true,
       "metro": null
      },
-     "distFromPrevM": 0
+     "distFromPrevM": 935,
+     "saltaSole": true,
+     "minFromPrev": 11
     },
     {
      "id": "d2",
@@ -1310,19 +1357,19 @@
       "Prenota il taxi dall'app mentre sei ancora in cima: qui sopra non ne passano. L'auto ci mette qualche minuto a salire.",
       "Se l'app non trova nessuno: scendi a piedi verso Carrer de Marià Labèrnia e richiama da lì."
      ],
-     "saltaPioggia": true,
-     "motivoPioggia": "saltati per pioggia: collina scoperta, terreno scivoloso, niente vista",
-     "avvisoOrario": "Orario da confermare: una fonte ufficiale dice che in ottobre l'area chiude alle 17:30."
+     "avvisoOrario": "Orario da confermare: una fonte ufficiale dice che in ottobre l'area chiude alle 17:30.",
+     "soloSole": true
     },
     {
      "id": "d3",
-     "time": "20:00",
+     "time": "20:05",
      "timeStatus": "stimato",
      "venueId": "bcnT2",
      "title": "Rientro a Bologna",
      "why": "Alessandro parte alle 23:05. Giulio e Manuel tornano lo stesso giorno, con orari loro.",
      "details": [
-      "Alessandro: FR5220 delle 23:05, T2. Si stacca dal gruppo alle 19:30, il viaggio completo è nella sezione Viaggio",
+      "Alessandro: FR5220 delle 23:05, T2. Taxi da Maremagnum alle 19:30: 20 km, circa 32 minuti. Da lì tutto come previsto: lounge Canudas dalle 20:20, volo alle 23:05",
+      "Con allerta meteo arancione o rossa il taxi si anticipa alle 18:45",
       "Giulio e Manuel rientrano domenica anche loro: i voli non li tracciamo, l'orario qui è indicativo"
      ],
      "people": [
@@ -1338,59 +1385,76 @@
       "taxi": true,
       "metro": null
      },
-     "distFromPrevM": 22684,
-     "minFromPrev": 36,
+     "distFromPrevM": 20000,
+     "minFromPrev": 32,
      "distMode": "auto",
      "img": "bcn_t2.webp",
-     "timePioggia": "20:05",
-     "detailsPioggia": [
-      "Piano pioggia: taxi da Maremagnum alle 19:30, 20 km e circa 32 minuti. Da qui tutto come previsto: lounge Canudas dalle 20:20, volo alle 23:05"
-     ],
-     "distPioggia": {
-      "m": 20000,
-      "min": 32
+     "sole": {
+      "time": "20:00",
+      "details": [
+       "Alessandro: FR5220 delle 23:05, T2. Si stacca dal gruppo alle 19:30, il viaggio completo è nella sezione Viaggio",
+       "Giulio e Manuel rientrano domenica anche loro: i voli non li tracciamo, l'orario qui è indicativo"
+      ],
+      "dist": {
+       "m": 22684,
+       "min": 36
+      }
      }
     }
    ],
    "percorsi": [
     {
      "id": "dom-mattina",
-     "label": "Appartamento → El Mirador",
-     "mode": "transit",
-     "url": "https://www.google.com/maps/dir/?api=1&origin=41.395437,2.179608&destination=41.4169774,2.1589342&travelmode=transit",
+     "label": "Appartamento → Casa Batlló",
+     "mode": "walking",
+     "url": "https://www.google.com/maps/dir/?api=1&origin=41.395437,2.179608&destination=41.3917,2.164918&travelmode=walking",
      "stops": [
-      "d1"
+      "d0"
      ],
-     "urlPioggia": "https://www.google.com/maps/dir/?api=1&origin=41.395437,2.179608&destination=41.3746496,2.1823721&travelmode=driving",
-     "labelPioggia": "Appartamento → Maremagnum",
-     "modePioggia": "driving",
-     "stopsPioggia": [
-      "d1b",
-      "d1c"
+     "urlSole": "https://www.google.com/maps/dir/?api=1&origin=41.395437,2.179608&destination=41.4169774,2.1589342&travelmode=transit",
+     "labelSole": "Appartamento → El Mirador",
+     "modeSole": "transit",
+     "stopsSole": [
+      "d1"
      ]
     },
     {
-     "id": "dom-pomeriggio",
-     "label": "El Mirador → Bunkers del Carmel",
-     "mode": "walking",
-     "url": "https://www.google.com/maps/dir/?api=1&origin=41.4169774,2.1589342&destination=41.4193003,2.1618259&travelmode=walking",
+     "id": "dom-pranzo",
+     "label": "Casa Batlló → Bar Celta (taxi)",
+     "mode": "driving",
+     "url": "https://www.google.com/maps/dir/?api=1&origin=41.3917,2.164918&destination=41.379925,2.180095&travelmode=driving",
      "stops": [
-      "d2"
+      "d1b"
      ],
-     "soloAsciutto": true
+     "nascondiSole": true
+    },
+    {
+     "id": "dom-pomeriggio",
+     "label": "Bar Celta → Maremagnum",
+     "mode": "walking",
+     "url": "https://www.google.com/maps/dir/?api=1&origin=41.379925,2.180095&destination=41.3746496,2.1823721&travelmode=walking",
+     "stops": [
+      "d1c"
+     ],
+     "urlSole": "https://www.google.com/maps/dir/?api=1&origin=41.4169774,2.1589342&destination=41.4193003,2.1618259&travelmode=walking",
+     "labelSole": "El Mirador → Bunkers del Carmel",
+     "modeSole": "walking",
+     "stopsSole": [
+      "d2"
+     ]
     },
     {
      "id": "dom-rientro",
-     "label": "Bunkers → Terminal 2",
-     "mode": "transit",
-     "url": "https://www.google.com/maps/dir/?api=1&origin=41.4193003,2.1618259&destination=41.3033401,2.076845&travelmode=transit",
+     "label": "Maremagnum → Terminal 2 (taxi)",
+     "mode": "driving",
+     "url": "https://www.google.com/maps/dir/?api=1&origin=41.3746496,2.1823721&destination=41.3033401,2.076845&travelmode=driving",
      "stops": [
       "d3"
      ],
-     "urlPioggia": "https://www.google.com/maps/dir/?api=1&origin=41.3746496,2.1823721&destination=41.3033401,2.076845&travelmode=driving",
-     "labelPioggia": "Maremagnum → Terminal 2",
-     "modePioggia": "driving",
-     "stopsPioggia": [
+     "urlSole": "https://www.google.com/maps/dir/?api=1&origin=41.4193003,2.1618259&destination=41.3033401,2.076845&travelmode=transit",
+     "labelSole": "Bunkers → Terminal 2",
+     "modeSole": "transit",
+     "stopsSole": [
       "d3"
      ]
     }

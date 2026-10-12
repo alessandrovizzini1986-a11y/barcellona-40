@@ -27,12 +27,12 @@ const primaSezione = dv.split('\n').find((l) => l.startsWith('## ')) || ''
 ok('DA_VERIFICARE.md: la prima voce è URGENTE e parla dei Bunkers, con le due versioni e le fonti', /URGENTE/.test(primaSezione) && /Bunkers/.test(primaSezione) && /guia\.barcelona\.cat/.test(dv) && /museuhistoria/.test(dv) && /17\.30|17:30/.test(dv) && /lliure accés/.test(dv), primaSezione)
 
 // 2. nel browser
-async function apri(person, path) {
+async function apri(person, path, { sole = false } = {}) {
   const ctx = await b.newContext({ viewport: { width: 380, height: 800 }, isMobile: true, hasTouch: true })
   const p = await ctx.newPage(); const errs = []
   p.on('pageerror', (e) => errs.push(e.message))
   p.on('console', (m) => { if (m.type() === 'error' && !/CERT|net::ERR/.test(m.text())) errs.push(m.text()) })
-  await p.addInitScript((person) => { try { if (sessionStorage.getItem('qa:init')) return; sessionStorage.setItem('qa:init', '1'); localStorage.clear(); localStorage.setItem('b40:v1:lastSeenVersion', '999'); localStorage.setItem('b40:v1:person', JSON.stringify(person)); localStorage.setItem('b40:v1:onboarded', 'true') } catch {} }, person)
+  await p.addInitScript(({ person, sole }) => { try { if (sessionStorage.getItem('qa:init')) return; sessionStorage.setItem('qa:init', '1'); localStorage.clear(); localStorage.setItem('b40:v1:lastSeenVersion', '999'); localStorage.setItem('b40:v1:person', JSON.stringify(person)); localStorage.setItem('b40:v1:onboarded', 'true'); if (sole) localStorage.setItem('b40:v1:sole', 'true') } catch {} }, { person, sole })
   await p.goto(base + path, { waitUntil: 'networkidle' }); await p.waitForTimeout(500)
   return { p, ctx, errs }
 }
@@ -67,7 +67,7 @@ for (const [person, key] of [['ale', 'ven'], ['monne', 'ven'], ['ale', 'sab'], [
   await ctx.close()
 }
 {
-  const { p, ctx, errs } = await apri('ale', '/#/programma/dom')
+  const { p, ctx, errs } = await apri('ale', '/#/programma/dom', { sole: true }) // i Bunkers stanno nella variante "Se torna il sole"
   const d2 = p.locator('.card[data-stop="d2"]')
   ok('Bunkers: avviso giallo "Orario da confermare: una fonte ufficiale dice che in ottobre l\'area chiude alle 17:30."', (await d2.locator('.avviso--orario').count()) === 1 && (await d2.locator('.avviso--orario').innerText()).trim() === "Orario da confermare: una fonte ufficiale dice che in ottobre l'area chiude alle 17:30.")
   ok('Bunkers: orario 16:00 e durata invariati (l\'itinerario non cambia)', (await d2.locator('.card__foto-time').innerText()).trim() === '16:00' && /3 h 30 min/.test(await d2.locator('.chips').innerText()))
@@ -116,7 +116,8 @@ for (const person of ['ale', 'monne', 'giulio', 'manuel']) {
   let hrefs = []
   for (const key of ['ven', 'sab', 'dom']) { const { p, ctx } = await apri('ale', `/#/programma/${key}`); hrefs.push(...await p.locator('.percorso').evaluateAll((as) => as.map((a) => a.href))); await ctx.close() }
   // El Palace, la Sagrada e il T2 sono anche tappe: quelle coordinate stanno nei percorsi per le tappe, non per i bagni
-  const soloBagni = coords.filter((c) => !['41.3915035,2.1715182', '41.4039406,2.1751597', '41.3033401,2.076845'].includes(c))
+  // El Palace, la Sagrada, il T2 e Maremagnum sono anche tappe: quelle coordinate stanno nei percorsi per le tappe, non per i bagni
+  const soloBagni = coords.filter((c) => !['41.3915035,2.1715182', '41.4039406,2.1751597', '41.3033401,2.076845', '41.3746496,2.1823721'].includes(c))
   ok(`i link dei percorsi (${hrefs.length}) non contengono coordinate dei bagni`, hrefs.length >= 6 && !hrefs.some((h) => soloBagni.some((c) => h.includes(c))))
 }
 await b.close(); if (errori.length) { console.error('ERRORI:\n' + errori.join('\n')); process.exit(1) } console.log('OK bagni')

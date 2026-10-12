@@ -4,8 +4,7 @@ Generato in parte dagli script dati (`npm run data`). Le sezioni tra marker veng
 
 ## URGENTE · Orario dei Bunkers domenica 18 ottobre: due versioni ufficiali (07/10/2026)
 
-**Decide Alessandro. L'itinerario non è stato toccato**: la tappa d2 resta alle 16:00 con 210 minuti e il
-tramonto delle 19:07; sulla card c'è solo l'avviso giallo "Orario da confermare".
+**Dal 12/10 i Bunkers stanno nella variante "Se torna il sole"** (interruttore in Programma › Domenica, spento di default): la tappa d2 resta alle 16:00 con 210 minuti e il tramonto delle 19:07, con l'avviso giallo "Orario da confermare". Il programma principale di domenica è al coperto.
 
 Il problema: se vale la versione A, **domenica 18 ottobre il recinto chiude alle 17:30** e la città che si
 accende (18:58) non si vede da lassù. Con la versione B si resta fino a quando si vuole.
@@ -38,6 +37,15 @@ recinto (da scegliere). Serve una telefonata al 93 256 21 22 (lun–gio 9–15, 
 - Dalla stessa prova: l'API risponde senza `count_unique` (GoatCounter non conta più gli unici dalla 2.5), quindi la tessera "Visitatori unici" resta nascosta per disegno; 29 percorsi e 69 hit negli ultimi 7 giorni, `hourly` da 24 valori per giorno, come previsto.
 - **Il token sta nel repo** (`src/stats-orari.js`, `TOKEN_REPO`), per decisione esplicita di Alessandro del 07/10/2026 ("ti autorizzo formalmente a inserirlo, mi assumo le responsabilità"): repo pubblico, sito non indicizzato, contatori senza valore di privacy. Ha tutti i permessi dell'account GoatCounter, non solo la lettura. Se lo revoca, la pagina mostra il campo e un token nuovo salvato dal telefono (`b40:v1:gc-token`) ha la precedenza. Se compare traffico strano nei contatori o cambiano le impostazioni del sito, è questo il token da revocare.
 - Il permesso del token deve essere "Read statistics" e basta: niente altro.
+
+## Domenica al coperto: due cose da fare prima (12/10/2026)
+
+| Cosa | Entro quando | Dove |
+|---|---|---|
+| **Comprare i biglietti di Casa Batlló** per domenica 18 alle 12:30, 3 persone. Prezzo dinamico: cambia col giorno e con l'ora | **giovedì 15 ottobre** | casabatllo.es, fascia 12:30. Finché non è comprato, la tappa d0 porta il badge "da verificare" |
+| **Disdire El Mirador** (prenotazione domenica 13:30, 3 persone) se la domenica resta in versione al coperto | **sabato 17 ottobre** | dal link nella mail di Google Maps, oppure +34 931 64 20 22 |
+
+La variante "Se torna il sole" (interruttore in Programma › Domenica) rimette El Mirador e i Bunkers: in quel caso la prenotazione serve e Casa Batlló va rimborsata o lasciata perdere.
 
 ## Bagni puliti: cosa resta aperto dopo la verifica del 07/10/2026
 
@@ -91,7 +99,7 @@ Nessuna: tutti i venue hanno coordinate verificate a mano.
 ## distanze
 
 <!-- distanze:start -->
-Nessuna: tutte le tappe hanno le coordinate e la distanza dalla precedente.
+- nessuna voce
 <!-- distanze:end -->
 
 ## Voci aperte (da `data/checks.json`, spuntabili nella sezione Info → Da verificare)

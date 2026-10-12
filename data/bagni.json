@@ -555,14 +555,8 @@
    "nota": "Usalo prima di uscire: dopo non c'è niente"
   },
   "d1b": {
-   "prima": "maremagnum",
-   "nota": "Il Time Out Market sta dentro Maremagnum",
-   "dist": {
-    "maremagnum": {
-     "m": 245,
-     "min": 3
-    }
-   }
+   "semplice": "Ristorante",
+   "nota": "Siamo clienti: quello del locale"
   },
   "d1c": {
    "prima": "maremagnum",
@@ -571,7 +565,8 @@
      "m": 0,
      "min": 0
     }
-   }
+   },
+   "nota": "Bagni gratuiti al 1° e 2° piano; a pagamento al piano terra"
   },
   "d2": {
    "semplice": "Nessuno quassù",
@@ -592,6 +587,17 @@
     "canudas": {
      "m": 0,
      "min": 0
+    }
+   }
+  },
+  "d0": {
+   "semplice": "Dentro",
+   "seconda": "elpalace",
+   "nota": "Dentro la Casa Batlló, col biglietto; in alternativa la hall dell'El Palace, a 764 m",
+   "dist": {
+    "elpalace": {
+     "m": 764,
+     "min": 9
     }
    }
   }

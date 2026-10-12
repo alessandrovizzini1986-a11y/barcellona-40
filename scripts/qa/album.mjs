@@ -108,7 +108,7 @@ for (const [person, path] of [['ale', '/#/oggi'], ['monne', '/#/info'], ['giulio
 {
   const { p, ctx } = await open('ale', '/?now=2026-10-15T20:00#/oggi')
   const order = await p.evaluate(() => [...document.querySelector('.view').children].map(e => e.className.split(' ')[0]))
-  ok('prima del weekend: album dopo il countdown', order.indexOf('album') === 1, order.join(' → '))
+  ok('prima del weekend: album dopo il countdown (e dopo la card meteo, dal 9 ottobre)', order.indexOf('album') === (order.includes('meteo') ? 2 : 1), order.join(' → '))
   ok('checklist: voce "Manda l\'album" per ale', (await p.locator('.share-album').count()) === 1)
   await ctx.close()
 }

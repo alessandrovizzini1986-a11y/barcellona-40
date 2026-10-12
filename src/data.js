@@ -37,6 +37,11 @@ export const piove = () => !!store.get('piove', false)
 // Secondo interruttore, solo venerdì: Palau Macaya. Non è un'opzionale senza orario come il Casinò: se si fa, ha
 // la sua fascia e sposta il pomeriggio. Spento, il pomeriggio è byte per byte quello di sempre.
 export const macaya = () => !!store.get('macaya', false)
+// Terzo interruttore, solo domenica: "Se torna il sole". Il programma principale della domenica è quello al coperto
+// (Casa Batlló, Bar Celta, Maremagnum); acceso, torna quello di prima: El Mirador alle 13:30 e i Bunkers.
+// `soloSole`: tappa che c'è solo col sole; `saltaSole`: tappa che col sole sparisce; `sole: {time, details, dist}`:
+// valori che una tappa prende col sole (il rientro: taxi dai Bunkers invece che da Maremagnum).
+export const sole = () => !!store.get('sole', false)
 
 // TAPPE OPZIONALI. Non hanno orario: sono posti dove si può finire, non impegni. Non entrano nei totali
 // della giornata, non diventano mai "Adesso" o "Prossima", e in fondo alla timeline stanno sotto una riga
@@ -111,6 +116,8 @@ export function percorsiDi(dayKey) {
     : pc))
   // Palau Macaya: il pomeriggio di venerdì passa dall'appartamento e da Passeig de Sant Joan (link verificato a mano)
   if (macaya()) lista = lista.map((pc) => (pc.urlMacaya ? { ...pc, url: pc.urlMacaya, stops: pc.stopsMacaya || pc.stops } : pc))
+  // Domenica col sole: i percorsi tornano quelli di prima (Mirador, Bunkers); il taxi Batlló → Celta sparisce
+  if (sole()) lista = lista.filter((pc) => !pc.nascondiSole).map((pc) => (pc.urlSole ? { ...pc, url: pc.urlSole, label: pc.labelSole || pc.label, stops: pc.stopsSole || pc.stops, mode: pc.modeSole || pc.mode } : pc))
   return lista
 }
 // Totale del blocco, sommato dalle tappe vere: i tratti a piedi per i percorsi a piedi, quelli in auto
@@ -139,10 +146,11 @@ export const missionByStop = (stopId) => missions.find((m) => m.stopId === stopI
 // Tappe visibili per una persona (people della tappa + skips della persona)
 export function stopsFor(personId) {
   const p = personById(personId)
-  const pioggia = piove(), casaMacaya = macaya()
-  let list = stops.filter((s) => (!s.soloPioggia || pioggia) && (!s.soloMacaya || casaMacaya))
+  const pioggia = piove(), casaMacaya = macaya(), colSole = sole()
+  let list = stops.filter((s) => (!s.soloPioggia || pioggia) && (!s.soloMacaya || casaMacaya) && (!s.soloSole || colSole) && (!s.saltaSole || !colSole))
   if (p) list = list.filter((s) => s.people.includes(personId) && !p.skips.includes(s.id))
   if (casaMacaya) list = conMacaya(list)
+  if (colSole) list = list.map((s) => (s.sole ? { ...s, ...(s.sole.time ? { time: s.sole.time, at: stopDate({ ...s, time: s.sole.time }, s.day.date) } : {}), ...(s.sole.details ? { details: s.sole.details } : {}), ...(s.sole.dist ? { distFromPrevM: s.sole.dist.m, minFromPrev: s.sole.dist.min } : {}) } : s))
   if (pioggia) list = conPioggia(list)
   return numera(list)
 }

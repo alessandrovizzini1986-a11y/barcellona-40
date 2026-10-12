@@ -92,17 +92,18 @@ async function apri(path, { dati = null, fallisce = false, piove = false } = {})
   ok('pioggia 30 %: nessun promemoria ombrello (soglia 40 %)', (await p.locator('.meteo__ombrello').count()) === 0)
   await ctx.close()
 }
-// 3b. domenica pomeriggio piovosa: la seconda riga gialla propone il piano Maremagnum; "Attiva" accende l'unico toggle
+// 3b. domenica pomeriggio piovosa: la seconda riga gialla dice che la domenica è già al coperto; "Attiva" sta solo sul venerdì
 {
   const { p, ctx, errs } = await apri('/?now=2026-10-15T14:30#/oggi', { dati: fixture('2026-10-15', 60, 65) })
   await p.click('[data-meteo-toggle]'); await p.waitForTimeout(150)
   const righe = () => p.evaluate(() => [...document.querySelectorAll('.meteo__piove')].map((r) => r.innerText.replace(/\s+/g, ' ').trim()))
-  ok('venerdì 60 e domenica 65: due righe gialle, venerdì prima', JSON.stringify(await righe()) === JSON.stringify(['Previsione: venerdì mattina 60 % di pioggia. Attivo il piano coperto? Attiva', 'Previsione: domenica pomeriggio 65 % di pioggia. Attivo il piano Maremagnum? Attiva']), JSON.stringify(await righe()))
+  ok('venerdì 60 e domenica 65: due righe gialle, venerdì prima', JSON.stringify(await righe()) === JSON.stringify(['Previsione: venerdì mattina 60 % di pioggia. Attivo il piano coperto? Attiva', 'Previsione: domenica pomeriggio 65 % di pioggia. La domenica è già al coperto.']), JSON.stringify(await righe()))
   ok('la riga della domenica è gialla', (await p.locator('[data-meteo-piano="dom"]').evaluate((e) => getComputedStyle(e).color)) === (await p.locator('[data-meteo-piano="ven"]').evaluate((e) => getComputedStyle(e).color)))
-  await p.click('[data-meteo-piano="dom"] [data-meteo-piove]'); await p.waitForTimeout(150)
-  ok('"Attiva" sulla domenica accende il toggle e aggiorna tutte e due le righe', await p.evaluate(() => JSON.parse(localStorage.getItem('b40:v1:piove'))) === true && JSON.stringify(await righe()) === JSON.stringify(['Piano coperto attivo.', 'Piano Maremagnum attivo.']), JSON.stringify(await righe()))
+  ok('la domenica non ha il pulsante Attiva: è già al coperto', (await p.locator('[data-meteo-piano="dom"] [data-meteo-piove]').count()) === 0)
+  await p.click('[data-meteo-piano="ven"] [data-meteo-piove]'); await p.waitForTimeout(150)
+  ok('"Attiva" sul venerdì accende il toggle; la riga della domenica resta informativa', await p.evaluate(() => JSON.parse(localStorage.getItem('b40:v1:piove'))) === true && JSON.stringify(await righe()) === JSON.stringify(['Piano coperto attivo.', 'Previsione: domenica pomeriggio 65 % di pioggia. La domenica è già al coperto.']), JSON.stringify(await righe()))
   await p.goto(base + '/?now=2026-10-15T14:30#/programma/dom', { waitUntil: 'networkidle' }); await p.waitForTimeout(300)
-  ok('nel Programma di domenica il toggle è acceso e il Time Out Market c\'è', await p.isChecked('#piove') && (await p.locator('.card[data-stop="d1b"]').count()) === 1)
+  ok('nel Programma di domenica non c\'è il toggle Piove e il Bar Celta c\'è', (await p.locator('#piove').count()) === 0 && (await p.locator('.card[data-stop="d1b"]').count()) === 1)
   ok('nessun errore JS', errs.length === 0, errs.join(' | '))
   await ctx.close()
 }
@@ -110,7 +111,7 @@ async function apri(path, { dati = null, fallisce = false, piove = false } = {})
   const { p, ctx } = await apri('/?now=2026-10-15T14:30#/oggi', { dati: fixture('2026-10-15', 30, 70) })
   await p.click('[data-meteo-toggle]'); await p.waitForTimeout(150)
   ok('venerdì asciutto e domenica 70: solo la riga della domenica, con la sua percentuale', (await p.locator('.meteo__piove').count()) === 1 && (await p.locator('[data-meteo-piano="dom"]').innerText()).includes('domenica pomeriggio 70 %'))
-  ok('nessun automatismo: il toggle resta spento finché non si tocca "Attiva"', await p.evaluate(() => localStorage.getItem('b40:v1:piove')) === null)
+  ok('nessun automatismo: il toggle resta spento, e la riga della domenica non ha pulsante', await p.evaluate(() => localStorage.getItem('b40:v1:piove')) === null && (await p.locator('[data-meteo-piove]').count()) === 0)
   await ctx.close()
 }
 // 4. fetch che fallisce: niente card, niente in console
@@ -130,8 +131,11 @@ async function apri(path, { dati = null, fallisce = false, piove = false } = {})
   const parti = Object.fromEntries(new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Madrid', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', hourCycle: 'h23' }).formatToParts(new Date()).map((x) => [x.type, x.value]))
   const oggi = new Date(+parti.year, +parti.month - 1, +parti.day), isoOggi = `${parti.year}-${parti.month}-${parti.day}`, oraBarcellona = parti.hour
   const NOMI = ['Dom', 'Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab'], attesi = [1, 2, 3].map((i) => NOMI[new Date(oggi.getFullYear(), oggi.getMonth(), oggi.getDate() + i).getDay()]).join(' ')
+  // dal 6 ottobre la previsione di 10 giorni copre il 15: il caso "data simulata fuori dalla previsione" non esiste più
+  const fuoriPrevisione = isoOggi < '2026-10-06'
   const { p, ctx, errs } = await apri('/#/oggi?now=2026-10-15T10:00', { dati: fixture(isoOggi) })
   ok('?now= fuori dalla previsione: la card compare lo stesso', (await p.locator('[data-meteo]').count()) === 1)
+  if (!fuoriPrevisione) { ok('oggi la previsione copre il 15 ottobre: la card mostra Ven Sab Dom, il caso del telefono non si pone più', (await p.evaluate(() => document.querySelector('[data-meteo]')?.dataset.oggi)) === '2026-10-15'); await ctx.close() } else {
   const st = await p.evaluate(() => { const c = document.querySelector('[data-meteo]'); return { oggi: c?.dataset.oggi, ora: c?.dataset.ora, giorni: [...c.querySelectorAll('.meteo__giorni > span i')].map((e) => e.textContent.trim()).join(' '), chips: [...c.querySelectorAll('[data-meteo-giorno]')].map((e) => e.textContent.trim()).join(' ') } })
   ok('adesso = ora reale del giorno dei dati, giorni = i tre successivi, chip Oggi + tre', st.oggi === isoOggi && st.giorni === attesi && st.chips === 'Oggi ' + attesi, JSON.stringify(st) + ' attesi ' + attesi)
   await p.click('[data-meteo-toggle]'); await p.waitForTimeout(150)
@@ -139,6 +143,7 @@ async function apri(path, { dati = null, fallisce = false, piove = false } = {})
   ok('la striscia di Oggi parte dall\'ora reale di Barcellona', prima === oraBarcellona, `${prima} vs ${oraBarcellona}`)
   ok('nessun errore JS', errs.length === 0, errs.join(' | '))
   await ctx.close()
+  }
 }
 // 5. 19 ottobre: fuori finestra
 {

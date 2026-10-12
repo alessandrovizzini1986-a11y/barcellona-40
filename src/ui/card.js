@@ -53,7 +53,9 @@ const ALT = {
   'parcheggio.webp': 'Il cartello "P2 Official Parking" sulla facciata del parcheggio di Bologna',
   'taps.webp': 'La vetrina viola dell\'enoteca Taps, con la botte davanti all\'ingresso',
   'teixido.webp': 'L\'interno di Teixidó, con l\'insegna in metallo Forners i Pastissers e il banco del pane in vista',
-  'duckstore.webp': 'La vetrina del Barcelona Duck Store, con la Sagrada Família di mattoncini e le paperelle in fila'
+  'duckstore.webp': 'La vetrina del Barcelona Duck Store, con la Sagrada Família di mattoncini e le paperelle in fila',
+  'batllo.webp': 'La facciata di Casa Batlló su Passeig de Gràcia, con i balconi a maschera e il tetto a scaglie',
+  'celta.webp': 'Un piatto di polpo alla gallega con pimentón e olio, su un tagliere di legno'
 }
 export const haFoto = (stop) => !!stop.img && !stop.mini // la mini-tappa (Pausa casa) è compatta, senza foto
 

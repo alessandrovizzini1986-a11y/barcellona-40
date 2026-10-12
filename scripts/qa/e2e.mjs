@@ -184,8 +184,8 @@ for (const [person, path] of [['ale', '/#/oggi'], ['ale', '/?now=2026-10-17T10:0
 for (const [quando, atteso, etichetta] of [
   ['2026-10-17T10:00', 's3c', 'ADESSO'],        // iniziata da 15 min su 30 di durata
   ['2026-10-17T16:30', 's7', 'ULTIMA TAPPA'],   // senza durata: 90 min dopo, oltre i 60
-  ['2026-10-18T13:45', 'd1', 'ADESSO'],         // 15 min su 90
-  ['2026-10-18T21:00', 'd3', 'ULTIMA TAPPA']
+  ['2026-10-18T14:15', 'd1b', 'ADESSO'],        // 15 min su 90 (Bar Celta, dal 12/10)
+  ['2026-10-18T21:10', 'd3', 'ULTIMA TAPPA']    // il rientro è alle 20:05 senza durata: 60 minuti di finestra
 ]) {
   const { p, ctx } = await open('ale', `/?now=${quando}#/oggi`)
   const card = p.locator('.tile--accent .card[data-stop]')

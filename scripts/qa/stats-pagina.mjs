@@ -90,7 +90,7 @@ const TOT_VISTE = 7 + 4 + 1 + 2 + 3 + 1 + 2 + 1 + 1 // profili, senza /anonimo/o
 // Quante richieste deve fare la pagina: 4 profili × 6 sezioni, lo speedrun di Monne, gli eventi
 // (21 a testa, meteo-apri, taxi-bolt e taxi-uber compresi, meno i tre WhatsApp che valgono solo per Alessandro), l'onboarding e una per tappa con Maps.
 const TAPPE_MAPS = JSON.parse(readFileSync('data/itinerary.json', 'utf8')).days.flatMap((d) => d.stops).filter((s) => s.actions?.maps).length
-const RICHIESTE = 4 * 6 + 1 + (23 * 4 - 3) + 1 + TAPPE_MAPS // 23 eventi in EVENTI (con macaya-attiva e bagno-apri)
+const RICHIESTE = 4 * 6 + 1 + (24 * 4 - 3) + 1 + TAPPE_MAPS // 24 eventi in EVENTI (con macaya-attiva, bagno-apri e sole-attiva)
 
 // ——— 3. la pagina disegnata sui numeri finti ———
 {

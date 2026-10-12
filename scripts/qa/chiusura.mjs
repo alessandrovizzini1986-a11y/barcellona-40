@@ -99,7 +99,7 @@ const prossima = (p) => p.locator('.tile:has(.tile__label:text-is("Prossima"))')
   ok('nessun errore JS nei tre fusi', Object.values(letture).every((l) => l.errs.length === 0))
   // ?now= resta com'è: la data simulata vince sul fuso
   const { p, ctx } = await apri('/?now=2026-10-18T10:00#/oggi', { timezoneId: 'America/New_York' })
-  ok('con ?now= la data simulata vince anche a New York', (await p.evaluate(() => document.documentElement.dataset.day)) === 'dom' && /13:30/.test(await prossima(p)))
+  ok('con ?now= la data simulata vince anche a New York', (await p.evaluate(() => document.documentElement.dataset.day)) === 'dom' && /12:30/.test(await prossima(p))) // dal 12/10 la domenica parte da Casa Batlló
   await ctx.close()
 }
 // 10. Profilo salvato sconosciuto → onboarding, non pagina vuota

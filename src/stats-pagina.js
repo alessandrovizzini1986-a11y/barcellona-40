@@ -53,6 +53,7 @@ const EVENTI = [
   { id: 'piove-attiva', label: 'Attivata la modalità pioggia' },
   { id: 'macaya-attiva', label: 'Acceso il toggle Palau Macaya' },
   { id: 'bagno-apri', label: 'Aperto un bagno (quale: nel titolo)' },
+  { id: 'sole-attiva', label: 'Acceso "Se torna il sole" (domenica)' },
   { id: 'rigori-apri', label: 'Aperto il gioco dei rigori' }
 ]
 // Le tappe con il pulsante Maps: il sito conta ognuna anche senza profilo (maps-tappa/<id>),

@@ -3,7 +3,7 @@
 import viaggio from '../../data/viaggio.json'
 import { store } from '../store.js'
 import { icon } from './icons.js'
-import { piove } from '../data.js'
+import { sole } from '../data.js'
 import { badges as badgeHtml } from './badge.js'
 import { immagineCard, creditoImmagine } from './card.js'
 import { esc } from './html.js'
@@ -144,7 +144,7 @@ export function timelineViaggio(key, person, { adesso = now() } = {}) {
     <h2 class="section-title">${esc(t.titolo)} <small>${t.step.length} passi</small></h2>
     <p class="faint">${esc(t.sottotitolo)}</p>
     ${t.avviso ? `<div class="avviso avviso--forte">${icon('alert')}<span>${esc(t.avviso)}</span></div>` : ''}
-    ${key === 'dom' && piove() ? `<div class="avviso avviso--pioggia">${icon('rain')}<span>Piano pioggia: niente Bunkers, il pomeriggio è al coperto a Maremagnum. Taxi al T2 alle 19:30 (20 km, circa 32 minuti), arrivo alle 20:05: da lì gli orari qui sotto valgono come sono.</span></div>` : ''}
+    ${key === 'dom' && sole() ? `<div class="avviso avviso--sole">${icon('sun')}<span>Variante sole: il taxi per il T2 parte dai Bunkers alle 19:30, prenotato dall'app mentre si è ancora in cima. Arrivo verso le 20:05, da lì gli orari qui sotto valgono come sono.</span></div>` : ''}
     <ol class="viaggio-tl">${passi.map(({ s, at }) => `
       <li class="viaggio-step${s.id === cur ? ' is-now' : ''}${at < adesso && s.id !== cur ? ' is-past' : ''}${s.evidenza ? ' is-key' : ''}">
         <time class="tnum">${esc(s.ora)}</time>
