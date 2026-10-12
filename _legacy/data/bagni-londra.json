@@ -1,0 +1,924 @@
+{
+  "versione": 1,
+  "aggiornato_il": "2026-10-08",
+  "metodo_distanze": "haversine × 1,3, passo bambina 4 km/h — sempre STIMATO",
+  "regola_caffe": "Negli hotel 4-5★ si entra nella hall, si ordina un caffè o una cioccolata al bar e si usano i bagni dei clienti. Mai entrare solo per il bagno.",
+  "da_evitare": [
+    {
+      "nome": "The Jubiloo (Southbank)",
+      "motivo": "2,6/5 Google, £1"
+    },
+    {
+      "nome": "Bagno pubblico Camden Market",
+      "motivo": "2,5/5 Google, £1"
+    },
+    {
+      "nome": "2theloo Covent Garden",
+      "motivo": "2,0/5 Google, £1,50"
+    }
+  ],
+  "tappe": [
+    {
+      "tappa": "southbank",
+      "nome_tappa": "Southbank Centre Winter Market",
+      "giorni": [
+        "dom15"
+      ],
+      "principale": {
+        "id": "rfh",
+        "nome": "Royal Festival Hall (Southbank Centre)",
+        "indirizzo": "Belvedere Rd, London SE1 8XX",
+        "piano": "Livello 2 (bagni pubblici)",
+        "lat": 51.5058062,
+        "lng": -0.1166288,
+        "distanza_m": 71,
+        "minuti": 1,
+        "orari": {
+          "dom15": "10:00–23:00"
+        },
+        "costo": "gratis",
+        "per_bambini": "no",
+        "fasciatoio": "sì",
+        "ascensore": "da verificare: lift in ristrutturazione a ott 2026",
+        "fonte": "southbankcentre.co.uk (orari) · headout (fasciatoi, non ufficiale)",
+        "verificato_il": "2026-10-08",
+        "stimati": [
+          "distanza_m",
+          "minuti",
+          "fasciatoio",
+          "ascensore"
+        ],
+        "note": ""
+      },
+      "riserva": {
+        "id": "marriott_ch",
+        "nome": "London Marriott Hotel County Hall (hall)",
+        "indirizzo": "Westminster Bridge Rd, London SE1 7PB",
+        "piano": "piano terra hall — da verificare",
+        "lat": 51.5010534,
+        "lng": -0.119174,
+        "distanza_m": 662,
+        "minuti": 10,
+        "orari": {
+          "dom15": "24 ore (hotel)"
+        },
+        "costo": "un caffè al bar",
+        "per_bambini": "no",
+        "fasciatoio": "non verificato",
+        "ascensore": "non verificato",
+        "fonte": "Google Places (orari)",
+        "verificato_il": "2026-10-08",
+        "stimati": [
+          "distanza_m",
+          "minuti",
+          "piano",
+          "fasciatoio",
+          "ascensore"
+        ],
+        "note": "Regola caffè in hotel"
+      },
+      "avviso": "Riserva oltre 500 m: meglio passare dal RFH prima di spostarsi"
+    },
+    {
+      "tappa": "sealife",
+      "nome_tappa": "SEA LIFE London",
+      "giorni": [
+        "dom15"
+      ],
+      "principale": {
+        "id": "sealife",
+        "nome": "SEA LIFE London (bagni interni)",
+        "indirizzo": "County Hall, Westminster Bridge Rd, London SE1 7PB",
+        "piano": "su ogni piano del percorso",
+        "lat": 51.501558,
+        "lng": -0.119506,
+        "distanza_m": 0,
+        "minuti": 1,
+        "orari": {
+          "dom15": "10:00–17:00"
+        },
+        "costo": "incluso nel biglietto",
+        "per_bambini": "no",
+        "fasciatoio": "sì, su ogni piano",
+        "ascensore": "sì (percorso accessibile)",
+        "fonte": "Supporto ufficiale SEA LIFE + euansguide",
+        "verificato_il": "2026-10-08",
+        "stimati": [
+          "distanza_m",
+          "minuti"
+        ],
+        "note": ""
+      },
+      "riserva": {
+        "id": "marriott_ch",
+        "nome": "London Marriott Hotel County Hall (hall)",
+        "indirizzo": "Westminster Bridge Rd, London SE1 7PB",
+        "piano": "piano terra hall — da verificare",
+        "lat": 51.5010534,
+        "lng": -0.119174,
+        "distanza_m": 79,
+        "minuti": 1,
+        "orari": {
+          "dom15": "24 ore (hotel)"
+        },
+        "costo": "un caffè al bar",
+        "per_bambini": "no",
+        "fasciatoio": "non verificato",
+        "ascensore": "non verificato",
+        "fonte": "Google Places (orari)",
+        "verificato_il": "2026-10-08",
+        "stimati": [
+          "distanza_m",
+          "minuti",
+          "piano",
+          "fasciatoio",
+          "ascensore"
+        ],
+        "note": "Regola caffè in hotel"
+      },
+      "avviso": "Andare in bagno prima di uscire dall'acquario"
+    },
+    {
+      "tappa": "hamleys",
+      "nome_tappa": "Hamleys",
+      "giorni": [
+        "dom15",
+        "lun16"
+      ],
+      "principale": {
+        "id": "hamleys",
+        "nome": "Hamleys (bagni interni)",
+        "indirizzo": "188-196 Regent St, London W1B 5BT",
+        "piano": "5° piano",
+        "lat": 51.51283,
+        "lng": -0.1400828,
+        "distanza_m": 0,
+        "minuti": 1,
+        "orari": {
+          "dom15": "12:00–18:00",
+          "lun16": "10:00–21:00"
+        },
+        "costo": "gratis",
+        "per_bambini": "no",
+        "fasciatoio": "sì",
+        "ascensore": "sì (piano alto: usarlo)",
+        "fonte": "Premier Inn blog (non ufficiale) · Google Places (orari)",
+        "verificato_il": "2026-10-08",
+        "stimati": [
+          "distanza_m",
+          "minuti",
+          "fasciatoio",
+          "ascensore"
+        ],
+        "note": "5° piano: prendere l'ascensore, non le scale"
+      },
+      "riserva": {
+        "id": "liberty",
+        "nome": "Liberty London",
+        "indirizzo": "Regent St, London W1B 5AH",
+        "piano": "2° e 4° piano (accessibili); fasciatoio al 4°",
+        "lat": 51.5138717,
+        "lng": -0.1400263,
+        "distanza_m": 151,
+        "minuti": 2,
+        "orari": {
+          "dom15": "12:00–18:00",
+          "lun16": "10:00–20:00"
+        },
+        "costo": "gratis",
+        "per_bambini": "no",
+        "fasciatoio": "sì (4° piano)",
+        "ascensore": "sì, due ascensori",
+        "fonte": "libertylondon.com (ufficiale)",
+        "verificato_il": "2026-10-08",
+        "stimati": [
+          "distanza_m",
+          "minuti"
+        ],
+        "note": ""
+      },
+      "avviso": ""
+    },
+    {
+      "tappa": "lina",
+      "nome_tappa": "Lina Stores",
+      "giorni": [
+        "dom15"
+      ],
+      "principale": {
+        "id": "hamyard",
+        "nome": "Ham Yard Hotel (hall/bar)",
+        "indirizzo": "1 Ham Yard, London W1D 7DT",
+        "piano": "da verificare",
+        "lat": 51.5112601,
+        "lng": -0.134821,
+        "distanza_m": 164,
+        "minuti": 2,
+        "orari": {
+          "dom15": "24 ore (hotel)",
+          "lun16": "24 ore (hotel)"
+        },
+        "costo": "un caffè al bar",
+        "per_bambini": "no",
+        "fasciatoio": "non verificato",
+        "ascensore": "non verificato",
+        "fonte": "Google Places (orari)",
+        "verificato_il": "2026-10-08",
+        "stimati": [
+          "distanza_m",
+          "minuti",
+          "piano",
+          "fasciatoio",
+          "ascensore"
+        ],
+        "note": "Regola caffè in hotel"
+      },
+      "riserva": {
+        "id": "liberty",
+        "nome": "Liberty London",
+        "indirizzo": "Regent St, London W1B 5AH",
+        "piano": "2° e 4° piano (accessibili); fasciatoio al 4°",
+        "lat": 51.5138717,
+        "lng": -0.1400263,
+        "distanza_m": 564,
+        "minuti": 8,
+        "orari": {
+          "dom15": "12:00–18:00",
+          "lun16": "10:00–20:00"
+        },
+        "costo": "gratis",
+        "per_bambini": "no",
+        "fasciatoio": "sì (4° piano)",
+        "ascensore": "sì, due ascensori",
+        "fonte": "libertylondon.com (ufficiale)",
+        "verificato_il": "2026-10-08",
+        "stimati": [
+          "distanza_m",
+          "minuti"
+        ],
+        "note": ""
+      },
+      "avviso": ""
+    },
+    {
+      "tappa": "trafalgar",
+      "nome_tappa": "Trafalgar Square",
+      "giorni": [
+        "lun16"
+      ],
+      "principale": {
+        "id": "natgallery",
+        "nome": "National Gallery",
+        "indirizzo": "Trafalgar Square, London WC2N 5DN",
+        "piano": "piano terra/inferiore — da verificare",
+        "lat": 51.508929,
+        "lng": -0.128299,
+        "distanza_m": 130,
+        "minuti": 2,
+        "orari": {
+          "lun16": "10:00–18:00"
+        },
+        "costo": "gratis (controllo borse)",
+        "per_bambini": "no",
+        "fasciatoio": "non verificato",
+        "ascensore": "sì (ingresso Getty, piano terra)",
+        "fonte": "Google Places (orari, recensioni 'puliti')",
+        "verificato_il": "2026-10-08",
+        "stimati": [
+          "distanza_m",
+          "minuti",
+          "piano",
+          "fasciatoio"
+        ],
+        "note": ""
+      },
+      "riserva": {
+        "id": "crypt",
+        "nome": "Café in the Crypt, St Martin-in-the-Fields",
+        "indirizzo": "Trafalgar Square, London WC2N 4JJ",
+        "piano": "seminterrato (ascensore presente)",
+        "lat": 51.5091332,
+        "lng": -0.1267349,
+        "distanza_m": 199,
+        "minuti": 3,
+        "orari": {
+          "lun16": "10:00–17:00"
+        },
+        "costo": "gratis",
+        "per_bambini": "no",
+        "fasciatoio": "non verificato",
+        "ascensore": "sì",
+        "fonte": "stmartin-in-the-fields.org + Google Places",
+        "verificato_il": "2026-10-08",
+        "stimati": [
+          "distanza_m",
+          "minuti",
+          "fasciatoio"
+        ],
+        "note": ""
+      },
+      "avviso": ""
+    },
+    {
+      "tappa": "horseguards",
+      "nome_tappa": "Horse Guards / Whitehall",
+      "giorni": [
+        "lun16"
+      ],
+      "principale": {
+        "id": "royal_horseguards",
+        "nome": "The Royal Horseguards Hotel (hall/bar)",
+        "indirizzo": "2 Whitehall Ct, London SW1A 2EJ",
+        "piano": "da verificare",
+        "lat": 51.5060478,
+        "lng": -0.1241368,
+        "distanza_m": 334,
+        "minuti": 5,
+        "orari": {
+          "lun16": "24 ore (hotel)"
+        },
+        "costo": "un caffè al bar",
+        "per_bambini": "no",
+        "fasciatoio": "non verificato",
+        "ascensore": "non verificato",
+        "fonte": "Google Places (orari)",
+        "verificato_il": "2026-10-08",
+        "stimati": [
+          "distanza_m",
+          "minuti",
+          "piano",
+          "fasciatoio",
+          "ascensore"
+        ],
+        "note": "Regola caffè in hotel"
+      },
+      "riserva": {
+        "id": "stjames_cafe",
+        "nome": "St James's Café (nel parco)",
+        "indirizzo": "St James's Park, London SW1A 2BJ",
+        "piano": "piano terra",
+        "lat": 51.503945,
+        "lng": -0.1316639,
+        "distanza_m": 416,
+        "minuti": 6,
+        "orari": {
+          "lun16": "08:00–18:30"
+        },
+        "costo": "per i clienti (un caffè)",
+        "per_bambini": "no",
+        "fasciatoio": "non verificato",
+        "ascensore": "non serve (piano terra)",
+        "fonte": "Google Places (orari)",
+        "verificato_il": "2026-10-08",
+        "stimati": [
+          "distanza_m",
+          "minuti",
+          "fasciatoio"
+        ],
+        "note": ""
+      },
+      "avviso": "Nessuna opzione sotto i 300 m: usare la National Gallery prima di partire da Trafalgar"
+    },
+    {
+      "tappa": "bigben",
+      "nome_tappa": "Big Ben / Parliament Square",
+      "giorni": [
+        "lun16"
+      ],
+      "principale": {
+        "id": "supreme",
+        "nome": "UK Supreme Court",
+        "indirizzo": "Parliament Square, London SW1P 3BD",
+        "piano": "da verificare",
+        "lat": 51.5005063,
+        "lng": -0.1280413,
+        "distanza_m": 309,
+        "minuti": 5,
+        "orari": {
+          "lun16": "09:00–16:30"
+        },
+        "costo": "gratis (controllo di sicurezza)",
+        "per_bambini": "no",
+        "fasciatoio": "non verificato",
+        "ascensore": "non verificato",
+        "fonte": "Google Places (orari)",
+        "verificato_il": "2026-10-08",
+        "stimati": [
+          "distanza_m",
+          "minuti",
+          "piano",
+          "fasciatoio",
+          "ascensore"
+        ],
+        "note": "Solo lun–ven: il 16/11 è lunedì ✓"
+      },
+      "riserva": {
+        "id": "centralhall",
+        "nome": "Methodist Central Hall Westminster",
+        "indirizzo": "Storey's Gate, London SW1H 9NH",
+        "piano": "da verificare",
+        "lat": 51.5000648,
+        "lng": -0.1302408,
+        "distanza_m": 514,
+        "minuti": 8,
+        "orari": {
+          "lun16": "09:00–18:00"
+        },
+        "costo": "gratis / caffè",
+        "per_bambini": "no",
+        "fasciatoio": "non verificato",
+        "ascensore": "non verificato",
+        "fonte": "Google Places (orari)",
+        "verificato_il": "2026-10-08",
+        "stimati": [
+          "distanza_m",
+          "minuti",
+          "piano",
+          "fasciatoio",
+          "ascensore"
+        ],
+        "note": ""
+      },
+      "avviso": "Controlli di sicurezza alla Supreme Court: contare 5-10 min"
+    },
+    {
+      "tappa": "stjames",
+      "nome_tappa": "St James's Park",
+      "giorni": [
+        "lun16"
+      ],
+      "principale": {
+        "id": "stjames_cafe",
+        "nome": "St James's Café (nel parco)",
+        "indirizzo": "St James's Park, London SW1A 2BJ",
+        "piano": "piano terra",
+        "lat": 51.503945,
+        "lng": -0.1316639,
+        "distanza_m": 250,
+        "minuti": 4,
+        "orari": {
+          "lun16": "08:00–18:30"
+        },
+        "costo": "per i clienti (un caffè)",
+        "per_bambini": "no",
+        "fasciatoio": "non verificato",
+        "ascensore": "non serve (piano terra)",
+        "fonte": "Google Places (orari)",
+        "verificato_il": "2026-10-08",
+        "stimati": [
+          "distanza_m",
+          "minuti",
+          "fasciatoio"
+        ],
+        "note": ""
+      },
+      "riserva": {
+        "id": "marlborough",
+        "nome": "Marlborough Gate Toilets (St James's Park)",
+        "indirizzo": "The Mall, St James's Park, London SW1A",
+        "piano": "piano terra",
+        "lat": 51.5033002,
+        "lng": -0.1358686,
+        "distanza_m": 179,
+        "minuti": 3,
+        "orari": {
+          "lun16": "08:00–21:30"
+        },
+        "costo": "20p contactless",
+        "per_bambini": "no",
+        "fasciatoio": "non verificato",
+        "ascensore": "non serve (piano terra)",
+        "fonte": "Google Places (3,5/5, recensioni contrastanti)",
+        "verificato_il": "2026-10-08",
+        "stimati": [
+          "distanza_m",
+          "minuti",
+          "fasciatoio"
+        ],
+        "note": "Pulizia variabile: preferire il café se si consuma"
+      },
+      "avviso": "Principale scelto per pulizia, non per distanza"
+    },
+    {
+      "tappa": "wellington",
+      "nome_tappa": "Wellington Barracks",
+      "giorni": [
+        "lun16"
+      ],
+      "principale": {
+        "id": "marlborough",
+        "nome": "Marlborough Gate Toilets (St James's Park)",
+        "indirizzo": "The Mall, St James's Park, London SW1A",
+        "piano": "piano terra",
+        "lat": 51.5033002,
+        "lng": -0.1358686,
+        "distanza_m": 430,
+        "minuti": 6,
+        "orari": {
+          "lun16": "08:00–21:30"
+        },
+        "costo": "20p contactless",
+        "per_bambini": "no",
+        "fasciatoio": "non verificato",
+        "ascensore": "non serve (piano terra)",
+        "fonte": "Google Places (3,5/5, recensioni contrastanti)",
+        "verificato_il": "2026-10-08",
+        "stimati": [
+          "distanza_m",
+          "minuti",
+          "fasciatoio"
+        ],
+        "note": "Pulizia variabile: preferire il café se si consuma"
+      },
+      "riserva": {
+        "id": "centralhall",
+        "nome": "Methodist Central Hall Westminster",
+        "indirizzo": "Storey's Gate, London SW1H 9NH",
+        "piano": "da verificare",
+        "lat": 51.5000648,
+        "lng": -0.1302408,
+        "distanza_m": 492,
+        "minuti": 7,
+        "orari": {
+          "lun16": "09:00–18:00"
+        },
+        "costo": "gratis / caffè",
+        "per_bambini": "no",
+        "fasciatoio": "non verificato",
+        "ascensore": "non verificato",
+        "fonte": "Google Places (orari)",
+        "verificato_il": "2026-10-08",
+        "stimati": [
+          "distanza_m",
+          "minuti",
+          "piano",
+          "fasciatoio",
+          "ascensore"
+        ],
+        "note": ""
+      },
+      "avviso": "Oltre i 400 m: passare dal St James's Café prima"
+    },
+    {
+      "tappa": "buckingham",
+      "nome_tappa": "Buckingham Palace",
+      "giorni": [
+        "lun16"
+      ],
+      "principale": {
+        "id": "marlborough",
+        "nome": "Marlborough Gate Toilets (St James's Park)",
+        "indirizzo": "The Mall, St James's Park, London SW1A",
+        "piano": "piano terra",
+        "lat": 51.5033002,
+        "lng": -0.1358686,
+        "distanza_m": 610,
+        "minuti": 9,
+        "orari": {
+          "lun16": "08:00–21:30"
+        },
+        "costo": "20p contactless",
+        "per_bambini": "no",
+        "fasciatoio": "non verificato",
+        "ascensore": "non serve (piano terra)",
+        "fonte": "Google Places (3,5/5, recensioni contrastanti)",
+        "verificato_il": "2026-10-08",
+        "stimati": [
+          "distanza_m",
+          "minuti",
+          "fasciatoio"
+        ],
+        "note": "Pulizia variabile: preferire il café se si consuma"
+      },
+      "riserva": {
+        "id": "stjames_cafe",
+        "nome": "St James's Café (nel parco)",
+        "indirizzo": "St James's Park, London SW1A 2BJ",
+        "piano": "piano terra",
+        "lat": 51.503945,
+        "lng": -0.1316639,
+        "distanza_m": 993,
+        "minuti": 15,
+        "orari": {
+          "lun16": "08:00–18:30"
+        },
+        "costo": "per i clienti (un caffè)",
+        "per_bambini": "no",
+        "fasciatoio": "non verificato",
+        "ascensore": "non serve (piano terra)",
+        "fonte": "Google Places (orari)",
+        "verificato_il": "2026-10-08",
+        "stimati": [
+          "distanza_m",
+          "minuti",
+          "fasciatoio"
+        ],
+        "note": ""
+      },
+      "avviso": "⚠️ Nessun bagno verificato entro 500 m: andare al St James's Café PRIMA di Buckingham"
+    },
+    {
+      "tappa": "harrods",
+      "nome_tappa": "Harrods",
+      "giorni": [
+        "lun16"
+      ],
+      "principale": {
+        "id": "harrods",
+        "nome": "Harrods (bagni interni)",
+        "indirizzo": "87-135 Brompton Rd, London SW1X 7XL",
+        "piano": "più piani — da verificare quale",
+        "lat": 51.4994055,
+        "lng": -0.1632344,
+        "distanza_m": 0,
+        "minuti": 1,
+        "orari": {
+          "lun16": "10:00–21:00"
+        },
+        "costo": "gratis",
+        "per_bambini": "no",
+        "fasciatoio": "sì",
+        "ascensore": "sì (scale mobili e ascensori)",
+        "fonte": "Google Places (orari) · fonti non ufficiali (fasciatoi)",
+        "verificato_il": "2026-10-08",
+        "stimati": [
+          "distanza_m",
+          "minuti",
+          "piano",
+          "fasciatoio"
+        ],
+        "note": ""
+      },
+      "riserva": {
+        "id": "harveynichols",
+        "nome": "Harvey Nichols",
+        "indirizzo": "109-125 Knightsbridge, London SW1X 7RJ",
+        "piano": "da verificare",
+        "lat": 51.5015123,
+        "lng": -0.1597536,
+        "distanza_m": 437,
+        "minuti": 7,
+        "orari": {
+          "lun16": "10:00–20:00"
+        },
+        "costo": "gratis",
+        "per_bambini": "no",
+        "fasciatoio": "non verificato",
+        "ascensore": "sì",
+        "fonte": "Google Places (orari)",
+        "verificato_il": "2026-10-08",
+        "stimati": [
+          "distanza_m",
+          "minuti",
+          "piano",
+          "fasciatoio"
+        ],
+        "note": ""
+      },
+      "avviso": ""
+    },
+    {
+      "tappa": "nhm",
+      "nome_tappa": "Natural History Museum",
+      "giorni": [
+        "lun16"
+      ],
+      "principale": {
+        "id": "nhm",
+        "nome": "Natural History Museum (bagni interni)",
+        "indirizzo": "Cromwell Rd, London SW7 5BD",
+        "piano": "piano terra vicino sicurezza; Red/Orange Zone; 3° piano vicino ascensore",
+        "lat": 51.496715,
+        "lng": -0.1763672,
+        "distanza_m": 0,
+        "minuti": 1,
+        "orari": {
+          "lun16": "10:00–17:50"
+        },
+        "costo": "gratis",
+        "per_bambini": "no",
+        "fasciatoio": "sì (piano terra Red Zone, Orange Zone, piano interrato area picnic, 3° piano)",
+        "ascensore": "sì",
+        "fonte": "AccessAble + NHM Visual Guide (ufficiali)",
+        "verificato_il": "2026-10-08",
+        "stimati": [
+          "distanza_m",
+          "minuti"
+        ],
+        "note": ""
+      },
+      "riserva": {
+        "id": "va",
+        "nome": "V&A South Kensington",
+        "indirizzo": "Cromwell Rd, London SW7 2RL",
+        "piano": "da verificare",
+        "lat": 51.4966392,
+        "lng": -0.17218,
+        "distanza_m": 377,
+        "minuti": 6,
+        "orari": {
+          "lun16": "10:00–17:45"
+        },
+        "costo": "gratis",
+        "per_bambini": "no",
+        "fasciatoio": "non verificato",
+        "ascensore": "sì",
+        "fonte": "Google Places (orari)",
+        "verificato_il": "2026-10-08",
+        "stimati": [
+          "distanza_m",
+          "minuti",
+          "piano",
+          "fasciatoio"
+        ],
+        "note": ""
+      },
+      "avviso": "Chiude 17:50: usarlo prima di uscire"
+    },
+    {
+      "tappa": "regentst",
+      "nome_tappa": "Luci di Regent Street",
+      "giorni": [
+        "lun16"
+      ],
+      "principale": {
+        "id": "liberty",
+        "nome": "Liberty London",
+        "indirizzo": "Regent St, London W1B 5AH",
+        "piano": "2° e 4° piano (accessibili); fasciatoio al 4°",
+        "lat": 51.5138717,
+        "lng": -0.1400263,
+        "distanza_m": 112,
+        "minuti": 2,
+        "orari": {
+          "dom15": "12:00–18:00",
+          "lun16": "10:00–20:00"
+        },
+        "costo": "gratis",
+        "per_bambini": "no",
+        "fasciatoio": "sì (4° piano)",
+        "ascensore": "sì, due ascensori",
+        "fonte": "libertylondon.com (ufficiale)",
+        "verificato_il": "2026-10-08",
+        "stimati": [
+          "distanza_m",
+          "minuti"
+        ],
+        "note": ""
+      },
+      "riserva": {
+        "id": "casa",
+        "nome": "Casa — 79 Beak St, 3° piano",
+        "indirizzo": "79 Beak St, London W1F 9SU",
+        "piano": "3° piano, SOLO SCALE",
+        "lat": 51.5129114,
+        "lng": -0.1364381,
+        "distanza_m": 0,
+        "minuti": 1,
+        "orari": {
+          "dom15": "dopo check-in",
+          "lun16": "sempre",
+          "mar17": "fino alle 10:30"
+        },
+        "costo": "—",
+        "per_bambini": "—",
+        "fasciatoio": "—",
+        "ascensore": "no (3 piani a piedi)",
+        "fonte": "Booking + host",
+        "verificato_il": "2026-10-08",
+        "stimati": [
+          "distanza_m",
+          "minuti"
+        ],
+        "note": ""
+      },
+      "avviso": "Liberty chiude alle 20:00 il lunedì"
+    },
+    {
+      "tappa": "camden",
+      "nome_tappa": "Camden Market / Camden Lock",
+      "giorni": [
+        "mar17"
+      ],
+      "principale": {
+        "id": "poppies",
+        "nome": "Poppies Camden (per i clienti)",
+        "indirizzo": "30 Hawley Crescent, London NW1 8NP",
+        "piano": "da verificare",
+        "lat": 51.5409723,
+        "lng": -0.143961,
+        "distanza_m": 0,
+        "minuti": 1,
+        "orari": {
+          "mar17": "orari da verificare su Google Maps"
+        },
+        "costo": "per i clienti (pranzo lì)",
+        "per_bambini": "no",
+        "fasciatoio": "non verificato",
+        "ascensore": "non verificato",
+        "fonte": "Google Places",
+        "verificato_il": "2026-10-08",
+        "stimati": [
+          "distanza_m",
+          "minuti",
+          "piano",
+          "orari",
+          "fasciatoio",
+          "ascensore"
+        ],
+        "note": "Si pranza lì: usarlo prima di uscire"
+      },
+      "riserva": {
+        "id": "voco_camden",
+        "nome": "voco London Camden Lock (hall/bar)",
+        "indirizzo": "indirizzo da verificare su Google Maps",
+        "piano": "da verificare",
+        "lat": 51.5404833,
+        "lng": -0.1460986,
+        "distanza_m": 348,
+        "minuti": 5,
+        "orari": {
+          "mar17": "24 ore (hotel)"
+        },
+        "costo": "un caffè al bar",
+        "per_bambini": "no",
+        "fasciatoio": "non verificato",
+        "ascensore": "non verificato",
+        "fonte": "Google Places",
+        "verificato_il": "2026-10-08",
+        "stimati": [
+          "distanza_m",
+          "minuti",
+          "indirizzo",
+          "piano",
+          "fasciatoio",
+          "ascensore"
+        ],
+        "note": "Regola caffè in hotel"
+      },
+      "avviso": "Da evitare: bagno pubblico Camden Market (2,5/5, £1)"
+    },
+    {
+      "tappa": "coventgarden",
+      "nome_tappa": "Covent Garden",
+      "giorni": [
+        "mar17"
+      ],
+      "principale": {
+        "id": "roh",
+        "nome": "Royal Opera House (foyer pubblico)",
+        "indirizzo": "Bow St, London WC2E 9DD",
+        "piano": "da verificare",
+        "lat": 51.5129211,
+        "lng": -0.1221976,
+        "distanza_m": 146,
+        "minuti": 2,
+        "orari": {
+          "mar17": "apertura 10:00 o 12:00 (fonti discordanti)"
+        },
+        "costo": "gratis / caffè",
+        "per_bambini": "no",
+        "fasciatoio": "non verificato",
+        "ascensore": "sì (edificio accessibile)",
+        "fonte": "Google Places + roh.org.uk (discordanti)",
+        "verificato_il": "2026-10-08",
+        "stimati": [
+          "distanza_m",
+          "minuti",
+          "piano",
+          "orari",
+          "fasciatoio"
+        ],
+        "note": ""
+      },
+      "riserva": {
+        "id": "nomad",
+        "nome": "NoMad London (hall/bar, 5★)",
+        "indirizzo": "28 Bow St, London WC2E 7AW",
+        "piano": "da verificare",
+        "lat": 51.5135071,
+        "lng": -0.1220797,
+        "distanza_m": 217,
+        "minuti": 3,
+        "orari": {
+          "mar17": "24 ore (hotel)"
+        },
+        "costo": "un caffè al bar",
+        "per_bambini": "no",
+        "fasciatoio": "non verificato",
+        "ascensore": "non verificato",
+        "fonte": "Google Places",
+        "verificato_il": "2026-10-08",
+        "stimati": [
+          "distanza_m",
+          "minuti",
+          "piano",
+          "fasciatoio",
+          "ascensore"
+        ],
+        "note": "Regola caffè in hotel"
+      },
+      "avviso": "Da evitare: 2theloo (2,0/5, £1,50)"
+    }
+  ]
+}

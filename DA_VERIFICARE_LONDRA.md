@@ -42,4 +42,20 @@ Tenute per memoria, non compaiono più nella pagina.
 - ~~Deposito bagagli assistito al Bright Carnaby Soho~~ — Superato: si viaggia con il solo bagaglio a mano sotto il sedile, quindi non serve nessun deposito. Il sito è già aggiornato in tre punti (nota check-in/check-out, card del check-out di martedì, note pratiche).
 - ~~Prezzo esatto della Tower Bridge Exhibition~~ — Non più rilevante: Tower Bridge non è nell’itinerario V3 e il sito non lo cita da nessuna parte, né come tappa né nel budget. Compare solo nel disegno decorativo dello skyline in testata, senza prezzi.
 
-_Ultimo aggiornamento: 27/09/2026._
+_Ultimo aggiornamento: 08/10/2026._
+
+## Bagni
+
+Funzione «Bagni puliti» (`_legacy/data/bagni-londra.json`, dati del 08/10/2026). In pagina ogni campo stimato o «da verificare» porta il badge «stimato»; qui le cose da confermare. Non sono nell'elenco «Aperte» della pagina: lì stanno solo le voci che cambiano il programma.
+
+- Royal Festival Hall: ascensore per il Livello 2 (era in ristrutturazione) e fasciatoi (la fonte non è ufficiale).
+- Hamleys: bagni al 5° piano e fasciatoio (la fonte non è ufficiale).
+- Hall degli hotel (Marriott County Hall, Ham Yard, Royal Horseguards, voco Camden, NoMad): piano dei bagni, ascensore, fasciatoio.
+- National Gallery: piano dei bagni vicino all'ingresso Getty.
+- Supreme Court: piano dei bagni e accesso libero ai bagni dopo i controlli.
+- Harrods: a quale piano si trovano i bagni con fasciatoio più vicini all'ingresso.
+- Poppies Camden: orari di martedì 17.
+- voco Camden: indirizzo.
+- Royal Opera House: orario di apertura del foyer martedì (10:00 o 12:00).
+- Buckingham: nessun bagno verificato entro 500 m. Controllare se in Green Park ci sono bagni aperti vicino a Canada Gate.
+- Tutte le distanze sono stimate (haversine ×1,3): confermarle con Google Maps a piedi.

@@ -662,6 +662,60 @@
   .pin-home-hit{width:44px;height:44px;display:grid;place-items:center}
   #map .leaflet-control-attribution{background:rgba(13,19,33,.85);color:#c9cfdd}
   #map .leaflet-control-attribution a{color:#8fcbeb}
+  /* ====== bagni puliti ====== */
+  .bagno-box,.ad-bagno{margin-top:10px}
+  .bagno-riga{display:flex;align-items:center;gap:8px;width:100%;min-height:44px;padding:8px 12px;text-align:left;
+    border:1px solid var(--line-gold);border-radius:12px;background:rgba(212,169,78,.08);color:var(--ink);
+    font:inherit;font-size:15px;line-height:1.35;cursor:pointer}
+  .bagno-riga__txt{flex:1;min-width:0}
+  .bagno-riga::after{content:"▾";flex:none;margin-left:auto;font-size:14px;color:var(--gold-soft)}
+  .bagno-riga[aria-expanded="true"]::after{content:"▴"}
+  .bagno-chiusa{display:inline-block;margin-left:4px;padding:1px 8px;border-radius:999px;font-size:12px;font-weight:800;
+    color:var(--rosso-testo);background:rgba(200,54,43,.14);border:1px solid rgba(200,54,43,.45)}
+  .bagno-pan{margin-top:8px;padding:12px;border:1px solid var(--line);border-radius:12px;background:rgba(128,128,128,.07);
+    display:flex;flex-direction:column;gap:12px}
+  .bagno-pan[hidden]{display:none}
+  .bagno-per{font-size:14px;color:var(--muted)}
+  .bagno-avviso{padding:10px 12px;border-radius:10px;font-size:15px;line-height:1.45;font-weight:700;color:var(--gold-soft);
+    background:rgba(212,169,78,.12);border:1px solid var(--line-gold)}
+  .bagno-avviso--alert{color:var(--rosso-testo);background:rgba(200,54,43,.14);border-color:rgba(200,54,43,.45)}
+  .bagno-avviso--riga{margin-top:8px}
+  .bagno-voce{padding-left:10px;border-left:3px solid var(--gold)}
+  .bagno-voce--riserva{border-left-style:dashed}
+  .bagno-voce__testa{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+  .bagno-ruolo{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--gold-soft)}
+  .bagno-scale{padding:1px 8px;border-radius:999px;font-size:12px;font-weight:800;color:var(--rosso-testo);
+    background:rgba(200,54,43,.14);border:1px solid rgba(200,54,43,.5)}
+  .bagno-nome{margin-top:2px;font-size:15px;font-weight:700;line-height:1.35;color:var(--ink)}
+  .bagno-ind{margin-top:2px;font-size:14px;line-height:1.4;color:var(--muted)}
+  .bagno-dati{list-style:none;margin-top:6px;display:flex;flex-direction:column;gap:4px}
+  .bagno-dati li{font-size:14px;line-height:1.45;color:var(--ink)}
+  .bagno-et{font-weight:700;color:var(--muted)}
+  .bagno-nota,.bagno-fonte{margin-top:6px;font-size:13px;line-height:1.45;color:var(--muted)}
+  .bagno-maps{display:inline-flex;align-items:center;gap:6px;min-height:44px;margin-top:6px;padding:0 16px;border-radius:999px;
+    font-size:14.5px;font-weight:700;text-decoration:none;color:var(--sky);border:1px solid rgba(109,179,216,.4);background:rgba(109,179,216,.1)}
+  .bagno-regola{padding:12px;border-radius:12px;font-size:15px;line-height:1.5;font-weight:700;color:var(--gold-soft);
+    background:rgba(212,169,78,.12);border:1px solid var(--line-gold)}
+  .bagno-legenda{margin-top:10px;font-size:14px;line-height:1.5;color:var(--muted)}
+  .bagno-giorno{margin-top:18px;font-family:"Playfair Display",Georgia,serif;font-size:19px;line-height:1.25}
+  .bagno-tappa{margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
+  .bagno-tappa__nome{font-size:15px;font-weight:800;line-height:1.35;color:var(--ink)}
+  .bagno-tappa .bagno-pan,.bagno-tappa > .bagno-avviso,.bagno-tappa > .bagno-voce{margin-top:8px}
+  .bagno-evita{list-style:none;margin-top:8px;display:flex;flex-direction:column;gap:6px}
+  .bagno-evita li{font-size:14px;line-height:1.45;color:var(--ink)}
+  .bagno-metodo{margin-top:14px;font-size:12px;line-height:1.5;color:var(--muted)}
+  /* mappa: marker 🚻 (principale pieno, riserva bordato, spostato in alto a destra del luogo) e livello a un tocco */
+  .bagno-pin-hit{width:44px;height:44px;display:grid;place-items:center}
+  .bagno-pin{width:32px;height:32px;display:grid;place-items:center;border-radius:50%;font-size:17px;line-height:1;
+    background:var(--gold-fill);border:2px solid var(--gold-fill);color:var(--on-accent)}
+  .bagno-pin--riserva{background:var(--night-0);color:var(--ink);border-color:var(--gold-fill)}
+  .bagno-pop{font-size:13px;line-height:1.5;color:var(--muted)}
+  .leaflet-control-layers-toggle{background-image:none!important;width:44px!important;height:44px!important;display:grid;place-items:center}
+  .leaflet-control-layers-toggle::before{content:"🚻";font-size:22px;line-height:1}
+  .leaflet-control-layers label{position:relative;display:block;min-height:44px;margin:0;padding:11px 14px;font-size:15px;cursor:pointer}
+  .leaflet-control-layers-selector{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:pointer}
+  .leaflet-control-layers-selector + span::before{content:"☐ "}
+  .leaflet-control-layers-selector:checked + span::before{content:"☑ "}
 </style>
 </head>
 <body>
@@ -728,6 +782,7 @@
       <button class="ad-scheda" id="adScheda" type="button">Vedi la scheda ↓</button>
       <button class="piove-btn" type="button" data-piove aria-pressed="false" id="pioveBtnAd"><span class="piove-ic">🌧️</span> Piove <span class="piove-stato">no</span></button>
     </div>
+    <div class="ad-bagno" id="adBagno" hidden></div>
     <div class="ad-proposta" id="adProposta" hidden>
       <p id="adPropostaTesto"></p>
       <div class="ad-proposta__az"><button type="button" class="ad-proposta__si" id="adPropostaSi">Sì, attiva</button><button type="button" class="ad-proposta__no" id="adPropostaNo">No</button></div>
@@ -825,7 +880,7 @@
           <span class="percorso__txt"><b>Percorso · Domenica</b><span>Southbank Centre → SEA LIFE</span></span>
           <span class="percorso__modo">🚶 a piedi</span>
         </a>
-        <article class="tcard" data-tappa="southbank" data-durata="75-75" data-comprimibile data-giorno="2026-11-15" data-ora="10:45" data-tipo="tappa">
+        <article class="tcard" data-tappa="southbank" data-durata="75-75" data-comprimibile data-giorno="2026-11-15" data-ora="10:45" data-tipo="tappa" data-bagno="southbank">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/southbank.webp" width="800" height="450" alt="Le scale gialle del Southbank Centre, con il palazzo in cemento e la gente che passa" loading="lazy" decoding="async">
             <span class="tcard__ora">10:45</span>
@@ -839,7 +894,7 @@
           </div>
           <p class="tcard__credito">foto: Robin Stott / CC BY-SA 2.0</p>
         </article>
-        <article class="tcard" data-tappa="sealife" data-durata="120-120" data-giorno="2026-11-15" data-ora="12:30" data-tipo="tappa">
+        <article class="tcard" data-tappa="sealife" data-durata="120-120" data-giorno="2026-11-15" data-ora="12:30" data-tipo="tappa" data-bagno="sealife">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/sealife.webp" width="800" height="450" alt="Il tunnel sottomarino dell’acquario, con la volta di vetro e i pesci sopra la testa" loading="lazy" decoding="async">
             <span class="tcard__ora">12:30</span>
@@ -867,7 +922,7 @@
             <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5123401,-0.1342553&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚌 coi mezzi</span></a>
           </div>
         </article>
-        <article class="tcard" data-giorno="2026-11-15" data-ora="15:00" data-tipo="tappa" data-durata="15-15" data-entro="18:00" data-vincolo="Lina Stores la domenica chiude alle 18:00" data-piano-b="Whole Foods a Piccadilly Circus, aperto fino alle 18:00">
+        <article class="tcard" data-giorno="2026-11-15" data-ora="15:00" data-tipo="tappa" data-durata="15-15" data-entro="18:00" data-vincolo="Lina Stores la domenica chiude alle 18:00" data-piano-b="Whole Foods a Piccadilly Circus, aperto fino alle 18:00" data-bagno="lina">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/lina.webp" width="800" height="450" alt="La vetrina verde di Lina Stores con l’insegna bianca sopra l’ingresso" loading="lazy" decoding="async">
             <span class="tcard__ora">15:00</span>
@@ -899,7 +954,7 @@
           <span class="percorso__txt"><b>Percorso · Domenica</b><span>Casa → Hamleys → luci di Carnaby</span></span>
           <span class="percorso__modo">🚶 a piedi</span>
         </a>
-        <article class="tcard" data-tappa="hamleys" data-durata="60-60" data-giorno="2026-11-15" data-ora="16:30" data-tipo="tappa">
+        <article class="tcard" data-tappa="hamleys" data-durata="60-60" data-giorno="2026-11-15" data-ora="16:30" data-tipo="tappa" data-bagno="hamleys">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/hamleys.webp" width="800" height="450" alt="La facciata di Hamleys su Regent Street, con le tende rosse e l’insegna sopra le vetrine" loading="lazy" decoding="async">
             <span class="tcard__ora">16:30</span>
@@ -969,7 +1024,7 @@
           </div>
           <p class="tcard__credito">foto: No Swan So Fine / CC BY-SA 4.0</p>
         </article>
-        <article class="tcard" data-tappa="trafalgar" data-durata="10-10" data-giorno="2026-11-16" data-ora="09:45" data-tipo="tappa">
+        <article class="tcard" data-tappa="trafalgar" data-durata="10-10" data-giorno="2026-11-16" data-ora="09:45" data-tipo="tappa" data-bagno="trafalgar">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/trafalgar.webp" width="800" height="450" alt="Le fontane di Trafalgar Square con la National Gallery sullo sfondo" loading="lazy" decoding="async">
             <span class="tcard__ora">09:45</span>
@@ -992,7 +1047,7 @@
             <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.502967,-0.1339534&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
           </div>
         </article>
-        <article class="tcard" data-tappa="wellington" data-durata="45-45" data-giorno="2026-11-16" data-ora="10:15" data-tipo="tappa" data-vincolo="In prima fila contro la ringhiera entro le 10:20">
+        <article class="tcard" data-tappa="wellington" data-durata="45-45" data-giorno="2026-11-16" data-ora="10:15" data-tipo="tappa" data-vincolo="In prima fila contro la ringhiera entro le 10:20" data-bagno="wellington">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/wellington.webp" width="800" height="450" alt="La banda delle Guards in cappotto grigio e colbacco esce da Wellington Barracks in una mattina d’autunno" loading="lazy" decoding="async">
             <span class="tcard__ora">10:15</span>
@@ -1011,7 +1066,7 @@
           <span class="percorso__txt"><b>Percorso · Lunedì</b><span>Wellington Barracks → Buckingham Palace</span></span>
           <span class="percorso__modo">🚶 a piedi</span>
         </a>
-        <article class="tcard" data-tappa="buckingham" data-durata="10-10" data-giorno="2026-11-16" data-ora="11:05" data-tipo="tappa">
+        <article class="tcard" data-tappa="buckingham" data-durata="10-10" data-giorno="2026-11-16" data-ora="11:05" data-tipo="tappa" data-bagno="buckingham">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/buckingham.webp" width="800" height="450" alt="La facciata di Buckingham Palace con il Victoria Memorial e le aiuole fiorite" loading="lazy" decoding="async">
             <span class="tcard__ora">11:05</span>
@@ -1029,7 +1084,7 @@
           <span class="percorso__txt"><b>Percorso · Lunedì</b><span>Buckingham → St James’s Park → Horse Guards → Big Ben</span></span>
           <span class="percorso__modo">🚶 a piedi</span>
         </a>
-        <article class="tcard" data-tappa="stjames" data-durata="45-45" data-comprimibile data-giorno="2026-11-16" data-ora="11:15" data-tipo="tappa">
+        <article class="tcard" data-tappa="stjames" data-durata="45-45" data-comprimibile data-giorno="2026-11-16" data-ora="11:15" data-tipo="tappa" data-bagno="stjames">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/stjames.webp" width="800" height="450" alt="Il lago di St James’s Park visto dal Blue Bridge, con gli alberi e la città in fondo" loading="lazy" decoding="async">
             <span class="tcard__ora">11:15</span>
@@ -1042,7 +1097,7 @@
           </div>
           <p class="tcard__credito">foto: Colin / CC BY-SA 3.0</p>
         </article>
-        <article class="tcard" data-tappa="horseguards" data-durata="15-15" data-giorno="2026-11-16" data-ora="12:05" data-tipo="tappa">
+        <article class="tcard" data-tappa="horseguards" data-durata="15-15" data-giorno="2026-11-16" data-ora="12:05" data-tipo="tappa" data-bagno="horseguards">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/horseguards.webp" width="800" height="450" alt="Una sentinella della Household Cavalry in tunica rossa ed elmo col pennacchio, sotto l’arco" loading="lazy" decoding="async">
             <span class="tcard__ora">12:05</span>
@@ -1055,7 +1110,7 @@
           </div>
           <p class="tcard__credito">foto: Lewis Clarke / CC BY-SA 2.0</p>
         </article>
-        <article class="tcard" data-tappa="bigben" data-durata="15-15" data-giorno="2026-11-16" data-ora="12:25" data-tipo="tappa">
+        <article class="tcard" data-tappa="bigben" data-durata="15-15" data-giorno="2026-11-16" data-ora="12:25" data-tipo="tappa" data-bagno="bigben">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/bigben.webp" width="800" height="450" alt="Il Palazzo di Westminster dal fiume, con la torre dell’orologio e il ponte" loading="lazy" decoding="async">
             <span class="tcard__ora">12:25</span>
@@ -1095,7 +1150,7 @@
           <span class="percorso__txt"><b>Percorso · Lunedì</b><span>South Kensington → Harrods</span></span>
           <span class="percorso__modo">🚶 a piedi</span>
         </a>
-        <article class="tcard" data-tappa="harrods" data-durata="110-110" data-comprimibile data-giorno="2026-11-16" data-ora="14:10" data-tipo="tappa">
+        <article class="tcard" data-tappa="harrods" data-durata="110-110" data-comprimibile data-giorno="2026-11-16" data-ora="14:10" data-tipo="tappa" data-bagno="harrods">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/harrods.webp" width="800" height="450" alt="La facciata di Harrods illuminata dalle luminarie natalizie" loading="lazy" decoding="async">
             <span class="tcard__ora">14:10</span>
@@ -1122,7 +1177,7 @@
           <span class="percorso__txt"><b>Percorso · Lunedì</b><span>Harrods → Natural History Museum</span></span>
           <span class="percorso__modo">🚶 a piedi</span>
         </a>
-        <article class="tcard" data-tappa="nhm" data-durata="75-75" data-giorno="2026-11-16" data-ora="16:30" data-tipo="tappa" data-non-prima="16:30" data-fine-entro="17:50" data-vincolo="Ingresso a fascia oraria alle 16:30, non prima · il museo chiude alle 17:50" data-mostra="nhm">
+        <article class="tcard" data-tappa="nhm" data-durata="75-75" data-giorno="2026-11-16" data-ora="16:30" data-tipo="tappa" data-non-prima="16:30" data-fine-entro="17:50" data-vincolo="Ingresso a fascia oraria alle 16:30, non prima · il museo chiude alle 17:50" data-mostra="nhm" data-bagno="nhm">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/nhm.webp" width="800" height="450" alt="La facciata in terracotta del Natural History Museum, con le torri e il portale ad arco" loading="lazy" decoding="async">
             <span class="tcard__ora">16:30</span>
@@ -1147,7 +1202,7 @@
           <span class="percorso__txt"><b>Percorso · Lunedì</b><span>Piccadilly Circus → luci Regent Street → casa</span></span>
           <span class="percorso__modo">🚶 a piedi</span>
         </a>
-        <article class="tcard" data-giorno="2026-11-16" data-ora="18:00" data-tipo="tappa">
+        <article class="tcard" data-giorno="2026-11-16" data-ora="18:00" data-tipo="tappa" data-bagno="regentst">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/regent.webp" width="800" height="450" alt="Un angelo luminoso sospeso sopra Regent Street, con un autobus rosso sotto" loading="lazy" decoding="async">
             <span class="tcard__ora">18:00</span>
@@ -1200,7 +1255,7 @@
             <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.539292,-0.14274&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚇 coi mezzi</span></a>
           </div>
         </article>
-        <article class="tcard" data-tappa="camden" data-durata="75-75" data-comprimibile data-giorno="2026-11-17" data-ora="11:00" data-tipo="tappa">
+        <article class="tcard" data-tappa="camden" data-durata="75-75" data-comprimibile data-giorno="2026-11-17" data-ora="11:00" data-tipo="tappa" data-bagno="camden">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/camden.webp" width="800" height="450" alt="Barche ormeggiate sul Regent’s Canal a Camden Lock, con gli edifici del mercato sull’acqua" loading="lazy" decoding="async">
             <span class="tcard__ora">11:00</span>
@@ -1251,7 +1306,7 @@
             <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5122737,-0.1234492&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚇 coi mezzi</span></a>
           </div>
         </article>
-        <article class="tcard" data-tappa="covent" data-durata="105-105" data-comprimibile data-giorno="2026-11-17" data-ora="13:30" data-tipo="tappa">
+        <article class="tcard" data-tappa="covent" data-durata="105-105" data-comprimibile data-giorno="2026-11-17" data-ora="13:30" data-tipo="tappa" data-bagno="coventgarden">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/covent.webp" width="800" height="450" alt="La galleria coperta di Covent Garden, con il tetto in ferro e vetro verde e i carretti di fiori" loading="lazy" decoding="async">
             <span class="tcard__ora">13:30</span>
@@ -1549,6 +1604,22 @@
       <p class="meta" style="margin-top:8px">Host confermato: nessuna unità sostitutiva (sarà esattamente l'appartamento fotografato), nessun costo extra, contatto diretto tramite numero Booking.com.</p>
       <p class="why"><b>Perché questa zona:</b> è il punto di minor cammino cumulativo per la giornata di lunedì (la Royal walk, sette tappe), tutte raggiungibili in 12–21 minuti a piedi, zero attraversamenti del fiume. Si sacrifica la comodità verso Southbank e South Kensington (serve la metro), accettabile perché cadono su giornate più leggere (domenica e martedì).</p>
     </div>
+  </section>
+
+  <!-- ============ BAGNI PULITI ============
+       Costruita da data/bagni-londra.json: se il file non si carica, la sezione resta nascosta. -->
+  <section id="bagni" hidden>
+    <div class="eyebrow">Bagni</div>
+    <details class="acc">
+      <summary>
+        <span class="srow">
+          <span class="daynum" style="color:var(--gold);background:rgba(212,169,78,.1)">🚻</span>
+          <span class="dtit"><h3>Bagni puliti</h3><p>Il più vicino a ogni tappa, con la riserva</p></span>
+          <span class="chev">▼</span>
+        </span>
+      </summary>
+      <div class="dbody" id="bagniLista"></div>
+    </details>
   </section>
 
   <!-- ============ SICUREZZA ============ -->
@@ -2200,6 +2271,160 @@
     document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && !velo.hidden) chiudi(); });
   })();
 
+  /* ====== Bagni puliti (data/bagni-londra.json) ======
+     Per ogni tappa un bagno principale e una riserva, con piano, orari del giorno, costo, fasciatoio, ascensore, fonte.
+     Nessun valore inventato né completato: ogni campo elencato in "stimati", o che dice «da verificare» /
+     «non verificato», porta il badge «stimato». Il file si carica con fetch (ed è nel precache offline): se non
+     c'è, le righe nelle card, in «Adesso», il layer della mappa e la sezione Info semplicemente non compaiono. */
+  var BAGNI = (function(){
+    var GIORNO = { '2026-11-15': 'dom15', '2026-11-16': 'lun16', '2026-11-17': 'mar17' };
+    var NOME_GIORNO = { dom15: 'Domenica 15', lun16: 'Lunedì 16', mar17: 'Martedì 17' };
+    var DUBBIO = /da verificare|non verificato/i;
+    var S = { dati: null, tappe: {}, n: 0 };
+    var esc = function(s){ return String(s == null ? '' : s).replace(/[&<>"]/g, function(c){ return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]; }); };
+    var BADGE = ' <span class="st est" title="Stimato: da confermare sul posto">stimato</span>';
+    var stimato = function(b, campi, valore){ return campi.some(function(c){ return (b.stimati || []).indexOf(c) >= 0; }) || DUBBIO.test(String(valore == null ? '' : valore)); };
+    var dataIt = function(iso){ var p = String(iso).split('-'); return p[2] + '/' + p[1] + '/' + p[0]; };
+    var maps = function(b){ return 'https://www.google.com/maps/search/?api=1&query=' + b.lat + ',' + b.lng; };
+    var pad2 = function(n){ return (n < 10 ? '0' : '') + n; };
+    function dato(b, icona, etichetta, valore, campi){
+      return '<li><span class="bagno-et">' + icona + ' ' + etichetta + '</span> ' + esc(valore) + (stimato(b, campi, valore) ? BADGE : '') + '</li>';
+    }
+    // un bagno: ruolo, nome, indirizzo, piano, distanza, orari del giorno, costo, bambini, fasciatoio, ascensore, fonte, Maps
+    function voce(b, ruolo, key){
+      var orario = b.orari && b.orari[key] != null ? b.orari[key] : null;
+      return '<div class="bagno-voce bagno-voce--' + ruolo + '">'
+        + '<div class="bagno-voce__testa"><span class="bagno-ruolo">' + (ruolo === 'principale' ? 'Principale' : 'Riserva') + '</span>'
+        + (/scale/i.test(b.piano || '') ? '<span class="bagno-scale">🪜 scale</span>' : '') + '</div>'
+        + '<p class="bagno-nome">' + esc(b.nome) + '</p>'
+        + '<p class="bagno-ind">' + esc(b.indirizzo) + (stimato(b, ['indirizzo'], b.indirizzo) ? BADGE : '') + '</p>'
+        + '<ul class="bagno-dati">'
+        + dato(b, '🏢', 'Piano', b.piano, ['piano'])
+        + dato(b, '📏', 'Distanza', b.distanza_m + ' m · ~' + b.minuti + ' min a piedi', ['distanza_m', 'minuti'])
+        + dato(b, '🕒', 'Orari', orario == null ? NOME_GIORNO[key] + ': non indicati' : NOME_GIORNO[key] + ': ' + orario, ['orari'])
+        + dato(b, '💷', 'Costo', b.costo, ['costo'])
+        + dato(b, '👶', 'Per bambini', b.per_bambini, ['per_bambini'])
+        + dato(b, '🚼', 'Fasciatoio', b.fasciatoio, ['fasciatoio'])
+        + dato(b, '🛗', 'Ascensore', b.ascensore, ['ascensore'])
+        + '</ul>'
+        + (b.note ? '<p class="bagno-nota">' + esc(b.note) + '</p>' : '')
+        + '<p class="bagno-fonte">Fonte: ' + esc(b.fonte) + ' · verificato il ' + dataIt(b.verificato_il) + '</p>'
+        + '<a class="bagno-maps" href="' + maps(b) + '" target="_blank" rel="noopener">📍 Maps</a>'
+        + '</div>';
+    }
+    // il contenuto del mini-pannello: avviso della tappa (oro, rosso se ha ⚠️), principale e riserva
+    function pannello(t, key, senzaAvviso){
+      var av = t.avviso && !senzaAvviso ? '<p class="bagno-avviso' + (/⚠️/.test(t.avviso) ? ' bagno-avviso--alert' : '') + '">' + esc(t.avviso) + '</p>' : '';
+      return av + voce(t.principale, 'principale', key) + voce(t.riserva, 'riserva', key);
+    }
+    function bottone(b, id, extra){
+      return '<button class="bagno-riga" type="button" aria-expanded="false" aria-controls="' + id + '"><span class="bagno-riga__txt">🚻 '
+        + esc(b.nome) + ' · ~' + b.minuti + ' min' + (stimato(b, ['minuti', 'distanza_m'], '') ? BADGE : '') + (extra || '') + '</span></button>';
+    }
+    // le righe nelle card: sotto «Portami qui»
+    function montaCard(card){
+      var t = S.tappe[card.dataset.bagno]; if (!t) return false;
+      var key = GIORNO[card.dataset.giorno], id = 'bagno-' + (++S.n);
+      var box = document.createElement('div'); box.className = 'bagno-box';
+      box.innerHTML = bottone(t.principale, id) + '<div class="bagno-pan" id="' + id + '" hidden>' + pannello(t, key) + '</div>';
+      var body = card.querySelector('.tcard__body'), vai = body.querySelector('a.gmap--vai');
+      if (vai) vai.insertAdjacentElement('afterend', box); else body.appendChild(box);
+      return true;
+    }
+    // sezione Info: regola del caffè, legenda, elenco per giorno (dalle card del programma), da evitare, metodo
+    function montaInfo(){
+      var sez = document.getElementById('bagni'), lista = document.getElementById('bagniLista'); if (!sez || !lista) return;
+      var h = '<p class="bagno-regola">☕ ' + esc(S.dati.regola_caffe) + '</p>'
+        + '<p class="bagno-legenda">' + BADGE.trim() + ' = da confermare sul posto.</p>';
+      Object.keys(NOME_GIORNO).forEach(function(key){
+        var carte = [].filter.call(document.querySelectorAll('#programma article.tcard[data-bagno]'), function(c){ return GIORNO[c.dataset.giorno] === key; });
+        if (!carte.length) return;
+        h += '<h4 class="bagno-giorno">' + NOME_GIORNO[key] + '</h4>';
+        carte.forEach(function(c){
+          var t = S.tappe[c.dataset.bagno]; if (!t) return;
+          h += '<div class="bagno-tappa"><h5 class="bagno-tappa__nome">' + esc(c.dataset.ora) + ' · ' + esc(c.querySelector('h4').textContent) + '</h5>'
+            + '<div class="bagno-pan">' + pannello(t, key) + '</div></div>';
+        });
+      });
+      h += '<h4 class="bagno-giorno">Da evitare</h4><ul class="bagno-evita">'
+        + S.dati.da_evitare.map(function(x){ return '<li><b>' + esc(x.nome) + '</b> — ' + esc(x.motivo) + '</li>'; }).join('') + '</ul>'
+        + '<p class="bagno-metodo">Distanze: ' + esc(S.dati.metodo_distanze) + '.</p>';
+      lista.innerHTML = h; sez.hidden = false;
+    }
+    // orario del giorno: «24 ore…» o «HH:MM–HH:MM»; qualunque altro testo non si legge (e non si indovina)
+    function leggi(txt){
+      if (/^24 ore/i.test(txt || '')) return { sempre: true };
+      var m = /^(\d{1,2}):(\d{2})\s*[–-]\s*(\d{1,2}):(\d{2})$/.exec(txt || '');
+      return m ? { da: +m[1] * 60 + +m[2], a: +m[3] * 60 + +m[4] } : null;
+    }
+    // null se l'orario non si legge; altrimenti aperto / chiuso / chiude (entro 15 minuti, con l'ora)
+    function stato(b, key, min){
+      var o = leggi(b.orari && b.orari[key]); if (!o) return null;
+      if (o.sempre) return { s: 'aperto' };
+      if (min < o.da || min >= o.a) return { s: 'chiuso' };
+      if (o.a - min <= 15) return { s: 'chiude', alle: pad2(Math.floor(o.a / 60)) + ':' + pad2(o.a % 60) };
+      return { s: 'aperto' };
+    }
+    // «Adesso»: il bagno della tappa in corso (o, se non ne ha, della prossima). Il pannello aperto non si chiude
+    // da solo: si ridisegna solo se cambia la scelta.
+    function perAdesso(corrente, prossima, now, isoOggi){
+      var box = document.getElementById('adBagno'); if (!box) return;
+      var x = null;
+      [corrente, prossima].forEach(function(c){ if (!x && c && c.el.dataset.bagno && S.tappe[c.el.dataset.bagno]) x = c; });
+      var key = GIORNO[isoOggi];
+      if (!S.dati || !x || !key) { box.hidden = true; box.innerHTML = ''; box.dataset.chiave = ''; return; }
+      var t = S.tappe[x.el.dataset.bagno], lo = OROLOGIO.parti(now), st = stato(t.principale, key, lo.h * 60 + lo.m);
+      var uso = t.principale, etichetta = '';
+      if (st && st.s !== 'aperto') { uso = t.riserva; etichetta = st.s === 'chiuso' ? 'principale chiusa' : 'principale chiude alle ' + st.alle; }
+      var chiave = [x.el.dataset.bagno, uso.id, key, etichetta].join('|');
+      if (box.dataset.chiave === chiave) { box.hidden = false; return; }
+      var allarme = /⚠️/.test(t.avviso || '');
+      box.innerHTML = bottone(uso, 'adBagnoPan', etichetta ? ' <span class="bagno-chiusa">' + esc(etichetta) + '</span>' : '')
+        + (allarme ? '<p class="bagno-avviso bagno-avviso--alert bagno-avviso--riga">' + esc(t.avviso) + '</p>' : '')
+        + '<div class="bagno-pan" id="adBagnoPan" hidden><p class="bagno-per">Vicino a: <b>' + esc(x.nome) + '</b></p>' + pannello(t, key, allarme) + '</div>';
+      box.hidden = false; box.dataset.chiave = chiave;
+    }
+    // mappa: un solo marker per bagno, con l'elenco delle tappe che lo usano
+    function perMappa(){
+      var out = {};
+      Object.keys(S.tappe).forEach(function(id){
+        var t = S.tappe[id];
+        [['principale', t.principale], ['riserva', t.riserva]].forEach(function(r){
+          var o = out[r[1].id] || (out[r[1].id] = { b: r[1], usi: [], principale: false });
+          o.usi.push(t.nome_tappa + ' (' + r[0] + ')'); if (r[0] === 'principale') o.principale = true;
+        });
+      });
+      return Object.keys(out).map(function(k){ return out[k]; });
+    }
+    function popup(o){
+      var b = o.b;
+      var giorni = Object.keys(NOME_GIORNO).filter(function(k){ return b.orari && b.orari[k] != null; }).map(function(k){
+        return NOME_GIORNO[k] + ': ' + esc(b.orari[k]) + (stimato(b, ['orari'], b.orari[k]) ? BADGE : '');
+      }).join('<br>');
+      return '<b>🚻 ' + esc(b.nome) + '</b><br><span class="bagno-pop">' + esc(b.piano) + (stimato(b, ['piano'], b.piano) ? BADGE : '') + '</span>'
+        + '<br><span class="bagno-pop">' + giorni + '</span>'
+        + '<br><span class="bagno-pop">Usato da: ' + o.usi.map(esc).join(' · ') + '</span>'
+        + '<br><a class="pop-vai" href="' + maps(b) + '" target="_blank" rel="noopener">📍 Apri in Maps</a>';
+    }
+    function monta(json){
+      S.dati = json; json.tappe.forEach(function(t){ S.tappe[t.tappa] = t; });
+      var senza = [];
+      [].forEach.call(document.querySelectorAll('#programma article.tcard[data-bagno]'), function(c){ if (!montaCard(c)) senza.push(c.dataset.bagno); });
+      montaInfo();
+      BAGNI.senzaTappa = senza;
+      document.dispatchEvent(new CustomEvent('bagni'));
+    }
+    // un tocco su una riga apre o chiude il suo pannello (inline, niente modale)
+    document.addEventListener('click', function(e){
+      var r = e.target.closest('.bagno-riga'); if (!r) return;
+      var p = document.getElementById(r.getAttribute('aria-controls')); if (!p) return;
+      var apri = p.hidden; p.hidden = !apri; r.setAttribute('aria-expanded', String(apri));
+    });
+    if (window.fetch) fetch('data/bagni-londra.json').then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(j){ if (j && j.tappe) monta(j); }).catch(function(){ /* niente bagni: la pagina funziona lo stesso */ });
+    return { pronto: function(){ return !!S.dati; }, perAdesso: perAdesso, perMappa: perMappa, popup: popup, senzaTappa: [] };
+  })();
+
   /* ====== Prima di partire / Adesso ======
      Calcolati dalle card del programma (data-giorno, data-ora, data-fuso, data-tipo, vincoli), sempre con
      l'ora di Londra. Fino al 14/11 "Prima di partire", dal 15 al 17 "Adesso" e solo il giorno corrente
@@ -2298,6 +2523,7 @@
       cod.hidden = !m;
       mostrata = prossima || corrente;
       $('adScheda').hidden = !mostrata;
+      BAGNI.perAdesso(corrente, prossima, now, lo.data);
       $('adesso').hidden = false;
     }
     $('adScheda').addEventListener('click', function(){
@@ -2324,6 +2550,7 @@
     else if (oggi <= '2026-11-17') {
       adesso();
       document.addEventListener('piove', adesso);
+      document.addEventListener('bagni', adesso);   // il file dei bagni arriva dopo il primo disegno
       setInterval(adesso, 30000);   // l'orologio (anche quello simulato) va avanti
     }
   })();
@@ -2361,6 +2588,11 @@
      Il pannello non si apre mai da solo: in cima c'è un banner sottile «N novità», e si apre solo se toccato.
      Il link in fondo alla pagina lo riapre con tutto lo storico, in ogni caso. */
   var NOVITA = [
+    { v: 29, data: '2026-10-08', titolo: '🚻 Bagni puliti', voci: [
+      '🚻 Bagni puliti: il bagno più vicino in ogni tappa, in Adesso, nella mappa e in Info',
+      'Sotto «Portami qui» una riga con il bagno più vicino: un tocco apre il pannello con la riserva, il piano, gli orari del giorno, il fasciatoio, l’ascensore e Maps',
+      'In «Adesso» il bagno della tappa; se la principale è chiusa o chiude entro un quarto d’ora compare la riserva. Nella mappa c’è il livello «🚻 Bagni», spento all’inizio',
+      'In Info la lista completa giorno per giorno, la regola del caffè negli hotel e i posti da evitare. Le distanze sono stimate: il badge «stimato» dice cosa confermare sul posto' ] },
     { v: 28, data: '2026-10-04', titolo: 'Martedì mattina a Camden', voci: [
       'Dopo il check-out, Northern line fino a Camden Town: il canale con le barche e i mercati alle 11:00, poi fish & chips da Poppies alle 12:15',
       'Alle 13:15 di nuovo in metro fino a Leicester Square e Covent Garden alle 13:30, per un’ora e tre quarti. La partenza per Heathrow resta alle 15:15',
@@ -2720,6 +2952,19 @@
   L.marker([CASA.lat,CASA.lng],{icon:homeIcon,title:CASA.n,zIndexOffset:500}).addTo(map)
     .bindPopup('<b>🏠 '+CASA.n+'</b><br><small>'+CASA.note+'</small>'+vai(CASA));
   bounds.push([CASA.lat,CASA.lng]);
+  // livello "🚻 Bagni", spento di default: un marker per bagno (principale pieno, riserva bordato)
+  var gruppoBagni=L.layerGroup(), bagniSullaMappa=false;
+  function montaBagni(){
+    if (bagniSullaMappa || !BAGNI.pronto()) return;
+    bagniSullaMappa=true;
+    BAGNI.perMappa().forEach(function(o){
+      var ic=L.divIcon({ className:'', iconSize:[44,44], iconAnchor:[4,40], popupAnchor:[18,-30],
+        html:'<div class="bagno-pin-hit"><div class="bagno-pin'+(o.principale?'':' bagno-pin--riserva')+'">🚻</div></div>' });
+      L.marker([o.b.lat,o.b.lng],{icon:ic,title:o.b.nome,zIndexOffset:300}).bindPopup(BAGNI.popup(o)).addTo(gruppoBagni);
+    });
+    L.control.layers(null,{'🚻 Bagni':gruppoBagni},{collapsed:true,position:'topright'}).addTo(map);
+  }
+  montaBagni(); document.addEventListener('bagni',montaBagni);
   map.fitBounds(bounds,{padding:[30,30]});
   }
   if ('IntersectionObserver' in window) {
