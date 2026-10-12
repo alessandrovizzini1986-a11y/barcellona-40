@@ -22,7 +22,9 @@ export async function caricaAllerte() {
   } catch { /* niente cache: si legge */ }
   if (!inVolo) {
     inVolo = fetch(`${URL}?t=${Math.floor(Date.now() / TTL)}`, { cache: 'no-cache' }).then((r) => (r.ok ? r.json() : { attive: [] })).then((dati) => {
-      const d = { attive: Array.isArray(dati.attive) ? dati.attive : [], aggiornato: dati.aggiornato || null }
+      // un'allerta con la fine già passata non si mostra: se il workflow si ferma, il file non resta "in allerta" per sempre
+      const vive = (Array.isArray(dati.attive) ? dati.attive : []).filter((a) => !a.fine || isNaN(Date.parse(a.fine)) || Date.parse(a.fine) > Date.now())
+      const d = { attive: vive, aggiornato: dati.aggiornato || null }
       try { sessionStorage.setItem(CACHE, JSON.stringify({ quando: Date.now(), dati: d })) } catch { /* pazienza */ }
       return d
     }).catch(() => ({ attive: [], aggiornato: null })).finally(() => { inVolo = null })

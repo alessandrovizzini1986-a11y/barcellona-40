@@ -120,6 +120,11 @@ for (const [livello, attesoTesto, attesoBg, attesoFg] of [
   await ctx.close()
 }
 {
+  const { p, ctx } = await apri('ale', '/#/oggi', ALLERTA('rosso', { inizio: '2026-10-01T10:00:00+00:00', fine: '2026-10-01T12:00:00+00:00' }))
+  ok('un\'allerta con la fine già passata non si mostra (file vecchio, workflow fermo)', (await p.locator('[data-allerta-banner]').count()) === 0)
+  await ctx.close()
+}
+{
   const { p, ctx } = await apri('ale', '/?now=2026-10-17T15:00#/oggi', ALLERTA(null))
   ok('niente allerta (anche con ?now= nel weekend): nessun banner, nessuno spazio vuoto', (await p.locator('[data-allerta-banner]').count()) === 0 && await p.evaluate(() => document.getElementById('app').firstElementChild.classList.contains('header')))
   await ctx.close()
