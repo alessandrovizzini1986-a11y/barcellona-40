@@ -18,6 +18,7 @@ import { timelineViaggio, bindViaggio, voli } from '../ui/viaggio.js'
 import { evento } from '../stats.js'
 import { montaMeteo, slotMeteo, statoMeteo } from '../ui/meteo.js'
 import { avvisoMiradorPioggia, PRENOTAZIONE_MIRADOR } from '../ui/pioggia.js'
+import { caricaAllerte, avvisoEsposto } from '../ui/allerte.js'
 
 const DAY_LABEL = { ven: 'Venerdì 16', sab: 'Sabato 17', dom: 'Domenica 18' }
 
@@ -117,6 +118,8 @@ export async function render(root, opts) {
 
   // Durante il weekend
   const key = dayKey()
+  // allerte attive (file del sito, cache 10 min): al massimo 2,5 s di attesa, poi si disegna senza
+  const allerte = (await Promise.race([caricaAllerte(), new Promise((r) => setTimeout(() => r({ attive: [] }), 2500))])).attive
   // le tappe saltate per pioggia restano nel programma, in coda e grigie, ma qui non sono né Adesso né Prossima
   const mine = stopsFor(person).filter(attiva)
   const todays = stopsForDay(person, key).filter(attiva)
@@ -156,7 +159,7 @@ export async function render(root, opts) {
     <div class="bento">
       <div class="tile tile--accent span-2" style="--day:${DAY_COLOR[key]}">
         <div class="tile__label">Adesso</div>
-        ${cur && !ripartito ? stopCard(cur, { person, isNow: true, nowLabel: imminent ? nextIn(cur) : etichettaAdesso(cur), eager: true }) + percorsoOra(cur, key, todays) : `<p class="muted">${ripartito ? (aCasa ? 'Tu a quest\'ora sei già a Bologna. Missione compiuta.' : `In volo verso Bologna · atterri alle ${esc(p.departure.landing)}.`) : 'La prima tappa di oggi non è ancora iniziata. Respira, c\'è tempo.'}</p>${aCasa ? `<a class="btn album__cta btn--block" href="${PHOTO_ALBUM}" target="_blank" rel="noopener" aria-label="Guarda com'è andata, apre l'album foto">${icon('camera')} Guarda com'è andata</a>` : ''}`}
+        ${cur && !ripartito ? avvisoEsposto(cur, allerte) + stopCard(cur, { person, isNow: true, nowLabel: imminent ? nextIn(cur) : etichettaAdesso(cur), eager: true }) + percorsoOra(cur, key, todays) : `<p class="muted">${ripartito ? (aCasa ? 'Tu a quest\'ora sei già a Bologna. Missione compiuta.' : `In volo verso Bologna · atterri alle ${esc(p.departure.landing)}.`) : 'La prima tappa di oggi non è ancora iniziata. Respira, c\'è tempo.'}</p>${aCasa ? `<a class="btn album__cta btn--block" href="${PHOTO_ALBUM}" target="_blank" rel="noopener" aria-label="Guarda com'è andata, apre l'album foto">${icon('camera')} Guarda com'è andata</a>` : ''}`}
       </div>
       ${slotMeteo('span-2')}
       <div class="tile">

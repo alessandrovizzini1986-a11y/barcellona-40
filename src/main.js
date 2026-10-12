@@ -15,6 +15,7 @@ import { personById } from './data.js'
 import { esc } from './ui/html.js'
 import { icon } from './ui/icons.js'
 import { renderOnboarding } from './views/onboarding.js'
+import { montaAllerte } from './ui/allerte.js'
 import { easterEgg } from './ui/egg.js'
 import { ciSonoNovita, segnaLette } from './novita.js'
 import { apriNovita } from './ui/novita.js'
@@ -93,6 +94,7 @@ async function route({ route, sub, params }) {
   // nel frattempo si è andati altrove: quello che questa vista ha montato si smonta subito, senza restare orfano
   if (my !== token) { try { pulisci?.() } catch { /* noop */ } return }
   cleanup = pulisci
+  montaAllerte(app) // allerta meteo attiva su Barcellona → banner sopra l'header, in ogni vista
   if (!sub) scrollTo({ top: 0, behavior: 'instant' })
   easterEgg(document.getElementById('site-title'))
 }

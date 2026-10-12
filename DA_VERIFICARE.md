@@ -38,6 +38,13 @@ recinto (da scegliere). Serve una telefonata al 93 256 21 22 (lun–gio 9–15, 
 - **Il token sta nel repo** (`src/stats-orari.js`, `TOKEN_REPO`), per decisione esplicita di Alessandro del 07/10/2026 ("ti autorizzo formalmente a inserirlo, mi assumo le responsabilità"): repo pubblico, sito non indicizzato, contatori senza valore di privacy. Ha tutti i permessi dell'account GoatCounter, non solo la lettura. Se lo revoca, la pagina mostra il campo e un token nuovo salvato dal telefono (`b40:v1:gc-token`) ha la precedenza. Se compare traffico strano nei contatori o cambiano le impostazioni del sito, è questo il token da revocare.
 - Il permesso del token deve essere "Read statistics" e basta: niente altro.
 
+## Allerte meteo: cose da fare (12/10/2026)
+
+- **Disattivare il workflow allerte dopo il viaggio**: GitHub → Actions → "allerte" → Disable workflow (dal 19/10 alle 06:00 lo script esce subito, ma il cron continuerebbe a girare a vuoto).
+- Il secret `NTFY_TOPIC` va creato a mano su GitHub (Settings → Secrets and variables → Actions): da qui l'API dei secret non è raggiungibile. Il topic sta solo lì e nell'app ntfy sul telefono.
+- Il nome esatto dell'area AEMET di Barcellona nel feed non si è potuto leggere (nessuna allerta attiva il 12/10): lo script filtra "Barcelona" e prende sia "Litoral de Barcelona" sia "Prelitoral de Barcelona". Alla prima allerta vera, controllare in `public/allerte.json` che l'area sia quella.
+- Open-Meteo non è raggiungibile dalla sandbox di sviluppo: il pre-allarme (pioggia ≥ 10 mm/h nelle 12 ore) è provato con una fixture, non con una previsione vera.
+
 ## Domenica al coperto: due cose da fare prima (12/10/2026)
 
 | Cosa | Entro quando | Dove |

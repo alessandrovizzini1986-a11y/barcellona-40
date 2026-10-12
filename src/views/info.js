@@ -15,14 +15,16 @@ import { sezioneNovita } from '../ui/novita.js'
 import { canzoneVisibile } from '../time.js'
 import { nonLette } from '../novita.js'
 import { BAGNI, REGOLA, DA_TENERE, PULIZIA, bagnoById, voceBagno, montaBagni } from '../ui/bagno.js'
+import { caricaAllerte, sezioneEmergenze } from '../ui/allerte.js'
 
 const sec = (id, title, body, open = false) => `<details id="sec-${id}" ${open ? 'open' : ''}><summary>${esc(title)}${icon('chevron')}</summary><div class="acc__body">${body}</div></details>`
 
 export async function render(root, { person, sub, header }) {
   const p = personById(person)
-  const openId = ['profilo', 'verifiche', 'foto', 'canzone', 'viaggio', 'novita', 'bagni'].includes(sub) ? sub : null
+  const openId = ['profilo', 'verifiche', 'foto', 'canzone', 'viaggio', 'novita', 'bagni', 'emergenze'].includes(sub) ? sub : null
   const nuove = nonLette().length
   const openChecks = checks.filter((c) => !store.isChecked(c.id)).length
+  const allerte = (await Promise.race([caricaAllerte(), new Promise((r) => setTimeout(() => r({ attive: [] }), 2500))])).attive
 
   root.innerHTML = header('Le cose da sapere, in un posto solo') + `<section class="view">
     <div class="acc">
@@ -60,6 +62,7 @@ export async function render(root, { person, sub, header }) {
       <h3 class="section-title">Tutti <small>${BAGNI.length}</small></h3>
       <div class="list bagni-lista">${BAGNI.map(voceBagno).join('')}</div>
       <p class="faint">${esc(PULIZIA)}</p>`, openId === 'bagni')}
+    ${sec('emergenze', `Maltempo e emergenze${allerte.length ? ` (${allerte.length})` : ''}`, sezioneEmergenze(allerte), openId === 'emergenze' || allerte.length > 0)}
     ${sec('profilo', 'Profilo', `
       <div class="field"><label for="person">Chi sei</label>
         <select class="input" id="person">${people.map((x) => `<option value="${x.id}" ${x.id === person ? 'selected' : ''}>${esc(x.name)} · ${esc(x.role)}</option>`).join('')}</select></div>

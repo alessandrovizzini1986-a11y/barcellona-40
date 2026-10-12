@@ -1,6 +1,16 @@
 {
   "entries": [
     {
+      "v": 50,
+      "data": "2026-10-12",
+      "titolo": "Allerte meteo in cima al sito",
+      "voci": [
+        "Se esce un'allerta meteo ufficiale per Barcellona, la vedete in cima al sito con cosa fare.",
+        "Gialla: ombrello e programma invariato. Arancione: taxi, niente moli, spiagge, sottopassi. Rossa: al chiuso, 112",
+        "In Info c'è \"Maltempo e emergenze\": livelli, ES-Alert sul telefono, numeri e link, cosa fare se il volo salta"
+      ]
+    },
+    {
       "v": 49,
       "data": "2026-10-12",
       "titolo": "Domenica cambia: al coperto, con il polpo",

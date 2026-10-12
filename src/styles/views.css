@@ -226,3 +226,26 @@
 .meteo__ombrello svg{ width:18px; height:18px; flex:none; }
 
 
+/* Allerte meteo: banner in cima a tutte le viste, pannello, regole */
+.banner-allerta{ display:flex; align-items:center; gap:var(--space-3); width:100%; min-height:48px; padding:var(--space-3) var(--space-4); font-size:var(--fs-0); font-weight:700; line-height:1.35; text-align:left; color:#0E1116; background:var(--giallo); }
+.banner-allerta svg{ width:20px; height:20px; flex:none; }
+.banner-allerta > span{ flex:1; min-width:0; }
+.banner-allerta--arancione{ background:var(--terracotta); color:#fff; }
+.banner-allerta--rosso{ background:#C62828; color:#fff; }
+.banner-allerta--preallarme{ background:color-mix(in srgb, var(--giallo) 70%, var(--bg-2)); }
+.allerte-sheet, .emergenze{ display:flex; flex-direction:column; gap:var(--space-3); }
+.allerte-lista, .allerte-regole{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:var(--space-2); }
+.allerte-voce{ display:flex; flex-direction:column; gap:2px; padding:var(--space-3); border-radius:var(--radius-s); border-left:4px solid var(--giallo); background:var(--bg-3); font-size:var(--fs-0); }
+.allerte-voce--arancione{ border-left-color:var(--terracotta); }
+.allerte-voce--rosso{ border-left-color:#C62828; }
+.allerte-voce--preallarme{ border-left-style:dashed; }
+.allerte-voce a{ color:var(--acqua); }
+.allerte-regole li{ display:flex; align-items:flex-start; gap:var(--space-2); font-size:var(--fs-0); line-height:1.45; color:var(--ink-2); }
+.allerte-regole li > span b{ color:var(--ink); }
+.allerte-pallino{ width:12px; height:12px; border-radius:50%; flex:none; margin-top:4px; background:var(--giallo); }
+.allerte-pallino--arancione{ background:var(--terracotta); }
+.allerte-pallino--rosso{ background:#C62828; }
+.avviso--allerta{ border-color:var(--terracotta); background:color-mix(in srgb, var(--terracotta) 14%, var(--bg-2)); }
+.avviso--allerta svg{ color:var(--terracotta); }
+.emergenze .list li a{ display:block; min-height:44px; display:flex; align-items:center; color:var(--ink); }
+@media (prefers-reduced-motion: reduce){ .banner-allerta{ transition:none; } }

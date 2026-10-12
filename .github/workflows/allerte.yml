@@ -1,0 +1,54 @@
+# Allerte meteo e protezione civile: ogni ora legge i feed MeteoAlarm (Spagna e Italia), manda una notifica ntfy
+# SOLO quando cambia qualcosa e pubblica public/allerte.json per il sito. Lo script esce subito fuori dalla finestra
+# 15/10 00:00 → 19/10 06:00 ora di Roma. Il topic ntfy sta nel secret NTFY_TOPIC (repo pubblico: mai nel codice).
+# Da disattivare dopo il viaggio (vedi DA_VERIFICARE.md).
+name: allerte
+on:
+  schedule:
+    - cron: '7 * * * *'
+  workflow_dispatch:
+    inputs:
+      test:
+        description: 'Manda la notifica di prova "✅ Allerte Barcelona 40 attive"'
+        type: boolean
+        default: false
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: allerte
+  cancel-in-progress: false
+jobs:
+  allerte:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Notifica di prova
+        if: ${{ inputs.test }}
+        env:
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+        run: node scripts/allerte.mjs --test
+      - name: Leggi i feed e confronta
+        if: ${{ !inputs.test }}
+        id: giro
+        env:
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+        run: node scripts/allerte.mjs
+      - name: Pubblica allerte.json
+        if: ${{ !inputs.test && steps.giro.outputs.cambiato == 'true' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name "allerte-bot"
+          git config user.email "allerte-bot@users.noreply.github.com"
+          git add public/allerte.json
+          git commit -m "allerte: stato aggiornato $(date -u +%Y-%m-%dT%H:%MZ)"
+          git pull --rebase origin main
+          git push origin HEAD:main
+          # Un push fatto con GITHUB_TOKEN non fa partire pages.yml: si lancia a mano
+          gh workflow run pages.yml --ref main
