@@ -1,6 +1,13 @@
 {
- "aggiornato": null,
- "finestra": { "inizio": "2026-10-15T00:00", "fine": "2026-10-19T06:00", "fuso": "Europe/Rome" },
+ "aggiornato": "2026-10-14T23:51:24.441Z",
+ "finestra": {
+  "inizio": "2026-10-15T00:00",
+  "fine": "2026-10-19T06:00",
+  "fuso": "Europe/Rome"
+ },
  "attive": [],
- "errori": []
+ "errori": [
+  "barcellona: HTTP 406 su https://feeds.meteoalarm.org/feeds/meteoalarm-legacy-atom-spain",
+  "bologna: HTTP 406 su https://feeds.meteoalarm.org/feeds/meteoalarm-legacy-atom-italy"
+ ]
 }
