@@ -47,7 +47,9 @@ const inFinestra = (t) => t >= INIZIO && t < FINE
 // ——— lettura feed (URL o file) ———
 async function leggi(src) {
   if (!/^https?:/.test(src)) return readFileSync(src, 'utf8')
-  const r = await fetch(src, { headers: { 'User-Agent': 'barcelona40-allerte (github actions)', Accept: 'application/atom+xml, application/xml, application/json' } })
+  // Accept: */* e basta. Con "application/atom+xml" in testa feeds.meteoalarm.org risponde 406 (visto il 14/10/2026 alle
+  // 23:51, prima lettura dentro la finestra): la negoziazione del contenuto dall'altra parte non lo accetta.
+  const r = await fetch(src, { headers: { 'User-Agent': 'barcelona40-allerte (github actions)', Accept: '*/*' } })
   if (!r.ok) throw new Error(`HTTP ${r.status} su ${src}`)
   return r.text()
 }
