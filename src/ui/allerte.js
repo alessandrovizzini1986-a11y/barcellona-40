@@ -11,7 +11,7 @@ const URL = import.meta.env.BASE_URL.replace(/\/$/, '') + '/allerte.json'
 const CACHE = 'b40:allerte:v1'
 const TTL = 10 * 60 * 1000
 const ORDINE = { rosso: 3, arancione: 2, giallo: 1, preallarme: 0 }
-const NOME = { rosso: 'rossa', arancione: 'arancione', giallo: 'gialla', preallarme: 'pre-allarme' }
+export const NOME = { rosso: 'rossa', arancione: 'arancione', giallo: 'gialla', preallarme: 'pre-allarme' }
 export const TEL_EMERGENZE = '112'
 
 let inVolo = null

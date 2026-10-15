@@ -14,7 +14,7 @@ import { evento } from '../stats.js'
 const KEYS = ['ven', 'sab', 'dom']
 const conteggio = (stops) => {
   const n = stops.filter(conOrario).filter(attiva).length, o = stops.filter(senzaOrario).length
-  return `${n} ${n === 1 ? 'tappa' : 'tappe'}${o ? ` · ${o} opzionale${o === 1 ? '' : 'i'}` : ''}`
+  return `${n} ${n === 1 ? 'tappa' : 'tappe'}${o ? ` · ${o} extra` : ''}`
 }
 const LABEL = { ven: 'Ven 16', sab: 'Sab 17', dom: 'Dom 18' }
 
@@ -118,7 +118,7 @@ export async function render(root, { person, sub, header }) {
     ${key === 'dom' && sole() ? `<div class="avviso">${icon('sun')}<span>${esc(AVVISO_SOLE)}</span></div>` : ''}
     ${avvisoConto(stops, key)}
     ${vedeMacaya && macaya() ? avvisoConto(stops.slice(stops.findIndex((s) => s.id === 'f13')), 'ven-pomeriggio') : ''}
-    ${righe.length || opzionali.length ? `<ol class="timeline" style="--dc:${DAY_COLOR[key]}">${righe.map((r) => `${r.id && ancore.has(r.id) ? `<li class="timeline__percorso">${ancore.get(r.id)}</li>` : ''}<li>${r.html}</li>`).join('')}${opzionali.length ? `<li class="timeline__opzionale">Opzionale</li>${opzionali.map((r) => `<li class="timeline__opz">${r.html}</li>`).join('')}` : ''}${saltate.length ? `<li class="timeline__opzionale timeline__saltate">${saltate.length > 1 ? 'Saltate' : 'Saltata'} per pioggia</li>${saltate.map((r) => `<li class="timeline__opz timeline__saltata">${r.html}</li>`).join('')}` : ''}</ol>` : `<div class="empty">${emptyState(person, key)}</div>`}
+    ${righe.length || opzionali.length ? `<ol class="timeline" style="--dc:${DAY_COLOR[key]}">${righe.map((r) => `${r.id && ancore.has(r.id) ? `<li class="timeline__percorso">${ancore.get(r.id)}</li>` : ''}<li>${r.html}</li>`).join('')}${opzionali.length ? `<li class="timeline__opzionale">Extra se avanza tempo</li>${opzionali.map((r) => `<li class="timeline__opz">${r.html}</li>`).join('')}` : ''}${saltate.length ? `<li class="timeline__opzionale timeline__saltate">${saltate.length > 1 ? 'Saltate' : 'Saltata'} per pioggia</li>${saltate.map((r) => `<li class="timeline__opz timeline__saltata">${r.html}</li>`).join('')}` : ''}</ol>` : `<div class="empty">${emptyState(person, key)}</div>`}
   </section>`
   root.querySelector('#macaya')?.addEventListener('change', (e) => {
     if (e.target.checked) evento('macaya-attiva')

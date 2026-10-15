@@ -63,7 +63,7 @@ for (const [giorno, id] of [['ven', 'f99'], ['sab', 's99']]) {
   ok(`${giorno}: la tappa c'è`, await card.count() === 1)
   ok(`${giorno}: è l'ultima della timeline`, (await p.locator('.timeline .card[data-stop]').last().getAttribute('data-stop')) === id)
   // il testo è in maiuscolo via CSS: innerText lo restituisce già trasformato
-  ok(`${giorno}: sta sotto la riga tratteggiata "Opzionale"`, /^opzionale$/i.test((await p.locator('.timeline__opzionale').innerText()).trim()), await p.locator('.timeline__opzionale').innerText())
+  ok(`${giorno}: sta sotto la riga tratteggiata "Extra se avanza tempo"`, /^extra se avanza tempo$/i.test((await p.locator('.timeline__opzionale').innerText()).trim()), await p.locator('.timeline__opzionale').innerText())
   ok(`${giorno}: la riga tratteggiata viene prima della card`, await p.evaluate((x) => {
     const riga = document.querySelector('.timeline__opzionale'), c = document.querySelector(`.card[data-stop="${x}"]`)
     return !!riga && !!c && (riga.compareDocumentPosition(c) & Node.DOCUMENT_POSITION_FOLLOWING) > 0
@@ -74,7 +74,7 @@ for (const [giorno, id] of [['ven', 'f99'], ['sab', 's99']]) {
     return li.classList.contains('timeline__opz') && st.borderStyle === 'solid' && st.borderTopWidth === '2px' && /rgba\(0, 0, 0, 0\)|transparent/.test(st.backgroundColor) === false ? st.backgroundColor !== st.borderTopColor : false
   }, id))
   ok(`${giorno}: al posto dell'ora c'è "Se avete voglia"`, (await card.locator('.card__foto-time').innerText()) === 'Se avete voglia')
-  ok(`${giorno}: badge OPZIONALE`, (await card.locator('.badge--opzionale').innerText()) === 'OPZIONALE')
+  ok(`${giorno}: badge EXTRA`, (await card.locator('.badge--opzionale').innerText()) === 'EXTRA')
   ok(`${giorno}: la spunta "Fatto" c'è`, await card.locator('input[data-done]').count() === 1)
   const avviso = await card.locator('.avviso').innerText().catch(() => '')
   if (giorno === 'ven') ok('ven: avviso zaini in giallo sulla card', /quelli grandi non entrano in sala/.test(avviso), avviso)
@@ -95,7 +95,7 @@ for (const [giorno, id] of [['ven', 'f99'], ['sab', 's99']]) {
   const testo = await conto(p)
   ok('venerdì: il conto della giornata resta quello della mattina', /Soste 4 h 10 min \+ cammino 1 h 2 min/.test(testo), testo)
   ok('venerdì: il conto non nomina il Casino', !/Casino/i.test(testo))
-  ok('venerdì: intestazione "16 tappe · 1 opzionale"', /16 tappe · 1 opzionale/.test(await p.locator('.day-head .faint').innerText()), await p.locator('.day-head .faint').innerText())
+  ok('venerdì: intestazione "16 tappe · 1 extra"', /16 tappe · 1 extra/.test(await p.locator('.day-head .faint').innerText()), await p.locator('.day-head .faint').innerText())
   await ctx.close()
 }
 

@@ -39,6 +39,11 @@ for (const day of it.days) {
     if (!stop.img) errors.push(`${stop.id}: manca il campo "img"`)
     else if (!existsSync('public/assets/tappe/' + stop.img)) errors.push(`${stop.id}: immagine "${stop.img}" inesistente`)
     else if (stop.img.endsWith('.webp') && !fotoIds.has(stop.img)) errors.push(`${stop.id}: foto "${stop.img}" senza crediti in data/foto-tappe.json`)
+    // Link Maps scritto a mano (il Mercat de Mercats parte dall'appartamento): stessa forma dei percorsi
+    if (stop.urlMaps && !/^https:\/\/www\.google\.com\/maps\/dir\/\?api=1&origin=[-\d.]+,[-\d.]+&destination=[-\d.]+,[-\d.]+&travelmode=(walking|transit|driving)$/.test(stop.urlMaps)) errors.push(`${stop.id}: urlMaps non valido`)
+    if (stop.urlMaps && v && !stop.urlMaps.includes(`destination=${v.lat},${v.lng}`)) errors.push(`${stop.id}: urlMaps non porta alle coordinate del venue`)
+    if (stop.programma && stop.programma !== 'mercat') errors.push(`${stop.id}: programma "${stop.programma}" sconosciuto`)
+    for (const k of ['prezzi']) if (stop[k] && !(Array.isArray(stop[k]) && stop[k].every((x) => typeof x === 'string' && x))) errors.push(`${stop.id}: "${k}" deve essere una lista di testi`)
     if (stop.id === 's2') seenS2 = true
     else if (seenS2 && stop.people.includes('monne')) errors.push(`${stop.id}: Monne è già partito (tappa dopo s2)`)
   }
@@ -126,6 +131,19 @@ for (const [id, t] of Object.entries(bagniJson.tappe)) {
   for (const k of [t.prima, t.seconda]) if (k && bagnoIds.has(k) && !(t.dist?.[k]?.m >= 0)) errors.push(`bagni ${id}: manca la distanza verso ${k} (node scripts/bagni-distanze.mjs)`)
 }
 for (const id of bagniJson.daTenereAMente) if (!bagnoIds.has(id)) errors.push(`bagni: "${id}" fra quelli da tenere a mente non esiste`)
+
+// Mercat de Mercats (data/mercat.json): tre giorni, sezioni note, ogni evento con orario e testo; lo spazio famiglie non c'è
+const mercat = readJson('mercat.json')
+const sezioniMercat = new Set(mercat.sezioni.map((s) => s.id))
+if (JSON.stringify(mercat.giorni.map((g) => g.key)) !== JSON.stringify(['ven', 'sab', 'dom'])) errors.push('mercat: i giorni devono essere ven, sab, dom')
+for (const g of mercat.giorni) {
+  if (!mercat.orari[g.key]) errors.push(`mercat ${g.key}: manca l'orario di apertura`)
+  for (const [sez, eventi] of Object.entries(g.eventi)) {
+    if (!sezioniMercat.has(sez)) errors.push(`mercat ${g.key}: sezione "${sez}" sconosciuta`)
+    for (const e of eventi) if (!/^\d{2}:\d{2}–\d{2}:\d{2}( e \d{2}:\d{2}–\d{2}:\d{2})?$/.test(e.ora) || !e.testo) errors.push(`mercat ${g.key}/${sez}: evento "${e.ora}" senza orario valido o senza testo`)
+  }
+}
+if (/famigli/i.test(JSON.stringify(mercat.sezioni))) errors.push('mercat: lo spazio famiglie non va mostrato')
 
 if (errors.length) {
   console.error(`✗ validate: ${errors.length} errori`)

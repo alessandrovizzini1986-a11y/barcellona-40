@@ -37,7 +37,9 @@ export const FILE = {
   maremagnum: 'File:614 Maremàgnum i Port Vell (Barcelona), des del moll de la Fusta.jpg',
   batllo: 'File:Casa Batllo Overview Barcelona Spain.jpg',
   // pulpo a la gallega (il locale non ha foto libere): foto da Flickr via Commons, CC BY 2.0
-  celta: 'File:Polbo a Feira con cachelos (4629216132).jpg'
+  celta: 'File:Polbo a Feira con cachelos (4629216132).jpg',
+  // il Mercat de Mercats non ha foto libere: si usa il Museu del Disseny visto dalla piazza dove si tiene
+  mercat: 'File:Barcelona - Museu del Disseny de Barcelona.jpg'
 }
 // Quanto spazio verticale lasciare SOPRA il ritaglio: 0,5 = centrato. Più basso = si tiene l'alto,
 // altrimenti le torri finiscono tagliate.
@@ -51,7 +53,7 @@ export const TITOLI = {
   pobleespanyol: 'La Terrrazza · Poble Espanyol', apolo: 'Sala Apolo', sarria: 'Sarrià',
   bunkers: 'Bunkers del Carmel', elborn: 'El Born Centre de Cultura i Memòria',
   timeoutmarket: 'Time Out Market Barcelona', maremagnum: 'Maremagnum', macaya: 'Palau Macaya',
-  batllo: 'Casa Batlló', celta: 'Bar Celta Pulpería'
+  batllo: 'Casa Batlló', celta: 'Bar Celta Pulpería', mercat: 'Mercat de Mercats'
 }
 const LIBERA = [/^cc0/i, /^cc[- ]by(-sa)?([- ]\d)?/i, /^public domain/i, /^pd/i]
 // Foto NON di Commons: private, usate con permesso. Non hanno licenza libera, quindi non stanno nella

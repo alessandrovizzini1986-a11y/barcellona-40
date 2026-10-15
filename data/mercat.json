@@ -1,0 +1,103 @@
+{
+  "_nota": "Programma del Mercat de Mercats 2026 (Plaça de les Glòries, 16-18 ottobre), tradotto dal programma ufficiale MDM26 del Comune (PDF del 13/10/2026) e da barcelona.cat/mercatdemercats. Orari e prezzi sono quelli stampati: niente aggiunto, niente stimato. Lo spazio famiglie non c'è: non ci riguarda. `top` = adatto a tre adulti senza programma fisso (★ nel pannello).",
+  "fonte": "https://www.barcelona.cat/mercatdemercats/es/mercat-de-mercats",
+  "orari": { "ven": "11:00–22:00", "sab": "11:00–22:00", "dom": "11:00–21:00" },
+  "sezioni": [
+    { "id": "bodegueta", "icona": "🍷", "titolo": "La Bodegueta", "sotto": "degustazioni gratuite" },
+    { "id": "aula", "icona": "👨‍🍳", "titolo": "Aula gastronomica" },
+    { "id": "lago", "icona": "🎧", "titolo": "Palco del Lago" },
+    { "id": "encants", "icona": "🎤", "titolo": "Palco degli Encants" }
+  ],
+  "giorni": [
+    {
+      "key": "ven", "label": "Ven 16",
+      "eventi": {
+        "bodegueta": [
+          { "ora": "12:30–13:15 e 13:30–14:15", "testo": "Degustazione: capire il vermut e le sue varietà, con Dos Déus", "top": true },
+          { "ora": "14:30–15:30", "testo": "Degustazione di vini di Cellers Domenys" },
+          { "ora": "16:30–17:15", "testo": "Degustazione di vini del territorio: assaggiamo 6 DO con Pol Aluja (INCAVI)" },
+          { "ora": "17:30–18:15", "testo": "Degustazione dei grandi vini di Cellers Maset" }
+        ],
+        "aula": [
+          { "ora": "11:30–12:30", "testo": "Showcooking \"Ricette per la pace\", Husam Dawoud e Ada Parellada" },
+          { "ora": "13:00–13:30", "testo": "Laboratorio Aperol Spritz: l'aperitivo perfetto" },
+          { "ora": "14:00–14:45", "testo": "Laboratorio di Maedup, nodi tradizionali coreani" },
+          { "ora": "15:30–16:30", "testo": "Showcooking Bibimbap, cucina coreana" },
+          { "ora": "17:00–17:45", "testo": "Showcooking \"Il segreto dei risi\" con Arròs Montsià" },
+          { "ora": "18:30–20:00", "testo": "Showcooking \"Tecniche e concetti di Disfrutar\", chef Oriol Castro", "top": true }
+        ],
+        "lago": [
+          { "ora": "13:15–15:00", "testo": "DJ Pinchadiscos" },
+          { "ora": "15:00–17:30", "testo": "DJ Guille de Juan" },
+          { "ora": "17:30–19:45", "testo": "DJ Diego Armando" },
+          { "ora": "20:00–21:00", "testo": "Concerto Mercabanda" },
+          { "ora": "21:00–22:00", "testo": "DJ Diego Armando" }
+        ]
+      }
+    },
+    {
+      "key": "sab", "label": "Sab 17",
+      "eventi": {
+        "bodegueta": [
+          { "ora": "12:00–12:45", "testo": "Degustazione di vini del territorio: assaggiamo 6 DO con Pol Aluja (INCAVI)" },
+          { "ora": "13:00–13:30", "testo": "Degustazione di vini del Celler Mas d'en Roy" },
+          { "ora": "14:30–15:15 e 15:30–16:15", "testo": "Degustazione: capire il vermut e le sue varietà, con Dos Déus", "top": true },
+          { "ora": "16:30–17:15", "testo": "Degustazione di Ratafia Premium Therat", "top": true },
+          { "ora": "17:30–18:15", "testo": "Degustazione dei grandi vini di Cellers Maset", "top": true }
+        ],
+        "aula": [
+          { "ora": "11:30–12:30", "testo": "Showcooking \"La frutta esotica nell'alta cucina\", chef Diego Mondragón e Germán Espinosa del Mae" },
+          { "ora": "13:00–14:00", "testo": "Showcooking \"Baccalà dal sapore d'autunno\", chef Carlota Claver de La Gormanda" },
+          { "ora": "14:30–15:30", "testo": "Showcooking \"Torta di noci in quattro consistenze\" con Walnuts Chile e Personalxef" },
+          { "ora": "16:15–17:00", "testo": "Showcooking \"Facciamo i panellets\" con Olalà! e Frit Ravich" },
+          { "ora": "17:30–18:15", "testo": "Laboratorio per bambini di hamburger sani, con il Gremi de Carnissers" },
+          { "ora": "18:45–19:30", "testo": "\"Compra con criterio!\": antispreco, sostenibilità e risparmio con il Gremi de Carnissers" },
+          { "ora": "20:00–21:00", "testo": "Degustazione di birra Estrella Damm", "top": true }
+        ],
+        "lago": [
+          { "ora": "13:30–14:30", "testo": "Concerto Breakfast" },
+          { "ora": "14:30–16:00", "testo": "DJ Pinchadiscos" },
+          { "ora": "16:00–18:30", "testo": "DJ Pierre Antoine", "top": true },
+          { "ora": "19:00–19:50", "testo": "Concerto \"Taste the Sound\": musica coreana dal vivo, K-Pungnyu" },
+          { "ora": "20:00–22:00", "testo": "DJ Lady Avocado" }
+        ],
+        "encants": [
+          { "ora": "11:30–13:00", "testo": "Concerto La Chica de Ayer" },
+          { "ora": "14:00–15:00", "testo": "Concerto \"Taste the Sound\": musica coreana dal vivo, K-Pungnyu" },
+          { "ora": "17:00–18:00", "testo": "Concerto Cor Novaura" }
+        ]
+      }
+    },
+    {
+      "key": "dom", "label": "Dom 18",
+      "eventi": {
+        "bodegueta": [
+          { "ora": "11:30–12:15", "testo": "Presentazione e degustazione di due caffè di Nomad Coffee" },
+          { "ora": "12:30–13:15", "testo": "Brunch rustico con le noci Walnuts Chile" },
+          { "ora": "16:15–17:00 e 17:15–18:00", "testo": "Degustazione dell'aroma e del sapore dei liquori tradizionali di Jeonbuk (Corea)" }
+        ],
+        "aula": [
+          { "ora": "11:30–12:30", "testo": "Showcooking \"Tradizione e avanguardia a maniche rimboccate\", chef Iñaki Aldrey de l'Atempo" },
+          { "ora": "13:30–14:15", "testo": "Showcooking \"Alimenti biologici: salute, qualità e sapore\", con CCPAE" },
+          { "ora": "15:15–16:15", "testo": "Laboratorio \"Sapore ed equilibrio\" con Royal Bliss" },
+          { "ora": "16:45–17:30", "testo": "Showcooking \"Autunno con le nonne: patata dolce dal salato al dolce\", Grandma's Cooking" },
+          { "ora": "19:30–20:30", "testo": "Showcooking Songpyeon, cucina coreana" }
+        ],
+        "lago": [
+          { "ora": "12:00–13:00", "testo": "Teatro per bambini \"La principessa cuoca\"" },
+          { "ora": "13:30–14:30", "testo": "Concerto Guillem Roma" },
+          { "ora": "14:30–16:00", "testo": "DJ Pinchadiscos" },
+          { "ora": "16:00–18:30", "testo": "DJ Hanakito" },
+          { "ora": "18:30–19:30", "testo": "Concerto La Rauxa" },
+          { "ora": "19:30–21:00", "testo": "Pinchadiscos DJ's" }
+        ]
+      }
+    }
+  ],
+  "mangiare": [
+    { "titolo": "Terrassa del Llac", "voci": ["Bar Nuri", "La Bikineria", "L'Arrosseria Montsià by Familia Nuri"] },
+    { "titolo": "Plaça de les Glòries", "voci": ["Bar Mundial", "Pepa Tomate", "Nectari by Jordi Esteve", "Mantequerías Pirenaicas", "Warike", "Antonia's", "Sauleda", "La Mafia Mexicana", "Creperia i Gelateria Gogo"] },
+    { "titolo": "Banchi dei mercati", "sotto": "compri e grigli ai barbecue gratuiti", "voci": ["Peixateria La Vero (Barceloneta)", "Fruites i Picants Soley, Sprimfruits (Boqueria)", "Carnisseria Gallifa (Felip II)", "La Barca (Galvany)", "Monibèric (Mercè)", "Olives i Conserves Ca la Rat, Fruites Macià, Delit (Ninot)", "Aviram i Ous Eulàlia (Sagrada Família)", "Only Granel (Sant Gervasi)", "Soler Capella Carnissers, Fruits Secs Villalba (Provençals)", "Cosas Deli La Paradeta de l'Abella, Boombibons, Cuinats Josep, Olives i Conserves Torres, Pesca Salada by Cinta (Santa Caterina)", "La Chiapaneca (Les Tres Torres)"] },
+    { "titolo": "Produttori", "voci": ["Postres Masgrau", "Artesans de l'Abel", "La Coca d'Anís de Vic", "Embotits de la Garrotxa", "Caffetteria Nomad Coffee"] }
+  ]
+}

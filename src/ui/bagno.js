@@ -38,6 +38,7 @@ export function rigaBagno(stop) {
     return `<div class="bagno bagno--semplice" data-bagno-riga="${esc(stop.id)}" aria-label="Bagno più vicino: ${esc(b.semplice)}">${icon('bath')}<span class="bagno__txt"><b>${esc(b.semplice)}</b>${b.stimato ? ` ${badge('stimato')}` : ''}</span></div>`
   }
   const d = b.dist[principale.id]
+  // Un bagno "stimato" (il Museu del Disseny) lo dice il pannello, col badge: sulla riga a 380 px non ci sta
   const testo = b.prima?.lat
     ? `<b>${esc(principale.breve)}</b>${d ? ` · ${d.m === 0 ? 'qui' : fmtDist(d.m)}` : ''} · ${esc(principale.orarioBreve)}`
     : `<b>${esc(b.semplice)}</b> · o ${esc(principale.breve)}${d ? ` · ${fmtDist(d.m)}` : ''}`

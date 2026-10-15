@@ -30,6 +30,13 @@ della guida cittadina descrive il recinto. Il peso delle fonti sta con le 17:30.
 e scendere alle 17:30 con la luce del giorno (vista sì, città accesa no), oppure spostare il tramonto su un belvedere senza
 recinto (da scegliere). Serve una telefonata al 93 256 21 22 (lun–gio 9–15, ven 9–15 e 16–19) per chiudere.
 
+## Mercat de Mercats, extra di sabato (15/10/2026)
+
+- **Orari del programma presi dal PDF ufficiale del 13/10 (MDM26programa): possono cambiare in caso di pioggia.** Il pannello "Programma completo" li riporta così come stampati; prima di puntare a una degustazione, un'occhiata a barcelona.cat/mercatdemercats.
+- **Bagni del Museu del Disseny: `stimato`.** Nessuna fonte dice dove sono dentro l'edificio né se l'atrio resta libero senza biglietto: la riga della tappa s98 porta il badge e il pannello lo dice. Orario 10–20 dal programma; il museo chiude il lunedì (non ci riguarda).
+- Distanza casa → fiera calcolata con Valhalla il 15/10: 1.261 m, 15 min a piedi (il prompt diceva 1,26 km, 15 min: torna). Fiera → Museu del Disseny 236 m, 3 min.
+- Il link Maps della card parte dall'appartamento (origin fisso): da un altro punto della città conviene il marker sulla mappa.
+
 ## Statistiche con orari (pagina privata) · 07/10/2026
 
 - **CORS verificato, API usabile dal browser**: `OPTIONS` e `GET` su `barcellona40.goatcounter.com/api/v0/stats/hits` rispondono con `Access-Control-Allow-Origin: *` e `Access-Control-Allow-Headers: Authorization, Content-Type`; un token sbagliato dà `401` leggibile (corpo HTML, non JSON). Quindi niente proxy, niente fallback: la pagina chiama l'API direttamente.

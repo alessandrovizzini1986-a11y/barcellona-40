@@ -79,8 +79,9 @@ il contenuto, con link alla pagina Commons del file.
 | Maremagnum | `public/assets/tappe/maremagnum.webp` | Enric | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0) | [614 Maremàgnum i Port Vell (Barcelona), des del moll de la Fusta.jpg](https://commons.wikimedia.org/wiki/File:614_Marem%C3%A0gnum_i_Port_Vell_(Barcelona),_des_del_moll_de_la_Fusta.jpg) |
 | Casa Batlló | `public/assets/tappe/batllo.webp` | ChristianSchd | [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0) | [Casa Batllo Overview Barcelona Spain.jpg](https://commons.wikimedia.org/wiki/File:Casa_Batllo_Overview_Barcelona_Spain.jpg) |
 | Bar Celta Pulpería (pulpo a la gallega) | `public/assets/tappe/celta.webp` | José Antonio Gil Martínez | [CC BY 2.0](https://creativecommons.org/licenses/by/2.0) | [Polbo a Feira con cachelos (4629216132).jpg](https://commons.wikimedia.org/wiki/File:Polbo_a_Feira_con_cachelos_(4629216132).jpg) |
+| Mercat de Mercats (Museu del Disseny visto dalla piazza) | `public/assets/tappe/mercat.webp` | Fred Romero | [CC BY 2.0](https://creativecommons.org/licenses/by/2.0) | [Barcelona - Museu del Disseny de Barcelona.jpg](https://commons.wikimedia.org/wiki/File:Barcelona_-_Museu_del_Disseny_de_Barcelona.jpg) |
 
-Ultimo aggiornamento: `npm run foto` · 16 foto, 1045 kB in tutto.
+Ultimo aggiornamento: `npm run foto` · 19 foto, 1166 kB in tutto.
 
 <!-- foto:end -->
 

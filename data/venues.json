@@ -330,6 +330,15 @@
       "reviews": 2982,
       "hours": "domenica 12:00–24:00",
       "phone": "+34 933 15 00 06"
+    },
+    "mercat": {
+      "name": "Mercat de Mercats",
+      "addr": "Plaça de les Glòries Catalanes 37 (Plaça de Josep Antoni Coderch)",
+      "lat": 41.4021668,
+      "lng": 2.1876385,
+      "verified": true,
+      "hours": "ven 16 e sab 17 11:00–22:00, dom 18 11:00–21:00",
+      "url": "https://www.barcelona.cat/mercatdemercats/es/mercat-de-mercats"
     }
   }
 }

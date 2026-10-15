@@ -208,6 +208,8 @@ export function fmtDist(m) {
 export function fmtEur(n) { return `€${Number.isInteger(n) ? n : String(n).replace('.', ',')}` }
 
 export function mapsUrl(stop) {
+  // Link scritto a mano nel dato (il Mercat de Mercats parte dall'appartamento): verificato come i percorsi, non rigenerato
+  if (stop.urlMaps) return stop.urlMaps
   if (!hasCoords(stop)) return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(stop.venue?.name + ', ' + (stop.venue?.addr || 'Barcelona'))}`
   const mode = stop.distMode === 'auto' || stop.distMode === 'taxi' ? 'driving' : 'walking'
   return `https://www.google.com/maps/dir/?api=1&destination=${stop.venue.lat},${stop.venue.lng}&travelmode=${mode}`

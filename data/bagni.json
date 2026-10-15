@@ -259,6 +259,23 @@
    "fonte": "Aena serviciosvip.aena.es e LoungePair, letti il 07/10/2026",
    "nota": "Docce gratuite ma 'subject to availability': non contarci al 100 %. Entra entro le 20:30",
    "stimato": true
+  },
+  {
+   "id": "disseny",
+   "nome": "Museu del Disseny de Barcelona",
+   "breve": "Museu del Disseny",
+   "cat": "Museo",
+   "addr": "Plaça de les Glòries Catalanes, 37-38",
+   "lat": 41.402451,
+   "lng": 2.1880918,
+   "orario": "10:00–20:00 (ven–dom; lunedì chiuso)",
+   "orarioBreve": "10–20",
+   "dove": "Piano terra, dentro l'edificio: da confermare sul posto",
+   "come": "Entri dalla piazza: l'atrio è libero, il biglietto serve solo per le sale. Chiedi del bagno",
+   "discrezione": 4,
+   "fonte": "Programma MDM26 (Comune, 13/10/2026) e Google Places, 15/10/2026",
+   "nota": "Accanto alla fiera del Mercat de Mercats, lato laghetto",
+   "stimato": true
   }
  ],
  "tappe": {
@@ -598,6 +615,16 @@
     "elpalace": {
      "m": 764,
      "min": 9
+    }
+   }
+  },
+  "s98": {
+   "prima": "disseny",
+   "nota": "Il museo è il lato sud della piazza, verso il laghetto e La Bodegueta",
+   "dist": {
+    "disseny": {
+     "m": 236,
+     "min": 3
     }
    }
   }

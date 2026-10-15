@@ -90,7 +90,7 @@ for (const person of ['ale', 'monne', 'giulio', 'manuel']) {
   const sec = p.locator('#sec-bagni')
   const t = (await sec.count()) ? (await sec.innerText()).replace(/\s+/g, ' ') : ''
   const nomi = await sec.locator('.bagni-lista').first().locator('.bagno-voce b').allInnerTexts()
-  ok(`${person}: Info ha "Bagni puliti" aperta, con la regola in tre righe, i 6 da tenere a mente in ordine, tutti e 13, la nota sulla pulizia`, (await sec.count()) === 1 && (await sec.getAttribute('open')) !== null && /Hall di hotel 4-5 stelle: entri dal bar, prendi un caffè, chiedi del bagno\. Sempre un caffè: così sei un cliente\. Evita le 11-12, orario dei check-out\./.test(t) && JSON.stringify(nomi) === JSON.stringify(['The Barcelona EDITION · bar Veraz', 'Hotel Neri · A Restaurant', 'Mercer Hotel · Cocktail Bar', 'Sercotel Rosellón', 'El Palace · hall e Rooftop', 'Maremagnum · bagni 1° e 2° piano']) && (await sec.locator('.bagni-lista').nth(1).locator('.bagno-voce').count()) === 13 && /Puliti per regola, non per recensione: nessuna recensione parla dei bagni delle hall\./.test(t), nomi.join(' | '))
+  ok(`${person}: Info ha "Bagni puliti" aperta, con la regola in tre righe, i 6 da tenere a mente in ordine, tutti e 14, la nota sulla pulizia`, (await sec.count()) === 1 && (await sec.getAttribute('open')) !== null && /Hall di hotel 4-5 stelle: entri dal bar, prendi un caffè, chiedi del bagno\. Sempre un caffè: così sei un cliente\. Evita le 11-12, orario dei check-out\./.test(t) && JSON.stringify(nomi) === JSON.stringify(['The Barcelona EDITION · bar Veraz', 'Hotel Neri · A Restaurant', 'Mercer Hotel · Cocktail Bar', 'Sercotel Rosellón', 'El Palace · hall e Rooftop', 'Maremagnum · bagni 1° e 2° piano']) && (await sec.locator('.bagni-lista').nth(1).locator('.bagno-voce').count()) === 14 && /Puliti per regola, non per recensione: nessuna recensione parla dei bagni delle hall\./.test(t), nomi.join(' | '))
   if (person === 'manuel') { await sec.locator('[data-bagno="mercer"]').first().click(); await p.waitForTimeout(400); ok('Info: la voce apre il pannello', (await p.locator('[data-bagno-sheet="mercer"]').count()) === 1) }
   ok(`${person}: nessun errore JS`, errs.length === 0, errs.join(' | '))
   await ctx.close()
@@ -101,7 +101,7 @@ for (const person of ['ale', 'monne', 'giulio', 'manuel']) {
   const toggle = p.locator('[data-bagni]')
   ok('Mappa: il pulsante "Bagni" c\'è ed è spento, nessun marker bagno', (await toggle.count()) === 1 && (await toggle.getAttribute('aria-pressed')) === 'false' && (await p.locator('[data-bagno-marker]').count()) === 0)
   await toggle.click(); await p.waitForTimeout(600)
-  ok('Mappa: acceso → 13 marker blu con l\'icona del bagno', (await toggle.getAttribute('aria-pressed')) === 'true' && (await p.locator('[data-bagno-marker]').count()) === 13 && (await p.locator('.marker--bagno svg').count()) === 13)
+  ok('Mappa: acceso → 14 marker blu con l\'icona del bagno', (await toggle.getAttribute('aria-pressed')) === 'true' && (await p.locator('[data-bagno-marker]').count()) === 14 && (await p.locator('.marker--bagno svg').count()) === 14)
   await p.locator('[data-bagno-marker="nhconstanza"]').first().dispatchEvent('click'); await p.waitForTimeout(500)
   ok('Mappa: tap sul marker → stesso pannello', (await p.locator('[data-bagno-sheet="nhconstanza"]').count()) === 1)
   await p.keyboard.press('Escape'); await p.waitForTimeout(300)

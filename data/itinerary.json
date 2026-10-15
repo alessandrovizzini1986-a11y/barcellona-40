@@ -1094,6 +1094,50 @@
      "img": "apolo.webp"
     },
     {
+     "id": "s98",
+     "time": null,
+     "timeStatus": "opzionale",
+     "venueId": "mercat",
+     "title": "Mercat de Mercats",
+     "sottotitolo": "La festa dei mercati di Barcellona · Plaça de les Glòries",
+     "why": "Oltre 20 banchi di 11 mercati (Boqueria, Santa Caterina, Barceloneta, Galvany…), barbecue gratuiti dove cuoci quello che compri, degustazioni di vino gratis a La Bodegueta, DJ e concerti al laghetto. A 15 minuti a piedi da casa.",
+     "details": [
+      "Orari: venerdì 16 e sabato 17 11:00–22:00, domenica 18 11:00–21:00. Ingresso gratuito",
+      "Metro: Glòries (L1) a 50 m; tram T4/T5/T6 in piazza",
+      "Dall'appartamento: 1,3 km · 15 min a piedi",
+      "Le zone, tutte dentro la piazza: La Bodegueta e la Terrassa del Llac verso il laghetto (lato sud, verso il Museu del Disseny), l'Aula Gastronòmica al centro-est, l'Escenari dels Encants sul lato degli Encants",
+      "Programma ufficiale: https://www.barcelona.cat/mercatdemercats/es/mercat-de-mercats"
+     ],
+     "prezzi": [
+      "Tapas 4–6 €",
+      "Menú de les estacions 16 €: 2 tapas da 6 €, 1 da 4 €, 1 bevanda",
+      "Menú familiar 40 €: 4 tapas da 6 €, 4 da 4 €, 4 bevande",
+      "Bicchiere riutilizzabile: cauzione 1 €, piatto 2 €; si recuperano al punto sostenibilità"
+     ],
+     "consiglio": "Sabato alle 14:30 o alle 15:30 c'è la degustazione di vermut, alle 20 quella di birra Estrella. Se andate, puntate a quelle.",
+     "avviso": "All'aperto in piazza. Con pioggia forte lasciate perdere.",
+     "sconsigliatoConAllerta": true,
+     "programma": "mercat",
+     "people": [
+      "ale",
+      "giulio",
+      "manuel"
+     ],
+     "badges": [
+      "verificato"
+     ],
+     "actions": {
+      "maps": true,
+      "taxi": false,
+      "metro": "Glòries L1 · tram T4/T5/T6"
+     },
+     "urlMaps": "https://www.google.com/maps/dir/?api=1&origin=41.3954365,2.1796078&destination=41.4021668,2.1876385&travelmode=walking",
+     "distFromPrevM": null,
+     "minFromPrev": null,
+     "durataMin": null,
+     "img": "mercat.webp"
+    },
+    {
      "id": "s99",
      "time": null,
      "timeStatus": "opzionale",

@@ -340,3 +340,34 @@ select.input,input.input{ min-height:44px; background:var(--bg-3); border:1px so
 .bagno-voce > svg{ width:18px; height:18px; flex:none; color:var(--acqua); }
 .bagno-voce__txt{ flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; }
 .bagno-voce__txt b{ color:var(--ink); }
+
+/* Mercat de Mercats (extra di sabato): riquadro dei prezzi, consiglio in terracotta, "Sconsigliato oggi" con l'allerta */
+.card__prezzi{ display:flex; flex-direction:column; gap:var(--space-1); padding:var(--space-3) var(--space-4); border-radius:var(--radius-s); background:var(--bg-3); border:1px solid var(--line); font-size:var(--fs-0); line-height:1.4; }
+.card__prezzi > b{ color:var(--ink); font-size:var(--fs-0); letter-spacing:.02em; text-transform:uppercase; }
+.card__prezzi ul{ display:flex; flex-direction:column; gap:2px; margin:0; padding:0; list-style:none; color:var(--ink-2); }
+.card__prezzi li::before{ content:"·"; margin-right:6px; color:var(--dc, var(--day)); font-weight:700; }
+.card__consiglio{ display:flex; align-items:flex-start; gap:var(--space-2); color:var(--terracotta); font-weight:600; font-size:var(--fs-0); line-height:1.4; }
+.card__consiglio svg{ width:18px; height:18px; flex:none; }
+.avviso[hidden]{ display:none; }
+
+/* Il pannello "Programma completo": tab per giorno, sezioni ad accordion, righe ★ in giallo, "Dove mangiare" in fondo */
+.mercat-sheet{ display:flex; flex-direction:column; gap:var(--space-3); }
+.mercat-sheet .seg button[aria-selected="true"]{ background:var(--sab); }
+.mercat__giorno{ display:flex; flex-direction:column; gap:var(--space-2); }
+.mercat__sez{ border:1px solid var(--line); border-radius:var(--radius-m); background:var(--bg-3); overflow:hidden; }
+.mercat__sez summary{ display:flex; align-items:center; gap:var(--space-2); min-height:48px; padding:var(--space-2) var(--space-3); cursor:pointer; list-style:none; font-weight:600; }
+.mercat__sez summary::-webkit-details-marker{ display:none; }
+.mercat__sez summary > svg{ width:18px; height:18px; margin-left:auto; flex:none; color:var(--ink-3); transition:transform var(--dur-2) var(--ease); }
+.mercat__sez[open] summary > svg{ transform:rotate(180deg); }
+.mercat__icona{ font-size:18px; line-height:1; flex:none; }
+.mercat__tit{ flex:1; min-width:0; }
+.mercat__tit small{ font-weight:400; color:var(--ink-3); }
+.mercat__lista{ list-style:none; margin:0; padding:0 var(--space-3) var(--space-3); display:flex; flex-direction:column; gap:var(--space-1); }
+.mercat__riga{ display:flex; gap:var(--space-3); align-items:flex-start; padding:var(--space-2) var(--space-2); border-radius:var(--radius-s); font-size:var(--fs-0); line-height:1.4; color:var(--ink-2); }
+.mercat__riga--top{ background:color-mix(in srgb, var(--giallo) 18%, var(--bg-2)); color:var(--ink); border:1px solid color-mix(in srgb, var(--giallo) 45%, transparent); }
+.mercat__ora{ flex:none; width:7.5em; color:var(--ink-3); font-weight:600; overflow-wrap:anywhere; }
+.mercat__riga--top .mercat__ora{ color:var(--ink); }
+.mercat__testo{ flex:1; min-width:0; overflow-wrap:anywhere; }
+.mercat__stella{ color:var(--giallo); }
+.mercat__mangiare{ display:flex; flex-direction:column; gap:var(--space-2); font-size:var(--fs-0); line-height:1.45; color:var(--ink-2); overflow-wrap:anywhere; }
+.mercat__mangiare b{ color:var(--ink); }

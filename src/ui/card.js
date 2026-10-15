@@ -11,6 +11,8 @@ import { toast } from './toast.js'
 import { short as confettiShort } from './confetti.js'
 import { evento, eventoGlobale } from '../stats.js'
 import { rigaBagno, montaBagni } from './bagno.js'
+import { montaMercat } from './mercat.js'
+import { caricaAllerte, massima, perZona, NOME as NOME_ALLERTA } from './allerte.js'
 
 // Immagini delle tappe. Il file da mostrare sta nel dato (`img` in data/itinerary.json e data/viaggio.json)
 // e sono tutte foto vere: da Wikimedia Commons, con autore e licenza sotto la card, oppure private,
@@ -55,7 +57,8 @@ const ALT = {
   'teixido.webp': 'L\'interno di Teixidó, con l\'insegna in metallo Forners i Pastissers e il banco del pane in vista',
   'duckstore.webp': 'La vetrina del Barcelona Duck Store, con la Sagrada Família di mattoncini e le paperelle in fila',
   'batllo.webp': 'La facciata di Casa Batlló su Passeig de Gràcia, con i balconi a maschera e il tetto a scaglie',
-  'celta.webp': 'Un piatto di polpo alla gallega con pimentón e olio, su un tagliere di legno'
+  'celta.webp': 'Un piatto di polpo alla gallega con pimentón e olio, su un tagliere di legno',
+  'mercat.webp': 'Il Museu del Disseny visto dalla Plaça de les Glòries, con le sdraio sulla piazza e la Torre Glòries dietro'
 }
 export const haFoto = (stop) => !!stop.img && !stop.mini // la mini-tappa (Pausa casa) è compatta, senza foto
 
@@ -125,6 +128,13 @@ export function stopCard(stop, { person = null, isNow = false, nowLabel = 'adess
   // Orario da confermare (Bunkers): avviso giallo, forte, sopra a tutto il resto; il dato resta com'è finché non si decide
   const avvisoOrario = stop.avvisoOrario ? `<div class="avviso avviso--forte avviso--orario">${icon('clock')}<span>${esc(stop.avvisoOrario)}</span></div>` : ''
   const avviso = pioggia && stop.avvisoPioggia ? `<div class="avviso avviso--pioggia">${icon('rain')}<span>${esc(stop.avvisoPioggia)}</span></div>` : (stop.avviso ? `<div class="avviso">${icon('alert')}<span>${esc(stop.avviso)}</span></div>` : '')
+  // Extra all'aperto (Mercat de Mercats): con un'allerta arancione o rossa su Barcellona la card dice "Sconsigliato oggi".
+  // Il blocco nasce nascosto e lo accende `aggiornaSconsigliati` quando allerte.json è arrivato: la card non aspetta la rete.
+  const sconsigliato = stop.sconsigliatoConAllerta ? `<div class="avviso avviso--allerta" data-allerta-sconsiglia="${esc(stop.id)}" hidden>${icon('alert')}<span><b>Sconsigliato oggi.</b> <span data-allerta-motivo></span></span></div>` : ''
+  // Prezzi stampati sul programma (un riquadro, non chip): si leggono tutti, senza aprire i dettagli
+  const prezzi = (stop.prezzi || []).length ? `<div class="card__prezzi"><b>Prezzi</b><ul>${stop.prezzi.map((r) => `<li>${esc(r)}</li>`).join('')}</ul></div>` : ''
+  // Il consiglio per i ragazzi: una riga in terracotta, sopra le azioni
+  const consiglio = stop.consiglio ? `<p class="card__consiglio">${icon('sparkles')}<span>${esc(stop.consiglio)}</span></p>` : ''
   const details = [...(stop.details || []), ...(pioggia ? (stop.detailsPioggia || []) : [])].map((d) => `<li class="${/ATTENZIONE|NON confermato|da verificare|da chiarire/i.test(d) ? 'alert' : ''}">${escLink(d)}</li>`).join('')
   // Consigli nostri, non dati confermati: stanno nello stesso pannello ma sotto il badge "stimato",
   // così chi legge sa che è un ragionamento sulla zona e non un orario o un numero verificato.
@@ -134,6 +144,8 @@ export function stopCard(stop, { person = null, isNow = false, nowLabel = 'adess
   if (stop.actions?.maps) acts.push(`<a class="btn" data-maps="${stop.id}" href="${mapsUrl(stop)}" target="_blank" rel="noopener">${icon('map-pin')} Maps</a>`)
   if (stop.actions?.taxi) acts.push(`<a class="btn" href="${taxiUrl(stop)}" data-taxi target="_blank" rel="noopener" title="Uber; in alternativa FREE NOW">${icon('taxi')} Taxi</a>`)
   if (stop.actions?.metro) acts.push(`<span class="btn btn--ghost" aria-label="Metro: ${esc(stop.actions.metro)}">${icon('train')} ${esc(stop.actions.metro)}</span>`)
+  // Programma completo (Mercat de Mercats): apre il pannello con gli eventi del giorno, tradotti
+  if (stop.programma === 'mercat') acts.push(`<button class="btn" type="button" data-mercat-programma="sab" aria-label="Programma completo del Mercat de Mercats">${icon('list')} Programma completo</button>`)
   // Tappa raggiunta in taxi dall'aeroporto: Bolt e Uber accanto a Maps, con il blocco "da dare al tassista"
   if (stop.tassista) {
     acts.push(`<a class="btn" href="${linkBolt()}" data-taxi-bolt data-indirizzo="${esc(stop.tassista.indirizzo)}" title="Copia l'indirizzo e apre Bolt" aria-label="Bolt: copia l'indirizzo e apre l'app">${icon('taxi')} Bolt</a>`)
@@ -142,9 +154,12 @@ export function stopCard(stop, { person = null, isNow = false, nowLabel = 'adess
   // Il nome del posto si ripete solo se non è già nel titolo: "Basílica de Santa Maria del Mar" due volte no
   const nomeFuoriDalTitolo = v && !stop.title.includes(v.name)
   const indirizzo = v?.addr && v.addr !== 'Barcelona' ? v.addr : ''
-  const venueLine = v && (nomeFuoriDalTitolo || indirizzo)
-    ? `<div class="card__venue">${[nomeFuoriDalTitolo ? esc(v.name) : '', indirizzo ? esc(indirizzo) : ''].filter(Boolean).join(' · ')}</div>`
-    : ''
+  // Un sottotitolo scritto a mano (il Mercat de Mercats) vale più dell'indirizzo: l'indirizzo sta nei dettagli
+  const venueLine = stop.sottotitolo
+    ? `<div class="card__venue">${esc(stop.sottotitolo)}</div>`
+    : v && (nomeFuoriDalTitolo || indirizzo)
+      ? `<div class="card__venue">${[nomeFuoriDalTitolo ? esc(v.name) : '', indirizzo ? esc(indirizzo) : ''].filter(Boolean).join(' · ')}</div>`
+      : ''
   const foto = fotoBlocco(stop, eager)
   return `<article class="card${done ? ' card--done' : ''}${isNow ? ' card--now' : ''}${foto ? ' card--conFoto' : ''}${stop.saltata ? ' card--saltata' : ''}${stop.mini ? ' card--mini' : ''}" data-stop="${stop.id}" style="--dc:${DAY_COLOR[stop.dayKey]}" aria-label="${esc(stop.title)}${stop.saltata ? ', saltata per pioggia' : ''}">
     ${foto}
@@ -157,7 +172,9 @@ export function stopCard(stop, { person = null, isNow = false, nowLabel = 'adess
     </div>
     <p class="card__why">${esc(why)}</p>
     <div class="chips">${distChip(stop)}${durataChip(stop)}${voto}${prices}${badgeHtml(badgesFor(stop), reveal)}</div>
-    ${avvisoOrario}${avviso}
+    ${prezzi}
+    ${avvisoOrario}${sconsigliato}${avviso}
+    ${consiglio}
     ${stop.tassista ? tassistaHtml(stop.tassista) : ''}
     ${acts.length ? `<div class="actions">${acts.join('')}</div>` : ''}
     ${details || bloccoStimati ? `<details><summary><span>Dettagli</span>${icon('chevron')}</summary><div class="card__more"><div>${details ? `<ul>${details}</ul>` : ''}${bloccoStimati}</div></div></details>` : ''}
@@ -193,8 +210,28 @@ async function copiaIndirizzo(testo, messaggio) {
 // Eventi delegati: animazione <details>, checkbox Fatto, fallback taxi.
 // `signal` viene dall'AbortController della vista: al cambio vista i listener spariscono.
 // Senza, si accumulavano su #app a ogni render e un tocco faceva più toggle.
+// "Sconsigliato oggi": si accende solo con un'allerta arancione o rossa su Barcellona (allerte.json, stessa cache
+// del banner). Niente allerta → il blocco resta nascosto e la card è quella di sempre.
+export function aggiornaSconsigliati(container) {
+  const blocchi = [...container.querySelectorAll('[data-allerta-sconsiglia]')]
+  if (!blocchi.length) return Promise.resolve()
+  return caricaAllerte().then(({ attive }) => {
+    const a = massima(perZona(attive, 'barcellona'))
+    const forte = a && ['arancione', 'rosso'].includes(a.livello)
+    for (const b of blocchi) {
+      if (!b.isConnected) continue
+      b.hidden = !forte
+      b.classList.toggle('avviso--forte', !!forte) // "forte" solo quando si vede: nascosto non è un avviso
+      const motivo = b.querySelector('[data-allerta-motivo]')
+      if (forte && motivo) motivo.textContent = `Allerta ${NOME_ALLERTA[a.livello]} su Barcellona e la fiera è all'aperto in piazza: lasciate perdere.`
+    }
+  }).catch(() => {})
+}
+
 export function bindCards(container, { signal, onChange } = {}) {
   montaBagni() // la riga "Bagno più vicino" apre il suo pannello: un ascoltatore solo, sul documento
+  montaMercat() // il pulsante "Programma completo" del Mercat de Mercats: stesso schema
+  aggiornaSconsigliati(container)
   container.addEventListener('error', (e) => {
     const img = e.target.closest?.('.card__foto img')
     if (!img) return

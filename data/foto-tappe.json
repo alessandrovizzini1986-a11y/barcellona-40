@@ -198,6 +198,17 @@
       "licenzaUrl": "https://creativecommons.org/licenses/by/2.0",
       "pagina": "https://commons.wikimedia.org/wiki/File:Polbo_a_Feira_con_cachelos_(4629216132).jpg",
       "kb": 25
+    },
+    {
+      "id": "mercat",
+      "file": "assets/tappe/mercat.webp",
+      "tappa": "Mercat de Mercats",
+      "titolo": "File:Barcelona - Museu del Disseny de Barcelona.jpg",
+      "autore": "Fred Romero",
+      "licenza": "CC BY 2.0",
+      "licenzaUrl": "https://creativecommons.org/licenses/by/2.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Barcelona_-_Museu_del_Disseny_de_Barcelona.jpg",
+      "kb": 57
     }
   ],
   "private": [
