@@ -1,7 +1,30 @@
 {
-  "updatedUtc": null,
+  "updatedUtc": "2026-10-16T01:57:00Z",
   "flights": {
-    "FR2097": null,
+    "FR2097": {
+      "text": "✅ In orario",
+      "bad": false,
+      "status": "Expected",
+      "delay": 0,
+      "dep": {
+        "airport": "BLQ",
+        "sched": "06:20",
+        "est": "06:20",
+        "terminal": null,
+        "gate": null,
+        "belt": null
+      },
+      "arr": {
+        "airport": "BCN",
+        "sched": "08:05",
+        "est": "08:05",
+        "terminal": "2",
+        "gate": null,
+        "belt": null
+      },
+      "aircraft": "Boeing 737-800",
+      "updated": "03:56"
+    },
     "FR5220": null
   }
 }
