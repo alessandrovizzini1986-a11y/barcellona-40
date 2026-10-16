@@ -1,10 +1,10 @@
 {
-  "updatedUtc": "2026-10-16T06:37:13Z",
+  "updatedUtc": "2026-10-16T11:58:39Z",
   "flights": {
     "FR2097": {
       "text": "⏱️ Ritardo 94 min · stima 07:54",
       "bad": true,
-      "status": "EnRoute",
+      "status": "Arrived",
       "delay": 94,
       "dep": {
         "airport": "BLQ",
@@ -17,13 +17,13 @@
       "arr": {
         "airport": "BCN",
         "sched": "08:05",
-        "est": "09:14",
+        "est": "09:19",
         "terminal": "2",
         "gate": null,
         "belt": null
       },
       "aircraft": "Boeing 737-800",
-      "updated": "08:37"
+      "updated": "13:58"
     },
     "FR5220": null
   }
