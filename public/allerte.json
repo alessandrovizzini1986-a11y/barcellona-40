@@ -1,11 +1,155 @@
 {
- "aggiornato": "2026-10-15T21:06:59.238Z",
+ "aggiornato": "2026-10-16T01:10:12.713Z",
  "finestra": {
   "inizio": "2026-10-15T00:00",
   "fine": "2026-10-19T06:00",
   "fuso": "Europe/Rome"
  },
  "attive": [
+  {
+   "id": "barcellona:temporali:giallo:2026-10-17T10:00:00+00:00:2026-10-17T21:59:59+00:00",
+   "zona": "barcellona",
+   "area": "Prelitoral de Barcelona",
+   "livello": "giallo",
+   "tipo": "temporali",
+   "evento": "Moderate thunderstorm warning",
+   "inizio": "2026-10-17T10:00:00+00:00",
+   "fine": "2026-10-17T21:59:59+00:00",
+   "fonte": "https://meteoalarm.org?geocode=EMMA_ID:ES180",
+   "titolo": "Yellow Thunderstorm Warning issued for Spain - Prelitoral de Barcelona"
+  },
+  {
+   "id": "barcellona:temporali:giallo:2026-10-17T10:00:00+00:00:2026-10-17T21:59:59+00:00",
+   "zona": "barcellona",
+   "area": "Litoral de Barcelona",
+   "livello": "giallo",
+   "tipo": "temporali",
+   "evento": "Moderate thunderstorm warning",
+   "inizio": "2026-10-17T10:00:00+00:00",
+   "fine": "2026-10-17T21:59:59+00:00",
+   "fonte": "https://meteoalarm.org?geocode=EMMA_ID:ES181",
+   "titolo": "Yellow Thunderstorm Warning issued for Spain - Litoral de Barcelona"
+  },
+  {
+   "id": "barcellona:temporali:giallo:2026-10-17T10:00:00+00:00:2026-10-17T21:59:59+00:00",
+   "zona": "barcellona",
+   "area": "Depresión central de Barcelona",
+   "livello": "giallo",
+   "tipo": "temporali",
+   "evento": "Moderate thunderstorm warning",
+   "inizio": "2026-10-17T10:00:00+00:00",
+   "fine": "2026-10-17T21:59:59+00:00",
+   "fonte": "https://meteoalarm.org?geocode=EMMA_ID:ES179",
+   "titolo": "Yellow Thunderstorm Warning issued for Spain - Depresión central de Barcelona"
+  },
+  {
+   "id": "barcellona:temporali:giallo:2026-10-17T10:00:00+00:00:2026-10-17T21:59:59+00:00",
+   "zona": "barcellona",
+   "area": "Prepirineo de Barcelona",
+   "livello": "giallo",
+   "tipo": "temporali",
+   "evento": "Moderate thunderstorm warning",
+   "inizio": "2026-10-17T10:00:00+00:00",
+   "fine": "2026-10-17T21:59:59+00:00",
+   "fonte": "https://meteoalarm.org?geocode=EMMA_ID:ES178",
+   "titolo": "Yellow Thunderstorm Warning issued for Spain - Prepirineo de Barcelona"
+  },
+  {
+   "id": "barcellona:pioggia:giallo:2026-10-17T10:00:00+00:00:2026-10-17T21:59:59+00:00",
+   "zona": "barcellona",
+   "area": "Litoral de Barcelona",
+   "livello": "giallo",
+   "tipo": "pioggia",
+   "evento": "Moderate rain warning",
+   "inizio": "2026-10-17T10:00:00+00:00",
+   "fine": "2026-10-17T21:59:59+00:00",
+   "fonte": "https://meteoalarm.org?geocode=EMMA_ID:ES181",
+   "titolo": "Yellow Rain Warning issued for Spain - Litoral de Barcelona"
+  },
+  {
+   "id": "barcellona:pioggia:giallo:2026-10-17T10:00:00+00:00:2026-10-17T21:59:59+00:00",
+   "zona": "barcellona",
+   "area": "Prelitoral de Barcelona",
+   "livello": "giallo",
+   "tipo": "pioggia",
+   "evento": "Moderate rain warning",
+   "inizio": "2026-10-17T10:00:00+00:00",
+   "fine": "2026-10-17T21:59:59+00:00",
+   "fonte": "https://meteoalarm.org?geocode=EMMA_ID:ES180",
+   "titolo": "Yellow Rain Warning issued for Spain - Prelitoral de Barcelona"
+  },
+  {
+   "id": "barcellona:pioggia:giallo:2026-10-17T10:00:00+00:00:2026-10-17T21:59:59+00:00",
+   "zona": "barcellona",
+   "area": "Litoral de Barcelona",
+   "livello": "giallo",
+   "tipo": "pioggia",
+   "evento": "Moderate rain warning",
+   "inizio": "2026-10-17T10:00:00+00:00",
+   "fine": "2026-10-17T21:59:59+00:00",
+   "fonte": "https://meteoalarm.org?geocode=EMMA_ID:ES181",
+   "titolo": "Yellow Rain Warning issued for Spain - Litoral de Barcelona"
+  },
+  {
+   "id": "barcellona:pioggia:giallo:2026-10-17T10:00:00+00:00:2026-10-17T21:59:59+00:00",
+   "zona": "barcellona",
+   "area": "Prelitoral de Barcelona",
+   "livello": "giallo",
+   "tipo": "pioggia",
+   "evento": "Moderate rain warning",
+   "inizio": "2026-10-17T10:00:00+00:00",
+   "fine": "2026-10-17T21:59:59+00:00",
+   "fonte": "https://meteoalarm.org?geocode=EMMA_ID:ES180",
+   "titolo": "Yellow Rain Warning issued for Spain - Prelitoral de Barcelona"
+  },
+  {
+   "id": "barcellona:pioggia:giallo:2026-10-17T10:00:00+00:00:2026-10-17T21:59:59+00:00",
+   "zona": "barcellona",
+   "area": "Depresión central de Barcelona",
+   "livello": "giallo",
+   "tipo": "pioggia",
+   "evento": "Moderate rain warning",
+   "inizio": "2026-10-17T10:00:00+00:00",
+   "fine": "2026-10-17T21:59:59+00:00",
+   "fonte": "https://meteoalarm.org?geocode=EMMA_ID:ES179",
+   "titolo": "Yellow Rain Warning issued for Spain - Depresión central de Barcelona"
+  },
+  {
+   "id": "barcellona:pioggia:giallo:2026-10-17T10:00:00+00:00:2026-10-17T21:59:59+00:00",
+   "zona": "barcellona",
+   "area": "Depresión central de Barcelona",
+   "livello": "giallo",
+   "tipo": "pioggia",
+   "evento": "Moderate rain warning",
+   "inizio": "2026-10-17T10:00:00+00:00",
+   "fine": "2026-10-17T21:59:59+00:00",
+   "fonte": "https://meteoalarm.org?geocode=EMMA_ID:ES179",
+   "titolo": "Yellow Rain Warning issued for Spain - Depresión central de Barcelona"
+  },
+  {
+   "id": "barcellona:pioggia:giallo:2026-10-17T10:00:00+00:00:2026-10-17T21:59:59+00:00",
+   "zona": "barcellona",
+   "area": "Prepirineo de Barcelona",
+   "livello": "giallo",
+   "tipo": "pioggia",
+   "evento": "Moderate rain warning",
+   "inizio": "2026-10-17T10:00:00+00:00",
+   "fine": "2026-10-17T21:59:59+00:00",
+   "fonte": "https://meteoalarm.org?geocode=EMMA_ID:ES178",
+   "titolo": "Yellow Rain Warning issued for Spain - Prepirineo de Barcelona"
+  },
+  {
+   "id": "barcellona:pioggia:giallo:2026-10-17T10:00:00+00:00:2026-10-17T21:59:59+00:00",
+   "zona": "barcellona",
+   "area": "Prepirineo de Barcelona",
+   "livello": "giallo",
+   "tipo": "pioggia",
+   "evento": "Moderate rain warning",
+   "inizio": "2026-10-17T10:00:00+00:00",
+   "fine": "2026-10-17T21:59:59+00:00",
+   "fonte": "https://meteoalarm.org?geocode=EMMA_ID:ES178",
+   "titolo": "Yellow Rain Warning issued for Spain - Prepirineo de Barcelona"
+  },
   {
    "id": "bologna:nebbia:giallo:2026-10-16T00:00:00+00:00:2026-10-16T08:59:00+00:00",
    "zona": "bologna",
@@ -15,6 +159,18 @@
    "evento": "Yellow Fog Warning",
    "inizio": "2026-10-16T00:00:00+00:00",
    "fine": "2026-10-16T08:59:00+00:00",
+   "fonte": "https://meteoalarm.org?geocode=EMMA_ID:IT008",
+   "titolo": "Yellow Fog Warning issued for Italy - Emilia e Romagna"
+  },
+  {
+   "id": "bologna:nebbia:giallo:2026-10-17T00:00:00+00:00:2026-10-17T08:59:00+00:00",
+   "zona": "bologna",
+   "area": "Emilia e Romagna",
+   "livello": "giallo",
+   "tipo": "nebbia",
+   "evento": "Yellow Fog Warning",
+   "inizio": "2026-10-17T00:00:00+00:00",
+   "fine": "2026-10-17T08:59:00+00:00",
    "fonte": "https://meteoalarm.org?geocode=EMMA_ID:IT008",
    "titolo": "Yellow Fog Warning issued for Italy - Emilia e Romagna"
   }
