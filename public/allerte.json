@@ -1,5 +1,5 @@
 {
- "aggiornato": "2026-10-16T23:27:29.681Z",
+ "aggiornato": "2026-10-17T09:11:04.117Z",
  "finestra": {
   "inizio": "2026-10-15T00:00",
   "fine": "2026-10-19T06:00",
@@ -305,18 +305,6 @@
    "fine": "2026-10-17T21:59:59+00:00",
    "fonte": "https://meteoalarm.org?geocode=EMMA_ID:ES179",
    "titolo": "Yellow Thunderstorm Warning issued for Spain - Depresión central de Barcelona"
-  },
-  {
-   "id": "bologna:nebbia:giallo:2026-10-17T00:00:00+00:00:2026-10-17T08:59:00+00:00",
-   "zona": "bologna",
-   "area": "Emilia e Romagna",
-   "livello": "giallo",
-   "tipo": "nebbia",
-   "evento": "Yellow Fog Warning",
-   "inizio": "2026-10-17T00:00:00+00:00",
-   "fine": "2026-10-17T08:59:00+00:00",
-   "fonte": "https://meteoalarm.org?geocode=EMMA_ID:IT008",
-   "titolo": "Yellow Fog Warning issued for Italy - Emilia e Romagna"
   }
  ],
  "errori": []
