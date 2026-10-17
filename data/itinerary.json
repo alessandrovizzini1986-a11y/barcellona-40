@@ -1035,14 +1035,21 @@
      "id": "s8",
      "time": "19:30",
      "timeStatus": "verificato",
-     "venueId": "biarritz",
-     "title": "Cena dei 40 · Bodega Biarritz 1881",
-     "why": "Alle 19:30 siete già seduti. Niente prenotazione: si arriva puntuali.",
+     "venueId": "localtapas",
+     "title": "Cena dei 40 · Local Tapas",
+     "why": "Tapas classiche fatte bene in un locale giovane e vivace, a 10 minuti di taxi da casa. Prenotato: niente fila sotto la pioggia.",
+     "prenotazione": "19:30 · 3 persone",
+     "consiglio": "Dalle recensioni: tartare di manzo galiziano, crocchette, baccalà fritto con miele al tartufo, spiedino di gamberi e polpo. Chiedi di Said o David.",
      "details": [
-      "Si sceglie una fascia di prezzo prima di entrare, poi le tapas arrivano a sorpresa: non si ordina dal menu",
-      "Aperto gio-lun 12:30-23:00, martedì e mercoledì chiuso: sabato 17 siete nella finestra giusta",
-      "4,7 su 9.353 recensioni",
+      "Prenotato: sabato 17 alle 19:30, 3 persone",
+      "Sabato 13:00–24:00, cucina fino a mezzanotte",
+      "Google 4,7 su 12.026 recensioni, fascia €€",
+      "Dall'appartamento in taxi: 2,5 km · 8 min (a piedi sarebbero 2,2 km · 27 min, troppi con la pioggia)",
+      "Verso Sala Apolo: 2,0 km · 23 min a piedi, taxi consigliato (4,1 km · 14 min)",
       "Foto di gruppo obbligatoria"
+     ],
+     "detailsStimati": [
+      "Budget: circa 30 € a testa, dalle recensioni"
      ],
      "people": [
       "ale",
@@ -1055,14 +1062,18 @@
      "actions": {
       "maps": true,
       "taxi": true,
-      "metro": null
+      "metro": null,
+      "tel": true
      },
-     "distFromPrevM": 2823,
-     "minFromPrev": 34,
-     "img": "biarritz.webp",
-     "detailsStimati": [
-      "Una recensione riporta: fascia bassa con antipasto, 8 tapas e due shot, più una bottiglia di vino, poco meno di 70 euro in due. Sui 30-35 a testa, vino compreso. Le fasce esatte non sono pubblicate: si vedono all'ingresso."
-     ]
+     "tassista": {
+      "indirizzo": "Carrer d'Aribau, 37 · 08011 Barcelona",
+      "nota": "Local Tapas, Eixample Esquerra: fra Gran Via e Carrer de la Diputació",
+      "uber": "https://m.uber.com/ul/?action=setPickup&pickup=my_location&dropoff[latitude]=41.3876228&dropoff[longitude]=2.1602109&dropoff[nickname]=Local%20Tapas&dropoff[formatted_address]=Carrer%20d%27Aribau%2037%2C%20Barcelona"
+     },
+     "distFromPrevM": 2521,
+     "minFromPrev": 8,
+     "distMode": "taxi",
+     "img": "localtapas.webp"
     },
     {
      "id": "s9",
@@ -1072,7 +1083,7 @@
      "title": "Dopo cena · si vede",
      "why": "Nessun programma. Si decide lì, con quello che ha voglia il gruppo.",
      "details": [
-      "Sala Apolo è l'opzione più probabile: metro L2/L3 fino a Paral·lel o taxi in dieci minuti",
+      "Sala Apolo è l'opzione più probabile: metro L2/L3 fino a Paral·lel o taxi in un quarto d'ora",
       "Nessuna prenotazione, nessun orario da rispettare"
      ],
      "people": [
@@ -1088,8 +1099,8 @@
       "taxi": true,
       "metro": "L2/L3 → Paral·lel"
      },
-     "distFromPrevM": 3500,
-     "minFromPrev": 12,
+     "distFromPrevM": 4088,
+     "minFromPrev": 14,
      "distMode": "taxi",
      "img": "apolo.webp"
     },
@@ -1154,7 +1165,7 @@
       "Minimi alti a roulette e blackjack: per giocare poco, slot",
       "Il ristorante interno è stroncato dalle recensioni: andateci dopo cena, non per cena",
       "Posteggio taxi davanti all'ingresso, Calle Marina 16: per tornare non devi cercare nulla",
-      "Dalla Bodega Biarritz: 2,3 km · 28 min a piedi",
+      "Da Local Tapas: 4,6 km · 13 min in auto",
       "Da Sala Apolo: 3,3 km · 8 min in auto",
       "Rientro all'appartamento: 2,1 km · 27 min a piedi, oppure 10 min in auto"
      ],
@@ -1194,9 +1205,9 @@
     },
     {
      "id": "sab-sera",
-     "label": "Appartamento → Biarritz → Sala Apolo",
-     "mode": "walking",
-     "url": "https://www.google.com/maps/dir/?api=1&origin=41.395437,2.179608&destination=41.3744026,2.1695739&travelmode=walking&waypoints=41.3791891,2.1770567",
+     "label": "Appartamento → Local Tapas → Sala Apolo",
+     "mode": "driving",
+     "url": "https://www.google.com/maps/dir/?api=1&origin=41.395437,2.179608&destination=41.3744026,2.1695739&travelmode=driving&waypoints=41.3876228,2.1602109",
      "stops": [
       "s8",
       "s9"

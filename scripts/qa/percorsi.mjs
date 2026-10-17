@@ -13,7 +13,7 @@ const ATTESI = {
   'ven-pomeriggio': 'https://www.google.com/maps/dir/?api=1&origin=41.386162,2.1786073&destination=41.3915035,2.1715182&travelmode=walking&waypoints=41.395437,2.179608|41.4054703,2.1759774',
   'ven-cena': 'https://www.google.com/maps/dir/?api=1&origin=41.3915035,2.1715182&destination=41.3925995,2.1344166&travelmode=transit',
   'sab-mattina': 'https://www.google.com/maps/dir/?api=1&origin=41.395437,2.179608&destination=41.4066347,2.1799385&travelmode=walking&waypoints=41.4039406,2.1751597',
-  'sab-sera': 'https://www.google.com/maps/dir/?api=1&origin=41.395437,2.179608&destination=41.3744026,2.1695739&travelmode=walking&waypoints=41.3791891,2.1770567',
+  'sab-sera': 'https://www.google.com/maps/dir/?api=1&origin=41.395437,2.179608&destination=41.3744026,2.1695739&travelmode=driving&waypoints=41.3876228,2.1602109',
   // domenica al coperto (dal 12/10): a piedi a Casa Batlló, taxi al Bar Celta, a piedi a Maremagnum, taxi al T2
   'dom-mattina': 'https://www.google.com/maps/dir/?api=1&origin=41.395437,2.179608&destination=41.3917,2.164918&travelmode=walking',
   'dom-pranzo': 'https://www.google.com/maps/dir/?api=1&origin=41.3917,2.164918&destination=41.379925,2.180095&travelmode=driving',
@@ -110,7 +110,7 @@ for (const [giorno, attesi] of [['ven', ['ven-mattina', 'ven-pomeriggio', 'ven-c
 {
   const { p, ctx } = await vista('ale', '/?now=2026-10-18T16:30#/oggi', { sole: true }) // i Bunkers stanno nella variante "Se torna il sole"
   ok('Oggi · domenica pomeriggio: percorso dei Bunkers', (await p.locator('.tile--accent .percorso').getAttribute('data-percorso')) === 'dom-pomeriggio')
-  ok('Oggi · avviso dei Bunkers visibile nella card di adesso', /belvedere è sempre aperto/.test(await p.locator('.tile--accent .avviso:not(.avviso--orario)').innerText()) && /chiude alle 17:30/.test(await p.locator('.tile--accent .avviso--orario').innerText())) // dal 07/10 sopra c'è anche l'avviso giallo sull'orario
+  ok('Oggi · avviso dei Bunkers visibile nella card di adesso', /belvedere è sempre aperto/.test(await p.locator('.tile--accent .avviso:not(.avviso--orario):not(.avviso--allerta)').innerText()) && /chiude alle 17:30/.test(await p.locator('.tile--accent .avviso--orario').innerText())) // dal 07/10 sopra c'è anche l'avviso giallo sull'orario
   await ctx.close()
 }
 // Chi non c'è non vede il percorso di quella mezza giornata

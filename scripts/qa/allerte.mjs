@@ -102,10 +102,12 @@ async function apri(person, path, dati) {
   return { p, ctx, errs }
 }
 const col = (p) => p.evaluate(() => { const b = document.querySelector('[data-allerta-banner]'); const s = getComputedStyle(b); return { bg: s.backgroundColor, fg: s.color, testo: b.innerText.replace(/\s+/g, ' ').trim(), prima: document.getElementById('app').firstElementChild === b } })
+// L'allerta di prova inizia alle 15:00 di Madrid del 17/10: finché quell'ora non è passata, arancione e rossa dicono "dalle 15:00"
+const dalle = Date.now() < Date.parse('2026-10-17T13:00:00+00:00') ? ' dalle 15:00' : ''
 for (const [livello, attesoTesto, attesoBg, attesoFg] of [
   ['giallo', 'Allerta gialla pioggia fino alle 23:00. Programma invariato, ombrello.', 'rgb(242, 183, 5)', 'rgb(14, 17, 22)'],
-  ['arancione', 'Allerta arancione. Spostamenti in taxi, niente moli, spiagge, Montjuïc, sottopassi.', 'rgb(232, 85, 46)', 'rgb(255, 255, 255)'],
-  ['rosso', 'Allerta rossa. Restate al chiuso. Emergenze: 112.', 'rgb(198, 40, 40)', 'rgb(255, 255, 255)']
+  ['arancione', `Allerta arancione${dalle}. Spostamenti in taxi, niente moli, spiagge, Montjuïc, sottopassi.`, 'rgb(232, 85, 46)', 'rgb(255, 255, 255)'],
+  ['rosso', `Allerta rossa${dalle}. Restate al chiuso. Emergenze: 112.`, 'rgb(198, 40, 40)', 'rgb(255, 255, 255)']
 ]) {
   const { p, ctx, errs } = await apri('giulio', '/#/programma/sab', ALLERTA(livello))
   const c = await col(p)

@@ -36,16 +36,17 @@ ok('distanza da casa nei dettagli: 1,3 km · 15 min (Valhalla)', s.details.some(
 ok('link al programma ufficiale nei dettagli', s.details.some((d) => d.includes('https://www.barcelona.cat/mercatdemercats/es/mercat-de-mercats')))
 ok('è di chi c\'è sabato, non di Monne', JSON.stringify(s.people) === JSON.stringify(['ale', 'giulio', 'manuel']))
 ok('sta in fondo al sabato, prima del Casinò', sab.stops.slice(-2).map((x) => x.id).join(' ') === 's98 s99')
-const ATTESI = [['s1', '07:40', null, null, null, null], ['s2', '08:15', null, 17100, 24, 'auto'], ['s3', '09:45', null, null, null, null], ['s3c', '09:45', 30, 1291, 16, null], ['s4', '10:30', null, 162, 2, null], ['s5', '11:20', null, 527, 7, null], ['s5b', '13:00', 10, 1189, 15, null], ['s6', '13:30', null, 574, 7, null], ['s7', '15:00', null, 672, 8, null], ['s8', '19:30', null, 2823, 34, null], ['s9', '00:15', null, 3500, 12, 'taxi']]
+const ATTESI = [['s1', '07:40', null, null, null, null], ['s2', '08:15', null, 17100, 24, 'auto'], ['s3', '09:45', null, null, null, null], ['s3c', '09:45', 30, 1291, 16, null], ['s4', '10:30', null, 162, 2, null], ['s5', '11:20', null, 527, 7, null], ['s5b', '13:00', 10, 1189, 15, null], ['s6', '13:30', null, 574, 7, null], ['s7', '15:00', null, 672, 8, null], ['s8', '19:30', null, 2521, 8, 'taxi'], ['s9', '00:15', null, 4088, 14, 'taxi']]
 ok('il sabato con orario non si muove: stesse tappe, orari, durate e tratti', JSON.stringify(sab.stops.filter((x) => x.time).map((x) => [x.id, x.time, x.durataMin ?? null, x.distFromPrevM ?? null, x.minFromPrev ?? null, x.distMode ?? null])) === JSON.stringify(ATTESI))
-ok('i due percorsi di sabato sono quelli di prima e non toccano s98', sab.percorsi.length === 2 && sab.percorsi.every((pc) => !pc.stops.includes('s98')) && sab.percorsi[0].url === 'https://www.google.com/maps/dir/?api=1&origin=41.395437,2.179608&destination=41.4066347,2.1799385&travelmode=walking&waypoints=41.4039406,2.1751597' && sab.percorsi[1].url === 'https://www.google.com/maps/dir/?api=1&origin=41.395437,2.179608&destination=41.3744026,2.1695739&travelmode=walking&waypoints=41.3791891,2.1770567')
+ok('i due percorsi di sabato sono quelli di prima e non toccano s98', sab.percorsi.length === 2 && sab.percorsi.every((pc) => !pc.stops.includes('s98')) && sab.percorsi[0].url === 'https://www.google.com/maps/dir/?api=1&origin=41.395437,2.179608&destination=41.4066347,2.1799385&travelmode=walking&waypoints=41.4039406,2.1751597' && sab.percorsi[1].url === 'https://www.google.com/maps/dir/?api=1&origin=41.395437,2.179608&destination=41.3744026,2.1695739&travelmode=driving&waypoints=41.3876228,2.1602109')
 ok('niente XP, niente missioni per s98', !missions.some((m) => m.stopId === 's98'))
 ok('ven e dom non hanno il Mercat (è l\'extra di sabato)', !it.days.filter((d) => d.label !== 'Sabato').some((d) => d.stops.some((x) => x.venueId === 'mercat')))
 const disseny = bagni.bagni.find((b) => b.id === 'disseny')
 ok('bagno: Museu del Disseny, stimato, 10–20, 236 m · 3 min da Valhalla', bagni.tappe.s98?.prima === 'disseny' && disseny?.stimato === true && disseny.orarioBreve === '10–20' && bagni.tappe.s98.dist.disseny.m === 236 && bagni.tappe.s98.dist.disseny.min === 3)
 const f = foto.foto.find((x) => x.id === 'mercat')
 ok('foto da Commons, CC BY 2.0, con crediti in CREDITS.md', s.img === 'mercat.webp' && f?.licenza === 'CC BY 2.0' && f.autore === 'Fred Romero' && readFileSync('CREDITS.md', 'utf8').includes(f.pagina))
-ok('changelog v51: l\'extra di sabato con vermut e birra', changelog[0].v === 51 && /Mercat de Mercats/.test(changelog[0].titolo + changelog[0].voci.join(' ')) && /Vermut gratis alle 14:30 e alle 15:30, birra alle 20/.test(changelog[0].voci.join(' ')))
+const v51 = changelog.find((e) => e.v === 51)
+ok('changelog v51: l\'extra di sabato con vermut e birra', !!v51 && /Mercat de Mercats/.test(v51.titolo + v51.voci.join(' ')) && /Vermut gratis alle 14:30 e alle 15:30, birra alle 20/.test(v51.voci.join(' ')))
 ok('DA_VERIFICARE: gli orari vengono dal PDF del 13/10 e possono cambiare con la pioggia', /PDF ufficiale del 13\/10/.test(readFileSync('DA_VERIFICARE.md', 'utf8')) && /possono cambiare in caso di pioggia/.test(readFileSync('DA_VERIFICARE.md', 'utf8')))
 // il programma: tre giorni, Encants solo sabato, niente spazio famiglie, le ★ dove dice il programma
 const g = Object.fromEntries(mercat.giorni.map((x) => [x.key, x]))
@@ -59,7 +60,8 @@ ok('dove mangiare: Terrassa del Llac, piazza, banchi dei mercati, produttori', m
 
 // ---- 2. nel browser ----
 const b = await chromium.launch({ executablePath: exe, args: ['--no-sandbox'] })
-const ALLERTA = (livello) => ({ aggiornato: new Date().toISOString(), finestra: { inizio: '2026-10-15T00:00', fine: '2026-10-19T06:00', fuso: 'Europe/Rome' }, attive: [{ zona: 'barcellona', area: 'Litoral de Barcelona', evento: 'Lluvias', livello, tipo: 'pioggia', inizio: new Date(Date.now() - 3600e3).toISOString(), fine: new Date(Date.now() + 6 * 3600e3).toISOString(), titolo: 'prova', fonte: 'https://www.aemet.es/' }], errori: [] })
+// `vuota`: nessuna allerta. Serve perché public/allerte.json nel weekend può contenere allerte vere (il 17/10 c'era un'arancione)
+const ALLERTA = (livello) => ({ aggiornato: new Date().toISOString(), finestra: { inizio: '2026-10-15T00:00', fine: '2026-10-19T06:00', fuso: 'Europe/Rome' }, attive: livello === 'vuota' ? [] : [{ zona: 'barcellona', area: 'Litoral de Barcelona', evento: 'Lluvias', livello, tipo: 'pioggia', inizio: new Date(Date.now() - 3600e3).toISOString(), fine: new Date(Date.now() + 6 * 3600e3).toISOString(), titolo: 'prova', fonte: 'https://www.aemet.es/' }], errori: [] })
 async function apri(person, path, { allerta = null, width = 380 } = {}) {
   const ctx = await b.newContext({ viewport: { width, height: 820 }, isMobile: true, hasTouch: true })
   const p = await ctx.newPage(); const errs = []
@@ -73,7 +75,7 @@ const pulito = (t) => t.replace(/\s+/g, ' ').trim()
 
 // la card, nel programma di sabato
 {
-  const { p, ctx, errs } = await apri('ale', '/#/programma/sab')
+  const { p, ctx, errs } = await apri('ale', '/#/programma/sab', { allerta: 'vuota' })
   const card = p.locator('.card[data-stop="s98"]')
   ok('sab: la card del Mercat c\'è, una sola', (await card.count()) === 1)
   ok('sab: sta sotto la riga "Extra se avanza tempo", prima del Casinò', await p.evaluate(() => { const riga = document.querySelector('.timeline__opzionale'), m = document.querySelector('.card[data-stop="s98"]'), c = document.querySelector('.card[data-stop="s99"]'); return !!riga && !!m && !!c && /extra se avanza tempo/i.test(riga.textContent) && (riga.compareDocumentPosition(m) & Node.DOCUMENT_POSITION_FOLLOWING) > 0 && (m.compareDocumentPosition(c) & Node.DOCUMENT_POSITION_FOLLOWING) > 0 }))
@@ -137,7 +139,7 @@ for (const [livello, atteso] of [['arancione', true], ['rosso', true], ['giallo'
 }
 // Oggi: mai "Adesso", mai nella cascata; l'ordine in fondo è Mercat, poi Casinò
 {
-  const { p, ctx, errs } = await apri('ale', '/?now=2026-10-17T16:00#/oggi')
+  const { p, ctx, errs } = await apri('ale', '/?now=2026-10-17T16:00#/oggi', { allerta: 'vuota' })
   const adesso = await p.locator('.tile--accent .card[data-stop]').getAttribute('data-stop').catch(() => null)
   ok('Oggi sabato 16:00: Adesso è il pomeriggio (s7), non il Mercat', adesso === 's7', String(adesso))
   const ultimi = await p.locator('.timeline .card[data-stop]').evaluateAll((els) => els.slice(-2).map((e) => e.dataset.stop).join(' '))

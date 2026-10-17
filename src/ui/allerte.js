@@ -47,8 +47,10 @@ export function finestra(a) {
 // Testo del banner, per livello (spec): gialla con tipo e ora di fine; arancione e rossa con le regole secche
 export function testoBanner(a) {
   if (a.livello === 'preallarme') return `Pre-allarme pioggia forte (non ufficiale)${a.inizio ? ` dalle ${oraLocale(a.inizio)}` : ''}. Ombrello, e occhio alle allerte vere.`
-  if (a.livello === 'rosso') return 'Allerta rossa. Restate al chiuso. Emergenze: 112.'
-  if (a.livello === 'arancione') return 'Allerta arancione. Spostamenti in taxi, niente moli, spiagge, Montjuïc, sottopassi.'
+  // Un'allerta già pubblicata ma non ancora iniziata (l'arancione delle 18:00 letta alle 8 del mattino) dice da quando vale
+  const dalle = a.inizio && Date.parse(a.inizio) > Date.now() ? ` dalle ${oraLocale(a.inizio)}` : ''
+  if (a.livello === 'rosso') return `Allerta rossa${dalle}. Restate al chiuso. Emergenze: 112.`
+  if (a.livello === 'arancione') return `Allerta arancione${dalle}. Spostamenti in taxi, niente moli, spiagge, Montjuïc, sottopassi.`
   return `Allerta gialla ${esc(a.tipo || '')}${a.fine ? ` fino alle ${oraLocale(a.fine)}` : ''}. Programma invariato, ombrello.`
 }
 export function bannerHtml(attive) {

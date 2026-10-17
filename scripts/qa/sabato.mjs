@@ -36,8 +36,8 @@ const aPiedi = (s) => s.distMode !== 'auto' && s.distMode !== 'taxi' && s.minFro
 const visibili = sab.filter((s) => s.people.includes('ale'))
 const camminoM = visibili.filter(aPiedi).reduce((n, s) => n + s.distFromPrevM, 0)
 const camminoMin = visibili.filter(aPiedi).reduce((n, s) => n + s.minFromPrev, 0)
-// appartamento→BO&MIE, BO&MIE→Sagrada, Sagrada→Olimpo, Olimpo→Teixidó, Teixidó→casa, casa→pomeriggio, →cena
-ok('cammino del sabato ricalcolato con le tappe nuove', camminoM === 1291 + 162 + 527 + 1189 + 574 + 672 + 2823 && camminoMin === 16 + 2 + 7 + 15 + 7 + 8 + 34, `${camminoM} m · ${camminoMin} min`)
+// appartamento→BO&MIE, BO&MIE→Sagrada, Sagrada→Olimpo, Olimpo→Teixidó, Teixidó→casa, casa→pomeriggio (la cena è in taxi: non si cammina)
+ok('cammino del sabato ricalcolato con le tappe nuove', camminoM === 1291 + 162 + 527 + 1189 + 574 + 672 && camminoMin === 16 + 2 + 7 + 15 + 7 + 8, `${camminoM} m · ${camminoMin} min`)
 
 // ---- BO&MIE: il ritrovo con Giulio ----
 const bm = venues.bomie
@@ -66,20 +66,22 @@ ok('la Sagrada dice da dove si arriva', stops.s4.details.some((d) => /Due minuti
 ok('il percorso della mattina comprende BO&MIE', it.days.find((d) => d.label === 'Sabato').percorsi.find((p) => p.id === 'sab-mattina').stops.join() === 's3c,s4,s5')
 ok('Forn Oriol: dati verificati nella riga del piano B', stops.s5b.details.some((d) => /Forn Oriol, Carrer de Nàpols 113/.test(d) && /6:30-21:00/.test(d) && /938 74 77 54/.test(d)))
 
-// ---- cena dei 40: Bodega Biarritz ----
-const b8 = venues.biarritz
-ok('Biarritz: indirizzo e coordinate verificate via Google Places', b8.addr === 'Carrer Nou de Sant Francesc 7, Ciutat Vella' && b8.lat === 41.3791891 && b8.lng === 2.1770567)
-ok('Biarritz: niente più coordinate automatiche', b8.verified === true && b8.geocoded === undefined && b8.geocodedFrom === undefined)
-ok('Biarritz: voto e recensioni', b8.rating === 4.7 && b8.reviews === 9353)
-ok('Biarritz: orari col martedì e mercoledì chiuso', /gio-lun 12:30-23:00/.test(b8.hours) && /martedì e mercoledì chiuso/.test(b8.hours), b8.hours)
-ok('cena: si sceglie la fascia di prezzo, non i piatti', stops.s8.details.some((d) => /fascia di prezzo prima di entrare/.test(d) && /a sorpresa/.test(d)))
-ok('cena: la recensione sta fra gli stimati, non fra i verificati', stops.s8.detailsStimati.some((d) => /8 tapas/.test(d) && /70 euro in due/.test(d) && /non sono pubblicate/.test(d)) && !stops.s8.details.some((d) => /70 euro/.test(d)))
-ok('cena: il meccanismo delle fasce resta un dato verificato', stops.s8.details.some((d) => /non si ordina dal menu/.test(d)))
+// ---- cena dei 40: Local Tapas (dal 17/10, al posto della Bodega Biarritz) ----
+const b8 = venues.localtapas
+ok('Local Tapas: indirizzo, coordinate di Google Places, telefono', b8.addr === "Carrer d'Aribau 37, Eixample Esquerra" && b8.lat === 41.3876228 && b8.lng === 2.1602109 && b8.verified === true && b8.phone === '+34 645 58 15 09')
+ok('Local Tapas: voto, recensioni, fascia, orari', b8.rating === 4.7 && b8.reviews === 12026 && b8.fascia === '€€' && /13:00–24:00/.test(b8.hours) && /cucina fino a mezzanotte/.test(b8.hours))
+ok('cena: stesso orario (19:30), prenotata per 3, verificata', stops.s8.time === '19:30' && stops.s8.timeStatus === 'verificato' && stops.s8.prenotazione === '19:30 · 3 persone' && stops.s8.details.some((d) => /Prenotato: sabato 17 alle 19:30, 3 persone/.test(d)))
+ok('cena: in taxi da casa (2,5 km · 8 min), col blocco da dare al tassista', stops.s8.distMode === 'taxi' && stops.s8.distFromPrevM === 2521 && stops.s8.minFromPrev === 8 && stops.s8.tassista?.indirizzo === "Carrer d'Aribau, 37 · 08011 Barcelona" && /dropoff\[latitude\]=41\.3876228&dropoff\[longitude\]=2\.1602109/.test(stops.s8.tassista.uber))
+ok('cena: il consiglio dalle recensioni, con Said o David', /tartare di manzo galiziano/.test(stops.s8.consiglio) && /Chiedi di Said o David/.test(stops.s8.consiglio))
+ok('cena: il budget sta fra gli stimati', stops.s8.detailsStimati.some((d) => /circa 30 € a testa/.test(d)) && !stops.s8.details.some((d) => /30 €/.test(d)))
+ok('cena: verso Apolo oltre 1,2 km, taxi consigliato; s9 prende la tratta nuova', stops.s8.details.some((d) => /Verso Sala Apolo: 2,0 km · 23 min a piedi, taxi consigliato/.test(d)) && stops.s9.distFromPrevM === 4088 && stops.s9.minFromPrev === 14 && stops.s9.distMode === 'taxi')
+ok('cena: telefono cliccabile e foto del locale', stops.s8.actions.tel === true && stops.s8.img === 'localtapas.webp')
+ok('niente più Biarritz nel programma, nei venue e nelle missioni', !JSON.stringify(it).includes('Biarritz') && !venues.biarritz && JSON.parse(readFileSync('data/missions.json', 'utf8')).missions.find((m) => m.id === 'm9').title === 'Compleanno a Local Tapas')
+ok('il percorso di sabato sera è in taxi: casa → Local Tapas → Apolo', (() => { const d = it.days.find((x) => x.label === 'Sabato').percorsi.find((x) => x.id === 'sab-sera'); return d.mode === 'driving' && d.label === 'Appartamento → Local Tapas → Sala Apolo' && d.url === 'https://www.google.com/maps/dir/?api=1&origin=41.395437,2.179608&destination=41.3744026,2.1695739&travelmode=driving&waypoints=41.3876228,2.1602109' })())
 // il pomeriggio di sabato non insegue più eventi che nessuno ha confermato
 ok('pomeriggio libero: niente eventi non confermati', stops.s7.title === 'Pomeriggio libero' && !JSON.stringify(stops.s7).includes('NON confermato') && !/SOUNDIT|Resident Advisor/.test(JSON.stringify(stops.s7)))
 ok('pomeriggio libero: badge stimato, non da verificare', JSON.stringify(stops.s7.badges) === JSON.stringify(['stimato']))
 ok('nessuna tappa porta più il badge da_verificare (tranne Casa Batlló, finché il biglietto non è comprato)', !sab.concat(it.days.flatMap((d) => d.stops)).some((s) => s.id !== 'd0' && (s.badges || []).includes('da_verificare')))
-ok('cena: sabato 17 è dentro la finestra di apertura', stops.s8.details.some((d) => /sabato 17 siete nella finestra giusta/.test(d)))
 ok('cena: nessun badge di coordinate automatiche', !stops.s8.badges.includes('geocoded'))
 // Nessun venue del sito ha più coordinate automatiche
 ok('nessun venue geocodificato in tutto il sito', !Object.values(venues).some((v) => v.geocoded))
@@ -108,7 +110,7 @@ async function vista(person, path) {
   ok('chip della distanza a piedi da Olimpo', /1,2 km · 15 min a piedi/.test(await card.locator('.chips').innerText()), await card.locator('.chips').innerText())
   await card.locator('summary').click(); await p.waitForTimeout(350)
   ok('le frasi in spagnolo si leggono', /recién horneado/.test(await card.innerHTML()))
-  ok('niente riquadro del conto sul sabato: non è una mezza giornata', await p.locator('.avviso--forte').count() === 0)
+  ok('niente riquadro del conto sul sabato: non è una mezza giornata (gli avvisi di allerta non contano)', await p.locator('.avviso--forte:not(.avviso--allerta)').count() === 0)
   ok('nessun errore JS', errs.length === 0, errs.join(' | '))
   ok('niente overflow a 380px', await p.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth))
   await ctx.close()
@@ -136,9 +138,21 @@ async function vista(person, path) {
   const { p, ctx } = await vista('ale', '/#/programma/sab')
   const cena = p.locator('.card[data-stop="s8"]')
   ok('cena: nessun badge "coordinate automatiche" sulla card', await cena.locator('.badge--geocoded').count() === 0)
+  ok('cena: foto del locale con il credito "foto: Local Tapas", badge PRENOTATO · 19:30 · 3 persone', (await cena.locator('.card__foto img').getAttribute('src')).endsWith('localtapas.webp') && (await cena.locator('.card__credito').innerText()).trim() === 'foto: Local Tapas' && /PRENOTATO · 19:30 · 3 PERSONE/i.test(await cena.locator('.badge--prenotato').innerText()))
+  ok('cena: telefono cliccabile, Bolt e Uber, blocco "Da dare al tassista" con Aribau 37', (await cena.locator('a[data-tel]').getAttribute('href')) === 'tel:+34645581509' && (await cena.locator('[data-taxi-bolt]').count()) === 1 && (await cena.locator('[data-taxi-uber]').count()) === 1 && /Carrer d'Aribau, 37/.test(await cena.locator('.tassista__addr').innerText()))
+  ok('cena: chip del taxi 2,5 km · 8 min e il consiglio in terracotta', /2,5 km · 8 min/.test(await cena.locator('.chips').innerText()) && /Said o David/.test(await cena.locator('.card__consiglio').innerText()))
   await cena.locator('summary').click(); await p.waitForTimeout(350)
-  ok('cena: la fascia di prezzo si legge nei dettagli', /fascia di prezzo prima di entrare/.test(await cena.innerHTML()))
-  ok('cena: indirizzo vero sotto il titolo', /Carrer Nou de Sant Francesc 7/.test(await cena.locator('.card__venue').innerText()))
+  ok('cena: nei dettagli la prenotazione, gli orari e il taxi consigliato verso Apolo', /Prenotato: sabato 17 alle 19:30/.test(await cena.innerHTML()) && /cucina fino a mezzanotte/.test(await cena.innerHTML()) && /taxi consigliato/.test(await cena.innerHTML()))
+  ok('cena: indirizzo vero sotto il titolo', /Carrer d'Aribau 37/.test(await cena.locator('.card__venue').innerText()))
+  ok('cena: niente overflow a 380px', await p.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth) === 0)
+  ok('cena: nessuna traccia di Biarritz nella pagina di sabato', !/Biarritz/.test(await p.locator('.timeline').innerText()))
+  await ctx.close()
+}
+// Oggi alle 19:45 di sabato: "Adesso" è la cena da Local Tapas
+{
+  const { p, ctx, errs } = await vista('ale', '/?now=2026-10-17T19:45#/oggi')
+  ok('Oggi 19:45: Adesso = Local Tapas', (await p.locator('.tile--accent .card[data-stop]').getAttribute('data-stop').catch(() => null)) === 's8' && /Local Tapas/.test(await p.locator('.tile--accent .card__title').innerText().catch(() => '')))
+  ok('Oggi 19:45: nessun errore JS', errs.length === 0, errs.join(' | '))
   await ctx.close()
 }
 {

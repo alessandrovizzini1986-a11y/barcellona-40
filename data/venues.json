@@ -121,16 +121,6 @@
       "verified": true,
       "note": "Coordinate verificate via Google Places: El Palace Hotel Barcelona, Gran Via de les Corts Catalanes 668. Il Rooftop Garden è sul tetto dell'hotel."
     },
-    "biarritz": {
-      "name": "Bodega Biarritz 1881",
-      "addr": "Carrer Nou de Sant Francesc 7, Ciutat Vella",
-      "lat": 41.3791891,
-      "lng": 2.1770567,
-      "verified": true,
-      "rating": 4.7,
-      "reviews": 9353,
-      "hours": "gio-lun 12:30-23:00 · martedì e mercoledì chiuso"
-    },
     "bunkers": {
       "name": "Bunkers del Carmel — MUHBA Turó de la Rovira",
       "addr": "Carrer de Marià Labèrnia s/n, Horta-Guinardó",
@@ -339,6 +329,18 @@
       "verified": true,
       "hours": "ven 16 e sab 17 11:00–22:00, dom 18 11:00–21:00",
       "url": "https://www.barcelona.cat/mercatdemercats/es/mercat-de-mercats"
+    },
+    "localtapas": {
+      "name": "Local Tapas",
+      "addr": "Carrer d'Aribau 37, Eixample Esquerra",
+      "lat": 41.3876228,
+      "lng": 2.1602109,
+      "verified": true,
+      "rating": 4.7,
+      "reviews": 12026,
+      "hours": "sabato 13:00–24:00, cucina fino a mezzanotte",
+      "phone": "+34 645 58 15 09",
+      "fascia": "€€"
     }
   }
 }

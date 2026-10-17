@@ -231,12 +231,6 @@
       "nota": "Foto fornita da Alessandro, uso autorizzato. Per gentile concessione."
     },
     {
-      "id": "biarritz",
-      "file": "assets/tappe/biarritz.webp",
-      "tappa": "Bodega Biarritz 1881",
-      "nota": "Foto fornita da Alessandro, uso autorizzato. Per gentile concessione."
-    },
-    {
       "id": "braseria",
       "file": "assets/tappe/braseria.webp",
       "tappa": "Brasería Sarrià",
@@ -301,6 +295,13 @@
       "file": "assets/tappe/macaya.webp",
       "tappa": "Palau Macaya",
       "nota": "Foto di un amico di Alessandro, uso autorizzato. Per gentile concessione."
+    },
+    {
+      "id": "localtapas",
+      "file": "assets/tappe/localtapas.webp",
+      "tappa": "Local Tapas",
+      "nota": "Foto del locale, fornita da Alessandro, uso autorizzato. Per gentile concessione.",
+      "credito": "Local Tapas"
     }
   ],
   "scartate": []

@@ -533,19 +533,8 @@
    }
   },
   "s8": {
-   "prima": "mercer",
-   "seconda": "neri",
-   "nota": "Aperitivo al Mercer alle 19:00 è anche un bel ponte",
-   "dist": {
-    "mercer": {
-     "m": 515,
-     "min": 7
-    },
-    "neri": {
-     "m": 588,
-     "min": 7
-    }
-   }
+   "semplice": "Ristorante",
+   "nota": "Siamo clienti: quello del locale"
   },
   "s9": {
    "prima": "mercer",

@@ -208,6 +208,9 @@ const overflow = (p) => p.evaluate(() => document.documentElement.scrollWidth - 
 {
   const { p, ctx, errs } = await apri('ale', '/#/mappa')
   await p.waitForTimeout(1500)
+  // nel weekend la mappa accende solo il giorno di oggi: il venerdì va acceso a mano (e gli altri spenti)
+  await p.evaluate(() => { for (const b of document.querySelectorAll('.map-controls [data-day]')) if ((b.dataset.day === 'ven') !== (b.getAttribute('aria-pressed') === 'true')) b.click() })
+  await p.waitForTimeout(600)
   const numeri = await p.evaluate(() => [...document.querySelectorAll('.marker span')].map((s) => +s.textContent))
   ok('marker del venerdì numerati 1…11', JSON.stringify(numeri.slice(0, 11)) === JSON.stringify([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]), numeri.join(' '))
   // la mappa disegna i vettori su canvas (preferCanvas), non in SVG: il canvas nell'overlay esiste solo

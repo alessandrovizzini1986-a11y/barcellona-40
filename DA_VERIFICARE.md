@@ -30,6 +30,13 @@ della guida cittadina descrive il recinto. Il peso delle fonti sta con le 17:30.
 e scendere alle 17:30 con la luce del giorno (vista sì, città accesa no), oppure spostare il tramonto su un belvedere senza
 recinto (da scegliere). Serve una telefonata al 93 256 21 22 (lun–gio 9–15, ven 9–15 e 16–19) per chiudere.
 
+## Cena di sabato: Local Tapas al posto della Bodega Biarritz (17/10/2026)
+
+- Dati del locale (indirizzo, coordinate, telefono, orari, voto 4,7 su 12.026) da Google Places letti da Alessandro il 17/10: non ricontrollati da qui. Prenotazione 19:30 per 3: fatta da Alessandro.
+- Tratte Valhalla del 17/10: casa → Aribau 37 in auto 2.521 m · 8 min (a piedi 2.178 m · 27 min); Local Tapas → Sala Apolo a piedi 1.980 m · 23 min, in auto 4.088 m · 14 min (sopra 1,2 km: "taxi consigliato"); Local Tapas → Casinò in auto 4.551 m · 13 min.
+- Il link Uber del blocco "Da dare al tassista" è scritto a mano sulle coordinate di Google Places, come quello del Bar Celta: da provare una volta dal telefono.
+- Budget "circa 30 € a testa": dalle recensioni, non dal menu. Sta fra gli stimati.
+
 ## Mercat de Mercats, extra di sabato (15/10/2026)
 
 - **Orari del programma presi dal PDF ufficiale del 13/10 (MDM26programa): possono cambiare in caso di pioggia.** Il pannello "Programma completo" li riporta così come stampati; prima di puntare a una degustazione, un'occhiata a barcelona.cat/mercatdemercats.
@@ -84,7 +91,6 @@ memoria, non pendenze.
 |---|---|---|
 | **Attesa del taxi ai Bunkers**, domenica sera | in cima, prenotandolo dall'app | si scende a piedi verso Carrer de Marià Labèrnia e si richiama da lì (è scritto sulla card) |
 | **Illuminazione della discesa** da Carrer de Marià Labèrnia | lì, alle 19:30 | si aspetta il taxi in cima |
-| **Fasce di prezzo della Bodega Biarritz** | all'ingresso, sabato sera | nessuna conseguenza: si sceglie lì |
 | **Civico esatto della Braseria Sarrià** (`c9`) | arrivandoci | nessuna: la prenotazione è a nome, non a civico |
 | **Promozioni del Casino Barcelona** | dal telefono, prima di partire | nessuna: è un'opzione, non un impegno |
 | **Rooftop Garden con la pioggia: chiude o ha una parte coperta?** | chiamando prima, +34 935 10 11 30 | piano B: il bar dell'hotel El Palace al piano terra (il nome del bar non è sul sito ufficiale) |

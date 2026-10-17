@@ -36,7 +36,7 @@ for (const id of ['f99', 's99']) {
   ok(`${id}: maps e taxi attivi`, s.actions.maps === true && s.actions.taxi === true)
 }
 ok('venerdì: la distanza è quella dalla Braseria', stops.f99.details.some((d) => d === 'Dalla Braseria Sarrià: 8,2 km · 22 min in auto'))
-ok('sabato: le distanze sono due, Biarritz e Apolo', stops.s99.details.some((d) => d === 'Dalla Bodega Biarritz: 2,3 km · 28 min a piedi') && stops.s99.details.some((d) => d === 'Da Sala Apolo: 3,3 km · 8 min in auto'))
+ok('sabato: le distanze sono due, Local Tapas e Apolo', stops.s99.details.some((d) => d === 'Da Local Tapas: 4,6 km · 13 min in auto') && stops.s99.details.some((d) => d === 'Da Sala Apolo: 3,3 km · 8 min in auto'))
 ok('venerdì è di Alessandro e Monne', JSON.stringify(stops.f99.people) === JSON.stringify(['ale', 'monne']))
 ok('sabato è di chi c\'è sabato', JSON.stringify(stops.s99.people) === JSON.stringify(['ale', 'giulio', 'manuel']))
 ok('domenica non ce l\'ha: si vola', !it.days[2].stops.some((s) => s.venueId === 'casino'))

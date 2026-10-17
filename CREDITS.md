@@ -98,7 +98,7 @@ riga "foto: autore / licenza" sotto ogni card. Le foto sono state ritagliate a 1
 | Bar Joan | `public/assets/tappe/barjoan.webp` | Foto fornita da Alessandro, uso autorizzato |
 | Brunells | `public/assets/tappe/brunells.webp` | Foto fornita da Alessandro, uso autorizzato |
 | Palau Macaya | `public/assets/tappe/macaya.webp` | Foto di un amico di Alessandro, uso autorizzato. Per gentile concessione |
-| Bodega Biarritz 1881 | `public/assets/tappe/biarritz.webp` | Foto fornita da Alessandro, uso autorizzato |
+| Local Tapas | `public/assets/tappe/localtapas.webp` | Foto del locale fornita da Alessandro, uso autorizzato; credito sotto la card: "foto: Local Tapas" |
 | Brasería Sarrià | `public/assets/tappe/braseria.webp` | Foto fornita da Alessandro, uso autorizzato |
 | Sala VIP Canudas | `public/assets/tappe/canudas.webp` | Foto fornita da Alessandro, uso autorizzato |
 | Casino Barcelona | `public/assets/tappe/casino.webp` | Foto fornita da Alessandro, uso autorizzato |

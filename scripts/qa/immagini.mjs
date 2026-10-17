@@ -89,7 +89,7 @@ for (const [giorno, attese, crediti0] of [['ven', 17, 17], ['sab', 10, 10], ['do
   // il testo dell'attribuzione dice la verità: link a Commons per le prime, gentile concessione per le altre
   const testi = await p.evaluate(() => [...document.querySelectorAll('.card[data-stop]')]
     .map((c) => [c.querySelector('.card__foto img')?.getAttribute('src').split('/').pop() || null, c.querySelector('.card__credito')?.textContent.trim() || null, !!c.querySelector('.card__credito a')]))
-  ok(`${giorno}: le foto private dicono "per gentile concessione", senza link`, testi.filter(([src]) => privateFile.has(src)).every(([, t, link]) => t === 'foto: per gentile concessione' && !link), JSON.stringify(testi.filter(([src, , link]) => privateFile.has(src) && link)))
+  ok(`${giorno}: le foto private dicono "per gentile concessione", senza link`, testi.filter(([src]) => privateFile.has(src)).every(([, t, link]) => /^foto: (per gentile concessione|Local Tapas)$/.test(t) && !link), JSON.stringify(testi.filter(([src, , link]) => privateFile.has(src) && link)))
   ok(`${giorno}: le foto di Commons portano autore, licenza e link`, testi.filter(([src]) => (src || '').endsWith('.webp') && !privateFile.has(src)).every(([, t, link]) => link && /\//.test(t)), JSON.stringify(testi.filter(([src, , link]) => (src || '').endsWith('.webp') && !privateFile.has(src) && !link)))
   ok(`${giorno}: niente overflow a 380px`, st.overflow === 0, String(st.overflow))
   ok(`${giorno}: pagina sotto i 2 MB`, st.peso < 2_000_000, `${(st.peso / 1024 / 1024).toFixed(2)} MB`)

@@ -96,6 +96,9 @@ const AVVISO = 'El Mirador è prenotato per domenica alle 13:30. Se la domenica 
 for (const [sole, attesi] of [[false, ['Casa Batlló', 'Pranzo · Bar Celta Pulpería', 'Pomeriggio al coperto · Maremagnum', 'Rientro a Bologna']], [true, ['Pranzo · El Mirador', 'Bunkers del Carmel — MUHBA Turó de la Rovira', 'Rientro a Bologna']]]) {
   const { p, ctx } = await apri('ale', '/#/mappa', { sole })
   await p.waitForTimeout(800)
+  // nel weekend la mappa accende solo il giorno di oggi: la domenica va accesa a mano
+  await p.evaluate(() => { const b = document.querySelector('.map-controls [data-day="dom"]'); if (b && b.getAttribute('aria-pressed') !== 'true') b.click() })
+  await p.waitForTimeout(600)
   const titoli = []
   const n = await p.locator('.marker[style*="--dom"]').count()
   for (let i = 0; i < n; i++) { await p.locator('.marker[style*="--dom"]').nth(i).dispatchEvent('click'); await p.waitForTimeout(250); titoli.push(await p.locator('.popup__title').last().innerText().catch(() => '?')); await p.evaluate(() => document.querySelector('.leaflet-popup-close-button')?.click()); await p.waitForTimeout(150) }

@@ -22,6 +22,8 @@ const CREDITI = Object.fromEntries(fotoTappe.foto.map((f) => [`${f.id}.webp`, f]
 // Foto private: fornite da chi c'era, uso autorizzato. Non hanno una licenza libera e non stanno in
 // CREDITS.md fra le Commons, ma un'attribuzione la meritano lo stesso.
 const PRIVATE = new Set((fotoTappe.private || []).map((f) => `${f.id}.webp`))
+// Alcune foto private hanno un credito da scrivere (la foto del locale: "foto: Local Tapas")
+const CREDITO_PRIVATO = Object.fromEntries((fotoTappe.private || []).filter((f) => f.credito).map((f) => [`${f.id}.webp`, f.credito]))
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, '') + '/assets/tappe/'
 // Testo alternativo, uno per immagine: descrive cosa si vede, non ripete il titolo della card
 const ALT = {
@@ -47,7 +49,7 @@ const ALT = {
   'apt.webp': 'L\'insegna illuminata dell\'Aparthotel Nàpols sopra l\'ingresso, di sera',
   'barjoan.webp': 'Il bancone del Bar Joan dentro il mercato, con le bottiglie alle spalle e la gente sugli sgabelli',
   'bomie.webp': 'L\'ingresso di BO&MIE, con l\'insegna Artisan Bakery & Speciality Coffee e la parete interna a mosaico colorato',
-  'biarritz.webp': 'L\'insegna di legno della Bodega Biarritz e le lavagne dei pinchos sul marciapiede',
+  'localtapas.webp': 'La sala di Local Tapas, con i tavoli di legno apparecchiati, le pareti scure e l\'insegna LOCAL TAPAS sul fondo',
   'braseria.webp': 'Un cameriere della Brasería Sarrià porta la tartare servita in un mortaio di legno, col pane tostato',
   'canudas.webp': 'La reception in marmo della Sala VIP Canudas, con le lampade a sospensione',
   'casino.webp': 'L\'ingresso illuminato del Casino Barcelona di sera, con tre persone che escono',
@@ -72,7 +74,7 @@ export function immagineCard(img, etichetta, { eager = false, classe = '', oraDe
 }
 // L'attribuzione è dovuta solo per le foto: le card stilizzate sono nostre
 export function creditoImmagine(img) {
-  if (PRIVATE.has(img)) return '<p class="card__credito">foto: per gentile concessione</p>'
+  if (PRIVATE.has(img)) return `<p class="card__credito">foto: ${esc(CREDITO_PRIVATO[img] || 'per gentile concessione')}</p>`
   const f = CREDITI[img]
   if (!f) return ''
   return `<p class="card__credito">foto: <a href="${esc(f.pagina)}" target="_blank" rel="noopener">${esc(f.autore || 'autore ignoto')} / ${esc(f.licenza)}</a></p>`
@@ -143,6 +145,8 @@ export function stopCard(stop, { person = null, isNow = false, nowLabel = 'adess
   const acts = []
   if (stop.actions?.maps) acts.push(`<a class="btn" data-maps="${stop.id}" href="${mapsUrl(stop)}" target="_blank" rel="noopener">${icon('map-pin')} Maps</a>`)
   if (stop.actions?.taxi) acts.push(`<a class="btn" href="${taxiUrl(stop)}" data-taxi target="_blank" rel="noopener" title="Uber; in alternativa FREE NOW">${icon('taxi')} Taxi</a>`)
+  // Telefono del locale (prenotazioni, ritardi): il numero sta nel venue, il pulsante lo chiama
+  if (stop.actions?.tel && v?.phone) acts.push(`<a class="btn" href="tel:${esc(v.phone.replace(/\s/g, ''))}" data-tel aria-label="Chiama ${esc(v.name)}: ${esc(v.phone)}">${icon('phone')} ${esc(v.phone)}</a>`)
   if (stop.actions?.metro) acts.push(`<span class="btn btn--ghost" aria-label="Metro: ${esc(stop.actions.metro)}">${icon('train')} ${esc(stop.actions.metro)}</span>`)
   // Programma completo (Mercat de Mercats): apre il pannello con gli eventi del giorno, tradotti
   if (stop.programma === 'mercat') acts.push(`<button class="btn" type="button" data-mercat-programma="sab" aria-label="Programma completo del Mercat de Mercats">${icon('list')} Programma completo</button>`)
@@ -171,7 +175,7 @@ export function stopCard(stop, { person = null, isNow = false, nowLabel = 'adess
       </div>
     </div>
     <p class="card__why">${esc(why)}</p>
-    <div class="chips">${distChip(stop)}${durataChip(stop)}${voto}${prices}${badgeHtml(badgesFor(stop), reveal)}</div>
+    <div class="chips">${distChip(stop)}${durataChip(stop)}${voto}${prices}${badgeHtml(badgesFor(stop), reveal)}${stop.prenotazione ? `<span class="badge badge--prenotato" title="Tavolo prenotato">PRENOTATO · ${esc(stop.prenotazione)}</span>` : ''}</div>
     ${prezzi}
     ${avvisoOrario}${sconsigliato}${avviso}
     ${consiglio}
