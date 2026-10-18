@@ -13,11 +13,12 @@ const DOMINIO = 'https://alessandrovizzini1986-a11y.github.io/barcellona-40/'
 
 // ---- 1. i file ----
 const FOTO = ['01_dom_santa-caterina_ale-giulio', '02_dom_mariposa-negra_brindisi-in-tre', '03_ven_braseria-sarria_ale-monne', '04_ven_santa-caterina_ale-monne', '05_ven_bar-joan_ale-monne']
-ok('cinque foto in -full e -thumb WebP', FOTO.every((f) => existsSync(`public/img/grazie/${f}-full.webp`) && existsSync(`public/img/grazie/${f}-thumb.webp`)))
+ok('cinque foto in -full e -thumb WebP, più la striscia dei quattro per il hero', [...FOTO, '00_quattro_monne-giulio-manuel-ale'].every((f) => existsSync(`public/img/grazie/${f}-full.webp`) && existsSync(`public/img/grazie/${f}-thumb.webp`)))
 ok('og-grazie.jpg (i quattro, composta il 18/10) sotto i 300 KB', existsSync('public/img/og-grazie.jpg') && statSync('public/img/og-grazie.jpg').size < 300 * 1024)
 const html = readFileSync('public/grazie/index.html', 'utf8')
 const meta = (p) => (html.match(new RegExp(`<meta property="${p}" content="([^"]*)"`)) || [])[1]
 ok('OG: titolo, descrizione, immagine assoluta https con ?v=1, 1200×630, url assoluto, twitter card', meta('og:title') === 'Grazie, ragazzi — Barcelona 40' && meta('og:description') === 'Tre giorni, quattro amici, zero rimpianti. Le foto e due righe da Alessandro.' && meta('og:image') === `${DOMINIO}img/og-grazie.jpg?v=2` && meta('og:image:width') === '1200' && meta('og:image:height') === '630' && meta('og:url') === `${DOMINIO}grazie/` && /<meta name="twitter:card" content="summary_large_image"/.test(html) && meta('og:type') === 'website')
+ok('hero: la striscia dei quattro, con Monne', /<header class="hero">\s*<img src="\.\.\/img\/grazie\/00_quattro_monne-giulio-manuel-ale-full\.webp"/.test(html) && /alt="I quattro del weekend[^"]*Monne/.test(html))
 ok('nomi veri, nessun segnaposto', ['Alessandro', 'Giulio', 'Manuel', 'Monne'].every((n) => html.includes(n)) && !/placeholder|nome amico|TODO/i.test(html))
 ok('il testo di Alessandro c\'è, parola per parola', html.includes("Quaranta anni si fanno una volta sola e io li ho fatti con voi, sotto un'allerta arancione") && html.includes('La prossima tappa la decidete voi. Io porto la torta.') && html.includes('— Alessandro'))
 // Chi è chi (conferma di Alessandro del 18/10): maglia "Vizzini" = Manuel (suo cugino, Vizzini anche lui); capelli grigi e occhiali = Giulio
@@ -68,7 +69,7 @@ async function apri(path, { person = 'ale', mobile = true } = {}) {
   await p.waitForTimeout(800)
   const peso = await p.evaluate(() => performance.getEntriesByType('resource').filter((r) => !/gc\.zgo\.at|goatcounter/.test(r.name)).reduce((n, r) => n + (r.encodedBodySize || r.transferSize || 0), 0))
   ok('pagina: primo caricamento sotto 1,5 MB', peso > 0 && peso < 1.5 * 1024 * 1024, `${(peso / 1024).toFixed(0)} KB`)
-  ok('pagina: le -full della galleria non si scaricano prima del lightbox', await p.evaluate(() => performance.getEntriesByType('resource').filter((r) => /-full\.webp/.test(r.name)).length) === 1)
+  ok('pagina: le -full della galleria non si scaricano prima del lightbox (solo quella del hero)', await p.evaluate(() => performance.getEntriesByType('resource').filter((r) => /-full\.webp/.test(r.name)).length) === 1)
   // lightbox
   await p.locator('#galleria [data-foto="0"]').tap(); await p.waitForTimeout(500)
   const lb = p.locator('#lightbox')

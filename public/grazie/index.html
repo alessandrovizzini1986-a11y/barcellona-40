@@ -52,8 +52,9 @@
       .pagina{ max-width:640px; margin:0 auto; padding:0 0 calc(var(--space-7) + var(--safe-b)); }
       /* Hero: la foto a tutta larghezza, il titolo in giallo sopra */
       .hero{ position:relative; isolation:isolate; }
-      .hero img{ width:100%; aspect-ratio:1600/739; object-fit:cover; }
-      .hero__testo{ position:absolute; inset:auto 0 0 0; padding:var(--space-6) var(--space-4) var(--space-4); background:linear-gradient(to top, rgba(14,17,22,.92), rgba(14,17,22,.55) 60%, transparent); color:#F2E9DE; }
+      .hero img{ width:100%; aspect-ratio:1600/840; object-fit:cover; }
+      /* Il titolo sta sotto la striscia, non sopra: con quattro volti in fila una sfumatura li coprirebbe */
+      .hero__testo{ padding:var(--space-4) var(--space-4) 0; color:var(--ink); }
       .hero__testo h1{ margin:0; font-family:var(--font-display); font-weight:700; font-size:var(--fs-4); line-height:1.05; color:var(--giallo); letter-spacing:-.01em; }
       .hero__testo p{ margin:var(--space-1) 0 0; font-size:var(--fs-0); opacity:.9; }
       .sezione{ padding:var(--space-5) var(--space-4) 0; }
@@ -113,7 +114,7 @@
   <body>
     <main class="pagina">
       <header class="hero">
-        <img src="../img/grazie/02_dom_mariposa-negra_brindisi-in-tre-full.webp" width="1600" height="739" alt="Giulio, Manuel e Alessandro brindano al Mariposa Negra, con le tazze in ceramica e lo scaffale di sculture dietro" fetchpriority="high" />
+        <img src="../img/grazie/00_quattro_monne-giulio-manuel-ale-full.webp" width="1600" height="840" alt="I quattro del weekend, uno accanto all'altro: Monne alla Braseria Sarrià, Giulio al Mariposa Negra, Manuel al Mercat de Santa Caterina, Alessandro al Mariposa Negra" fetchpriority="high" />
         <div class="hero__testo">
           <h1>Grazie, ragazzi.</h1>
           <p>Barcellona, 16–18 ottobre 2026</p>
