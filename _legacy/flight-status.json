@@ -1,5 +1,5 @@
 {
-  "updatedUtc": "2026-10-18T19:47:00Z",
+  "updatedUtc": "2026-10-18T21:59:35Z",
   "flights": {
     "FR2097": {
       "text": "⏱️ Ritardo 94 min · stima 07:54",
@@ -26,16 +26,16 @@
       "updated": "21:36"
     },
     "FR5220": {
-      "text": "✅ In orario · T2",
-      "bad": false,
-      "status": "Expected",
-      "delay": 0,
+      "text": "⏱️ Ritardo 22 min · stima 23:27",
+      "bad": true,
+      "status": "GateClosed",
+      "delay": 22,
       "dep": {
         "airport": "BCN",
         "sched": "23:05",
-        "est": "23:05",
+        "est": "23:27",
         "terminal": "2",
-        "gate": null,
+        "gate": "U34",
         "belt": null
       },
       "arr": {
@@ -47,7 +47,7 @@
         "belt": null
       },
       "aircraft": "Boeing 737-800",
-      "updated": "21:46"
+      "updated": "23:59"
     }
   }
 }
