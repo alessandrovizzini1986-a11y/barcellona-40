@@ -15,7 +15,7 @@
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:type" content="image/jpeg" />
-    <meta property="og:image:alt" content="Manuel, Giulio e Alessandro al Mariposa Negra, brindisi in tre" />
+    <meta property="og:image:alt" content="Giulio, Manuel e Alessandro al Mariposa Negra, brindisi in tre" />
     <meta property="og:url" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/grazie/" />
     <meta property="og:site_name" content="Barcelona 40" />
     <meta property="og:locale" content="it_IT" />
@@ -65,7 +65,9 @@
       .amici{ display:flex; flex-direction:column; gap:var(--space-4); }
       .amico{ background:var(--bg-2); border:1px solid var(--line); border-left:4px solid var(--pc); border-radius:var(--radius-m); overflow:hidden; }
       .amico img{ width:100%; aspect-ratio:16/9; object-fit:cover; }
-      /* foto verticale (il selfie con Giulio): quadrata, come in galleria, così i due volti restano dentro */
+      /* foto verticale (il selfie con Manuel): quadrata, come in galleria, così i due volti restano dentro */
+      /* foto orizzontale in tre (Giulio sta a sinistra): il ritaglio resta ancorato a sinistra */
+      .amico--sinistra img{ object-position:left center; }
       .amico--alto img{ aspect-ratio:1/1; object-position:center 45%; }
       .amico__corpo{ padding:var(--space-4); }
       .amico__nome{ margin:0 0 var(--space-2); display:flex; align-items:center; gap:var(--space-2); font-family:var(--font-display); font-weight:700; font-size:var(--fs-2); }
@@ -111,7 +113,7 @@
   <body>
     <main class="pagina">
       <header class="hero">
-        <img src="../img/grazie/02_dom_mariposa-negra_brindisi-in-tre-full.webp" width="1600" height="739" alt="Manuel, Giulio e Alessandro brindano al Mariposa Negra, con le tazze in ceramica e lo scaffale di sculture dietro" fetchpriority="high" />
+        <img src="../img/grazie/02_dom_mariposa-negra_brindisi-in-tre-full.webp" width="1600" height="739" alt="Giulio, Manuel e Alessandro brindano al Mariposa Negra, con le tazze in ceramica e lo scaffale di sculture dietro" fetchpriority="high" />
         <div class="hero__testo">
           <h1>Grazie, ragazzi.</h1>
           <p>Barcellona, 16–18 ottobre 2026</p>
@@ -138,16 +140,16 @@
             </div>
             <small class="credito">foto: Alessandro</small>
           </article>
-          <article class="amico amico--alto" style="--pc:var(--blu)" data-amico="giulio">
-            <img src="../img/grazie/01_dom_santa-caterina_ale-giulio-thumb.webp" width="450" height="800" alt="Alessandro e Giulio al Mercat de Santa Caterina, davanti al banco del pesce; Giulio con la maglia bianca con la scritta Vizzini" loading="lazy" />
+          <article class="amico amico--sinistra" style="--pc:var(--blu)" data-amico="giulio">
+            <img src="../img/grazie/02_dom_mariposa-negra_brindisi-in-tre-thumb.webp" width="800" height="370" alt="Giulio, Manuel e Alessandro al Mariposa Negra: Giulio, a sinistra, alza la bottiglia verde" loading="lazy" />
             <div class="amico__corpo">
               <h3 class="amico__nome">Giulio</h3>
               <p>Ti sei presentato con il mio cognome stampato sulla maglietta. Non so ancora se era un omaggio o una minaccia, ma l'hai portata per tutto il Born e questo mi basta. Grazie per le foto, per la pazienza con la pioggia e per aver preso il gioco dei rigori più sul serio di tutti.</p>
             </div>
             <small class="credito">foto: Alessandro</small>
           </article>
-          <article class="amico" style="--pc:var(--acqua)" data-amico="manuel">
-            <img src="../img/grazie/02_dom_mariposa-negra_brindisi-in-tre-thumb.webp" width="800" height="370" alt="Manuel, Giulio e Alessandro al Mariposa Negra: Manuel alza la bottiglia verde" loading="lazy" />
+          <article class="amico amico--alto" style="--pc:var(--acqua)" data-amico="manuel">
+            <img src="../img/grazie/01_dom_santa-caterina_ale-giulio-thumb.webp" width="450" height="800" alt="Alessandro e Manuel al Mercat de Santa Caterina, davanti al banco del pesce; Manuel con la maglia bianca con la scritta Vizzini" loading="lazy" />
             <div class="amico__corpo">
               <h3 class="amico__nome">Manuel</h3>
               <p>Il più tranquillo del gruppo, quello che si siede, ordina bene e non si lamenta mai. Al Mariposa Negra hai alzato la bottiglia prima di tutti. Grazie per esserci arrivato nonostante l'orario del volo e per aver tenuto il ritmo quando il programma diceva una cosa e Barcellona un'altra.</p>
@@ -163,8 +165,8 @@
           <li><figure><button type="button" data-foto="0" aria-label="Apri la foto: venerdì 16, Mercat de Santa Caterina"><img src="../img/grazie/04_ven_santa-caterina_ale-monne-thumb.webp" width="450" height="800" alt="Alessandro e Monne al Mercat de Santa Caterina, con le insegne Xarcuteria sullo sfondo" loading="lazy" /><figcaption>Venerdì 16 · Mercat de Santa Caterina</figcaption></button></figure></li>
           <li><figure><button type="button" data-foto="1" aria-label="Apri la foto: venerdì 16, Bar Joan"><img src="../img/grazie/05_ven_bar-joan_ale-monne-thumb.webp" width="800" height="370" alt="Monne e Alessandro al bancone del Bar Joan, dentro il Mercat de Santa Caterina" loading="lazy" /><figcaption>Venerdì 16 · Bar Joan</figcaption></button></figure></li>
           <li><figure><button type="button" data-foto="2" aria-label="Apri la foto: venerdì 16, Braseria Sarrià"><img src="../img/grazie/03_ven_braseria-sarria_ale-monne-thumb.webp" width="800" height="370" alt="Monne e Alessandro alla Braseria Sarrià" loading="lazy" /><figcaption>Venerdì 16 · Braseria Sarrià</figcaption></button></figure></li>
-          <li><figure><button type="button" data-foto="3" aria-label="Apri la foto: domenica 18, Mercat de Santa Caterina"><img src="../img/grazie/01_dom_santa-caterina_ale-giulio-thumb.webp" width="450" height="800" alt="Alessandro e Giulio al Mercat de Santa Caterina" loading="lazy" /><figcaption>Domenica 18 · Mercat de Santa Caterina</figcaption></button></figure></li>
-          <li><figure><button type="button" data-foto="4" aria-label="Apri la foto: domenica 18, Mariposa Negra"><img src="../img/grazie/02_dom_mariposa-negra_brindisi-in-tre-thumb.webp" width="800" height="370" alt="Manuel, Giulio e Alessandro al Mariposa Negra" loading="lazy" /><figcaption>Domenica 18 · Mariposa Negra</figcaption></button></figure></li>
+          <li><figure><button type="button" data-foto="3" aria-label="Apri la foto: domenica 18, Mercat de Santa Caterina"><img src="../img/grazie/01_dom_santa-caterina_ale-giulio-thumb.webp" width="450" height="800" alt="Alessandro e Manuel al Mercat de Santa Caterina" loading="lazy" /><figcaption>Domenica 18 · Mercat de Santa Caterina</figcaption></button></figure></li>
+          <li><figure><button type="button" data-foto="4" aria-label="Apri la foto: domenica 18, Mariposa Negra"><img src="../img/grazie/02_dom_mariposa-negra_brindisi-in-tre-thumb.webp" width="800" height="370" alt="Giulio, Manuel e Alessandro al Mariposa Negra" loading="lazy" /><figcaption>Domenica 18 · Mariposa Negra</figcaption></button></figure></li>
         </ul>
         <small class="credito credito--galleria">foto: Alessandro</small>
       </section>
@@ -203,8 +205,8 @@
         { file: '04_ven_santa-caterina_ale-monne', did: 'Mercat de Santa Caterina', giorno: 'Venerdì 16', alt: 'Alessandro e Monne al Mercat de Santa Caterina' },
         { file: '05_ven_bar-joan_ale-monne', did: 'Bar Joan, dentro il Mercat de Santa Caterina', giorno: 'Venerdì 16', alt: 'Monne e Alessandro al bancone del Bar Joan' },
         { file: '03_ven_braseria-sarria_ale-monne', did: 'Braseria Sarrià', giorno: 'Venerdì 16', alt: 'Monne e Alessandro alla Braseria Sarrià' },
-        { file: '01_dom_santa-caterina_ale-giulio', did: 'Mercat de Santa Caterina', giorno: 'Domenica 18', alt: 'Alessandro e Giulio al Mercat de Santa Caterina' },
-        { file: '02_dom_mariposa-negra_brindisi-in-tre', did: 'Mariposa Negra, Plaça de les Olles 4', giorno: 'Domenica 18', alt: 'Manuel, Giulio e Alessandro al Mariposa Negra' }
+        { file: '01_dom_santa-caterina_ale-giulio', did: 'Mercat de Santa Caterina', giorno: 'Domenica 18', alt: 'Alessandro e Manuel al Mercat de Santa Caterina' },
+        { file: '02_dom_mariposa-negra_brindisi-in-tre', did: 'Mariposa Negra, Plaça de les Olles 4', giorno: 'Domenica 18', alt: 'Giulio, Manuel e Alessandro al Mariposa Negra' }
       ]
       var box = document.getElementById('lightbox'), img = document.getElementById('lightbox-img'), did = document.getElementById('lightbox-did')
       var corrente = -1, ultimoFocus = null
