@@ -14,10 +14,10 @@ const DOMINIO = 'https://alessandrovizzini1986-a11y.github.io/barcellona-40/'
 // ---- 1. i file ----
 const FOTO = ['01_dom_santa-caterina_ale-giulio', '02_dom_mariposa-negra_brindisi-in-tre', '03_ven_braseria-sarria_ale-monne', '04_ven_santa-caterina_ale-monne', '05_ven_bar-joan_ale-monne']
 ok('cinque foto in -full e -thumb WebP', FOTO.every((f) => existsSync(`public/img/grazie/${f}-full.webp`) && existsSync(`public/img/grazie/${f}-thumb.webp`)))
-ok('og-grazie.jpg 1200×630 sotto i 300 KB, non ricompressa (129 KB)', existsSync('public/img/og-grazie.jpg') && statSync('public/img/og-grazie.jpg').size < 300 * 1024 && Math.round(statSync('public/img/og-grazie.jpg').size / 1024) === 129)
+ok('og-grazie.jpg (i quattro, composta il 18/10) sotto i 300 KB', existsSync('public/img/og-grazie.jpg') && statSync('public/img/og-grazie.jpg').size < 300 * 1024)
 const html = readFileSync('public/grazie/index.html', 'utf8')
 const meta = (p) => (html.match(new RegExp(`<meta property="${p}" content="([^"]*)"`)) || [])[1]
-ok('OG: titolo, descrizione, immagine assoluta https con ?v=1, 1200×630, url assoluto, twitter card', meta('og:title') === 'Grazie, ragazzi — Barcelona 40' && meta('og:description') === 'Tre giorni, quattro amici, zero rimpianti. Le foto e due righe da Alessandro.' && meta('og:image') === `${DOMINIO}img/og-grazie.jpg?v=1` && meta('og:image:width') === '1200' && meta('og:image:height') === '630' && meta('og:url') === `${DOMINIO}grazie/` && /<meta name="twitter:card" content="summary_large_image"/.test(html) && meta('og:type') === 'website')
+ok('OG: titolo, descrizione, immagine assoluta https con ?v=1, 1200×630, url assoluto, twitter card', meta('og:title') === 'Grazie, ragazzi — Barcelona 40' && meta('og:description') === 'Tre giorni, quattro amici, zero rimpianti. Le foto e due righe da Alessandro.' && meta('og:image') === `${DOMINIO}img/og-grazie.jpg?v=2` && meta('og:image:width') === '1200' && meta('og:image:height') === '630' && meta('og:url') === `${DOMINIO}grazie/` && /<meta name="twitter:card" content="summary_large_image"/.test(html) && meta('og:type') === 'website')
 ok('nomi veri, nessun segnaposto', ['Alessandro', 'Giulio', 'Manuel', 'Monne'].every((n) => html.includes(n)) && !/placeholder|nome amico|TODO/i.test(html))
 ok('il testo di Alessandro c\'è, parola per parola', html.includes("Quaranta anni si fanno una volta sola e io li ho fatti con voi, sotto un'allerta arancione") && html.includes('La prossima tappa la decidete voi. Io porto la torta.') && html.includes('— Alessandro'))
 // Chi è chi (conferma di Alessandro del 18/10): maglia "Vizzini" = Manuel (suo cugino, Vizzini anche lui); capelli grigi e occhiali = Giulio
@@ -32,7 +32,7 @@ const segnaposto = (f) => { try { const t = readFileSync(f, 'utf8'); return /nom
 ok('niente segnaposto nel sito (src e public)', ![...readdirSync('src', { recursive: true }).map((f) => 'src/' + f), ...readdirSync('public', { recursive: true }).map((f) => 'public/' + f)].filter((f) => /\.(js|html|css)$/.test(String(f))).some(segnaposto))
 // la home: og:image nuova, descrizione nuova
 const home = readFileSync('index.html', 'utf8')
-ok('home: og:image = og-grazie.jpg?v=1 (jpeg) e la descrizione nuova', home.includes('content="%SITE_URL%img/og-grazie.jpg?v=1"') && home.includes('content="image/jpeg"') && home.includes("Il weekend dei 40 di Alessandro. Grazie a chi c'era."))
+ok('home: og:image = og-grazie.jpg?v=1 (jpeg) e la descrizione nuova', home.includes('content="%SITE_URL%img/og-grazie.jpg?v=2"') && home.includes('content="image/jpeg"') && home.includes("Il weekend dei 40 di Alessandro. Grazie a chi c'era."))
 // changelog
 const changelog = JSON.parse(readFileSync('data/changelog.json', 'utf8')).entries
 ok('changelog: la voce sulla pagina Grazie', changelog.some((e) => /ringraziamenti con le foto/.test(e.voci.join(' ')) && /\/grazie/.test(e.voci.join(' '))))
