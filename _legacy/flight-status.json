@@ -1,5 +1,5 @@
 {
-  "updatedUtc": "2026-10-18T01:50:16Z",
+  "updatedUtc": "2026-10-18T06:43:56Z",
   "flights": {
     "FR2097": {
       "text": "⏱️ Ritardo 94 min · stima 07:54",
@@ -47,7 +47,7 @@
         "belt": null
       },
       "aircraft": "Boeing 737-800",
-      "updated": "03:50"
+      "updated": "08:43"
     }
   }
 }
