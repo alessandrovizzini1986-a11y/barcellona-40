@@ -18,6 +18,7 @@ import { evento } from '../stats.js'
 import { montaMeteo, slotMeteo, statoMeteo } from '../ui/meteo.js'
 import { avvisoMiradorPioggia, PRENOTAZIONE_MIRADOR } from '../ui/pioggia.js'
 import { caricaAllerte, avvisoEsposto } from '../ui/allerte.js'
+import { URL_GRAZIE } from '../grazieLink.js'
 
 const DAY_LABEL = { ven: 'Venerdì 16', sab: 'Sabato 17', dom: 'Domenica 18' }
 
@@ -86,7 +87,12 @@ export async function render(root, opts) {
   if (ph === 'after') {
     const xp = xpFor(person), max = maxXpFor(person)
     const lv = levelFor(xp)
+    // Il viaggio è finito: la prima card porta alla pagina Grazie (statica, /grazie/, con le foto e due righe)
     html = header('Missione compiuta.') + `<section class="view">
+      <a class="grazie-card" href="${URL_GRAZIE}" data-grazie aria-label="Il viaggio è finito. Apri la pagina Grazie">
+        <span class="grazie-card__txt"><b>Il viaggio è finito.</b><span>Le foto e due righe da Alessandro</span></span>
+        <span class="grazie-card__cta">→ Grazie</span>
+      </a>
       <div class="hero">
         <div class="hero__label">18 ottobre, sera</div>
         <h2 style="font-size:var(--fs-4)">Missione compiuta</h2>

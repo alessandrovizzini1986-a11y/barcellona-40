@@ -249,3 +249,10 @@
 .avviso--allerta svg{ color:var(--terracotta); }
 .emergenze .list li a{ display:block; min-height:44px; display:flex; align-items:center; color:var(--ink); }
 @media (prefers-reduced-motion: reduce){ .banner-allerta{ transition:none; } }
+
+/* Oggi, a viaggio finito: la card che porta alla pagina Grazie (statica, /grazie/) */
+.grazie-card{ display:flex; align-items:center; gap:var(--space-3); padding:var(--space-4); border-radius:var(--radius-l); background:color-mix(in srgb, var(--giallo) 16%, var(--bg-2)); border:2px solid var(--giallo); color:var(--ink); text-decoration:none; min-height:72px; }
+.grazie-card__txt{ flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; }
+.grazie-card__txt b{ font-family:var(--font-display); font-weight:700; font-size:var(--fs-2); line-height:1.15; }
+.grazie-card__txt span{ color:var(--ink-2); font-size:var(--fs-0); }
+.grazie-card__cta{ flex:none; padding:10px 14px; border-radius:999px; background:var(--giallo); color:#0E1116; font-weight:700; white-space:nowrap; }

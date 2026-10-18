@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="robots" content="noindex, nofollow, noarchive" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Grazie, ragazzi — Barcelona 40</title>
+    <meta name="description" content="Tre giorni, quattro amici, zero rimpianti. Le foto e due righe da Alessandro." />
+    <!-- Pagina statica, fuori dal router a hash: WhatsApp e gli altri crawler leggono solo questo HTML,
+         quindi l'Open Graph sta qui, con URL assoluti in https. Nessuna build la tocca: public/ si copia com'è. -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Grazie, ragazzi — Barcelona 40" />
+    <meta property="og:description" content="Tre giorni, quattro amici, zero rimpianti. Le foto e due righe da Alessandro." />
+    <meta property="og:image" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/img/og-grazie.jpg?v=1" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:alt" content="Manuel, Giulio e Alessandro al Mariposa Negra, brindisi in tre" />
+    <meta property="og:url" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/grazie/" />
+    <meta property="og:site_name" content="Barcelona 40" />
+    <meta property="og:locale" content="it_IT" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="theme-color" content="#0E1116" />
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <link rel="preload" href="../fonts/ClashDisplay-Semibold.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="../fonts/Inter-Variable.woff2" as="font" type="font/woff2" crossorigin />
+    <style>
+      /* Stesso sistema del sito (src/styles/tokens.css), inline: la pagina si apre anche senza JS e senza la build */
+      :root{
+        --bg:#0E1116; --bg-2:#151A21; --bg-3:#1C232C;
+        --ink:#F2E9DE; --ink-2:#B9B2A7; --ink-3:#7E7A72;
+        --terracotta:#E8552E; --acqua:#2CA6A4; --giallo:#F2B705; --blu:#3D5A80;
+        --radius-s:10px; --radius-m:16px; --radius-l:24px;
+        --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px; --space-5:24px; --space-6:32px; --space-7:48px;
+        --shadow-2:0 8px 24px rgba(0,0,0,.45);
+        --font-display:"Clash Display", system-ui, sans-serif; --font-body:"Inter", system-ui, sans-serif;
+        --fs-0:clamp(13px,3.4vw,14px); --fs-1:16px; --fs-2:clamp(18px,4.6vw,20px); --fs-3:clamp(24px,6.5vw,30px); --fs-4:clamp(34px,9.5vw,44px);
+        --ease:cubic-bezier(.2,.8,.2,1); --dur-2:220ms; --dur-3:420ms;
+        --line:color-mix(in srgb, var(--ink) 12%, transparent);
+        --safe-b:env(safe-area-inset-bottom,0px);
+      }
+      :root[data-theme="light"]{ --bg:#F7F2EA; --bg-2:#FFFFFF; --bg-3:#EFE8DD; --ink:#151A21; --ink-2:#4A4740; --ink-3:#7E7A72; color-scheme:light; }
+      @media (prefers-reduced-motion: reduce){ :root{ --dur-2:0ms; --dur-3:0ms; } }
+      @font-face{ font-family:"Clash Display"; src:url("../fonts/ClashDisplay-Semibold.woff2") format("woff2"); font-weight:600; font-style:normal; font-display:swap; }
+      @font-face{ font-family:"Clash Display"; src:url("../fonts/ClashDisplay-Bold.woff2") format("woff2"); font-weight:700; font-style:normal; font-display:swap; }
+      @font-face{ font-family:"Inter"; src:url("../fonts/Inter-Variable.woff2") format("woff2"); font-weight:100 900; font-style:normal; font-display:swap; }
+      *,*::before,*::after{ box-sizing:border-box; }
+      html{ background:var(--bg); color:var(--ink); color-scheme:dark; -webkit-text-size-adjust:100%; }
+      body{ margin:0; font-family:var(--font-body); font-size:var(--fs-1); line-height:1.5; overflow-x:hidden; }
+      img{ display:block; max-width:100%; height:auto; }
+      a{ color:inherit; }
+      .pagina{ max-width:640px; margin:0 auto; padding:0 0 calc(var(--space-7) + var(--safe-b)); }
+      /* Hero: la foto a tutta larghezza, il titolo in giallo sopra */
+      .hero{ position:relative; isolation:isolate; }
+      .hero img{ width:100%; aspect-ratio:1600/739; object-fit:cover; }
+      .hero__testo{ position:absolute; inset:auto 0 0 0; padding:var(--space-6) var(--space-4) var(--space-4); background:linear-gradient(to top, rgba(14,17,22,.92), rgba(14,17,22,.55) 60%, transparent); color:#F2E9DE; }
+      .hero__testo h1{ margin:0; font-family:var(--font-display); font-weight:700; font-size:var(--fs-4); line-height:1.05; color:var(--giallo); letter-spacing:-.01em; }
+      .hero__testo p{ margin:var(--space-1) 0 0; font-size:var(--fs-0); opacity:.9; }
+      .sezione{ padding:var(--space-5) var(--space-4) 0; }
+      .lettera p{ margin:0 0 var(--space-4); color:var(--ink-2); }
+      .lettera p:last-child{ margin:0; color:var(--ink); font-weight:600; }
+      .lettera .firma{ font-family:var(--font-display); font-weight:600; font-size:var(--fs-2); color:var(--terracotta); }
+      h2.titolo{ margin:0 0 var(--space-3); font-family:var(--font-display); font-weight:600; font-size:var(--fs-2); line-height:1.2; }
+      /* Le tre card, una per amico: il colore del profilo è lo stesso del sito */
+      .amici{ display:flex; flex-direction:column; gap:var(--space-4); }
+      .amico{ background:var(--bg-2); border:1px solid var(--line); border-left:4px solid var(--pc); border-radius:var(--radius-m); overflow:hidden; }
+      .amico img{ width:100%; aspect-ratio:16/9; object-fit:cover; }
+      .amico--alto img{ object-position:center 30%; }
+      .amico__corpo{ padding:var(--space-4); }
+      .amico__nome{ margin:0 0 var(--space-2); display:flex; align-items:center; gap:var(--space-2); font-family:var(--font-display); font-weight:700; font-size:var(--fs-2); }
+      .amico__nome::before{ content:""; width:10px; height:10px; border-radius:50%; background:var(--pc); flex:none; }
+      .amico__corpo p{ margin:0; color:var(--ink-2); font-size:var(--fs-1); }
+      .credito{ display:block; padding:var(--space-1) var(--space-4) 0; font-size:var(--fs-0); color:var(--ink-3); }
+      .amico .credito{ padding:0 var(--space-4) var(--space-3); }
+      /* Galleria: due colonne, miniature, tap → lightbox */
+      .galleria{ display:grid; grid-template-columns:1fr 1fr; gap:var(--space-2); margin:0; padding:0; list-style:none; }
+      .galleria li{ margin:0; }
+      .galleria button{ display:block; width:100%; padding:0; border:0; background:var(--bg-3); border-radius:var(--radius-s); overflow:hidden; cursor:pointer; color:inherit; font:inherit; text-align:left; }
+      .galleria button:focus-visible{ outline:3px solid var(--giallo); outline-offset:2px; }
+      .galleria img{ width:100%; aspect-ratio:1/1; object-fit:cover; }
+      .galleria figcaption{ padding:var(--space-2) var(--space-3); font-size:var(--fs-0); color:var(--ink-2); line-height:1.3; }
+      .galleria figure{ margin:0; }
+      .credito--galleria{ padding-left:0; }
+      /* Numeri: solo se su questo telefono c'è qualcosa di spuntato */
+      .numeri{ display:grid; grid-template-columns:repeat(auto-fit, minmax(96px, 1fr)); gap:var(--space-2); }
+      .numeri[hidden]{ display:none; }
+      .tessera{ background:var(--bg-2); border:1px solid var(--line); border-radius:var(--radius-m); padding:var(--space-3); text-align:center; }
+      .tessera b{ display:block; font-family:var(--font-display); font-weight:700; font-size:var(--fs-3); line-height:1; color:var(--giallo); font-variant-numeric:tabular-nums; }
+      .tessera span{ display:block; margin-top:var(--space-1); font-size:var(--fs-0); color:var(--ink-2); }
+      .numeri__nota{ margin:var(--space-2) 0 0; font-size:var(--fs-0); color:var(--ink-3); }
+      /* Chiusura */
+      .chiusura{ display:flex; flex-direction:column; align-items:center; gap:var(--space-3); }
+      .btn{ display:inline-flex; align-items:center; justify-content:center; gap:var(--space-2); width:100%; min-height:52px; padding:0 var(--space-5); border-radius:999px; border:0; background:var(--giallo); color:#0E1116; font:inherit; font-weight:700; font-size:var(--fs-1); text-decoration:none; }
+      .btn svg{ width:20px; height:20px; }
+      .torna{ font-size:var(--fs-0); color:var(--ink-3); }
+      /* Lightbox: a schermo pieno, vanilla; swipe a sinistra e a destra, Esc per chiudere */
+      .lightbox{ position:fixed; inset:0; z-index:50; display:none; flex-direction:column; background:rgba(8,10,13,.96); color:#F2E9DE; touch-action:pan-y; }
+      .lightbox[data-aperta="true"]{ display:flex; }
+      .lightbox__palco{ flex:1; min-height:0; display:grid; place-items:center; padding:var(--space-3); }
+      .lightbox__palco img{ max-width:100%; max-height:100%; width:auto; height:auto; object-fit:contain; border-radius:var(--radius-s); transition:opacity var(--dur-2) var(--ease); }
+      .lightbox__barra{ display:flex; align-items:center; gap:var(--space-3); padding:var(--space-3) var(--space-4) calc(var(--space-4) + var(--safe-b)); }
+      .lightbox__did{ flex:1; min-width:0; margin:0; font-size:var(--fs-0); color:#B9B2A7; }
+      .lightbox__did b{ display:block; color:#F2E9DE; }
+      .lightbox button{ width:44px; height:44px; flex:none; border-radius:50%; border:1px solid rgba(255,255,255,.25); background:rgba(255,255,255,.08); color:inherit; font:inherit; cursor:pointer; display:grid; place-items:center; }
+      .lightbox button svg{ width:22px; height:22px; }
+      .lightbox__chiudi{ position:absolute; top:var(--space-3); right:var(--space-3); }
+      @media (min-width:600px){ .hero__testo h1{ font-size:48px; } }
+    </style>
+  </head>
+  <body>
+    <main class="pagina">
+      <header class="hero">
+        <img src="../img/grazie/02_dom_mariposa-negra_brindisi-in-tre-full.webp" width="1600" height="739" alt="Manuel, Giulio e Alessandro brindano al Mariposa Negra, con le tazze in ceramica e lo scaffale di sculture dietro" fetchpriority="high" />
+        <div class="hero__testo">
+          <h1>Grazie, ragazzi.</h1>
+          <p>Barcellona, 16–18 ottobre 2026</p>
+        </div>
+      </header>
+      <small class="credito">foto: Alessandro</small>
+
+      <section class="sezione lettera" aria-label="Due righe da Alessandro">
+        <p>Quaranta anni si fanno una volta sola e io li ho fatti con voi, sotto un'allerta arancione, con un ombrello in due e la convinzione che tanto "poi passa". È passata. Siamo andati a cena lo stesso.</p>
+        <p>Questo sito era nato per non perdervi per strada. Alla fine è servito soprattutto a sapere dove fosse il bagno più vicino, e va bene così: anche questo è prendersi cura degli amici.</p>
+        <p>Grazie di aver preso un volo alle sei del mattino, di aver camminato più del previsto, di aver detto "sì" a ogni tappa senza sapere cosa fosse, e di aver cantato (male) quando non c'era nessun motivo per farlo.</p>
+        <p>La prossima tappa la decidete voi. Io porto la torta.</p>
+        <p><span class="firma">— Alessandro</span></p>
+      </section>
+
+      <section class="sezione" aria-label="Uno per uno">
+        <h2 class="titolo">Uno per uno</h2>
+        <div class="amici">
+          <article class="amico" style="--pc:var(--giallo)" data-amico="monne">
+            <img src="../img/grazie/03_ven_braseria-sarria_ale-monne-thumb.webp" width="800" height="370" alt="Monne e Alessandro alla Braseria Sarrià, sulla terrazza con le piante e gli ombrelloni, calici in mano" loading="lazy" />
+            <div class="amico__corpo">
+              <h3 class="amico__nome">Monne</h3>
+              <p>Venerdì. Solo tu e io, il mercato di Santa Caterina, il bancone del Bar Joan e una bistecca che non finiva mai. Sei partito sabato mattina ma hai aperto il weekend nel modo giusto. Grazie per esserci stato il primo giorno, quando ancora non era festa.</p>
+            </div>
+            <small class="credito">foto: Alessandro</small>
+          </article>
+          <article class="amico amico--alto" style="--pc:var(--blu)" data-amico="giulio">
+            <img src="../img/grazie/01_dom_santa-caterina_ale-giulio-thumb.webp" width="450" height="800" alt="Alessandro e Giulio al Mercat de Santa Caterina, davanti al banco del pesce; Giulio con la maglia bianca con la scritta Vizzini" loading="lazy" />
+            <div class="amico__corpo">
+              <h3 class="amico__nome">Giulio</h3>
+              <p>Ti sei presentato con il mio cognome stampato sulla maglietta. Non so ancora se era un omaggio o una minaccia, ma l'hai portata per tutto il Born e questo mi basta. Grazie per le foto, per la pazienza con la pioggia e per aver preso il gioco dei rigori più sul serio di tutti.</p>
+            </div>
+            <small class="credito">foto: Alessandro</small>
+          </article>
+          <article class="amico" style="--pc:var(--acqua)" data-amico="manuel">
+            <img src="../img/grazie/02_dom_mariposa-negra_brindisi-in-tre-thumb.webp" width="800" height="370" alt="Manuel, Giulio e Alessandro al Mariposa Negra: Manuel alza la bottiglia verde" loading="lazy" />
+            <div class="amico__corpo">
+              <h3 class="amico__nome">Manuel</h3>
+              <p>Il più tranquillo del gruppo, quello che si siede, ordina bene e non si lamenta mai. Al Mariposa Negra hai alzato la bottiglia prima di tutti. Grazie per esserci arrivato nonostante l'orario del volo e per aver tenuto il ritmo quando il programma diceva una cosa e Barcellona un'altra.</p>
+            </div>
+            <small class="credito">foto: Alessandro</small>
+          </article>
+        </div>
+      </section>
+
+      <section class="sezione" aria-label="Le foto">
+        <h2 class="titolo">Le foto</h2>
+        <ul class="galleria" id="galleria">
+          <li><figure><button type="button" data-foto="0" aria-label="Apri la foto: venerdì 16, Mercat de Santa Caterina"><img src="../img/grazie/04_ven_santa-caterina_ale-monne-thumb.webp" width="450" height="800" alt="Alessandro e Monne al Mercat de Santa Caterina, con le insegne Xarcuteria sullo sfondo" loading="lazy" /><figcaption>Venerdì 16 · Mercat de Santa Caterina</figcaption></button></figure></li>
+          <li><figure><button type="button" data-foto="1" aria-label="Apri la foto: venerdì 16, Bar Joan"><img src="../img/grazie/05_ven_bar-joan_ale-monne-thumb.webp" width="800" height="370" alt="Monne e Alessandro al bancone del Bar Joan, dentro il Mercat de Santa Caterina" loading="lazy" /><figcaption>Venerdì 16 · Bar Joan</figcaption></button></figure></li>
+          <li><figure><button type="button" data-foto="2" aria-label="Apri la foto: venerdì 16, Braseria Sarrià"><img src="../img/grazie/03_ven_braseria-sarria_ale-monne-thumb.webp" width="800" height="370" alt="Monne e Alessandro alla Braseria Sarrià" loading="lazy" /><figcaption>Venerdì 16 · Braseria Sarrià</figcaption></button></figure></li>
+          <li><figure><button type="button" data-foto="3" aria-label="Apri la foto: domenica 18, Mercat de Santa Caterina"><img src="../img/grazie/01_dom_santa-caterina_ale-giulio-thumb.webp" width="450" height="800" alt="Alessandro e Giulio al Mercat de Santa Caterina" loading="lazy" /><figcaption>Domenica 18 · Mercat de Santa Caterina</figcaption></button></figure></li>
+          <li><figure><button type="button" data-foto="4" aria-label="Apri la foto: domenica 18, Mariposa Negra"><img src="../img/grazie/02_dom_mariposa-negra_brindisi-in-tre-thumb.webp" width="800" height="370" alt="Manuel, Giulio e Alessandro al Mariposa Negra" loading="lazy" /><figcaption>Domenica 18 · Mariposa Negra</figcaption></button></figure></li>
+        </ul>
+        <small class="credito credito--galleria">foto: Alessandro</small>
+      </section>
+
+      <section class="sezione" aria-label="I numeri del weekend" id="numeri-sezione" hidden>
+        <h2 class="titolo">I numeri del weekend</h2>
+        <div class="numeri" id="numeri"></div>
+        <p class="numeri__nota">Contati su questo telefono: quello che hai spuntato tu nel sito.</p>
+      </section>
+
+      <section class="sezione chiusura">
+        <a class="btn" id="whatsapp" href="https://wa.me/?text=Grazie%20ragazzi%20%F0%9F%99%8F%20https%3A%2F%2Falessandrovizzini1986-a11y.github.io%2Fbarcellona-40%2Fgrazie%2F" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>
+          Condividi su WhatsApp
+        </a>
+        <a class="torna" href="../">Torna al sito</a>
+      </section>
+    </main>
+
+    <div class="lightbox" id="lightbox" data-aperta="false" role="dialog" aria-modal="true" aria-label="Foto a schermo pieno" hidden>
+      <button type="button" class="lightbox__chiudi" data-chiudi aria-label="Chiudi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+      <div class="lightbox__palco" data-palco><img id="lightbox-img" src="" alt="" /></div>
+      <div class="lightbox__barra">
+        <button type="button" data-prec aria-label="Foto precedente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
+        <p class="lightbox__did" id="lightbox-did"></p>
+        <button type="button" data-succ aria-label="Foto successiva"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button>
+      </div>
+    </div>
+
+    <script>
+      // Tema: lo stesso salvato dal sito (b40:v1:theme), così chi usa il chiaro lo trova anche qui
+      try { if (JSON.parse(localStorage.getItem('b40:v1:theme')) === 'light') document.documentElement.dataset.theme = 'light' } catch (e) {}
+
+      // Le foto, nell'ordine della galleria: file -full per il lightbox, didascalia = giorno + luogo
+      var FOTO = [
+        { file: '04_ven_santa-caterina_ale-monne', did: 'Mercat de Santa Caterina', giorno: 'Venerdì 16', alt: 'Alessandro e Monne al Mercat de Santa Caterina' },
+        { file: '05_ven_bar-joan_ale-monne', did: 'Bar Joan, dentro il Mercat de Santa Caterina', giorno: 'Venerdì 16', alt: 'Monne e Alessandro al bancone del Bar Joan' },
+        { file: '03_ven_braseria-sarria_ale-monne', did: 'Braseria Sarrià', giorno: 'Venerdì 16', alt: 'Monne e Alessandro alla Braseria Sarrià' },
+        { file: '01_dom_santa-caterina_ale-giulio', did: 'Mercat de Santa Caterina', giorno: 'Domenica 18', alt: 'Alessandro e Giulio al Mercat de Santa Caterina' },
+        { file: '02_dom_mariposa-negra_brindisi-in-tre', did: 'Mariposa Negra, Plaça de les Olles 4', giorno: 'Domenica 18', alt: 'Manuel, Giulio e Alessandro al Mariposa Negra' }
+      ]
+      var box = document.getElementById('lightbox'), img = document.getElementById('lightbox-img'), did = document.getElementById('lightbox-did')
+      var corrente = -1, ultimoFocus = null
+      function mostra (i) {
+        corrente = (i + FOTO.length) % FOTO.length
+        var f = FOTO[corrente]
+        img.style.opacity = '0'
+        img.onload = function () { img.style.opacity = '1' }
+        img.src = '../img/grazie/' + f.file + '-full.webp'
+        img.alt = f.alt
+        did.innerHTML = '<b>' + f.giorno + '</b>' + f.did + ' · ' + (corrente + 1) + ' di ' + FOTO.length
+      }
+      function apri (i) {
+        ultimoFocus = document.activeElement
+        box.hidden = false; box.dataset.aperta = 'true'; document.body.style.overflow = 'hidden'
+        mostra(i)
+        box.querySelector('[data-chiudi]').focus()
+      }
+      function chiudi () {
+        box.dataset.aperta = 'false'; box.hidden = true; document.body.style.overflow = ''
+        if (ultimoFocus && ultimoFocus.focus) ultimoFocus.focus()
+      }
+      document.getElementById('galleria').addEventListener('click', function (e) {
+        var b = e.target.closest('[data-foto]'); if (b) apri(+b.dataset.foto)
+      })
+      box.addEventListener('click', function (e) {
+        if (e.target.closest('[data-chiudi]')) chiudi()
+        else if (e.target.closest('[data-prec]')) mostra(corrente - 1)
+        else if (e.target.closest('[data-succ]')) mostra(corrente + 1)
+        else if (e.target === box.querySelector('[data-palco]')) chiudi()
+      })
+      document.addEventListener('keydown', function (e) {
+        if (box.dataset.aperta !== 'true') return
+        if (e.key === 'Escape') chiudi()
+        else if (e.key === 'ArrowLeft') mostra(corrente - 1)
+        else if (e.key === 'ArrowRight') mostra(corrente + 1)
+      })
+      // Swipe: orizzontale netto (oltre 40 px, più largo che alto) → foto prima o dopo
+      var x0 = null, y0 = null
+      box.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; y0 = e.touches[0].clientY }, { passive: true })
+      box.addEventListener('touchend', function (e) {
+        if (x0 == null) return
+        var dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0
+        x0 = y0 = null
+        if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) mostra(dx < 0 ? corrente + 1 : corrente - 1)
+      })
+
+      // I numeri: quello che questo telefono ha spuntato nel sito (stesse chiavi di src/store.js).
+      // XP = somma delle missioni chiuse (valori di data/missions.json). Niente di inventato: senza dati, niente tessere.
+      try {
+        var XP = { m1: 30, m2: 40, m3: 50, m4: 100, m5: 40, m6: 60, m7: 40, m8: 30, m9: 80, m10: 50, m11: 40, m12: 70, m13: 30, m14: 40 }
+        var fatte = JSON.parse(localStorage.getItem('b40:v1:done') || '[]'), missioni = JSON.parse(localStorage.getItem('b40:v1:missions') || '[]')
+        var xp = missioni.reduce(function (n, id) { return n + (XP[id] || 0) }, 0)
+        var tessere = []
+        if (fatte.length) tessere.push([fatte.length, fatte.length === 1 ? 'tappa spuntata' : 'tappe spuntate'])
+        if (missioni.length) tessere.push([missioni.length, missioni.length === 1 ? 'missione chiusa' : 'missioni chiuse'])
+        if (xp) tessere.push([xp, 'XP'])
+        if (tessere.length) {
+          document.getElementById('numeri').innerHTML = tessere.map(function (t) { return '<div class="tessera"><b>' + t[0] + '</b><span>' + t[1] + '</span></div>' }).join('')
+          document.getElementById('numeri-sezione').hidden = false
+        }
+      } catch (e) {}
+    </script>
+    <!-- Statistiche anonime (GoatCounter), come il resto del sito: questa pagina conta come /grazie -->
+    <script data-goatcounter="https://barcellona40.goatcounter.com/count"
+            data-goatcounter-settings='{"path": "/grazie", "title": "Grazie"}'
+            async src="//gc.zgo.at/count.js"></script>
+  </body>
+</html>
