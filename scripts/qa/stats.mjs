@@ -114,24 +114,16 @@ const eventi = async (p) => (await conte(p)).filter((c) => c[2])
   await ctx.close()
 }
 
-// 8. Eventi dell'album, della canzone e del gioco (tutti presenti in Info)
+// 8. Eventi dell'album e del gioco (tutti presenti in Info)
 {
   const { p, ctx, errs } = await open('/?stats=prova#/info')
   await p.locator('#sec-extra summary').click() // la sezione Extra è chiusa: dentro c'è il gioco
   await tocca(p, '.album__cta')
   await tocca(p, '[data-album-copy]')
-  await tocca(p, '[data-song-dl="mp3"]')
-  await tocca(p, '[data-song-dl="video"]')
-  await tocca(p, '[data-song-coro]')
   await tocca(p, '[data-rigori]')
-  // play e pause dell'audio non si pilotano dai controlli nativi: si verifica il collegamento
-  await p.evaluate(() => {
-    document.querySelector('[data-song-audio]')?.dispatchEvent(new Event('play'))
-    document.querySelector('[data-song-video]')?.dispatchEvent(new Event('play'))
-  })
   await p.waitForTimeout(400)
   const ev = (await eventi(p)).map((c) => c[0] + '|' + c[1])
-  for (const nome of ['album-apri', 'album-copia-link', 'canzone-scarica-mp3', 'canzone-scarica-video', 'coro-apri', 'rigori-apri', 'canzone-play', 'canzone-video']) {
+  for (const nome of ['album-apri', 'album-copia-link', 'rigori-apri']) {
     ok(`evento ${nome}`, ev.includes(`alessandro/${nome}|${nome}`), ev.join(' , '))
   }
   ok('gli eventi non sono viste (event: true)', (await conte(p)).filter((c) => c[2]).length === ev.length)

@@ -108,13 +108,13 @@ for (const hops of [2, 3, 5]) {
   await ctx.close()
 }
 
-// 7. Missioni: molte navigazioni, poi una spunta sola → +50 una volta sola
+// 7. Missioni: molte navigazioni, poi una spunta sola → gli XP della missione una volta sola
 {
   const { p, ctx } = await open('giulio')
   for (const h of ['missioni', 'oggi', 'missioni', 'programma/sab', 'missioni', 'info', 'missioni']) await go(p, h)
-  await tick(p, 'input[data-mission="m15"]', true)
-  ok('m15: XP = 50 esatti', (await p.locator('.ring__label').first().textContent()).trim().startsWith('50'))
-  ok('m15: un solo toast', (await p.locator('.toast').count()) === 1)
+  await tick(p, 'input[data-mission="m9"]', true)
+  ok('m9: XP = 80 esatti', (await p.locator('.ring__label').first().textContent()).trim().startsWith('80'))
+  ok('m9: un solo toast', (await p.locator('.toast').count()) === 1)
   await ctx.close()
 }
 await b.close()

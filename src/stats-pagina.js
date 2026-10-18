@@ -25,21 +25,16 @@ const BLOCCO = 6
 const SLUG = { ale: 'alessandro', monne: 'monne', giulio: 'giulio', manuel: 'manuel' }
 const PROFILI = people.people.map((p) => ({ id: p.id, nome: p.name, slug: SLUG[p.id], colore: p.color }))
 
-// Le sezioni con la barra. Coro e speedrun non sono "sezioni guardate" come le altre: entrano nel
+// Le sezioni con la barra. Lo speedrun non è una "sezione guardata" come le altre: entra nel
 // totale e compaiono solo a chi le ha davvero aperte.
 const SEZIONI = [['oggi', 'Oggi'], ['programma', 'Programma'], ['mappa', 'Mappa'], ['missioni', 'Missioni'], ['info', 'Info']]
-const EXTRA = [['coro', 'Coro'], ['speedrun', 'Speedrun']]
+const EXTRA = [['speedrun', 'Speedrun']]
 
 const EVENTI = [
   { id: 'album-apri', label: "Aperto l'album" },
   { id: 'album-copia-link', label: 'Copiato il link dell’album' },
   { id: 'album-whatsapp', label: "Mandato l'album su WhatsApp", solo: 'ale' },
   { id: 'meteo-apri', label: 'Aperto il meteo' },
-  { id: 'canzone-play', label: 'Ascoltata la canzone' },
-  { id: 'canzone-video', label: 'Guardato il video' },
-  { id: 'canzone-scarica-mp3', label: "Scaricato l'MP3" },
-  { id: 'canzone-scarica-video', label: 'Scaricato il video' },
-  { id: 'coro-apri', label: 'Aperta la modalità coro' },
   { id: 'maps-tappa', label: 'Aperta una tappa su Maps' },
   { id: 'maps-percorso', label: 'Aperto un percorso su Maps' },
   { id: 'taxi', label: 'Chiamato un taxi' },
@@ -65,7 +60,6 @@ function percorsi() {
   const out = []
   for (const p of PROFILI) {
     for (const [v] of SEZIONI) out.push(`/${p.slug}/${v}`)
-    out.push(`/${p.slug}/coro`)
     if (p.id === 'monne') out.push(`/${p.slug}/speedrun`)
     for (const e of EVENTI) if (!e.solo || e.solo === p.id) out.push(`${p.slug}/${e.id}`)
   }

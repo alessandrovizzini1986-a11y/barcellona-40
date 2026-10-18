@@ -29,9 +29,9 @@ R.numero('url esterni provati', n)
 // ---- bundle: ogni risorsa referenziata risponde ----
 const b = await lancia()
 const { p, ctx, rete } = await pagina(b)
-const rotte = ['#/oggi', '#/programma/ven', '#/programma/sab', '#/programma/dom', '#/mappa', '#/missioni', '#/info', '#/info/viaggio', '#/coro', '#/speedrun']
+const rotte = ['#/oggi', '#/programma/ven', '#/programma/sab', '#/programma/dom', '#/mappa', '#/missioni', '#/info', '#/info/viaggio', '#/speedrun']
 for (const h of rotte) { const { p: q, ctx: c, erroriVeri } = await pagina(b, { person: h === '#/speedrun' ? 'monne' : 'ale' }); await vai(q, h); const e = erroriVeri(); if (e.length) R.problema('ALTA', `rotta ${h}: errori`, { nota: e.join(' | ').slice(0, 200) }); else R.ok(`rotta ${h} senza errori`); await c.close() }
-for (const h of ['rigori/', 'stats-dtcmbsis.html', 'canzone.html?now=2026-10-10T10:00']) { const { p: q, ctx: c, erroriVeri } = await pagina(b); await q.goto(base + '/' + h, { waitUntil: 'load' }).catch(() => {}); await q.waitForTimeout(1500); const e = erroriVeri(); if (e.length) R.problema('ALTA', `pagina ${h}: errori`, { nota: e.join(' | ').slice(0, 200) }); else R.ok(`pagina ${h} senza errori`); await c.close() }
+for (const h of ['rigori/', 'stats-dtcmbsis.html']) { const { p: q, ctx: c, erroriVeri } = await pagina(b); await q.goto(base + '/' + h, { waitUntil: 'load' }).catch(() => {}); await q.waitForTimeout(1500); const e = erroriVeri(); if (e.length) R.problema('ALTA', `pagina ${h}: errori`, { nota: e.join(' | ').slice(0, 200) }); else R.ok(`pagina ${h} senza errori`); await c.close() }
 // risorse 404 dal bundle: tutte le viste caricate, poi la lista delle risposte ≥ 400 verso il preview
 for (const h of rotte) await vai(p, h)
 const r404 = rete.filter((r) => r.status && r.url.startsWith(base))

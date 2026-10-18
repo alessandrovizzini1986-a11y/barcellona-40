@@ -29,7 +29,7 @@ const GIORNI = ['dom', 'lun', 'mar', 'mer', 'gio', 'ven', 'sab']
 const SLUG = { ale: 'alessandro', monne: 'monne', giulio: 'giulio', manuel: 'manuel' }
 const NOMI = Object.fromEntries(people.people.map((p) => [SLUG[p.id], p.name]))
 const COLORI = Object.fromEntries(people.people.map((p) => [SLUG[p.id], p.color]))
-const VISTE = { oggi: 'Oggi', programma: 'Programma', mappa: 'Mappa', missioni: 'Missioni', info: 'Info', coro: 'Coro', speedrun: 'Speedrun' }
+const VISTE = { oggi: 'Oggi', programma: 'Programma', mappa: 'Mappa', missioni: 'Missioni', info: 'Info', speedrun: 'Speedrun' }
 const TAPPE = Object.fromEntries(itinerary.days.flatMap((d) => d.stops).map((s) => [s.id, s.title]))
 const PROFILI = Object.keys(NOMI)
 

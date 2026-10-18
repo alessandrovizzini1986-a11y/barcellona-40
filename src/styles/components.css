@@ -239,65 +239,6 @@ select.input,input.input{ min-height:44px; background:var(--bg-3); border:1px so
    lo stesso ingombro, a 22 sembrava più grande degli altri due. */
 .header__rigori svg{ width:20px; height:20px; }
 
-/* Inno ufficiale */
-.song{ position:relative; display:flex; flex-direction:column; justify-content:flex-end; gap:var(--space-3); min-height:560px; padding:var(--space-4); border-radius:var(--radius-l); background-color:var(--bg-2); border:2px solid var(--terracotta); overflow:hidden; isolation:isolate; }
-.song::before{ content:""; position:absolute; inset:0; background-image:var(--song-mosaic); background-size:420px 420px; opacity:.10; pointer-events:none; z-index:1; }
-.song > *{ position:relative; z-index:2; }
-/* Canvas: la papera sta in basso al centro nel video, quindi l'inquadratura resta su di lei
-   anche quando la card è più larga che alta */
-/* Su telefono la card è molto più alta che larga: il video tiene il suo 3:4 ancorato in alto e sfuma
-   nel fondo della card, così la papera resta nel palco in alto. Quando invece la card è più larga
-   che alta (desktop), max-height lo limita alla card e il ritaglio verticale al 60% tiene la papera. */
-.song__canvas{ position:absolute; top:0; left:0; z-index:0; width:100%; height:auto; aspect-ratio:540/720; max-height:100%; object-fit:cover; object-position:center 60%; background-color:#0E1116; pointer-events:none; -webkit-mask-image:linear-gradient(180deg, #000 62%, transparent 100%); mask-image:linear-gradient(180deg, #000 62%, transparent 100%); }
-.song__canvas--still{ background-position:center 60%; background-size:cover; background-repeat:no-repeat; }
-/* ▶ della papera: in alto a destra, sopra lo sfumato, dove il video non copre niente di scritto */
-.song.song .song__play{ position:absolute; top:var(--space-3); right:var(--space-3); z-index:3; width:44px; height:44px; padding:0; border-radius:50%; display:flex; align-items:center; justify-content:center; background:rgba(14,17,22,.55); color:#fff; border:1px solid rgba(255,255,255,.4); cursor:pointer; }
-.song__play svg{ width:22px; height:22px; margin-left:2px; }
-/* Gradiente: denso in basso dove stanno titolo e pulsanti, leggero in alto dove resta la papera */
-.song__shade{ position:absolute; inset:0; z-index:1; background:linear-gradient(180deg, rgba(14,17,22,.25) 0%, rgba(14,17,22,.55) 45%, rgba(14,17,22,.88) 100%); pointer-events:none; }
-.song__stage{ flex:1 1 auto; min-height:240px; }
-.song__head{ display:flex; gap:var(--space-4); align-items:center; }
-.song__disc{ flex:none; width:64px; height:64px; border-radius:50%; background:color-mix(in srgb, var(--terracotta) 18%, transparent); color:var(--terracotta); display:grid; place-items:center; }
-.song__disc svg{ width:38px; height:38px; }
-.song__disc--spin svg{ animation:song-spin 4s linear infinite; }
-@keyframes song-spin{ to{ transform:rotate(360deg); } }
-@media (prefers-reduced-motion: reduce){ .song__disc--spin svg{ animation:none; } }
-.song__meta{ min-width:0; display:flex; flex-direction:column; gap:var(--space-1); }
-.song__title{ font-family:var(--font-display); font-weight:700; font-size:var(--fs-2); }
-.song__line{ color:var(--ink); opacity:.85; font-size:var(--fs-0); }
-.song__audio{ width:100%; min-height:44px; }
-.song__audio[hidden]{ display:none !important; }
-.song__video{ display:flex; justify-content:center; }
-/* display:flex batte l'attributo hidden: va riaffermato, altrimenti il video resta sempre visibile */
-.song__video[hidden]{ display:none; }
-.song__video video{ width:100%; max-width:100%; aspect-ratio:824/1464; max-height:70dvh; border-radius:var(--radius-m); background:#000; }
-.song__downloads .btn{ flex:1; min-width:0; }
-.song__cta{ min-height:48px; font-weight:700; background:color-mix(in srgb, var(--terracotta) 16%, var(--bg-3)); border-color:color-mix(in srgb, var(--terracotta) 45%, transparent); }
-.song__lyrics{ font-size:var(--fs-0); color:var(--ink-2); border-top:1px solid var(--line); padding-top:var(--space-2); }
-.song__lyrics summary{ display:flex; align-items:center; justify-content:space-between; min-height:44px; cursor:pointer; list-style:none; font-weight:600; -webkit-user-select:none; user-select:none; }
-.song__lyrics summary::-webkit-details-marker{ display:none; }
-.song__lyrics summary svg{ width:18px; height:18px; transition:transform var(--dur-2) var(--ease); }
-.song__lyrics[open] summary svg{ transform:rotate(180deg); }
-.song__section{ color:var(--ink-3); font-size:var(--fs-0); font-weight:700; letter-spacing:.1em; font-variant-caps:all-small-caps; text-transform:lowercase; margin-bottom:var(--space-1); }
-.song__lines{ display:flex; flex-direction:column; gap:2px; line-height:1.45; color:var(--ink-2); font-size:var(--fs-0); }
-.song__lines--chorus{ color:var(--terracotta); font-weight:600; font-size:var(--fs-1); }
-.song__shout{ color:var(--giallo); font-size:.85em; font-style:normal; font-weight:700; }
-.song__block + .song__block{ margin-top:var(--space-4); }
-.song__lyrics-body{ display:flex; flex-direction:column; padding:var(--space-2) 0 var(--space-1); }
-.header__music{ display:grid; place-items:center; width:44px; height:44px; flex:none; border-radius:999px; background:var(--bg-3); border:1px solid var(--line-2); color:var(--terracotta); }
-.header__music svg{ width:22px; height:22px; }
-
-/* Modalità coro: il ritornello a schermo pieno */
-.coro{ position:relative; min-height:100svh; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:var(--space-5); padding:var(--space-7) var(--space-4) calc(var(--space-7) + var(--safe-b)); background-color:var(--bg); text-align:center; overflow:hidden; }
-.coro::before{ content:""; position:absolute; inset:0; background-image:var(--coro-mosaic); background-size:420px 420px; opacity:.12; pointer-events:none; }
-.coro > *{ position:relative; }
-.coro__close{ position:absolute; top:var(--space-4); right:var(--space-4); background:var(--bg-3); border:1px solid var(--line-2); }
-.coro__kicker{ font-family:var(--font-display); font-size:var(--fs-0); font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:var(--giallo); }
-.coro__lines{ display:flex; flex-direction:column; gap:var(--space-4); }
-.coro__lines li{ font-family:var(--font-display); font-weight:700; font-size:clamp(30px,8.5vw,52px); line-height:1.05; color:var(--terracotta); letter-spacing:-.01em; }
-.coro__lines .song__shout{ display:block; margin-top:var(--space-2); font-size:.6em; }
-.coro__foot{ color:var(--ink-3); font-size:var(--fs-0); max-width:26ch; }
-
 /* Da dare al tassista: l'indirizzo grande, leggibile mostrando lo schermo */
 .tassista{ display:flex; flex-direction:column; gap:var(--space-1); padding:var(--space-3) var(--space-4); border-radius:var(--radius-s); background:var(--bg-3); border:1px solid var(--line); }
 .tassista__label{ font-size:var(--fs-0); font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-2); }

@@ -7,10 +7,8 @@ import { icon } from './icons.js'
 import { esc } from './html.js'
 import { SITE_URL } from '../store.js'
 import { evento } from '../stats.js'
-import { canzoneVisibile } from '../time.js'
 
-// Dal 19 ottobre le voci che parlano della canzone escono anche dallo storico: il sito non deve più nominarla
-const vociDi = (e) => canzoneVisibile() ? e.voci : e.voci.filter((v) => !/canzone|coro|inno|disonesti/i.test(v))
+const vociDi = (e) => e.voci
 const vociHtml = (e) => `<ul class="novita__voci">${vociDi(e).map((v) => `<li>${esc(v)}</li>`).join('')}</ul>`
 export const entryHtml = (e, { puntino = false } = {}) => `<article class="novita__entry">
   <div class="novita__data">${puntino ? '<span class="novita__punto" aria-label="Non letta"></span>' : ''}${esc(dataEstesa(e.data))}</div>

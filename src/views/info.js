@@ -9,10 +9,8 @@ import { toast } from '../ui/toast.js'
 import { navigate } from '../router.js'
 import { albumBanner, bindAlbum } from '../ui/album.js'
 import { shareAlbum, bindShareAlbum } from '../ui/share-album.js'
-import { songCard, bindSong } from '../ui/song.js'
 import { sezioneViaggio, bindViaggio } from '../ui/viaggio.js'
 import { sezioneNovita } from '../ui/novita.js'
-import { canzoneVisibile } from '../time.js'
 import { nonLette } from '../novita.js'
 import { BAGNI, REGOLA, DA_TENERE, PULIZIA, bagnoById, voceBagno, montaBagni } from '../ui/bagno.js'
 import { caricaAllerte, sezioneEmergenze } from '../ui/allerte.js'
@@ -21,7 +19,7 @@ const sec = (id, title, body, open = false) => `<details id="sec-${id}" ${open ?
 
 export async function render(root, { person, sub, header }) {
   const p = personById(person)
-  const openId = ['profilo', 'verifiche', 'foto', 'canzone', 'viaggio', 'novita', 'bagni', 'emergenze'].includes(sub) ? sub : null
+  const openId = ['profilo', 'verifiche', 'foto', 'viaggio', 'novita', 'bagni', 'emergenze', 'grazie'].includes(sub) ? sub : null
   const nuove = nonLette().length
   const openChecks = checks.filter((c) => !store.isChecked(c.id)).length
   const allerte = (await Promise.race([caricaAllerte(), new Promise((r) => setTimeout(() => r({ attive: [] }), 2500))])).attive
@@ -36,9 +34,6 @@ export async function render(root, { person, sub, header }) {
       <p>Un album solo, quattro telefoni. Carica le tue quando vuoi, anche dopo essere tornato a casa.</p>
       ${albumBanner()}
       ${person === 'ale' ? shareAlbum() : ''}`, !openId || openId === 'foto')}
-    ${canzoneVisibile() ? sec('canzone', 'La canzone', `
-      <p>Scaricala prima di partire: in aereo e in taxi la rete non c'è e il ritornello serve subito.</p>
-      ${songCard()}`, !openId || openId === 'canzone') : ''}
     ${sec('extra', 'Extra', `
       <p>Il gioco dei rigori sta dentro questo sito: si apre nella stessa scheda e il tasto indietro riporta qui.</p>
       <ul class="list">
@@ -87,7 +82,6 @@ export async function render(root, { person, sub, header }) {
   </section>`
 
   bindAlbum(root)
-  bindSong(root)
   montaBagni()
   if (person === 'ale') bindShareAlbum(root)
   if (openId) root.querySelector(`#sec-${openId}`)?.scrollIntoView({ block: 'start' })

@@ -17,7 +17,7 @@ ok('og-scelta.png sta in public/assets senza hash, 1200×630', existsSync('publi
 ok('noindex, nofollow, noarchive', /noindex, nofollow, noarchive/.test(og.robots || ''))
 ok('la pagina non importa il bundle del sito', !/type="module"|\/src\/|assets\/main-/.test(html))
 const cerca = (dir) => readdirSync(dir, { withFileTypes: true }).flatMap((e) => e.isDirectory() ? (e.name === 'node_modules' || e.name === '.git' ? [] : cerca(`${dir}/${e.name}`)) : [`${dir}/${e.name}`])
-const linkata = [...cerca('src'), ...cerca('dist').filter((f) => /\.(js|html|css)$/.test(f) && !f.endsWith('/' + PAGINA)), 'index.html', 'public/canzone.html'].filter((f) => existsSync(f) && readFileSync(f, 'utf8').includes('scelta-2ddyu6'))
+const linkata = [...cerca('src'), ...cerca('dist').filter((f) => /\.(js|html|css)$/.test(f) && !f.endsWith('/' + PAGINA)), 'index.html'].filter((f) => existsSync(f) && readFileSync(f, 'utf8').includes('scelta-2ddyu6'))
 ok('non linkata da nessuna parte (sorgenti, bundle, index, canzone)', linkata.length === 0, linkata.join(' '))
 // 2. nel browser: eventi, link WhatsApp, voto che resta, misure a 380 px, GoatCounter bloccato
 async function apri({ blocca = false } = {}) {

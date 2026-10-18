@@ -1,5 +1,5 @@
 // Vista Oggi: countdown prima del weekend, bento durante, "Missione compiuta" dopo
-import { now, phase, countdownTo, dayKey, minutesUntil, fmtMinutes, currentStop, nextStop, isOverridden, parseLocal, canzoneVisibile } from '../time.js'
+import { now, phase, countdownTo, dayKey, minutesUntil, fmtMinutes, currentStop, nextStop, isOverridden, parseLocal } from '../time.js'
 import { stopsFor, stopsForDay, personById, checks, fmtDist, DAY_COLOR, missionsFor, percorsiDi, conOrario, days, durataDi, attiva, sole } from '../data.js'
 import { store } from '../store.js'
 import { stopCard, bindCards, percorsoLink } from '../ui/card.js'
@@ -11,7 +11,6 @@ import { openSheet } from '../ui/sheet.js'
 import { xpFor, maxXpFor, doneCountFor, levelFor, summaryFor } from '../game.js'
 import { big as confettiBig } from '../ui/confetti.js'
 import { albumBanner, bindAlbum } from '../ui/album.js'
-import { songCard, bindSong } from '../ui/song.js'
 import { shareAlbum, bindShareAlbum } from '../ui/share-album.js'
 import { PHOTO_ALBUM } from '../store.js'
 import { timelineViaggio, bindViaggio, voli } from '../ui/viaggio.js'
@@ -70,14 +69,12 @@ export async function render(root, opts) {
       </div>
       ${slotMeteo()}
       ${albumBanner({ line: 'Ogni foto che carichi finisce nello stesso posto. Stasera riguardate tutto insieme.' })}
-      ${canzoneVisibile() ? songCard({ line: 'Due minuti e quarantacinque. Dopo il terzo ascolto il ritornello non esce più.' }) : ''}
       ${person === 'ale' ? `<h2 class="section-title">Manda l'album ai ragazzi</h2>${shareAlbum()}` : ''}
       ${person === 'monne' ? speedBanner() : ''}
       ${isOverridden() ? `<p class="faint">Data simulata: ${now().toLocaleString('it-IT')}</p>` : ''}
     </section>`
     root.innerHTML = html
     bindAlbum(root)
-    bindSong(root)
     if (person === 'ale') bindShareAlbum(root)
     const cd = root.querySelector('#cd')
     timers.push(setInterval(() => { cd.innerHTML = countdownHtml() }, 30_000))
@@ -154,7 +151,6 @@ export async function render(root, opts) {
     ${avvisoMirador ? avvisoMiradorPioggia() : ''}
     ${timelineViaggio(key, person)}
     ${albumBanner({ line: 'Ogni foto che carichi finisce nello stesso posto. Stasera riguardate tutto insieme.' })}
-    ${canzoneVisibile() ? songCard({ line: 'Due minuti e quarantacinque. Dopo il terzo ascolto il ritornello non esce più.' }) : ''}
     ${person === 'monne' && !ripartito ? speedBanner() : ''}
     <div class="bento">
       <div class="tile tile--accent span-2" style="--day:${DAY_COLOR[key]}">
@@ -190,7 +186,6 @@ export async function render(root, opts) {
   </section>`
   root.innerHTML = html
   bindAlbum(root)
-  bindSong(root)
   const ac = new AbortController()
   bindViaggio(root, { signal: ac.signal })
   montaMeteo(root.querySelector('[data-meteo-slot]'), { signal: ac.signal, piove: () => store.piove, onPiove: () => { store.piove = true }, stato: opts._ripristino?.meteo || null })

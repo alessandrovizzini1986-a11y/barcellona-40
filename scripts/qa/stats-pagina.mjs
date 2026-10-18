@@ -79,18 +79,18 @@ async function apri(dati) {
 // Numeri finti ma espliciti: ogni riga della pagina deve poterci essere ricondotta.
 const MAPPA = {
   '/alessandro/oggi': [7, 3], '/alessandro/programma': [4, 2], '/alessandro/mappa': [1, 1],
-  '/alessandro/missioni': [2, 1], '/alessandro/info': [3, 2], '/alessandro/coro': [1, 1],
-  'alessandro/album-apri': [2, 1], 'alessandro/canzone-play': [5, 2], 'alessandro/rigori-apri': [1, 1],
+  '/alessandro/missioni': [2, 1], '/alessandro/info': [3, 2],
+  'alessandro/album-apri': [5, 2], 'alessandro/rigori-apri': [1, 1],
   '/monne/oggi': [2, 2], '/monne/speedrun': [1, 1], 'monne/qr-parcheggio-apri': [1, 1],
   '/manuel/oggi': [1, 1], 'manuel/missione-completata': [1, 1],
   '/anonimo/onboarding': [2, 2],
   'maps-tappa/f8': [4, 2], 'maps-tappa/s4': [9, 3], 'maps-tappa/d2': [1, 1]
 }
-const TOT_VISTE = 7 + 4 + 1 + 2 + 3 + 1 + 2 + 1 + 1 // profili, senza /anonimo/onboarding
-// Quante richieste deve fare la pagina: 4 profili × 6 sezioni, lo speedrun di Monne, gli eventi
+const TOT_VISTE = 7 + 4 + 1 + 2 + 3 + 2 + 1 + 1 // profili, senza /anonimo/onboarding
+// Quante richieste deve fare la pagina: 4 profili × 5 sezioni, lo speedrun di Monne, gli eventi
 // (21 a testa, meteo-apri, taxi-bolt e taxi-uber compresi, meno i tre WhatsApp che valgono solo per Alessandro), l'onboarding e una per tappa con Maps.
 const TAPPE_MAPS = JSON.parse(readFileSync('data/itinerary.json', 'utf8')).days.flatMap((d) => d.stops).filter((s) => s.actions?.maps).length
-const RICHIESTE = 4 * 6 + 1 + (25 * 4 - 3) + 1 + TAPPE_MAPS // 25 eventi in EVENTI (con macaya-attiva, bagno-apri, sole-attiva e mercat-programma)
+const RICHIESTE = 4 * 5 + 1 + (20 * 4 - 3) + 1 + TAPPE_MAPS // 5 sezioni, 20 eventi in EVENTI (senza quelli della canzone e del coro)
 
 // ——— 3. la pagina disegnata sui numeri finti ———
 {
@@ -103,14 +103,14 @@ const RICHIESTE = 4 * 6 + 1 + (25 * 4 - 3) + 1 + TAPPE_MAPS // 25 eventi in EVEN
   ok('aperture prima del profilo', (await p.locator('.totale__anon').innerText()).includes('2'))
   ok('quattro card, una per persona', (await p.locator('.p-card').count()) === 4)
   const ale = p.locator('.p-card').first()
-  ok('Alessandro: 18 viste in card', (await ale.locator('.p-card__tot').innerText()).trim() === '18', await ale.locator('.p-card__tot').innerText())
+  ok('Alessandro: 17 viste in card', (await ale.locator('.p-card__tot').innerText()).trim() === '17', await ale.locator('.p-card__tot').innerText())
   ok('Alessandro: "volte diverse" quando è diverso', (await ale.innerText()).includes('volte diverse'))
   const barreAle = await ale.locator('.barra').allInnerTexts()
   ok('Alessandro: barra Oggi = 7', barreAle.some((t) => t.startsWith('Oggi') && t.trim().endsWith('7')), barreAle.join(' / '))
-  ok('Alessandro: la barra Coro c\'è solo perché l\'ha aperto', barreAle.some((t) => t.startsWith('Coro')))
+  ok('Alessandro: nessuna barra Coro (la canzone non c\'è più)', !barreAle.some((t) => t.startsWith('Coro')))
   ok('Alessandro: niente barra Speedrun', !barreAle.some((t) => t.startsWith('Speedrun')))
   const spunteAle = await ale.locator('.spunte li').allInnerTexts()
-  ok('Alessandro: ✓ sulla canzone con il numero', spunteAle.some((t) => t.includes('Ascoltata la canzone') && t.includes('✓') && t.includes('5')))
+  ok('Alessandro: ✓ sull\'album con il numero', spunteAle.some((t) => t.includes("Aperto l'album") && t.includes('✓') && t.includes('5')))
   ok('Alessandro: — su quello che non ha toccato', spunteAle.some((t) => t.includes('Chiamato un taxi') && t.includes('—')))
   ok('solo Alessandro ha la voce WhatsApp', spunteAle.filter((t) => t.includes('WhatsApp')).length === 1)
   const monne = p.locator('.p-card').nth(1)
@@ -119,7 +119,7 @@ const RICHIESTE = 4 * 6 + 1 + (25 * 4 - 3) + 1 + TAPPE_MAPS // 25 eventi in EVEN
   ok('Giulio: card spenta', (await giulio.getAttribute('class')).includes('p-card--spenta'))
   ok('Giulio: "Non ancora entrato"', (await giulio.innerText()).includes('Non ancora entrato'))
   ok('Manuel: entrato, quindi card viva', !(await p.locator('.p-card').nth(3).getAttribute('class')).includes('spenta'))
-  ok('sezione "Cosa viene usato"', txt.includes('Cosa viene usato') && txt.includes('Ascoltata la canzone'))
+  ok('sezione "Cosa viene usato"', txt.includes('Cosa viene usato') && txt.includes("Aperto l'album"))
   const maps = await p.locator('.s-titolo:has-text("Maps") + .barre .barra').allInnerTexts()
   ok('classifica Maps in ordine', maps[0].includes('9') && maps.length === 3, maps.join(' / '))
   ok('classifica Maps: solo le tappe aperte', !maps.some((t) => t.trim().endsWith(' 0')))
@@ -165,7 +165,7 @@ const RICHIESTE = 4 * 6 + 1 + (25 * 4 - 3) + 1 + TAPPE_MAPS // 25 eventi in EVEN
 }
 // Qualche richiesta persa: si mostra quello che c'è, dicendo che è incompleto
 {
-  const { p, ctx } = await apri({ mappa: MAPPA, rompi: ['/alessandro/oggi', 'alessandro/canzone-play'] })
+  const { p, ctx } = await apri({ mappa: MAPPA, rompi: ['/alessandro/oggi', 'alessandro/album-apri'] })
   ok('richieste perse → avviso di dato parziale', (await p.locator('.s-parziale').innerText()).includes('2 richieste'))
   ok('richieste perse → la pagina resta in piedi', (await p.locator('.p-card').count()) === 4)
   await ctx.close()

@@ -41,11 +41,11 @@ for (const person of ['ale', 'monne', 'giulio', 'manuel']) {
     ok(`pallone presente (${tag})`, (await a.count()) === 1)
     ok(`va al gioco nella stessa scheda (${tag})`, (await a.getAttribute('href')) === 'rigori/' && (await a.getAttribute('target')) === null)
     ok(`aria-label (${tag})`, (await a.getAttribute('aria-label')) === 'Gioca ai rigori')
-    // dal 19 ottobre la canzone sparisce e con lei la nota: nella fase "dopo" i tondi sono due
-    const conNota = fase !== 'dopo'
+    // la canzone non c'è più (tolta il 18/10): i tondi sono sempre due, pallone e camera
+    const conNota = false
     const [r, c, chip, t] = await Promise.all(['.header__rigori', '.header__camera', '.person-chip', '.header__title'].map((s) => box(p, s)))
     const m = conNota ? await box(p, '.header__music') : c
-    ok(`nota presente solo finché c'è la canzone (${tag})`, (await p.locator('.header__music').count()) === (conNota ? 1 : 0))
+    ok(`niente nota della canzone (${tag})`, (await p.locator('.header__music').count()) === 0)
     ok(`ordine rigori · camera${conNota ? ' · musica' : ''} · profilo (${tag})`, r.r <= c.l && (conNota ? c.r <= m.l && m.r <= chip.l : c.r <= chip.l), JSON.stringify([r.l, c.l, m.l, chip.l]))
     ok(`tutti sulla stessa riga del profilo (${tag})`, [r, c, m].every((x) => Math.abs(x.t - chip.t) < 1 && Math.abs(x.b - chip.b) < 1))
     ok(`i tondi sotto il titolo, non accanto (${tag})`, r.t >= t.b)
@@ -61,22 +61,22 @@ for (const person of ['ale', 'monne', 'giulio', 'manuel']) {
 // Stessi tre tondi, stessa misura, stesso bordo: cambia solo il colore
 {
   const { p, ctx } = await open('ale', '/#/oggi')
-  const stili = await p.evaluate(() => ['.header__rigori', '.header__camera', '.header__music'].map((s) => {
+  const stili = await p.evaluate(() => ['.header__rigori', '.header__camera'].map((s) => {
     const c = getComputedStyle(document.querySelector(s))
     return { w: c.width, h: c.height, bg: c.backgroundColor, bordo: c.border, raggio: c.borderRadius, colore: c.color, svg: getComputedStyle(document.querySelector(s + ' svg')).width }
   }))
-  const [r, c, m] = stili
-  ok('stesso diametro', r.w === c.w && r.w === m.w && r.h === c.h && r.w === '44px')
-  ok('stesso sfondo e bordo', r.bg === c.bg && r.bg === m.bg && r.bordo === c.bordo && r.raggio === c.raggio)
+  const [r, c] = stili
+  ok('stesso diametro', r.w === c.w && r.h === c.h && r.w === '44px')
+  ok('stesso sfondo e bordo', r.bg === c.bg && r.bordo === c.bordo && r.raggio === c.raggio)
   // Stesso ingombro, non stessa scatola: il disegno di camera (Lucide, tratto 2) occupa circa 20 px del
   // suo riquadro da 22; il pallone è pieno fino al bordo. Si confronta quello che si vede.
   const ingombro = await p.evaluate(() => {
     const vis = (sel) => { const s = document.querySelector(sel + ' svg'); const bb = s.getBBox(); const k = s.getBoundingClientRect().width / s.viewBox.baseVal.width; const sw = parseFloat(s.getAttribute('stroke-width') || 0) * k; return Math.max(bb.width, bb.height) * k + sw }
-    return { pallone: document.querySelector('.header__rigori svg').getBoundingClientRect().width, camera: vis('.header__camera'), musica: vis('.header__music') }
+    return { pallone: document.querySelector('.header__rigori svg').getBoundingClientRect().width, camera: vis('.header__camera') }
   })
-  ok('il pallone ha lo stesso ingombro di camera e musica', Math.abs(ingombro.pallone - ingombro.camera) <= 1.5 && ingombro.pallone <= Math.max(ingombro.camera, ingombro.musica) + 0.5, JSON.stringify(ingombro))
+  ok('il pallone ha lo stesso ingombro della camera', Math.abs(ingombro.pallone - ingombro.camera) <= 1.5 && ingombro.pallone <= ingombro.camera + 0.5, JSON.stringify(ingombro))
   ok('colore acqua #2CA6A4', r.colore === 'rgb(44, 166, 164)', r.colore)
-  ok('tre colori diversi', new Set([r.colore, c.colore, m.colore]).size === 3)
+  ok('due colori diversi', new Set([r.colore, c.colore]).size === 2)
   ok('pallone pieno, colore preso dal pulsante', await p.evaluate(() => document.querySelector('.header__rigori svg g').getAttribute('fill') === 'currentColor'))
   ok('il pallone si vede in acqua', await p.evaluate(() => getComputedStyle(document.querySelector('.header__rigori svg path')).fill) === 'rgb(44, 166, 164)')
   // L'SVG è quello fornito, non ridisegnato: stessi tracciati, stesso viewBox, stessa trasformazione
