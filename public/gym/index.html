@@ -250,6 +250,22 @@ header.top .place.on{border-color:rgba(214,255,62,.4);color:var(--acc);backgroun
 .plankrow{padding:12px 15px 0 17px}
 .plankrow .btn{width:100%;min-height:54px}
 .plankrow .muted{display:block;margin-top:7px;font-size:11px;line-height:1.4}
+/* scheda 2: attrezzo, tempi esecutivi, regola del trainer, superset, serie senza kg */
+.ex .att{font-size:11.5px;color:var(--mut);font-weight:700;margin-top:4px;line-height:1.35}
+.modo{display:inline-block;margin-top:7px;font-size:11.5px;font-weight:800;color:var(--c2);line-height:1.3;
+  background:rgba(51,214,255,.09);border:1px solid rgba(51,214,255,.3);padding:4px 10px;border-radius:99px}
+.regola{margin:10px 15px 4px 17px;padding:9px 11px;border-radius:12px;font-size:12px;line-height:1.45;color:var(--mut);
+  background:rgba(214,255,62,.06);border:1px solid rgba(214,255,62,.22)}
+.regola b{color:var(--acc);font-weight:900}
+.fld.ro{align-items:center;justify-content:center;padding:0 6px;min-height:54px;background:var(--s2);border-style:dashed}
+.fld.ro span{font-size:11px;font-weight:800;color:var(--mut);text-align:center;line-height:1.15}
+.ssgrp{position:relative;margin:0 0 14px;padding:10px 8px 2px 12px;border-radius:calc(var(--r) + 4px);
+  border:1px solid rgba(166,109,242,.35);background:linear-gradient(170deg,rgba(166,109,242,.08),transparent 60%)}
+.ssgrp::before{content:'';position:absolute;left:4px;top:44px;bottom:16px;width:3px;border-radius:3px;background:var(--c5)}
+.ssgrp .sshead{display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px;margin:0 2px 10px;font-size:10.5px;font-weight:900;
+  letter-spacing:.11em;text-transform:uppercase;color:var(--c5)}
+.ssgrp .sshead span{color:var(--mut);letter-spacing:.02em;text-transform:none;font-weight:700}
+.ssgrp .card.ex{margin-bottom:10px}
 .tgline{padding:8px 15px 0 17px;font-size:10.5px;font-weight:800;letter-spacing:.04em;color:var(--acc2)}
 .serie .n .mx{display:block;font-style:normal;font-size:7.5px;font-weight:900;letter-spacing:.08em;color:var(--c4);margin-top:2px}
 .serie.maxset .fld:last-of-type{border-color:rgba(255,138,61,.45)}
@@ -514,6 +530,28 @@ body.locked{overflow:hidden;position:fixed;width:100%}
 .wkbar div.done{background:var(--acc2)}
 .wkbar div.now{background:var(--acc);box-shadow:0 0 10px rgba(214,255,62,.6)}
 .wkgrid{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:8px}
+.pex{padding:13px 2px 12px;border-top:1px solid var(--line)}
+.ssgrp .pex:first-of-type{border-top:none;padding-top:2px}
+.pexh{display:flex;align-items:baseline;gap:10px}
+.pexh b{flex:1;font-size:15px;font-weight:900;letter-spacing:-.015em;line-height:1.25}
+.pexh b i{font-style:normal;display:inline-block;min-width:22px;color:var(--exc,var(--acc));font-size:12px;font-weight:900;margin-right:4px}
+.pexh span{flex:none;font-size:11px;color:var(--faint);font-weight:800}
+.pex .att{font-size:12px;color:var(--mut);font-weight:700;margin-top:5px}
+.pnow{margin-top:9px;font-size:13.5px;font-weight:800;color:var(--ink);line-height:1.4}
+.pnow span{display:inline-block;margin-right:8px;font-size:9.5px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--acc-ink);background:var(--acc);padding:3px 7px;border-radius:6px;vertical-align:1px}
+.pnota{margin-top:7px;font-size:12px}
+.pall{margin-top:8px}
+.pall summary{cursor:pointer;font-size:11.5px;font-weight:800;color:var(--faint);letter-spacing:.03em;list-style:none}
+.pall summary::-webkit-details-marker{display:none}
+.pall summary::before{content:'▸ '}.pall[open] summary::before{content:'▾ '}
+.pwk th{width:34px;font-size:10px}.pwk tr.now td,.pwk tr.now th{color:var(--acc);font-weight:900}
+.consigli ul{margin:10px 0 0;padding-left:18px}
+.consigli li{font-size:13px;line-height:1.5;color:var(--mut);margin-bottom:7px}
+.arch summary{cursor:pointer;font-weight:900;font-size:14.5px;list-style:none}
+.arch summary::-webkit-details-marker{display:none}
+.arch summary span{display:block;margin-top:3px;font-size:11.5px;font-weight:700;color:var(--faint)}
+.arch .card{background:transparent;border:none;box-shadow:none;padding:6px 0 0}
 .wkgrid th,.wkgrid td{padding:7px 5px;border-bottom:1px solid var(--line);text-align:left}
 .wkgrid th{font-size:9.5px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
 .wkgrid td.now{color:var(--acc);font-weight:800}
@@ -681,8 +719,8 @@ body.pausa *,body.pausa *::before,body.pausa *::after{animation-play-state:pause
   <div id="planList"></div>
   <h2 class="sec">Resoconto scheda</h2>
   <div class="card">
-    <p class="muted" style="margin-bottom:10px">Criticità, punti di forza, cosa dire al trainer l'11 ottobre. Scrivilo qui man mano: finisce nel report.</p>
-    <textarea id="resoconto" placeholder="Es. Il pull up assistito a -55 regge bene…&#10;Il ginocchio destro tira negli affondi…"></textarea>
+    <p class="muted" style="margin-bottom:10px" id="resocontoInfo"></p>
+    <textarea id="resoconto" placeholder="Es. Il chin up con elastico arancione + giallo: 4×3 pulite…&#10;Hack squat: nel max 9 ripetizioni a 12,5+12,5…"></textarea>
   </div>
 </main>
 
@@ -819,13 +857,15 @@ const HAP={
 const buzz=p=>{try{navigator.vibrate&&navigator.vibrate(p);}catch(e){}};
 
 /* ================================================================
-   SCHEDA — l'unico posto da toccare quando arriva la scheda nuova.
+   SCHEDE — l'unico posto da toccare quando arriva la scheda nuova:
+   si aggiunge in fondo a SCHEDE, la vecchia resta per lo storico.
    Serie: [carico,rip] · [carico,ripMin,ripMax] · [carico,'max']
-   carico negativo = assistenza (pull up) · perMano: carico per mano
+   carico null = niente kg (elastico o corpo libero)
+   carico negativo = assistenza (pull up, dip) · perMano: carico per mano
    tipo: 'carico' (default) · 'tempo' (secondi) · 'rt' (rip totali a tempo)
    ================================================================ */
-const SCHEDA={
-  nome:'Scheda 1', obiettivo:'Primo approccio pull up', sedute:2,
+const S1={
+  id:1, nome:'Scheda 1', obiettivo:'Primo approccio pull up', sedute:2,
   inizio:'2026-08-31', fine:'2026-10-11', settimane:6,
   riscaldamento:[
     {n:'Aerobico',min:8,d:'Cyclette, tapis o ellittica: ritmo in cui sudi ma riesci a parlare.'},
@@ -918,42 +958,271 @@ const SCHEDA={
   ]}]
 };
 
-/* ---- settimana corrente calcolata dalla data (1..N, fuori periodo la limita) ---- */
-function settimanaDi(iso){
-  const g0=new Date(SCHEDA.inizio+'T00:00'), d=new Date((iso||oggiISO())+'T12:00');
-  const w=Math.floor((d-g0)/(7*864e5))+1;
-  return Math.max(1,Math.min(SCHEDA.settimane,w));
+/* ---- SCHEDA 2 · dal PDF del trainer (12/10–22/11/2026) ----
+   Campi in più rispetto alla scheda 1:
+   attrezzo: macchina o attrezzo da usare · modo: tempi esecutivi
+   doppio:'mano'|'lato' → il carico è per manubrio/per lato ("14+14")
+   uni:'gamba'|'braccio' → monogamba/monobraccio, carico per lato
+   corpo: niente kg da segnare (elastico o corpo libero), solo ripetizioni
+   passo: incremento dei tasti ± (manubri 2, dischi EZ 1,25)
+   ss/ssPos/giri: superset, due esercizi a giri alternati
+   prog: progressione automatica decisa dal risultato della serie a max
+   regola: la regola del trainer, scritta come nel PDF */
+const S2={
+  id:2, nome:'Scheda 2', obiettivo:'Primo approccio pull up', sedute:2,
+  inizio:'2026-10-12', fine:'2026-11-22', settimane:6,
+  riscaldamento:[
+    {n:'Aerobico',min:8,d:'7–8\' su tappeto o cyclette a basso impatto: serve solo a portare il corpo alla temperatura giusta per lavorare.'},
+    {n:'Mobilità',min:7,d:'7–8\' di mobilità e allungamento delle articolazioni e dei tendini di oggi: polsi, gomiti e spalle per la parte alta; caviglie, ginocchia e anca per la parte bassa; la schiena sempre.'}],
+  stretching:{min:10,d:'Dedica 10\' allo stretching a fine allenamento.'},
+  consigli:[
+    'Riscaldamento di 15\': 7–8\' di aerobico a basso impatto (tappeto o cyclette) solo per portare il corpo alla temperatura giusta, poi 7–8\' di mobilità e allungamento di articolazioni e tendini che lavorano nella seduta — polsi, gomiti e spalle per la parte alta; caviglie, ginocchia e anca per la parte bassa; la schiena sempre.',
+    'Stretching di 10\' a fine allenamento.',
+    'Anche se nella scheda non sono scritte, tieni a mente e concentrati su tutte le correzioni fatte durante le sedute insieme.',
+    'Non trascurare la tecnica: 10 ripetizioni fatte bene non sono uguali a 10 ripetizioni fatte male o con l\'aiuto di qualcuno.',
+    'A fine scheda farete un resoconto generale del mesociclo e nuovi test. Appuntati criticità e punti di forza, i carichi usati quando non erano specificati e le ripetizioni fatte nelle serie a max.',
+    'Il trainer è a disposizione per qualsiasi chiarimento, anche con dei video se ti senti insicuro su un esercizio. Mandagli feedback durante le settimane per limare le criticità e chiarire i dubbi.'],
+  giorni:[
+  {id:'A',nome:'Giorno A',esercizi:[
+    {id:'hack-squat',n:'Hack squat',gruppo:'gambe',rec:150,recTxt:"2'–3'",tipo:'carico',doppio:'lato',passo:2.5,
+      attrezzo:'Hack squat · dischi',
+      prog:{tipo:'kgMax',base:10,passo:2.5,soglia:8,serie:3,rip:6},
+      regola:'Se nella serie a max fai almeno 8 ripetizioni, la settimana dopo aumenta di 5 kg in totale (+2,5 per lato).'},
+    {id:'chin-up',n:'Chin up',gruppo:'dorso',rec:105,recTxt:"1'30–2'",tipo:'carico',
+      corpo:'Elastico arancione + giallo',corpoBreve:'elastico',attrezzo:'Sbarra con elastico arancione + giallo',w:[
+      [[null,3],[null,3],[null,3],[null,3]],
+      [[null,3],[null,3],[null,3],[null,3],[null,3]],
+      [[null,4],[null,4],[null,3],[null,3]],
+      [[null,4],[null,4],[null,4],[null,4]],
+      [[null,4],[null,4],[null,4],[null,4],[null,4]],
+      [[null,5],[null,5],[null,4],[null,4]]]},
+    {id:'leg-curl-mono',n:'Leg curl monogamba in piedi',gruppo:'gambe',rec:40,recTxt:'30–45" tra le gambe',tipo:'carico',uni:'gamba',
+      attrezzo:'Leg curl in piedi',w:[
+      [[15,12],[17.5,10],[20,8]],
+      [[15,13],[17.5,11],[20,9]],
+      [[15,14],[17.5,12],[20,10]],
+      [[25,6],[22.5,8],[20,10]],
+      [[25,7],[22.5,9],[20,11]],
+      [[25,8],[22.5,10],[20,12]]]},
+    {id:'distensioni-manubri',n:'Distensioni con manubri su panca piana',gruppo:'petto',rec:120,recTxt:"2'",tipo:'carico',doppio:'mano',passo:2,
+      attrezzo:'Panca piana + manubri',modo:'Negativa (discesa) 3" + fermo 1" giù',w:[
+      [[14,6],[14,6],[14,6],[14,6]],
+      [[14,6,8],[14,6,8],[14,6,8],[14,6,8]],
+      [[16,5],[16,5],[16,5],[16,5]],
+      [[16,5,7],[16,5,7],[16,5,7],[16,5,7]],
+      [[18,4],[18,4],[18,4],[18,4]],
+      [[18,4,6],[18,4,6],[18,4,6],[18,4,6]]]},
+    {id:'australian-pull-up',n:'Australian pull up',gruppo:'dorso',rec:0,recTxt:'subito il push up',tipo:'carico',
+      corpo:'Corpo libero',corpoBreve:'corpo',attrezzo:'Sbarra',modo:'Fermo 2" su',
+      ss:'A5',ssPos:1,giri:3,ssRec:90,ssRecTxt:'1\'30" tra i giri',w:[
+      [[null,6,8],[null,6,8],[null,6,8]],
+      [[null,6,8],[null,6,8],[null,6,8]],
+      [[null,8,10],[null,8,10],[null,8,10]],
+      [[null,8,10],[null,8,10],[null,8,10]],
+      [[null,10,12],[null,10,12],[null,10,12]],
+      [[null,10,12],[null,10,12],[null,10,12]]]},
+    {id:'push-up-sbarra',n:'Push up alla sbarra',gruppo:'petto',rec:90,recTxt:'1\'30" tra i giri',tipo:'carico',
+      corpo:'Corpo libero',corpoBreve:'corpo',attrezzo:'Sbarra ad altezza 2',modo:'Fermo 1" giù',
+      ss:'A5',ssPos:2,giri:3,w:[
+      [[null,6,8],[null,6,8],[null,6,8]],
+      [[null,6,8],[null,6,8],[null,6,8]],
+      [[null,8,10],[null,8,10],[null,8,10]],
+      [[null,8,10],[null,8,10],[null,8,10]],
+      [[null,10,12],[null,10,12],[null,10,12]],
+      [[null,10,12],[null,10,12],[null,10,12]]]},
+    {id:'curl-ez',n:'Curl con asta EZ',gruppo:'braccia',rec:0,recTxt:'subito il french press',tipo:'carico',doppio:'lato',passo:1.25,
+      attrezzo:'Asta EZ',ss:'A6',ssPos:1,giri:3,ssRec:90,ssRecTxt:'1\'30" tra i giri',w:[
+      [[7.5,8,10],[7.5,8,10],[7.5,8,10]],
+      [[7.5,8,10],[7.5,8,10],[7.5,8,10]],
+      [[8.75,7,9],[8.75,7,9],[8.75,7,9]],
+      [[8.75,7,9],[8.75,7,9],[8.75,7,9]],
+      [[10,6,8],[10,6,8],[10,6,8]],
+      [[10,6,8],[10,6,8],[10,6,8]]]},
+    {id:'french-press-ez',n:'French press con asta EZ',gruppo:'braccia',rec:90,recTxt:'1\'30" tra i giri',tipo:'carico',doppio:'lato',passo:1.25,
+      attrezzo:'Asta EZ',ss:'A6',ssPos:2,giri:3,w:[
+      [[7.5,8,10],[7.5,8,10],[7.5,8,10]],
+      [[7.5,8,10],[7.5,8,10],[7.5,8,10]],
+      [[8.75,7,9],[8.75,7,9],[8.75,7,9]],
+      [[8.75,7,9],[8.75,7,9],[8.75,7,9]],
+      [[10,6,8],[10,6,8],[10,6,8]],
+      [[10,6,8],[10,6,8],[10,6,8]]]}
+  ]},
+  {id:'B',nome:'Giorno B',esercizi:[
+    {id:'stacchi-rumeni',n:'Stacchi rumeni con manubri',gruppo:'gambe',rec:120,recTxt:"2'",tipo:'carico',doppio:'mano',passo:2,
+      attrezzo:'Manubri',modo:'Discesa 3"',
+      prog:{tipo:'kgMax',base:16,passo:2,soglia:8,serie:3,rip:6},
+      regola:'Se nella serie a max fai almeno 8 ripetizioni, la settimana dopo aumenta di 2+2 kg.'},
+    {id:'dip-assistiti',n:'Dip assistiti',gruppo:'petto',rec:120,recTxt:"2'",tipo:'carico',assist:true,
+      attrezzo:'Macchina dip assistiti',
+      nota:'Il carico è l’assistenza della macchina: meno assistenza = più difficile.',
+      prog:{tipo:'dip',base:-35,rip:6,serie:3,passoKg:5,ripScala:9},
+      regola:'Se nella serie a max fai almeno 2 ripetizioni in più della serie, la settimana dopo +1 ripetizione a serie, e così via. Quando chiudi 3×9 (alla 4ª settimana), la settimana dopo l\'assistenza scala di 5 kg (−30) e si riparte da 3×6 + 1×max, con la stessa progressione.'},
+    {id:'leg-ext-mono',n:'Leg extension monogamba',gruppo:'gambe',rec:40,recTxt:'30–45" tra le gambe',tipo:'carico',uni:'gamba',
+      attrezzo:'Leg extension',w:[
+      [[20,10],[22.5,8],[25,6]],
+      [[20,11],[22.5,9],[25,7]],
+      [[20,12],[22.5,10],[25,8]],
+      [[27.5,6],[25,8],[22.5,10]],
+      [[27.5,7],[25,9],[22.5,11]],
+      [[27.5,8],[25,10],[22.5,12]]]},
+    {id:'lat-monobraccio',n:'Lat machine monobraccio in ginocchio',gruppo:'dorso',rec:40,recTxt:'30–45" tra le braccia',tipo:'carico',uni:'braccio',
+      attrezzo:'Lat machine con maniglia singola',modo:'Discesa 3" + fermo 1" giù al petto (incollato)',w:[
+      [[15,8],[15,8],[15,8]],
+      [[15,9],[15,9],[15,9]],
+      [[15,10],[15,10],[15,10]],
+      [[20,5],[20,5],[20,5]],
+      [[20,6],[20,6],[20,6]],
+      [[20,7],[20,7],[20,7]]]},
+    {id:'shoulder-press',n:'Shoulder press con manubri',gruppo:'spalle',rec:0,recTxt:'subito il rematore',tipo:'carico',doppio:'mano',passo:2,
+      attrezzo:'Manubri',ss:'B5',ssPos:1,giri:3,ssRec:105,ssRecTxt:'1\'30–2\' tra i giri',w:[
+      [[12,6,8],[12,6,8],[12,6,8]],
+      [[12,6,8],[12,6,8],[12,6,8]],
+      [[12,8,10],[12,8,10],[12,8,10]],
+      [[12,8,10],[12,8,10],[12,8,10]],
+      [[14,6,8],[14,6,8],[14,6,8]],
+      [[14,6,8],[14,6,8],[14,6,8]]]},
+    {id:'rematore-inclinata',n:'Rematore con manubri su panca inclinata',gruppo:'dorso',rec:105,recTxt:'1\'30–2\' tra i giri',tipo:'carico',doppio:'mano',passo:2,
+      attrezzo:'Panca inclinata + manubri',ss:'B5',ssPos:2,giri:3,w:[
+      [[16,6,8],[16,6,8],[16,6,8]],
+      [[16,6,8],[16,6,8],[16,6,8]],
+      [[16,8,10],[16,8,10],[16,8,10]],
+      [[16,8,10],[16,8,10],[16,8,10]],
+      [[18,6,8],[18,6,8],[18,6,8]],
+      [[18,6,8],[18,6,8],[18,6,8]]]},
+    {id:'push-down-corda',n:'Push down con corda',gruppo:'braccia',rec:0,recTxt:'subito il curl',tipo:'carico',
+      attrezzo:'Cavo alto con corda',ss:'B6',ssPos:1,giri:3,ssRec:75,ssRecTxt:'1\'–1\'30" tra i giri',w:[
+      [[12.5,8,10],[12.5,8,10],[12.5,8,10]],
+      [[12.5,8,10],[12.5,8,10],[12.5,8,10]],
+      [[12.5,10,12],[12.5,10,12],[12.5,10,12]],
+      [[12.5,10,12],[12.5,10,12],[12.5,10,12]],
+      [[15,8,10],[15,8,10],[15,8,10]],
+      [[15,8,10],[15,8,10],[15,8,10]]]},
+    {id:'curl-cavo-basso',n:'Curl al cavo basso con fune',gruppo:'braccia',rec:75,recTxt:'1\'–1\'30" tra i giri',tipo:'carico',
+      attrezzo:'Cavo basso con fune',ss:'B6',ssPos:2,giri:3,w:[
+      [[12.5,8,10],[12.5,8,10],[12.5,8,10]],
+      [[12.5,8,10],[12.5,8,10],[12.5,8,10]],
+      [[12.5,10,12],[12.5,10,12],[12.5,10,12]],
+      [[12.5,10,12],[12.5,10,12],[12.5,10,12]],
+      [[15,8,10],[15,8,10],[15,8,10]],
+      [[15,8,10],[15,8,10],[15,8,10]]]}
+  ]}]
+};
+
+const SCHEDE=[S1,S2];
+/* indice esercizio → definizione e scheda di appartenenza (gli id non si ripetono tra schede) */
+const DEF={};
+for(const sc of SCHEDE)for(const g of sc.giorni)for(const e of g.esercizi)DEF[e.id]={e,sc,g};
+const defById=id=>DEF[id]?DEF[id].e:null;
+const schedaDiEs=id=>DEF[id]?DEF[id].sc:null;
+/* la scheda in corso: l'ultima già iniziata (prima della prima, la prima) */
+function schedaAttiva(){
+  const o=oggiISO();let a=SCHEDE[0];
+  for(const sc of SCHEDE)if(o>=sc.inizio)a=sc;
+  return a;
 }
-function fuoriPeriodo(){
-  const o=oggiISO();return o<SCHEDA.inizio?'prima':(o>SCHEDA.fine?'dopo':'');
+let SCHEDA=schedaAttiva();
+/* a quale scheda appartiene una seduta: campo esplicito (sedute nuove), poi
+   dagli esercizi che contiene (sedute vecchie), infine dalla data */
+function schedaDi(s){
+  if(s&&s.scheda){const x=SCHEDE.find(k=>k.id===s.scheda);if(x)return x;}
+  if(s){
+    for(const id of Object.keys(s.esercizi||{}))if(DEF[id]&&(s.esercizi[id]||[]).some(x=>x.fatta))return DEF[id].sc;
+    for(const id of Object.keys(s.rt||{}))if(DEF[id])return DEF[id].sc;
+    for(const id of Object.keys(s.esercizi||{}))if(DEF[id])return DEF[id].sc;
+  }
+  let a=SCHEDE[0];for(const k of SCHEDE)if(s&&s.data>=k.inizio)a=k;
+  return a;
+}
+
+/* ---- settimana di una scheda calcolata dalla data (1..N, fuori periodo la limita) ---- */
+function settimanaDi(iso,sc){
+  sc=sc||SCHEDA;
+  const g0=new Date(sc.inizio+'T00:00'), d=new Date((iso||oggiISO())+'T12:00');
+  const w=Math.floor((d-g0)/(7*864e5))+1;
+  return Math.max(1,Math.min(sc.settimane,w));
+}
+const settDi=s=>s.settimana||settimanaDi(s.data,schedaDi(s));
+/* l'ultima seduta chiusa di una scheda, in quella settimana, con l'esercizio fatto */
+function sedutaSett(sc,w,exId){
+  let out=null;
+  for(const s of dati.sessioni){
+    if(!s.chiusa||schedaDi(s)!==sc||settDi(s)!==w)continue;
+    if((s.esercizi[exId]||[]).some(x=>x.fatta))out=s;
+  }
+  return out;
+}
+/* ---- PROGRESSIONI AUTOMATICHE: il trainer le lega alla serie a max ----
+   kgMax: se nel max fai almeno 'soglia' rip, la settimana dopo +passo kg.
+   dip:   se nel max fai almeno rip+2, la settimana dopo +1 rip a serie;
+          chiusa la serie a 3×ripScala, l'assistenza scala di passoKg e si
+          riparte da rip. Settimana senza seduta: il target resta uguale. */
+function statoProg(e,w){
+  const p=e.prog, sc=schedaDiEs(e.id);
+  const st={kg:p.base,rip:p.rip,storia:[]};
+  for(let k=1;k<w;k++){
+    const s=sedutaSett(sc,k,e.id);if(!s){st.storia.push({w:k,nulla:true,kg:st.kg,rip:st.rip});continue;}
+    const arr=s.esercizi[e.id]||[], mx=arr[p.serie], normali=arr.slice(0,p.serie);
+    const maxRip=mx&&mx.fatta?(mx.reps||0):0;
+    const prima={w:k,kg:st.kg,rip:st.rip,max:maxRip};
+    if(p.tipo==='kgMax'){
+      if(maxRip>=p.soglia){st.kg=+(st.kg+p.passo).toFixed(2);prima.su='+'+p.passo+(e.doppio?'+'+p.passo:'')+' kg';}
+    }else if(p.tipo==='dip'){
+      const chiuse=normali.length>=p.serie&&normali.every(x=>x.fatta&&(x.reps||0)>=st.rip);
+      if(st.rip>=p.ripScala&&chiuse){st.kg=st.kg+p.passoKg;st.rip=p.rip;prima.su='assistenza '+st.kg+' kg, si riparte da '+p.serie+'×'+p.rip;}
+      else if(maxRip>=st.rip+2){st.rip++;prima.su='+1 rip a serie';}
+    }
+    st.storia.push(prima);
+  }
+  return st;
+}
+/* una riga che spiega da dove arriva il target di questa settimana */
+function statoProgTxt(id){
+  const e=defById(id);if(!e||!e.prog||schedaDiEs(id)!==SCHEDA)return '';
+  const st=statoProg(e,SETT), ult=st.storia.filter(x=>!x.nulla).pop();
+  if(!ult)return '<br>Settimana '+SETT+': si parte dal carico base.';
+  return '<br>Settimana '+ult.w+': max '+ult.max+' rip → '+(ult.su?'<b>'+esc(ult.su)+'</b>':'target invariato')+'.';
 }
 /* Target di un esercizio per una settimana: array di {kg,rip,ripMax,max} */
 function targetSerie(e,w){
   if(e.tipo==='rt')return [{rt:targetRT(w,e)}];
+  if(e.prog){
+    const st=statoProg(e,w), out=[];
+    for(let i=0;i<e.prog.serie;i++)out.push({kg:st.kg,rip:st.rip,ripMax:null,max:false});
+    out.push({kg:st.kg,rip:null,ripMax:null,max:true});
+    return out;
+  }
   const arr=(e.w&&e.w[Math.min(w,e.w.length)-1])||[];
   return arr.map(s=>({kg:s[0],rip:s[1]==='max'?null:s[1],ripMax:(typeof s[2]==='number')?s[2]:null,max:s[1]==='max'}));
+}
+function fuoriPeriodo(sc){
+  sc=sc||SCHEDA;const o=oggiISO();return o<sc.inizio?'prima':(o>sc.fine?'dopo':'');
 }
 /* Push up a tempo: si parte da rtBase e sale di rtStep ogni settimana
    in cui hai chiuso sotto il limite di tempo. */
 function targetRT(w,e){
   let t=e.rtBase;
   for(let k=1;k<w;k++){
-    const s=dati.sessioni.find(x=>x.chiusa&&x.settimana===k&&x.rt&&x.rt[e.id]&&x.rt[e.id].sec);
+    const s=dati.sessioni.find(x=>x.chiusa&&settDi(x)===k&&schedaDi(x)===schedaDiEs(e.id)&&x.rt&&x.rt[e.id]&&x.rt[e.id].sec);
     if(s&&s.rt[e.id].sec<e.rtLimite&&(s.rt[e.id].reps||0)>=t)t+=e.rtStep;
   }
   return t;
 }
 /* La scheda "piatta" della settimana: le altre parti dell'app la usano così. */
-function schedaSettimana(w){
-  return {giorni:SCHEDA.giorni.map(g=>({id:g.id,nome:g.nome,esercizi:g.esercizi.map(e=>{
+function appiattisci(e,w){
     const t=targetSerie(e,w);
     const rips=t.filter(x=>x.rip!=null).map(x=>x.rip);
     return {id:e.id,nome:e.n,gruppo:e.gruppo,rec:e.rec,recTxt:e.recTxt,note:e.nota||'',desc:e.nota||'',
       tipo:e.tipo||'carico',perMano:!!e.perMano,assist:!!e.assist,
+      attrezzo:e.attrezzo||'',modo:e.modo||'',regola:e.regola||'',doppio:e.doppio||'',uni:e.uni||'',
+      corpo:e.corpo||'',corpoBreve:e.corpoBreve||'',passo:e.passo||2.5,
+      ss:e.ss||'',ssPos:e.ssPos||0,giri:e.giri||0,ssRec:e.ssRec||0,ssRecTxt:e.ssRecTxt||'',
       serie:t.length,target:t,
       repMin:rips.length?Math.min(...rips):(e.rtBase||0),
       repMax:t.some(x=>x.ripMax)?Math.max(...t.map(x=>x.ripMax||x.rip||0)):(rips.length?Math.max(...rips):(e.rtBase||0))};
-  })}))};
+}
+function schedaSettimana(w,sc){
+  sc=sc||SCHEDA;
+  return {id:sc.id,giorni:sc.giorni.map(g=>({id:g.id,nome:g.nome,esercizi:g.esercizi.map(e=>appiattisci(e,w))}))};
 }
 function statoVuoto(){return {v:3,sessioni:[],luoghi:[],pref:{geo:null},note:{},resoconto:''};}
 function carica(){
@@ -1034,10 +1303,19 @@ function volumeGruppi(giorniIndietro){
 /* testo leggibile del target di un esercizio ("70x12 · 80x10 · 90x8") */
 function serieTxt(t,e){
   if(t.rt!=null)return t.rt+' rip totali';
-  const kg=(t.kg===0?'corpo libero':(t.kg<0?t.kg+'':t.kg+'')+(t.kg!==0?' kg':''));
   const r=t.max?'max':(t.ripMax?t.rip+'-'+t.ripMax:t.rip);
   if(e&&e.tipo==='tempo')return r+'"';            // tenute: solo i secondi
+  if(t.kg==null)return r+' rip';                  // elastico o corpo libero: contano le ripetizioni
+  const kg=(t.kg===0?'corpo libero':kgCorto(t.kg,e)+' kg');
   return (t.kg===0&&!e.assist?'':kg)+'×'+r;
+}
+/* "14+14" per manubri e dischi per lato, come lo scrive il trainer */
+const kgCorto=(kg,e)=>(e&&e.doppio&&kg>0)?kg+'+'+kg:String(kg);
+/* una serie fatta, in breve: "14+14×6", "8 rip", "35\"" */
+function fattoBreve(x,e){
+  if(e&&e.tipo==='tempo')return (x.reps??'—')+'"';
+  if(x.kg==null)return (x.reps??'—')+' rip';
+  return kgCorto(x.kg,e)+'×'+(x.reps??'—');
 }
 /* "4× 60×9" invece di quattro volte la stessa serie */
 function compatta(items){
@@ -1047,7 +1325,7 @@ function compatta(items){
 function targetTxt(e){
   const t=e.target||[];
   const uguali=t.length>1&&t.every(x=>JSON.stringify(x)===JSON.stringify(t[0]));
-  return uguali?t.length+' × '+serieTxt(t[0],e):t.map(x=>serieTxt(x,e)).join(' · ');
+  return uguali?t.length+' × '+serieTxt(t[0],e):compatta(t.map(x=>serieTxt(x,e)));
 }
 
 /* ---- COLORE: ogni esercizio ha la sua tinta, stabile nel tempo ---- */
@@ -1066,11 +1344,11 @@ function recordCarico(exId,escludiSessId){
 /* ---- RECORD RIPETIZIONI sulle serie a MAX (l'ultima di affondi e lat):
    il meglio di sempre prima della sessione in corso ---- */
 function recordRip(exId,escludiSessId){
-  const def=SCHEDA.giorni.flatMap(g=>g.esercizi).find(x=>x.id===exId);if(!def)return null;
+  const def=defById(exId);if(!def)return null;
   let best=null;
   for(const s of dati.sessioni){
-    if(!s.chiusa||s.id===escludiSessId)continue;
-    const t=targetSerie(def,s.settimana||settimanaDi(s.data));
+    if(!s.chiusa||s.id===escludiSessId||!(s.esercizi[exId]||[]).length)continue;
+    const t=targetSerie(def,settDi(s));
     (s.esercizi[exId]||[]).forEach((x,i)=>{const tg=t[i]||{};if(tg.max&&x.fatta&&x.reps>0)best=Math.max(best??0,x.reps);});
   }
   return best;
@@ -1129,8 +1407,21 @@ function festa(icona,testo,pattern,n){
 }
 
 const nomeGiorno=g=>g?(g.nome===('Giorno '+g.id)?g.nome:'Giorno '+g.id+' · '+g.nome):'';
-const exById=id=>{for(const g of dati.scheda.giorni){const e=g.esercizi.find(x=>x.id===id);if(e)return e;}return null;};
-const tuttiEs=()=>{const seen={},out=[];for(const g of dati.scheda.giorni)for(const e of g.esercizi){if(!seen[e.id]){seen[e.id]=1;out.push(e);}}return out;};
+const exById=id=>{
+  for(const g of dati.scheda.giorni){const e=g.esercizi.find(x=>x.id===id);if(e)return e;}
+  const d=DEF[id];return d?appiattisci(d.e,1):null;
+};
+/* esercizi per grafici e report: quelli della scheda in corso, poi quelli
+   delle schede archiviate che hanno storico */
+const tuttiEs=()=>{
+  const seen={},out=[];
+  for(const g of dati.scheda.giorni)for(const e of g.esercizi){if(!seen[e.id]){seen[e.id]=1;out.push(e);}}
+  for(const sc of [...SCHEDE].reverse())for(const g of sc.giorni)for(const e of g.esercizi){
+    if(seen[e.id])continue;
+    if(dati.sessioni.some(s=>s.chiusa&&(s.esercizi[e.id]||[]).some(x=>x.fatta))){seen[e.id]=1;out.push(appiattisci(e,1));}
+  }
+  return out;
+};
 
 /* backup */
 $('#btnExport').onclick=()=>{
@@ -1171,6 +1462,7 @@ $('#fileImport').onchange=e=>{
     if(!g||!g.scheda||!Array.isArray(g.sessioni))throw 0;
     if(!confirm('Sostituisco i dati attuali con il backup ('+g.sessioni.length+' sessioni)?'))return;
     dati=g;if(!Array.isArray(dati.luoghi))dati.luoghi=[];if(!dati.pref)dati.pref={geo:null};ordinaSessioni();
+    dati.scheda=schedaSettimana(SETT);
     salva();renderAll();toast('Backup importato ✔','good');
   }).catch(()=>toast('File non valido: serve un backup di questa app','warn'));
   e.target.value='';
@@ -1297,26 +1589,75 @@ function rilevaLuogo(interattivo){
 $('#placeBtn').onclick=()=>{buzz(HAP.tap);rilevaLuogo(true);};
 
 /* ========================= SCHEDA ========================= */
+/* La tab Scheda: la scheda in corso per intero (attrezzo, modalità, serie e
+   kg di ogni settimana, consigli del trainer); le schede passate in archivio. */
+function righeSettimane(e,sc,wNow){
+  return '<table class="wkgrid pwk">'+Array.from({length:sc.settimane},(_,k)=>{
+    const w=k+1, now=w===wNow;
+    let txt;
+    if(e.tipo==='rt')txt=targetSerie(e,w)[0].rt+' rip totali';
+    else if(e.prog&&w>wNow)txt='dipende dal max della settimana prima';
+    else txt=compatta(targetSerie(e,w).map(x=>serieTxt(x,e)));
+    return '<tr class="'+(now?'now':'')+'"><th>S'+w+'</th><td>'+esc(txt)+'</td></tr>';
+  }).join('')+'</table>';
+}
+function cartaEsercizio(e,sc,wNow,n){
+  const f=appiattisci(e,wNow), t=f.target;
+  const ora=e.tipo==='rt'?t[0].rt+' rip totali':compatta(t.map(x=>serieTxt(x,f)));
+  return '<div class="pex" style="--exc:'+colorEx(e.id)+'">'+
+    '<div class="pexh"><b><i>'+n+'</i>'+esc(e.n)+'</b><span>'+(e.ssPos===1?'→ '+esc(e.recTxt):'rec '+esc(e.recTxt||''))+'</span></div>'+
+    (e.attrezzo?'<div class="att">🏋️ '+esc(e.attrezzo)+(e.doppio?' · kg per '+e.doppio:'')+(e.uni?' · '+(e.uni==='gamba'?'una gamba':'un braccio')+' alla volta':'')+(e.assist?' · kg = assistenza':'')+'</div>':'')+
+    (e.modo?'<div class="modo">⏱ '+esc(e.modo)+'</div>':'')+
+    '<div class="pnow"><span>Settimana '+wNow+'</span>'+esc(ora)+'</div>'+
+    (e.regola?'<div class="regola" style="margin:8px 0 0"><b>📈 Regola del trainer</b> · '+esc(e.regola)+(sc===SCHEDA?statoProgTxt(e.id):'')+'</div>':'')+
+    (e.nota&&!e.regola?'<p class="muted pnota">'+esc(e.nota)+'</p>':'')+
+    '<details class="pall"><summary>Tutte le settimane</summary>'+righeSettimane(e,sc,wNow)+'</details>'+
+  '</div>';
+}
+function giorniScheda(sc,wNow){
+  return sc.giorni.map(g=>{
+    let html='',n=0;
+    for(let k=0;k<g.esercizi.length;k++){
+      const e=g.esercizi[k], b=g.esercizi[k+1];
+      if(e.ssPos===1&&b&&b.ss===e.ss){
+        n++;
+        html+='<div class="ssgrp"><div class="sshead">⇄ Superset · '+e.giri+' giri <span>nessuna pausa tra i due · rec '+esc(e.ssRecTxt)+'</span></div>'+
+          cartaEsercizio(e,sc,wNow,n+'a')+cartaEsercizio(b,sc,wNow,n+'b')+'</div>';
+        k++;continue;
+      }
+      html+=cartaEsercizio(e,sc,wNow,++n);
+    }
+    return '<div class="card"><div class="row head"><span class="pill acc">Giorno '+esc(g.id)+'</span><b style="font-size:16px;font-weight:900">'+esc(g.nome)+'</b>'+
+      '<span class="muted" style="margin-left:auto;font-size:12px">'+g.esercizi.length+' esercizi</span></div>'+html+'</div>';
+  }).join('');
+}
 function renderPlan(){
-  const fp=fuoriPeriodo();
-  $('#planHead').innerHTML='<div class="card"><div class="eyebrow">'+esc(SCHEDA.nome)+' · '+SCHEDA.sedute+' sedute a settimana</div>'+
-    '<h3 style="font-size:21px;font-weight:900;letter-spacing:-.02em;margin-top:6px">'+esc(SCHEDA.obiettivo)+'</h3>'+
-    '<p class="muted" style="margin-top:6px">Dal '+fmtData(SCHEDA.inizio)+' all\''+fmtData(SCHEDA.fine)+' · '+SCHEDA.settimane+' settimane</p>'+
-    '<div class="wkbar">'+Array.from({length:SCHEDA.settimane},(_,k)=>'<div class="'+(k+1<SETT?'done':(k+1===SETT?'now':''))+'"></div>').join('')+'</div>'+
-    '<p class="muted" style="margin-top:8px">'+(fp==='prima'?'La scheda parte il '+fmtData(SCHEDA.inizio)+': per ora vedi la settimana 1.':
-      (fp==='dopo'?'Periodo concluso: resta visibile la settimana '+SCHEDA.settimane+'. Consegna il report al trainer.':
-      '<b style="color:var(--acc)">Settimana '+SETT+' di '+SCHEDA.settimane+'</b> — i target qui sotto sono già precompilati nell\'allenamento.'))+'</p></div>';
-  $('#planList').innerHTML=SCHEDA.giorni.map(g=>'<div class="card">'+
-    '<div class="row head"><span class="pill acc">Giorno '+esc(g.id)+'</span><b style="font-size:16px;font-weight:900">'+esc(g.nome)+'</b></div>'+
-    '<table class="wkgrid"><tr><th>Esercizio</th>'+Array.from({length:SCHEDA.settimane},(_,k)=>'<th'+(k+1===SETT?' style="color:var(--acc)"':'')+'>S'+(k+1)+'</th>').join('')+'</tr>'+
-    g.esercizi.map(e=>'<tr><td class="exn">'+esc(e.n)+(e.perMano?' <span class="muted">(a mano)</span>':'')+(e.assist?' <span class="muted">(assist.)</span>':'')+'</td>'+
-      Array.from({length:SCHEDA.settimane},(_,k)=>{
-        const t=targetSerie(e,k+1);
-        const txt=e.tipo==='rt'?t[0].rt+' RT':(t.length+'×'+serieTxt(t[t.length-1],e)).replace(' kg','');
-        return '<td class="'+(k+1===SETT?'now':'')+'">'+txt+'</td>';}).join('')+'</tr>'+
-      (e.nota?'<tr><td colspan="'+(SCHEDA.settimane+1)+'" class="muted" style="padding-top:0;font-size:11.5px">'+esc(e.nota)+'</td></tr>':'')).join('')+
-    '</table></div>').join('');
-  const r=$('#resoconto');if(r&&document.activeElement!==r)r.value=dati.resoconto||'';
+  const fp=fuoriPeriodo(), sc=SCHEDA;
+  $('#planHead').innerHTML='<div class="card"><div class="eyebrow">'+esc(sc.nome)+' · '+sc.sedute+' sedute a settimana</div>'+
+    '<h3 style="font-size:21px;font-weight:900;letter-spacing:-.02em;margin-top:6px">'+esc(sc.obiettivo)+'</h3>'+
+    '<p class="muted" style="margin-top:6px">Dal '+fmtData(sc.inizio)+' al '+fmtData(sc.fine)+' · '+sc.settimane+' settimane</p>'+
+    '<div class="wkbar">'+Array.from({length:sc.settimane},(_,k)=>'<div class="'+(k+1<SETT?'done':(k+1===SETT?'now':''))+'"></div>').join('')+'</div>'+
+    '<p class="muted" style="margin-top:8px">'+(fp==='prima'?'La scheda parte il '+fmtData(sc.inizio)+': per ora vedi la settimana 1.':
+      (fp==='dopo'?'Periodo concluso: resta visibile la settimana '+sc.settimane+'. Consegna il report al trainer.':
+      '<b style="color:var(--acc)">Settimana '+SETT+' di '+sc.settimane+'</b> — i target qui sotto sono già precompilati nell\'allenamento.'))+'</p></div>'+
+    (sc.consigli?'<div class="card consigli"><div class="eyebrow">🧑‍🏫 Consigli del trainer</div><ul>'+
+      sc.consigli.map(c=>'<li>'+esc(c)+'</li>').join('')+'</ul></div>':'');
+  const vecchie=SCHEDE.filter(k=>k!==sc&&k.inizio<sc.inizio).reverse();
+  $('#planList').innerHTML=giorniScheda(sc,SETT)+
+    vecchie.map(k=>{
+      const n=dati.sessioni.filter(x=>x.chiusa&&schedaDi(x)===k&&statSessione(x).serie).length;
+      return '<details class="card arch"><summary>📦 Archivio · '+esc(k.nome)+' <span>'+fmtData(k.inizio)+'–'+fmtData(k.fine)+' · '+n+' sedute</span></summary>'+
+        '<p class="muted" style="margin:10px 0 4px">Scheda conclusa. Le sue sedute restano nello storico e nel report, con i target di allora.</p>'+
+        giorniScheda(k,k.settimane)+'</details>';
+    }).join('');
+  $('#resocontoInfo').textContent='Criticità, punti di forza, i carichi usati quando non erano specificati e le ripetizioni fatte nelle serie a max: '+
+    'è quello che il trainer ti chiede per il '+fmtData(sc.fine)+'. Scrivilo qui man mano: finisce nel report.';
+  const r=$('#resoconto');if(r&&document.activeElement!==r)r.value=resocontoDi(sc);
+}
+/* un resoconto per scheda; quello della scheda 1 stava in dati.resoconto */
+function resocontoDi(sc){
+  const m=dati.resoconti||{};
+  return m[sc.id]!=null?m[sc.id]:(sc.id===1?(dati.resoconto||''):'');
 }
 
 /* ---- PERSONAL TRAINER: marca la sessione e/o i singoli esercizi ---- */
@@ -1341,7 +1682,7 @@ function suggerimento(ex){
   /* Il consiglio È la scheda: target della settimana corrente. Il badge di
      salita compare solo dove il trainer ha previsto un aumento rispetto
      alla settimana prima (carico, assistenza in meno, secondi o RT). */
-  const def=SCHEDA.giorni.flatMap(g=>g.esercizi).find(x=>x.id===ex.id);
+  const def=defById(ex.id);
   if(!def)return {txt:'—',serieTxt:'',su:false,delta:''};
   const t=targetSerie(def,SETT), prev=SETT>1?targetSerie(def,SETT-1):null;
   if(def.tipo==='rt'){const d=prev?t[0].rt-prev[0].rt:0;return {txt:t[0].rt+' RT',serieTxt:'a tempo',su:d>0,delta:'+'+d};}
@@ -1349,35 +1690,43 @@ function suggerimento(ex){
     const mx=Math.max(...t.map(x=>x.rip)), pm=prev?Math.max(...prev.map(x=>x.rip)):mx;
     return {txt:t.length+'×'+mx+'"',serieTxt:'tenuta',su:mx>pm,delta:'+'+(mx-pm)+'"'};
   }
+  if(t.every(x=>x.kg==null)){                    // elastico o corpo libero: conta il volume di ripetizioni
+    const somma=a=>a.reduce((n,x)=>n+(x.ripMax||x.rip||0),0), d=prev?somma(t)-somma(prev):0;
+    const ug=t.every(x=>x.rip===t[0].rip&&x.ripMax===t[0].ripMax);
+    return {txt:ug?t.length+'×'+(t[0].ripMax?t[0].rip+'-'+t[0].ripMax:t[0].rip):compatta(t.map(x=>x.rip)).replace(/ · /g,' + '),
+      serieTxt:def.corpoBreve||'rip',su:d>0,delta:'+'+d+' rip'};
+  }
   const kgs=t.map(x=>x.kg), mx=Math.max(...kgs), pm=prev?Math.max(...prev.map(x=>x.kg)):mx;
-  const lo=Math.min(...kgs);
-  const txt=def.assist?('assist. '+Math.abs(mx)+(lo!==mx?'–'+Math.abs(lo):'')+' kg'):(lo===mx?mx+' kg':lo+'→'+mx+' kg');
-  const delta=def.assist?('−'+(mx-pm)+' assist.'):('+'+(+(mx-pm).toFixed(1)));
+  const lo=Math.min(...kgs), k=v=>kgCorto(v,def);
+  const txt=def.assist?('assist. '+Math.abs(mx)+(lo!==mx?'–'+Math.abs(lo):'')+' kg'):(lo===mx?k(mx)+' kg':k(lo)+'→'+k(mx)+' kg');
+  const dd=+(mx-pm).toFixed(2);
+  const delta=def.assist?('−'+dd+' assist.'):('+'+(def.doppio?dd+'+'+dd:dd));
   return {txt,serieTxt:t.length+' serie',su:mx>pm,delta};
 }
 /* ---- ADERENZA alla scheda: serie fatte che raggiungono il target della
    loro settimana. Per gli assistiti "≥" significa meno assistenza o uguale.
    Serie a max: basta averla fatta. ---- */
 function aderenza(s){
-  const w=s.settimana||settimanaDi(s.data);
+  const w=settDi(s);
   let ok=0,tot=0;
   for(const [id,arr] of Object.entries(s.esercizi||{})){
-    const def=SCHEDA.giorni.flatMap(g=>g.esercizi).find(x=>x.id===id);if(!def||def.tipo==='rt')continue;
+    const def=defById(id);if(!def||def.tipo==='rt')continue;
     const t=targetSerie(def,w);
     arr.forEach((x,i)=>{if(!x.fatta)return;tot++;const tg=t[i]||t[t.length-1]||{};
       if(def.tipo==='tempo'){if((x.reps||0)>=(tg.rip||0))ok++;return;}
       const kgOk=tg.kg==null||(x.kg??-1e9)>=tg.kg, ripOk=tg.max?(x.reps||0)>0:(x.reps||0)>=(tg.rip||0);
       if(kgOk&&ripOk)ok++;});
   }
-  for(const [id,d] of Object.entries(s.rt||{})){const def=SCHEDA.giorni.flatMap(g=>g.esercizi).find(x=>x.id===id);
+  for(const [id,d] of Object.entries(s.rt||{})){const def=defById(id);
     if(def&&d.sec){tot++;if((d.reps||0)>=targetRT(w,def))ok++;}}
   return {ok,tot,pct:tot?Math.round(ok/tot*100):null};
 }
 /* sedute previste dalla scheda e quante ne hai chiuse; settimane "piene" (tutti i giorni fatti) */
 function progressoScheda(){
   const previste=SCHEDA.settimane*SCHEDA.giorni.length;
-  const fatte=dati.sessioni.filter(s=>s.chiusa&&statSessione(s).serie).length;
-  const perSett={};for(const s of dati.sessioni)if(s.chiusa&&statSessione(s).serie){const w=s.settimana||settimanaDi(s.data);(perSett[w]=perSett[w]||new Set()).add(s.giorno);}
+  const mie=dati.sessioni.filter(s=>s.chiusa&&statSessione(s).serie&&schedaDi(s)===SCHEDA);
+  const fatte=mie.length;
+  const perSett={};for(const s of mie){const w=settDi(s);(perSett[w]=perSett[w]||new Set()).add(s.giorno);}
   const piene=Object.keys(perSett).filter(w=>perSett[w].size>=SCHEDA.giorni.length).map(Number).sort((a,b)=>a-b);
   let streak=0;for(let w=SETT-(perSett[SETT]&&perSett[SETT].size>=SCHEDA.giorni.length?0:1);w>=1;w--){if(piene.includes(w))streak++;else break;}
   return {previste,fatte,pct:Math.min(100,Math.round(fatte/previste*100)),piene:piene.length,streak};
@@ -1400,7 +1749,7 @@ function renderProssimo(){
   const righe=g.esercizi.map(e=>{
     const su=suggerimento(e);
     return '<li style="--exc:'+colorEx(e.id)+'"><span class="dot"></span>'+
-      '<span class="nm">'+esc(e.nome)+'</span>'+
+      '<span class="nm">'+(e.ss?'<b style="color:var(--c5)">⇄ </b>':'')+esc(e.nome)+'</span>'+
       '<span class="kg">'+esc(su.txt)+'</span>'+
       (su.su?'<span class="up">'+esc(su.delta)+'</span>':'<span class="same">'+esc(su.serieTxt)+'</span>')+'</li>';
   }).join('');
@@ -1438,7 +1787,7 @@ const serieVuote=n=>Array.from({length:n},()=>({kg:null,reps:null,fatta:false}))
 /** giorno consigliato: il successivo nella rotazione rispetto all'ultima sessione chiusa */
 function giornoSuggerito(){
   const gs=dati.scheda.giorni;if(!gs.length)return null;
-  const last=[...dati.sessioni].reverse().find(s=>s.chiusa);
+  const last=[...dati.sessioni].reverse().find(s=>s.chiusa&&schedaDi(s)===SCHEDA);
   if(!last)return gs[0].id;
   const i=gs.findIndex(g=>g.id===last.giorno);
   return gs[(i+1)%gs.length].id;
@@ -1448,7 +1797,7 @@ function giornoSuggerito(){
 function giornoAlBoot(){
   const oggi=oggiISO(), d=new Date();d.setDate(d.getDate()-1);
   const ieri=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
-  const aperte=dati.sessioni.filter(s=>!s.chiusa&&(s.data===oggi||(s.data===ieri&&s.inizio&&Date.now()-s.inizio<12*3600e3)));
+  const aperte=dati.sessioni.filter(s=>!s.chiusa&&schedaDi(s)===SCHEDA&&(s.data===oggi||(s.data===ieri&&s.inizio&&Date.now()-s.inizio<12*3600e3)));
   const attiva=aperte.find(s=>statSessione(s).serie>0)||aperte.find(s=>s.warm&&Object.values(s.warm).some(Boolean));
   return attiva&&dati.scheda.giorni.some(g=>g.id===attiva.giorno)?attiva.giorno:giornoSuggerito();
 }
@@ -1457,11 +1806,11 @@ function giornoAlBoot(){
    invece di aprirne una nuova e "perdere" il lavoro dalla vista. */
 function sessioneCorrente(){
   const g=giornoCorrente();if(!g)return null;
-  let s=dati.sessioni.find(x=>x.data===oggiISO()&&x.giorno===g.id&&!x.chiusa);
+  let s=dati.sessioni.find(x=>x.data===oggiISO()&&x.giorno===g.id&&!x.chiusa&&schedaDi(x)===SCHEDA);
   if(!s){
     const d=new Date();d.setDate(d.getDate()-1);
     const ieri=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
-    s=dati.sessioni.find(x=>x.data===ieri&&x.giorno===g.id&&!x.chiusa&&x.inizio&&
+    s=dati.sessioni.find(x=>x.data===ieri&&x.giorno===g.id&&!x.chiusa&&x.inizio&&schedaDi(x)===SCHEDA&&
       (Date.now()-x.inizio)<12*3600e3&&statSessione(x).serie>0);
   }
   return s||null;
@@ -1470,7 +1819,7 @@ function sessioneAperta(crea){
   const g=giornoCorrente();if(!g)return null;
   let s=sessioneCorrente();
   if(!s&&crea){
-    s={id:oggiISO()+'-'+uid(),data:oggiISO(),giorno:g.id,settimana:SETT,chiusa:false,inizio:null,fine:null,esercizi:{}};
+    s={id:oggiISO()+'-'+uid(),data:oggiISO(),scheda:SCHEDA.id,giorno:g.id,settimana:SETT,chiusa:false,inizio:null,fine:null,esercizi:{}};
     if(luogoAttuale){s.luogoId=luogoAttuale.id;s.luogoNome=luogoAttuale.nome;}
     dati.sessioni.push(s);
   }
@@ -1484,7 +1833,7 @@ function ultimaSerie(exId,idx){
   for(let i=dati.sessioni.length-1;i>=0;i--){
     const s=dati.sessioni[i];if(!s.chiusa)continue;
     const arr=s.esercizi[exId];
-    if(arr&&arr.some(x=>x.fatta&&x.kg!=null))return arr[Math.min(idx,arr.length-1)]||null;
+    if(arr&&arr.some(x=>x.fatta&&(x.kg!=null||x.reps!=null)))return arr[Math.min(idx,arr.length-1)]||null;
   }
   return null;
 }
@@ -1539,8 +1888,18 @@ function renderWorkout(){
   const s=sessioneAperta(true);salva();
   // primo esercizio non completato = quello "attivo"
   let activeId=null;
-  for(const e of g.esercizi){const a=s.esercizi[e.id];if(a.filter(x=>x.fatta).length<e.serie){activeId=e.id;break;}}
-  box.innerHTML=g.esercizi.map(e=>{
+  const nF=e=>s.esercizi[e.id].filter(x=>x.fatta).length;
+  for(let k=0;k<g.esercizi.length;k++){
+    const e=g.esercizi[k], b=g.esercizi[k+1];
+    if(e.ssPos===1&&b&&b.ss===e.ss){                 // superset: A, B, A, B…
+      if(nF(e)>nF(b)&&nF(b)<b.serie){activeId=b.id;break;}
+      if(nF(e)<e.serie){activeId=e.id;break;}
+      if(nF(b)<b.serie){activeId=b.id;break;}
+      k++;continue;
+    }
+    if(nF(e)<e.serie){activeId=e.id;break;}
+  }
+  const cards=g.esercizi.map(e=>{
     const arr=s.esercizi[e.id], fatte=arr.filter(x=>x.fatta).length, done=fatte>=e.serie;
     const nextIdx=arr.findIndex(x=>!x.fatta);
     const hasLast=!!ultimaSerie(e.id,0);
@@ -1556,11 +1915,14 @@ function renderWorkout(){
     }
     return '<div class="card ex'+(done?' exdone':'')+(e.id===activeId?' active':'')+'" data-ex="'+esc(e.id)+'" style="--exc:'+colorEx(e.id)+'">'+
       '<div class="head"><div class="miniring">'+ringSVG(fatte/e.serie,38)+'<i>'+fatte+'/'+e.serie+'</i></div>'+
-      '<div class="grow"><h3>'+esc(e.nome)+(hasPR?'<span class="prbadge">RECORD</span>':'')+(ptEs(s,e.id)?'<span class="ptbadge">PT</span>':'')+'</h3><div class="tgt tnum">'+e.serie+' serie · rec '+(e.recTxt||e.rec+'s')+' · '+GRUPPI[gruppoDi(e)].n+(e.perMano?' · kg a mano':'')+'</div>'+
+      '<div class="grow"><h3>'+esc(e.nome)+(hasPR?'<span class="prbadge">RECORD</span>':'')+(ptEs(s,e.id)?'<span class="ptbadge">PT</span>':'')+'</h3><div class="tgt tnum">'+
+        (e.ss?e.serie+' giri':e.serie+' serie')+' · '+(e.ssPos===1?'→ '+esc(e.recTxt):'rec '+esc(e.recTxt||e.rec+'s'))+' · '+GRUPPI[gruppoDi(e)].n+(e.perMano?' · kg a mano':'')+'</div>'+
+        (e.attrezzo?'<div class="att">🏋️ '+esc(e.attrezzo)+(e.doppio?' · kg per '+e.doppio:'')+(e.uni?' · '+(e.uni==='gamba'?'una gamba':'un braccio')+' alla volta':'')+'</div>':'')+
+        (e.modo?'<div class="modo">⏱ '+esc(e.modo)+'</div>':'')+
 '</div>'+
       '<button class="focusbtn" data-a="focus" aria-label="Modalità trainer">🔍</button>'+
       (e.desc?'<button class="howbtn" data-a="how" aria-label="Come si fa">📖</button>':'')+'</div>'+
-      '<div class="sethead"><span>#</span><span>'+(e.assist?'Assist. kg':(e.perMano?'Kg a mano':'Carico kg'))+'</span><span>'+(e.tipo==='tempo'?'Secondi':'Ripetizioni')+'</span><span>Fatta</span></div>'+
+      '<div class="sethead"><span>#</span><span>'+(e.corpo?'Attrezzo':e.assist?'Assist. kg':e.doppio?'Kg per '+e.doppio:e.uni?'Kg per '+e.uni:(e.perMano?'Kg a mano':'Carico kg'))+'</span><span>'+(e.tipo==='tempo'?'Secondi':'Ripetizioni')+'</span><span>Fatta</span></div>'+
       arr.map((serie,i)=>{
         const tg=(e.target&&e.target[i])||{};
         const ult=ultimaSerie(e.id,i);
@@ -1569,8 +1931,9 @@ function renderWorkout(){
         const unit=e.tipo==='tempo'?'sec':'rip';
         return '<div class="serie'+(serie.fatta?' fatta':'')+(isPR(serie)?' pr':'')+(tg.max?' maxset':'')+(i===nextIdx&&e.id===activeId?' next':'')+'" data-i="'+i+'">'+
         '<span class="n tnum">'+(i+1)+(tg.max?'<i class="mx">MAX</i>':'')+'</span>'+
-        '<div class="fld"><input type="number" inputmode="decimal" step="0.5" min="0" data-f="kg" placeholder="kg" value="'+kg+'" aria-label="Carico serie '+(i+1)+'">'+
-          '<span class="stp"><button data-s="kg" data-d="2.5" aria-label="Più peso">＋</button><button data-s="kg" data-d="-2.5" aria-label="Meno peso">−</button></span></div>'+
+        (e.corpo?'<div class="fld ro"><span>'+esc(e.corpo)+'</span></div>':
+        '<div class="fld"><input type="number" inputmode="decimal" step="'+(e.passo<1?0.25:0.5)+'" min="'+(e.assist?-200:0)+'" data-f="kg" placeholder="kg" value="'+kg+'" aria-label="Carico serie '+(i+1)+'">'+
+          '<span class="stp"><button data-s="kg" data-d="'+e.passo+'" aria-label="Più peso">＋</button><button data-s="kg" data-d="-'+e.passo+'" aria-label="Meno peso">−</button></span></div>')+
         '<div class="fld"><input type="number" inputmode="numeric" min="0" data-f="reps" placeholder="'+(tg.max?(ult&&ult.reps!=null?'max ('+ult.reps+')':'max'):unit)+'" value="'+rp+'" aria-label="'+unit+' serie '+(i+1)+'">'+
           '<span class="stp"><button data-s="reps" data-d="'+(e.tipo==='tempo'?5:1)+'" aria-label="Più">＋</button><button data-s="reps" data-d="'+(e.tipo==='tempo'?-5:-1)+'" aria-label="Meno">−</button></span></div>'+
         '<button class="ck" data-a="ck" aria-label="Serie '+(i+1)+' fatta">✓</button></div>';
@@ -1585,14 +1948,22 @@ function renderWorkout(){
           (inCorso?'■ Ferma il plank':'▶ Avvia serie '+(idx+1)+' · '+(t.rip||30)+'\"')+'</button>'+
           '<span class="muted">Parte il countdown: a fine tempo vibra e segna la serie da sola.'+('wakeLock' in navigator?' Lo schermo resta acceso.':'')+'</span></div>';
       })():'')+
+      (e.regola?'<div class="regola"><b>📈 Regola del trainer</b> · '+esc(e.regola)+statoProgTxt(e.id)+'</div>':'')+
       (e.tipo!=='rt'?'<div class="tgline">Target settimana '+SETT+' · '+targetTxt(e)+'</div>':'')+
-      (hasLast?'<div class="lastrow"><b>Ultima volta</b> · '+arr.map((_,i)=>{const u=ultimaSerie(e.id,i);return u&&u.kg!=null?(u.kg+'×'+(u.reps??'—')):'—';}).join('  ·  ')+(pr!=null?'   ·   <b>record</b> '+pr+' kg':'')+
+      (hasLast?'<div class="lastrow"><b>Ultima volta</b> · '+arr.map((_,i)=>{const u=ultimaSerie(e.id,i);return u&&u.fatta?fattoBreve(u,e):'—';}).join('  ·  ')+(pr!=null?'   ·   <b>record</b> '+kgCorto(pr,e)+' kg':'')+
         (()=>{const rr=e.target&&e.target.some(t=>t.max)?recordRip(e.id,s.id):null;return rr!=null?'   ·   <b>max</b> '+rr+' rip':'';})()+'</div>':'')+
       '</div>';
+  });
+  box.innerHTML=g.esercizi.map((e,k)=>{
+    const b=g.esercizi[k+1];
+    if(e.ssPos===1&&b&&b.ss===e.ss)
+      return '<div class="ssgrp"><div class="sshead">⇄ Superset · '+e.giri+' giri <span>nessuna pausa tra i due · rec '+esc(e.ssRecTxt)+'</span></div>'+cards[k]+cards[k+1]+'</div>';
+    if(e.ssPos===2&&k>0&&g.esercizi[k-1].ss===e.ss)return '';
+    return cards[k];
   }).join('');
   // riempio le card a tempo e tengo vivo il cronometro
   document.querySelectorAll('[data-rt]').forEach(box=>{
-    const def=SCHEDA.giorni.flatMap(x=>x.esercizi).find(x=>x.id===box.dataset.rt);
+    const def=defById(box.dataset.rt);
     if(def)renderRT(def,box,s);
   });
   if(!RTint&&document.querySelector('[data-rt]'))RTint=setInterval(tickRT,1000);
@@ -1623,7 +1994,7 @@ function gestisciClick(e){
   if(aRT&&aRT.startsWith('rt')){
     const s=sessioneAperta(true);s.rt=s.rt||{};
     const d=s.rt[exId]=s.rt[exId]||{reps:null,sec:0,start:null};
-    const def=SCHEDA.giorni.flatMap(x=>x.esercizi).find(x=>x.id===exId);
+    const def=defById(exId);
     if(aRT==='rtplay'){
       if(d.start){d.sec=(d.sec||0)+Math.floor((Date.now()-d.start)/1000);d.start=null;buzz(HAP.tap);}
       else{d.start=Date.now();if(!s.inizio)s.inizio=Date.now();buzz(HAP.serie);}
@@ -1655,7 +2026,8 @@ function gestisciClick(e){
     const row=btn.closest('.serie'), i=+row.dataset.i, f=btn.dataset.s, d=parseFloat(btn.dataset.d);
     const inp=$('[data-f='+f+']',row);
     const base=inp.value===''?(f==='kg'?0:0):parseFloat(inp.value);
-    const nv=Math.max(0,Math.round(((isNaN(base)?0:base)+d)*(f==='kg'?2:1))/(f==='kg'?2:1));
+    const exD=exById(exId), minimo=(f==='kg'&&exD&&exD.assist)?-200:0;
+    const nv=Math.max(minimo,Math.round(((isNaN(base)?0:base)+d)*(f==='kg'?4:1))/(f==='kg'?4:1));
     inp.value=nv;
     const s=sessioneAperta(true);s.esercizi[exId][i][f]=nv;salva();buzz(HAP.step);
     if(row.classList.contains('fatta'))renderHero();
@@ -1667,7 +2039,7 @@ function gestisciClick(e){
     const row=btn.closest('.serie'), i=+row.dataset.i;
     const s=sessioneAperta(true), serie=s.esercizi[exId][i];
     if(!serie.fatta){
-      const kg=parseFloat($('[data-f=kg]',row).value), rp=parseFloat($('[data-f=reps]',row).value);
+      const kgEl=$('[data-f=kg]',row), kg=kgEl?parseFloat(kgEl.value):NaN, rp=parseFloat($('[data-f=reps]',row).value);
       const tgMax=(()=>{const d=exById(exId);return !!(d&&d.target&&d.target[i]&&d.target[i].max);})();
       if(tgMax&&isNaN(rp)){                // serie a MAX: senza ripetizioni non vale
         const u=ultimaSerie(exId,i);buzz(HAP.annulla);
@@ -1722,7 +2094,14 @@ function gestisciClick(e){
         if(!celebrato)toast('✔ '+(ex?ex.nome:'')+' completato','good');
       }else if(!celebrato)buzz(HAP.serie);
 
-      if(ex&&ex.rec>0&&!tuttoFatto)avviaTimer(ex.rec,ex.nome);
+      const partner=ex&&ex.ss?gg.esercizi.find(x=>x.ss===ex.ss&&x.id!==ex.id):null;
+      if(ex&&ex.ssPos===1&&partner&&!tuttoFatto){
+        toast('⇄ Subito '+partner.nome+' · giro '+(i+1)+' di '+ex.giri,'good');
+        if(FOCUS.on){const j=gg.esercizi.findIndex(x=>x.id===partner.id);if(j>=0)FOCUS.idx=j;}
+      }else if(ex&&ex.ssPos===2&&ex.rec>0&&!tuttoFatto){
+        avviaTimer(ex.rec,'Giro '+(i+1)+' fatto · recupero');
+        if(FOCUS.on&&partner&&i+1<ex.giri){const j=gg.esercizi.findIndex(x=>x.id===partner.id);if(j>=0)FOCUS.idx=j;}
+      }else if(ex&&ex.rec>0&&!tuttoFatto)avviaTimer(ex.rec,ex.nome);
     }else{serie.fatta=false;buzz(HAP.annulla);stopTimer();}
     salva();renderWorkout();if(FOCUS.on)renderFocus();aggiornaContesto();
     return;
@@ -1742,7 +2121,7 @@ $('#btnCloseSession').onclick=()=>{
 
   /* obiettivi di fine sessione, in ordine di importanza */
   const ad=aderenza(s), prog=progressoScheda();
-  const settPiena=(()=>{const w=s.settimana||SETT;const gg=new Set(dati.sessioni.filter(x=>x.chiusa&&(x.settimana||settimanaDi(x.data))===w&&statSessione(x).serie).map(x=>x.giorno));return gg.size>=SCHEDA.giorni.length;})();
+  const settPiena=(()=>{const w=settDi(s), sc=schedaDi(s);const gg=new Set(dati.sessioni.filter(x=>x.chiusa&&schedaDi(x)===sc&&settDi(x)===w&&statSessione(x).serie).map(x=>x.giorno));return gg.size>=sc.giorni.length;})();
   const nSess=dati.sessioni.filter(x=>x.chiusa).length;
   const settimana=dati.sessioni.filter(x=>x.chiusa&&(Date.now()-new Date(x.data+'T12:00'))<7*864e5).length;
   if(ad.pct!=null&&ad.pct>=100){
@@ -1810,7 +2189,7 @@ $('#stretch').addEventListener('click',e=>{
   if(b.dataset.a==='stimer'){avviaTimer(SCHEDA.stretching.min*60,'Stretching');toast('Timer stretching avviato','good');}
 });
 $('#noteSeduta').addEventListener('input',e=>{const s=sessioneAperta(true);s.note=e.target.value;salva();});
-$('#resoconto').addEventListener('input',e=>{dati.resoconto=e.target.value;salva();});
+$('#resoconto').addEventListener('input',e=>{dati.resoconti=dati.resoconti||{};dati.resoconti[SCHEDA.id]=e.target.value;salva();});
 
 /* =================== PUSH UP A TEMPO (ripetizioni totali) ===================
    Cronometro con partenza/stop: registra RT e secondi. Sotto il limite il
@@ -1819,7 +2198,7 @@ let RTint=null;
 function renderRT(exDef,box,s){
   s.rt=s.rt||{};
   const dato=s.rt[exDef.id]||{reps:null,sec:null,start:null};
-  const target=targetRT(SETT,SCHEDA.giorni.flatMap(g=>g.esercizi).find(x=>x.id===exDef.id));
+  const target=targetRT(SETT,defById(exDef.id));
   const run=!!dato.start;
   const sec=run?Math.floor((Date.now()-dato.start)/1000)+(dato.sec||0):(dato.sec||0);
   const mm=Math.floor(sec/60), ss=String(sec%60).padStart(2,'0');
@@ -1877,14 +2256,15 @@ function renderFocus(){
     const a=s.esercizi[x.id]||[];const compl=a.filter(y=>y.fatta).length>=x.serie;
     return '<i class="'+(i===FOCUS.idx?'on ':'')+(compl?'ok':'')+'"></i>';}).join('');
   const righe=arr.map((serie,i)=>{
-    const ult=ultimaSerie(e.id,i);
-    const kg=serie.kg!=null?serie.kg:(ult&&ult.kg!=null?ult.kg:'');
-    const rp=serie.reps!=null?serie.reps:(ult&&ult.reps!=null?ult.reps:'');
-    return '<div class="serie'+(serie.fatta?' fatta':'')+(isPR(serie)?' pr':'')+(i===nextIdx?' next':'')+'" data-i="'+i+'">'+
-      '<span class="n tnum">'+(i+1)+'</span>'+
-      '<div class="fld"><input type="number" inputmode="decimal" step="0.5" min="0" data-f="kg" placeholder="kg" value="'+kg+'" aria-label="Carico serie '+(i+1)+'">'+
-        '<span class="stp"><button data-s="kg" data-d="2.5" aria-label="Più peso">＋</button><button data-s="kg" data-d="-2.5" aria-label="Meno peso">−</button></span></div>'+
-      '<div class="fld"><input type="number" inputmode="numeric" min="0" data-f="reps" placeholder="rip" value="'+rp+'" aria-label="Ripetizioni serie '+(i+1)+'">'+
+    const ult=ultimaSerie(e.id,i), tg=(e.target&&e.target[i])||{};
+    const kg=serie.kg!=null?serie.kg:(tg.kg!=null?tg.kg:(ult&&ult.kg!=null?ult.kg:''));
+    const rp=serie.reps!=null?serie.reps:(tg.max?'':(tg.rip!=null?tg.rip:(ult&&ult.reps!=null?ult.reps:'')));
+    return '<div class="serie'+(serie.fatta?' fatta':'')+(isPR(serie)?' pr':'')+(tg.max?' maxset':'')+(i===nextIdx?' next':'')+'" data-i="'+i+'">'+
+      '<span class="n tnum">'+(i+1)+(tg.max?'<i class="mx">MAX</i>':'')+'</span>'+
+      (e.corpo?'<div class="fld ro"><span>'+esc(e.corpo)+'</span></div>':
+      '<div class="fld"><input type="number" inputmode="decimal" step="'+(e.passo<1?0.25:0.5)+'" min="'+(e.assist?-200:0)+'" data-f="kg" placeholder="kg" value="'+kg+'" aria-label="Carico serie '+(i+1)+'">'+
+        '<span class="stp"><button data-s="kg" data-d="'+e.passo+'" aria-label="Più peso">＋</button><button data-s="kg" data-d="-'+e.passo+'" aria-label="Meno peso">−</button></span></div>')+
+      '<div class="fld"><input type="number" inputmode="numeric" min="0" data-f="reps" placeholder="'+(tg.max?'max':'rip')+'" value="'+rp+'" aria-label="Ripetizioni serie '+(i+1)+'">'+
         '<span class="stp"><button data-s="reps" data-d="1" aria-label="Più ripetizioni">＋</button><button data-s="reps" data-d="-1" aria-label="Meno ripetizioni">−</button></span></div>'+
       '<button class="ck" data-a="ck" aria-label="Serie '+(i+1)+' fatta">✓</button></div>';
   }).join('');
@@ -1895,13 +2275,17 @@ function renderFocus(){
     '<div class="fx-body">'+
       '<h2 class="fx-name">'+esc(e.nome)+'</h2>'+
       '<div class="fx-meta"><span class="pill">'+GRUPPI[gruppoDi(e)].n+'</span>'+
-        '<span class="pill">'+e.serie+' × '+e.repMin+(e.repMax>e.repMin?'–'+e.repMax:'')+' rip</span>'+
-        '<span class="pill">rec '+e.rec+'s</span>'+
-        (sg.kg!=null?'<span class="pill">'+(sg.su?'consigliato ':'ultimo ')+sg.kg+' kg</span>':'')+
-        (pr!=null?'<span class="pill">record '+pr+' kg</span>':'')+'</div>'+
+        (e.ss?'<span class="pill">⇄ superset · '+e.giri+' giri</span>':'')+
+        '<span class="pill">'+esc(targetTxt(e))+'</span>'+
+        '<span class="pill">'+(e.ssPos===1?'→ '+esc(e.recTxt):'rec '+esc(e.recTxt||e.rec+'s'))+'</span>'+
+        (sg.su?'<span class="pill">'+esc(sg.delta)+' rispetto alla settimana scorsa</span>':'')+
+        (pr!=null?'<span class="pill">record '+kgCorto(pr,e)+' kg</span>':'')+'</div>'+
+      (e.attrezzo?'<p class="muted" style="margin-top:10px">🏋️ '+esc(e.attrezzo)+(e.doppio?' · kg per '+e.doppio:'')+(e.uni?' · '+(e.uni==='gamba'?'una gamba':'un braccio')+' alla volta':'')+'</p>':'')+
+      (e.modo?'<div class="modo">⏱ '+esc(e.modo)+'</div>':'')+
+      (e.regola?'<div class="regola" style="margin:12px 0 0">'+'<b>📈 Regola del trainer</b> · '+esc(e.regola)+statoProgTxt(e.id)+'</div>':'')+
       (e.desc?'<div class="fx-how"><b>Come si fa</b>'+esc(e.desc)+'</div>':'')+
       (e.note?'<p class="muted" style="margin-top:10px">'+esc(e.note)+'</p>':'')+
-      '<div class="fx-sets"><div class="sethead"><span>#</span><span>Carico kg</span><span>Ripetizioni</span><span>Fatta</span></div>'+righe+'</div>'+
+      '<div class="fx-sets"><div class="sethead"><span>#</span><span>'+(e.corpo?'Attrezzo':e.assist?'Assist. kg':e.doppio?'Kg per '+e.doppio:e.uni?'Kg per '+e.uni:'Carico kg')+'</span><span>Ripetizioni</span><span>Fatta</span></div>'+righe+'</div>'+
       '<button class="fx-pt'+(ptEs(s,e.id)?' on':'')+'" data-a="ptex">🧑‍🏫 <span>Eseguito col personal trainer</span><span class="sw"></span></button>'+
       (done?'<div class="fx-done">✔ Esercizio completato'+(FOCUS.idx<g.esercizi.length-1?' — vai al prossimo':'')+'</div>':'')+
     '</div>'+
@@ -2007,14 +2391,14 @@ $('#timerStop').onclick=()=>{buzz(HAP.tap);stopTimer();};
    riga, quello che è stato fatto davvero. La vede il trainer nello
    storico e nel report del giorno. ---- */
 function schedaCompilata(s){
-  const w=s.settimana||settimanaDi(s.data);
-  const giorno=schedaSettimana(w).giorni.find(g=>g.id===s.giorno);
-  const defs=SCHEDA.giorni.flatMap(g=>g.esercizi);
+  const sc=schedaDi(s), w=settDi(s);
+  const giorno=schedaSettimana(w,sc).giorni.find(g=>g.id===s.giorno);
+  const defs=sc.giorni.flatMap(g=>g.esercizi);
   const ordine=giorno?giorno.esercizi.map(e=>e.id):[];
   for(const id of Object.keys(s.esercizi||{}))if(!ordine.includes(id))ordine.push(id);
   const min=(s.inizio&&s.fine)?Math.max(1,Math.round((s.fine-s.inizio)/60000)):null;
   const ad=aderenza(s);
-  const wr=SCHEDA.riscaldamento.length, wf=SCHEDA.riscaldamento.filter((x,i)=>s.warm&&s.warm['w'+i]).length;
+  const wr=sc.riscaldamento.length, wf=sc.riscaldamento.filter((x,i)=>s.warm&&s.warm['w'+i]).length;
   let html='<div class="scmeta">'+
     '<span class="'+(wf>=wr?'on':'')+'">🔥 Riscaldamento '+(wf>=wr?'✓':wf+'/'+wr)+'</span>'+
     '<span class="'+(s.warm&&s.warm.stretch?'on':'')+'">🧘 Stretching '+(s.warm&&s.warm.stretch?'✓':'—')+'</span>'+
@@ -2048,13 +2432,13 @@ function schedaCompilata(s){
           fTxt=(x.reps??'—')+'"';const d=(x.reps||0)-(tg.rip||0);
           if(d<0){cls='down';st='▼ '+d+'"';}else if(d>0){cls='up';st='▲ +'+d+'"';}
         }else if(tg.max){
-          fTxt=(x.kg??'—')+' × '+(x.reps??'?');
+          fTxt=x.kg==null?(x.reps??'?')+' rip':kgCorto(x.kg,ex)+' × '+(x.reps??'?');
           if(x.reps>0){cls='max';st='MAX '+x.reps+' rip';}else{cls='nd';st='rip ?';}
         }else{
-          fTxt=(x.kg??'—')+' × '+(x.reps??'—');
-          const dk=(tg.kg!=null&&x.kg!=null)?+(x.kg-tg.kg).toFixed(1):0;
+          fTxt=x.kg==null?(x.reps??'—')+' rip':kgCorto(x.kg,ex)+' × '+(x.reps??'—');
+          const dk=(tg.kg!=null&&x.kg!=null)?+(x.kg-tg.kg).toFixed(2):0;
           let dr=0;if(tg.rip!=null){const r=x.reps||0;if(r<tg.rip)dr=r-tg.rip;else if(tg.ripMax?r>tg.ripMax:r>tg.rip)dr=r-(tg.ripMax||tg.rip);}
-          const kgTxt=d=>ex.assist?((d>0?'−':'+')+Math.abs(d)+' assist.'):((d>0?'+':'')+d+' kg');
+          const kgTxt=d=>ex.assist?((d>0?'−':'+')+Math.abs(d)+' assist.'):((d>0?'+':'')+d+(ex.doppio?' kg/'+ex.doppio:' kg'));
           if(dk<0||dr<0){cls='down';st='▼ '+(dk<0?kgTxt(dk):dr+' rip');}
           else if(dk>0||dr>0){cls='up';st='▲ '+(dk>0?kgTxt(dk):'+'+dr+' rip');}
           if(!t.length){cls='ok';st='✓';}
@@ -2072,7 +2456,9 @@ function schedaCompilata(s){
     const pr=prima!=null&&arr.some(x=>x.fatta&&x.kg!=null&&x.kg>prima);
     html+='<div class="sc" style="--exc:'+colorEx(id)+'"><div class="sch"><i class="dot"></i><div class="grow"><b>'+esc(ex.nome)+'</b>'+
       (pr?'<span class="prbadge">RECORD</span>':'')+(ptEs(s,id)?'<span class="ptbadge">PT</span>':'')+
-      '<div class="scg">'+esc(grp)+(ex.recTxt?' · rec '+esc(ex.recTxt):'')+(ex.perMano?' · kg a mano':'')+(ex.assist?' · kg = assistenza':'')+'</div></div>'+
+      '<div class="scg">'+(ex.ss?'⇄ superset · ':'')+esc(grp)+(ex.attrezzo?' · '+esc(ex.attrezzo):'')+(ex.recTxt?' · rec '+esc(ex.recTxt):'')+
+        (ex.perMano?' · kg a mano':'')+(ex.doppio?' · kg per '+ex.doppio:'')+(ex.uni?' · per '+ex.uni:'')+(ex.assist?' · kg = assistenza':'')+'</div>'+
+        (ex.modo?'<div class="scg modo">⏱ '+esc(ex.modo)+'</div>':'')+'</div>'+
       '<span class="scn'+(tot&&fatte>=tot?' full':'')+'">'+fatte+'/'+tot+'</span></div>'+
       '<div class="schead"><span>#</span><span>Scheda</span><span>Fatto</span><span></span></div>'+righe+
       (ex.note?'<div class="scnote">'+esc(ex.note)+'</div>':'')+'</div>';
@@ -2111,7 +2497,7 @@ function renderHistory(){
       '<span class="d">'+fmtData(s.data)+'</span><span class="pill">'+esc(gg?nomeGiorno(gg):s.giorno)+'</span>'+
       (ptSessione(s)?'<span class="ptbadge">🧑‍🏫 PT</span>':'')+
       (()=>{const a=aderenza(s);return a.pct==null?'':'<span class="adpill'+(a.pct>=95?'':(a.pct>=75?' mid':' low'))+'">🎯 '+a.pct+'%</span>';})()+
-      '<span class="meta grow">'+st.serie+' serie · '+Math.round(st.vol).toLocaleString('it-IT')+' kg'+
+      '<span class="meta grow">'+esc(schedaDi(s).nome)+' · sett. '+settDi(s)+' · '+st.serie+' serie · '+Math.round(st.vol).toLocaleString('it-IT')+' kg'+
       (s.inizio?' · '+fmtOra(s.inizio)+(min?' · '+min+' min':''):'')+(s.luogoNome?' · 📍 '+esc(s.luogoNome):'')+
       '</span></summary>'+
       schedaCompilata(s)+
@@ -2178,9 +2564,10 @@ function seriePerEsercizio(exId,giorniIndietro){
   for(const s of dati.sessioni){
     if(!s.chiusa)continue;
     if(lim&&new Date(s.data+'T12:00').getTime()<lim)continue;
-    const arr=(s.esercizi[exId]||[]).filter(x=>x.fatta&&x.kg!=null);
+    const corpo=!!(defById(exId)||{}).corpo;
+    const arr=(s.esercizi[exId]||[]).filter(x=>x.fatta&&(corpo?x.reps!=null:x.kg!=null));
     if(!arr.length)continue;
-    out.push({data:s.data,best:Math.max(...arr.map(x=>x.kg)),vol:arr.reduce((v,x)=>v+volSerie(x),0),serie:arr});
+    out.push({data:s.data,best:Math.max(...arr.map(x=>corpo?(x.reps||0):x.kg)),vol:arr.reduce((v,x)=>v+volSerie(x),0),serie:arr});
   }
   return out;
 }
@@ -2207,8 +2594,8 @@ function disegnaGrafico(exId,box,giorniIndietro,hintSel){
     '<text class="lbl" x="'+(P-4)+'" y="'+(y(Math.max(...vals))+3)+'" text-anchor="end">'+Math.max(...vals)+'</text>'+
     '<text class="lbl" x="'+(P-4)+'" y="'+(y(Math.min(...vals))+3)+'" text-anchor="end">'+Math.min(...vals)+'</text>'+
     '<path class="ar" d="'+area+'"/><path class="ln" d="'+ln+'"/>'+dots+labs+'</svg>';
-  if(hint){const d=vals[vals.length-1]-vals[0];
-    hint.textContent='Carico migliore per sessione · '+(d>0?'+':'')+d+' kg da '+fmtData(pts[0].data);}
+  if(hint){const d=+(vals[vals.length-1]-vals[0]).toFixed(2), corpo=!!(defById(exId)||{}).corpo;
+    hint.textContent=(corpo?'Ripetizioni migliori per sessione · ':'Carico migliore per sessione · ')+(d>0?'+':'')+d+(corpo?' rip':' kg')+' da '+fmtData(pts[0].data);}
 }
 
 /* ========================= REPORT ========================= */
@@ -2258,52 +2645,58 @@ function renderReport(){
     '</table></div>':'';
   /* ---- Target vs fatto, settimana per settimana: è il cuore della consegna ---- */
   function bloccoSettimane(){
+    const lim=gi?Date.now()-gi*864e5:0;
+    const nelPeriodo=x=>x.chiusa&&(!lim||new Date(x.data+'T12:00').getTime()>=lim);
+    const schede=[...SCHEDE].reverse().filter(sc=>dati.sessioni.some(x=>nelPeriodo(x)&&schedaDi(x)===sc));
     let out='<div class="card rex"><h2 class="sec">Target vs eseguito · settimana per settimana</h2>'+
       '<p class="muted" style="margin-bottom:8px">T = assegnato dal trainer · F = fatto davvero. In grassetto le serie a ripetizioni massime.</p>';
-    for(const g of SCHEDA.giorni){
-      out+='<h3 style="font-size:15px;font-weight:900;margin:14px 0 4px">'+esc(nomeGiorno(g))+'</h3>'+
-        '<table><tr><th>Esercizio</th><th>Sett.</th><th>Target</th><th>Eseguito</th></tr>';
-      for(const e of g.esercizi){
-        for(let w=1;w<=SCHEDA.settimane;w++){
-          const sess=dati.sessioni.filter(s=>s.chiusa&&s.settimana===w&&s.giorno===g.id);
-          if(!sess.length)continue;
-          const t=targetSerie(e,w);
-          let fatto='—';
-          if(e.tipo==='rt'){
-            const d=sess.map(s=>s.rt&&s.rt[e.id]).filter(Boolean).pop();
-            fatto=d?(d.reps||0)+' RT in '+Math.floor((d.sec||0)/60)+"' "+((d.sec||0)%60)+'"':'—';
-          }else{
-            const arr=sess.flatMap(s=>(s.esercizi[e.id]||[]).filter(x=>x.fatta));
-            if(arr.length)fatto=compatta(arr.map((x,i)=>{
-              const tt=t[i]||{};const v=e.tipo==='tempo'?(x.reps??'—')+'"':(x.kg??'—')+'×'+(x.reps??'—');
-              return tt.max?'<b>'+v+'</b>':v;}));
+    for(const sc of schede){
+      if(schede.length>1)out+='<h3 style="font-size:16px;font-weight:900;margin:18px 0 2px">'+esc(sc.nome)+
+        ' <span class="muted" style="font-size:12px;font-weight:700">'+fmtData(sc.inizio)+'–'+fmtData(sc.fine)+'</span></h3>';
+      for(const g of sc.giorni){
+        let righe='';
+        for(const e of g.esercizi){
+          for(let w=1;w<=sc.settimane;w++){
+            const sess=dati.sessioni.filter(x=>nelPeriodo(x)&&schedaDi(x)===sc&&settDi(x)===w&&x.giorno===g.id);
+            if(!sess.length)continue;
+            const t=targetSerie(e,w);
+            let fatto='—';
+            if(e.tipo==='rt'){
+              const d=sess.map(x=>x.rt&&x.rt[e.id]).filter(Boolean).pop();
+              fatto=d?(d.reps||0)+' RT in '+Math.floor((d.sec||0)/60)+"' "+((d.sec||0)%60)+'"':'—';
+            }else{
+              const arr=sess.flatMap(x=>(x.esercizi[e.id]||[]).filter(y=>y.fatta));
+              if(arr.length)fatto=compatta(arr.map((x,i)=>{const tt=t[i]||{};const v=esc(fattoBreve(x,e));return tt.max?'<b>'+v+'</b>':v;}));
+            }
+            righe+='<tr><td>'+esc(e.n)+(e.ss?' <span class="muted">⇄</span>':'')+'</td><td class="tnum">S'+w+'</td>'+
+              '<td class="tnum">'+esc(e.tipo==='rt'?t[0].rt+' RT':compatta(t.map(x=>serieTxt(x,e))))+'</td>'+
+              '<td class="tnum">'+fatto+'</td></tr>';
           }
-          out+='<tr><td>'+esc(e.n)+'</td><td class="tnum">S'+w+'</td>'+
-            '<td class="tnum">'+(e.tipo==='rt'?t[0].rt+' RT':compatta(t.map(x=>serieTxt(x,e))))+'</td>'+
-            '<td class="tnum">'+fatto+'</td></tr>';
         }
+        if(righe)out+='<h3 style="font-size:15px;font-weight:900;margin:14px 0 4px">'+esc(nomeGiorno(g))+'</h3>'+
+          '<table><tr><th>Esercizio</th><th>Sett.</th><th>Target</th><th>Eseguito</th></tr>'+righe+'</table>';
       }
-      out+='</table>';
     }
     return out+'</div>';
   }
-  const bloccoResoconto=dati.resoconto?'<div class="card rex"><h2 class="sec">Resoconto di Alessandro</h2>'+
-    '<p style="white-space:pre-wrap;font-size:13.5px;line-height:1.6">'+esc(dati.resoconto)+'</p></div>':'';
+  const bloccoResoconto=[...SCHEDE].reverse().filter(sc=>resocontoDi(sc)).map(sc=>
+    '<div class="card rex"><h2 class="sec">Resoconto di Alessandro · '+esc(sc.nome)+'</h2>'+
+    '<p style="white-space:pre-wrap;font-size:13.5px;line-height:1.6">'+esc(resocontoDi(sc))+'</p></div>').join('');
   const noteSedute=dati.sessioni.filter(s=>s.chiusa&&s.note).map(s=>
-    '<tr><td class="tnum">'+fmtData(s.data)+'</td><td>'+esc(s.giorno)+'</td><td>'+esc(s.note)+'</td></tr>').join('');
+    '<tr><td class="tnum">'+fmtData(s.data)+'</td><td>'+esc(s.giorno)+(SCHEDE.length>1?' · S'+schedaDi(s).id:'')+'</td><td>'+esc(s.note)+'</td></tr>').join('');
   const bloccoNote=noteSedute?'<div class="card rex"><h2 class="sec">Note delle sedute</h2>'+
     '<table><tr><th>Data</th><th>Giorno</th><th>Nota</th></tr>'+noteSedute+'</table></div>':'';
   const blocchi=tuttiEs().map(e=>{
     const pts=seriePerEsercizio(e.id,gi);if(!pts.length)return '';
     const best=Math.max(...pts.map(p=>p.best)), vol=Math.round(pts.reduce((v,p)=>v+p.vol,0));
     return '<div class="card rex"><h2 class="sec">'+esc(e.nome)+'</h2>'+
-      '<div class="kpi"><span><b class="tnum">'+best+' kg</b>miglior carico</span>'+
+      '<div class="kpi">'+(e.corpo?'<span><b class="tnum">'+best+' rip</b>migliori ripetizioni</span>':'<span><b class="tnum">'+kgCorto(best,e)+' kg</b>miglior carico</span>')+
       '<span><b class="tnum">'+vol.toLocaleString('it-IT')+' kg</b>volume totale</span>'+
       '<span><b class="tnum">'+pts.length+'</b>sessioni</span></div>'+
       '<div id="rep-ch-'+esc(e.id)+'" class="chartwrap"></div>'+
       '<table><tr><th>Data</th><th>Serie (kg × rip)</th><th>Best</th><th>Volume</th></tr>'+
       pts.map(p=>'<tr><td class="tnum">'+fmtData(p.data)+'</td><td class="tnum">'+
-        p.serie.map(x=>x.kg+'×'+(x.reps??'—')).join(' · ')+'</td><td class="tnum">'+p.best+'</td>'+
+        p.serie.map(x=>fattoBreve(x,e)).join(' · ')+'</td><td class="tnum">'+p.best+'</td>'+
         '<td class="tnum">'+Math.round(p.vol)+'</td></tr>').join('')+'</table></div>';
   }).join('');
   $('#reportBody').innerHTML=(blocchi?bloccoSettimane()+bloccoGruppi+blocchi+bloccoNote+bloccoResoconto:'')||
@@ -2361,7 +2754,7 @@ const TUTORIAL=[
   {v:'workout',sel:'.ex .serie .ck', t:'Il recupero',
    d:'Spunta la serie e il timer parte da solo. La ✕ sulla barra lo chiude se vuoi ripartire subito.'},
   {v:'workout',sel:'.ex.rtbox, .ex:last-of-type', t:'Esercizi speciali',
-   d:'Serie a MAX: scrivi le ripetizioni che sei riuscito a fare. Plank in secondi. Push up: cronometro, e sotto gli 8\' il target sale di 5.'},
+   d:'Serie a MAX: scrivi le ripetizioni fatte, decidono i carichi della settimana dopo. Superset ⇄: i due esercizi di fila, il recupero parte dopo il secondo.'},
   {v:'history',sel:'#histTop .tiles', t:'Storico e grafici',
    d:'Volume, costanza, progressione per esercizio e radar dei gruppi muscolari. Tutto si aggiorna da solo.'},
   {v:'history',sel:'#btnExport', t:'Backup',
@@ -2464,6 +2857,7 @@ if(TRAINER){
     .then(j=>{
       if(j&&j.scheda&&Array.isArray(j.sessioni)){
         dati=j;if(!Array.isArray(dati.luoghi))dati.luoghi=[];if(!dati.pref)dati.pref={geo:null};
+        ordinaSessioni();dati.scheda=schedaSettimana(SETT);
       }
       bannerTrainer(j&&j.aggiornato,!(j&&j.sessioni&&j.sessioni.length));
       renderHistory();renderReport();vaiA(TRAINER_VIEW);
