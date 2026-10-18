@@ -65,7 +65,8 @@
       .amici{ display:flex; flex-direction:column; gap:var(--space-4); }
       .amico{ background:var(--bg-2); border:1px solid var(--line); border-left:4px solid var(--pc); border-radius:var(--radius-m); overflow:hidden; }
       .amico img{ width:100%; aspect-ratio:16/9; object-fit:cover; }
-      .amico--alto img{ object-position:center 30%; }
+      /* foto verticale (il selfie con Giulio): quadrata, come in galleria, così i due volti restano dentro */
+      .amico--alto img{ aspect-ratio:1/1; object-position:center 45%; }
       .amico__corpo{ padding:var(--space-4); }
       .amico__nome{ margin:0 0 var(--space-2); display:flex; align-items:center; gap:var(--space-2); font-family:var(--font-display); font-weight:700; font-size:var(--fs-2); }
       .amico__nome::before{ content:""; width:10px; height:10px; border-radius:50%; background:var(--pc); flex:none; }
