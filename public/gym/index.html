@@ -1063,7 +1063,7 @@ const S2={
       [[10,6,8],[10,6,8],[10,6,8]],
       [[10,6,8],[10,6,8],[10,6,8]]]},
     {id:'french-press-ez',n:'French press con asta EZ',gruppo:'braccia',rec:90,recTxt:'1\'30" tra i giri',tipo:'carico',doppio:'lato',passo:1.25,
-      attrezzo:'Asta EZ',ss:'A6',ssPos:2,giri:3,w:[
+      attrezzo:'Panca piana + asta EZ',ss:'A6',ssPos:2,giri:3,w:[
       [[7.5,8,10],[7.5,8,10],[7.5,8,10]],
       [[7.5,8,10],[7.5,8,10],[7.5,8,10]],
       [[8.75,7,9],[8.75,7,9],[8.75,7,9]],
@@ -1079,8 +1079,8 @@ const S2={
     {id:'dip-assistiti',n:'Dip assistiti',gruppo:'petto',rec:120,recTxt:"2'",tipo:'carico',assist:true,
       attrezzo:'Macchina dip assistiti',
       nota:'Il carico è l’assistenza della macchina: meno assistenza = più difficile.',
-      prog:{tipo:'dip',base:-35,rip:6,serie:3,passoKg:5,ripScala:9},
-      regola:'Se nella serie a max fai almeno 2 ripetizioni in più della serie, la settimana dopo +1 ripetizione a serie, e così via. Quando chiudi 3×9 (alla 4ª settimana), la settimana dopo l\'assistenza scala di 5 kg (−30) e si riparte da 3×6 + 1×max, con la stessa progressione.'},
+      prog:{tipo:'dip',base:-35,rip:6,serie:3,passoKg:5,ripScala:9,settScala:4},
+      regola:'Se nella serie a max fai almeno 2 ripetizioni in più della serie, la settimana dopo +1 ripetizione a serie, e così via. Se alla 4ª settimana chiudi il 3×9, la 5ª l\'assistenza scala di 5 kg (−30) e si riparte da 3×6 + 1×max, con la stessa progressione.'},
     {id:'leg-ext-mono',n:'Leg extension monogamba',gruppo:'gambe',rec:40,recTxt:'30–45" tra le gambe',tipo:'carico',uni:'gamba',
       attrezzo:'Leg extension',w:[
       [[20,10],[22.5,8],[25,6]],
@@ -1172,8 +1172,10 @@ const FIG={
   {h:[50,16],sh:[50,26],hip:[50,52],arm:[[51,40],[53,54]],leg:[[50,70],[50,88],[58,88]],eq:[['b',53,54,22]]},
   {h:[50,16],sh:[50,26],hip:[50,52],arm:[[51,40],[58,28]],leg:[[50,70],[50,88],[58,88]],hi:['arm'],eq:[['b',58,28,22]]}],
  'french-press-ez':[
-  {h:[50,30],sh:[50,40],hip:[50,64],arm:[[53,24],[54,8]],leg:[[50,78],[50,90],[58,90]],eq:[['b',54,8,22]]},
-  {h:[50,30],sh:[50,40],hip:[50,64],arm:[[53,24],[36,26]],leg:[[50,78],[50,90],[58,90]],hi:['arm'],eq:[['b',36,26,18]]}],
+  {h:[22,52],sh:[32,54],hip:[62,56],arm:[[33,40],[34,24]],leg:[[72,72],[76,90],[82,90]],
+   eq:[['r',12,60,74,7],['l',20,67,20,90],['l',78,67,78,90],['b',34,24,18]]},
+  {h:[22,52],sh:[32,54],hip:[62,56],arm:[[33,40],[16,34]],leg:[[72,72],[76,90],[82,90]],hi:['arm'],
+   eq:[['r',12,60,74,7],['l',20,67,20,90],['l',78,67,78,90],['b',16,34,16]]}],
  'stacchi-rumeni':[
   {h:[50,16],sh:[50,26],hip:[50,52],arm:[[51,42],[52,58]],leg:[[50,70],[50,88],[58,88]],eq:[['d',52,58]]},
   {h:[22,36],sh:[30,40],hip:[52,54],arm:[[32,54],[34,68]],leg:[[54,72],[50,88],[58,88]],hi:['torso'],eq:[['d',34,68]]}],
@@ -1241,7 +1243,7 @@ function figuraSVG(id,cls){
 const GUIDA={
  'hack-squat':{come:['Schiena e spalle contro lo schienale, piedi sulla pedana larghezza spalle, punte un po\' in fuori.','Sblocca le sicure e scendi piegando le ginocchia fino a 90° o poco sotto, discesa controllata.','Spingi con tutto il piede, tallone compreso, e torna su senza bloccare le ginocchia.','Le prime 3 serie da 6, l\'ultima a max: conta le ripetizioni, decidono i kg della settimana dopo.'],
   occhio:['Talloni che si alzano dalla pedana.','Ginocchia che cedono verso l\'interno.','Risalita a scatto con le ginocchia bloccate.']},
- 'chin-up':{come:['Elastico arancione + giallo agganciati alla sbarra, piede (o ginocchio) dentro l\'anello.','Presa supina, palmi verso di te, larghezza spalle, braccia distese in partenza.','Tira fino a portare il mento sopra la sbarra, gomiti verso il basso.','Scendi controllato fino a braccia distese prima della ripetizione dopo.'],
+ 'chin-up':{come:['Elastico arancione + giallo insieme, agganciati alla sbarra, piede (o ginocchio) dentro l\'anello: valgono per tutte e 6 le settimane.','Presa supina, palmi verso di te, larghezza spalle, braccia distese in partenza.','Tira fino a portare il mento sopra la sbarra, gomiti verso il basso.','Scendi controllato fino a braccia distese prima della ripetizione dopo.'],
   occhio:['Slancio con le gambe o col bacino.','Fermarsi a metà: la ripetizione vale solo col mento sopra la sbarra.','Spalle che salgono verso le orecchie: tienile basse.']},
  'leg-curl-mono':{come:['Alla macchina in piedi: cuscinetto sopra la caviglia, mani sugli appoggi, busto fermo.','Piega il ginocchio portando il tallone verso il gluteo.','Torna giù controllando, senza far cadere il peso.','Finisci le 3 serie di una gamba, poi l\'altra: i 30–45" di recupero sono tra una gamba e l\'altra.'],
   occhio:['Anca che si apre e schiena che si inarca per aiutarsi.','Calcio di slancio invece di contrarre il femorale.']},
@@ -1253,8 +1255,8 @@ const GUIDA={
   occhio:['Sedere in alto o bacino che cade.','Mezze ripetizioni: il petto deve arrivare alla sbarra.']},
  'curl-ez':{come:['In piedi, asta EZ presa alle curve interne con i palmi in su, gomiti vicini ai fianchi.','Porta l\'asta verso le spalle piegando solo i gomiti.','Scendi lento fino a braccia quasi distese.','Subito dopo il french press con la stessa asta, senza pausa.'],
   occhio:['Gomiti che vanno avanti o busto che dondola per aiutarsi.','Polsi piegati: tienili dritti.']},
- 'french-press-ez':{come:['Asta EZ sopra la testa, braccia distese, gomiti stretti e puntati in avanti.','Piega solo i gomiti portando l\'asta dietro la nuca.','Distendi tornando su, gomiti che restano fermi.','Chiude il giro: poi 1\'30" di recupero.'],
-  occhio:['Gomiti che si aprono di lato.','Schiena che si inarca: addome contratto.']},
+ 'french-press-ez':{come:['Sdraiato sulla panca piana, asta EZ sopra il petto a braccia distese, gomiti stretti e puntati al soffitto.','Piega solo i gomiti portando l\'asta verso la fronte, dietro la testa.','Distendi tornando su, gomiti che restano fermi sopra le spalle.','Chiude il giro: poi 1\'30" di recupero.'],
+  occhio:['Gomiti che si aprono di lato.','Spalle che spingono l\'asta invece dei tricipiti: i gomiti non si muovono.']},
  'stacchi-rumeni':{come:['In piedi, manubri davanti alle cosce, piedi larghezza anche, ginocchia morbide.','Spingi il sedere indietro e scendi in 3 secondi con la schiena dritta, manubri che scivolano lungo le gambe.','Fermati quando senti tirare dietro le cosce, poco sotto il ginocchio, poi risali contraendo i glutei.','Ultima serie a max: conta le ripetizioni, decidono i kg della settimana dopo.'],
   occhio:['Schiena che si curva: è l\'errore classico, petto in fuori sempre.','Piegare troppo le ginocchia: diventa uno squat.','Manubri lontani dalle gambe.']},
  'dip-assistiti':{come:['Macchina dip assistiti: ginocchia sul cuscino, mani sulle maniglie, 35 kg di assistenza.','Parti a braccia distese, scendi piegando i gomiti fino a 90°, busto leggermente avanti.','Spingi su fino a braccia distese.','Ultima serie a max: con almeno 2 ripetizioni in più, la settimana dopo +1 a serie.'],
@@ -1331,8 +1333,8 @@ function statoProg(e,w){
     if(p.tipo==='kgMax'){
       if(maxRip>=p.soglia){st.kg=+(st.kg+p.passo).toFixed(2);prima.su='+'+p.passo+(e.doppio?'+'+p.passo:'')+' kg';}
     }else if(p.tipo==='dip'){
-      const chiuse=normali.length>=p.serie&&normali.every(x=>x.fatta&&(x.reps||0)>=st.rip);
-      if(st.rip>=p.ripScala&&chiuse){st.kg=st.kg+p.passoKg;st.rip=p.rip;prima.su='assistenza '+st.kg+' kg, si riparte da '+p.serie+'×'+p.rip;}
+      const chiuse=normali.length>=p.serie&&normali.every(x=>x.fatta&&(x.reps||0)>=p.ripScala);
+      if(k===p.settScala&&chiuse){st.kg=st.kg+p.passoKg;st.rip=p.rip;prima.su='assistenza '+st.kg+' kg, si riparte da '+p.serie+'×'+p.rip;}
       else if(maxRip>=st.rip+2){st.rip++;prima.su='+1 rip a serie';}
     }
     st.storia.push(prima);
