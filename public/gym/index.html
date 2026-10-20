@@ -336,6 +336,30 @@ header.top .place.on{border-color:rgba(214,255,62,.4);color:var(--acc);backgroun
 .sheet .grab{width:42px;height:4px;border-radius:99px;background:var(--line2);margin:6px auto 16px}
 .sheet h3{font-size:21px;font-weight:900;letter-spacing:-.025em;margin-bottom:4px}
 .sheet .body{color:var(--mut);font-size:14.5px;line-height:1.65;margin:12px 0 20px}
+/* pittogrammi: due pose, partenza → arrivo */
+.fig{display:block;width:100%;height:auto}
+.fig polyline{fill:none;stroke-width:5;stroke-linecap:round;stroke-linejoin:round}
+.fig .eq{stroke:var(--faint);stroke-width:4;stroke-linecap:round;fill:none}.fig .eqf{fill:var(--faint)}
+.fig .el{stroke:var(--c4);stroke-width:3;stroke-dasharray:4 3;stroke-linecap:round}
+.fig .fa{stroke:var(--faint);stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.figbtn{flex:none;width:84px;height:40px;border-radius:12px;background:var(--bg);border:1px solid var(--line2);padding:2px 4px;cursor:pointer}
+.figbtn .fig polyline{stroke-width:7}.figbtn .fig .eq{stroke-width:5}
+.sheet .figbig{background:var(--bg);border:1px solid var(--line);border-radius:16px;padding:10px 14px;margin:12px 0 4px}
+.sheet .figbig .fig{max-width:360px;margin:0 auto}
+.sheet .figcap{display:flex;justify-content:space-between;font-size:10px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin:6px 8px 0}
+.sheet .passi{margin:14px 0 0;padding:0;list-style:none;counter-reset:p}
+.sheet .passi li{position:relative;padding:0 0 10px 34px;font-size:14px;line-height:1.5;color:var(--ink);counter-increment:p}
+.sheet .passi li::before{content:counter(p);position:absolute;left:0;top:1px;width:22px;height:22px;border-radius:50%;background:var(--acc);color:var(--acc-ink);font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center}
+.sheet .occhio{margin:6px 0 16px;padding:11px 13px;border-radius:12px;background:rgba(255,93,93,.08);border:1px solid rgba(255,93,93,.28)}
+.sheet .occhio b{display:block;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--err);margin-bottom:5px}
+.sheet .occhio li{font-size:13px;color:var(--mut);line-height:1.45;margin-left:16px}
+.sheet .shtag{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.sheet .shtag span{font-size:11.5px;font-weight:800;color:var(--mut);background:var(--s2);border:1px solid var(--line);padding:4px 9px;border-radius:99px}
+.pex .figrow{display:flex;align-items:center;gap:10px;margin-top:8px}
+.pex .figrow .figbtn{width:112px;height:52px}
+.pex .figrow span{font-size:11.5px;color:var(--faint);font-weight:700}
+.fx-how .fig{max-width:300px;margin:4px auto 10px}
+.fx-how ol{margin:0;padding-left:20px}.fx-how ol li{font-size:13.5px;line-height:1.5;margin-bottom:5px;color:var(--mut)}
 
 /* ---------------- SCHEDA ---------------- */
 .gday .row.head{margin-bottom:10px}
@@ -1108,6 +1132,146 @@ const S2={
   ]}]
 };
 
+/* ---- PITTOGRAMMI: due pose per esercizio (partenza → arrivo), omino
+   stilizzato visto di lato in un riquadro 100×100, terra a y=90.
+   h testa · sh spalla · hip anca · arm [gomito,mano] · leg [ginocchio,caviglia,piede]
+   hi: parte che si muove (lime) · eq: attrezzo (grigio)
+   eq: ['l',x1,y1,x2,y2] linea · ['r',x,y,w,h] rettangolo · ['d',x,y] manubrio · ['b',x,y,w] bilanciere · ['e',x1,y1,x2,y2] elastico ---- */
+const FIG={
+ 'hack-squat':[
+  {h:[62,18],sh:[58,28],hip:[46,54],arm:[[64,30],[66,22]],leg:[[50,72],[40,88],[52,84]],
+   eq:[['l',26,92,76,10],['l',34,90,60,80],['r',76,6,8,6]]},
+  {h:[52,36],sh:[48,45],hip:[36,68],arm:[[54,46],[56,38]],leg:[[56,74],[40,88],[52,84]],hi:['leg'],
+   eq:[['l',26,92,76,10],['l',34,90,60,80]]}],
+ 'chin-up':[
+  {h:[50,32],sh:[50,41],hip:[50,64],arm:[[45,27],[42,13]],arm2:[[55,27],[58,13]],leg:[[50,78],[50,90],[55,90]],
+   eq:[['b',50,12,64],['l',18,12,18,30],['l',82,12,82,30],['e',57,12,57,88]]},
+  {h:[50,6],sh:[50,16],hip:[50,42],arm:[[41,24],[42,13]],arm2:[[59,24],[58,13]],leg:[[46,58],[50,74],[55,74]],hi:['arm','arm2'],
+   eq:[['b',50,12,64],['l',18,12,18,30],['l',82,12,82,30],['e',57,12,57,74]]}],
+ 'leg-curl-mono':[
+  {h:[42,16],sh:[42,26],hip:[42,52],arm:[[52,36],[64,38]],leg:[[42,70],[42,88],[50,88]],leg2:[[46,70],[46,88],[54,88]],
+   eq:[['r',64,30,10,62],['l',58,90,82,90]]},
+  {h:[42,16],sh:[42,26],hip:[42,52],arm:[[52,36],[64,38]],leg:[[42,70],[42,88],[50,88]],leg2:[[46,70],[32,74],[28,80]],hi:['leg2'],
+   eq:[['r',64,30,10,62],['l',58,90,82,90]]}],
+ 'distensioni-manubri':[
+  {h:[22,52],sh:[32,54],hip:[62,56],arm:[[33,40],[34,24]],leg:[[72,72],[76,90],[82,90]],
+   eq:[['r',12,60,74,7],['l',20,67,20,90],['l',78,67,78,90],['d',34,24]]},
+  {h:[22,52],sh:[32,54],hip:[62,56],arm:[[26,66],[30,50]],leg:[[72,72],[76,90],[82,90]],hi:['arm'],
+   eq:[['r',12,60,74,7],['l',20,67,20,90],['l',78,67,78,90],['d',30,50]]}],
+ 'australian-pull-up':[
+  {h:[30,58],sh:[40,64],hip:[62,76],arm:[[46,52],[50,40]],leg:[[76,84],[86,90],[92,86]],
+   eq:[['b',50,40,40],['l',30,40,30,90],['l',70,40,70,90]]},
+  {h:[26,42],sh:[36,50],hip:[58,68],arm:[[28,46],[50,40]],leg:[[74,80],[86,90],[92,86]],hi:['arm'],
+   eq:[['b',50,40,40],['l',30,40,30,90],['l',70,40,70,90]]}],
+ 'push-up-sbarra':[
+  {h:[72,24],sh:[64,32],hip:[42,58],arm:[[62,42],[62,50]],leg:[[28,76],[14,90],[8,90]],
+   eq:[['b',62,50,28],['l',48,50,48,90],['l',76,50,76,90]]},
+  {h:[70,38],sh:[62,46],hip:[40,66],arm:[[74,50],[62,50]],leg:[[26,80],[14,90],[8,90]],hi:['arm'],
+   eq:[['b',62,50,28],['l',48,50,48,90],['l',76,50,76,90]]}],
+ 'curl-ez':[
+  {h:[50,16],sh:[50,26],hip:[50,52],arm:[[51,40],[53,54]],leg:[[50,70],[50,88],[58,88]],eq:[['b',53,54,22]]},
+  {h:[50,16],sh:[50,26],hip:[50,52],arm:[[51,40],[58,28]],leg:[[50,70],[50,88],[58,88]],hi:['arm'],eq:[['b',58,28,22]]}],
+ 'french-press-ez':[
+  {h:[50,30],sh:[50,40],hip:[50,64],arm:[[53,24],[54,8]],leg:[[50,78],[50,90],[58,90]],eq:[['b',54,8,22]]},
+  {h:[50,30],sh:[50,40],hip:[50,64],arm:[[53,24],[36,26]],leg:[[50,78],[50,90],[58,90]],hi:['arm'],eq:[['b',36,26,18]]}],
+ 'stacchi-rumeni':[
+  {h:[50,16],sh:[50,26],hip:[50,52],arm:[[51,42],[52,58]],leg:[[50,70],[50,88],[58,88]],eq:[['d',52,58]]},
+  {h:[22,36],sh:[30,40],hip:[52,54],arm:[[32,54],[34,68]],leg:[[54,72],[50,88],[58,88]],hi:['torso'],eq:[['d',34,68]]}],
+ 'dip-assistiti':[
+  {h:[50,16],sh:[50,26],hip:[50,52],arm:[[50,38],[50,48]],leg:[[50,66],[64,70],[68,64]],
+   eq:[['l',38,48,62,48],['l',38,48,38,92],['l',62,48,62,92],['r',44,70,24,5]]},
+  {h:[50,30],sh:[50,40],hip:[50,64],arm:[[62,44],[50,48]],leg:[[50,70],[64,74],[68,68]],hi:['arm'],
+   eq:[['l',38,48,62,48],['l',38,48,38,92],['l',62,48,62,92],['r',44,70,24,5]]}],
+ 'leg-ext-mono':[
+  {h:[40,22],sh:[40,32],hip:[42,58],arm:[[46,46],[52,58]],leg:[[62,58],[62,80],[62,86]],leg2:[[60,60],[58,82],[58,88]],
+   eq:[['r',28,58,36,8],['l',30,66,30,90],['l',60,66,60,90],['l',26,28,26,58]]},
+  {h:[40,22],sh:[40,32],hip:[42,58],arm:[[46,46],[52,58]],leg:[[62,58],[84,54],[88,48]],leg2:[[60,60],[58,82],[58,88]],hi:['leg'],
+   eq:[['r',28,58,36,8],['l',30,66,30,90],['l',60,66,60,90],['l',26,28,26,58]]}],
+ 'lat-monobraccio':[
+  {h:[44,24],sh:[44,34],hip:[44,60],arm:[[52,20],[60,8]],leg:[[44,80],[60,84],[66,78]],
+   eq:[['l',72,0,60,8],['r',70,0,12,3]]},
+  {h:[44,24],sh:[44,34],hip:[44,60],arm:[[56,42],[48,38]],leg:[[44,80],[60,84],[66,78]],hi:['arm'],
+   eq:[['l',72,0,48,38],['r',70,0,12,3]]}],
+ 'shoulder-press':[
+  {h:[50,30],sh:[50,40],hip:[50,64],arm:[[60,44],[58,30]],leg:[[50,78],[50,90],[58,90]],eq:[['d',58,30]]},
+  {h:[50,30],sh:[50,40],hip:[50,64],arm:[[53,24],[54,8]],leg:[[50,78],[50,90],[58,90]],hi:['arm'],eq:[['d',54,8]]}],
+ 'rematore-inclinata':[
+  {h:[68,30],sh:[58,40],hip:[36,64],arm:[[58,58],[58,74]],leg:[[30,78],[34,90],[40,90]],
+   eq:[['l',22,78,66,34],['l',44,56,44,90],['d',58,74]]},
+  {h:[68,30],sh:[58,40],hip:[36,64],arm:[[46,54],[60,50]],leg:[[30,78],[34,90],[40,90]],hi:['arm'],
+   eq:[['l',22,78,66,34],['l',44,56,44,90],['d',60,50]]}],
+ 'push-down-corda':[
+  {h:[48,16],sh:[48,26],hip:[48,52],arm:[[52,42],[58,30]],leg:[[48,70],[48,88],[56,88]],eq:[['l',66,0,58,30],['r',62,0,10,3]]},
+  {h:[48,16],sh:[48,26],hip:[48,52],arm:[[52,42],[60,58]],leg:[[48,70],[48,88],[56,88]],hi:['arm'],eq:[['l',66,0,60,58],['r',62,0,10,3]]}],
+ 'curl-cavo-basso':[
+  {h:[48,16],sh:[48,26],hip:[48,52],arm:[[50,40],[56,56]],leg:[[48,70],[48,88],[56,88]],eq:[['l',70,90,56,56],['r',66,88,10,3]]},
+  {h:[48,16],sh:[48,26],hip:[48,52],arm:[[50,40],[60,28]],leg:[[48,70],[48,88],[56,88]],hi:['arm'],eq:[['l',70,90,60,28],['r',66,88,10,3]]}]
+};
+/* una posa → elementi svg (coordinate già nel riquadro 100×100) */
+function posaSVG(p){
+  const hi=p.hi||[], col=k=>hi.includes(k)?'var(--acc)':'var(--ink)';
+  const pl=(pts,k)=>'<polyline points="'+pts.map(q=>q.join(',')).join(' ')+'" stroke="'+col(k)+'"/>';
+  let s='';
+  for(const e of (p.eq||[])){
+    if(e[0]==='l')s+='<line class="eq" x1="'+e[1]+'" y1="'+e[2]+'" x2="'+e[3]+'" y2="'+e[4]+'"/>';
+    if(e[0]==='r')s+='<rect class="eq" x="'+e[1]+'" y="'+e[2]+'" width="'+e[3]+'" height="'+e[4]+'" rx="1.5"/>';
+    if(e[0]==='d')s+='<line class="eq" x1="'+(e[1]-6)+'" y1="'+e[2]+'" x2="'+(e[1]+6)+'" y2="'+e[2]+'"/><circle class="eqf" cx="'+(e[1]-6)+'" cy="'+e[2]+'" r="2.6"/><circle class="eqf" cx="'+(e[1]+6)+'" cy="'+e[2]+'" r="2.6"/>';
+    if(e[0]==='b')s+='<line class="eq" x1="'+(e[1]-e[3]/2)+'" y1="'+e[2]+'" x2="'+(e[1]+e[3]/2)+'" y2="'+e[2]+'"/>';
+    if(e[0]==='e')s+='<line class="el" x1="'+e[1]+'" y1="'+e[2]+'" x2="'+e[3]+'" y2="'+e[4]+'"/>';
+  }
+  s+=pl([p.sh,p.hip],'torso');
+  if(p.leg2)s+=pl([p.hip,...p.leg2],'leg2');
+  s+=pl([p.hip,...p.leg],'leg');
+  if(p.arm2)s+=pl([p.sh,...p.arm2],'arm2');
+  s+=pl([p.sh,...p.arm],'arm');
+  s+='<circle cx="'+p.h[0]+'" cy="'+p.h[1]+'" r="6.5" fill="'+col('torso')+'" stroke="none"/>';
+  return s;
+}
+/* il pittogramma intero: partenza, freccia, arrivo */
+function figuraSVG(id,cls){
+  const f=FIG[id];if(!f)return '';
+  return '<svg class="fig '+(cls||'')+'" viewBox="0 0 224 100" aria-hidden="true">'+
+    '<g>'+posaSVG(f[0])+'</g>'+
+    '<path class="fa" d="M104 50 L120 50 M114 44 L120 50 L114 56"/>'+
+    '<g transform="translate(124,0)">'+posaSVG(f[1])+'</g></svg>';
+}
+
+/* ---- COME SI FA: i passi e gli errori tipici, da leggere sul disegnino.
+   La tecnica vera la corregge il trainer in sala. ---- */
+const GUIDA={
+ 'hack-squat':{come:['Schiena e spalle contro lo schienale, piedi sulla pedana larghezza spalle, punte un po\' in fuori.','Sblocca le sicure e scendi piegando le ginocchia fino a 90° o poco sotto, discesa controllata.','Spingi con tutto il piede, tallone compreso, e torna su senza bloccare le ginocchia.','Le prime 3 serie da 6, l\'ultima a max: conta le ripetizioni, decidono i kg della settimana dopo.'],
+  occhio:['Talloni che si alzano dalla pedana.','Ginocchia che cedono verso l\'interno.','Risalita a scatto con le ginocchia bloccate.']},
+ 'chin-up':{come:['Elastico arancione + giallo agganciati alla sbarra, piede (o ginocchio) dentro l\'anello.','Presa supina, palmi verso di te, larghezza spalle, braccia distese in partenza.','Tira fino a portare il mento sopra la sbarra, gomiti verso il basso.','Scendi controllato fino a braccia distese prima della ripetizione dopo.'],
+  occhio:['Slancio con le gambe o col bacino.','Fermarsi a metà: la ripetizione vale solo col mento sopra la sbarra.','Spalle che salgono verso le orecchie: tienile basse.']},
+ 'leg-curl-mono':{come:['Alla macchina in piedi: cuscinetto sopra la caviglia, mani sugli appoggi, busto fermo.','Piega il ginocchio portando il tallone verso il gluteo.','Torna giù controllando, senza far cadere il peso.','Finisci le 3 serie di una gamba, poi l\'altra: i 30–45" di recupero sono tra una gamba e l\'altra.'],
+  occhio:['Anca che si apre e schiena che si inarca per aiutarsi.','Calcio di slancio invece di contrarre il femorale.']},
+ 'distensioni-manubri':{come:['Sdraiato sulla panca piana, piedi a terra, scapole strette e petto in fuori.','Manubri sopra il petto a braccia distese: è la partenza.','Scendi in 3 secondi fino ai lati del petto, gomiti a 45° rispetto al busto.','Fermo 1 secondo giù, poi spingi su con decisione.'],
+  occhio:['Gomiti troppo larghi, a 90°: stressano le spalle.','Scendere di fretta: i 3 secondi sono l\'esercizio.','Rimbalzare in basso invece di fermarti.']},
+ 'australian-pull-up':{come:['Sbarra bassa: ti appendi da sotto, corpo dritto, talloni a terra. Più sei orizzontale, più è duro.','Presa poco più larga delle spalle, corpo in linea come una tavola.','Tira il petto alla sbarra, fermo 2 secondi su con le scapole strette.','Scendi controllato a braccia distese. Poi subito il push up, senza pausa: il recupero arriva dopo.'],
+  occhio:['Bacino che cade: addome e glutei tengono la linea.','Collo che si allunga verso la sbarra al posto del petto.']},
+ 'push-up-sbarra':{come:['Mani sulla sbarra all\'altezza 2, poco più larghe delle spalle, piedi indietro, corpo in linea.','Scendi finché il petto quasi tocca la sbarra, gomiti a 45°.','Fermo 1 secondo giù, poi spingi fino a braccia distese.','Chiude il giro del superset: dopo questo parte il recupero.'],
+  occhio:['Sedere in alto o bacino che cade.','Mezze ripetizioni: il petto deve arrivare alla sbarra.']},
+ 'curl-ez':{come:['In piedi, asta EZ presa alle curve interne con i palmi in su, gomiti vicini ai fianchi.','Porta l\'asta verso le spalle piegando solo i gomiti.','Scendi lento fino a braccia quasi distese.','Subito dopo il french press con la stessa asta, senza pausa.'],
+  occhio:['Gomiti che vanno avanti o busto che dondola per aiutarsi.','Polsi piegati: tienili dritti.']},
+ 'french-press-ez':{come:['Asta EZ sopra la testa, braccia distese, gomiti stretti e puntati in avanti.','Piega solo i gomiti portando l\'asta dietro la nuca.','Distendi tornando su, gomiti che restano fermi.','Chiude il giro: poi 1\'30" di recupero.'],
+  occhio:['Gomiti che si aprono di lato.','Schiena che si inarca: addome contratto.']},
+ 'stacchi-rumeni':{come:['In piedi, manubri davanti alle cosce, piedi larghezza anche, ginocchia morbide.','Spingi il sedere indietro e scendi in 3 secondi con la schiena dritta, manubri che scivolano lungo le gambe.','Fermati quando senti tirare dietro le cosce, poco sotto il ginocchio, poi risali contraendo i glutei.','Ultima serie a max: conta le ripetizioni, decidono i kg della settimana dopo.'],
+  occhio:['Schiena che si curva: è l\'errore classico, petto in fuori sempre.','Piegare troppo le ginocchia: diventa uno squat.','Manubri lontani dalle gambe.']},
+ 'dip-assistiti':{come:['Macchina dip assistiti: ginocchia sul cuscino, mani sulle maniglie, 35 kg di assistenza.','Parti a braccia distese, scendi piegando i gomiti fino a 90°, busto leggermente avanti.','Spingi su fino a braccia distese.','Ultima serie a max: con almeno 2 ripetizioni in più, la settimana dopo +1 a serie.'],
+  occhio:['Scendere troppo: spalle a rischio.','Spalle che salgono: tienile giù e aperte.']},
+ 'leg-ext-mono':{come:['Seduto alla leg extension, cuscinetto sopra la caviglia, schiena allo schienale.','Distendi una gamba sola fino a ginocchio quasi dritto.','Torna giù controllando, senza far sbattere il carico.','3 serie di una gamba poi l\'altra, 30–45" di recupero tra le gambe.'],
+  occhio:['Scattare in alto di slancio.','Sedere che si stacca dal sedile.']},
+ 'lat-monobraccio':{come:['In ginocchio davanti alla lat machine, maniglia singola, braccio disteso in alto.','Tira portando la maniglia al petto, gomito giù e indietro.','Fermo 1 secondo con la maniglia incollata al petto.','Risali in 3 secondi controllando. 3 serie per braccio, 30–45" tra un braccio e l\'altro.'],
+  occhio:['Busto che ruota o si inclina per aiutarsi.','Spalla che sale: parti abbassandola.']},
+ 'shoulder-press':{come:['Manubri alle spalle, palmi in avanti, gomiti sotto i polsi.','Spingi in alto fino a braccia distese sopra la testa.','Scendi controllato fino alle spalle.','Subito dopo il rematore senza pausa; il recupero di 1\'30–2\' arriva dopo il rematore.'],
+  occhio:['Schiena che si inarca: addome contratto, costole giù.','Gomiti bloccati di colpo in alto.']},
+ 'rematore-inclinata':{come:['Petto appoggiato sulla panca inclinata, manubri a braccia distese sotto le spalle.','Tira i gomiti verso il soffitto, scapole strette, manubri ai fianchi.','Scendi controllato a braccia distese.','Chiude il giro del superset.'],
+  occhio:['Petto che si stacca dalla panca.','Tirare con le braccia invece che con la schiena: pensa ai gomiti.']},
+ 'push-down-corda':{come:['Cavo alto con la corda, gomiti incollati ai fianchi, mani all\'altezza del petto.','Spingi giù fino a braccia distese, aprendo la corda in basso.','Torna su controllando, gomiti fermi.','Subito dopo il curl al cavo basso, senza pausa.'],
+  occhio:['Gomiti che si alzano o vanno avanti.','Busto che si piega sul cavo.']},
+ 'curl-cavo-basso':{come:['Cavo basso con la fune, braccia distese, gomiti ai fianchi.','Curla portando la fune alle spalle, gomiti fermi.','Scendi lento fino a braccia distese.','Chiude il giro: poi 1\'–1\'30" di recupero.'],
+  occhio:['Dondolare con la schiena.','Gomiti che vanno avanti.']}
+};
 const SCHEDE=[S1,S2];
 /* indice esercizio → definizione e scheda di appartenenza (gli id non si ripetono tra schede) */
 const DEF={};
@@ -1214,6 +1378,7 @@ function appiattisci(e,w){
     return {id:e.id,nome:e.n,gruppo:e.gruppo,rec:e.rec,recTxt:e.recTxt,note:e.nota||'',desc:e.nota||'',
       tipo:e.tipo||'carico',perMano:!!e.perMano,assist:!!e.assist,
       attrezzo:e.attrezzo||'',modo:e.modo||'',regola:e.regola||'',doppio:e.doppio||'',uni:e.uni||'',
+      fig:!!FIG[e.id],come:(GUIDA[e.id]||{}).come||[],occhio:(GUIDA[e.id]||{}).occhio||[],
       corpo:e.corpo||'',corpoBreve:e.corpoBreve||'',passo:e.passo||2.5,
       ss:e.ss||'',ssPos:e.ssPos||0,giri:e.giri||0,ssRec:e.ssRec||0,ssRecTxt:e.ssRecTxt||'',
       serie:t.length,target:t,
@@ -1607,6 +1772,7 @@ function cartaEsercizio(e,sc,wNow,n){
   return '<div class="pex" style="--exc:'+colorEx(e.id)+'">'+
     '<div class="pexh"><b><i>'+n+'</i>'+esc(e.n)+'</b><span>'+(e.ssPos===1?'→ '+esc(e.recTxt):'rec '+esc(e.recTxt||''))+'</span></div>'+
     (e.attrezzo?'<div class="att">🏋️ '+esc(e.attrezzo)+(e.doppio?' · kg per '+e.doppio:'')+(e.uni?' · '+(e.uni==='gamba'?'una gamba':'un braccio')+' alla volta':'')+(e.assist?' · kg = assistenza':'')+'</div>':'')+
+    (FIG[e.id]?'<div class="figrow"><button class="figbtn" data-fig="'+esc(e.id)+'" aria-label="Come si fa">'+figuraSVG(e.id)+'</button><span>tocca per vedere come si fa</span></div>':'')+
     (e.modo?'<div class="modo">⏱ '+esc(e.modo)+'</div>':'')+
     '<div class="pnow"><span>Settimana '+wNow+'</span>'+esc(ora)+'</div>'+
     (e.regola?'<div class="regola" style="margin:8px 0 0"><b>📈 Regola del trainer</b> · '+esc(e.regola)+(sc===SCHEDA?statoProgTxt(e.id):'')+'</div>':'')+
@@ -1921,7 +2087,8 @@ function renderWorkout(){
         (e.modo?'<div class="modo">⏱ '+esc(e.modo)+'</div>':'')+
 '</div>'+
       '<button class="focusbtn" data-a="focus" aria-label="Modalità trainer">🔍</button>'+
-      (e.desc?'<button class="howbtn" data-a="how" aria-label="Come si fa">📖</button>':'')+'</div>'+
+      (e.fig?'<button class="figbtn" data-a="how" aria-label="Come si fa">'+figuraSVG(e.id)+'</button>':
+        (e.desc?'<button class="howbtn" data-a="how" aria-label="Come si fa">📖</button>':''))+'</div>'+
       '<div class="sethead"><span>#</span><span>'+(e.corpo?'Attrezzo':e.assist?'Assist. kg':e.doppio?'Kg per '+e.doppio:e.uni?'Kg per '+e.uni:(e.perMano?'Kg a mano':'Carico kg'))+'</span><span>'+(e.tipo==='tempo'?'Secondi':'Ripetizioni')+'</span><span>Fatta</span></div>'+
       arr.map((serie,i)=>{
         const tg=(e.target&&e.target[i])||{};
@@ -2094,14 +2261,15 @@ function gestisciClick(e){
         if(!celebrato)toast('✔ '+(ex?ex.nome:'')+' completato','good');
       }else if(!celebrato)buzz(HAP.serie);
 
+      /* il cavallo arriva solo a fine esercizio: ultima serie, o ultimo giro del superset */
       const partner=ex&&ex.ss?gg.esercizi.find(x=>x.ss===ex.ss&&x.id!==ex.id):null;
       if(ex&&ex.ssPos===1&&partner&&!tuttoFatto){
         toast('⇄ Subito '+partner.nome+' · giro '+(i+1)+' di '+ex.giri,'good');
         if(FOCUS.on){const j=gg.esercizi.findIndex(x=>x.id===partner.id);if(j>=0)FOCUS.idx=j;}
       }else if(ex&&ex.ssPos===2&&ex.rec>0&&!tuttoFatto){
-        avviaTimer(ex.rec,'Giro '+(i+1)+' fatto · recupero');
+        avviaTimer(ex.rec,'Giro '+(i+1)+' fatto · recupero',{cavallo:exFinito});
         if(FOCUS.on&&partner&&i+1<ex.giri){const j=gg.esercizi.findIndex(x=>x.id===partner.id);if(j>=0)FOCUS.idx=j;}
-      }else if(ex&&ex.rec>0&&!tuttoFatto)avviaTimer(ex.rec,ex.nome);
+      }else if(ex&&ex.rec>0&&!tuttoFatto)avviaTimer(ex.rec,ex.nome,{cavallo:exFinito});
     }else{serie.fatta=false;buzz(HAP.annulla);stopTimer();}
     salva();renderWorkout();if(FOCUS.on)renderFocus();aggiornaContesto();
     return;
@@ -2189,6 +2357,10 @@ $('#stretch').addEventListener('click',e=>{
   if(b.dataset.a==='stimer'){avviaTimer(SCHEDA.stretching.min*60,'Stretching');toast('Timer stretching avviato','good');}
 });
 $('#noteSeduta').addEventListener('input',e=>{const s=sessioneAperta(true);s.note=e.target.value;salva();});
+$('#planList').addEventListener('click',e=>{
+  const b=e.target.closest('[data-fig]');if(!b)return;
+  const d=defById(b.dataset.fig);if(d){buzz(HAP.tap);apriSheet(appiattisci(d,SETT));}
+});
 $('#resoconto').addEventListener('input',e=>{dati.resoconti=dati.resoconti||{};dati.resoconti[SCHEDA.id]=e.target.value;salva();});
 
 /* =================== PUSH UP A TEMPO (ripetizioni totali) ===================
@@ -2283,7 +2455,8 @@ function renderFocus(){
       (e.attrezzo?'<p class="muted" style="margin-top:10px">🏋️ '+esc(e.attrezzo)+(e.doppio?' · kg per '+e.doppio:'')+(e.uni?' · '+(e.uni==='gamba'?'una gamba':'un braccio')+' alla volta':'')+'</p>':'')+
       (e.modo?'<div class="modo">⏱ '+esc(e.modo)+'</div>':'')+
       (e.regola?'<div class="regola" style="margin:12px 0 0">'+'<b>📈 Regola del trainer</b> · '+esc(e.regola)+statoProgTxt(e.id)+'</div>':'')+
-      (e.desc?'<div class="fx-how"><b>Come si fa</b>'+esc(e.desc)+'</div>':'')+
+      (e.fig?'<div class="fx-how"><b>Come si fa</b>'+figuraSVG(e.id)+'<ol>'+e.come.map(c=>'<li>'+esc(c)+'</li>').join('')+'</ol></div>':
+        (e.desc?'<div class="fx-how"><b>Come si fa</b>'+esc(e.desc)+'</div>':''))+
       (e.note?'<p class="muted" style="margin-top:10px">'+esc(e.note)+'</p>':'')+
       '<div class="fx-sets"><div class="sethead"><span>#</span><span>'+(e.corpo?'Attrezzo':e.assist?'Assist. kg':e.doppio?'Kg per '+e.doppio:e.uni?'Kg per '+e.uni:'Carico kg')+'</span><span>Ripetizioni</span><span>Fatta</span></div>'+righe+'</div>'+
       '<button class="fx-pt'+(ptEs(s,e.id)?' on':'')+'" data-a="ptex">🧑‍🏫 <span>Eseguito col personal trainer</span><span class="sw"></span></button>'+
@@ -2346,13 +2519,14 @@ function tickTimer(){
   bar.hidden=false;
   $('#timerEx').textContent=(t.modo==='plank'?'⏱️ ':'')+(t.label||'Recupero');
   if(ms<=0){
-    bar.classList.add('due');$('#timerT').innerHTML='VAI<i>CAVALLO</i>';
+    bar.classList.add('due');$('#timerT').innerHTML=t.cavallo?'VAI<i>CAVALLO</i>':'VAI!';
     $('#timerSub').textContent='recupero finito';
     $('#timerRing').setAttribute('stroke-dashoffset','0');
     if(!t.beep){
       t.beep=1;localStorage.setItem(K_TIMER,JSON.stringify(t));
       if(t.modo==='plank')buzz(HAP.esercizio);             // niente suoni: parla la vibrazione
-      else cavallata();                                    // fine recupero: VAI CAVALLO
+      else if(t.cavallo)cavallata();                       // esercizio finito: VAI CAVALLO
+      else buzz(HAP.recupero);
       /* plank finito: segno la serie da solo, così non tocchi il telefono da terra */
       if(t.modo==='plank'){
         const s=sessioneAperta(true), arr=s.esercizi[t.exId];
@@ -2364,6 +2538,7 @@ function tickTimer(){
           toast('Plank '+t.tot+'\" completato'+(restano?' · ne restano '+restano:' · esercizio finito'),'good');
           stopTimer();
           if(ex&&ex.rec>0&&restano)avviaTimer(ex.rec,ex.nome);
+          else if(!restano)cavallata();                    // ultimo plank: il cavallo
           renderWorkout();if(FOCUS.on)renderFocus();
           return;
         }
@@ -2822,9 +2997,21 @@ function toast(msg,tipo){
 function apriSheet(ex){
   if(!ex)return;
   const host=$('#sheetHost');
+  const tag=[];
+  if(ex.attrezzo)tag.push('🏋️ '+esc(ex.attrezzo));
+  if(ex.doppio)tag.push('kg per '+ex.doppio);
+  if(ex.uni)tag.push((ex.uni==='gamba'?'una gamba':'un braccio')+' alla volta');
+  if(ex.ss)tag.push('⇄ superset · '+ex.giri+' giri');
+  if(ex.recTxt)tag.push((ex.ssPos===1?'→ ':'rec ')+ex.recTxt);
   host.innerHTML='<div class="sheet"><div class="pan"><div class="grab"></div>'+
-    '<h3>'+esc(ex.nome)+'</h3><div class="muted">'+esc(ex.note||'')+'</div>'+
-    '<div class="body">'+esc(ex.desc||'')+'</div>'+
+    '<h3>'+esc(ex.nome)+'</h3>'+(tag.length?'<div class="shtag">'+tag.map(t=>'<span>'+t+'</span>').join('')+'</div>':'')+
+    (ex.fig?'<div class="figbig">'+figuraSVG(ex.id)+'<div class="figcap"><span>Partenza</span><span>Arrivo</span></div></div>':'')+
+    (ex.modo?'<div class="modo">⏱ '+esc(ex.modo)+'</div>':'')+
+    (ex.come&&ex.come.length?'<ol class="passi">'+ex.come.map(c=>'<li>'+esc(c)+'</li>').join('')+'</ol>':
+      '<div class="body">'+esc(ex.desc||ex.note||'')+'</div>')+
+    (ex.occhio&&ex.occhio.length?'<div class="occhio"><b>Occhio a</b><ul>'+ex.occhio.map(c=>'<li>'+esc(c)+'</li>').join('')+'</ul></div>':'')+
+    (ex.regola?'<div class="regola" style="margin:0 0 16px"><b>📈 Regola del trainer</b> · '+esc(ex.regola)+'</div>':'')+
+    (ex.note&&ex.come&&ex.come.length?'<p class="muted" style="margin-bottom:14px">'+esc(ex.note)+'</p>':'')+
     '<button class="btn pri" style="width:100%" data-close>Ho capito</button></div></div>';
   host.querySelector('.sheet').onclick=e=>{if(e.target.closest('[data-close]')||!e.target.closest('.pan'))host.innerHTML='';};
 }

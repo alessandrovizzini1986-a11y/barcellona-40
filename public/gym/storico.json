@@ -1,16 +1,71 @@
 {
  "v": 2,
- "aggiornato": "2026-10-08T19:14:44.073660Z",
+ "aggiornato": "2026-10-20T19:50:03.322664Z",
  "scheda": {
+  "id": 2,
   "giorni": [
    {
     "id": "A",
     "nome": "Giorno A",
     "esercizi": [
      {
-      "id": "leg-press",
-      "nome": "Leg Press",
+      "id": "hack-squat",
+      "nome": "Hack squat",
       "gruppo": "gambe",
+      "rec": 150,
+      "recTxt": "2'–3'",
+      "note": "",
+      "desc": "",
+      "tipo": "carico",
+      "perMano": false,
+      "assist": false,
+      "attrezzo": "Hack squat · dischi",
+      "modo": "",
+      "regola": "Se nella serie a max fai almeno 8 ripetizioni, la settimana dopo aumenta di 5 kg in totale (+2,5 per lato).",
+      "doppio": "lato",
+      "uni": "",
+      "corpo": "",
+      "corpoBreve": "",
+      "passo": 2.5,
+      "ss": "",
+      "ssPos": 0,
+      "giri": 0,
+      "ssRec": 0,
+      "ssRecTxt": "",
+      "serie": 4,
+      "target": [
+       {
+        "kg": 10,
+        "rip": 6,
+        "ripMax": null,
+        "max": false
+       },
+       {
+        "kg": 10,
+        "rip": 6,
+        "ripMax": null,
+        "max": false
+       },
+       {
+        "kg": 10,
+        "rip": 6,
+        "ripMax": null,
+        "max": false
+       },
+       {
+        "kg": 10,
+        "rip": null,
+        "ripMax": null,
+        "max": true
+       }
+      ],
+      "repMin": 6,
+      "repMax": 6
+     },
+     {
+      "id": "chin-up",
+      "nome": "Chin up",
+      "gruppo": "dorso",
       "rec": 105,
       "recTxt": "1'30–2'",
       "note": "",
@@ -18,215 +73,293 @@
       "tipo": "carico",
       "perMano": false,
       "assist": false,
+      "attrezzo": "Sbarra con elastico arancione + giallo",
+      "modo": "",
+      "regola": "",
+      "doppio": "",
+      "uni": "",
+      "corpo": "Elastico arancione + giallo",
+      "corpoBreve": "elastico",
+      "passo": 2.5,
+      "ss": "",
+      "ssPos": 0,
+      "giri": 0,
+      "ssRec": 0,
+      "ssRecTxt": "",
+      "serie": 5,
+      "target": [
+       {
+        "kg": null,
+        "rip": 3,
+        "ripMax": null,
+        "max": false
+       },
+       {
+        "kg": null,
+        "rip": 3,
+        "ripMax": null,
+        "max": false
+       },
+       {
+        "kg": null,
+        "rip": 3,
+        "ripMax": null,
+        "max": false
+       },
+       {
+        "kg": null,
+        "rip": 3,
+        "ripMax": null,
+        "max": false
+       },
+       {
+        "kg": null,
+        "rip": 3,
+        "ripMax": null,
+        "max": false
+       }
+      ],
+      "repMin": 3,
+      "repMax": 3
+     },
+     {
+      "id": "leg-curl-mono",
+      "nome": "Leg curl monogamba in piedi",
+      "gruppo": "gambe",
+      "rec": 40,
+      "recTxt": "30–45\" tra le gambe",
+      "note": "",
+      "desc": "",
+      "tipo": "carico",
+      "perMano": false,
+      "assist": false,
+      "attrezzo": "Leg curl in piedi",
+      "modo": "",
+      "regola": "",
+      "doppio": "",
+      "uni": "gamba",
+      "corpo": "",
+      "corpoBreve": "",
+      "passo": 2.5,
+      "ss": "",
+      "ssPos": 0,
+      "giri": 0,
+      "ssRec": 0,
+      "ssRecTxt": "",
+      "serie": 3,
+      "target": [
+       {
+        "kg": 15,
+        "rip": 13,
+        "ripMax": null,
+        "max": false
+       },
+       {
+        "kg": 17.5,
+        "rip": 11,
+        "ripMax": null,
+        "max": false
+       },
+       {
+        "kg": 20,
+        "rip": 9,
+        "ripMax": null,
+        "max": false
+       }
+      ],
+      "repMin": 9,
+      "repMax": 13
+     },
+     {
+      "id": "distensioni-manubri",
+      "nome": "Distensioni con manubri su panca piana",
+      "gruppo": "petto",
+      "rec": 120,
+      "recTxt": "2'",
+      "note": "",
+      "desc": "",
+      "tipo": "carico",
+      "perMano": false,
+      "assist": false,
+      "attrezzo": "Panca piana + manubri",
+      "modo": "Negativa (discesa) 3\" + fermo 1\" giù",
+      "regola": "",
+      "doppio": "mano",
+      "uni": "",
+      "corpo": "",
+      "corpoBreve": "",
+      "passo": 2,
+      "ss": "",
+      "ssPos": 0,
+      "giri": 0,
+      "ssRec": 0,
+      "ssRecTxt": "",
       "serie": 4,
       "target": [
        {
-        "kg": 90,
-        "rip": 10,
-        "ripMax": null,
-        "max": false
-       },
-       {
-        "kg": 100,
-        "rip": 8,
-        "ripMax": null,
-        "max": false
-       },
-       {
-        "kg": 100,
-        "rip": 8,
-        "ripMax": null,
-        "max": false
-       },
-       {
-        "kg": 110,
+        "kg": 14,
         "rip": 6,
-        "ripMax": null,
+        "ripMax": 8,
+        "max": false
+       },
+       {
+        "kg": 14,
+        "rip": 6,
+        "ripMax": 8,
+        "max": false
+       },
+       {
+        "kg": 14,
+        "rip": 6,
+        "ripMax": 8,
+        "max": false
+       },
+       {
+        "kg": 14,
+        "rip": 6,
+        "ripMax": 8,
         "max": false
        }
       ],
       "repMin": 6,
-      "repMax": 10
+      "repMax": 8
      },
      {
-      "id": "pull-up-ass",
-      "nome": "Pull up assistiti",
+      "id": "australian-pull-up",
+      "nome": "Australian pull up",
       "gruppo": "dorso",
-      "rec": 105,
-      "recTxt": "1'30–2'",
-      "note": "Il carico è l’assistenza della macchina: meno assistenza = più difficile.",
-      "desc": "Il carico è l’assistenza della macchina: meno assistenza = più difficile.",
-      "tipo": "carico",
-      "perMano": false,
-      "assist": true,
-      "serie": 4,
-      "target": [
-       {
-        "kg": -55,
-        "rip": 9,
-        "ripMax": null,
-        "max": false
-       },
-       {
-        "kg": -55,
-        "rip": 9,
-        "ripMax": null,
-        "max": false
-       },
-       {
-        "kg": -55,
-        "rip": 9,
-        "ripMax": null,
-        "max": false
-       },
-       {
-        "kg": -55,
-        "rip": 9,
-        "ripMax": null,
-        "max": false
-       }
-      ],
-      "repMin": 9,
-      "repMax": 9
-     },
-     {
-      "id": "leg-extension",
-      "nome": "Leg Extension",
-      "gruppo": "gambe",
-      "rec": 90,
-      "recTxt": "1'30",
-      "note": "Fermo 2\" in alto, in massima contrazione.",
-      "desc": "Fermo 2\" in alto, in massima contrazione.",
-      "tipo": "carico",
-      "perMano": false,
-      "assist": false,
-      "serie": 3,
-      "target": [
-       {
-        "kg": 30,
-        "rip": 9,
-        "ripMax": null,
-        "max": false
-       },
-       {
-        "kg": 30,
-        "rip": 9,
-        "ripMax": null,
-        "max": false
-       },
-       {
-        "kg": 30,
-        "rip": 9,
-        "ripMax": null,
-        "max": false
-       }
-      ],
-      "repMin": 9,
-      "repMax": 9
-     },
-     {
-      "id": "pulley-triangolo",
-      "nome": "Pulley con triangolo",
-      "gruppo": "dorso",
-      "rec": 90,
-      "recTxt": "1'30",
+      "rec": 0,
+      "recTxt": "subito il push up",
       "note": "",
       "desc": "",
       "tipo": "carico",
       "perMano": false,
       "assist": false,
+      "attrezzo": "Sbarra",
+      "modo": "Fermo 2\" su",
+      "regola": "",
+      "doppio": "",
+      "uni": "",
+      "corpo": "Corpo libero",
+      "corpoBreve": "corpo",
+      "passo": 2.5,
+      "ss": "A5",
+      "ssPos": 1,
+      "giri": 3,
+      "ssRec": 90,
+      "ssRecTxt": "1'30\" tra i giri",
       "serie": 3,
       "target": [
        {
-        "kg": 30,
-        "rip": 10,
-        "ripMax": null,
+        "kg": null,
+        "rip": 6,
+        "ripMax": 8,
         "max": false
        },
        {
-        "kg": 30,
-        "rip": 10,
-        "ripMax": null,
+        "kg": null,
+        "rip": 6,
+        "ripMax": 8,
         "max": false
        },
        {
-        "kg": 30,
-        "rip": 10,
-        "ripMax": null,
+        "kg": null,
+        "rip": 6,
+        "ripMax": 8,
         "max": false
        }
       ],
-      "repMin": 10,
-      "repMax": 10
+      "repMin": 6,
+      "repMax": 8
      },
      {
-      "id": "chest-press",
-      "nome": "Chest Press",
+      "id": "push-up-sbarra",
+      "nome": "Push up alla sbarra",
       "gruppo": "petto",
-      "rec": 105,
-      "recTxt": "1'30–2'",
-      "note": "",
-      "desc": "",
-      "tipo": "carico",
-      "perMano": false,
-      "assist": false,
-      "serie": 4,
-      "target": [
-       {
-        "kg": 40,
-        "rip": 7,
-        "ripMax": null,
-        "max": false
-       },
-       {
-        "kg": 40,
-        "rip": 7,
-        "ripMax": null,
-        "max": false
-       },
-       {
-        "kg": 40,
-        "rip": 7,
-        "ripMax": null,
-        "max": false
-       },
-       {
-        "kg": 40,
-        "rip": 7,
-        "ripMax": null,
-        "max": false
-       }
-      ],
-      "repMin": 7,
-      "repMax": 7
-     },
-     {
-      "id": "push-down",
-      "nome": "Push down",
-      "gruppo": "braccia",
       "rec": 90,
-      "recTxt": "1'30",
+      "recTxt": "1'30\" tra i giri",
       "note": "",
       "desc": "",
       "tipo": "carico",
       "perMano": false,
       "assist": false,
+      "attrezzo": "Sbarra ad altezza 2",
+      "modo": "Fermo 1\" giù",
+      "regola": "",
+      "doppio": "",
+      "uni": "",
+      "corpo": "Corpo libero",
+      "corpoBreve": "corpo",
+      "passo": 2.5,
+      "ss": "A5",
+      "ssPos": 2,
+      "giri": 3,
+      "ssRec": 0,
+      "ssRecTxt": "",
       "serie": 3,
       "target": [
        {
-        "kg": 17.5,
+        "kg": null,
+        "rip": 6,
+        "ripMax": 8,
+        "max": false
+       },
+       {
+        "kg": null,
+        "rip": 6,
+        "ripMax": 8,
+        "max": false
+       },
+       {
+        "kg": null,
+        "rip": 6,
+        "ripMax": 8,
+        "max": false
+       }
+      ],
+      "repMin": 6,
+      "repMax": 8
+     },
+     {
+      "id": "curl-ez",
+      "nome": "Curl con asta EZ",
+      "gruppo": "braccia",
+      "rec": 0,
+      "recTxt": "subito il french press",
+      "note": "",
+      "desc": "",
+      "tipo": "carico",
+      "perMano": false,
+      "assist": false,
+      "attrezzo": "Asta EZ",
+      "modo": "",
+      "regola": "",
+      "doppio": "lato",
+      "uni": "",
+      "corpo": "",
+      "corpoBreve": "",
+      "passo": 1.25,
+      "ss": "A6",
+      "ssPos": 1,
+      "giri": 3,
+      "ssRec": 90,
+      "ssRecTxt": "1'30\" tra i giri",
+      "serie": 3,
+      "target": [
+       {
+        "kg": 7.5,
         "rip": 8,
         "ripMax": 10,
         "max": false
        },
        {
-        "kg": 17.5,
+        "kg": 7.5,
         "rip": 8,
         "ripMax": 10,
         "max": false
        },
        {
-        "kg": 17.5,
+        "kg": 7.5,
         "rip": 8,
         "ripMax": 10,
         "max": false
@@ -236,45 +369,52 @@
       "repMax": 10
      },
      {
-      "id": "plank",
-      "nome": "Plank",
-      "gruppo": "core",
-      "rec": 60,
-      "recTxt": "1'",
-      "note": "Target in secondi. Bacino in linea, addome e glutei attivi.",
-      "desc": "Target in secondi. Bacino in linea, addome e glutei attivi.",
-      "tipo": "tempo",
+      "id": "french-press-ez",
+      "nome": "French press con asta EZ",
+      "gruppo": "braccia",
+      "rec": 90,
+      "recTxt": "1'30\" tra i giri",
+      "note": "",
+      "desc": "",
+      "tipo": "carico",
       "perMano": false,
       "assist": false,
-      "serie": 4,
+      "attrezzo": "Asta EZ",
+      "modo": "",
+      "regola": "",
+      "doppio": "lato",
+      "uni": "",
+      "corpo": "",
+      "corpoBreve": "",
+      "passo": 1.25,
+      "ss": "A6",
+      "ssPos": 2,
+      "giri": 3,
+      "ssRec": 0,
+      "ssRecTxt": "",
+      "serie": 3,
       "target": [
        {
-        "kg": 0,
-        "rip": 40,
-        "ripMax": null,
+        "kg": 7.5,
+        "rip": 8,
+        "ripMax": 10,
         "max": false
        },
        {
-        "kg": 0,
-        "rip": 40,
-        "ripMax": null,
+        "kg": 7.5,
+        "rip": 8,
+        "ripMax": 10,
         "max": false
        },
        {
-        "kg": 0,
-        "rip": 40,
-        "ripMax": null,
-        "max": false
-       },
-       {
-        "kg": 0,
-        "rip": 40,
-        "ripMax": null,
+        "kg": 7.5,
+        "rip": 8,
+        "ripMax": 10,
         "max": false
        }
       ],
-      "repMin": 40,
-      "repMax": 40
+      "repMin": 8,
+      "repMax": 10
      }
     ]
    },
@@ -283,114 +423,201 @@
     "nome": "Giorno B",
     "esercizi": [
      {
-      "id": "affondi-indietro",
-      "nome": "Affondi indietro",
+      "id": "stacchi-rumeni",
+      "nome": "Stacchi rumeni con manubri",
       "gruppo": "gambe",
-      "rec": 40,
-      "recTxt": "30–45\" tra le gambe",
-      "note": "Ultima serie a ripetizioni massime. Braccia distese in avanti e busto leggermente inclinato avanti; piede dritto, non allungare troppo la gamba dietro; peso sempre sul centro del piede.",
-      "desc": "Ultima serie a ripetizioni massime. Braccia distese in avanti e busto leggermente inclinato avanti; piede dritto, non allungare troppo la gamba dietro; peso sempre sul centro del piede.",
-      "tipo": "carico",
-      "perMano": true,
-      "assist": false,
-      "serie": 4,
-      "target": [
-       {
-        "kg": 10,
-        "rip": 8,
-        "ripMax": 10,
-        "max": false
-       },
-       {
-        "kg": 10,
-        "rip": 8,
-        "ripMax": 10,
-        "max": false
-       },
-       {
-        "kg": 10,
-        "rip": 8,
-        "ripMax": 10,
-        "max": false
-       },
-       {
-        "kg": 10,
-        "rip": 8,
-        "ripMax": 10,
-        "max": false
-       }
-      ],
-      "repMin": 8,
-      "repMax": 10
-     },
-     {
-      "id": "lat-prona",
-      "nome": "Lat machine presa prona",
-      "gruppo": "dorso",
-      "rec": 105,
-      "recTxt": "1'30–2'",
-      "note": "Ultima serie a ripetizioni massime.",
-      "desc": "Ultima serie a ripetizioni massime.",
+      "rec": 120,
+      "recTxt": "2'",
+      "note": "",
+      "desc": "",
       "tipo": "carico",
       "perMano": false,
       "assist": false,
+      "attrezzo": "Manubri",
+      "modo": "Discesa 3\"",
+      "regola": "Se nella serie a max fai almeno 8 ripetizioni, la settimana dopo aumenta di 2+2 kg.",
+      "doppio": "mano",
+      "uni": "",
+      "corpo": "",
+      "corpoBreve": "",
+      "passo": 2,
+      "ss": "",
+      "ssPos": 0,
+      "giri": 0,
+      "ssRec": 0,
+      "ssRecTxt": "",
       "serie": 4,
       "target": [
        {
-        "kg": 35,
-        "rip": 14,
+        "kg": 16,
+        "rip": 6,
         "ripMax": null,
         "max": false
        },
        {
-        "kg": 40,
-        "rip": 12,
+        "kg": 16,
+        "rip": 6,
         "ripMax": null,
         "max": false
        },
        {
-        "kg": 45,
-        "rip": 10,
+        "kg": 16,
+        "rip": 6,
         "ripMax": null,
         "max": false
        },
        {
-        "kg": 35,
+        "kg": 16,
         "rip": null,
         "ripMax": null,
         "max": true
        }
       ],
-      "repMin": 10,
-      "repMax": 14
+      "repMin": 6,
+      "repMax": 6
      },
      {
-      "id": "leg-curl",
-      "nome": "Leg Curl",
+      "id": "dip-assistiti",
+      "nome": "Dip assistiti",
+      "gruppo": "petto",
+      "rec": 120,
+      "recTxt": "2'",
+      "note": "Il carico è l’assistenza della macchina: meno assistenza = più difficile.",
+      "desc": "Il carico è l’assistenza della macchina: meno assistenza = più difficile.",
+      "tipo": "carico",
+      "perMano": false,
+      "assist": true,
+      "attrezzo": "Macchina dip assistiti",
+      "modo": "",
+      "regola": "Se nella serie a max fai almeno 2 ripetizioni in più della serie, la settimana dopo +1 ripetizione a serie, e così via. Quando chiudi 3×9 (alla 4ª settimana), la settimana dopo l'assistenza scala di 5 kg (−30) e si riparte da 3×6 + 1×max, con la stessa progressione.",
+      "doppio": "",
+      "uni": "",
+      "corpo": "",
+      "corpoBreve": "",
+      "passo": 2.5,
+      "ss": "",
+      "ssPos": 0,
+      "giri": 0,
+      "ssRec": 0,
+      "ssRecTxt": "",
+      "serie": 4,
+      "target": [
+       {
+        "kg": -35,
+        "rip": 6,
+        "ripMax": null,
+        "max": false
+       },
+       {
+        "kg": -35,
+        "rip": 6,
+        "ripMax": null,
+        "max": false
+       },
+       {
+        "kg": -35,
+        "rip": 6,
+        "ripMax": null,
+        "max": false
+       },
+       {
+        "kg": -35,
+        "rip": null,
+        "ripMax": null,
+        "max": true
+       }
+      ],
+      "repMin": 6,
+      "repMax": 6
+     },
+     {
+      "id": "leg-ext-mono",
+      "nome": "Leg extension monogamba",
       "gruppo": "gambe",
-      "rec": 90,
-      "recTxt": "1'30",
-      "note": "Fermo 2\" in basso, in massima contrazione.",
-      "desc": "Fermo 2\" in basso, in massima contrazione.",
+      "rec": 40,
+      "recTxt": "30–45\" tra le gambe",
+      "note": "",
+      "desc": "",
       "tipo": "carico",
       "perMano": false,
       "assist": false,
+      "attrezzo": "Leg extension",
+      "modo": "",
+      "regola": "",
+      "doppio": "",
+      "uni": "gamba",
+      "corpo": "",
+      "corpoBreve": "",
+      "passo": 2.5,
+      "ss": "",
+      "ssPos": 0,
+      "giri": 0,
+      "ssRec": 0,
+      "ssRecTxt": "",
       "serie": 3,
       "target": [
        {
-        "kg": 40,
+        "kg": 20,
+        "rip": 11,
+        "ripMax": null,
+        "max": false
+       },
+       {
+        "kg": 22.5,
         "rip": 9,
         "ripMax": null,
         "max": false
        },
        {
-        "kg": 40,
+        "kg": 25,
+        "rip": 7,
+        "ripMax": null,
+        "max": false
+       }
+      ],
+      "repMin": 7,
+      "repMax": 11
+     },
+     {
+      "id": "lat-monobraccio",
+      "nome": "Lat machine monobraccio in ginocchio",
+      "gruppo": "dorso",
+      "rec": 40,
+      "recTxt": "30–45\" tra le braccia",
+      "note": "",
+      "desc": "",
+      "tipo": "carico",
+      "perMano": false,
+      "assist": false,
+      "attrezzo": "Lat machine con maniglia singola",
+      "modo": "Discesa 3\" + fermo 1\" giù al petto (incollato)",
+      "regola": "",
+      "doppio": "",
+      "uni": "braccio",
+      "corpo": "",
+      "corpoBreve": "",
+      "passo": 2.5,
+      "ss": "",
+      "ssPos": 0,
+      "giri": 0,
+      "ssRec": 0,
+      "ssRecTxt": "",
+      "serie": 3,
+      "target": [
+       {
+        "kg": 15,
         "rip": 9,
         "ripMax": null,
         "max": false
        },
        {
-        "kg": 40,
+        "kg": 15,
+        "rip": 9,
+        "ripMax": null,
+        "max": false
+       },
+       {
+        "kg": 15,
         "rip": 9,
         "ripMax": null,
         "max": false
@@ -400,89 +627,143 @@
       "repMax": 9
      },
      {
-      "id": "low-row",
-      "nome": "Low row",
-      "gruppo": "dorso",
-      "rec": 90,
-      "recTxt": "1'30",
-      "note": "",
-      "desc": "",
-      "tipo": "carico",
-      "perMano": false,
-      "assist": false,
-      "serie": 3,
-      "target": [
-       {
-        "kg": 35,
-        "rip": 10,
-        "ripMax": null,
-        "max": false
-       },
-       {
-        "kg": 35,
-        "rip": 10,
-        "ripMax": null,
-        "max": false
-       },
-       {
-        "kg": 35,
-        "rip": 10,
-        "ripMax": null,
-        "max": false
-       }
-      ],
-      "repMin": 10,
-      "repMax": 10
-     },
-     {
-      "id": "push-up-ginocchia",
-      "nome": "Push up con ginocchia a terra",
-      "gruppo": "petto",
+      "id": "shoulder-press",
+      "nome": "Shoulder press con manubri",
+      "gruppo": "spalle",
       "rec": 0,
-      "recTxt": "a sensazione",
-      "note": "Ripetizioni totali nel minor tempo possibile, in quante serie vuoi. Sotto gli 8 minuti il target sale di 5 la settimana dopo.",
-      "desc": "Ripetizioni totali nel minor tempo possibile, in quante serie vuoi. Sotto gli 8 minuti il target sale di 5 la settimana dopo.",
-      "tipo": "rt",
-      "perMano": false,
-      "assist": false,
-      "serie": 1,
-      "target": [
-       {
-        "rt": 50
-       }
-      ],
-      "repMin": 30,
-      "repMax": 30
-     },
-     {
-      "id": "curl-manubri",
-      "nome": "Curl manubri",
-      "gruppo": "braccia",
-      "rec": 90,
-      "recTxt": "1'30",
+      "recTxt": "subito il rematore",
       "note": "",
       "desc": "",
       "tipo": "carico",
-      "perMano": true,
+      "perMano": false,
       "assist": false,
+      "attrezzo": "Manubri",
+      "modo": "",
+      "regola": "",
+      "doppio": "mano",
+      "uni": "",
+      "corpo": "",
+      "corpoBreve": "",
+      "passo": 2,
+      "ss": "B5",
+      "ssPos": 1,
+      "giri": 3,
+      "ssRec": 105,
+      "ssRecTxt": "1'30–2' tra i giri",
       "serie": 3,
       "target": [
        {
-        "kg": 10,
-        "rip": 8,
-        "ripMax": null,
+        "kg": 12,
+        "rip": 6,
+        "ripMax": 8,
         "max": false
        },
        {
-        "kg": 10,
-        "rip": 8,
-        "ripMax": null,
+        "kg": 12,
+        "rip": 6,
+        "ripMax": 8,
         "max": false
        },
        {
-        "kg": 8,
-        "rip": 10,
-        "ripMax": null,
+        "kg": 12,
+        "rip": 6,
+        "ripMax": 8,
+        "max": false
+       }
+      ],
+      "repMin": 6,
+      "repMax": 8
+     },
+     {
+      "id": "rematore-inclinata",
+      "nome": "Rematore con manubri su panca inclinata",
+      "gruppo": "dorso",
+      "rec": 105,
+      "recTxt": "1'30–2' tra i giri",
+      "note": "",
+      "desc": "",
+      "tipo": "carico",
+      "perMano": false,
+      "assist": false,
+      "attrezzo": "Panca inclinata + manubri",
+      "modo": "",
+      "regola": "",
+      "doppio": "mano",
+      "uni": "",
+      "corpo": "",
+      "corpoBreve": "",
+      "passo": 2,
+      "ss": "B5",
+      "ssPos": 2,
+      "giri": 3,
+      "ssRec": 0,
+      "ssRecTxt": "",
+      "serie": 3,
+      "target": [
+       {
+        "kg": 16,
+        "rip": 6,
+        "ripMax": 8,
+        "max": false
+       },
+       {
+        "kg": 16,
+        "rip": 6,
+        "ripMax": 8,
+        "max": false
+       },
+       {
+        "kg": 16,
+        "rip": 6,
+        "ripMax": 8,
+        "max": false
+       }
+      ],
+      "repMin": 6,
+      "repMax": 8
+     },
+     {
+      "id": "push-down-corda",
+      "nome": "Push down con corda",
+      "gruppo": "braccia",
+      "rec": 0,
+      "recTxt": "subito il curl",
+      "note": "",
+      "desc": "",
+      "tipo": "carico",
+      "perMano": false,
+      "assist": false,
+      "attrezzo": "Cavo alto con corda",
+      "modo": "",
+      "regola": "",
+      "doppio": "",
+      "uni": "",
+      "corpo": "",
+      "corpoBreve": "",
+      "passo": 2.5,
+      "ss": "B6",
+      "ssPos": 1,
+      "giri": 3,
+      "ssRec": 75,
+      "ssRecTxt": "1'–1'30\" tra i giri",
+      "serie": 3,
+      "target": [
+       {
+        "kg": 12.5,
+        "rip": 8,
+        "ripMax": 10,
+        "max": false
+       },
+       {
+        "kg": 12.5,
+        "rip": 8,
+        "ripMax": 10,
+        "max": false
+       },
+       {
+        "kg": 12.5,
+        "rip": 8,
+        "ripMax": 10,
         "max": false
        }
       ],
@@ -490,39 +771,52 @@
       "repMax": 10
      },
      {
-      "id": "alzate-laterali",
-      "nome": "Alzate laterali",
-      "gruppo": "spalle",
-      "rec": 90,
-      "recTxt": "1'30",
+      "id": "curl-cavo-basso",
+      "nome": "Curl al cavo basso con fune",
+      "gruppo": "braccia",
+      "rec": 75,
+      "recTxt": "1'–1'30\" tra i giri",
       "note": "",
       "desc": "",
       "tipo": "carico",
-      "perMano": true,
+      "perMano": false,
       "assist": false,
+      "attrezzo": "Cavo basso con fune",
+      "modo": "",
+      "regola": "",
+      "doppio": "",
+      "uni": "",
+      "corpo": "",
+      "corpoBreve": "",
+      "passo": 2.5,
+      "ss": "B6",
+      "ssPos": 2,
+      "giri": 3,
+      "ssRec": 0,
+      "ssRecTxt": "",
       "serie": 3,
       "target": [
        {
-        "kg": 6,
-        "rip": 10,
-        "ripMax": 12,
+        "kg": 12.5,
+        "rip": 8,
+        "ripMax": 10,
         "max": false
        },
        {
-        "kg": 6,
-        "rip": 10,
-        "ripMax": 12,
+        "kg": 12.5,
+        "rip": 8,
+        "ripMax": 10,
         "max": false
        },
        {
-        "kg": 6,
-        "rip": 10,
-        "ripMax": 12,
+        "kg": 12.5,
+        "rip": 8,
+        "ripMax": 10,
         "max": false
        }
       ],
-      "repMin": 10,
-      "repMax": 12
+      "repMin": 8,
+      "repMax": 10
      }
     ]
    }
@@ -2018,6 +2312,520 @@
    },
    "luogoId": "au2vmbf",
    "luogoNome": "Mcfit"
+  },
+  {
+   "id": "2026-10-13-ricA",
+   "data": "2026-10-13",
+   "scheda": 2,
+   "giorno": "A",
+   "settimana": 1,
+   "chiusa": true,
+   "inizio": null,
+   "fine": null,
+   "esercizi": {
+    "hack-squat": [
+     {
+      "kg": 10,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": 10,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": 10,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": 10,
+      "reps": 6,
+      "fatta": true
+     }
+    ],
+    "chin-up": [
+     {
+      "kg": null,
+      "reps": 3,
+      "fatta": true
+     },
+     {
+      "kg": null,
+      "reps": 3,
+      "fatta": true
+     },
+     {
+      "kg": null,
+      "reps": 3,
+      "fatta": true
+     },
+     {
+      "kg": null,
+      "reps": 3,
+      "fatta": true
+     }
+    ],
+    "leg-curl-mono": [
+     {
+      "kg": 15,
+      "reps": 12,
+      "fatta": true
+     },
+     {
+      "kg": 17.5,
+      "reps": 10,
+      "fatta": true
+     },
+     {
+      "kg": 20,
+      "reps": 8,
+      "fatta": true
+     }
+    ],
+    "distensioni-manubri": [
+     {
+      "kg": 14,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": 14,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": 14,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": 14,
+      "reps": 6,
+      "fatta": true
+     }
+    ],
+    "australian-pull-up": [
+     {
+      "kg": null,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": null,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": null,
+      "reps": 6,
+      "fatta": true
+     }
+    ],
+    "push-up-sbarra": [
+     {
+      "kg": null,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": null,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": null,
+      "reps": 6,
+      "fatta": true
+     }
+    ],
+    "curl-ez": [
+     {
+      "kg": 7.5,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 7.5,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 7.5,
+      "reps": 8,
+      "fatta": true
+     }
+    ],
+    "french-press-ez": [
+     {
+      "kg": 7.5,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 7.5,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 7.5,
+      "reps": 8,
+      "fatta": true
+     }
+    ]
+   },
+   "warm": {
+    "w0": true,
+    "w1": true,
+    "stretch": true
+   },
+   "luogoNome": "Mcfit",
+   "pt": true,
+   "ricostruita": true,
+   "note": "Seduta ricostruita: fatta con il trainer prima di avere la scheda, segnata con i carichi e le ripetizioni standard della settimana 1."
+  },
+  {
+   "id": "2026-10-16-ricB",
+   "data": "2026-10-16",
+   "scheda": 2,
+   "giorno": "B",
+   "settimana": 1,
+   "chiusa": true,
+   "inizio": null,
+   "fine": null,
+   "esercizi": {
+    "stacchi-rumeni": [
+     {
+      "kg": 16,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": 16,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": 16,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": 16,
+      "reps": 6,
+      "fatta": true
+     }
+    ],
+    "dip-assistiti": [
+     {
+      "kg": -35,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": -35,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": -35,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": -35,
+      "reps": 6,
+      "fatta": true
+     }
+    ],
+    "leg-ext-mono": [
+     {
+      "kg": 20,
+      "reps": 10,
+      "fatta": true
+     },
+     {
+      "kg": 22.5,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 25,
+      "reps": 6,
+      "fatta": true
+     }
+    ],
+    "lat-monobraccio": [
+     {
+      "kg": 15,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 15,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 15,
+      "reps": 8,
+      "fatta": true
+     }
+    ],
+    "shoulder-press": [
+     {
+      "kg": 12,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": 12,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": 12,
+      "reps": 6,
+      "fatta": true
+     }
+    ],
+    "rematore-inclinata": [
+     {
+      "kg": 16,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": 16,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": 16,
+      "reps": 6,
+      "fatta": true
+     }
+    ],
+    "push-down-corda": [
+     {
+      "kg": 12.5,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 12.5,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 12.5,
+      "reps": 8,
+      "fatta": true
+     }
+    ],
+    "curl-cavo-basso": [
+     {
+      "kg": 12.5,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 12.5,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 12.5,
+      "reps": 8,
+      "fatta": true
+     }
+    ]
+   },
+   "warm": {
+    "w0": true,
+    "w1": true,
+    "stretch": true
+   },
+   "luogoNome": "Mcfit",
+   "pt": true,
+   "ricostruita": true,
+   "note": "Seduta ricostruita: fatta con il trainer prima di avere la scheda, segnata con i carichi e le ripetizioni standard della settimana 1."
+  },
+  {
+   "id": "2026-10-20-o1afm7a",
+   "data": "2026-10-20",
+   "scheda": 2,
+   "giorno": "A",
+   "settimana": 2,
+   "chiusa": true,
+   "inizio": 1792520304229,
+   "fine": 1792525172581,
+   "esercizi": {
+    "hack-squat": [
+     {
+      "kg": 12.5,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": 12.5,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": 12.5,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": 12.5,
+      "reps": 10,
+      "fatta": true
+     }
+    ],
+    "chin-up": [
+     {
+      "kg": null,
+      "reps": 3,
+      "fatta": true
+     },
+     {
+      "kg": null,
+      "reps": 3,
+      "fatta": true
+     },
+     {
+      "kg": null,
+      "reps": 3,
+      "fatta": true
+     },
+     {
+      "kg": null,
+      "reps": 3,
+      "fatta": true
+     },
+     {
+      "kg": null,
+      "reps": 3,
+      "fatta": true
+     }
+    ],
+    "leg-curl-mono": [
+     {
+      "kg": 15,
+      "reps": 13,
+      "fatta": true
+     },
+     {
+      "kg": 17.5,
+      "reps": 11,
+      "fatta": true
+     },
+     {
+      "kg": 20,
+      "reps": 9,
+      "fatta": true
+     }
+    ],
+    "distensioni-manubri": [
+     {
+      "kg": 14,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": 14,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": 14,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": 14,
+      "reps": 6,
+      "fatta": true
+     }
+    ],
+    "australian-pull-up": [
+     {
+      "kg": null,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": null,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": null,
+      "reps": 6,
+      "fatta": true
+     }
+    ],
+    "push-up-sbarra": [
+     {
+      "kg": null,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": null,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": null,
+      "reps": 6,
+      "fatta": true
+     }
+    ],
+    "curl-ez": [
+     {
+      "kg": 7.5,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 7.5,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 7.5,
+      "reps": 8,
+      "fatta": true
+     }
+    ],
+    "french-press-ez": [
+     {
+      "kg": 7.5,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 7.5,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 7.5,
+      "reps": 8,
+      "fatta": true
+     }
+    ]
+   },
+   "warm": {
+    "w0": true,
+    "w1": true,
+    "stretch": true
+   },
+   "pt": true,
+   "warmOpen": false
   }
  ],
  "luoghi": [
