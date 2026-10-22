@@ -1,6 +1,6 @@
 {
  "v": 2,
- "aggiornato": "2026-10-20T19:50:03.322664Z",
+ "aggiornato": "2026-10-22T19:30:30.812332Z",
  "scheda": {
   "id": 2,
   "giorni": [
@@ -24,6 +24,18 @@
       "regola": "Se nella serie a max fai almeno 8 ripetizioni, la settimana dopo aumenta di 5 kg in totale (+2,5 per lato).",
       "doppio": "lato",
       "uni": "",
+      "fig": true,
+      "come": [
+       "Schiena e spalle contro lo schienale, piedi sulla pedana larghezza spalle, punte un po' in fuori.",
+       "Sblocca le sicure e scendi piegando le ginocchia fino a 90° o poco sotto, discesa controllata.",
+       "Spingi con tutto il piede, tallone compreso, e torna su senza bloccare le ginocchia.",
+       "Le prime 3 serie da 6, l'ultima a max: conta le ripetizioni, decidono i kg della settimana dopo."
+      ],
+      "occhio": [
+       "Talloni che si alzano dalla pedana.",
+       "Ginocchia che cedono verso l'interno.",
+       "Risalita a scatto con le ginocchia bloccate."
+      ],
       "corpo": "",
       "corpoBreve": "",
       "passo": 2.5,
@@ -78,6 +90,18 @@
       "regola": "",
       "doppio": "",
       "uni": "",
+      "fig": true,
+      "come": [
+       "Elastico arancione + giallo insieme, agganciati alla sbarra, piede (o ginocchio) dentro l'anello: valgono per tutte e 6 le settimane.",
+       "Presa supina, palmi verso di te, larghezza spalle, braccia distese in partenza.",
+       "Tira fino a portare il mento sopra la sbarra, gomiti verso il basso.",
+       "Scendi controllato fino a braccia distese prima della ripetizione dopo."
+      ],
+      "occhio": [
+       "Slancio con le gambe o col bacino.",
+       "Fermarsi a metà: la ripetizione vale solo col mento sopra la sbarra.",
+       "Spalle che salgono verso le orecchie: tienile basse."
+      ],
       "corpo": "Elastico arancione + giallo",
       "corpoBreve": "elastico",
       "passo": 2.5,
@@ -138,6 +162,17 @@
       "regola": "",
       "doppio": "",
       "uni": "gamba",
+      "fig": true,
+      "come": [
+       "Alla macchina in piedi: cuscinetto sopra la caviglia, mani sugli appoggi, busto fermo.",
+       "Piega il ginocchio portando il tallone verso il gluteo.",
+       "Torna giù controllando, senza far cadere il peso.",
+       "Finisci le 3 serie di una gamba, poi l'altra: i 30–45\" di recupero sono tra una gamba e l'altra."
+      ],
+      "occhio": [
+       "Anca che si apre e schiena che si inarca per aiutarsi.",
+       "Calcio di slancio invece di contrarre il femorale."
+      ],
       "corpo": "",
       "corpoBreve": "",
       "passo": 2.5,
@@ -186,6 +221,18 @@
       "regola": "",
       "doppio": "mano",
       "uni": "",
+      "fig": true,
+      "come": [
+       "Sdraiato sulla panca piana, piedi a terra, scapole strette e petto in fuori.",
+       "Manubri sopra il petto a braccia distese: è la partenza.",
+       "Scendi in 3 secondi fino ai lati del petto, gomiti a 45° rispetto al busto.",
+       "Fermo 1 secondo giù, poi spingi su con decisione."
+      ],
+      "occhio": [
+       "Gomiti troppo larghi, a 90°: stressano le spalle.",
+       "Scendere di fretta: i 3 secondi sono l'esercizio.",
+       "Rimbalzare in basso invece di fermarti."
+      ],
       "corpo": "",
       "corpoBreve": "",
       "passo": 2,
@@ -240,6 +287,17 @@
       "regola": "",
       "doppio": "",
       "uni": "",
+      "fig": true,
+      "come": [
+       "Sbarra bassa: ti appendi da sotto, corpo dritto, talloni a terra. Più sei orizzontale, più è duro.",
+       "Presa poco più larga delle spalle, corpo in linea come una tavola.",
+       "Tira il petto alla sbarra, fermo 2 secondi su con le scapole strette.",
+       "Scendi controllato a braccia distese. Poi subito il push up, senza pausa: il recupero arriva dopo."
+      ],
+      "occhio": [
+       "Bacino che cade: addome e glutei tengono la linea.",
+       "Collo che si allunga verso la sbarra al posto del petto."
+      ],
       "corpo": "Corpo libero",
       "corpoBreve": "corpo",
       "passo": 2.5,
@@ -288,6 +346,17 @@
       "regola": "",
       "doppio": "",
       "uni": "",
+      "fig": true,
+      "come": [
+       "Mani sulla sbarra all'altezza 2, poco più larghe delle spalle, piedi indietro, corpo in linea.",
+       "Scendi finché il petto quasi tocca la sbarra, gomiti a 45°.",
+       "Fermo 1 secondo giù, poi spingi fino a braccia distese.",
+       "Chiude il giro del superset: dopo questo parte il recupero."
+      ],
+      "occhio": [
+       "Sedere in alto o bacino che cade.",
+       "Mezze ripetizioni: il petto deve arrivare alla sbarra."
+      ],
       "corpo": "Corpo libero",
       "corpoBreve": "corpo",
       "passo": 2.5,
@@ -336,6 +405,17 @@
       "regola": "",
       "doppio": "lato",
       "uni": "",
+      "fig": true,
+      "come": [
+       "In piedi, asta EZ presa alle curve interne con i palmi in su, gomiti vicini ai fianchi.",
+       "Porta l'asta verso le spalle piegando solo i gomiti.",
+       "Scendi lento fino a braccia quasi distese.",
+       "Subito dopo il french press con la stessa asta, senza pausa."
+      ],
+      "occhio": [
+       "Gomiti che vanno avanti o busto che dondola per aiutarsi.",
+       "Polsi piegati: tienili dritti."
+      ],
       "corpo": "",
       "corpoBreve": "",
       "passo": 1.25,
@@ -379,11 +459,22 @@
       "tipo": "carico",
       "perMano": false,
       "assist": false,
-      "attrezzo": "Asta EZ",
+      "attrezzo": "Panca piana + asta EZ",
       "modo": "",
       "regola": "",
       "doppio": "lato",
       "uni": "",
+      "fig": true,
+      "come": [
+       "Sdraiato sulla panca piana, asta EZ sopra il petto a braccia distese, gomiti stretti e puntati al soffitto.",
+       "Piega solo i gomiti portando l'asta verso la fronte, dietro la testa.",
+       "Distendi tornando su, gomiti che restano fermi sopra le spalle.",
+       "Chiude il giro: poi 1'30\" di recupero."
+      ],
+      "occhio": [
+       "Gomiti che si aprono di lato.",
+       "Spalle che spingono l'asta invece dei tricipiti: i gomiti non si muovono."
+      ],
       "corpo": "",
       "corpoBreve": "",
       "passo": 1.25,
@@ -438,6 +529,18 @@
       "regola": "Se nella serie a max fai almeno 8 ripetizioni, la settimana dopo aumenta di 2+2 kg.",
       "doppio": "mano",
       "uni": "",
+      "fig": true,
+      "come": [
+       "In piedi, manubri davanti alle cosce, piedi larghezza anche, ginocchia morbide.",
+       "Spingi il sedere indietro e scendi in 3 secondi con la schiena dritta, manubri che scivolano lungo le gambe.",
+       "Fermati quando senti tirare dietro le cosce, poco sotto il ginocchio, poi risali contraendo i glutei.",
+       "Ultima serie a max: conta le ripetizioni, decidono i kg della settimana dopo."
+      ],
+      "occhio": [
+       "Schiena che si curva: è l'errore classico, petto in fuori sempre.",
+       "Piegare troppo le ginocchia: diventa uno squat.",
+       "Manubri lontani dalle gambe."
+      ],
       "corpo": "",
       "corpoBreve": "",
       "passo": 2,
@@ -489,9 +592,20 @@
       "assist": true,
       "attrezzo": "Macchina dip assistiti",
       "modo": "",
-      "regola": "Se nella serie a max fai almeno 2 ripetizioni in più della serie, la settimana dopo +1 ripetizione a serie, e così via. Quando chiudi 3×9 (alla 4ª settimana), la settimana dopo l'assistenza scala di 5 kg (−30) e si riparte da 3×6 + 1×max, con la stessa progressione.",
+      "regola": "Se nella serie a max fai almeno 2 ripetizioni in più della serie, la settimana dopo +1 ripetizione a serie, e così via. Se alla 4ª settimana chiudi il 3×9, la 5ª l'assistenza scala di 5 kg (−30) e si riparte da 3×6 + 1×max, con la stessa progressione.",
       "doppio": "",
       "uni": "",
+      "fig": true,
+      "come": [
+       "Macchina dip assistiti: ginocchia sul cuscino, mani sulle maniglie, 35 kg di assistenza.",
+       "Parti a braccia distese, scendi piegando i gomiti fino a 90°, busto leggermente avanti.",
+       "Spingi su fino a braccia distese.",
+       "Ultima serie a max: con almeno 2 ripetizioni in più, la settimana dopo +1 a serie."
+      ],
+      "occhio": [
+       "Scendere troppo: spalle a rischio.",
+       "Spalle che salgono: tienile giù e aperte."
+      ],
       "corpo": "",
       "corpoBreve": "",
       "passo": 2.5,
@@ -546,6 +660,17 @@
       "regola": "",
       "doppio": "",
       "uni": "gamba",
+      "fig": true,
+      "come": [
+       "Seduto alla leg extension, cuscinetto sopra la caviglia, schiena allo schienale.",
+       "Distendi una gamba sola fino a ginocchio quasi dritto.",
+       "Torna giù controllando, senza far sbattere il carico.",
+       "3 serie di una gamba poi l'altra, 30–45\" di recupero tra le gambe."
+      ],
+      "occhio": [
+       "Scattare in alto di slancio.",
+       "Sedere che si stacca dal sedile."
+      ],
       "corpo": "",
       "corpoBreve": "",
       "passo": 2.5,
@@ -594,6 +719,17 @@
       "regola": "",
       "doppio": "",
       "uni": "braccio",
+      "fig": true,
+      "come": [
+       "In ginocchio davanti alla lat machine, maniglia singola, braccio disteso in alto.",
+       "Tira portando la maniglia al petto, gomito giù e indietro.",
+       "Fermo 1 secondo con la maniglia incollata al petto.",
+       "Risali in 3 secondi controllando. 3 serie per braccio, 30–45\" tra un braccio e l'altro."
+      ],
+      "occhio": [
+       "Busto che ruota o si inclina per aiutarsi.",
+       "Spalla che sale: parti abbassandola."
+      ],
       "corpo": "",
       "corpoBreve": "",
       "passo": 2.5,
@@ -642,6 +778,17 @@
       "regola": "",
       "doppio": "mano",
       "uni": "",
+      "fig": true,
+      "come": [
+       "Manubri alle spalle, palmi in avanti, gomiti sotto i polsi.",
+       "Spingi in alto fino a braccia distese sopra la testa.",
+       "Scendi controllato fino alle spalle.",
+       "Subito dopo il rematore senza pausa; il recupero di 1'30–2' arriva dopo il rematore."
+      ],
+      "occhio": [
+       "Schiena che si inarca: addome contratto, costole giù.",
+       "Gomiti bloccati di colpo in alto."
+      ],
       "corpo": "",
       "corpoBreve": "",
       "passo": 2,
@@ -690,6 +837,17 @@
       "regola": "",
       "doppio": "mano",
       "uni": "",
+      "fig": true,
+      "come": [
+       "Petto appoggiato sulla panca inclinata, manubri a braccia distese sotto le spalle.",
+       "Tira i gomiti verso il soffitto, scapole strette, manubri ai fianchi.",
+       "Scendi controllato a braccia distese.",
+       "Chiude il giro del superset."
+      ],
+      "occhio": [
+       "Petto che si stacca dalla panca.",
+       "Tirare con le braccia invece che con la schiena: pensa ai gomiti."
+      ],
       "corpo": "",
       "corpoBreve": "",
       "passo": 2,
@@ -738,6 +896,17 @@
       "regola": "",
       "doppio": "",
       "uni": "",
+      "fig": true,
+      "come": [
+       "Cavo alto con la corda, gomiti incollati ai fianchi, mani all'altezza del petto.",
+       "Spingi giù fino a braccia distese, aprendo la corda in basso.",
+       "Torna su controllando, gomiti fermi.",
+       "Subito dopo il curl al cavo basso, senza pausa."
+      ],
+      "occhio": [
+       "Gomiti che si alzano o vanno avanti.",
+       "Busto che si piega sul cavo."
+      ],
       "corpo": "",
       "corpoBreve": "",
       "passo": 2.5,
@@ -786,6 +955,17 @@
       "regola": "",
       "doppio": "",
       "uni": "",
+      "fig": true,
+      "come": [
+       "Cavo basso con la fune, braccia distese, gomiti ai fianchi.",
+       "Curla portando la fune alle spalle, gomiti fermi.",
+       "Scendi lento fino a braccia distese.",
+       "Chiude il giro: poi 1'–1'30\" di recupero."
+      ],
+      "occhio": [
+       "Dondolare con la schiena.",
+       "Gomiti che vanno avanti."
+      ],
       "corpo": "",
       "corpoBreve": "",
       "passo": 2.5,
@@ -2826,6 +3006,171 @@
    },
    "pt": true,
    "warmOpen": false
+  },
+  {
+   "id": "2026-10-22-38qze96",
+   "data": "2026-10-22",
+   "scheda": 2,
+   "giorno": "B",
+   "settimana": 2,
+   "chiusa": true,
+   "inizio": 1792693745831,
+   "fine": 1792697344463,
+   "esercizi": {
+    "stacchi-rumeni": [
+     {
+      "kg": 16,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": 16,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": 16,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": 16,
+      "reps": 10,
+      "fatta": true
+     }
+    ],
+    "dip-assistiti": [
+     {
+      "kg": -35,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": -35,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": -35,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": -35,
+      "reps": 8,
+      "fatta": true
+     }
+    ],
+    "leg-ext-mono": [
+     {
+      "kg": 20,
+      "reps": 11,
+      "fatta": true
+     },
+     {
+      "kg": 22.5,
+      "reps": 9,
+      "fatta": true
+     },
+     {
+      "kg": 25,
+      "reps": 7,
+      "fatta": true
+     }
+    ],
+    "lat-monobraccio": [
+     {
+      "kg": 15,
+      "reps": 9,
+      "fatta": true
+     },
+     {
+      "kg": 15,
+      "reps": 9,
+      "fatta": true
+     },
+     {
+      "kg": 15,
+      "reps": 9,
+      "fatta": true
+     }
+    ],
+    "shoulder-press": [
+     {
+      "kg": 14,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": 14,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": 14,
+      "reps": 6,
+      "fatta": true
+     }
+    ],
+    "rematore-inclinata": [
+     {
+      "kg": 16,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": 16,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": 16,
+      "reps": 6,
+      "fatta": true
+     }
+    ],
+    "push-down-corda": [
+     {
+      "kg": 12.5,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 12.5,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 12.5,
+      "reps": 8,
+      "fatta": true
+     }
+    ],
+    "curl-cavo-basso": [
+     {
+      "kg": 12.5,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 12.5,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 12.5,
+      "reps": 8,
+      "fatta": true
+     }
+    ]
+   },
+   "warm": {
+    "w0": true,
+    "w1": true,
+    "stretch": true
+   },
+   "warmOpen": false,
+   "note": "CAVALLISSIMO"
   }
  ],
  "luoghi": [
