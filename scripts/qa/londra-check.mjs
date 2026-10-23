@@ -157,7 +157,8 @@ ok('storage: solo londra:novita:vista', storage.local.join() === 'londra:novita:
 // service worker: controlla le pagine di Londra, non quelle di Barcellona
 const reg = await p.evaluate(async () => { const r = await navigator.serviceWorker.ready; return r.scope })
 const fuori = []
-for (const u of ['/', '/index.html', '/gym/', '/soldi/', '/rigori.html']) {
+// (/rigori-classic.html e non /rigori.html: quest'ultima reindirizza al gioco 3D, che nel Chromium senza GPU dei container di prova fa cadere il browser)
+for (const u of ['/', '/index.html', '/gym/', '/soldi/', '/rigori-classic.html']) {
   const q = await ctx.newPage(); await q.goto(base + u, { waitUntil: 'load' }).catch(() => {})
   const c = await q.evaluate(() => !!navigator.serviceWorker?.controller && navigator.serviceWorker.controller.scriptURL.includes('londra-sw')).catch(() => false)
   if (c) fuori.push(u); await q.close()
