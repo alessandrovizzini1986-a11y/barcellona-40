@@ -1,0 +1,323 @@
+{
+  "versione": 1,
+  "aggiornato_il": "2026-10-25",
+  "regola": "Prenotare dall'app (Bounce o Stasher) la sera prima: si paga a collo, si riceve un QR. Foto dei bagagli al deposito. Niente documenti, farmaci o power bank dentro: BA li vuole con voi e il deposito non li assicura.",
+  "depositi": [
+    {
+      "id": "bounce_waterloo",
+      "nome": "Bounce — Waterloo (minimarket)",
+      "indirizzo": "7 Chicheley St, SE1 7PY",
+      "lat": 51.5025654,
+      "lng": -0.1165451,
+      "place_id": "ChIJkYdEzbEFdkgRrxXGtTY-Ux4",
+      "orari": "24 ore",
+      "voto": 4.8,
+      "recensioni": 640,
+      "prenota": "https://bounce.com/stores/london/0xWORF",
+      "tappe": [
+        "sealife",
+        "southbank"
+      ],
+      "giorno": "dom15",
+      "distanze_m": {
+        "sealife": 304,
+        "southbank": 424
+      },
+      "minuti": {
+        "sealife": 5,
+        "southbank": 6
+      },
+      "prezzo": "da verificare al momento della prenotazione (app)",
+      "stimati": [
+        "distanze_m",
+        "minuti",
+        "prezzo"
+      ],
+      "note": "Borse fotografate e messe dietro il banco. Una recensione segnala borse lasciate sul pavimento per qualche minuto: restare finché non sono riposte.",
+      "verificato_il": "2026-10-25",
+      "fonte": "Google Places (orari, voti)"
+    },
+    {
+      "id": "stasher_countyhall",
+      "nome": "Stasher — County Hall (hotel)",
+      "indirizzo": "County Hall, Belvedere Rd, SE1 7GP",
+      "lat": 51.5019633,
+      "lng": -0.1188522,
+      "place_id": "ChIJVzad37UFdkgRYlTAHFaFeM4",
+      "orari": "7:00–23:00",
+      "voto": 4.6,
+      "recensioni": 9,
+      "prenota": "https://stasher.com/luggage-storage/united-kingdom/london/london-eye/stashpoints/68a734d2aabc",
+      "tappe": [
+        "sealife"
+      ],
+      "giorno": "dom15",
+      "distanze_m": {
+        "sealife": 83
+      },
+      "minuti": {
+        "sealife": 1
+      },
+      "prezzo": "da verificare al momento della prenotazione (app)",
+      "stimati": [
+        "distanze_m",
+        "minuti",
+        "prezzo"
+      ],
+      "note": "Stesso edificio del SEA LIFE, deposito in un locale separato dell'hotel. Poche recensioni.",
+      "verificato_il": "2026-10-25",
+      "fonte": "Google Places (orari, voti)"
+    },
+    {
+      "id": "stasher_york",
+      "nome": "Stasher — Waterloo (hotel, 85 York Rd)",
+      "indirizzo": "85 York Rd, SE1 7NJ",
+      "lat": 51.501831,
+      "lng": -0.11647,
+      "place_id": "ChIJwTtPCkYFdkgRtJQ0X3rSI0E",
+      "orari": "7:00–23:00",
+      "voto": 5.0,
+      "recensioni": 85,
+      "prenota": "https://stasher.com/luggage-storage/united-kingdom/london/waterloo-station/stashpoints/e37384841fb6",
+      "tappe": [
+        "sealife",
+        "southbank"
+      ],
+      "giorno": "dom15",
+      "distanze_m": {
+        "sealife": 276,
+        "southbank": 530
+      },
+      "minuti": {
+        "sealife": 4,
+        "southbank": 8
+      },
+      "prezzo": "da verificare al momento della prenotazione (app)",
+      "stimati": [
+        "distanze_m",
+        "minuti",
+        "prezzo"
+      ],
+      "note": "",
+      "verificato_il": "2026-10-25",
+      "fonte": "Google Places (orari, voti)"
+    },
+    {
+      "id": "bounce_broadwick",
+      "nome": "Bounce — Broadwick St (Carnaby)",
+      "indirizzo": "43 Broadwick St, W1F 9QN",
+      "lat": 51.5132489,
+      "lng": -0.1368169,
+      "place_id": "ChIJ8dDVYdYPdkgR06T9HQ32lHs",
+      "orari": "dom 12:00–21:00 · lun 9:00–23:00 · mar 9:00–23:00",
+      "voto": 4.8,
+      "recensioni": 55,
+      "prenota": "https://bounce.com/stores/london/fTfJhX",
+      "tappe": [
+        "casa"
+      ],
+      "giorno": "mar17",
+      "distanze_m": {
+        "casa": 60
+      },
+      "minuti": {
+        "casa": 1
+      },
+      "prezzo": "da verificare al momento della prenotazione (app)",
+      "stimati": [
+        "distanze_m",
+        "minuti",
+        "prezzo"
+      ],
+      "note": "Stesso negozio usato anche da Radical e LuggageHero. Domenica apre solo alle 12:00.",
+      "verificato_il": "2026-10-25",
+      "fonte": "Google Places (orari, voti)"
+    },
+    {
+      "id": "stasher_marshall",
+      "nome": "Stasher — Soho (11 Marshall St)",
+      "indirizzo": "11 Marshall St, W1F 7EN",
+      "lat": 51.5126155,
+      "lng": -0.137142,
+      "place_id": "ChIJe3bazuMFdkgRqvJpr28B_gA",
+      "orari": "lun–ven 7:30–19:00 · CHIUSO domenica",
+      "voto": 4.9,
+      "recensioni": 31,
+      "prenota": "https://stasher.com/luggage-storage/united-kingdom/london/soho-uk/stashpoints/b667def75f99",
+      "tappe": [
+        "casa"
+      ],
+      "giorno": "mar17",
+      "distanze_m": {
+        "casa": 76
+      },
+      "minuti": {
+        "casa": 1
+      },
+      "prezzo": "da verificare al momento della prenotazione (app)",
+      "stimati": [
+        "distanze_m",
+        "minuti",
+        "prezzo"
+      ],
+      "note": "Chiude alle 19:00: va bene solo martedì, con ritiro entro le 15:00.",
+      "verificato_il": "2026-10-25",
+      "fonte": "Google Places (orari, voti)"
+    },
+    {
+      "id": "bounce_camden",
+      "nome": "Bounce — Camden (19 Kentish Town Rd)",
+      "indirizzo": "19 Kentish Town Rd, NW1 8NH",
+      "lat": 51.5399019,
+      "lng": -0.1424556,
+      "place_id": "ChIJPzB_usIbdkgRthOZu20xfA8",
+      "orari": "mar 11:00–01:00",
+      "voto": 4.9,
+      "recensioni": 300,
+      "prenota": "https://bounce.com/stores/london/CyTDfS",
+      "tappe": [
+        "camden"
+      ],
+      "giorno": "mar17",
+      "distanze_m": {
+        "camden": 92
+      },
+      "minuti": {
+        "camden": 1
+      },
+      "prezzo": "da verificare al momento della prenotazione (app)",
+      "stimati": [
+        "distanze_m",
+        "minuti",
+        "prezzo"
+      ],
+      "note": "Apre alle 11:00: con arrivo a Camden alle 11:00 è al limite.",
+      "verificato_il": "2026-10-25",
+      "fonte": "Google Places (orari, voti)"
+    },
+    {
+      "id": "radical_camden",
+      "nome": "Radical — Camden Town station (21 Kentish Town Rd)",
+      "indirizzo": "21 Kentish Town Rd, NW1 8NH",
+      "lat": 51.539997,
+      "lng": -0.1424041,
+      "place_id": "ChIJKa7IdP0bdkgRb1mQE8KxeMc",
+      "orari": "10:00–20:00",
+      "voto": 4.9,
+      "recensioni": 52,
+      "prenota": "https://radicalstorage.com/luggage-storage/london/camden-town/luggage-storage-camden-town-underground-station-1",
+      "tappe": [
+        "camden"
+      ],
+      "giorno": "mar17",
+      "distanze_m": {
+        "camden": 106
+      },
+      "minuti": {
+        "camden": 2
+      },
+      "prezzo": "da verificare al momento della prenotazione (app)",
+      "stimati": [
+        "distanze_m",
+        "minuti",
+        "prezzo"
+      ],
+      "note": "Apre alle 10:00, accanto alla stazione.",
+      "verificato_il": "2026-10-25",
+      "fonte": "Google Places (orari, voti)"
+    },
+    {
+      "id": "camden_station",
+      "nome": "Camden Luggage Storage (2 Camden Rd)",
+      "indirizzo": "2 Camden Rd, NW1 9DL",
+      "lat": 51.5393343,
+      "lng": -0.1419684,
+      "place_id": "ChIJBTiuDwAbdkgRqKS9_vPhyZw",
+      "orari": "9:00–21:00",
+      "voto": 5.0,
+      "recensioni": 42,
+      "prenota": "https://luggagestoragecamdenstation.com/",
+      "tappe": [
+        "camden"
+      ],
+      "giorno": "mar17",
+      "distanze_m": {
+        "camden": 70
+      },
+      "minuti": {
+        "camden": 1
+      },
+      "prezzo": "da verificare al momento della prenotazione (app)",
+      "stimati": [
+        "distanze_m",
+        "minuti",
+        "prezzo"
+      ],
+      "note": "Negozio indipendente di fronte alla stazione, con souvenir.",
+      "verificato_il": "2026-10-25",
+      "fonte": "Google Places (orari, voti)"
+    },
+    {
+      "id": "bounce_covent",
+      "nome": "Bounce — Covent Garden (9 Endell St)",
+      "indirizzo": "9 Endell St, WC2H 9BJ",
+      "lat": 51.5138395,
+      "lng": -0.1237129,
+      "place_id": "ChIJEQFIMUMFdkgR7mtFwbI1qzw",
+      "orari": "mar 8:00–22:00",
+      "voto": 4.8,
+      "recensioni": 325,
+      "prenota": "https://bounce.com/stores/london/LSLt49",
+      "tappe": [
+        "coventgarden"
+      ],
+      "giorno": "mar17",
+      "distanze_m": {
+        "coventgarden": 228
+      },
+      "minuti": {
+        "coventgarden": 3
+      },
+      "prezzo": "da verificare al momento della prenotazione (app)",
+      "stimati": [
+        "distanze_m",
+        "minuti",
+        "prezzo"
+      ],
+      "note": "Dietro il banco di un negozio (Refill Store). Non ci sono armadietti.",
+      "verificato_il": "2026-10-25",
+      "fonte": "Google Places (orari, voti)"
+    },
+    {
+      "id": "stasher_shelton",
+      "nome": "Stasher — Shelton St (armadietti, 24 ore)",
+      "indirizzo": "42 Shelton St, WC2H 9HJ",
+      "lat": 51.5140221,
+      "lng": -0.1245663,
+      "place_id": "ChIJIT1UhnEFdkgRvnwvG5hOOnU",
+      "orari": "24 ore",
+      "voto": 4.8,
+      "recensioni": 17,
+      "prenota": "https://stasher.com/luggage-storage/united-kingdom/london/cambridge-theatre/stashpoints/f4d8ddd9b4e5",
+      "tappe": [
+        "coventgarden"
+      ],
+      "giorno": "mar17",
+      "distanze_m": {
+        "coventgarden": 272
+      },
+      "minuti": {
+        "coventgarden": 4
+      },
+      "prezzo": "da verificare al momento della prenotazione (app)",
+      "stimati": [
+        "distanze_m",
+        "minuti",
+        "prezzo"
+      ],
+      "note": "Armadietti veri dentro un parcheggio: unico posto con lucchetto, non un banco.",
+      "verificato_il": "2026-10-25",
+      "fonte": "Google Places (orari, voti)"
+    }
+  ]
+}

@@ -713,9 +713,11 @@
   .bagno-pin{width:32px;height:32px;display:grid;place-items:center;border-radius:50%;font-size:17px;line-height:1;
     background:var(--gold-fill);border:2px solid var(--gold-fill);color:var(--on-accent)}
   .bagno-pin--riserva{background:var(--night-0);color:var(--ink);border-color:var(--gold-fill)}
+  .deposito-azioni{display:flex;flex-wrap:wrap;gap:8px}
+  .deposito-azioni .bagno-maps{margin-top:6px}
   .bagno-pop{font-size:13px;line-height:1.5;color:var(--muted)}
-  .leaflet-control-layers-toggle{background-image:none!important;width:44px!important;height:44px!important;display:grid;place-items:center}
-  .leaflet-control-layers-toggle::before{content:"🚻";font-size:22px;line-height:1}
+  .leaflet-control-layers-toggle{background-image:none!important;width:64px!important;height:44px!important;display:grid;place-items:center}
+  .leaflet-control-layers-toggle::before{content:"🚻🧳";font-size:20px;line-height:1}
   .leaflet-control-layers label{position:relative;display:block;min-height:44px;margin:0;padding:11px 14px;font-size:15px;cursor:pointer}
   .leaflet-control-layers-selector{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:pointer}
   .leaflet-control-layers-selector + span::before{content:"☐ "}
@@ -894,7 +896,7 @@
             </ul>
             <p class="regola">📌 Appena superati i passaporti, aprite TfL Go o Google Maps: se c’è un’Elizabeth line entro una decina di minuti, prendetela; se il prossimo è fra mezz’ora, prendete la Piccadilly: arrivate alla stessa ora e spendete meno.</p>
             <p>Olly gratis in entrambi i casi. Contactless o telefono, una carta per adulto.</p>
-            <details class="det"><summary>Dettagli</summary><p>Elizabeth la domenica: per esempio 09:49 → Waterloo 10:40, poi 10:20 → 11:07. Treni nuovi e spaziosi. Piccadilly: per esempio 09:53 → Waterloo 10:54, poi 10:05, 10:17. Si tira dritto a Southbank: con gli zaini in spalla non serve passare da casa.</p></details>
+            <details class="det"><summary>Dettagli</summary><p>Elizabeth la domenica: per esempio 09:49 → Waterloo 10:40, poi 10:20 → 11:07. Treni nuovi e spaziosi. Piccadilly: per esempio 09:53 → Waterloo 10:54, poi 10:05, 10:17. Si tira dritto a Southbank, senza passare da casa: i bagagli si lasciano da Bounce Waterloo, in Chicheley St vicino alla stazione (riga 🧳 nella card del SEA LIFE).</p></details>
             <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5054668,-0.1171985&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚇 coi mezzi</span></a>
           </div>
           <p class="tcard__credito">foto: Chris McKenna (Thryduulf) / CC BY-SA 4.0</p>
@@ -919,7 +921,7 @@
           </div>
           <p class="tcard__credito">foto: Robin Stott / CC BY-SA 2.0</p>
         </article>
-        <article class="tcard" data-tappa="sealife" data-durata="120-120" data-giorno="2026-11-15" data-ora="12:30" data-tipo="tappa" data-mostra="sealife" data-bagno="sealife">
+        <article class="tcard" data-tappa="sealife" data-durata="120-120" data-giorno="2026-11-15" data-ora="12:30" data-tipo="tappa" data-mostra="sealife" data-bagno="sealife" data-deposito="sealife">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/sealife.webp" width="800" height="450" alt="Il tunnel sottomarino dell’acquario, con la volta di vetro e i pesci sopra la testa" loading="lazy" decoding="async">
             <span class="tcard__ora">12:30</span>
@@ -1266,15 +1268,15 @@
           <span class="percorso__txt"><b>Percorso · Martedì</b><span>Beak St → Camden Town</span></span>
           <span class="percorso__modo">🚇 con i mezzi</span>
         </a>
-        <article class="tcard" data-giorno="2026-11-17" data-ora="10:30" data-tipo="casa">
+        <article class="tcard" data-giorno="2026-11-17" data-ora="10:30" data-tipo="casa" data-deposito="casa">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/apt.webp" width="800" height="450" alt="Il civico 79 di Beak Street: la vetrina verde di John Wilkes e, a sinistra, la porta col numero 79" loading="lazy" decoding="async">
             <span class="tcard__ora">10:30</span>
           </div>
           <div class="tcard__body">
-            <h4>Check-out, zaini in spalla</h4>
-            <p>Camera da lasciare alle 10:30. Zaini in spalla: si va a Camden, poi Covent Garden e l’aeroporto.</p>
-            <details class="det"><summary>Dettagli</summary><p>Con solo bagaglio a mano non serve nessun deposito.</p></details>
+            <h4>Check-out e bagagli in deposito</h4>
+            <p>Camera da lasciare alle 10:30. Bagagli in un deposito, uno solo scelto la mattina: qui a Carnaby, a Camden o a Covent Garden. Poi Camden, Covent Garden e l’aeroporto.</p>
+            <details class="det"><summary>Dettagli</summary><p>Carnaby è a 60 m da casa, ma poi si ripassa a riprenderli. Camden o Covent Garden: si portano con sé in metro fin lì.</p></details>
             <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5129114,-0.1364381&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
           </div>
           <p class="tcard__credito">foto: No Swan So Fine / CC BY-SA 4.0</p>
@@ -1288,7 +1290,7 @@
             <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.539292,-0.14274&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚇 coi mezzi</span></a>
           </div>
         </article>
-        <article class="tcard" data-tappa="camden" data-durata="75-75" data-comprimibile data-giorno="2026-11-17" data-ora="11:00" data-tipo="tappa" data-bagno="camden">
+        <article class="tcard" data-tappa="camden" data-durata="75-75" data-comprimibile data-giorno="2026-11-17" data-ora="11:00" data-tipo="tappa" data-bagno="camden" data-deposito="camden">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/camden.webp" width="800" height="450" alt="Barche ormeggiate sul Regent’s Canal a Camden Lock, con gli edifici del mercato sull’acqua" loading="lazy" decoding="async">
             <span class="tcard__ora">11:00</span>
@@ -1339,7 +1341,7 @@
             <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5122737,-0.1234492&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚇 coi mezzi</span></a>
           </div>
         </article>
-        <article class="tcard" data-tappa="covent" data-durata="105-105" data-comprimibile data-giorno="2026-11-17" data-ora="13:30" data-tipo="tappa" data-bagno="coventgarden">
+        <article class="tcard" data-tappa="covent" data-durata="105-105" data-comprimibile data-giorno="2026-11-17" data-ora="13:30" data-tipo="tappa" data-bagno="coventgarden" data-deposito="coventgarden">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/covent.webp" width="800" height="450" alt="La galleria coperta di Covent Garden, con il tetto in ferro e vetro verde e i carretti di fiori" loading="lazy" decoding="async">
             <span class="tcard__ora">13:30</span>
@@ -1376,7 +1378,7 @@
             </ul>
             <p class="regola">📌 Volo alle 18:10: puntate ad arrivare a T5 verso le 16:10. Alle 15:10 guardate TfL Go: se l’Elizabeth delle 15:30 da Tottenham Court Road è confermata, andate a piedi fin lì; altrimenti prendete la Piccadilly delle 15:25 da Covent Garden.</p>
             <p>Olly gratis in entrambi i casi.</p>
-            <details class="det"><summary>Dettagli</summary><p>Elizabeth: per esempio 15:30 → 16:06, 16:00 → 16:36. Piccadilly: per esempio 15:25 → 16:21, 15:37 → 16:34. Gli zaini sono già con voi dal check-out, quindi si parte da dove siete.</p></details>
+            <details class="det"><summary>Dettagli</summary><p>Elizabeth: per esempio 15:30 → 16:06, 16:00 → 16:36. Piccadilly: per esempio 15:25 → 16:21, 15:37 → 16:34. Prima si ritirano i bagagli dal deposito scelto la mattina: se è quello di Covent Garden, si parte da lì.</p></details>
             <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.4723,-0.4887&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚇 coi mezzi</span></a>
           </div>
           <p class="tcard__credito">foto: DiscoA340 / CC BY-SA 4.0</p>
@@ -1669,7 +1671,7 @@
     </div>
     <div class="card">
       <h3>🏠 Note sull’alloggio</h3>
-      <p class="ci-co-note">🎒 I due buchi (domenica prima delle 15:00, martedì dopo le 10:30) non sono un problema: <b>si viaggia con il solo bagaglio a mano sotto il sedile</b> e gli zaini restano in spalla. Da sapere però: il check-in è self-service, <b>una reception dove lasciare i bagagli potrebbe non esserci</b> — va chiarito con l’host prima di un eventuale viaggio con la valigia.</p>
+      <p class="ci-co-note">🧳 I due buchi (domenica prima delle 15:00, martedì dopo le 10:30): con <b>3 trolley 56×45×25 e 3 borse 40×30×15</b> (franchigia BA, zero stiva) non si gira. Domenica deposito vicino al SEA LIFE, martedì dopo il check-out a Carnaby, Camden o Covent Garden: è tutto in «🧳 Depositi bagagli», in Info. Da sapere però: il check-in è self-service, <b>una reception dove lasciare i bagagli potrebbe non esserci</b> — va chiarito con l’host prima di un eventuale viaggio con la valigia.</p>
       <p class="meta" style="margin-top:8px">Prenotazione Booking <b>5946777151</b> · totale <b>£538,90</b>, addebitati €648,82 · Wi-Fi gratuito in tutto l’appartamento.</p>
       <p class="meta" style="margin-top:8px">Host confermato: nessuna unità sostitutiva (sarà esattamente l'appartamento fotografato), nessun costo extra, contatto diretto tramite numero Booking.com.</p>
       <p class="why"><b>Perché questa zona:</b> è il punto di minor cammino cumulativo per la giornata di lunedì (la Royal walk, sette tappe), tutte raggiungibili in 12–21 minuti a piedi, zero attraversamenti del fiume. Si sacrifica la comodità verso Southbank e South Kensington (serve la metro), accettabile perché cadono su giornate più leggere (domenica e martedì).</p>
@@ -1689,6 +1691,22 @@
         </span>
       </summary>
       <div class="dbody" id="bagniLista"></div>
+    </details>
+  </section>
+
+  <!-- ============ DEPOSITI BAGAGLI ============
+       Costruita da data/depositi-londra.json: se il file non si carica, la sezione resta nascosta. -->
+  <section id="depositi" hidden>
+    <div class="eyebrow">Depositi</div>
+    <details class="acc">
+      <summary>
+        <span class="srow">
+          <span class="daynum" style="color:var(--gold);background:rgba(212,169,78,.1)">🧳</span>
+          <span class="dtit"><h3>Depositi bagagli</h3><p>Domenica al SEA LIFE, martedì dopo il check-out</p></span>
+          <span class="chev">▼</span>
+        </span>
+      </summary>
+      <div class="dbody" id="depositiLista"></div>
     </details>
   </section>
 
@@ -1748,7 +1766,7 @@
       <ul class="notes">
         <li><span class="ic">🚇</span><span>Olly viaggia gratis sulla metro (under 11 con adulto).</span></li>
         <li><span class="ic">🧭</span><span>Regola del viaggio: una zona al giorno, minimo cammino.</span></li>
-        <li><span class="ic">🎒</span><span>Solo bagaglio a mano sotto il sedile: niente nastro all’arrivo e niente depositi. SEA LIFE ammette zaini fino a 30 litri.</span></li>
+        <li><span class="ic">🧳</span><span>Franchigia BA: 3 trolley 56×45×25 + 3 borse 40×30×15, zero stiva. Niente nastro; i depositi servono domenica al SEA LIFE e martedì dopo il check-out. SEA LIFE ammette zaini fino a 30 litri.</span></li>
         <li><span class="ic">🌧️</span><span>Meteo novembre: freddo e possibile pioggia — il martedì è al coperto (mercato di Covent Garden) e il Natural History Museum del lunedì è un riparo pronto.</span></li>
       </ul>
     </div>
@@ -1828,6 +1846,8 @@
     <li data-giorno="2026-11-16" data-da="08:30" data-a="10:45"><b>💂 Controlla se la cerimonia è confermata</b><br><a href="https://www.householddivision.org.uk/changing-the-guard-calendar" target="_blank" rel="noopener">📅 Calendario ufficiale</a><a href="https://x.com/ArmyInLondon" target="_blank" rel="noopener">𝕏 @ArmyInLondon</a></li>
     <li data-giorno="2026-11-16" data-da="10:00" data-a="10:20" data-non-in="wellington">⏰ Vai a Wellington Barracks: arrivo entro le 10:20</li>
     <li data-giorno="2026-11-16" data-da="11:30" data-a="11:40">🐎 Torna al Victoria Memorial: cavalli alle 11:45</li>
+    <li data-giorno="2026-11-15" data-da="09:30" data-a="12:30">🧳 Lascia i bagagli da Bounce Waterloo prima del SEA LIFE</li>
+    <li data-giorno="2026-11-17" data-da="10:00" data-a="15:15">🧳 Depositi aperti oggi: Carnaby 9:00 · Camden 10:00 · Covent Garden 8:00</li>
   </template>
 
   <!-- schede complete delle tappe "se avanza tempo": una copia sola, si aprono dalle righe dei giorni -->
@@ -2314,6 +2334,8 @@
     { cosa: 'Dom 15/11 sera — calendario e X @ArmyInLondon', stato: 'da_fare' },
     { cosa: 'Lun 16/11, ore 08:30–09:00 — X e calendario', stato: 'da_fare' },
     { cosa: 'SEA LIFE prenotato · 3 biglietti nel Portafoglio', stato: 'fatto' },
+    { cosa: 'Scaricare l’app Bounce e Stasher, carta già salvata', stato: 'da_fare' },
+    { cosa: 'Sabato 14 sera: prenotare Bounce Waterloo per domenica (3 colli)', stato: 'da_fare' },
     { cosa: 'Assicurazione viaggio', stato: 'fatto' }
   ];
   (function(){
@@ -2529,8 +2551,124 @@
     });
     if (window.fetch) fetch('data/bagni-londra.json').then(function(r){ return r.ok ? r.json() : null; })
       .then(function(j){ if (j && j.tappe) monta(j); }).catch(function(){ /* niente bagni: la pagina funziona lo stesso */ });
-    return { pronto: function(){ return !!S.dati; }, perAdesso: perAdesso, perMappa: perMappa, popup: popup, senzaTappa: [] };
+    return { pronto: function(){ return !!S.dati; }, perAdesso: perAdesso, perMappa: perMappa, popup: popup, senzaTappa: [],
+             util: { esc: esc, BADGE: BADGE, stimato: stimato, dataIt: dataIt, GIORNO: GIORNO, NOME_GIORNO: NOME_GIORNO } };   // usati anche dai depositi
   })();
+
+  /* ====== Depositi bagagli (data/depositi-londra.json) ======
+     Stesso schema dei bagni, con gli stessi componenti e lo stesso CSS: riga sotto «Portami qui», pannello inline,
+     riga in «Adesso» (dai promemoria), livello della mappa, sezione Info. Il file è copiato tale e quale; la scelta di
+     principale e riserva per ogni tappa è già decisa e sta qui sotto, non nel file. Nessun prezzo: è nell'app, col
+     badge «stimato» come ogni campo elencato in "stimati". */
+  var DEPOSITI = (function(){
+    var U = BAGNI.util, esc = U.esc, BADGE = U.BADGE, stimato = U.stimato, NOME_GIORNO = U.NOME_GIORNO;
+    var SCELTE = {
+      sealife: ['bounce_waterloo', 'stasher_countyhall'],
+      casa: ['bounce_broadwick', 'stasher_marshall'],
+      camden: ['radical_camden', 'camden_station', 'bounce_camden'],   // Bounce Camden solo come terza: apre alle 11:00
+      coventgarden: ['bounce_covent', 'stasher_shelton']
+    };
+    var AVVISO = { '2026-11-17': 'Martedì un solo deposito, scelto la mattina: Carnaby (a 60 m da casa, si ripassa a riprenderli), Camden o Covent Garden.' };
+    var RUOLO = ['Principale', 'Riserva', 'Terza opzione'];
+    var NOME_TAPPA = { sealife: 'SEA LIFE', casa: 'casa (Carnaby)', camden: 'Camden', coventgarden: 'Covent Garden' };
+    var SIGLE = ['lun', 'mar', 'mer', 'gio', 'ven', 'sab', 'dom'], SIGLA = { dom15: 'dom', lun16: 'lun', mar17: 'mar' };
+    var S = { dati: null, per: {}, n: 0 };
+    var maps = function(d){ return 'https://www.google.com/maps/search/?api=1&query=' + d.lat + ',' + d.lng + '&query_place_id=' + encodeURIComponent(d.place_id); };
+    var voto = function(d){ return String(d.voto).replace('.', ',') + ' su 5 · ' + d.recensioni + ' recensioni'; };
+    // orari del giorno della card: dal testo «dom 12:00–21:00 · lun 9:00–23:00», «lun–ven …», «CHIUSO domenica»;
+    // se il testo non distingue i giorni vale tutto com'è. Nessun orario dedotto.
+    function orarioDel(txt, key){
+      var g = SIGLE.indexOf(SIGLA[key]), conGiorni = false, out = null;
+      String(txt || '').split(/\s*·\s*/).forEach(function(p){
+        var m = /^(lun|mar|mer|gio|ven|sab|dom)(?:\s*[–-]\s*(lun|mar|mer|gio|ven|sab|dom))?\s+(.+)$/i.exec(p);
+        var c = /^chiuso\s+(lun|mar|mer|gio|ven|sab|dom)/i.exec(p);
+        if (m) { conGiorni = true; var a = SIGLE.indexOf(m[1].toLowerCase()), b = m[2] ? SIGLE.indexOf(m[2].toLowerCase()) : a; if (out == null && g >= a && g <= b) out = m[3]; }
+        else if (c) { conGiorni = true; if (SIGLE.indexOf(c[1].toLowerCase()) === g) out = 'chiuso'; }
+      });
+      return conGiorni ? (out == null ? 'non indicati' : out) : String(txt || '');
+    }
+    function voce(d, i, tappa, key){
+      return '<div class="bagno-voce bagno-voce--' + (i ? 'riserva' : 'principale') + '">'
+        + '<div class="bagno-voce__testa"><span class="bagno-ruolo">' + RUOLO[i] + '</span></div>'
+        + '<p class="bagno-nome">' + esc(d.nome) + '</p>'
+        + '<p class="bagno-ind">' + esc(d.indirizzo) + '</p>'
+        + '<ul class="bagno-dati">'
+        + '<li><span class="bagno-et">📏 Distanza</span> ' + d.distanze_m[tappa] + ' m · ~' + d.minuti[tappa] + ' min a piedi' + (stimato(d, ['distanze_m', 'minuti'], '') ? BADGE : '') + '</li>'
+        + '<li><span class="bagno-et">🕒 Orari</span> ' + NOME_GIORNO[key] + ': ' + esc(orarioDel(d.orari, key)) + (stimato(d, ['orari'], '') ? BADGE : '') + '</li>'
+        + '<li><span class="bagno-et">⭐ Voto</span> ' + voto(d) + '</li>'
+        + '<li><span class="bagno-et">💷 Prezzo</span> prezzo nell’app' + BADGE + '</li>'
+        + '</ul>'
+        + (d.note ? '<p class="bagno-nota">' + esc(d.note) + '</p>' : '')
+        + '<p class="bagno-fonte">Fonte: ' + esc(d.fonte) + ' · verificato il ' + U.dataIt(d.verificato_il) + '</p>'
+        + '<p class="deposito-azioni"><a class="bagno-maps" href="' + maps(d) + '" target="_blank" rel="noopener">📍 Maps</a>'
+        + '<a class="bagno-maps" href="' + esc(d.prenota) + '" target="_blank" rel="noopener">📲 Prenota</a></p>'
+        + '</div>';
+    }
+    function pannello(tappa, giorno){
+      var key = U.GIORNO[giorno], av = AVVISO[giorno] ? '<p class="bagno-avviso">' + esc(AVVISO[giorno]) + '</p>' : '';
+      return av + S.per[tappa].map(function(d, i){ return voce(d, i, tappa, key); }).join('');
+    }
+    function montaCard(card){
+      var t = card.dataset.deposito; if (!S.per[t]) return false;
+      var d = S.per[t][0], id = 'deposito-' + (++S.n);
+      var box = document.createElement('div'); box.className = 'bagno-box deposito-box';
+      box.innerHTML = '<button class="bagno-riga" type="button" aria-expanded="false" aria-controls="' + id + '"><span class="bagno-riga__txt">🧳 '
+        + esc(d.nome) + ' · ~' + d.minuti[t] + ' min' + (stimato(d, ['minuti', 'distanze_m'], '') ? BADGE : '') + '</span></button>'
+        + '<div class="bagno-pan" id="' + id + '" hidden>' + pannello(t, card.dataset.giorno) + '</div>';
+      // sotto la riga del bagno, se c'è; altrimenti sotto «Portami qui»
+      var body = card.querySelector('.tcard__body'), dopo = body.querySelector('.bagno-box:not(.deposito-box)') || body.querySelector('a.gmap--vai');
+      if (dopo) dopo.insertAdjacentElement('afterend', box); else body.appendChild(box);
+      return true;
+    }
+    function montaInfo(){
+      var sez = document.getElementById('depositi'), lista = document.getElementById('depositiLista'); if (!sez || !lista) return;
+      var h = '<p class="bagno-regola">🧳 ' + esc(S.dati.regola) + '</p>'
+        + '<p class="bagno-avviso bagno-avviso--alert bagno-avviso--riga">⚠️ Documenti, farmaci, power bank e cose di valore restano con noi: BA li vuole in cabina e i depositi non li assicurano.</p>'
+        + '<p class="bagno-legenda">' + BADGE.trim() + ' = da confermare nell’app o sul posto.</p>';
+      Object.keys(U.GIORNO).forEach(function(giorno){
+        var carte = [].filter.call(document.querySelectorAll('#programma article.tcard[data-deposito]'), function(c){ return c.dataset.giorno === giorno && S.per[c.dataset.deposito]; });
+        if (!carte.length) return;
+        h += '<h4 class="bagno-giorno">' + NOME_GIORNO[U.GIORNO[giorno]] + '</h4>';
+        carte.forEach(function(c){
+          h += '<div class="bagno-tappa"><h5 class="bagno-tappa__nome">' + esc(c.dataset.ora) + ' · ' + esc(c.querySelector('h4').textContent) + '</h5>'
+            + '<div class="bagno-pan">' + pannello(c.dataset.deposito, giorno) + '</div></div>';
+        });
+      });
+      lista.innerHTML = h; sez.hidden = false;
+    }
+    // mappa: tutti i depositi del file, un marker ciascuno; pieno se è principale di qualche tappa
+    function perMappa(){
+      return S.dati.depositi.map(function(d){
+        var usi = [], principale = false;
+        Object.keys(SCELTE).forEach(function(t){ var i = SCELTE[t].indexOf(d.id); if (i >= 0) { usi.push(NOME_TAPPA[t] + ' (' + RUOLO[i].toLowerCase() + ')'); if (!i) principale = true; } });
+        return { d: d, usi: usi, principale: principale };
+      });
+    }
+    function popup(o){
+      var d = o.d;
+      return '<b>🧳 ' + esc(d.nome) + '</b><br><span class="bagno-pop">' + esc(d.indirizzo) + '</span>'
+        + '<br><span class="bagno-pop">🕒 ' + esc(d.orari) + '</span>'
+        + '<br><span class="bagno-pop">⭐ ' + voto(d) + ' · 💷 prezzo nell’app' + BADGE + '</span>'
+        + (o.usi.length ? '<br><span class="bagno-pop">Per: ' + o.usi.map(esc).join(' · ') + '</span>' : '')
+        + '<br><a class="pop-vai" href="' + maps(d) + '" target="_blank" rel="noopener">📍 Maps</a>'
+        + ' · <a class="pop-vai" href="' + esc(d.prenota) + '" target="_blank" rel="noopener">📲 Prenota</a>';
+    }
+    function monta(json){
+      var perId = {}; json.depositi.forEach(function(d){ perId[d.id] = d; });
+      S.dati = json;
+      Object.keys(SCELTE).forEach(function(t){ var l = SCELTE[t].map(function(id){ return perId[id]; }); if (l.every(Boolean)) S.per[t] = l; });
+      var senza = [];
+      [].forEach.call(document.querySelectorAll('#programma article.tcard[data-deposito]'), function(c){ if (!montaCard(c)) senza.push(c.dataset.deposito); });
+      montaInfo();
+      DEPOSITI.senzaTappa = senza;
+      document.dispatchEvent(new CustomEvent('depositi'));
+    }
+    // il tocco sulle righe è quello dei bagni (stessa classe .bagno-riga)
+    if (window.fetch) fetch('data/depositi-londra.json').then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(j){ if (j && j.depositi) monta(j); }).catch(function(){ /* niente depositi: la pagina funziona lo stesso */ });
+    return { pronto: function(){ return !!S.dati; }, perMappa: perMappa, popup: popup, scelte: SCELTE, senzaTappa: [] };
+  })();
+
 
   /* ====== Prima di partire / Adesso ======
      Calcolati dalle card del programma (data-giorno, data-ora, data-fuso, data-tipo, vincoli), sempre con
@@ -2710,6 +2848,11 @@
      Il pannello non si apre mai da solo: in cima c'è un banner sottile «N novità», e si apre solo se toccato.
      Il link in fondo alla pagina lo riapre con tutto lo storico, in ogni caso. */
   var NOVITA = [
+    { v: 32, data: '2026-10-25', titolo: '🧳 Depositi bagagli', voci: [
+      '🧳 Depositi bagagli: il deposito più vicino a SEA LIFE, Camden, Covent Garden e casa, con orari e prenotazione',
+      'Sotto la riga del bagno, nelle card di SEA LIFE, check-out, Camden e Covent Garden: un tocco apre principale e riserva, con orari del giorno, voto, 📍 Maps e 📲 Prenota',
+      'In «Adesso»: domenica mattina il promemoria per Bounce Waterloo, martedì gli orari dei depositi. Nella mappa il livello «🧳 Depositi», in Info la sezione con le regole',
+      'In «Prima di partire»: scaricare le app e prenotare Bounce Waterloo sabato sera' ] },
     { v: 31, data: '2026-10-25', titolo: '🐠 Biglietti SEA LIFE', voci: [
       '🐠 Biglietti SEA LIFE nel Portafoglio: 3 QR pronti all’ingresso, anche offline',
       'Un tocco su un QR lo apre a schermo pieno su fondo bianco; con le frecce o scorrendo di lato si passa al biglietto dopo, uno per persona',
@@ -3084,7 +3227,10 @@
   L.marker([CASA.lat,CASA.lng],{icon:homeIcon,title:CASA.n,zIndexOffset:500}).addTo(map)
     .bindPopup('<b>🏠 '+CASA.n+'</b><br><small>'+CASA.note+'</small>'+vai(CASA));
   bounds.push([CASA.lat,CASA.lng]);
-  // livello "🚻 Bagni", spento di default: un marker per bagno (principale pieno, riserva bordato)
+  // livelli "🚻 Bagni" e "🧳 Depositi", spenti di default, nello stesso controllo (compare col primo dei due)
+  var livelli=L.control.layers(null,null,{collapsed:true,position:'topright'}), livelliSullaMappa=false;
+  function aggiungiLivello(nome,gruppo){ livelli.addOverlay(gruppo,nome); if (!livelliSullaMappa) { livelliSullaMappa=true; livelli.addTo(map); } }
+  // bagni: un marker per bagno (principale pieno, riserva bordato)
   var gruppoBagni=L.layerGroup(), bagniSullaMappa=false;
   function montaBagni(){
     if (bagniSullaMappa || !BAGNI.pronto()) return;
@@ -3094,9 +3240,22 @@
         html:'<div class="bagno-pin-hit"><div class="bagno-pin'+(o.principale?'':' bagno-pin--riserva')+'">🚻</div></div>' });
       L.marker([o.b.lat,o.b.lng],{icon:ic,title:o.b.nome,zIndexOffset:300}).bindPopup(BAGNI.popup(o)).addTo(gruppoBagni);
     });
-    L.control.layers(null,{'🚻 Bagni':gruppoBagni},{collapsed:true,position:'topright'}).addTo(map);
+    aggiungiLivello('🚻 Bagni',gruppoBagni);
   }
   montaBagni(); document.addEventListener('bagni',montaBagni);
+  // depositi: tutti quelli del file (principale pieno, riserva e terza opzione bordati)
+  var gruppoDepositi=L.layerGroup(), depositiSullaMappa=false;
+  function montaDepositi(){
+    if (depositiSullaMappa || !DEPOSITI.pronto()) return;
+    depositiSullaMappa=true;
+    DEPOSITI.perMappa().forEach(function(o){
+      var ic=L.divIcon({ className:'', iconSize:[44,44], iconAnchor:[4,40], popupAnchor:[18,-30],
+        html:'<div class="bagno-pin-hit"><div class="bagno-pin'+(o.principale?'':' bagno-pin--riserva')+'">🧳</div></div>' });
+      L.marker([o.d.lat,o.d.lng],{icon:ic,title:o.d.nome,zIndexOffset:300}).bindPopup(DEPOSITI.popup(o)).addTo(gruppoDepositi);
+    });
+    aggiungiLivello('🧳 Depositi',gruppoDepositi);
+  }
+  montaDepositi(); document.addEventListener('depositi',montaDepositi);
   map.fitBounds(bounds,{padding:[30,30]});
   }
   if ('IntersectionObserver' in window) {

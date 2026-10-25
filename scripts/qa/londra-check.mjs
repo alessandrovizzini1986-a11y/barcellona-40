@@ -196,6 +196,24 @@ ok('bagni: ogni card con data-bagno ha la sua riga «🚻»', righe === dataBagn
 await p.evaluate(() => { document.querySelectorAll('details').forEach((d) => (d.open = true)); document.querySelectorAll('.bagno-riga').forEach((r) => { if (document.getElementById(r.getAttribute('aria-controls')).hidden) r.click() }) })
 const bassi = await p.$$eval('.bagno-riga, .bagno-maps', (e) => e.filter((x) => x.offsetParent).map((x) => x.getBoundingClientRect().height).filter((h) => h < 44).length)
 ok('bagni: righe e link Maps dei pannelli alti almeno 44 px', bassi === 0, `${bassi} sotto 44`)
+// ---------- depositi bagagli (data/depositi-londra.json): stesso schema dei bagni ----------
+const dep = await p.evaluate(async () => { const r = await fetch('data/depositi-londra.json'); return r.ok ? r.json() : null })
+const idDep = dep ? dep.depositi.map((d) => d.id) : []
+const scelte = await p.evaluate(() => window.DEPOSITI ? DEPOSITI.scelte : null)
+const dataDep = await p.$$eval('#programma article.tcard[data-deposito]', (c) => c.map((x) => x.dataset.deposito))
+const depOrfani = dataDep.filter((t) => !scelte || !scelte[t] || scelte[t].length < 2 || scelte[t].some((id) => !idDep.includes(id)))
+ok('depositi: data-deposito sulle 4 card, ogni tappa con principale e riserva che esistono nel JSON', !!dep && dataDep.sort().join() === 'camden,casa,coventgarden,sealife' && !depOrfani.length, `${dataDep.join(', ')}${depOrfani.length ? ' · senza scelta: ' + depOrfani.join(', ') : ''}`)
+const depSw = await p.evaluate(async () => {
+  const testo = await (await fetch('londra-sw.js')).text()
+  const c = []; for (const k of await caches.keys()) if (k.startsWith('londra-')) c.push(!!(await (await caches.open(k)).match('data/depositi-londra.json')))
+  return { lista: /"data\/depositi-londra\.json"/.test(testo), cache: c.some(Boolean) }
+})
+ok('depositi: il JSON è nel precache del service worker (nella lista e nella cache)', depSw.lista && depSw.cache, JSON.stringify(depSw))
+const depRighe = await p.$$eval('#programma article.tcard[data-deposito]', (c) => c.filter((x) => /^🧳/.test(x.querySelector('.deposito-box .bagno-riga')?.textContent || '')).length)
+ok('depositi: ogni card con data-deposito ha la sua riga «🧳»', depRighe === dataDep.length && depRighe === 4, `${depRighe}/${dataDep.length}`)
+const depBassi = await p.$$eval('.deposito-box .bagno-riga, .deposito-box .bagno-maps, #depositiLista .bagno-maps', (e) => e.filter((x) => x.offsetParent).map((x) => x.getBoundingClientRect().height).filter((h) => h < 44).length)
+ok('depositi: righe, Maps e Prenota alti almeno 44 px', depBassi === 0, `${depBassi} sotto 44`)
+
 await p.setViewportSize({ width: 375, height: 812 }); await p.waitForTimeout(300)
 const largo = await p.evaluate(() => ({ larghezza: innerWidth, scroll: document.documentElement.scrollWidth }))
 ok('bagni: a 375 px, con tutto aperto, la pagina non scorre di lato', largo.scroll <= largo.larghezza, JSON.stringify(largo))
