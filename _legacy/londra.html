@@ -305,7 +305,8 @@
   .plus-warn{margin-top:8px;font-size:12px;line-height:1.45;color:var(--rosso-testo)}
 
   /* biglietti: il riquadro del barcode resta bianco, serve contrasto per lo scanner */
-  .tk-when{display:flex;gap:10px;margin-top:4px}
+  .tk-when{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px}
+  .tk-when > div:nth-child(3){flex-basis:100%}   /* la terza casella (ordine di SEA LIFE) va a capo: in tre non ci stanno a 375 px */
   .tk-when > div{flex:1;background:rgba(212,169,78,.08);border:1px solid var(--line-gold);border-radius:12px;
     padding:10px 12px;text-align:center}
   .tk-when .k{display:block;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700}
@@ -316,6 +317,8 @@
   .tk-box{background:#fff;border-radius:12px;padding:14px 10px 10px;text-align:center;
     box-shadow:0 6px 18px -10px rgba(0,0,0,.8)}
   .tk-svg{display:block;width:100%;max-width:330px;height:auto;margin:0 auto}
+  .tk-box--qr .tk-svg{width:min(60%,220px);aspect-ratio:1;height:auto;margin:0 auto;display:block}
+  .tk-sub{font-size:12px;color:#4a4740;margin:2px 0 0}   /* sul bianco del box: --muted del tema scuro non avrebbe contrasto */
   .tk-num{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13.5px;font-weight:700;
     color:#000;letter-spacing:.06em;margin-top:6px;font-variant-numeric:tabular-nums}
   .tk-note{margin-top:16px;font-size:12.5px;line-height:1.55;color:var(--rosso-testo);
@@ -521,6 +524,7 @@
   .cod-code{display:flex;align-items:center;justify-content:center;width:100%}
   .cod-code .pk__svg{width:min(88vw,62vh);height:auto}
   .cod-code .tk-svg{width:min(94vw,640px);height:max(160px,24vh);max-width:none}
+  .cod-code .tk-svg.tk-qr{width:min(88vw,62vh);height:auto;aspect-ratio:1}
   .cod-num{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:clamp(20px,6vw,28px);font-weight:800;letter-spacing:.04em;font-variant-numeric:tabular-nums}
   .cod-hint{font-size:15px;color:#3d3a34;max-width:34ch;line-height:1.45}
   .cod-indirizzo{font-family:"Playfair Display",Georgia,serif;font-size:clamp(34px,11vw,56px);line-height:1.15}
@@ -915,7 +919,7 @@
           </div>
           <p class="tcard__credito">foto: Robin Stott / CC BY-SA 2.0</p>
         </article>
-        <article class="tcard" data-tappa="sealife" data-durata="120-120" data-giorno="2026-11-15" data-ora="12:30" data-tipo="tappa" data-bagno="sealife">
+        <article class="tcard" data-tappa="sealife" data-durata="120-120" data-giorno="2026-11-15" data-ora="12:30" data-tipo="tappa" data-mostra="sealife" data-bagno="sealife">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/sealife.webp" width="800" height="450" alt="Il tunnel sottomarino dell’acquario, con la volta di vetro e i pesci sopra la testa" loading="lazy" decoding="async">
             <span class="tcard__ora">12:30</span>
@@ -923,9 +927,10 @@
           <div class="tcard__body">
             <h4>SEA LIFE London Aquarium</h4>
             <p class="tdur">⏱️ 2 h</p>
-            <p>Domenica 10:00–17:00, fascia oraria da prenotare online. Zaini fino a 30 litri; guardaroba non c’è.</p>
+            <p>Domenica 10:00–17:00. Ingresso in qualsiasi momento, biglietti già presi. Zaini fino a 30 litri; guardaroba non c’è.</p>
             <details class="det"><summary>Dettagli</summary><p>Squali, pinguini e il tunnel sottomarino, dentro County Hall.</p></details>
             <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.501558,-0.119506&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
+            <button class="gmap gmap--btn" type="button" data-codice="sealife-1">🎟️ Mostra i biglietti</button>
           </div>
           <p class="tcard__credito">foto: ʘx / CC BY-SA 4.0</p>
         </article>
@@ -1423,6 +1428,7 @@
     <h2 id="bigTit">Portafoglio</h2>
     <p class="sub2">Tocca un codice per aprirlo a schermo pieno. Funzionano anche senza rete.</p>
     <a class="pk-riga big-casa" href="#casaCard"><span class="pk-riga__ic" aria-hidden="true">🏠</span><span><b>Appartamento · Booking 5946777151</b><small>79 Beak Street, W1F 9SU · indirizzo per il taxi più sotto</small></span><span aria-hidden="true">›</span></a>
+    <a class="pk-riga big-casa" href="#sealifeCard"><span class="pk-riga__ic" aria-hidden="true">🐠</span><span><b>SEA LIFE · 3 QR</b><small>Domenica 15, ingresso in qualsiasi momento · uno per persona</small></span><span aria-hidden="true">›</span></a>
 
       <article class="pk" aria-labelledby="pkTit">
     <p class="pk__eyebrow">🅿️ Parcheggio aeroporto · domenica all’ingresso, martedì sera all’uscita</p>
@@ -1442,6 +1448,42 @@
     <p class="pk__tot"><b>€ 63,00</b> <span class="pk__paid">Pagato</span></p>
     <p class="pk__note">Tenere il QR a portata di mano su questa pagina all’ingresso del parcheggio (P1, Bologna) — nessuna stampa necessaria.</p>
     </article>
+
+    <div class="card tk-card" id="sealifeCard">
+      <h3>🐠 SEA LIFE London Aquarium <span class="st ok">3 ingressi</span></h3>
+      <div class="tk-when">
+        <div><span class="k">Data</span><span class="v">domenica 15 nov</span></div>
+        <div><span class="k">Ingresso</span><span class="v">qualsiasi orario, 10:00–17:00</span></div>
+        <div><span class="k">Ordine</span><span class="v">129390167</span></div>
+      </div>
+      <p class="pk__note">Nessuna fascia oraria: si entra quando si arriva. Mostrare i QR al personale all’ingresso di County Hall, uno per persona. Nessuna stampa necessaria.</p>
+
+      <figure class="tk">
+        <figcaption>Adulto 1 <small>Adult 16+ · £33,00</small></figcaption>
+        <div class="tk-box tk-box--qr" role="button" tabindex="0" data-codice="sealife-1" aria-label="772334430770151846: mostra a schermo pieno il biglietto SEA LIFE 1">
+          <svg class="tk-svg tk-qr" id="sealife-1" viewBox="0 0 25 25" shape-rendering="crispEdges" role="img" aria-label="QR del biglietto SEA LIFE 772334430770151846" xmlns="http://www.w3.org/2000/svg"><rect width="25" height="25" fill="#fff"/><path fill="#000" d="M2 2h1v1h-1zM3 2h1v1h-1zM4 2h1v1h-1zM5 2h1v1h-1zM6 2h1v1h-1zM7 2h1v1h-1zM8 2h1v1h-1zM10 2h1v1h-1zM11 2h1v1h-1zM16 2h1v1h-1zM17 2h1v1h-1zM18 2h1v1h-1zM19 2h1v1h-1zM20 2h1v1h-1zM21 2h1v1h-1zM22 2h1v1h-1zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h1v1h-1zM12 3h1v1h-1zM13 3h1v1h-1zM14 3h1v1h-1zM16 3h1v1h-1zM22 3h1v1h-1zM2 4h1v1h-1zM4 4h1v1h-1zM5 4h1v1h-1zM6 4h1v1h-1zM8 4h1v1h-1zM12 4h1v1h-1zM13 4h1v1h-1zM16 4h1v1h-1zM18 4h1v1h-1zM19 4h1v1h-1zM20 4h1v1h-1zM22 4h1v1h-1zM2 5h1v1h-1zM4 5h1v1h-1zM5 5h1v1h-1zM6 5h1v1h-1zM8 5h1v1h-1zM10 5h1v1h-1zM11 5h1v1h-1zM13 5h1v1h-1zM14 5h1v1h-1zM16 5h1v1h-1zM18 5h1v1h-1zM19 5h1v1h-1zM20 5h1v1h-1zM22 5h1v1h-1zM2 6h1v1h-1zM4 6h1v1h-1zM5 6h1v1h-1zM6 6h1v1h-1zM8 6h1v1h-1zM10 6h1v1h-1zM11 6h1v1h-1zM13 6h1v1h-1zM14 6h1v1h-1zM16 6h1v1h-1zM18 6h1v1h-1zM19 6h1v1h-1zM20 6h1v1h-1zM22 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM14 7h1v1h-1zM16 7h1v1h-1zM22 7h1v1h-1zM2 8h1v1h-1zM3 8h1v1h-1zM4 8h1v1h-1zM5 8h1v1h-1zM6 8h1v1h-1zM7 8h1v1h-1zM8 8h1v1h-1zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM17 8h1v1h-1zM18 8h1v1h-1zM19 8h1v1h-1zM20 8h1v1h-1zM21 8h1v1h-1zM22 8h1v1h-1zM10 9h1v1h-1zM11 9h1v1h-1zM2 10h1v1h-1zM6 10h1v1h-1zM8 10h1v1h-1zM9 10h1v1h-1zM10 10h1v1h-1zM11 10h1v1h-1zM12 10h1v1h-1zM14 10h1v1h-1zM15 10h1v1h-1zM16 10h1v1h-1zM17 10h1v1h-1zM18 10h1v1h-1zM19 10h1v1h-1zM22 10h1v1h-1zM3 11h1v1h-1zM5 11h1v1h-1zM6 11h1v1h-1zM7 11h1v1h-1zM11 11h1v1h-1zM14 11h1v1h-1zM15 11h1v1h-1zM17 11h1v1h-1zM18 11h1v1h-1zM19 11h1v1h-1zM20 11h1v1h-1zM21 11h1v1h-1zM22 11h1v1h-1zM2 12h1v1h-1zM3 12h1v1h-1zM4 12h1v1h-1zM6 12h1v1h-1zM7 12h1v1h-1zM8 12h1v1h-1zM9 12h1v1h-1zM10 12h1v1h-1zM11 12h1v1h-1zM14 12h1v1h-1zM17 12h1v1h-1zM18 12h1v1h-1zM21 12h1v1h-1zM2 13h1v1h-1zM3 13h1v1h-1zM10 13h1v1h-1zM11 13h1v1h-1zM12 13h1v1h-1zM13 13h1v1h-1zM14 13h1v1h-1zM18 13h1v1h-1zM19 13h1v1h-1zM2 14h1v1h-1zM5 14h1v1h-1zM6 14h1v1h-1zM7 14h1v1h-1zM8 14h1v1h-1zM10 14h1v1h-1zM11 14h1v1h-1zM12 14h1v1h-1zM13 14h1v1h-1zM15 14h1v1h-1zM16 14h1v1h-1zM17 14h1v1h-1zM18 14h1v1h-1zM19 14h1v1h-1zM21 14h1v1h-1zM22 14h1v1h-1zM10 15h1v1h-1zM13 15h1v1h-1zM14 15h1v1h-1zM17 15h1v1h-1zM18 15h1v1h-1zM2 16h1v1h-1zM3 16h1v1h-1zM4 16h1v1h-1zM5 16h1v1h-1zM6 16h1v1h-1zM7 16h1v1h-1zM8 16h1v1h-1zM10 16h1v1h-1zM11 16h1v1h-1zM12 16h1v1h-1zM13 16h1v1h-1zM16 16h1v1h-1zM18 16h1v1h-1zM22 16h1v1h-1zM2 17h1v1h-1zM8 17h1v1h-1zM12 17h1v1h-1zM15 17h1v1h-1zM16 17h1v1h-1zM18 17h1v1h-1zM19 17h1v1h-1zM20 17h1v1h-1zM2 18h1v1h-1zM4 18h1v1h-1zM5 18h1v1h-1zM6 18h1v1h-1zM8 18h1v1h-1zM10 18h1v1h-1zM11 18h1v1h-1zM14 18h1v1h-1zM15 18h1v1h-1zM16 18h1v1h-1zM18 18h1v1h-1zM22 18h1v1h-1zM2 19h1v1h-1zM4 19h1v1h-1zM5 19h1v1h-1zM6 19h1v1h-1zM8 19h1v1h-1zM12 19h1v1h-1zM14 19h1v1h-1zM15 19h1v1h-1zM16 19h1v1h-1zM19 19h1v1h-1zM21 19h1v1h-1zM22 19h1v1h-1zM2 20h1v1h-1zM4 20h1v1h-1zM5 20h1v1h-1zM6 20h1v1h-1zM8 20h1v1h-1zM11 20h1v1h-1zM14 20h1v1h-1zM15 20h1v1h-1zM17 20h1v1h-1zM19 20h1v1h-1zM20 20h1v1h-1zM2 21h1v1h-1zM8 21h1v1h-1zM12 21h1v1h-1zM13 21h1v1h-1zM14 21h1v1h-1zM17 21h1v1h-1zM18 21h1v1h-1zM20 21h1v1h-1zM21 21h1v1h-1zM2 22h1v1h-1zM3 22h1v1h-1zM4 22h1v1h-1zM5 22h1v1h-1zM6 22h1v1h-1zM7 22h1v1h-1zM8 22h1v1h-1zM10 22h1v1h-1zM11 22h1v1h-1zM12 22h1v1h-1zM13 22h1v1h-1zM16 22h1v1h-1zM20 22h1v1h-1zM21 22h1v1h-1zM22 22h1v1h-1z"/></svg>
+          <p class="tk-num">772334430770151846</p>
+          <p class="tk-sub">ID biglietto 152344597</p>
+        </div>
+      </figure>
+      <figure class="tk">
+        <figcaption>Adulto 2 <small>Adult 16+ · £33,00</small></figcaption>
+        <div class="tk-box tk-box--qr" role="button" tabindex="0" data-codice="sealife-2" aria-label="773215047000220012: mostra a schermo pieno il biglietto SEA LIFE 2">
+          <svg class="tk-svg tk-qr" id="sealife-2" viewBox="0 0 25 25" shape-rendering="crispEdges" role="img" aria-label="QR del biglietto SEA LIFE 773215047000220012" xmlns="http://www.w3.org/2000/svg"><rect width="25" height="25" fill="#fff"/><path fill="#000" d="M2 2h1v1h-1zM3 2h1v1h-1zM4 2h1v1h-1zM5 2h1v1h-1zM6 2h1v1h-1zM7 2h1v1h-1zM8 2h1v1h-1zM13 2h1v1h-1zM14 2h1v1h-1zM16 2h1v1h-1zM17 2h1v1h-1zM18 2h1v1h-1zM19 2h1v1h-1zM20 2h1v1h-1zM21 2h1v1h-1zM22 2h1v1h-1zM2 3h1v1h-1zM8 3h1v1h-1zM16 3h1v1h-1zM22 3h1v1h-1zM2 4h1v1h-1zM4 4h1v1h-1zM5 4h1v1h-1zM6 4h1v1h-1zM8 4h1v1h-1zM11 4h1v1h-1zM13 4h1v1h-1zM16 4h1v1h-1zM18 4h1v1h-1zM19 4h1v1h-1zM20 4h1v1h-1zM22 4h1v1h-1zM2 5h1v1h-1zM4 5h1v1h-1zM5 5h1v1h-1zM6 5h1v1h-1zM8 5h1v1h-1zM13 5h1v1h-1zM16 5h1v1h-1zM18 5h1v1h-1zM19 5h1v1h-1zM20 5h1v1h-1zM22 5h1v1h-1zM2 6h1v1h-1zM4 6h1v1h-1zM5 6h1v1h-1zM6 6h1v1h-1zM8 6h1v1h-1zM11 6h1v1h-1zM13 6h1v1h-1zM14 6h1v1h-1zM16 6h1v1h-1zM18 6h1v1h-1zM19 6h1v1h-1zM20 6h1v1h-1zM22 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM11 7h1v1h-1zM16 7h1v1h-1zM22 7h1v1h-1zM2 8h1v1h-1zM3 8h1v1h-1zM4 8h1v1h-1zM5 8h1v1h-1zM6 8h1v1h-1zM7 8h1v1h-1zM8 8h1v1h-1zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM17 8h1v1h-1zM18 8h1v1h-1zM19 8h1v1h-1zM20 8h1v1h-1zM21 8h1v1h-1zM22 8h1v1h-1zM11 9h1v1h-1zM12 9h1v1h-1zM2 10h1v1h-1zM5 10h1v1h-1zM7 10h1v1h-1zM8 10h1v1h-1zM10 10h1v1h-1zM11 10h1v1h-1zM13 10h1v1h-1zM14 10h1v1h-1zM15 10h1v1h-1zM17 10h1v1h-1zM2 11h1v1h-1zM9 11h1v1h-1zM11 11h1v1h-1zM13 11h1v1h-1zM15 11h1v1h-1zM18 11h1v1h-1zM19 11h1v1h-1zM4 12h1v1h-1zM5 12h1v1h-1zM6 12h1v1h-1zM7 12h1v1h-1zM8 12h1v1h-1zM9 12h1v1h-1zM10 12h1v1h-1zM11 12h1v1h-1zM13 12h1v1h-1zM15 12h1v1h-1zM16 12h1v1h-1zM19 12h1v1h-1zM22 12h1v1h-1zM2 13h1v1h-1zM3 13h1v1h-1zM4 13h1v1h-1zM5 13h1v1h-1zM6 13h1v1h-1zM11 13h1v1h-1zM14 13h1v1h-1zM15 13h1v1h-1zM16 13h1v1h-1zM17 13h1v1h-1zM19 13h1v1h-1zM21 13h1v1h-1zM22 13h1v1h-1zM2 14h1v1h-1zM6 14h1v1h-1zM7 14h1v1h-1zM8 14h1v1h-1zM9 14h1v1h-1zM10 14h1v1h-1zM13 14h1v1h-1zM16 14h1v1h-1zM18 14h1v1h-1zM19 14h1v1h-1zM20 14h1v1h-1zM22 14h1v1h-1zM10 15h1v1h-1zM12 15h1v1h-1zM15 15h1v1h-1zM16 15h1v1h-1zM17 15h1v1h-1zM18 15h1v1h-1zM20 15h1v1h-1zM21 15h1v1h-1zM22 15h1v1h-1zM2 16h1v1h-1zM3 16h1v1h-1zM4 16h1v1h-1zM5 16h1v1h-1zM6 16h1v1h-1zM7 16h1v1h-1zM8 16h1v1h-1zM11 16h1v1h-1zM12 16h1v1h-1zM13 16h1v1h-1zM14 16h1v1h-1zM16 16h1v1h-1zM17 16h1v1h-1zM19 16h1v1h-1zM20 16h1v1h-1zM22 16h1v1h-1zM2 17h1v1h-1zM8 17h1v1h-1zM10 17h1v1h-1zM11 17h1v1h-1zM12 17h1v1h-1zM16 17h1v1h-1zM19 17h1v1h-1zM21 17h1v1h-1zM2 18h1v1h-1zM4 18h1v1h-1zM5 18h1v1h-1zM6 18h1v1h-1zM8 18h1v1h-1zM12 18h1v1h-1zM14 18h1v1h-1zM15 18h1v1h-1zM16 18h1v1h-1zM17 18h1v1h-1zM18 18h1v1h-1zM22 18h1v1h-1zM2 19h1v1h-1zM4 19h1v1h-1zM5 19h1v1h-1zM6 19h1v1h-1zM8 19h1v1h-1zM10 19h1v1h-1zM11 19h1v1h-1zM12 19h1v1h-1zM15 19h1v1h-1zM16 19h1v1h-1zM17 19h1v1h-1zM19 19h1v1h-1zM20 19h1v1h-1zM21 19h1v1h-1zM22 19h1v1h-1zM2 20h1v1h-1zM4 20h1v1h-1zM5 20h1v1h-1zM6 20h1v1h-1zM8 20h1v1h-1zM11 20h1v1h-1zM12 20h1v1h-1zM13 20h1v1h-1zM15 20h1v1h-1zM16 20h1v1h-1zM18 20h1v1h-1zM19 20h1v1h-1zM22 20h1v1h-1zM2 21h1v1h-1zM8 21h1v1h-1zM11 21h1v1h-1zM12 21h1v1h-1zM13 21h1v1h-1zM14 21h1v1h-1zM17 21h1v1h-1zM18 21h1v1h-1zM19 21h1v1h-1zM21 21h1v1h-1zM2 22h1v1h-1zM3 22h1v1h-1zM4 22h1v1h-1zM5 22h1v1h-1zM6 22h1v1h-1zM7 22h1v1h-1zM8 22h1v1h-1zM10 22h1v1h-1zM12 22h1v1h-1zM15 22h1v1h-1zM18 22h1v1h-1zM19 22h1v1h-1zM20 22h1v1h-1z"/></svg>
+          <p class="tk-num">773215047000220012</p>
+          <p class="tk-sub">ID biglietto 152344597</p>
+        </div>
+      </figure>
+      <figure class="tk">
+        <figcaption>Bambina (Olly) <small>Child 2–15 · £30,00</small></figcaption>
+        <div class="tk-box tk-box--qr" role="button" tabindex="0" data-codice="sealife-3" aria-label="777155289086963187: mostra a schermo pieno il biglietto SEA LIFE 3">
+          <svg class="tk-svg tk-qr" id="sealife-3" viewBox="0 0 25 25" shape-rendering="crispEdges" role="img" aria-label="QR del biglietto SEA LIFE 777155289086963187" xmlns="http://www.w3.org/2000/svg"><rect width="25" height="25" fill="#fff"/><path fill="#000" d="M2 2h1v1h-1zM3 2h1v1h-1zM4 2h1v1h-1zM5 2h1v1h-1zM6 2h1v1h-1zM7 2h1v1h-1zM8 2h1v1h-1zM10 2h1v1h-1zM11 2h1v1h-1zM14 2h1v1h-1zM16 2h1v1h-1zM17 2h1v1h-1zM18 2h1v1h-1zM19 2h1v1h-1zM20 2h1v1h-1zM21 2h1v1h-1zM22 2h1v1h-1zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h1v1h-1zM12 3h1v1h-1zM14 3h1v1h-1zM16 3h1v1h-1zM22 3h1v1h-1zM2 4h1v1h-1zM4 4h1v1h-1zM5 4h1v1h-1zM6 4h1v1h-1zM8 4h1v1h-1zM10 4h1v1h-1zM12 4h1v1h-1zM14 4h1v1h-1zM16 4h1v1h-1zM18 4h1v1h-1zM19 4h1v1h-1zM20 4h1v1h-1zM22 4h1v1h-1zM2 5h1v1h-1zM4 5h1v1h-1zM5 5h1v1h-1zM6 5h1v1h-1zM8 5h1v1h-1zM12 5h1v1h-1zM13 5h1v1h-1zM16 5h1v1h-1zM18 5h1v1h-1zM19 5h1v1h-1zM20 5h1v1h-1zM22 5h1v1h-1zM2 6h1v1h-1zM4 6h1v1h-1zM5 6h1v1h-1zM6 6h1v1h-1zM8 6h1v1h-1zM12 6h1v1h-1zM14 6h1v1h-1zM16 6h1v1h-1zM18 6h1v1h-1zM19 6h1v1h-1zM20 6h1v1h-1zM22 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM16 7h1v1h-1zM22 7h1v1h-1zM2 8h1v1h-1zM3 8h1v1h-1zM4 8h1v1h-1zM5 8h1v1h-1zM6 8h1v1h-1zM7 8h1v1h-1zM8 8h1v1h-1zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM17 8h1v1h-1zM18 8h1v1h-1zM19 8h1v1h-1zM20 8h1v1h-1zM21 8h1v1h-1zM22 8h1v1h-1zM11 9h1v1h-1zM12 9h1v1h-1zM13 9h1v1h-1zM2 10h1v1h-1zM4 10h1v1h-1zM8 10h1v1h-1zM9 10h1v1h-1zM11 10h1v1h-1zM12 10h1v1h-1zM13 10h1v1h-1zM14 10h1v1h-1zM17 10h1v1h-1zM20 10h1v1h-1zM22 10h1v1h-1zM4 11h1v1h-1zM5 11h1v1h-1zM6 11h1v1h-1zM10 11h1v1h-1zM11 11h1v1h-1zM12 11h1v1h-1zM15 11h1v1h-1zM16 11h1v1h-1zM18 11h1v1h-1zM21 11h1v1h-1zM2 12h1v1h-1zM5 12h1v1h-1zM7 12h1v1h-1zM8 12h1v1h-1zM10 12h1v1h-1zM12 12h1v1h-1zM15 12h1v1h-1zM16 12h1v1h-1zM19 12h1v1h-1zM21 12h1v1h-1zM4 13h1v1h-1zM7 13h1v1h-1zM11 13h1v1h-1zM12 13h1v1h-1zM14 13h1v1h-1zM18 13h1v1h-1zM19 13h1v1h-1zM3 14h1v1h-1zM4 14h1v1h-1zM6 14h1v1h-1zM8 14h1v1h-1zM10 14h1v1h-1zM11 14h1v1h-1zM12 14h1v1h-1zM15 14h1v1h-1zM16 14h1v1h-1zM17 14h1v1h-1zM18 14h1v1h-1zM19 14h1v1h-1zM21 14h1v1h-1zM22 14h1v1h-1zM10 15h1v1h-1zM12 15h1v1h-1zM13 15h1v1h-1zM15 15h1v1h-1zM16 15h1v1h-1zM17 15h1v1h-1zM18 15h1v1h-1zM19 15h1v1h-1zM20 15h1v1h-1zM21 15h1v1h-1zM22 15h1v1h-1zM2 16h1v1h-1zM3 16h1v1h-1zM4 16h1v1h-1zM5 16h1v1h-1zM6 16h1v1h-1zM7 16h1v1h-1zM8 16h1v1h-1zM10 16h1v1h-1zM13 16h1v1h-1zM14 16h1v1h-1zM15 16h1v1h-1zM17 16h1v1h-1zM18 16h1v1h-1zM20 16h1v1h-1zM21 16h1v1h-1zM2 17h1v1h-1zM8 17h1v1h-1zM12 17h1v1h-1zM13 17h1v1h-1zM15 17h1v1h-1zM16 17h1v1h-1zM2 18h1v1h-1zM4 18h1v1h-1zM5 18h1v1h-1zM6 18h1v1h-1zM8 18h1v1h-1zM11 18h1v1h-1zM12 18h1v1h-1zM13 18h1v1h-1zM14 18h1v1h-1zM15 18h1v1h-1zM16 18h1v1h-1zM19 18h1v1h-1zM22 18h1v1h-1zM2 19h1v1h-1zM4 19h1v1h-1zM5 19h1v1h-1zM6 19h1v1h-1zM8 19h1v1h-1zM11 19h1v1h-1zM17 19h1v1h-1zM18 19h1v1h-1zM2 20h1v1h-1zM4 20h1v1h-1zM5 20h1v1h-1zM6 20h1v1h-1zM8 20h1v1h-1zM10 20h1v1h-1zM12 20h1v1h-1zM16 20h1v1h-1zM17 20h1v1h-1zM20 20h1v1h-1zM21 20h1v1h-1zM22 20h1v1h-1zM2 21h1v1h-1zM8 21h1v1h-1zM14 21h1v1h-1zM17 21h1v1h-1zM21 21h1v1h-1zM2 22h1v1h-1zM3 22h1v1h-1zM4 22h1v1h-1zM5 22h1v1h-1zM6 22h1v1h-1zM7 22h1v1h-1zM8 22h1v1h-1zM10 22h1v1h-1zM12 22h1v1h-1zM16 22h1v1h-1zM18 22h1v1h-1zM20 22h1v1h-1zM21 22h1v1h-1zM22 22h1v1h-1z"/></svg>
+          <p class="tk-num">777155289086963187</p>
+          <p class="tk-sub">ID biglietto 152344598</p>
+        </div>
+      </figure>
+      <p class="pk__tot"><b>£ 96,00</b> <span class="pk__paid">Pagato</span></p>
+    </div>
 
     <div class="card tk-card">
       <h3>🎟️ Natural History Museum <span class="st ok">3 ingressi</span></h3>
@@ -1678,7 +1720,7 @@
     <details class="acc" open>
       <summary>
         <span class="daynum" style="color:var(--gold);background:rgba(212,169,78,.1)">💶</span>
-        <span class="dtit"><h3>Quanto ci costa</h3><p>Stima ~€1.496 con la Piccadilly, ~€1.543 con l’Elizabeth</p></span>
+        <span class="dtit"><h3>Quanto ci costa</h3><p>Stima ~€1.514 con la Piccadilly, ~€1.561 con l’Elizabeth</p></span>
         <span class="chev">▼</span>
       </summary>
       <div class="dbody">
@@ -1689,9 +1731,9 @@
             <tr><td>Alloggio (Bright Carnaby Soho)<small class="bnota">£538,90 addebitati in euro</small></td><td><span class="st ok">✅ pagato</span></td><td class="imp">€648,82</td></tr>
             <tr><td>Transfer e mezzi<small class="bnota">tariffe TfL contactless, Olly gratis, con la Northern line per Camden (+£12, ~€15): ~€63 con la Piccadilly, ~€110 con l’Elizabeth andata e ritorno</small></td><td><span class="st est">💶 stima</span></td><td class="imp">~€63 · ~€110</td></tr>
             <tr><td>UK ETA ×3<small class="bnota">£20 a persona · tutte e tre fatte; Alessandro €24,31, Vale e Olly importo in euro da confermare</small></td><td><span class="st est">💶 stima</span></td><td class="imp">~€73</td></tr>
-            <tr><td>SEA LIFE<small class="bnota">3 × €32,57 «a partire da», prezzo bambino da verificare</small></td><td><span class="st est">💶 stima</span></td><td class="imp">~€98</td></tr>
+            <tr><td>SEA LIFE<small class="bnota">2 × £33 + 1 × £30 · in euro ~€116 al cambio dell’alloggio (1 £ = 1,204 €): l’addebito vero dipende dal cambio del giorno dell’acquisto</small></td><td><span class="st ok">✅ pagato</span></td><td class="imp">£96,00 · ~€116</td></tr>
             <tr><td>Spesa e pasti</td><td><span class="st est">💶 stima</span></td><td class="imp">~€180</td></tr>
-            <tr class="tot"><td>Totale<small class="bnota">con la Piccadilly · con l’Elizabeth A/R</small></td><td></td><td class="imp">~€1.496 · ~€1.543</td></tr>
+            <tr class="tot"><td>Totale<small class="bnota">con la Piccadilly · con l’Elizabeth A/R</small></td><td></td><td class="imp">~€1.514 · ~€1.561</td></tr>
           </tbody>
         </table>
         <p class="meta" style="margin-top:8px">Acquisti da Hamleys esclusi dal budget.</p>
@@ -2010,28 +2052,33 @@
     }
   })();
 
-  /* ====== codici a schermo pieno: QR del parcheggio e biglietti del museo ======
+  /* ====== codici a schermo pieno: QR del parcheggio, biglietti di SEA LIFE e del museo ======
      Un tocco su un codice (o su una scorciatoia con data-codice) lo apre su fondo bianco, col massimo
      della dimensione e lo schermo che resta acceso. Uno alla volta, con le frecce (o scorrendo di lato)
-     per passare al successivo. I codici sono gli stessi SVG della pagina, clonati: nessuna copia dei dati.
+     per passare al successivo dello stesso gruppo (i tre di SEA LIFE, i tre del museo). I codici sono gli stessi SVG della pagina, clonati: nessuna copia dei dati.
      "Mostra l'indirizzo" usa lo stesso schermo per il tassista. */
   var CODICI = (function(){
-    var lock = null, el = null, idx = 0, prima = null;
+    var lock = null, el = null, idx = 0, prima = null, lista = [];
     function tieniAcceso(){ try { if (navigator.wakeLock && navigator.wakeLock.request) navigator.wakeLock.request('screen').then(function(l){ lock = l; }, function(){}); } catch (e) {} }
     function rilascia(){ try { if (lock) lock.release(); } catch (e) {} lock = null; }
     function riprendi(){ if (document.visibilityState === 'visible' && el) tieniAcceso(); }
     function slides(){
       var s = [], qr = document.querySelector('#biglietti .pk__svg');
-      if (qr) s.push({ tit: 'Parcheggio P1 · Aeroporto di Bologna', num: 'Prenotazione 3039188', svg: qr, hint: 'Alza la luminosità dello schermo e avvicinalo al lettore, a circa 10 cm' });
-      document.querySelectorAll('#biglietti figure.tk').forEach(function(f, i, tutti){
-        s.push({ tit: 'Natural History Museum · ' + f.querySelector('figcaption').firstChild.textContent.trim() + ' (' + (i + 1) + ' di ' + tutti.length + ')',
+      var hintQR = 'Alza la luminosità dello schermo e avvicinalo al lettore, a circa 10 cm';
+      if (qr) s.push({ k: '0', g: 'pk', tit: 'Parcheggio P1 · Aeroporto di Bologna', num: 'Prenotazione 3039188', svg: qr, hint: hintQR });
+      document.querySelectorAll('#sealifeCard figure.tk').forEach(function(f, i){
+        s.push({ k: f.querySelector('.tk-box').dataset.codice, g: 'sealife', tit: 'SEA LIFE · biglietto ' + (i + 1),
+                 num: f.querySelector('.tk-num').textContent.trim(), svg: f.querySelector('.tk-svg'), hint: hintQR });
+      });
+      document.querySelectorAll('#biglietti .tk-card:not(#sealifeCard) figure.tk').forEach(function(f, i, tutti){
+        s.push({ k: String(i + 1), g: 'nhm', tit: 'Natural History Museum · ' + f.querySelector('figcaption').firstChild.textContent.trim() + ' (' + (i + 1) + ' di ' + tutti.length + ')',
                  num: f.querySelector('.tk-num').textContent.trim(), svg: f.querySelector('.tk-svg'), barcode: true,
                  hint: 'Alza la luminosità dello schermo e tieni il telefono fermo sotto il lettore' });
       });
       return s;
     }
     function disegna(){
-      var s = slides(), x = s[idx]; if (!x) return;
+      var s = lista, x = s[idx]; if (!x) return;
       el.querySelector('.cod-tit').textContent = x.tit;
       var box = el.querySelector('.cod-code'); box.innerHTML = '';
       var c = x.svg.cloneNode(true); c.removeAttribute('id');
@@ -2056,7 +2103,7 @@
       el.querySelector('.cod-x').addEventListener('click', chiudi);
       if (!soloTesto) {
         el.querySelector('.cod-prec').addEventListener('click', function(){ if (idx > 0) { idx--; disegna(); } });
-        el.querySelector('.cod-succ').addEventListener('click', function(){ if (idx < slides().length - 1) { idx++; disegna(); } });
+        el.querySelector('.cod-succ').addEventListener('click', function(){ if (idx < lista.length - 1) { idx++; disegna(); } });
         var x0 = null;
         el.addEventListener('touchstart', function(e){ x0 = e.touches[0].clientX; }, { passive: true });
         el.addEventListener('touchend', function(e){ if (x0 === null) return; var dx = e.changedTouches[0].clientX - x0; x0 = null;
@@ -2077,7 +2124,10 @@
       else if (e.key === 'ArrowLeft') { var a = el.querySelector('.cod-prec'); if (a) a.click(); }
     });
     return {
-      apri: function(i, da){ if (el) chiudi(); prima = da || document.activeElement; idx = Math.max(0, Math.min(i || 0, slides().length - 1)); costruisci(false); disegna(); },
+      // k è il data-codice: "0" parcheggio, "1"–"3" museo, "sealife-1"–"3" acquario. Le frecce restano nel suo gruppo
+      apri: function(k, da){ if (el) chiudi(); prima = da || document.activeElement;
+        var s = slides(), x = s.filter(function(y){ return y.k === String(k); })[0] || s[0]; if (!x) return;
+        lista = s.filter(function(y){ return y.g === x.g; }); idx = lista.indexOf(x); costruisci(false); disegna(); },
       indirizzo: function(da){ if (el) chiudi(); prima = da || document.activeElement; costruisci(true);
         el.setAttribute('aria-label', 'Indirizzo dell’appartamento per il tassista');
         el.querySelector('.cod-tit').outerHTML = '<p class="cod-indirizzo">79 Beak Street<br>London W1F 9SU</p>';
@@ -2086,12 +2136,12 @@
     };
   })();
   document.addEventListener('click', function(e){
-    var t = e.target.closest('[data-codice]'); if (t) { e.preventDefault(); CODICI.apri(+t.dataset.codice, t); return; }
+    var t = e.target.closest('[data-codice]'); if (t) { e.preventDefault(); CODICI.apri(t.dataset.codice, t); return; }
     var a = e.target.closest('[data-indirizzo]'); if (a) CODICI.indirizzo(a);
   });
   document.addEventListener('keydown', function(e){
     var t = e.target.closest && e.target.closest('[role="button"][data-codice]');
-    if (t && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); CODICI.apri(+t.dataset.codice, t); }
+    if (t && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); CODICI.apri(t.dataset.codice, t); }
   });
 
   /* ====== margine delle giornate ======
@@ -2209,11 +2259,6 @@
   "come": "Alessandro: aprire dal telefono la pagina del Winter Market su southbankcentre.co.uk quando esce il programma invernale e controllare date e orari di domenica 15. Se apre più tardi o non c’è, va ripensato il pranzo di domenica."
  },
  {
-  "cosa": "SEA LIFE: prezzo bambino e prenotazione della fascia delle 12:30",
-  "contesto": "I biglietti non sono ancora comprati: nel budget c’è una stima (3 × €32,57 «a partire da») e la lista «Prima di partire» ha «Prenotare SEA LIFE, domenica fascia 12:30». L’età di Olly (5 anni) dovrebbe cadere nella fascia bambino, ma prezzo e fascia vanno letti sul sito ufficiale.",
-  "come": "Alessandro o Vale: al momento dell’acquisto, sul sito ufficiale di SEA LIFE London, prenotare la fascia delle 12:30 di domenica 15, controllare fascia d’età e prezzo bambino, poi aggiornare il budget da «stima» a «prenotato»."
- },
- {
   "cosa": "Lavori programmati TfL nel weekend del 14-15/11 e martedì 17/11 su Piccadilly ed Elizabeth line",
   "contesto": "I trasferimenti da e per Heathrow contano su una delle due linee; nei weekend TfL programma chiusure parziali.",
   "come": "Alessandro: controllare su tfl.gov.uk la settimana prima della partenza, per domenica 15 e martedì 17."
@@ -2268,7 +2313,7 @@
     { cosa: 'Ven 13/11 — calendario, royal.uk e meteo di lunedì 10–12 (Met Office)', stato: 'da_fare' },
     { cosa: 'Dom 15/11 sera — calendario e X @ArmyInLondon', stato: 'da_fare' },
     { cosa: 'Lun 16/11, ore 08:30–09:00 — X e calendario', stato: 'da_fare' },
-    { cosa: 'Prenotare SEA LIFE, domenica fascia 12:30', stato: 'da_fare' },
+    { cosa: 'SEA LIFE prenotato · 3 biglietti nel Portafoglio', stato: 'fatto' },
     { cosa: 'Assicurazione viaggio', stato: 'fatto' }
   ];
   (function(){
@@ -2585,7 +2630,7 @@
         var l = link(prossima); $('adVai').hidden = !l; if (l) $('adVai').href = l;
       } else { $('adPross').hidden = true; $('adVai').hidden = true; }
       // scorciatoia al codice giusto: QR attorno alle card con data-mostra="qr" (aeroporto di Bologna),
-      // biglietti del museo da mezz'ora prima dell'ingresso (data-non-prima della card)
+      // biglietti del museo da mezz'ora prima dell'ingresso (data-non-prima della card), QR di SEA LIFE sempre
       var cod = $('adCodice'), m = null;
       [corrente, prossima].forEach(function(x){
         if (m || !x || !x.el.dataset.mostra) return;
@@ -2593,7 +2638,10 @@
         if (d.mostra === 'nhm' && d.nonPrima && now < OROLOGIO.istante(d.giorno, d.nonPrima, d.fuso || 'Europe/London') - 30 * 6e4) return;
         m = d.mostra;
       });
-      if (m) { cod.textContent = m === 'qr' ? '🅿️ Mostra il QR del parcheggio' : '🎟️ Mostra i biglietti del museo'; cod.dataset.codice = m === 'qr' ? '0' : '1'; }
+      if (m) {
+        cod.textContent = { qr: '🅿️ Mostra il QR del parcheggio', sealife: '🐠 Mostra i biglietti dell’acquario' }[m] || '🎟️ Mostra i biglietti del museo';
+        cod.dataset.codice = { qr: '0', sealife: 'sealife-1' }[m] || '1';
+      }
       cod.hidden = !m;
       mostrata = prossima || corrente;
       $('adScheda').hidden = !mostrata;
@@ -2662,6 +2710,11 @@
      Il pannello non si apre mai da solo: in cima c'è un banner sottile «N novità», e si apre solo se toccato.
      Il link in fondo alla pagina lo riapre con tutto lo storico, in ogni caso. */
   var NOVITA = [
+    { v: 31, data: '2026-10-25', titolo: '🐠 Biglietti SEA LIFE', voci: [
+      '🐠 Biglietti SEA LIFE nel Portafoglio: 3 QR pronti all’ingresso, anche offline',
+      'Un tocco su un QR lo apre a schermo pieno su fondo bianco; con le frecce o scorrendo di lato si passa al biglietto dopo, uno per persona',
+      'Nella card di domenica alle 12:30 c’è «🎟️ Mostra i biglietti», e «Adesso» propone «🐠 Mostra i biglietti dell’acquario» quando SEA LIFE è la tappa in corso o la prossima',
+      'Budget: SEA LIFE pagato £96 (2 adulti £33, Olly £30), circa €116; tolto dai «da verificare»' ] },
     { v: 30, data: '2026-10-23', titolo: '💂 Cambio della Guardia confermato', voci: [
       '💂 Cambio della Guardia confermato lun 16/11 alle 11:00. Nuovo orario: Wellington Barracks entro le 10:20, cavalli alle 11:45 al Victoria Memorial',
       'Lunedì mattina nuovo giro: Trafalgar 09:30, Horse Guards 09:50 (le sentinelle a cavallo entrano in servizio alle 10:00), Big Ben 10:05, Wellington Barracks 10:15 con la banda, St James’s Park 11:00, Buckingham 11:40',

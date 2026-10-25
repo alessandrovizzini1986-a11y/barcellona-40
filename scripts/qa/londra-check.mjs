@@ -3,7 +3,7 @@
 //
 //   npm run build && npm run preview &   poi   node scripts/qa/londra-check.mjs [http://localhost:4173]
 //
-// Controlla: i 18 percorsi identici al riferimento, il payload del QR e i 3 barcode (decodificati
+// Controlla: i 18 percorsi identici al riferimento, il payload del QR, i 3 barcode del museo e i 3 QR di SEA LIFE (decodificati
 // dagli SVG, non letti dal testo), le voci «da verificare» uguali fra pagina e DA_VERIFICARE_LONDRA.md,
 // nessuna chiave di storage oltre londra:novita:vista, cartella foto sotto 1,5 MB, alt su tutte le
 // immagini, nessun controllo sotto 44 px, service worker che non copre le pagine di Barcellona.
@@ -44,9 +44,10 @@ const PERCORSI = [
 ]
 const QR_PAYLOAD = '$BLQ3039188LGT@'
 const BARCODE = ['1001401807011726169', '1001401807011726170', '1001401807011726171']
+const SEALIFE = ['772334430770151846', '773215047000220012', '777155289086963187']   // codici numerici del PDF ufficiale, ordine 129390167
 const LIMITE_FOTO_KB = 1500
 
-// ---------- decodifica QR (versioni 1–3, un blocco) da un path SVG a tratti orizzontali ----------
+// ---------- decodifica QR (versioni 1–3, un blocco, modalità byte o numerica) da un path SVG a tratti orizzontali ----------
 function moduliDaPath(d, quiet) {
   const righe = new Map(); let x = 0, y = 0
   for (const [, c, a, b] of d.matchAll(/([MmHh])\s*(-?[\d.]+)(?:\s+(-?[\d.]+))?/g)) {
@@ -75,9 +76,15 @@ function decodificaQR(scuro, n) {
     const byte = []; for (let i = 0; i + 8 <= bit.length && byte.length < nDati; i += 8) byte.push(bit.slice(i, i + 8).reduce((a, b) => a * 2 + (b ? 1 : 0), 0))
     const flusso = byte.flatMap((b) => [...b.toString(2).padStart(8, '0')].map(Number)); let p = 0
     const leggi = (k) => { let x = 0; for (let i = 0; i < k; i++) x = x * 2 + (flusso[p++] ?? 0); return x }
-    if (leggi(4) !== 4) continue                                   // solo modalità byte
-    const len = leggi(v < 10 ? 8 : 16); if (len < 1 || p + len * 8 > flusso.length) continue
-    let s = ''; for (let i = 0; i < len; i++) s += String.fromCharCode(leggi(8))
+    const modo = leggi(4); let s = ''
+    if (modo === 4) {                                              // byte
+      const len = leggi(v < 10 ? 8 : 16); if (len < 1 || p + len * 8 > flusso.length) continue
+      for (let i = 0; i < len; i++) s += String.fromCharCode(leggi(8))
+    } else if (modo === 1) {                                       // numerica: 3 cifre in 10 bit, poi 2 in 7 o 1 in 4
+      const len = leggi(10); if (len < 1) continue
+      for (let r = len; r > 0; r -= 3) { const k = Math.min(r, 3), x = leggi([0, 4, 7, 10][k]); if (x >= 10 ** k) { s = ''; break } s += String(x).padStart(k, '0') }
+      if (s.length !== len || p > flusso.length) continue
+    } else continue
     if (leggi(4) !== 0) continue                                   // terminatore
     p = Math.ceil(p / 8) * 8; const riemp = []; while (p + 8 <= flusso.length) riemp.push(leggi(8))
     if (riemp.every((b) => b === 0 || b === 0xEC || b === 0x11)) risultati.push(s)   // riempimento ammesso dallo standard
@@ -126,9 +133,13 @@ const lato = +qr.vb.split(/\s+/)[2], quiet = 4, nMod = lato - 2 * quiet
 const letti = decodificaQR(moduliDaPath(qr.d, quiet), nMod)
 ok('QR del parcheggio: payload esatto, fondo bianco', letti.length === 1 && letti[0] === QR_PAYLOAD && /^#fff/i.test(qr.sfondo), JSON.stringify(letti))
 
-const bc = await p.evaluate(() => [...document.querySelectorAll('#biglietti .tk-svg')].map((s) => ({ d: s.querySelector('path').getAttribute('d'), sfondo: s.querySelector('rect')?.getAttribute('fill'), num: s.closest('.tk-box')?.querySelector('.tk-num')?.textContent.trim() })))
+const bc = await p.evaluate(() => [...document.querySelectorAll('#biglietti .tk-svg:not(.tk-qr)')].map((s) => ({ d: s.querySelector('path').getAttribute('d'), sfondo: s.querySelector('rect')?.getAttribute('fill'), num: s.closest('.tk-box')?.querySelector('.tk-num')?.textContent.trim() })))
 const decod = bc.map((x) => decodificaC128(x.d))
 ok('3 barcode del museo: CODE128 decodificati, numero in chiaro uguale, fondo bianco', bc.length === 3 && BARCODE.every((n, i) => decod[i] === n && bc[i].num === n && bc[i].sfondo === '#fff'), decod.join(' · '))
+
+const sl = await p.evaluate(() => [...document.querySelectorAll('#sealifeCard .tk-qr')].map((s) => ({ vb: s.getAttribute('viewBox'), d: s.querySelector('path').getAttribute('d'), sfondo: s.querySelector('rect')?.getAttribute('fill'), num: s.closest('.tk-box')?.querySelector('.tk-num')?.textContent.trim() })))
+const slLetti = sl.map((x) => { const n = +x.vb.split(/\s+/)[2] - 4; return decodificaQR(moduliDaPath(x.d, 2), n) })
+ok('3 QR di SEA LIFE: decodificati, uguali al codice numerico del PDF e al numero in chiaro, fondo bianco', sl.length === 3 && SEALIFE.every((n, i) => slLetti[i].length === 1 && slLetti[i][0] === n && sl[i].num === n && sl[i].sfondo === '#fff'), slLetti.map((x) => x.join('|')).join(' · '))
 
 const dvPagina = await p.evaluate(() => (window.DA_VERIFICARE || []).length)
 const dvLista = await p.$$eval('#ppTutta .pp-voce--da_verificare', (x) => x.length)
