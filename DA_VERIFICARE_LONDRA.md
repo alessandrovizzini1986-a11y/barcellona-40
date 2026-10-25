@@ -75,3 +75,12 @@ Funzione «Bagni puliti» (`_legacy/data/bagni-londra.json`, dati del 08/10/2026
 - Royal Opera House: orario di apertura del foyer martedì (10:00 o 12:00).
 - Buckingham: nessun bagno verificato entro 500 m. Controllare se in Green Park ci sono bagni aperti vicino a Canada Gate.
 - Tutte le distanze sono stimate (haversine ×1,3): confermarle con Google Maps a piedi.
+
+## Depositi
+
+Funzione «Depositi bagagli» (`_legacy/data/depositi-londra.json`, dati del 25/10/2026). In pagina distanze, minuti e prezzo portano il badge «stimato»; qui le cose da confermare. Come per i bagni, non sono nell'elenco «Aperte» della pagina.
+
+- Prezzi a collo nelle app Bounce e Stasher (e Radical, Camden Luggage Storage): non sono pubblicati su Google.
+- Dimensione massima accettata per collo (trolley 56×45×25, borse 40×30×15).
+- Se Bounce Waterloo accetta 6 colli (3 trolley + 3 borse) con una sola prenotazione.
+- Orari di apertura di domenica 15/11 (festivi o eventi possono cambiarli), in particolare Bounce Waterloo e Stasher County Hall.
