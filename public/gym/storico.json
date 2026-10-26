@@ -1,6 +1,6 @@
 {
  "v": 2,
- "aggiornato": "2026-10-22T19:30:30.812332Z",
+ "aggiornato": "2026-10-26T20:51:09.136426Z",
  "scheda": {
   "id": 2,
   "giorni": [
@@ -47,25 +47,25 @@
       "serie": 4,
       "target": [
        {
-        "kg": 10,
+        "kg": 12.5,
         "rip": 6,
         "ripMax": null,
         "max": false
        },
        {
-        "kg": 10,
+        "kg": 12.5,
         "rip": 6,
         "ripMax": null,
         "max": false
        },
        {
-        "kg": 10,
+        "kg": 12.5,
         "rip": 6,
         "ripMax": null,
         "max": false
        },
        {
-        "kg": 10,
+        "kg": 12.5,
         "rip": null,
         "ripMax": null,
         "max": true
@@ -110,23 +110,17 @@
       "giri": 0,
       "ssRec": 0,
       "ssRecTxt": "",
-      "serie": 5,
+      "serie": 4,
       "target": [
        {
         "kg": null,
-        "rip": 3,
+        "rip": 4,
         "ripMax": null,
         "max": false
        },
        {
         "kg": null,
-        "rip": 3,
-        "ripMax": null,
-        "max": false
-       },
-       {
-        "kg": null,
-        "rip": 3,
+        "rip": 4,
         "ripMax": null,
         "max": false
        },
@@ -144,7 +138,7 @@
        }
       ],
       "repMin": 3,
-      "repMax": 3
+      "repMax": 4
      },
      {
       "id": "leg-curl-mono",
@@ -185,25 +179,25 @@
       "target": [
        {
         "kg": 15,
-        "rip": 13,
+        "rip": 14,
         "ripMax": null,
         "max": false
        },
        {
         "kg": 17.5,
-        "rip": 11,
+        "rip": 12,
         "ripMax": null,
         "max": false
        },
        {
         "kg": 20,
-        "rip": 9,
+        "rip": 10,
         "ripMax": null,
         "max": false
        }
       ],
-      "repMin": 9,
-      "repMax": 13
+      "repMin": 10,
+      "repMax": 14
      },
      {
       "id": "distensioni-manubri",
@@ -244,32 +238,32 @@
       "serie": 4,
       "target": [
        {
-        "kg": 14,
-        "rip": 6,
-        "ripMax": 8,
+        "kg": 16,
+        "rip": 5,
+        "ripMax": null,
         "max": false
        },
        {
-        "kg": 14,
-        "rip": 6,
-        "ripMax": 8,
+        "kg": 16,
+        "rip": 5,
+        "ripMax": null,
         "max": false
        },
        {
-        "kg": 14,
-        "rip": 6,
-        "ripMax": 8,
+        "kg": 16,
+        "rip": 5,
+        "ripMax": null,
         "max": false
        },
        {
-        "kg": 14,
-        "rip": 6,
-        "ripMax": 8,
+        "kg": 16,
+        "rip": 5,
+        "ripMax": null,
         "max": false
        }
       ],
-      "repMin": 6,
-      "repMax": 8
+      "repMin": 5,
+      "repMax": 5
      },
      {
       "id": "australian-pull-up",
@@ -310,25 +304,25 @@
       "target": [
        {
         "kg": null,
-        "rip": 6,
-        "ripMax": 8,
+        "rip": 8,
+        "ripMax": 10,
         "max": false
        },
        {
         "kg": null,
-        "rip": 6,
-        "ripMax": 8,
+        "rip": 8,
+        "ripMax": 10,
         "max": false
        },
        {
         "kg": null,
-        "rip": 6,
-        "ripMax": 8,
+        "rip": 8,
+        "ripMax": 10,
         "max": false
        }
       ],
-      "repMin": 6,
-      "repMax": 8
+      "repMin": 8,
+      "repMax": 10
      },
      {
       "id": "push-up-sbarra",
@@ -369,25 +363,25 @@
       "target": [
        {
         "kg": null,
-        "rip": 6,
-        "ripMax": 8,
+        "rip": 8,
+        "ripMax": 10,
         "max": false
        },
        {
         "kg": null,
-        "rip": 6,
-        "ripMax": 8,
+        "rip": 8,
+        "ripMax": 10,
         "max": false
        },
        {
         "kg": null,
-        "rip": 6,
-        "ripMax": 8,
+        "rip": 8,
+        "ripMax": 10,
         "max": false
        }
       ],
-      "repMin": 6,
-      "repMax": 8
+      "repMin": 8,
+      "repMax": 10
      },
      {
       "id": "curl-ez",
@@ -427,26 +421,26 @@
       "serie": 3,
       "target": [
        {
-        "kg": 7.5,
-        "rip": 8,
-        "ripMax": 10,
+        "kg": 8.75,
+        "rip": 7,
+        "ripMax": 9,
         "max": false
        },
        {
-        "kg": 7.5,
-        "rip": 8,
-        "ripMax": 10,
+        "kg": 8.75,
+        "rip": 7,
+        "ripMax": 9,
         "max": false
        },
        {
-        "kg": 7.5,
-        "rip": 8,
-        "ripMax": 10,
+        "kg": 8.75,
+        "rip": 7,
+        "ripMax": 9,
         "max": false
        }
       ],
-      "repMin": 8,
-      "repMax": 10
+      "repMin": 7,
+      "repMax": 9
      },
      {
       "id": "french-press-ez",
@@ -486,26 +480,26 @@
       "serie": 3,
       "target": [
        {
-        "kg": 7.5,
-        "rip": 8,
-        "ripMax": 10,
+        "kg": 8.75,
+        "rip": 7,
+        "ripMax": 9,
         "max": false
        },
        {
-        "kg": 7.5,
-        "rip": 8,
-        "ripMax": 10,
+        "kg": 8.75,
+        "rip": 7,
+        "ripMax": 9,
         "max": false
        },
        {
-        "kg": 7.5,
-        "rip": 8,
-        "ripMax": 10,
+        "kg": 8.75,
+        "rip": 7,
+        "ripMax": 9,
         "max": false
        }
       ],
-      "repMin": 8,
-      "repMax": 10
+      "repMin": 7,
+      "repMax": 9
      }
     ]
    },
@@ -552,25 +546,25 @@
       "serie": 4,
       "target": [
        {
-        "kg": 16,
+        "kg": 18,
         "rip": 6,
         "ripMax": null,
         "max": false
        },
        {
-        "kg": 16,
+        "kg": 18,
         "rip": 6,
         "ripMax": null,
         "max": false
        },
        {
-        "kg": 16,
+        "kg": 18,
         "rip": 6,
         "ripMax": null,
         "max": false
        },
        {
-        "kg": 16,
+        "kg": 18,
         "rip": null,
         "ripMax": null,
         "max": true
@@ -618,19 +612,19 @@
       "target": [
        {
         "kg": -35,
-        "rip": 6,
+        "rip": 7,
         "ripMax": null,
         "max": false
        },
        {
         "kg": -35,
-        "rip": 6,
+        "rip": 7,
         "ripMax": null,
         "max": false
        },
        {
         "kg": -35,
-        "rip": 6,
+        "rip": 7,
         "ripMax": null,
         "max": false
        },
@@ -641,8 +635,8 @@
         "max": true
        }
       ],
-      "repMin": 6,
-      "repMax": 6
+      "repMin": 7,
+      "repMax": 7
      },
      {
       "id": "leg-ext-mono",
@@ -683,25 +677,25 @@
       "target": [
        {
         "kg": 20,
-        "rip": 11,
+        "rip": 12,
         "ripMax": null,
         "max": false
        },
        {
         "kg": 22.5,
-        "rip": 9,
+        "rip": 10,
         "ripMax": null,
         "max": false
        },
        {
         "kg": 25,
-        "rip": 7,
+        "rip": 8,
         "ripMax": null,
         "max": false
        }
       ],
-      "repMin": 7,
-      "repMax": 11
+      "repMin": 8,
+      "repMax": 12
      },
      {
       "id": "lat-monobraccio",
@@ -742,25 +736,25 @@
       "target": [
        {
         "kg": 15,
-        "rip": 9,
+        "rip": 10,
         "ripMax": null,
         "max": false
        },
        {
         "kg": 15,
-        "rip": 9,
+        "rip": 10,
         "ripMax": null,
         "max": false
        },
        {
         "kg": 15,
-        "rip": 9,
+        "rip": 10,
         "ripMax": null,
         "max": false
        }
       ],
-      "repMin": 9,
-      "repMax": 9
+      "repMin": 10,
+      "repMax": 10
      },
      {
       "id": "shoulder-press",
@@ -801,25 +795,25 @@
       "target": [
        {
         "kg": 12,
-        "rip": 6,
-        "ripMax": 8,
+        "rip": 8,
+        "ripMax": 10,
         "max": false
        },
        {
         "kg": 12,
-        "rip": 6,
-        "ripMax": 8,
+        "rip": 8,
+        "ripMax": 10,
         "max": false
        },
        {
         "kg": 12,
-        "rip": 6,
-        "ripMax": 8,
+        "rip": 8,
+        "ripMax": 10,
         "max": false
        }
       ],
-      "repMin": 6,
-      "repMax": 8
+      "repMin": 8,
+      "repMax": 10
      },
      {
       "id": "rematore-inclinata",
@@ -860,25 +854,25 @@
       "target": [
        {
         "kg": 16,
-        "rip": 6,
-        "ripMax": 8,
+        "rip": 8,
+        "ripMax": 10,
         "max": false
        },
        {
         "kg": 16,
-        "rip": 6,
-        "ripMax": 8,
+        "rip": 8,
+        "ripMax": 10,
         "max": false
        },
        {
         "kg": 16,
-        "rip": 6,
-        "ripMax": 8,
+        "rip": 8,
+        "ripMax": 10,
         "max": false
        }
       ],
-      "repMin": 6,
-      "repMax": 8
+      "repMin": 8,
+      "repMax": 10
      },
      {
       "id": "push-down-corda",
@@ -919,25 +913,25 @@
       "target": [
        {
         "kg": 12.5,
-        "rip": 8,
-        "ripMax": 10,
+        "rip": 10,
+        "ripMax": 12,
         "max": false
        },
        {
         "kg": 12.5,
-        "rip": 8,
-        "ripMax": 10,
+        "rip": 10,
+        "ripMax": 12,
         "max": false
        },
        {
         "kg": 12.5,
-        "rip": 8,
-        "ripMax": 10,
+        "rip": 10,
+        "ripMax": 12,
         "max": false
        }
       ],
-      "repMin": 8,
-      "repMax": 10
+      "repMin": 10,
+      "repMax": 12
      },
      {
       "id": "curl-cavo-basso",
@@ -978,25 +972,25 @@
       "target": [
        {
         "kg": 12.5,
-        "rip": 8,
-        "ripMax": 10,
+        "rip": 10,
+        "ripMax": 12,
         "max": false
        },
        {
         "kg": 12.5,
-        "rip": 8,
-        "ripMax": 10,
+        "rip": 10,
+        "ripMax": 12,
         "max": false
        },
        {
         "kg": 12.5,
-        "rip": 8,
-        "ripMax": 10,
+        "rip": 10,
+        "ripMax": 12,
         "max": false
        }
       ],
-      "repMin": 8,
-      "repMax": 10
+      "repMin": 10,
+      "repMax": 12
      }
     ]
    }
@@ -3171,6 +3165,176 @@
    },
    "warmOpen": false,
    "note": "CAVALLISSIMO"
+  },
+  {
+   "id": "2026-10-26-isyy8ve",
+   "data": "2026-10-26",
+   "scheda": 2,
+   "giorno": "A",
+   "settimana": 3,
+   "chiusa": true,
+   "inizio": 1793042419361,
+   "fine": 1793047789804,
+   "esercizi": {
+    "hack-squat": [
+     {
+      "kg": 10,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": 12.5,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": null,
+      "reps": null,
+      "fatta": false
+     },
+     {
+      "kg": null,
+      "reps": null,
+      "fatta": false
+     }
+    ],
+    "chin-up": [
+     {
+      "kg": null,
+      "reps": 4,
+      "fatta": true
+     },
+     {
+      "kg": null,
+      "reps": 4,
+      "fatta": true
+     },
+     {
+      "kg": null,
+      "reps": 3,
+      "fatta": true
+     },
+     {
+      "kg": null,
+      "reps": 3,
+      "fatta": true
+     }
+    ],
+    "leg-curl-mono": [
+     {
+      "kg": 15,
+      "reps": 14,
+      "fatta": true
+     },
+     {
+      "kg": 17.5,
+      "reps": 12,
+      "fatta": true
+     },
+     {
+      "kg": 20,
+      "reps": 10,
+      "fatta": true
+     }
+    ],
+    "distensioni-manubri": [
+     {
+      "kg": 16,
+      "reps": 5,
+      "fatta": true
+     },
+     {
+      "kg": 16,
+      "reps": 5,
+      "fatta": true
+     },
+     {
+      "kg": 16,
+      "reps": 5,
+      "fatta": true
+     },
+     {
+      "kg": 16,
+      "reps": 5,
+      "fatta": true
+     }
+    ],
+    "australian-pull-up": [
+     {
+      "kg": null,
+      "reps": 9,
+      "fatta": true
+     },
+     {
+      "kg": null,
+      "reps": 9,
+      "fatta": true
+     },
+     {
+      "kg": null,
+      "reps": 9,
+      "fatta": true
+     }
+    ],
+    "push-up-sbarra": [
+     {
+      "kg": null,
+      "reps": 9,
+      "fatta": true
+     },
+     {
+      "kg": null,
+      "reps": 9,
+      "fatta": true
+     },
+     {
+      "kg": null,
+      "reps": 9,
+      "fatta": true
+     }
+    ],
+    "curl-ez": [
+     {
+      "kg": 8.75,
+      "reps": 7,
+      "fatta": true
+     },
+     {
+      "kg": 8.75,
+      "reps": 7,
+      "fatta": true
+     },
+     {
+      "kg": 8.75,
+      "reps": 7,
+      "fatta": true
+     }
+    ],
+    "french-press-ez": [
+     {
+      "kg": 8.75,
+      "reps": 7,
+      "fatta": true
+     },
+     {
+      "kg": 8.75,
+      "reps": 7,
+      "fatta": true
+     },
+     {
+      "kg": 8.75,
+      "reps": 7,
+      "fatta": true
+     }
+    ]
+   },
+   "warm": {
+    "w0": true,
+    "w1": true,
+    "stretch": true
+   },
+   "warmOpen": false,
+   "pt": true
   }
  ],
  "luoghi": [
