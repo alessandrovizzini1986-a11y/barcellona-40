@@ -1,6 +1,6 @@
 {
  "v": 2,
- "aggiornato": "2026-10-26T20:51:09.136426Z",
+ "aggiornato": "2026-10-29T20:27:54.975253Z",
  "scheda": {
   "id": 2,
   "giorni": [
@@ -3335,6 +3335,170 @@
    },
    "warmOpen": false,
    "pt": true
+  },
+  {
+   "id": "2026-10-29-g94dmte",
+   "data": "2026-10-29",
+   "scheda": 2,
+   "giorno": "B",
+   "settimana": 3,
+   "chiusa": true,
+   "inizio": 1793301956039,
+   "fine": 1793305617039,
+   "esercizi": {
+    "stacchi-rumeni": [
+     {
+      "kg": 18,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 18,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": 18,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 18,
+      "reps": 10,
+      "fatta": true
+     }
+    ],
+    "dip-assistiti": [
+     {
+      "kg": -35,
+      "reps": 7,
+      "fatta": true
+     },
+     {
+      "kg": -35,
+      "reps": 7,
+      "fatta": true
+     },
+     {
+      "kg": -35,
+      "reps": 7,
+      "fatta": true
+     },
+     {
+      "kg": -35,
+      "reps": 9,
+      "fatta": true
+     }
+    ],
+    "leg-ext-mono": [
+     {
+      "kg": 20,
+      "reps": 12,
+      "fatta": true
+     },
+     {
+      "kg": 22.5,
+      "reps": 10,
+      "fatta": true
+     },
+     {
+      "kg": 25,
+      "reps": 8,
+      "fatta": true
+     }
+    ],
+    "lat-monobraccio": [
+     {
+      "kg": 15,
+      "reps": 10,
+      "fatta": true
+     },
+     {
+      "kg": 15,
+      "reps": 10,
+      "fatta": true
+     },
+     {
+      "kg": 15,
+      "reps": 10,
+      "fatta": true
+     }
+    ],
+    "shoulder-press": [
+     {
+      "kg": 12,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 12,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 12,
+      "reps": 8,
+      "fatta": true
+     }
+    ],
+    "rematore-inclinata": [
+     {
+      "kg": 16,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 16,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 16,
+      "reps": 8,
+      "fatta": true
+     }
+    ],
+    "push-down-corda": [
+     {
+      "kg": 12.5,
+      "reps": 10,
+      "fatta": true
+     },
+     {
+      "kg": 12.5,
+      "reps": 10,
+      "fatta": true
+     },
+     {
+      "kg": 12.5,
+      "reps": 10,
+      "fatta": true
+     }
+    ],
+    "curl-cavo-basso": [
+     {
+      "kg": 12.5,
+      "reps": 10,
+      "fatta": true
+     },
+     {
+      "kg": 12.5,
+      "reps": 10,
+      "fatta": true
+     },
+     {
+      "kg": 12.5,
+      "reps": 10,
+      "fatta": true
+     }
+    ]
+   },
+   "warm": {
+    "w0": true,
+    "w1": true,
+    "stretch": true
+   },
+   "warmOpen": false
   }
  ],
  "luoghi": [
