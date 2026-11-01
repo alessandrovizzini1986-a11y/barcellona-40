@@ -1,0 +1,137 @@
+{
+  "nome": "f2",
+  "data": "2026-11-01T12:03:59.744Z",
+  "url": "http://localhost:4173/londra.html?now=2026-11-16T10:30",
+  "lighthouse": {
+    "performance": 97,
+    "accessibilita": 100,
+    "bestPractices": 96,
+    "seo": 66,
+    "fcp_ms": 1354,
+    "lcp_ms": 2124,
+    "speedIndex_ms": 1354,
+    "tbt_ms": 8,
+    "cls": 0.024,
+    "threadPrincipale_ms": 1958,
+    "nodiDom": 3880,
+    "pesoTrasferito_kB": 267,
+    "richieste": 13,
+    "a11yFalliti": [],
+    "bpFalliti": [
+      "errors-in-console"
+    ]
+  },
+  "lighthouseCorse": [
+    {
+      "performance": 98,
+      "accessibilita": 100,
+      "bestPractices": 96,
+      "seo": 66,
+      "fcp_ms": 1353,
+      "lcp_ms": 2403,
+      "speedIndex_ms": 1353,
+      "tbt_ms": 8,
+      "cls": 0.024,
+      "threadPrincipale_ms": 1942,
+      "nodiDom": 3880,
+      "pesoTrasferito_kB": 267,
+      "richieste": 13,
+      "a11yFalliti": [],
+      "bpFalliti": [
+        "errors-in-console"
+      ]
+    },
+    {
+      "performance": 86,
+      "accessibilita": 100,
+      "bestPractices": 96,
+      "seo": 66,
+      "fcp_ms": 1357,
+      "lcp_ms": 1657,
+      "speedIndex_ms": 1357,
+      "tbt_ms": 5,
+      "cls": 0.275,
+      "threadPrincipale_ms": 1958,
+      "nodiDom": 3880,
+      "pesoTrasferito_kB": 267,
+      "richieste": 13,
+      "a11yFalliti": [],
+      "bpFalliti": [
+        "errors-in-console"
+      ]
+    },
+    {
+      "performance": 97,
+      "accessibilita": 100,
+      "bestPractices": 96,
+      "seo": 66,
+      "fcp_ms": 1354,
+      "lcp_ms": 2124,
+      "speedIndex_ms": 1354,
+      "tbt_ms": 156,
+      "cls": 0.024,
+      "threadPrincipale_ms": 2420,
+      "nodiDom": 3880,
+      "pesoTrasferito_kB": 267,
+      "richieste": 13,
+      "a11yFalliti": [],
+      "bpFalliti": [
+        "errors-in-console"
+      ]
+    }
+  ],
+  "lighthouseDi": "2026-11-01T12:01:51.646Z",
+  "viste": {
+    "adesso": {
+      "altezza": 1399,
+      "schermate": 1.7,
+      "nodi": 3919,
+      "nodiVisibili": 105
+    },
+    "programma": {
+      "altezza": 9125,
+      "schermate": 11.2,
+      "nodi": 3919,
+      "nodiVisibili": 357
+    },
+    "biglietti": {
+      "altezza": 6587,
+      "schermate": 8.1,
+      "nodi": 3919,
+      "nodiVisibili": 235
+    },
+    "mappa": {
+      "altezza": 1259,
+      "schermate": 1.6,
+      "nodi": 4036,
+      "nodiVisibili": 1210
+    },
+    "info": {
+      "altezza": 6004,
+      "schermate": 7.4,
+      "nodi": 4030,
+      "nodiVisibili": 525
+    }
+  },
+  "errori": [],
+  "altezzaMax": 9125,
+  "schermateMax": 11.2,
+  "toccabiliPiccoli": [],
+  "scrollOrizzontale": {
+    "320": {
+      "larghezza": 320,
+      "scroll": 320,
+      "ok": true
+    },
+    "375": {
+      "larghezza": 375,
+      "scroll": 375,
+      "ok": true
+    },
+    "430": {
+      "larghezza": 430,
+      "scroll": 430,
+      "ok": true
+    }
+  }
+}
