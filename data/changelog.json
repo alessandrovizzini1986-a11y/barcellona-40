@@ -1,6 +1,14 @@
 {
   "entries": [
     {
+      "v": 57,
+      "data": "2026-11-01",
+      "titolo": "Londra: navigazione a viste",
+      "voci": [
+        "Pagina di Londra: la barra in basso ha 5 voci (Adesso, Programma, Biglietti, Mappa, Info) e mostra una vista alla volta; nel Programma un giorno per volta, con i tre giorni in cima e lo scorrimento di lato; pulsante «Adesso» sempre a portata di pollice"
+      ]
+    },
+    {
       "v": 56,
       "data": "2026-11-01",
       "titolo": "Londra: sistema di design",

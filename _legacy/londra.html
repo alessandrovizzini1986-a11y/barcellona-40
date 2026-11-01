@@ -86,7 +86,7 @@
   h1,h2,h3,h4,h5{text-wrap:balance}
   p,li,summary,figcaption,dt,dd{text-wrap:pretty}
   a{color:var(--gold-soft)}
-  .wrap{max-width:560px;margin:0 auto;padding:0 var(--s-4)}
+  .wrap{max-width:560px;margin:0 auto;padding:0 max(var(--s-4),env(safe-area-inset-right)) 0 max(var(--s-4),env(safe-area-inset-left))}
   :focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:6px}
   :focus:not(:focus-visible){outline:none}
 
@@ -163,7 +163,7 @@
     border-radius:var(--r-m);box-shadow:var(--shadow-2);margin-top:var(--s-4)}
   .card{padding:var(--s-4)}
   .card h3{font-size:var(--f-18)}
-  .sheet,.nov{width:100%;max-width:560px;max-height:82vh;display:flex;flex-direction:column;background:var(--night-1);
+  .sheet,.nov{width:100%;max-width:560px;max-height:82dvh;display:flex;flex-direction:column;background:var(--night-1);
     border:1px solid var(--line-gold);border-bottom:0;border-radius:var(--r-l) var(--r-l) 0 0;box-shadow:0 -20px 50px -10px rgba(0,0,0,.7)}
   .card .meta{color:var(--muted);font-size:var(--f-14);margin-top:3px}
 
@@ -498,17 +498,51 @@
   .pics-link{margin-top:2px;font-weight:600;text-decoration:underline;text-underline-offset:3px}
   /* barra fissa in basso, a portata di pollice; rispetta la safe area dell'iPhone */
   body{padding-bottom:calc(68px + env(safe-area-inset-bottom))}
-  .barra{position:fixed;left:0;right:0;bottom:0;z-index:900;display:grid;grid-template-columns:repeat(4,1fr);
-    background:rgba(13,19,33,.96);border-top:1px solid var(--line-gold);padding-bottom:env(safe-area-inset-bottom);
+  .barra{position:fixed;left:0;right:0;bottom:0;z-index:900;display:grid;grid-template-columns:repeat(5,1fr);
+    background:rgba(13,19,33,.96);border-top:1px solid var(--line-gold);padding:0 env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
     -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
   .barra a{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:60px;
-    font-size:var(--f-12);font-weight:700;color:var(--muted);text-decoration:none;-webkit-tap-highlight-color:transparent}
+    font-size:var(--f-12);font-weight:700;color:var(--muted);text-decoration:none;-webkit-tap-highlight-color:transparent;letter-spacing:-.01em}
   .barra a span{font-size:var(--f-22);line-height:1}
   /* voce attiva: colore e barretta sopra l'icona, così si vede anche senza distinguere i colori */
   .barra a[aria-current="true"]{color:var(--gold-soft)}
   .barra a::before{content:"";position:absolute;top:0;left:50%;width:28px;height:3px;border-radius:0 0 3px 3px;background:var(--gold-fill);
     transform:translateX(-50%) scaleX(0);transition:transform var(--t-base) var(--ease-out)}
   .barra a[aria-current="true"]::before{transform:translateX(-50%) scaleX(1)}
+  /* ====== viste: una alla volta; le altre hanno hidden e non si disegnano ====== */
+  .vista[hidden]{display:none}
+  .vista--entra{animation:vista-entra var(--t-base) var(--ease-out)}
+  @keyframes vista-entra{from{opacity:0;transform:translateX(var(--vista-dx,16px))}}
+  html[data-dir="indietro"]{--vista-dx:-16px}
+  /* View Transitions: la vista scorre nel verso delle voci della barra; testata, barra e pulsante flottante restano fermi */
+  ::view-transition-old(root){animation:vt-esce var(--t-base) var(--ease-out) both}
+  ::view-transition-new(root){animation:vt-entra var(--t-base) var(--ease-out) both}
+  @keyframes vt-esce{to{opacity:0;transform:translateX(calc(-1 * var(--vista-dx,16px)))}}
+  @keyframes vt-entra{from{opacity:0;transform:translateX(var(--vista-dx,16px))}}
+  header.hero{view-transition-name:testata}
+  .barra{view-transition-name:barra}
+  .fab-adesso{view-transition-name:fab}
+  /* giorni del programma: controllo segmentato che resta attaccato in alto, un giorno visibile alla volta */
+  .giorni-seg{position:sticky;top:0;z-index:50;display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s-1);
+    margin:0 calc(-1 * var(--s-1));padding:var(--s-2) var(--s-1);background:var(--night-0)}
+  .giorni-seg__b{border-radius:var(--r-s);padding:0 var(--s-2);background:var(--night-1);border-color:var(--line);color:var(--muted);font-weight:600}
+  .giorni-seg__b b{font-family:"Playfair Display",Georgia,serif;font-weight:700;font-size:var(--f-16)}
+  .giorni-seg__b[aria-selected="true"]{color:var(--on-accent);font-weight:800}
+  .giorni-seg__b.dom[aria-selected="true"]{background:var(--gold-fill);border-color:var(--gold-fill)}
+  .giorni-seg__b.lun[aria-selected="true"]{background:var(--bus);border-color:var(--bus);color:#fff}
+  .giorni-seg__b.mar[aria-selected="true"]{background:var(--sky-fill);border-color:var(--sky-fill)}
+  details.acc.giorno[hidden]{display:none}
+  details.acc.giorno > summary{pointer-events:none}   /* il giorno si sceglie dal controllo sopra, non dalla sua testata */
+  details.acc.giorno .chev{display:none}
+  /* fuori da Adesso la testata è compatta: solo il titolo, così la vista parte subito col suo contenuto */
+  html[data-vista-attiva]:not([data-vista-attiva="adesso"]) .hero{padding-top:var(--s-3)}
+  html[data-vista-attiva]:not([data-vista-attiva="adesso"]) .hero :is(.badge,.sub,.fam,.offline-ok,.pics-link,.skyline,.snow){display:none}
+  html[data-vista-attiva]:not([data-vista-attiva="adesso"]) .hero h1{font-size:var(--f-28);margin-top:0;text-shadow:none}
+  /* pulsante flottante «Adesso»: sopra la barra, a destra; compare fuori da Adesso o scorrendo oltre la prima schermata */
+  .fab-adesso{position:fixed;right:max(var(--s-4),env(safe-area-inset-right));bottom:calc(76px + env(safe-area-inset-bottom));z-index:950;
+    min-height:48px;padding:0 var(--s-4);box-shadow:var(--shadow-2);font-size:var(--f-16)}
+  .fab-adesso[hidden]{display:none}
+  @media (prefers-reduced-motion:reduce){.vista--entra,::view-transition-old(root),::view-transition-new(root){animation:none}}
   /* portafoglio */
   .pk-riga{justify-content:flex-start;gap:var(--s-3);min-height:60px;margin:2px 0 var(--s-4);padding:var(--s-3) var(--s-4);text-align:left;border-radius:var(--r-m);font-weight:400}
   .pk-riga b{display:block;font-size:var(--f-16)}
@@ -529,9 +563,9 @@
     align-items:center;justify-content:center;gap:var(--s-4);padding:64px 3vw calc(96px + env(safe-area-inset-bottom));text-align:center}
   .cod-tit{font-size:var(--f-18);font-weight:800;max-width:34ch}
   .cod-code{display:flex;align-items:center;justify-content:center;width:100%}
-  .cod-code .pk__svg{width:min(88vw,62vh);height:auto}
-  .cod-code .tk-svg{width:min(94vw,640px);height:max(160px,24vh);max-width:none}
-  .cod-code .tk-svg.tk-qr{width:min(88vw,62vh);height:auto;aspect-ratio:1}
+  .cod-code .pk__svg{width:min(88vw,62svh);height:auto}
+  .cod-code .tk-svg{width:min(94vw,640px);height:max(160px,24svh);max-width:none}
+  .cod-code .tk-svg.tk-qr{width:min(88vw,62svh);height:auto;aspect-ratio:1}
   .cod-num{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:clamp(20px,6vw,28px);font-weight:800;letter-spacing:.04em;font-variant-numeric:tabular-nums}
   .cod-hint{font-size:var(--f-16);color:#3d3a34;max-width:34ch;line-height:1.45}
   .cod-indirizzo{font-family:"Playfair Display",Georgia,serif;font-size:clamp(34px,11vw,56px);line-height:1.15}
@@ -765,6 +799,7 @@
 
 <main>
 <div class="wrap">
+<div class="vista" data-vista="adesso">
 
   <button class="btn btn--secondario btn--blocco nov-banner" id="novBanner" type="button" hidden></button>
 
@@ -804,12 +839,14 @@
     </div>
   </section>
 
+</div>
+<div class="vista" data-vista="programma" hidden>
   <!-- ============ PROGRAMMA ============ -->
   <section id="programma">
     <div class="eyebrow">Programma</div>
     <h2>Tre giorni, una zona al giorno</h2>
     <p class="prog-azioni"><button class="btn btn--secondario piove-btn" type="button" data-piove aria-pressed="false" id="pioveBtn"><span class="piove-ic">🌧️</span> Piove <span class="piove-stato">no</span></button></p>
-    <p class="sub2">Tocca una giornata per aprire il dettaglio. <b>Gli orari sono una proposta</b>, ricavata da voli, check-in e distanze: vanno confermati.</p>
+    <p class="sub2">Scegli il giorno qui sotto, o scorri di lato. <b>Gli orari sono una proposta</b>, ricavata da voli, check-in e distanze: vanno confermati.</p>
     <section class="meteo" id="meteo" hidden aria-label="Meteo di Londra, previsione Open-Meteo">
       <button class="meteo__riga" type="button" aria-expanded="false" aria-controls="meteoDett"></button>
       <div class="meteo__dett" id="meteoDett" hidden>
@@ -819,7 +856,12 @@
       </div>
     </section>
 
-    <details class="acc dom" open>
+    <div class="giorni-seg" role="tablist" aria-label="Giorno del programma">
+      <button class="btn giorni-seg__b dom" type="button" role="tab" data-giorno-seg="dom" aria-selected="true"><b>Dom</b> 15</button>
+      <button class="btn giorni-seg__b lun" type="button" role="tab" data-giorno-seg="lun" aria-selected="false" tabindex="-1"><b>Lun</b> 16</button>
+      <button class="btn giorni-seg__b mar" type="button" role="tab" data-giorno-seg="mar" aria-selected="false" tabindex="-1"><b>Mar</b> 17</button>
+    </div>
+    <details class="acc dom giorno" open>
       <summary>
         <span class="srow">
           <span class="daynum">15<small>DOM</small></span>
@@ -1014,7 +1056,7 @@
       </div>
     </details>
 
-    <details class="acc lun">
+    <details class="acc lun giorno" hidden>
       <summary>
         <span class="srow">
           <span class="daynum">16<small>LUN</small></span>
@@ -1243,7 +1285,7 @@
       </div>
     </details>
 
-    <details class="acc mar">
+    <details class="acc mar giorno" hidden>
       <summary>
         <span class="srow">
           <span class="daynum">17<small>MAR</small></span>
@@ -1414,6 +1456,8 @@
     </details>
   </section>
 
+</div>
+<div class="vista" data-vista="biglietti" hidden>
   <!-- ============ BIGLIETTI ============ -->
   <section id="biglietti" aria-labelledby="bigTit">
     <div class="eyebrow">Biglietti</div>
@@ -1634,6 +1678,8 @@
 
   </section>
 
+</div>
+<div class="vista" data-vista="mappa" hidden>
   <!-- ============ MAPPA ============ -->
   <section id="mappa">
     <div class="eyebrow">Mappa</div>
@@ -1647,24 +1693,6 @@
       <span>🏠 Casa</span>
       <span><i class="line"></i>A piedi</span>
       <span><i class="line dash"></i>Metro</span>
-    </div>
-  </section>
-
-  <!-- ============ INFO ============ -->
-  <section id="info" aria-labelledby="infoTit">
-    <div class="eyebrow">Info</div>
-    <h2 id="infoTit">Da sapere</h2>
-    <div class="card" id="listaPartenza">
-      <h3>📋 Prima di partire</h3>
-      <p class="pp-conti" id="ppConti"></p>
-      <div id="ppTutta"></div>
-    </div>
-    <div class="card">
-      <h3>🏠 Note sull’alloggio</h3>
-      <p class="ci-co-note">🧳 I due buchi (domenica prima delle 15:00, martedì dopo le 10:30): con <b>3 trolley 56×45×25 e 3 borse 40×30×15</b> (franchigia BA, zero stiva) non si gira. Domenica deposito vicino al SEA LIFE, martedì dopo il check-out a Carnaby, Camden o Covent Garden: è tutto in «🧳 Depositi bagagli», in Info. Da sapere però: il check-in è self-service, <b>una reception dove lasciare i bagagli potrebbe non esserci</b> — va chiarito con l’host prima di un eventuale viaggio con la valigia.</p>
-      <p class="meta" style="margin-top:8px">Prenotazione Booking <b>5946777151</b> · totale <b>£538,90</b>, addebitati €648,82 · Wi-Fi gratuito in tutto l’appartamento.</p>
-      <p class="meta" style="margin-top:8px">Host confermato: nessuna unità sostitutiva (sarà esattamente l'appartamento fotografato), nessun costo extra, contatto diretto tramite numero Booking.com.</p>
-      <p class="why"><b>Perché questa zona:</b> è il punto di minor cammino cumulativo per la giornata di lunedì (la Royal walk, sette tappe), tutte raggiungibili in 12–21 minuti a piedi, zero attraversamenti del fiume. Si sacrifica la comodità verso Southbank e South Kensington (serve la metro), accettabile perché cadono su giornate più leggere (domenica e martedì).</p>
     </div>
   </section>
 
@@ -1698,6 +1726,26 @@
       </summary>
       <div class="dbody" id="depositiLista"></div>
     </details>
+  </section>
+
+</div>
+<div class="vista" data-vista="info" hidden>
+  <!-- ============ INFO ============ -->
+  <section id="info" aria-labelledby="infoTit">
+    <div class="eyebrow">Info</div>
+    <h2 id="infoTit">Da sapere</h2>
+    <div class="card" id="listaPartenza">
+      <h3>📋 Prima di partire</h3>
+      <p class="pp-conti" id="ppConti"></p>
+      <div id="ppTutta"></div>
+    </div>
+    <div class="card">
+      <h3>🏠 Note sull’alloggio</h3>
+      <p class="ci-co-note">🧳 I due buchi (domenica prima delle 15:00, martedì dopo le 10:30): con <b>3 trolley 56×45×25 e 3 borse 40×30×15</b> (franchigia BA, zero stiva) non si gira. Domenica deposito vicino al SEA LIFE, martedì dopo il check-out a Carnaby, Camden o Covent Garden: è tutto in «🧳 Depositi bagagli», in Info. Da sapere però: il check-in è self-service, <b>una reception dove lasciare i bagagli potrebbe non esserci</b> — va chiarito con l’host prima di un eventuale viaggio con la valigia.</p>
+      <p class="meta" style="margin-top:8px">Prenotazione Booking <b>5946777151</b> · totale <b>£538,90</b>, addebitati €648,82 · Wi-Fi gratuito in tutto l’appartamento.</p>
+      <p class="meta" style="margin-top:8px">Host confermato: nessuna unità sostitutiva (sarà esattamente l'appartamento fotografato), nessun costo extra, contatto diretto tramite numero Booking.com.</p>
+      <p class="why"><b>Perché questa zona:</b> è il punto di minor cammino cumulativo per la giornata di lunedì (la Royal walk, sette tappe), tutte raggiungibili in 12–21 minuti a piedi, zero attraversamenti del fiume. Si sacrifica la comodità verso Southbank e South Kensington (serve la metro), accettabile perché cadono su giornate più leggere (domenica e martedì).</p>
+    </div>
   </section>
 
   <!-- ============ SICUREZZA ============ -->
@@ -1831,6 +1879,8 @@
     </details>
   </section>
 
+</div>
+
   <!-- promemoria di «Adesso» con finestra oraria: data-giorno, data-da, data-a (ora di Londra); data-non-in = non si mostra se quella tappa è già in corso -->
   <template id="promemoriaAdesso">
     <li data-giorno="2026-11-16" data-da="08:30" data-a="10:45"><b>💂 Controlla se la cerimonia è confermata</b><br><a href="https://www.householddivision.org.uk/changing-the-guard-calendar" target="_blank" rel="noopener">📅 Calendario ufficiale</a><a href="https://x.com/ArmyInLondon" target="_blank" rel="noopener">𝕏 @ArmyInLondon</a></li>
@@ -1887,10 +1937,12 @@
 </main>
 
 <!-- barra fissa in basso, a portata di pollice -->
+<button class="btn btn--primario fab-adesso" id="fabAdesso" type="button" hidden>🕒 Adesso</button>
 <nav class="barra" aria-label="Sezioni della pagina">
-  <a href="#ora" data-barra="ora"><span aria-hidden="true">🕒</span>Adesso</a>
+  <a href="#adesso" data-barra="adesso"><span aria-hidden="true">🕒</span>Adesso</a>
   <a href="#programma" data-barra="programma"><span aria-hidden="true">🗓️</span>Programma</a>
   <a href="#biglietti" data-barra="biglietti"><span aria-hidden="true">🎟️</span>Biglietti</a>
+  <a href="#mappa" data-barra="mappa"><span aria-hidden="true">🗺️</span>Mappa</a>
   <a href="#info" data-barra="info"><span aria-hidden="true">ℹ️</span>Info</a>
 </nav>
 
@@ -2216,10 +2268,7 @@
       { g: 'Lunedì', testo: 'cerimonia a rischio: piano B a Horse Guards alle 11:00', sel: '#piano-b-lun' },
       { g: 'Martedì', testo: 'con pioggia forte Camden più corta e Covent Garden prima, che è al coperto', sel: '#pioggia-mar' }
     ];
-    function vaiA(el){
-      for (var d = el.closest('details'); d; d = d.parentElement && d.parentElement.closest('details')) d.open = true;   // anche il giorno che lo contiene
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+    function vaiA(el){ VISTE.vaiA(el); }   // apre vista, giorno e <details>, poi scorre
     function riepilogo(btn){
       document.querySelectorAll('.piove-riepilogo').forEach(function(x){ x.remove(); });
       if (!piove) return;
@@ -2388,6 +2437,108 @@
     document.getElementById('plusOk').addEventListener('click', chiudi);
     velo.addEventListener('click', function(e){ if (e.target === velo) chiudi(); });
     document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && !velo.hidden) chiudi(); });
+  })();
+
+  /* ====== VISTE: una sezione alla volta ======
+     Le cinque voci della barra (Adesso, Programma, Biglietti, Mappa, Info) mostrano una vista sola; le altre hanno
+     hidden, così il browser non le disegna. L'hash resta profondo e condivisibile: #programma apre la vista,
+     #casaCard apre Biglietti e scorre alla card, le ancore vecchie funzionano tutte. Ogni vista ricorda dove era;
+     Adesso riparte sempre dall'alto. Il cambio usa le View Transitions se ci sono (non per la Mappa: Leaflet
+     sfarfalla), altrimenti una dissolvenza CSS. Nel Programma un giorno alla volta, dal controllo in cima o con
+     uno scorrimento di lato. */
+  var VISTE = (function(){
+    var ORDINE = ['adesso', 'programma', 'biglietti', 'mappa', 'info'], GIORNI_SEG = ['dom', 'lun', 'mar'];
+    var viste = {}, attiva = null, posizioni = {}, giornoAttivo = null;
+    var barra = document.querySelector('.barra'), fab = document.getElementById('fabAdesso');
+    [].forEach.call(document.querySelectorAll('[data-vista]'), function(v){ viste[v.dataset.vista] = v; });
+    function ridotto(){ return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches); }
+    function vistaDi(el){ var v = el && el.closest ? el.closest('[data-vista]') : null; return v ? v.dataset.vista : null; }
+    function applica(nome){
+      ORDINE.forEach(function(k){ if (viste[k]) viste[k].hidden = (k !== nome); });
+      if (barra) [].forEach.call(barra.querySelectorAll('a[data-barra]'), function(a){ a.setAttribute('aria-current', String(a.dataset.barra === nome)); });
+      document.documentElement.dataset.vistaAttiva = nome;
+    }
+    // mostra una vista; «dopo» gira a cambio avvenuto, per scorrere a un elemento
+    function mostra(nome, dopo){
+      if (!viste[nome]) nome = 'adesso';
+      if (attiva === nome) { if (dopo) dopo(); return; }
+      if (attiva) posizioni[attiva] = window.scrollY;
+      var da = attiva; attiva = nome;
+      document.documentElement.dataset.dir = da && ORDINE.indexOf(nome) < ORDINE.indexOf(da) ? 'indietro' : 'avanti';
+      function cambia(){
+        applica(nome);
+        window.scrollTo({ top: nome === 'adesso' ? 0 : (posizioni[nome] || 0), behavior: 'instant' });
+        aggiornaFab();
+        document.dispatchEvent(new CustomEvent('vista', { detail: { nome: nome, da: da } }));
+      }
+      var fine = function(){ if (dopo) dopo(); };
+      var vt = document.startViewTransition && !ridotto() && da && nome !== 'mappa' && da !== 'mappa';
+      if (vt) {
+        // lo scorrimento a un elemento parte a transizione finita: dentro la transizione si perderebbe.
+        // Le promesse rifiutate (transizione saltata perché ne parte un'altra) non sono errori.
+        try { var t = document.startViewTransition(cambia); t.finished.then(fine, fine); t.ready.catch(function(){}); return; } catch (e) {}
+      }
+      cambia(); fine();
+      if (da && !ridotto()) { var v = viste[nome]; v.classList.remove('vista--entra'); void v.offsetWidth; v.classList.add('vista--entra'); }
+    }
+    // va a un elemento: apre la sua vista, il suo giorno e i <details> che lo contengono, poi scorre
+    function vaiA(el){
+      if (!el) return;
+      var nome = vistaDi(el) || attiva || 'adesso', morbido = nome === attiva && !ridotto();   // fra viste diverse il salto è secco
+      mostra(nome, function(){
+        var g = el.closest('details.acc.giorno'); if (g) giorno(GIORNI_SEG.filter(function(k){ return g.classList.contains(k); })[0]);
+        for (var d = el.closest('details'); d; d = d.parentElement && d.parentElement.closest('details')) d.open = true;
+        requestAnimationFrame(function(){ el.scrollIntoView({ behavior: morbido ? 'smooth' : 'auto', block: 'start' }); });
+      });
+    }
+    // giorni del programma: uno solo visibile; il controllo segmentato e lo scorrimento di lato lo cambiano
+    function giorno(g, scorri){
+      if (GIORNI_SEG.indexOf(g) < 0) return;
+      giornoAttivo = g;
+      GIORNI_SEG.forEach(function(k){ var d = document.querySelector('details.acc.giorno.' + k); if (d) { d.hidden = (k !== g); if (k === g) d.open = true; } });
+      [].forEach.call(document.querySelectorAll('.giorni-seg__b'), function(b){ var on = b.dataset.giornoSeg === g; b.setAttribute('aria-selected', String(on)); b.tabIndex = on ? 0 : -1; });
+      // se il controllo è già attaccato in alto, si torna in cima al giorno nuovo (alla posizione naturale del controllo)
+      if (scorri) { var seg = document.querySelector('.giorni-seg'); if (seg && seg.getBoundingClientRect().top <= 1) { var cima = seg.nextElementSibling; while (cima && cima.hidden) cima = cima.nextElementSibling; if (cima) window.scrollTo({ top: cima.getBoundingClientRect().top + window.scrollY - seg.offsetHeight - 4, behavior: 'auto' }); } }
+      document.dispatchEvent(new CustomEvent('giorno', { detail: g }));
+    }
+    document.addEventListener('click', function(e){
+      var b = e.target.closest('.giorni-seg__b'); if (b) { giorno(b.dataset.giornoSeg, true); b.focus(); return; }
+      var a = e.target.closest('.barra a[data-barra]');
+      if (a && a.dataset.barra === attiva) { e.preventDefault(); window.scrollTo({ top: 0, behavior: ridotto() ? 'auto' : 'smooth' }); }
+    });
+    document.addEventListener('keydown', function(e){
+      var b = e.target.closest && e.target.closest('.giorni-seg__b'); if (!b || (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft')) return;
+      var i = GIORNI_SEG.indexOf(giornoAttivo) + (e.key === 'ArrowRight' ? 1 : -1); if (GIORNI_SEG[i]) { e.preventDefault(); giorno(GIORNI_SEG[i], true); document.querySelector('.giorni-seg__b[data-giorno-seg="' + GIORNI_SEG[i] + '"]').focus(); }
+    });
+    // scorrimento di lato fra i giorni (soglia 60 px, quasi orizzontale); non tocca lo scorrimento verticale
+    if (viste.programma) (function(){
+      var x0 = null, y0 = 0;
+      viste.programma.addEventListener('touchstart', function(e){ if (e.touches.length !== 1 || e.target.closest('.meteo__striscia, .leaflet-container')) { x0 = null; return; } x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, { passive: true });
+      viste.programma.addEventListener('touchend', function(e){
+        if (x0 === null) return; var dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0; x0 = null;
+        if (Math.abs(dx) < 60 || Math.abs(dy) > 50) return;
+        var i = GIORNI_SEG.indexOf(giornoAttivo) + (dx < 0 ? 1 : -1); if (GIORNI_SEG[i]) giorno(GIORNI_SEG[i], true);
+      }, { passive: true });
+    })();
+    // pulsante flottante: fuori da Adesso, o in Adesso oltre la prima schermata
+    function aggiornaFab(){ if (fab) fab.hidden = attiva === 'adesso' && window.scrollY < window.innerHeight * 0.8; }
+    window.addEventListener('scroll', aggiornaFab, { passive: true });
+    if (fab) fab.addEventListener('click', function(){ mostra('adesso'); window.scrollTo({ top: 0, behavior: ridotto() ? 'auto' : 'smooth' }); });
+    // hash: nome di vista, o id di un elemento (apre la sua vista e scorre lì)
+    function daHash(){
+      var k = decodeURIComponent(location.hash.slice(1));
+      if (!k || k === 'ora') { mostra('adesso'); return; }
+      if (viste[k]) { mostra(k); return; }
+      var el = document.getElementById(k);
+      if (el) vaiA(el); else mostra(attiva || 'adesso');
+    }
+    window.addEventListener('hashchange', daHash);
+    // giorno di partenza: oggi se si è in viaggio (anche con ?now=), altrimenti domenica
+    var oggi = OROLOGIO.parti(OROLOGIO.adesso()).data;
+    giorno({ '2026-11-15': 'dom', '2026-11-16': 'lun', '2026-11-17': 'mar' }[oggi] || 'dom');
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+    daHash();
+    return { mostra: mostra, vaiA: vaiA, giorno: giorno, attiva: function(){ return attiva; }, giornoAttivo: function(){ return giornoAttivo; } };
   })();
 
   /* ====== Bagni puliti (data/bagni-londra.json) ======
@@ -2670,9 +2821,7 @@
     var pad = OROLOGIO.pad, $ = function(id){ return document.getElementById(id); };
     var oggi = OROLOGIO.parti(OROLOGIO.adesso()).data;
 
-    // apertura dei giorni: decisa una volta all'apertura della pagina
-    if (GIORNI[oggi]) ['dom', 'lun', 'mar'].forEach(function(g){ var d = document.querySelector('details.acc.' + g); if (d) d.open = (g === GIORNI[oggi]); });
-    else if (oggi > '2026-11-17') document.querySelectorAll('#programma details.acc').forEach(function(d){ d.open = false; });
+    // il giorno aperto lo decide VISTE (oggi se in viaggio, altrimenti domenica)
 
     function primaDiPartire(){
       var p = oggi.split('-').map(Number), giorni = Math.round((Date.UTC(2026, 10, 15) - Date.UTC(p[0], p[1] - 1, p[2])) / 864e5);
@@ -2776,11 +2925,7 @@
       BAGNI.perAdesso(corrente, prossima, now, lo.data);
       $('adesso').hidden = false;
     }
-    $('adScheda').addEventListener('click', function(){
-      if (!mostrata) return;
-      var d = mostrata.el.closest('details'); if (d) d.open = true;
-      mostrata.el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
+    $('adScheda').addEventListener('click', function(){ if (mostrata) VISTE.vaiA(mostrata.el); });
 
     // proposta del piano pioggia: se il meteo dà pioggia >= 60% per oggi. Non lo accende mai da sola;
     // "No" la nasconde finché la pagina resta aperta (in memoria, nessuno storage)
@@ -2805,29 +2950,7 @@
     }
   })();
 
-  /* ====== barra in basso ======
-     "Adesso" porta al pannello visibile ("Adesso" nei giorni del viaggio, "Prima di partire" prima, la cima dopo).
-     La voce della sezione che si sta guardando è evidenziata. */
-  (function(){
-    var barra = document.querySelector('.barra'); if (!barra) return;
-    function bersaglio(k){
-      if (k !== 'ora') return document.getElementById(k);
-      var a = document.getElementById('adesso'), p = document.getElementById('primaDiPartire');
-      return a && !a.hidden ? a : p && !p.hidden ? p : document.querySelector('header.hero');
-    }
-    barra.addEventListener('click', function(e){
-      var l = e.target.closest('a[data-barra]'); if (!l) return;
-      var t = bersaglio(l.dataset.barra); if (!t) return;
-      e.preventDefault(); t.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
-    var voci = [].slice.call(barra.querySelectorAll('a[data-barra]'));
-    function evidenzia(){
-      var y = window.innerHeight * 0.3, att = 'ora';
-      ['programma', 'biglietti', 'info'].forEach(function(k){ var s = document.getElementById(k); if (s && s.getBoundingClientRect().top < y) att = k; });
-      voci.forEach(function(v){ v.setAttribute('aria-current', String(v.dataset.barra === att)); });
-    }
-    window.addEventListener('scroll', evidenzia, { passive: true }); evidenzia();
-  })();
+  /* la barra in basso e la voce attiva sono gestite da VISTE */
 
   /* ====== NOVITÀ: cosa è cambiato dall'ultima visita ======
      REGOLA: ogni modifica a questa pagina che Vale o Alessandro possano notare aggiunge una voce IN CIMA
@@ -3142,7 +3265,7 @@
      Se per qualunque motivo Leaflet non c'è, il messaggio compare e il resto della pagina va avanti. */
   var mapBox=document.getElementById('map');
   function mappaOffline(si){ mapBox.classList.toggle('map-offline', !!si); }
-  var mappaAvviata = false;
+  var mappaAvviata = false, map = null;
   function avviaMappa(){
   if (mappaAvviata) return;
   if (typeof L === 'undefined') {
@@ -3152,7 +3275,7 @@
   mappaAvviata = true;
   // touch: niente trascinamento con un dito (la pagina scorre); due dita spostano e zoomano
   var touch = !!(window.matchMedia && window.matchMedia('(pointer:coarse)').matches);
-  var map=L.map('map',{scrollWheelZoom:false, dragging:!touch});
+  map=L.map('map',{scrollWheelZoom:false, dragging:!touch});
   map.attributionControl.setPrefix(false);
   map.attributionControl.addAttribution('<a href="https://leafletjs.com" target="_blank" rel="noopener">Leaflet</a>');
   if (touch) {
@@ -3248,12 +3371,10 @@
   montaDepositi(); document.addEventListener('depositi',montaDepositi);
   map.fitBounds(bounds,{padding:[30,30]});
   }
-  if ('IntersectionObserver' in window) {
-    var oss = new IntersectionObserver(function(voci){
-      if (voci.some(function(v){ return v.isIntersecting; })) { oss.disconnect(); avviaMappa(); }
-    }, { rootMargin: '600px 0px' });
-    oss.observe(mapBox);
-  } else avviaMappa();
+  // la mappa parte quando si apre la vista Mappa (e si ridimensiona: era nascosta)
+  function vistaMappa(){ avviaMappa(); if (map) requestAnimationFrame(function(){ map.invalidateSize(); }); }
+  document.addEventListener('vista', function(e){ if (e.detail && e.detail.nome === 'mappa') vistaMappa(); });
+  if (document.documentElement.dataset.vistaAttiva === 'mappa') vistaMappa();
 </script>
 </body>
 </html>
