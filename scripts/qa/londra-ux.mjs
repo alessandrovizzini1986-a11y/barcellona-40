@@ -41,6 +41,7 @@ else if (ripeti) {
       '--chrome-flags=--headless=new --no-sandbox --ignore-certificate-errors', '--output=json', '--output-path=' + file, '--quiet'], { env: { ...process.env, CHROME_PATH: CHROME }, stdio: 'pipe', timeout: 300000 })
     const j = JSON.parse(readFileSync(file, 'utf8')), a = j.audits, c = j.categories
     const ms = (k) => Math.round(a[k].numericValue)
+    if (j.runtimeError) console.log(`  corsa ${i + 1}: ${j.runtimeError.code} · ${String(j.runtimeError.message).slice(0, 120)}`)
     corse.push({
       performance: Math.round(c.performance.score * 100), accessibilita: Math.round(c.accessibility.score * 100), bestPractices: Math.round(c['best-practices'].score * 100), seo: Math.round(c.seo.score * 100),
       fcp_ms: ms('first-contentful-paint'), lcp_ms: ms('largest-contentful-paint'), speedIndex_ms: ms('speed-index'), tbt_ms: ms('total-blocking-time'), cls: +a['cumulative-layout-shift'].numericValue.toFixed(3),
@@ -50,9 +51,12 @@ else if (ripeti) {
       bpFalliti: Object.values(a).filter((x) => c['best-practices'].auditRefs.some((ref) => ref.id === x.id) && x.score !== null && x.score < 1).map((x) => x.id)
     })
   }
-  // mediana numero per numero; le liste dei falliti sono l'unione
-  const mediana = (v) => { const s = [...v].sort((x, y) => x - y); return s[Math.floor((s.length - 1) / 2)] }
-  r.lighthouse = Object.fromEntries(Object.keys(corse[0]).map((k) => [k, Array.isArray(corse[0][k]) ? [...new Set(corse.flatMap((x) => x[k]))] : mediana(corse.map((x) => x[k]))]))
+  // mediana numero per numero, ignorando le corse rotte (performance 0 o valori non numerici: capita quando una
+  // richiesta va in timeout); le liste dei falliti sono l'unione
+  const valide = corse.filter((x) => x.performance > 0)
+  if (valide.length < corse.length) console.log(`  (${corse.length - valide.length} corsa/e non valida/e ignorata/e)`)
+  const mediana = (v) => { const s = v.filter((x) => Number.isFinite(x)).sort((x, y) => x - y); return s.length ? s[Math.floor((s.length - 1) / 2)] : null }
+  r.lighthouse = Object.fromEntries(Object.keys(corse[0]).map((k) => [k, Array.isArray(corse[0][k]) ? [...new Set(corse.flatMap((x) => x[k]))] : mediana((valide.length ? valide : corse).map((x) => x[k]))]))
   r.lighthouseCorse = corse
   const lh = r.lighthouse
   console.log(`✓ Lighthouse (mediana di ${ripeti}): performance ${lh.performance} · a11y ${lh.accessibilita} · best practices ${lh.bestPractices} · SEO ${lh.seo}`)
