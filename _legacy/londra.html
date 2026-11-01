@@ -11,6 +11,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Londra 2026">
 <link rel="manifest" href="londra-manifest.json">
+<script>try{if(localStorage.getItem('londra:sole')==='1')document.documentElement.classList.add('sole')}catch(e){}</script>
 <link rel="preload" href="vendor/fonts/playfair-display-700-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-londra-32.png">
 <link rel="apple-touch-icon" href="apple-touch-icon-londra.png">
@@ -78,6 +79,41 @@
     .tcard--plus{background:var(--night-1)!important}
     .nov__piede{background:linear-gradient(180deg,rgba(255,255,255,0),var(--night-1) 30%)!important}
   }
+  /* ====== modalità Sole (fase 6 UX): il tema chiaro forzato dalla classe html.sole, con contrasto più alto, testo +15 % e niente ombre.
+     Le regole sono le stesse del tema chiaro automatico, ripetute per la classe; sotto, le differenze. Stato in localStorage londra:sole. */
+  html.sole{--night-0:#f6f3ee;--night-1:#ffffff;--night-2:#f3efe8;
+      --gold:#5f4205;--gold-soft:#553b04;--gold-dim:rgba(138,100,20,.22);
+      --bus:#b3281e;--sky:#17496a;
+      --ink:#141a26;--muted:#3f4757;
+      --ok:#0f4a2e;
+      --line:rgba(20,26,38,.13);--line-gold:rgba(138,100,20,.38);
+      --shadow-1:0 4px 14px -8px rgba(20,26,38,.3);--shadow-2:0 12px 30px -20px rgba(20,26,38,.45);
+      --gold-fill:#b8862a;--sky-fill:#3a86ad;
+      --rosso-testo:#7d1d15;--verde-testo:#0f4a2e;--info-testo:#17496a;
+      color-scheme:light;}
+  html.sole .aurora{background:var(--night-0)!important}
+  html.sole .percorso__modo{background:rgba(20,26,38,.06)!important}
+  html.sole .tcard__credito{color:var(--muted)!important}
+  html.sole .skyline{color:#1a2332!important}
+  html.sole .barra{background:rgba(255,255,255,.96)!important}
+  html.sole .pk{background:linear-gradient(180deg,rgba(212,169,78,.12),var(--night-1))!important}
+  html.sole .tcard--plus{background:var(--night-1)!important}
+  html.sole .nov__piede{background:linear-gradient(180deg,rgba(255,255,255,0),var(--night-1) 30%)!important}
+  html.sole{--ink:#000;--muted:#2b3140;--gold:#4a3304;--gold-soft:#3f2c03;--sky:#0f3a55;--line:rgba(20,26,38,.3);--shadow-1:none;--shadow-2:none;
+    --f-12:14px;--f-14:16px;--f-16:18px;--f-18:21px;--f-22:25px;--f-28:clamp(27px,8vw,32px);--f-36:clamp(30px,8.5vw,41px)}
+  html.sole .hero h1{background:none;-webkit-text-fill-color:#000;color:#000;text-shadow:none}
+  html.sole .tcard__ora{text-shadow:0 1px 4px #000,0 0 2px #000}
+  html.sole .card,html.sole .tcard,html.sole details.acc,html.sole .ora-pan,html.sole .olly-card,html.sole .pk{box-shadow:none;border-color:var(--line)}
+  html.sole .sole-btn{background:#000;border-color:#000;color:#fff}
+  /* pulsanti pieni in Sole: riempimenti chiari col testo scuro (≥ 8:1) e bordo nero per il contorno; rosso più scuro sotto il bianco (≥ 8:1) */
+  html.sole{--gold-fill:#d4a94e;--sky-fill:#8fcbeb;--bus:#8f1f17}
+  html.sole .btn--primario,html.sole .giorni-seg__b[aria-selected="true"],html.sole .olly-nav button.active,html.sole .ad-proposta__si{border-color:#000}
+  .hero .sole-btn{position:absolute;top:max(var(--s-3),env(safe-area-inset-top));right:max(var(--s-3),env(safe-area-inset-right));min-height:44px;padding:0 var(--s-3);font-size:var(--f-12);z-index:2}
+  .copia-riga{display:flex;flex-wrap:wrap;gap:var(--s-2);margin-top:var(--s-1)}
+  .copia[data-fatto]{color:var(--verde-testo)}
+  .cod-full{box-shadow:inset 0 0 0 4px #000}   /* bordo nero: il lettore trova i margini del QR anche con lo schermo al massimo */
+  .sole-card p{margin-top:var(--s-2);font-size:var(--f-14);color:var(--muted);line-height:1.5}
+
   html{scroll-behavior:smooth;background:var(--night-0)}
   body{background:var(--night-0);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
     line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden;font-variant-numeric:tabular-nums}
@@ -559,6 +595,16 @@
   html[data-vista-attiva]:not([data-vista-attiva="adesso"]) .hero{padding-top:var(--s-3)}
   html[data-vista-attiva]:not([data-vista-attiva="adesso"]) .hero :is(.badge,.sub,.fam,.offline-ok,.pics-link,.skyline,.snow){display:none}
   html[data-vista-attiva]:not([data-vista-attiva="adesso"]) .hero h1{font-size:var(--f-28);margin-top:0;text-shadow:none}
+  /* striscia «Prossima: …» sopra la barra, in tutte le viste tranne Adesso; un tocco apre Adesso */
+  .striscia{position:fixed;left:0;right:0;bottom:calc(60px + env(safe-area-inset-bottom));z-index:900;display:flex;align-items:center;gap:var(--s-2);
+    min-height:44px;padding:0 max(var(--s-4),env(safe-area-inset-right)) 0 max(var(--s-4),env(safe-area-inset-left));border:0;border-top:1px solid var(--line-gold);
+    background:var(--night-1);color:var(--ink);font:inherit;font-size:var(--f-14);text-align:left;cursor:pointer}
+  .striscia[hidden],html[data-vista-attiva="adesso"] .striscia{display:none}
+  .striscia__k{flex:none;font-size:var(--f-12);font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--gold-soft)}
+  .striscia__v{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:700}
+  .striscia__fr{flex:none;font-size:var(--f-22);color:var(--gold)}
+  html.con-striscia:not([data-vista-attiva="adesso"]) body{padding-bottom:calc(112px + env(safe-area-inset-bottom))}
+  html.con-striscia:not([data-vista-attiva="adesso"]) .fab-adesso{bottom:calc(120px + env(safe-area-inset-bottom))}
   /* pulsante flottante «Adesso»: sopra la barra, a destra; compare fuori da Adesso o scorrendo oltre la prima schermata */
   .fab-adesso{position:fixed;right:max(var(--s-4),env(safe-area-inset-right));bottom:calc(76px + env(safe-area-inset-bottom));z-index:950;
     min-height:48px;padding:0 var(--s-4);box-shadow:var(--shadow-2);font-size:var(--f-16)}
@@ -673,6 +719,7 @@
   html.piove .scaletta .solo-pioggia{display:block}
   html.piove .scaletta .solo-asciutto{display:none}
   .tcard[id]{scroll-margin-top:12px}
+  details.acc.giorno [id]{scroll-margin-top:68px}   /* sotto il controllo dei giorni, che resta attaccato in alto */
   /* tappe "se avanza tempo": una riga, la scheda si apre al tocco */
   .plus-riga{justify-content:flex-start;gap:var(--s-3);min-height:48px;margin:var(--s-1) 0 var(--s-3);padding:var(--s-3) var(--s-4);text-align:left;border-style:dashed;border-radius:var(--r-m);background:none;font-weight:400}
   .plus-riga > span:last-child{margin-left:auto;font-size:var(--f-22);color:var(--gold)}
@@ -763,6 +810,14 @@
   #map .leaflet-control-attribution a{color:#8fcbeb}
   /* ====== bagni puliti ====== */
   .bagno-box,.ad-bagno{margin-top:var(--s-3)}
+  .bagno-box:empty,.bagno-box > .bagno-pan[hidden]:only-child{display:none}
+  /* nella card: «Portami qui» e «Bagno» metà e metà, alti 48 px, a portata di pollice */
+  .azioni-tappa{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-2);margin-top:var(--s-3)}
+  .azioni-tappa .gmap,.azioni-tappa .bagno-riga{margin-top:0;min-height:48px;justify-content:center;text-align:center;padding:var(--s-1) var(--s-2);line-height:1.2}
+  .azioni-tappa .gmap{flex-wrap:wrap}
+  .azioni-tappa .bagno-riga{border-radius:999px;font-weight:700}
+  .azioni-tappa .bagno-riga__txt{flex:0 1 auto}
+  .azioni-tappa .bagno-riga::after{margin-left:var(--s-1)}
   .bagno-riga{justify-content:flex-start;padding:var(--s-2) var(--s-3);text-align:left;border-radius:var(--r-s);font-size:var(--f-16);font-weight:400;line-height:1.35}
   .bagno-riga__txt{flex:1;min-width:0}
   .bagno-riga::after{content:"▾";flex:none;margin-left:auto;font-size:var(--f-14);color:var(--gold-soft)}
@@ -843,6 +898,7 @@
   <p class="fam">Alessandro, Vale e Olly</p>
   <p class="offline-ok" id="offlineOk" hidden>✓ Disponibile offline</p>
   <a class="btn btn--ghost pics-link" href="londra-illustrata.html">🖼️ Versione per immagini, per Olly</a>
+  <button class="btn btn--secondario sole-btn" type="button" data-sole aria-pressed="false" title="Lettura al sole: sfondo chiaro, testo più grande">☀️ Sole</button>
   <div class="skyline" aria-hidden="true">
     <svg viewBox="0 0 640 90" fill="currentColor" preserveAspectRatio="xMidYMax meet">
       <!-- skyline stilizzata: Big Ben, London Eye, Tower Bridge, St Paul's -->
@@ -1538,6 +1594,7 @@
     <div><span class="k">Prenotazione</span><span class="v">3039188</span></div>
     <div><span class="k">Intestatario</span><span class="v">Alessandro Vizzini</span></div>
     </div>
+    <p class="copia-riga"><button class="btn btn--ghost copia" type="button" data-copia="3039188">📋 Copia la prenotazione</button></p>
     <button class="pk__box" type="button" id="pkBox" data-codice="0" aria-label="Tocca per ingrandire il QR del parcheggio, a schermo pieno">
     <svg class="pk__svg" viewBox="0 0 33 33" shape-rendering="crispEdges" role="img" aria-label="QR code della prenotazione parcheggio 3039188" xmlns="http://www.w3.org/2000/svg"><path fill="#fff" d="M0 0h33v33h-33z"/><path stroke="#000" d="M4 4.5h7m2 0h2m1 0h1m2 0h2m1 0h7m-25 1h1m5 0h1m1 0h1m1 0h2m2 0h2m2 0h1m5 0h1m-25 1h1m1 0h3m1 0h1m1 0h2m1 0h5m2 0h1m1 0h3m1 0h1m-25 1h1m1 0h3m1 0h1m2 0h1m2 0h1m5 0h1m1 0h3m1 0h1m-25 1h1m1 0h3m1 0h1m2 0h5m4 0h1m1 0h3m1 0h1m-25 1h1m5 0h1m4 0h1m2 0h1m1 0h1m1 0h1m5 0h1m-25 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-16 1h6m-14 1h3m1 0h2m3 0h2m1 0h2m1 0h1m5 0h2m-23 1h2m6 0h1m1 0h2m2 0h1m1 0h1m4 0h1m1 0h1m-21 1h1m1 0h1m1 0h1m1 0h1m3 0h1m2 0h4m-21 1h1m1 0h2m4 0h1m2 0h1m1 0h2m1 0h1m2 0h1m1 0h2m1 0h1m-24 1h1m1 0h1m1 0h2m2 0h1m5 0h1m2 0h3m3 0h1m-22 1h3m2 0h1m2 0h3m2 0h1m1 0h1m1 0h1m2 0h1m-23 1h1m1 0h2m1 0h3m4 0h1m2 0h1m1 0h1m2 0h3m-24 1h1m2 0h2m2 0h10m1 0h1m1 0h2m2 0h1m-23 1h3m1 0h2m3 0h1m1 0h2m1 0h7m-15 1h1m1 0h1m1 0h2m1 0h2m3 0h1m1 0h1m1 0h1m-25 1h7m2 0h2m2 0h4m1 0h1m1 0h1m1 0h1m1 0h1m-25 1h1m5 0h1m1 0h2m3 0h1m1 0h2m3 0h1m3 0h1m-25 1h1m1 0h3m1 0h1m2 0h1m1 0h1m1 0h1m2 0h6m1 0h2m-25 1h1m1 0h3m1 0h1m1 0h1m1 0h4m2 0h6m2 0h1m-25 1h1m1 0h3m1 0h1m1 0h6m1 0h1m1 0h1m2 0h1m2 0h1m-24 1h1m5 0h1m1 0h1m3 0h1m1 0h1m1 0h3m1 0h1m1 0h1m-23 1h7m2 0h1m1 0h2m5 0h1m3 0h3"/></svg>
     <span class="pk__cta">Tocca per ingrandire</span>
@@ -1557,6 +1614,7 @@
         <div><span class="k">Ingresso</span><span class="v">qualsiasi orario, 10:00–17:00</span></div>
         <div><span class="k">Ordine</span><span class="v">129390167</span></div>
       </div>
+      <p class="copia-riga"><button class="btn btn--ghost copia" type="button" data-copia="129390167">📋 Copia il n. d’ordine</button></p>
       <p class="pk__note">Nessuna fascia oraria: si entra quando si arriva. Mostrare i QR al personale all’ingresso di County Hall, uno per persona. Nessuna stampa necessaria.</p>
 
       <figure class="tk">
@@ -1619,6 +1677,7 @@
 
       <p class="tk-note">⏰ Ingresso a fascia oraria — non presentarsi prima delle 16:30. Museo aperto 10:00–17:50, ultimi ingressi in galleria verso le 17:30.</p>
       <p class="tk-order">Order ID 7800197 · South Kensington Admission, Natural History Museum</p>
+      <p class="copia-riga" style="text-align:center"><button class="btn btn--ghost copia" type="button" data-copia="7800197">📋 Copia l’Order ID</button></p>
     </div>
 
     <div class="card">
@@ -1641,6 +1700,7 @@
     <div class="card casa-card" id="casaCard">
       <h3>🏠 Appartamento <span class="st ok">✅ prenotato</span></h3>
       <p class="casa-indirizzo">79 Beak Street<br>London W1F 9SU</p>
+      <p class="copia-riga"><button class="btn btn--ghost copia" type="button" data-copia="79 Beak Street, London W1F 9SU">📋 Copia l’indirizzo</button><button class="btn btn--ghost copia" type="button" data-copia="5946777151">📋 Copia il n. Booking</button></p>
       <p class="meta">Bright Carnaby Soho · 3° piano · Soho · 2 notti, 15–17 novembre</p>
       <p class="meta">Cancellazione gratuita attiva · verificato con l'host.</p>
       <div class="ci-co">
@@ -1808,6 +1868,11 @@
   <section id="info" aria-labelledby="infoTit">
     <div class="eyebrow">Info</div>
     <h2 id="infoTit">Da sapere</h2>
+    <div class="card sole-card">
+      <h3>☀️ Lettura al sole</h3>
+      <p>Sfondo chiaro, contrasto più alto, testo più grande e niente ombre: per leggere la pagina in strada con la luce forte. Si ricorda su questo telefono.</p>
+      <button class="btn btn--secondario sole-btn" type="button" data-sole aria-pressed="false">☀️ Sole</button>
+    </div>
     <div class="card" id="listaPartenza">
       <h3>📋 Prima di partire</h3>
       <p class="pp-conti" id="ppConti"></p>
@@ -2005,6 +2070,7 @@
 </main>
 
 <!-- barra fissa in basso, a portata di pollice -->
+<button class="striscia" id="striscia" type="button" hidden><span class="striscia__k">Prossima</span><span class="striscia__v" id="strisciaTesto"></span><span class="striscia__fr" aria-hidden="true">›</span></button>
 <button class="btn btn--primario fab-adesso" id="fabAdesso" type="button" hidden>🕒 Adesso</button>
 <nav class="barra" aria-label="Sezioni della pagina">
   <a href="#adesso" data-barra="adesso"><span aria-hidden="true">🕒</span>Adesso</a>
@@ -2208,8 +2274,9 @@
      "Mostra l'indirizzo" usa lo stesso schermo per il tassista. */
   var CODICI = (function(){
     var lock = null, el = null, idx = 0, prima = null, lista = [];
-    function tieniAcceso(){ try { if (navigator.wakeLock && navigator.wakeLock.request) navigator.wakeLock.request('screen').then(function(l){ lock = l; }, function(){}); } catch (e) {} }
-    function rilascia(){ try { if (lock) lock.release(); } catch (e) {} lock = null; }
+    var DEV = /[?&]dev=1/.test(location.search);   // ?dev=1: il wake lock scrive in console quando parte e quando viene rilasciato
+    function tieniAcceso(){ try { if (navigator.wakeLock && navigator.wakeLock.request) navigator.wakeLock.request('screen').then(function(l){ lock = l; if (DEV) console.log('[wake lock] attivo'); }, function(){}); } catch (e) {} }
+    function rilascia(){ try { if (lock) { lock.release(); if (DEV) console.log('[wake lock] rilasciato'); } } catch (e) {} lock = null; }
     function riprendi(){ if (document.visibilityState === 'visible' && el) tieniAcceso(); }
     function slides(){
       var s = [], qr = document.querySelector('#biglietti .pk__svg');
@@ -2509,6 +2576,26 @@
     });
   })();
 
+  /* ====== «Copia»: numero di prenotazione e indirizzo negli appunti, con conferma per 1,5 s ====== */
+  document.addEventListener('click', function(e){
+    var b = e.target.closest('.copia'); if (!b) return;
+    var testo = b.dataset.copia, fatto = function(){ if (b.dataset.fatto) return; b.dataset.fatto = b.textContent; b.textContent = '✓ Copiato'; setTimeout(function(){ b.textContent = b.dataset.fatto; delete b.dataset.fatto; }, 1500); };
+    var riserva = function(){ try { var t = document.createElement('textarea'); t.value = testo; t.setAttribute('readonly', ''); t.style.position = 'fixed'; t.style.opacity = '0'; document.body.appendChild(t); t.select(); document.execCommand('copy'); t.remove(); fatto(); } catch (err) {} };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(testo).then(fatto, riserva); else riserva();
+  });
+  /* ====== SOLE: sfondo chiaro forzato, contrasto alto, testo +15 %, niente ombre. Stato in localStorage londra:sole ====== */
+  var SOLE = (function(){
+    var CHIAVE = 'londra:sole', btns = document.querySelectorAll('[data-sole]');
+    function leggi(){ try { return localStorage.getItem(CHIAVE) === '1'; } catch (e) { return false; } }
+    function applica(on, salva){
+      document.documentElement.classList.toggle('sole', on);
+      [].forEach.call(btns, function(b){ b.setAttribute('aria-pressed', String(on)); });
+      if (salva) try { if (on) localStorage.setItem(CHIAVE, '1'); else localStorage.removeItem(CHIAVE); } catch (e) {}
+    }
+    [].forEach.call(btns, function(b){ b.addEventListener('click', function(){ applica(!document.documentElement.classList.contains('sole'), true); }); });
+    applica(leggi(), false);
+    return { attivo: function(){ return document.documentElement.classList.contains('sole'); } };
+  })();
   var MOTO = { ridotto: function(){ return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches); } };
   /* ====== SHEET: il pannello dal basso, uno per tutti (Novità, schede «se avanza tempo») ======
      Sale in 250 ms, si chiude trascinandolo in giù (80 px), toccando lo sfondo o con Esc. Il markup ha già
@@ -2627,6 +2714,9 @@
       document.documentElement.dataset.dir = da && ORDINE.indexOf(nome) < ORDINE.indexOf(da) ? 'indietro' : 'avanti';
       function cambia(){
         applica(nome);
+        // l'hash segue la vista (senza hashchange): così la voce della barra risponde anche dopo il pulsante flottante o la striscia
+        var k = location.hash.slice(1), elK = k && document.getElementById(k);
+        if (k !== nome && !(elK && vistaDi(elK) === nome)) try { history.replaceState(null, '', location.pathname + location.search + '#' + nome); } catch (e) {}
         window.scrollTo({ top: nome === 'adesso' ? 0 : (posizioni[nome] || 0), behavior: 'instant' });
         aggiornaFab();
         document.dispatchEvent(new CustomEvent('vista', { detail: { nome: nome, da: da } }));
@@ -2642,13 +2732,23 @@
       if (da && !ridotto()) { var v = viste[nome]; v.classList.remove('vista--entra'); void v.offsetWidth; v.classList.add('vista--entra'); }
     }
     // va a un elemento: apre la sua vista, il suo giorno e i <details> che lo contengono, poi scorre
+    // Dopo lo scorrimento a un elemento la pagina può ancora cambiare sopra di lui: le card con content-visibility
+    // prendono la misura vera solo quando si disegnano, e le righe di bagni e depositi arrivano col thread libero.
+    // Quindi si riallinea una seconda volta poco dopo, e quando bagni e depositi sono montati; un tocco o una
+    // rotella dell'utente nel frattempo annullano il riallineamento.
+    var bersaglio = null, tBersaglio = 0;
+    function allinea(el, morbido){ el.scrollIntoView({ behavior: morbido ? 'smooth' : 'instant', block: 'start' }); }   // 'auto' erediterebbe scroll-behavior: smooth
+    function riallinea(){ if (bersaglio && Date.now() - tBersaglio < 5000) { var el = bersaglio; requestAnimationFrame(function(){ if (bersaglio === el) allinea(el, false); }); } }
+    document.addEventListener('bagni', riallinea); document.addEventListener('depositi', riallinea);
+    ['touchstart', 'wheel', 'keydown'].forEach(function(t){ document.addEventListener(t, function(){ bersaglio = null; }, { passive: true }); });
     function vaiA(el){
       if (!el) return;
       var nome = vistaDi(el) || attiva || 'adesso', morbido = nome === attiva && !ridotto();   // fra viste diverse il salto è secco
       mostra(nome, function(){
         var g = el.closest('details.acc.giorno'); if (g) giorno(GIORNI_SEG.filter(function(k){ return g.classList.contains(k); })[0]);
         for (var d = el.closest('details'); d; d = d.parentElement && d.parentElement.closest('details')) d.open = true;
-        requestAnimationFrame(function(){ el.scrollIntoView({ behavior: morbido ? 'smooth' : 'auto', block: 'start' }); });
+        bersaglio = el; tBersaglio = Date.now();
+        requestAnimationFrame(function(){ allinea(el, morbido); setTimeout(function(){ if (bersaglio === el) allinea(el, false); }, morbido ? 1300 : 350); });
       });
     }
     // giorni del programma: uno solo visibile; il controllo segmentato e lo scorrimento di lato lo cambiano
@@ -2684,6 +2784,8 @@
     function aggiornaFab(){ if (fab) fab.hidden = attiva === 'adesso' && window.scrollY < window.innerHeight * 0.8; }
     window.addEventListener('scroll', aggiornaFab, { passive: true });
     if (fab) fab.addEventListener('click', function(){ mostra('adesso'); window.scrollTo({ top: 0, behavior: ridotto() ? 'auto' : 'smooth' }); });
+    var striscia = document.getElementById('striscia');   // «Prossima: …» sopra la barra: un tocco apre Adesso
+    if (striscia) striscia.addEventListener('click', function(){ mostra('adesso'); window.scrollTo({ top: 0, behavior: ridotto() ? 'auto' : 'smooth' }); });
     // hash: nome di vista, o id di un elemento (apre la sua vista e scorre lì)
     function daHash(){
       var k = decodeURIComponent(location.hash.slice(1));
@@ -2747,18 +2849,22 @@
       var av = t.avviso && !senzaAvviso ? '<p class="bagno-avviso' + (/⚠️/.test(t.avviso) ? ' bagno-avviso--alert' : '') + '">' + esc(t.avviso) + '</p>' : '';
       return av + voce(t.principale, 'principale', key) + voce(t.riserva, 'riserva', key);
     }
-    function bottone(b, id, extra){
+    // corto = nella card, accanto a «Portami qui» (il nome del bagno sta nel pannello); intero in «Adesso»
+    function bottone(b, id, extra, corto){
       return '<button class="btn btn--secondario btn--blocco bagno-riga" type="button" aria-expanded="false" aria-controls="' + id + '"><span class="bagno-riga__txt">🚻 '
-        + esc(b.nome) + ' · ~' + b.minuti + ' min' + (stimato(b, ['minuti', 'distanza_m'], '') ? BADGE : '') + (extra || '') + '</span></button>';
+        + (corto ? 'Bagno' : esc(b.nome)) + ' · ~' + b.minuti + ' min' + (stimato(b, ['minuti', 'distanza_m'], '') ? BADGE : '') + (extra || '') + '</span></button>';
     }
     // le righe nelle card: sotto «Portami qui»
     function montaCard(card){
       var t = S.tappe[card.dataset.bagno]; if (!t) return false;
       var key = GIORNO[card.dataset.giorno], id = 'bagno-' + (++S.n);
+      // il pulsante sta accanto a «Portami qui», metà e metà, alto 48 px; il pannello si apre sotto, a tutta larghezza
       var box = document.createElement('div'); box.className = 'bagno-box';
-      box.innerHTML = bottone(t.principale, id) + '<div class="bagno-pan" id="' + id + '" hidden>' + pannello(t, key) + '</div>';
+      box.innerHTML = '<div class="bagno-pan" id="' + id + '" hidden>' + pannello(t, key) + '</div>';
+      var tmp = document.createElement('div'); tmp.innerHTML = bottone(t.principale, id, '', true); var btn = tmp.firstChild;
       var body = card.querySelector('.tcard__body'), vai = body.querySelector('a.gmap--vai');
-      if (vai) vai.insertAdjacentElement('afterend', box); else body.appendChild(box);
+      if (vai) { var az = document.createElement('div'); az.className = 'azioni-tappa'; vai.replaceWith(az); az.appendChild(vai); az.appendChild(btn); az.insertAdjacentElement('afterend', box); }
+      else { body.appendChild(btn); body.appendChild(box); }
       return true;
     }
     // sezione Info: regola del caffè, legenda, elenco per giorno (dalle card del programma), da evitare, metodo
@@ -2917,7 +3023,7 @@
         + esc(d.nome) + ' · ~' + d.minuti[t] + ' min' + (stimato(d, ['minuti', 'distanze_m'], '') ? BADGE : '') + '</span></button>'
         + '<div class="bagno-pan" id="' + id + '" hidden>' + pannello(t, card.dataset.giorno) + '</div>';
       // sotto la riga del bagno, se c'è; altrimenti sotto «Portami qui»
-      var body = card.querySelector('.tcard__body'), dopo = body.querySelector('.bagno-box:not(.deposito-box)') || body.querySelector('a.gmap--vai');
+      var body = card.querySelector('.tcard__body'), dopo = body.querySelector('.bagno-box:not(.deposito-box)') || body.querySelector('.azioni-tappa') || body.querySelector('a.gmap--vai');
       if (dopo) dopo.insertAdjacentElement('afterend', box); else body.appendChild(box);
       return true;
     }
@@ -3095,6 +3201,12 @@
       cod.hidden = !m;
       mostrata = prossima || corrente;
       window.ADESSO_STATO = { corrente: corrente ? corrente.el : null, prossima: prossima ? prossima.el : null };   // lo legge la mappa («Tappa di adesso», «Sei qui»)
+      // striscia sopra la barra: «Prossima: 11:00 St James's Park · tra 30 min», con lo stesso orologio
+      var st = $('striscia');
+      if (st) {
+        if (prossima) { var fq = fraQuanto(prossima.t - now, prossima, lo.data); $('strisciaTesto').textContent = prossima.giorno === lo.data ? prossima.ora + ' ' + prossima.nome + ' · ' + fq.split(' · ').slice(1).join(' · ') : prossima.nome + ' · ' + fq; st.hidden = false; document.documentElement.classList.add('con-striscia'); }
+        else { st.hidden = true; document.documentElement.classList.remove('con-striscia'); }
+      }
       $('adScheda').hidden = !mostrata;
       BAGNI.perAdesso(corrente, prossima, now, lo.data);
       $('adesso').hidden = false;
@@ -3129,7 +3241,7 @@
   /* ====== NOVITÀ: cosa è cambiato dall'ultima visita ======
      REGOLA: ogni modifica a questa pagina che Vale o Alessandro possano notare aggiunge una voce IN CIMA
      a NOVITA, con v = ultimo v + 1, nello stesso commit. Senza la voce l'aggiornamento passa inosservato.
-     È l'unico punto della pagina che usa localStorage, ed è voluto: una chiave sola per dispositivo,
+     Con la modalità Sole (londra:sole) è uno dei due punti della pagina che usano localStorage, ed è voluto: una chiave per dispositivo,
      con l'ultima versione vista. Se il localStorage non si può leggere o scrivere (navigazione privata,
      dati bloccati) il banner non compare: uno che non si può chiudere per sempre è peggio di niente.
      Il pannello non si apre mai da solo: in cima c'è un banner sottile «N novità», e si apre solo se toccato.
