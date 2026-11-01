@@ -1,0 +1,58 @@
+{
+  "nome": "f5",
+  "data": "2026-11-01T12:50:57.141Z",
+  "url": "http://localhost:4173/londra.html?now=2026-11-16T10:30",
+  "viste": {
+    "adesso": {
+      "altezza": 1425,
+      "schermate": 1.8,
+      "nodi": 3928,
+      "nodiVisibili": 106
+    },
+    "programma": {
+      "altezza": 8654,
+      "schermate": 10.7,
+      "nodi": 3928,
+      "nodiVisibili": 364
+    },
+    "biglietti": {
+      "altezza": 6264,
+      "schermate": 7.7,
+      "nodi": 3928,
+      "nodiVisibili": 235
+    },
+    "mappa": {
+      "altezza": 1574,
+      "schermate": 1.9,
+      "nodi": 4051,
+      "nodiVisibili": 1219
+    },
+    "info": {
+      "altezza": 5606,
+      "schermate": 6.9,
+      "nodi": 4051,
+      "nodiVisibili": 525
+    }
+  },
+  "errori": [],
+  "altezzaMax": 8654,
+  "schermateMax": 10.7,
+  "toccabiliPiccoli": [],
+  "scrollOrizzontale": {
+    "320": {
+      "larghezza": 320,
+      "scroll": 320,
+      "ok": true
+    },
+    "375": {
+      "larghezza": 375,
+      "scroll": 375,
+      "ok": true
+    },
+    "430": {
+      "larghezza": 430,
+      "scroll": 430,
+      "ok": true
+    }
+  }
+}
