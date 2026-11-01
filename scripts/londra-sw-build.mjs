@@ -15,7 +15,8 @@ export function precacheLondra(dist) {
     if (!existsSync(f)) continue
     const html = readFileSync(f, 'utf8')
     // + i file letti con fetch('percorso') (per esempio data/bagni-londra.json)
-    const rif = [...html.matchAll(/(?:src|href)="([^"#?]+)"/g), ...html.matchAll(/url\(\s*['"]?([^)'"?#]+)['"]?\s*\)/g), ...html.matchAll(/fetch\(\s*['"]([^'"?#]+)['"]/g)].map((m) => m[1])
+    // + i file che il JS carica da solo con s.src = '…' / css.href = '…' (Leaflet alla prima apertura della mappa)
+    const rif = [...html.matchAll(/(?:src|href)="([^"#?]+)"/g), ...html.matchAll(/(?:src|href)\s*=\s*'([^'#?]+)'/g), ...html.matchAll(/url\(\s*['"]?([^)'"?#]+)['"]?\s*\)/g), ...html.matchAll(/fetch\(\s*['"]([^'"?#]+)['"]/g)].map((m) => m[1])
     for (const r of rif) {
       if (/^(https?:|data:|mailto:|tel:|\/\/)/.test(r)) continue
       const rel = path.posix.normalize(r.replace(/^\.\//, ''))
