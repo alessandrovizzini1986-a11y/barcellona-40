@@ -543,6 +543,48 @@
     min-height:48px;padding:0 var(--s-4);box-shadow:var(--shadow-2);font-size:var(--f-16)}
   .fab-adesso[hidden]{display:none}
   @media (prefers-reduced-motion:reduce){.vista--entra,::view-transition-old(root),::view-transition-new(root){animation:none}}
+  /* ====== movimento (fase 3 UX) ======
+     <details> con apertura animata: ::details-content dove c'è, altrimenti il JS anima l'altezza. Chevron che ruota. */
+  @supports (interpolate-size: allow-keywords){
+    :root{interpolate-size:allow-keywords}
+    details.acc:not(.giorno)::details-content,details.det::details-content{block-size:0;overflow:hidden;
+      transition:block-size var(--t-base) var(--ease-out),content-visibility var(--t-base) allow-discrete}
+    details.acc:not(.giorno)[open]::details-content,details.det[open]::details-content{block-size:auto}
+  }
+  .det summary::after{content:"▾";display:inline-block;margin-left:var(--s-2);font-size:var(--f-12);transition:transform var(--t-base) var(--ease-out)}
+  .det[open] summary::after{content:"▾";transform:rotate(180deg)}
+  /* pressione sui pulsanti: 120 ms */
+  .btn:active{transform:scale(.97);transition:transform 120ms var(--ease-out)}
+  /* sheet dal basso: velo in dissolvenza, foglio che sale in 250 ms, maniglia per il trascinamento */
+  .nov-velo{opacity:0;transition:opacity var(--t-base) var(--ease-out)}
+  .nov-velo.sheet--on{opacity:1}
+  .nov{transform:translateY(100%);transition:transform var(--t-base) var(--ease-out);touch-action:pan-y}
+  .sheet--on .nov{transform:translateY(0)}
+  .nov.sheet--drag{transition:none}
+  .nov::before{content:"";display:block;flex:none;width:40px;height:4px;margin:var(--s-2) auto 0;border-radius:2px;background:var(--line-gold)}
+  /* «Adesso»: quando cambia la tappa il pannello si dissolve (View Transition sul solo pannello) */
+  #adesso{view-transition-name:adesso}
+  /* scheletro del meteo mentre carica */
+  .sk{display:inline-block;border-radius:6px;color:transparent!important;background:linear-gradient(90deg,var(--night-2) 25%,var(--line-gold) 50%,var(--night-2) 75%);
+    background-size:200% 100%;animation:sk 1.2s linear infinite}
+  @keyframes sk{to{background-position:-200% 0}}
+  .meteo--scheletro .meteo__riga{pointer-events:none}
+  /* testata: il titolo si riduce e la skyline si attenua scorrendo (solo in Adesso, dove la testata è intera) */
+  @supports (animation-timeline: scroll()){
+    html[data-vista-attiva="adesso"] .hero h1{transform-origin:50% 100%;animation:hero-titolo linear both;animation-timeline:scroll(root);animation-range:0 220px}
+    html[data-vista-attiva="adesso"] .skyline{animation:hero-skyline linear both;animation-timeline:scroll(root);animation-range:0 180px}
+  }
+  @keyframes hero-titolo{to{transform:scale(.78)}}
+  @keyframes hero-skyline{to{opacity:.2}}
+  /* chi preferisce meno movimento: tutto istantaneo, non assente */
+  @media (prefers-reduced-motion:reduce){
+    :root{--t-fast:0ms;--t-base:0ms;--t-slow:0ms}
+    *,::before,::after,::details-content{animation-duration:0s!important;animation-delay:0s!important;transition-duration:0s!important}
+    html{scroll-behavior:auto}
+    .hero h1,.skyline,.sk{animation:none!important}
+  }
+  /* niente salto quando compare «Disponibile offline»: lo spazio è già riservato */
+  .offline-ok[hidden]{display:block;visibility:hidden}
   /* portafoglio */
   .pk-riga{justify-content:flex-start;gap:var(--s-3);min-height:60px;margin:2px 0 var(--s-4);padding:var(--s-3) var(--s-4);text-align:left;border-radius:var(--r-m);font-weight:400}
   .pk-riga b{display:block;font-size:var(--f-16)}
@@ -594,8 +636,6 @@
   .det{margin-top:var(--s-2);font-size:var(--f-14);line-height:1.5;color:var(--muted)}
   .det summary{display:inline-flex;align-items:center;min-height:44px;color:var(--gold-soft);font-weight:700;font-size:var(--f-14);cursor:pointer;list-style:none}
   .det summary::-webkit-details-marker{display:none}
-  .det summary::after{content:"▾";margin-left:var(--s-2);font-size:var(--f-12)}
-  .det[open] summary::after{content:"▴"}
   .det p{margin-top:2px}
   /* scaletta in cima a ogni giorno: un colpo d'occhio, ogni riga porta alla sua card */
   .scaletta{list-style:none;margin:2px 0 var(--s-4);border:1px solid var(--line);border-radius:var(--r-m);overflow:hidden}
@@ -635,7 +675,6 @@
   .ad-scheda{flex:0 1 auto;background:none}
   /* offline: indicatore discreto in testata, versione in fondo */
   .offline-ok{margin-top:var(--s-2);font-size:var(--f-12);font-weight:700;color:var(--verde-testo);letter-spacing:.02em}
-  .offline-ok[hidden]{display:none}
   .ver-sito{margin-top:var(--s-3);font-size:var(--f-12);color:var(--muted)}
   /* passeggino a noleggio: piano B, nelle note pratiche */
   .psg{margin-top:var(--s-4)}
@@ -1926,12 +1965,6 @@
           <p class="tcard__credito">foto di famiglia</p>
         </article>
   </template>
-  <div class="nov-velo" id="plusVelo" hidden>
-    <section class="nov plus-foglio" role="dialog" aria-modal="true" aria-label="Se avanza tempo">
-      <div class="nov__lista" id="plusCorpo"></div>
-      <div class="nov__piede"><button class="btn btn--primario btn--blocco nov__ok" type="button" id="plusOk">Chiudi</button></div>
-    </section>
-  </div>
 
 </div>
 </main>
@@ -1953,6 +1986,13 @@
   <p style="margin-top:10px"><button class="btn btn--ghost nov-link" type="button" id="novApri">📋 Cosa è cambiato nel sito</button></p>
   <p class="ver-sito" id="verSito"></p>
 </footer>
+
+<div class="nov-velo" id="plusVelo" hidden>
+  <section class="nov plus-foglio" role="dialog" aria-modal="true" aria-label="Se avanza tempo">
+    <div class="nov__lista" id="plusCorpo"></div>
+    <div class="nov__piede"><button class="btn btn--primario btn--blocco nov__ok" type="button" id="plusOk">Chiudi</button></div>
+  </section>
+</div>
 
 <div class="nov-velo" id="novita" hidden>
   <section class="nov" role="dialog" aria-modal="true" aria-labelledby="novTit">
@@ -2002,7 +2042,8 @@
   /* ====== meteo ora per ora (Open-Meteo, nessuna chiave) ======
      Compare solo da 10 giorni prima della partenza (dal 5 novembre) fino alla fine del viaggio: prima la
      previsione per il 15-17 non esiste o non è affidabile, e dati incerti confondono più che aiutare.
-     Se la rete manca o l'API risponde con un errore la card resta nascosta: nessun placeholder.
+     Mentre carica mostra uno scheletro (così non c'è salto quando arriva); se la rete manca o l'API risponde
+     con un errore resta una riga «Meteo non disponibile», della stessa altezza.
      Niente cache: nessun dato salvato sul dispositivo. ?now=AAAA-MM-GG simula la data, solo per i test. */
   (function(){
     var card = document.getElementById('meteo');
@@ -2030,12 +2071,21 @@
     };
     var arr = function(v){ return Math.round(v) + '°'; };
 
+    // scheletro: la riga chiusa, con le forme di quello che arriverà
+    card.classList.add('meteo--scheletro'); card.hidden = false;
+    card.querySelector('.meteo__riga').innerHTML = '<span class="meteo__ora"><span class="ico sk">🌦️</span><span><b class="sk">12°</b><span class="meteo__dove sk">Londra, adesso</span></span></span>'
+      + '<span class="meteo__giorni">' + GIORNI.map(function(g){ return '<span class="sk">' + g[1] + ' 00/00°</span>'; }).join('') + '</span>';
+    function nonDisponibile(){
+      card.classList.remove('meteo--scheletro');
+      card.querySelector('.meteo__riga').innerHTML = '<span class="meteo__ora"><span class="ico">🌦️</span><span><b>Meteo</b><span class="meteo__dove">non disponibile ora</span></span></span>';
+      card.querySelector('.meteo__riga').disabled = true;
+    }
     var ctrl = window.AbortController ? new AbortController() : null;
     var t = setTimeout(function(){ if (ctrl) ctrl.abort(); }, 8000);
     fetch(URL, ctrl ? { signal: ctrl.signal } : {})
       .then(function(r){ return r.ok ? r.json() : null; })
-      .then(function(d){ clearTimeout(t); if (valido(d)) monta(d); else card.remove(); })
-      .catch(function(){ clearTimeout(t); card.remove(); });
+      .then(function(d){ clearTimeout(t); if (valido(d)) { card.classList.remove('meteo--scheletro'); monta(d); } else nonDisponibile(); })
+      .catch(function(){ clearTimeout(t); nonDisponibile(); });
 
     function valido(d){
       if (!d || d.error || !d.hourly || !d.daily) return false;
@@ -2297,6 +2347,7 @@
     }
     btns.forEach(function(btn){ btn.addEventListener('click', function(){
       piove = !piove;
+      if (navigator.vibrate) try { navigator.vibrate(10); } catch (e) {}
       document.documentElement.classList.toggle('piove', piove);
       btns.forEach(function(b){ b.setAttribute('aria-pressed', String(piove)); b.querySelector('.piove-stato').textContent = piove ? 'sì' : 'no'; });
       riepilogo(btn);
@@ -2421,22 +2472,94 @@
     });
   })();
 
+  var MOTO = { ridotto: function(){ return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches); } };
+  /* ====== SHEET: il pannello dal basso, uno per tutti (Novità, schede «se avanza tempo») ======
+     Sale in 250 ms, si chiude trascinandolo in giù (80 px), toccando lo sfondo o con Esc. Il markup ha già
+     role="dialog" e aria-modal; qui: focus intrappolato, ritorno del focus a chi l'ha aperto, inert sul resto. */
+  var SHEET = (function(){
+    var velo = null, da = null, dopoChiusura = null, timer = null, pendente = null;
+    var FUORI = 'header.hero, main, .barra, #fabAdesso';
+    function inerte(si){ [].forEach.call(document.querySelectorAll(FUORI), function(e){ if (si) e.setAttribute('inert', ''); else e.removeAttribute('inert'); }); }
+    function focusabili(el){ return [].filter.call(el.querySelectorAll('a[href],button:not([disabled]),input:not([disabled]),select,textarea,[tabindex]:not([tabindex="-1"])'), function(x){ return x.offsetParent !== null; }); }
+    function apri(v, opz){
+      if (velo) chiudi(true);
+      if (pendente) { clearTimeout(timer); var fp = pendente; pendente = null; fp(); }   // una chiusura ancora in corso si completa subito
+      velo = v; opz = opz || {};
+      da = opz.da || document.activeElement; dopoChiusura = opz.chiudi || null;
+      v.hidden = false; v.querySelector('.nov').style.transform = '';
+      document.documentElement.classList.add('nov-aperto'); inerte(true);
+      requestAnimationFrame(function(){ v.classList.add('sheet--on'); });
+      var f = opz.focus || focusabili(v)[0] || v.querySelector('.nov'); if (f && f.focus) f.focus();
+    }
+    function chiudi(subito){
+      if (!velo) return;
+      var v = velo, fn = dopoChiusura, torna = da; velo = null; dopoChiusura = null; da = null;
+      v.classList.remove('sheet--on'); inerte(false); document.documentElement.classList.remove('nov-aperto');
+      var fine = function(){ v.hidden = true; v.querySelector('.nov').style.transform = ''; if (fn) fn(); if (torna && torna.focus && document.contains(torna)) torna.focus(); };
+      if (subito || MOTO.ridotto()) fine(); else { pendente = fine; timer = setTimeout(function(){ pendente = null; fine(); }, 270); }
+    }
+    document.addEventListener('click', function(e){ if (velo && e.target === velo) chiudi(); });
+    document.addEventListener('keydown', function(e){
+      if (!velo) return;
+      if (e.key === 'Escape') { e.preventDefault(); chiudi(); return; }
+      if (e.key !== 'Tab') return;
+      var f = focusabili(velo); if (!f.length) { e.preventDefault(); return; }
+      var i = f.indexOf(document.activeElement);
+      if (e.shiftKey && (i <= 0)) { e.preventDefault(); f[f.length - 1].focus(); }
+      else if (!e.shiftKey && (i === f.length - 1 || i < 0)) { e.preventDefault(); f[0].focus(); }
+    });
+    // trascinamento in giù: parte solo se la lista è in cima; oltre 80 px chiude, se no torna su
+    var y0 = null, dy = 0, foglio = null;
+    document.addEventListener('touchstart', function(e){
+      if (!velo || e.touches.length !== 1) { y0 = null; return; }
+      foglio = e.target.closest('.nov'); if (!foglio) { y0 = null; return; }
+      var lista = e.target.closest('.nov__lista'); if (lista && lista.scrollTop > 0) { y0 = null; return; }
+      y0 = e.touches[0].clientY; dy = 0;
+    }, { passive: true });
+    document.addEventListener('touchmove', function(e){
+      if (y0 === null || !foglio) return;
+      dy = Math.max(0, e.touches[0].clientY - y0);
+      if (dy > 0) { foglio.classList.add('sheet--drag'); foglio.style.transform = 'translateY(' + dy + 'px)'; }
+    }, { passive: true });
+    document.addEventListener('touchend', function(){
+      if (y0 === null || !foglio) return;
+      foglio.classList.remove('sheet--drag');
+      if (dy > 80) { foglio.style.transform = 'translateY(' + dy + 'px)'; chiudi(); }
+      else foglio.style.transform = '';
+      y0 = null; dy = 0;
+    }, { passive: true });
+    return { apri: apri, chiudi: function(){ chiudi(false); }, aperto: function(){ return velo; } };
+  })();
+
+  /* ====== <details> animati dove non c'è ::details-content (Safari e Firefox vecchi): il JS anima l'altezza ====== */
+  if (!(window.CSS && CSS.supports && CSS.supports('interpolate-size', 'allow-keywords'))) document.addEventListener('click', function(e){
+    var s = e.target.closest('summary'); if (!s) return;
+    var d = s.parentElement; if (!d || !d.matches('details.acc:not(.giorno), details.det') || !d.animate || MOTO.ridotto()) return;
+    e.preventDefault();
+    var h0 = d.getBoundingClientRect().height, opz = { duration: 250, easing: 'cubic-bezier(.2,.7,.2,1)' };
+    d.style.overflow = 'hidden';
+    if (d.open) {
+      var a = d.animate([{ height: h0 + 'px' }, { height: s.getBoundingClientRect().height + 'px' }], opz);
+      a.onfinish = function(){ d.open = false; d.style.overflow = ''; };
+    } else {
+      d.open = true;
+      var b = d.animate([{ height: h0 + 'px' }, { height: d.getBoundingClientRect().height + 'px' }], opz);
+      b.onfinish = function(){ d.style.overflow = ''; };
+    }
+  });
+
   /* ====== tappe "se avanza tempo": la scheda completa si apre in un foglio ====== */
   (function(){
     var tpl = document.getElementById('plusSchede'), velo = document.getElementById('plusVelo'), corpo = document.getElementById('plusCorpo');
     if (!tpl || !velo) return;
     var da = null;
-    function chiudi(){ velo.hidden = true; corpo.innerHTML = ''; document.documentElement.classList.remove('nov-aperto'); if (da) da.focus(); }
     document.addEventListener('click', function(e){
       var b = e.target.closest('[data-plus]'); if (!b) return;
       var sch = tpl.content.querySelector('[data-plus-id="' + b.dataset.plus + '"]'); if (!sch) return;
       da = b; corpo.innerHTML = ''; var k = sch.cloneNode(true); k.querySelectorAll('img').forEach(function(i){ i.loading = 'eager'; }); corpo.appendChild(k);
-      velo.hidden = false; document.documentElement.classList.add('nov-aperto');
-      document.getElementById('plusOk').focus();
+      SHEET.apri(velo, { da: b, focus: document.getElementById('plusOk'), chiudi: function(){ corpo.innerHTML = ''; } });
     });
-    document.getElementById('plusOk').addEventListener('click', chiudi);
-    velo.addEventListener('click', function(e){ if (e.target === velo) chiudi(); });
-    document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && !velo.hidden) chiudi(); });
+    document.getElementById('plusOk').addEventListener('click', SHEET.chiudi);
   })();
 
   /* ====== VISTE: una sezione alla volta ======
@@ -2852,7 +2975,20 @@
       return '';
     }
     var mostrata = null;
+    // quando cambia la coppia tappa in corso / prossima, il pannello si dissolve invece di cambiare di colpo
+    var chiaveAdesso = null;
     function adesso(){
+      var now = OROLOGIO.adesso(), l = tappe(), c = null, p = null;
+      l.forEach(function(x){ if (x.t <= now) c = x; else if (!p) p = x; });
+      var k = (c ? c.nome : '') + '|' + (p ? p.nome : ''), cambia = chiaveAdesso !== null && k !== chiaveAdesso; chiaveAdesso = k;
+      var pan = $('adesso');
+      if (cambia && !pan.hidden && !MOTO.ridotto()) {
+        if (document.startViewTransition) { try { var t = document.startViewTransition(disegnaAdesso); t.ready.catch(function(){}); t.finished.catch(function(){}); return; } catch (e) {} }
+        if (pan.animate) pan.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 250, easing: 'ease-out' });
+      }
+      disegnaAdesso();
+    }
+    function disegnaAdesso(){
       var now = OROLOGIO.adesso(), lo = OROLOGIO.parti(now), lista = tappe(), corrente = null, prossima = null;
       lista.forEach(function(x){ if (x.t <= now) corrente = x; else if (!prossima) prossima = x; });
       // una tappa con durata stimata non è più "in corso" quando la durata è passata (si è in cammino verso la prossima)
@@ -3111,20 +3247,12 @@
           + dataIt(e.data) + '</div><h3>' + esc(e.titolo) + '</h3><ul>'
           + e.voci.map(function(x){ return '<li>' + esc(x) + '</li>'; }).join('') + '</ul></article>';
       }).join('');
-      velo.hidden = false;
-      document.documentElement.classList.add('nov-aperto');
-      document.getElementById('novOk').focus();
+      SHEET.apri(velo, { focus: document.getElementById('novOk'), chiudi: viste });
     }
-    // qualunque modo di chiudere segna come viste: così il pannello non insegue nessuno
-    function chiudi(){
-      salva();
-      if (banner) banner.hidden = true;
-      velo.hidden = true;
-      document.documentElement.classList.remove('nov-aperto');
-    }
+    // qualunque modo di chiudere (pulsante, sfondo, Esc, trascinamento) segna come viste: così il pannello non insegue nessuno
+    function viste(){ salva(); if (banner) banner.hidden = true; }
+    function chiudi(){ SHEET.chiudi(); }
     document.getElementById('novOk').addEventListener('click', chiudi);
-    velo.addEventListener('click', function(e){ if (e.target === velo) chiudi(); });
-    document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && !velo.hidden) chiudi(); });
     document.getElementById('novApri').addEventListener('click', function(){ apri(false); });
 
     var banner = document.getElementById('novBanner');
@@ -3198,6 +3326,7 @@
     seenBtns.forEach(function(b){
       b.addEventListener('click',function(){
         var on=!seenState[b.dataset.oid];
+        if (navigator.vibrate) try { navigator.vibrate(10); } catch (e) {}
         seenState[b.dataset.oid]=on;
         b.classList.toggle('seen',on);
         refreshOlly();
