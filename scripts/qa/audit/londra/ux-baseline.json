@@ -1,0 +1,165 @@
+{
+  "nome": "baseline",
+  "data": "2026-11-01T11:33:56.147Z",
+  "url": "http://localhost:4173/londra.html?now=2026-11-16T10:30",
+  "lighthouse": {
+    "performance": 96,
+    "accessibilita": 100,
+    "bestPractices": 100,
+    "seo": 66,
+    "fcp_ms": 1352,
+    "lcp_ms": 2704,
+    "speedIndex_ms": 1352,
+    "tbt_ms": 2,
+    "cls": 0.024,
+    "threadPrincipale_ms": 5173,
+    "nodiDom": 3868,
+    "pesoTrasferito_kB": 524,
+    "richieste": 18,
+    "a11yFalliti": [
+      "label-content-name-mismatch"
+    ],
+    "bpFalliti": [
+      "errors-in-console"
+    ]
+  },
+  "lighthouseCorse": [
+    {
+      "performance": 95,
+      "accessibilita": 100,
+      "bestPractices": 96,
+      "seo": 66,
+      "fcp_ms": 1352,
+      "lcp_ms": 2922,
+      "speedIndex_ms": 1352,
+      "tbt_ms": 3,
+      "cls": 0.024,
+      "threadPrincipale_ms": 2178,
+      "nodiDom": 3868,
+      "pesoTrasferito_kB": 524,
+      "richieste": 18,
+      "a11yFalliti": [
+        "label-content-name-mismatch"
+      ],
+      "bpFalliti": [
+        "errors-in-console"
+      ]
+    },
+    {
+      "performance": 96,
+      "accessibilita": 100,
+      "bestPractices": 100,
+      "seo": 66,
+      "fcp_ms": 1352,
+      "lcp_ms": 2702,
+      "speedIndex_ms": 1352,
+      "tbt_ms": 0,
+      "cls": 0.024,
+      "threadPrincipale_ms": 5267,
+      "nodiDom": 3868,
+      "pesoTrasferito_kB": 524,
+      "richieste": 18,
+      "a11yFalliti": [
+        "label-content-name-mismatch"
+      ],
+      "bpFalliti": []
+    },
+    {
+      "performance": 96,
+      "accessibilita": 100,
+      "bestPractices": 100,
+      "seo": 66,
+      "fcp_ms": 1354,
+      "lcp_ms": 2704,
+      "speedIndex_ms": 1354,
+      "tbt_ms": 2,
+      "cls": 0.024,
+      "threadPrincipale_ms": 5173,
+      "nodiDom": 3868,
+      "pesoTrasferito_kB": 524,
+      "richieste": 18,
+      "a11yFalliti": [
+        "label-content-name-mismatch"
+      ],
+      "bpFalliti": []
+    }
+  ],
+  "viste": {
+    "adesso": {
+      "altezza": 22071,
+      "schermate": 27.2,
+      "nodi": 3907,
+      "nodiVisibili": 2708
+    },
+    "programma": {
+      "altezza": 22071,
+      "schermate": 27.2,
+      "nodi": 3907,
+      "nodiVisibili": 2708
+    },
+    "biglietti": {
+      "altezza": 22071,
+      "schermate": 27.2,
+      "nodi": 3907,
+      "nodiVisibili": 2708
+    },
+    "mappa": {
+      "altezza": 22071,
+      "schermate": 27.2,
+      "nodi": 4018,
+      "nodiVisibili": 2813
+    },
+    "info": {
+      "altezza": 22071,
+      "schermate": 27.2,
+      "nodi": 4018,
+      "nodiVisibili": 2813
+    }
+  },
+  "errori": [],
+  "altezzaMax": 22071,
+  "schermateMax": 27.2,
+  "toccabiliPiccoli": [
+    {
+      "el": "a",
+      "testo": "Baboodle",
+      "w": 62,
+      "h": 16
+    },
+    {
+      "el": "a",
+      "testo": "The London Baby Equipment Hire Company",
+      "w": 219,
+      "h": 36
+    },
+    {
+      "el": "a",
+      "testo": "Babonbo",
+      "w": 59,
+      "h": 16
+    },
+    {
+      "el": "a",
+      "testo": "🖼️ Versione per immagini, per Olly →",
+      "w": 219,
+      "h": 15
+    }
+  ],
+  "scrollOrizzontale": {
+    "320": {
+      "larghezza": 320,
+      "scroll": 320,
+      "ok": true
+    },
+    "375": {
+      "larghezza": 375,
+      "scroll": 375,
+      "ok": true
+    },
+    "430": {
+      "larghezza": 430,
+      "scroll": 430,
+      "ok": true
+    }
+  }
+}
