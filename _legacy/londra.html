@@ -2714,9 +2714,10 @@
       document.documentElement.dataset.dir = da && ORDINE.indexOf(nome) < ORDINE.indexOf(da) ? 'indietro' : 'avanti';
       function cambia(){
         applica(nome);
-        // l'hash segue la vista (senza hashchange): così la voce della barra risponde anche dopo il pulsante flottante o la striscia
+        // l'hash segue la vista (senza hashchange): così la voce della barra risponde anche dopo il pulsante flottante o la
+        // striscia. Non all'avvio: cambiare l'URL subito dopo il caricamento fa perdere l'LCP a Lighthouse (NO_LCP)
         var k = location.hash.slice(1), elK = k && document.getElementById(k);
-        if (k !== nome && !(elK && vistaDi(elK) === nome)) try { history.replaceState(null, '', location.pathname + location.search + '#' + nome); } catch (e) {}
+        if (da && k !== nome && !(elK && vistaDi(elK) === nome)) try { history.replaceState(null, '', location.pathname + location.search + '#' + nome); } catch (e) {}
         window.scrollTo({ top: nome === 'adesso' ? 0 : (posizioni[nome] || 0), behavior: 'instant' });
         aggiornaFab();
         document.dispatchEvent(new CustomEvent('vista', { detail: { nome: nome, da: da } }));
@@ -3247,6 +3248,12 @@
      Il pannello non si apre mai da solo: in cima c'è un banner sottile «N novità», e si apre solo se toccato.
      Il link in fondo alla pagina lo riapre con tutto lo storico, in ogni caso. */
   var NOVITA = [
+    { v: 33, data: '2026-11-01', titolo: '📱 La pagina è diventata un’app', voci: [
+      'Barra in basso con cinque voci: Adesso, Programma, Biglietti, Mappa, Info. Una vista alla volta, e il Programma mostra un giorno per volta: si cambia con i tre pulsanti in cima o scorrendo di lato',
+      'Pulsante «🕒 Adesso» sempre a portata di pollice e, durante il viaggio, la striscia «Prossima: …» sopra la barra',
+      'Mappa più grande, a schermo intero se serve: «Tappa di adesso» la centra sulla tappa in corso, «Sei qui» mostra dove siete e i minuti alla prossima tappa, un tocco su un giorno mostra solo quello',
+      '«☀️ Sole» in testata e in Info: sfondo chiaro, testo più grande e contrasto alto per leggere in strada. «Copia» accanto a indirizzo e numeri di prenotazione',
+      'Tutto più leggero e veloce, funziona ancora senza rete; chi preferisce meno movimento ha tutto istantaneo' ] },
     { v: 32, data: '2026-10-25', titolo: '🧳 Depositi bagagli', voci: [
       '🧳 Depositi bagagli: il deposito più vicino a SEA LIFE, Camden, Covent Garden e casa, con orari e prenotazione',
       'Sotto la riga del bagno, nelle card di SEA LIFE, check-out, Camden e Covent Garden: un tocco apre principale e riserva, con orari del giorno, voto, 📍 Maps e 📲 Prenota',
