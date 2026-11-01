@@ -369,8 +369,30 @@
   html.pk-open{overflow:hidden}
 
   /* mappa */
-  #map{height:300px;border-radius:var(--r-m);border:1px solid var(--line-gold);box-shadow:var(--shadow-card);
+  #map{height:60svh;min-height:300px;border-radius:var(--r-m);border:1px solid var(--line-gold);box-shadow:var(--shadow-card);
     margin-top:var(--s-4);background:var(--night-1);z-index:0}
+  /* mappa a schermo intero: Fullscreen API sulla cornice, o la cornice fissa a tutto schermo dove non c'è */
+  .map-cornice{position:relative}
+  .map-cornice:fullscreen{background:var(--night-0);padding:0}
+  .map-cornice.map-pieno{position:fixed;inset:0;z-index:1400;background:var(--night-0)}
+  .map-cornice:fullscreen #map,.map-cornice.map-pieno #map{height:100%;min-height:0;margin:0;border:0;border-radius:0;box-shadow:none}
+  .map-chiudi{position:absolute;top:max(var(--s-3),env(safe-area-inset-top));left:50%;transform:translateX(-50%);z-index:1001}
+  .map-chiudi[hidden]{display:none}
+  .map-azioni{display:flex;flex-wrap:wrap;gap:var(--s-2);margin-top:var(--s-3)}
+  .map-azioni .btn{flex:1 1 auto}
+  .map-qui{margin-top:var(--s-2);font-size:var(--f-14);line-height:1.45;color:var(--ink)}
+  .map-qui[hidden]{display:none}
+  /* legenda come filtro: acceso = solo quel giorno */
+  .legend__b{min-height:44px;padding:0 var(--s-3);background:var(--night-1);border-color:var(--line);color:var(--ink);font-size:var(--f-12);font-weight:600;gap:var(--s-2)}
+  .legend__b[aria-pressed="true"]{border-color:var(--gold-fill);background:rgba(212,169,78,.16);font-weight:800}
+  .legend.legend--filtro .legend__b[aria-pressed="false"]{opacity:.55}
+  /* «Sei qui»: punto azzurro che pulsa */
+  .pin-qui-hit{width:44px;height:44px;display:grid;place-items:center}
+  .pin-qui{width:18px;height:18px;border-radius:50%;background:#3a86ad;border:3px solid #fff;box-shadow:0 0 0 0 rgba(58,134,173,.55);animation:qui 1.6s ease-out infinite}
+  @keyframes qui{to{box-shadow:0 0 0 14px rgba(58,134,173,0)}}
+  @media (prefers-reduced-motion:reduce){.pin-qui{animation:none}}
+  /* ventaglio: le gambe dal punto vero al marker spostato */
+  .map-gamba{pointer-events:none}
   /* mappa senza rete: messaggio sopra lo sfondo vuoto */
   #map{position:relative}
   #map.map-offline::after{content:"🗺️ Mappa non disponibile senza rete";position:absolute;inset:0;z-index:1000;
@@ -1728,11 +1750,20 @@
     <div class="eyebrow">Mappa</div>
     <h2>Dove andiamo</h2>
     <p class="sub2">Un colore per ogni giornata. Linea piena = a piedi, tratteggiata = metro.</p>
-    <div id="map" role="region" aria-label="Mappa delle tappe del viaggio"></div>
-    <div class="legend">
-      <span><i style="background:#d4a94e"></i>Domenica</span>
-      <span><i style="background:#c8362b"></i>Lunedì</span>
-      <span><i style="background:#6db3d8"></i>Martedì</span>
+    <div class="map-cornice" id="mapCornice">
+      <div id="map" role="region" aria-label="Mappa delle tappe del viaggio"></div>
+      <button class="btn btn--primario map-chiudi" type="button" id="mapChiudi" hidden>✕ Chiudi la mappa</button>
+    </div>
+    <div class="map-azioni">
+      <button class="btn btn--secondario" type="button" id="mapAdesso">📍 Tappa di adesso</button>
+      <button class="btn btn--secondario btn--cielo" type="button" id="mapQui">🧭 Sei qui</button>
+      <button class="btn btn--secondario" type="button" id="mapPieno">⛶ Schermo intero</button>
+    </div>
+    <p class="map-qui" id="mapRiga" role="status" hidden></p>
+    <div class="legend" role="group" aria-label="Giorni: un tocco mostra solo quel giorno, un altro li mostra tutti">
+      <button class="btn legend__b" type="button" data-giorno-mappa="dom" aria-pressed="false"><i style="background:#d4a94e"></i>Domenica</button>
+      <button class="btn legend__b" type="button" data-giorno-mappa="lun" aria-pressed="false"><i style="background:#c8362b"></i>Lunedì</button>
+      <button class="btn legend__b" type="button" data-giorno-mappa="mar" aria-pressed="false"><i style="background:#6db3d8"></i>Martedì</button>
       <span>🏠 Casa</span>
       <span><i class="line"></i>A piedi</span>
       <span><i class="line dash"></i>Metro</span>
@@ -3063,6 +3094,7 @@
       }
       cod.hidden = !m;
       mostrata = prossima || corrente;
+      window.ADESSO_STATO = { corrente: corrente ? corrente.el : null, prossima: prossima ? prossima.el : null };   // lo legge la mappa («Tappa di adesso», «Sei qui»)
       $('adScheda').hidden = !mostrata;
       BAGNI.perAdesso(corrente, prossima, now, lo.data);
       $('adesso').hidden = false;
@@ -3463,6 +3495,7 @@
 
   var bounds=[];
 
+  var gruppiGiorno={dom:L.layerGroup().addTo(map),lun:L.layerGroup().addTo(map),mar:L.layerGroup().addTo(map)}, marcatori=[];
   /* linee dei percorsi, sotto i marker: tratteggiate per la metro, piene a piedi */
   ROUTES.forEach(function(r){
     for(var i=1;i<r.stops.length;i++){
@@ -3471,18 +3504,111 @@
         color:COLORS[r.g], weight:3, opacity:.65,
         dashArray: mode==='metro' ? '2,10' : null,
         lineCap:'round'
-      }).addTo(map);
+      }).addTo(gruppiGiorno[r.g]);
     }
   });
 
   var popup=function(p,g,note){ return '<b>'+p.n+'</b><br><small>'+GIORNI[g]+' · '+note+'</small>'+vai(p); };
+  /* marker e linee per giorno, così la legenda li filtra; ogni marker ricorda il punto vero (il ventaglio lo sposta solo a schermo) */
+  function registra(m,t,p){ var x={m:m,t:t,p:p,reale:L.latLng(p.lat,p.lng)}; marcatori.push(x); m.on('click',function(){ if(!aperti||aperti.items.indexOf(x)<0) ventaglio(x); }); return x; }
   TAPPE.forEach(function(t){
-    L.marker([t.p.lat,t.p.lng],{icon:pinIcon(COLORS[t.g]),title:t.p.n}).addTo(map).bindPopup(popup(t.p,t.g,t.note));
+    var m=L.marker([t.p.lat,t.p.lng],{icon:pinIcon(COLORS[t.g]),title:t.p.n});
+    registra(m,t,t.p); m.bindPopup(popup(t.p,t.g,t.note)).addTo(gruppiGiorno[t.g]);
     bounds.push([t.p.lat,t.p.lng]);
   });
-  L.marker([CASA.lat,CASA.lng],{icon:homeIcon,title:CASA.n,zIndexOffset:500}).addTo(map)
-    .bindPopup('<b>🏠 '+CASA.n+'</b><br><small>'+CASA.note+'</small>'+vai(CASA));
+  var casaMarker=L.marker([CASA.lat,CASA.lng],{icon:homeIcon,title:CASA.n,zIndexOffset:500});
+  registra(casaMarker,null,CASA); casaMarker.bindPopup('<b>🏠 '+CASA.n+'</b><br><small>'+CASA.note+'</small>'+vai(CASA)).addTo(map);
   bounds.push([CASA.lat,CASA.lng]);
+  /* ventaglio (spiderfy a mano, senza plugin): al tocco di un marker con altri a meno di 18 px allo zoom corrente,
+     il gruppo si apre a raggiera con una gamba verso il punto vero. Si richiude toccando la mappa o cambiando zoom.
+     Le coordinate reali non cambiano mai: si sposta solo l'icona. */
+  var aperti=null;
+  function chiudiVentaglio(){ if(!aperti) return; aperti.items.forEach(function(x){ x.m.setLatLng(x.reale); }); aperti.leg.forEach(function(l){ map.removeLayer(l); }); aperti=null; }
+  function ventaglio(x){
+    var p0=map.latLngToLayerPoint(x.reale);
+    var vicini=marcatori.filter(function(y){ return y!==x && map.hasLayer(y.m) && map.latLngToLayerPoint(y.reale).distanceTo(p0)<18; });
+    if(!vicini.length) return false;
+    chiudiVentaglio();
+    var tutti=[x].concat(vicini), n=tutti.length, r=30+4*n, legs=[];
+    tutti.forEach(function(y,i){
+      var a=-Math.PI/2+i*2*Math.PI/n, ll=map.layerPointToLatLng(L.point(p0.x+r*Math.cos(a),p0.y+r*Math.sin(a)));
+      y.m.setLatLng(ll);
+      legs.push(L.polyline([y.reale,ll],{color:'#fff',weight:1.5,opacity:.75,interactive:false,className:'map-gamba'}).addTo(map));
+    });
+    aperti={items:tutti,leg:legs};
+    return true;
+  }
+  map.on('click zoomstart',chiudiVentaglio);
+  /* legenda = filtro: un tocco mostra solo quel giorno, un altro tocco rimette tutto (stato nella pagina, nessuno storage) */
+  var filtro=null, legenda=document.querySelector('.legend');
+  function filtra(g){
+    filtro = filtro===g ? null : g; chiudiVentaglio();
+    ['dom','lun','mar'].forEach(function(k){ if(!filtro||k===filtro) map.addLayer(gruppiGiorno[k]); else map.removeLayer(gruppiGiorno[k]); });
+    [].forEach.call(document.querySelectorAll('.legend__b'),function(b){ b.setAttribute('aria-pressed',String(b.dataset.giornoMappa===filtro)); });
+    if(legenda) legenda.classList.toggle('legend--filtro',!!filtro);
+  }
+  document.addEventListener('click',function(e){ var b=e.target.closest('.legend__b'); if(b) filtra(b.dataset.giornoMappa); });
+  /* «Tappa di adesso» e «Sei qui» */
+  var riga=document.getElementById('mapRiga');
+  function scrivi(html){ if(!riga) return; riga.innerHTML=html; riga.hidden=!html; }
+  function coordDi(el){ var a=el&&el.querySelector('a.gmap--vai'); var m=a&&/destination=(-?[\d.]+),(-?[\d.]+)/.exec(a.getAttribute('href')||''); return m?L.latLng(+m[1],+m[2]):null; }
+  function nomeDi(el){ var t=el&&el.querySelector('h4'); return t?t.textContent.trim():''; }
+  function tappaDiAdesso(){
+    var st=window.ADESSO_STATO||{}, el=st.corrente||st.prossima, c=coordDi(el); if(!c) return null;
+    var best=null, bd=1e9; marcatori.forEach(function(x){ var d=x.reale.distanceTo(c); if(d<bd){ bd=d; best=x; } });
+    return bd<150 ? best : null;
+  }
+  var btnAdesso=document.getElementById('mapAdesso');
+  if(btnAdesso) btnAdesso.addEventListener('click',function(){
+    var x=tappaDiAdesso();
+    if(!x){ scrivi('📍 Nessuna tappa in corso adesso: il programma è nelle tre giornate del viaggio.'); return; }
+    if(filtro && x.t && x.t.g!==filtro) filtra(filtro);
+    chiudiVentaglio(); map.setView(x.reale,16); x.m.openPopup(); scrivi('');
+  });
+  var quiMarker=null, btnQui=document.getElementById('mapQui');
+  if(btnQui) btnQui.addEventListener('click',function(){
+    if(!navigator.geolocation){ scrivi('🧭 Questo telefono non dà la posizione.'); return; }
+    btnQui.disabled=true; scrivi('🧭 Cerco la posizione…');
+    navigator.geolocation.getCurrentPosition(function(pos){
+      btnQui.disabled=false;
+      var ll=L.latLng(pos.coords.latitude,pos.coords.longitude);
+      if(!quiMarker) quiMarker=L.marker(ll,{icon:L.divIcon({className:'',html:'<div class="pin-qui-hit"><div class="pin-qui"></div></div>',iconSize:[44,44],iconAnchor:[22,22]}),title:'Sei qui',zIndexOffset:600,interactive:false}).addTo(map);
+      else quiMarker.setLatLng(ll);
+      map.setView(ll,Math.max(map.getZoom(),15));
+      // minuti a piedi fino alla prossima tappa (o a quella in corso): distanza in linea d'aria × 1,3 a 4 km/h, come il resto del sito
+      var st=window.ADESSO_STATO||{}, el=st.prossima||st.corrente, c=coordDi(el);
+      if(c){ var min=Math.max(1,Math.round(ll.distanceTo(c)*1.3/(4000/60))); scrivi('🧭 Sei a ~'+min+' min a piedi da <b>'+nomeDi(el).replace(/[<>&]/g,'')+'</b> <span class="st est" title="Stimato: linea d’aria × 1,3 a 4 km/h">stimato</span>'); }
+      else scrivi('🧭 Posizione trovata.');
+    },function(err){
+      btnQui.disabled=false;
+      scrivi(err&&err.code===1 ? '🧭 Posizione negata: si può consentire dalle impostazioni del telefono.' : '🧭 Posizione non trovata, riprova fra poco.');
+    },{enableHighAccuracy:true,timeout:10000,maximumAge:60000});
+  });
+  /* schermo intero: Fullscreen API sulla cornice; dove manca (iPhone) la cornice si fissa a tutto schermo. Con un dito si trascina. */
+  var cornice=document.getElementById('mapCornice'), btnPieno=document.getElementById('mapPieno'), btnChiudi=document.getElementById('mapChiudi'), pienoFallback=false;
+  function pienoAttivo(){ return document.fullscreenElement===cornice || pienoFallback; }
+  function dopoPieno(){
+    var on=pienoAttivo();
+    if(btnChiudi) btnChiudi.hidden=!on;
+    if(btnPieno) btnPieno.textContent = on ? '⛶ Esci dallo schermo intero' : '⛶ Schermo intero';
+    if(on) map.dragging.enable(); else if(touch) map.dragging.disable();
+    setTimeout(function(){ map.invalidateSize(); },120);
+  }
+  function entraPieno(){
+    if(cornice.requestFullscreen){ var pr=cornice.requestFullscreen(); if(pr&&pr.then){ pr.then(dopoPieno,fallbackPieno); return; } dopoPieno(); return; }
+    fallbackPieno();
+  }
+  function fallbackPieno(){ pienoFallback=true; cornice.classList.add('map-pieno'); document.documentElement.classList.add('nov-aperto'); dopoPieno(); }
+  function esciPieno(){
+    if(document.fullscreenElement===cornice && document.exitFullscreen){ var pr=document.exitFullscreen(); if(pr&&pr.then) pr.then(dopoPieno,dopoPieno); else dopoPieno(); return; }
+    pienoFallback=false; cornice.classList.remove('map-pieno'); document.documentElement.classList.remove('nov-aperto'); dopoPieno();
+  }
+  if(btnPieno) btnPieno.addEventListener('click',function(){ if(pienoAttivo()) esciPieno(); else entraPieno(); });
+  if(btnChiudi) btnChiudi.addEventListener('click',esciPieno);
+  document.addEventListener('fullscreenchange',dopoPieno);
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&pienoFallback) esciPieno(); });
+  window.MAPPA={ marcatori:function(){ return marcatori.map(function(x){ var ll=x.m.getLatLng(); return { n:x.p.n, g:x.t?x.t.g:'casa', reale:[x.reale.lat,x.reale.lng], mostrato:[ll.lat,ll.lng], visibile:map.hasLayer(x.m) }; }); },
+    filtra:filtra, filtro:function(){ return filtro; }, chiudiVentaglio:chiudiVentaglio, aperto:function(){ return aperti?aperti.items.length:0; }, centro:function(){ var c=map.getCenter(); return [c.lat,c.lng,map.getZoom()]; }, pieno:pienoAttivo };
   // livelli "🚻 Bagni" e "🧳 Depositi", spenti di default, nello stesso controllo (compare col primo dei due)
   var livelli=L.control.layers(null,null,{collapsed:true,position:'topright'}), livelliSullaMappa=false;
   function aggiungiLivello(nome,gruppo){ livelli.addOverlay(gruppo,nome); if (!livelliSullaMappa) { livelliSullaMappa=true; livelli.addTo(map); } }
