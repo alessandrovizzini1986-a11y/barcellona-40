@@ -1,6 +1,14 @@
 {
   "entries": [
     {
+      "v": 56,
+      "data": "2026-11-01",
+      "titolo": "Londra: sistema di design",
+      "voci": [
+        "Pagina di Londra: pulsanti, chip e badge uniformati, tutti i tocchi almeno 44 px, voce attiva della barra con la barretta sopra l'icona, colori del tema chiaro a contrasto AA"
+      ]
+    },
+    {
       "v": 55,
       "data": "2026-10-25",
       "titolo": "Londra: depositi bagagli",
