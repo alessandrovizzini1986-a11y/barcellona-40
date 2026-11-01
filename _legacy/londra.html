@@ -45,10 +45,15 @@
     --ink:#f5f0e8;--muted:#bec5d2;
     --ok:#7dd3a4;
     --line:rgba(245,240,232,.09);--line-gold:rgba(212,169,78,.3);
-    --shadow-card:0 18px 44px -20px rgba(0,0,0,.75);
     /* riempimenti (uguali nei due temi) e testi colorati (cambiano col tema) */
     --gold-fill:#d4a94e;--sky-fill:#6db3d8;--on-accent:#0d1321;
     --rosso-testo:#ffb3ac;--verde-testo:#8fe0b6;--info-testo:#bcdcee;
+    /* scale del sistema: spazi, testo, raggi, ombre, tempi e curve. Le regole usano questi, non valori sparsi */
+    --s-1:4px;--s-2:8px;--s-3:12px;--s-4:16px;--s-5:24px;--s-6:32px;
+    --f-12:12px;--f-14:14px;--f-16:16px;--f-18:18px;--f-22:22px;--f-28:clamp(24px,7vw,28px);--f-36:clamp(26px,7.5vw,36px);
+    --r-s:10px;--r-m:16px;--r-l:22px;
+    --shadow-1:0 6px 18px -10px rgba(0,0,0,.6);--shadow-2:0 18px 44px -20px rgba(0,0,0,.75);--shadow-card:var(--shadow-2);
+    --t-fast:150ms;--t-base:250ms;--t-slow:400ms;--ease-out:cubic-bezier(.2,.7,.2,1);--ease-spring:cubic-bezier(.34,1.56,.64,1);
     color-scheme:dark;
   }
   /* Tema chiaro automatico quando il telefono è in modalità chiara: utile al sole. Nessun interruttore. */
@@ -60,7 +65,8 @@
       --ink:#141a26;--muted:#3f4757;
       --ok:#0f4a2e;
       --line:rgba(20,26,38,.13);--line-gold:rgba(138,100,20,.38);
-      --shadow-card:0 12px 30px -20px rgba(20,26,38,.45);
+      --shadow-1:0 4px 14px -8px rgba(20,26,38,.3);--shadow-2:0 12px 30px -20px rgba(20,26,38,.45);
+      --gold-fill:#b8862a;--sky-fill:#3a86ad;
       --rosso-testo:#7d1d15;--verde-testo:#0f4a2e;--info-testo:#17496a;
       color-scheme:light;
     }
@@ -75,12 +81,13 @@
   }
   html{scroll-behavior:smooth;background:var(--night-0)}
   body{background:var(--night-0);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-    line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
-  h1,h2,h3{font-family:"Playfair Display",Georgia,serif;line-height:1.06;letter-spacing:-.01em;text-wrap:balance}
-  p,li{text-wrap:pretty}
+    line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden;font-variant-numeric:tabular-nums}
+  h1,h2,h3{font-family:"Playfair Display",Georgia,serif;line-height:1.06;letter-spacing:-.01em}
+  h1,h2,h3,h4,h5{text-wrap:balance}
+  p,li,summary,figcaption,dt,dd{text-wrap:pretty}
   a{color:var(--gold-soft)}
-  .wrap{max-width:560px;margin:0 auto;padding:0 18px}
-  :focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:6px}
+  .wrap{max-width:560px;margin:0 auto;padding:0 var(--s-4)}
+  :focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:6px}
   :focus:not(:focus-visible){outline:none}
 
   /* aurora notturna di sfondo */
@@ -90,22 +97,18 @@
     linear-gradient(180deg,var(--night-0),#101828 55%,var(--night-0))}
 
   /* ============ HERO ============ */
-  .hero{position:relative;text-align:center;padding:22px 18px 0;overflow:hidden}
-  .hero .badge{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line-gold);border-radius:999px;
-    padding:7px 15px;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
+  .hero{position:relative;text-align:center;padding:var(--s-5) var(--s-4) 0;overflow:hidden}
+  .hero .badge{display:inline-flex;align-items:center;gap:var(--s-2);border:1px solid var(--line-gold);border-radius:999px;
+    padding:var(--s-2) 15px;font-size:var(--f-12);font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
   .hero .badge .dot{width:7px;height:7px;border-radius:50%;background:var(--gold-fill);animation:pulse 2s infinite}
   @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(212,169,78,.55)}70%{box-shadow:0 0 0 9px rgba(212,169,78,0)}100%{box-shadow:0 0 0 0 rgba(212,169,78,0)}}
-  .hero h1{font-size:clamp(44px,13vw,64px);font-weight:700;margin-top:10px;
+  .hero h1{font-size:clamp(44px,13vw,64px);font-weight:700;margin-top:var(--s-3);
     background:linear-gradient(180deg,#fdf6e3 20%,var(--gold-soft) 60%,var(--gold) 100%);
     -webkit-background-clip:text;background-clip:text;color:transparent;
     text-shadow:0 0 60px rgba(212,169,78,.25)}
-  .hero .sub{margin-top:12px;font-size:15.5px;color:var(--muted)}
+  .hero .sub{margin-top:var(--s-3);font-size:var(--f-16);color:var(--muted)}
   .hero .sub b{color:var(--ink);font-weight:600}
-  .hero .fam{margin-top:6px;font-family:"Playfair Display",serif;font-style:italic;font-size:17px;color:var(--gold-soft)}
-  .pics-btn{display:inline-flex;align-items:center;gap:7px;margin-top:22px;font-weight:700;font-size:14px;
-    color:#0d1321;background:linear-gradient(135deg,#e8c87e,#d4a94e);border-radius:999px;
-    padding:11px 20px;text-decoration:none;box-shadow:0 12px 30px -12px rgba(212,169,78,.55)}
-  .pics-btn:active{transform:scale(.97)}
+  .hero .fam{margin-top:var(--s-2);font-family:"Playfair Display",serif;font-style:italic;font-size:var(--f-18);color:var(--gold-soft)}
   /* skyline decorativa (SVG inline, leggerissima) */
   .skyline{display:block;width:100%;max-width:640px;margin:10px auto -1px;color:#060a14}
   .skyline svg{display:block;width:auto;height:34px;margin:0 auto}
@@ -115,135 +118,156 @@
   @media (prefers-reduced-motion:reduce){.snow{display:none}.hero .badge .dot{animation:none}}
 
   /* ============ SEZIONI ============ */
-  main{padding:34px 0 10px}
+  main{padding:34px 0 var(--s-3)}
   section{margin-top:34px}
-  .eyebrow{display:flex;align-items:center;gap:10px;font-size:11px;font-weight:700;letter-spacing:.2em;
-    text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+  .eyebrow{display:flex;align-items:center;gap:var(--s-3);font-size:var(--f-12);font-weight:700;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--gold);margin-bottom:var(--s-3)}
   .eyebrow::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--gold-dim),transparent)}
-  h2{font-size:clamp(26px,7.5vw,34px);margin-bottom:6px}
-  .sub2{color:var(--muted);font-size:14.5px;margin-bottom:14px}
+  h2{font-size:var(--f-36);margin-bottom:var(--s-2)}
+  .sub2{color:var(--muted);font-size:var(--f-14);margin-bottom:var(--s-4)}
 
-  /* badge di stato */
-  .st{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;letter-spacing:.05em;
-    text-transform:uppercase;border-radius:999px;padding:3px 10px;white-space:nowrap;vertical-align:middle}
-  .st.ok{color:var(--verde-testo);background:rgba(79,174,124,.14);border:1px solid rgba(79,174,124,.4)}
-  .st.todo{color:var(--rosso-testo);background:rgba(200,54,43,.16);border:1px solid rgba(200,54,43,.5)}
-  .st.est{color:var(--gold-soft);background:rgba(212,169,78,.12);border:1px solid var(--line-gold)}
-
-  /* card generica */
-  .card{background:linear-gradient(180deg,var(--night-1),var(--night-2));border:1px solid var(--line);
-    border-radius:18px;padding:18px;box-shadow:var(--shadow-card);margin-top:14px}
-  .card h3{font-size:19px}
-  .card .meta{color:var(--muted);font-size:13.5px;margin-top:3px}
+  /* ====== componenti del sistema: una regola per tipo; le classi storiche (.st, .gmap, .tcard…) ne sono alias ======
+     .btn: primario (oro pieno), secondario (bordo), ghost (solo testo); --cielo per il colore dei percorsi, --grande per
+     i pulsanti alti 56 px di «Adesso» e dei codici, --blocco a tutta larghezza. Tutti alti almeno 44 px. */
+  .btn,.gmap,.bagno-maps,.ad-vai,.ad-scheda,.casa-mostra,.nov__ok,.cod-nav button,.ad-codice,.ad-proposta__az button,.oc-seen,
+  .olly-nav button,.meteo__chips button,.piove-btn,.pics-link,.pp-link,.guardia-link,.pop-vai,.nov-link,.ad-guardia a,.pk-riga,.plus-riga,.nov-banner,.bagno-riga,.meteo__riga{
+    display:inline-flex;align-items:center;justify-content:center;gap:var(--s-2);min-height:44px;padding:0 var(--s-4);
+    border:1px solid transparent;border-radius:999px;background:none;color:var(--ink);font:inherit;font-weight:700;font-size:var(--f-14);line-height:1.25;
+    text-decoration:none;cursor:pointer;-webkit-tap-highlight-color:transparent;
+    transition:transform var(--t-fast) var(--ease-out),background-color var(--t-fast),border-color var(--t-fast),color var(--t-fast)}
+  .btn--primario,.ad-vai,.casa-mostra,.nov__ok,.ad-proposta__si{background:var(--gold-fill);border-color:var(--gold-fill);color:var(--on-accent);font-weight:800}
+  .btn--secondario,.ad-scheda,.ad-proposta__no,.oc-seen,.olly-nav button,.meteo__chips button,.piove-btn,.pk-riga,.plus-riga,.nov-banner,.bagno-riga{border-color:var(--line-gold);background:rgba(212,169,78,.08)}
+  .btn--cielo,.gmap,.bagno-maps{color:var(--sky);border-color:rgba(109,179,216,.4);background:rgba(109,179,216,.1)}
+  .btn--inline{display:inline-flex;vertical-align:middle;color:var(--sky);font-weight:700;text-decoration:underline;text-underline-offset:3px}
+  .btn--ghost,.pics-link,.pp-link,.guardia-link,.pop-vai,.nov-link,.ad-guardia a{padding:0 var(--s-1);color:var(--gold-soft);justify-content:flex-start}
+  .btn--grande,.ad-vai,.ad-scheda,.ad-codice,.cod-nav button,.ad-azioni .piove-btn{min-height:56px;border-radius:var(--r-m);font-size:var(--f-16)}
+  .btn--blocco,.nov__ok,.ad-codice,.pk-riga,.plus-riga,.nov-banner,.bagno-riga,.meteo__riga{display:flex;width:100%}
+  .btn:active,.gmap:active,.bagno-maps:active,.ad-vai:active,.ad-scheda:active,.casa-mostra:active,.nov__ok:active,.pk-riga:active,.plus-riga:active{transform:scale(.97)}
+  /* .chip: etichetta piccola, non interattiva (durata, giorno, modo del percorso, vincolo) */
+  .chip,.tdur,.hp-badge,.legend span,.plus-meta span,.percorso__modo,.chip-vincolo{display:inline-flex;align-items:center;gap:var(--s-2);
+    padding:3px var(--s-3);border:1px solid var(--line);border-radius:999px;background:rgba(245,240,232,.06);color:var(--ink);
+    font-size:var(--f-12);font-weight:700;line-height:1.35;white-space:nowrap}
+  .chip--oro,.tdur,.hp-badge.dom{color:var(--gold-soft);background:rgba(212,169,78,.12);border-color:var(--line-gold)}
+  .chip--rosso,.chip-vincolo,.hp-badge.lun{color:var(--rosso-testo);background:rgba(200,54,43,.14);border-color:rgba(200,54,43,.45)}
+  .chip--cielo,.hp-badge.mar{color:var(--sky);background:rgba(109,179,216,.14);border-color:rgba(109,179,216,.4)}
+  /* .badge: stato (fatto, da fare, da verificare, stimato, prenotato), maiuscoletto */
+  .badge,.st,.pp-stato,.pk__paid,.bagno-chiusa,.bagno-scale{display:inline-flex;align-items:center;gap:5px;padding:3px var(--s-3);
+    border:1px solid transparent;border-radius:999px;font-size:var(--f-12);font-weight:700;letter-spacing:.05em;line-height:1.3;
+    text-transform:uppercase;white-space:nowrap;vertical-align:middle}
+  .badge--fatto,.badge--prenotato,.st.ok,.pp-stato--fatto,.pk__paid{color:var(--verde-testo);background:rgba(79,174,124,.14);border-color:rgba(79,174,124,.4)}
+  .badge--da-fare,.pp-stato--da_fare{color:var(--gold-soft);background:rgba(212,169,78,.1);border-color:var(--line-gold)}
+  .badge--da-verificare,.st.todo,.pp-stato--da_verificare,.bagno-chiusa,.bagno-scale{color:var(--rosso-testo);background:rgba(200,54,43,.14);border-color:rgba(200,54,43,.45)}
+  .badge--stimato,.st.est{color:var(--gold-soft);background:rgba(212,169,78,.12);border-color:var(--line-gold)}
+  /* .card: superficie; .sheet: pannello dal basso (Novità, schede «se avanza tempo») */
+  .card,.tcard,details.acc,.ora-pan,.olly-card,.pk{background:linear-gradient(180deg,var(--night-1),var(--night-2));border:1px solid var(--line);
+    border-radius:var(--r-m);box-shadow:var(--shadow-2);margin-top:var(--s-4)}
+  .card{padding:var(--s-4)}
+  .card h3{font-size:var(--f-18)}
+  .sheet,.nov{width:100%;max-width:560px;max-height:82vh;display:flex;flex-direction:column;background:var(--night-1);
+    border:1px solid var(--line-gold);border-bottom:0;border-radius:var(--r-l) var(--r-l) 0 0;box-shadow:0 -20px 50px -10px rgba(0,0,0,.7)}
+  .card .meta{color:var(--muted);font-size:var(--f-14);margin-top:3px}
 
   /* check-in / check-out */
-  .ci-co{display:flex;gap:10px;margin-top:14px}
-  .ci-co .chip2{flex:1;background:rgba(212,169,78,.08);border:1px solid var(--line-gold);border-radius:12px;
-    padding:10px 12px;text-align:center}
-  .ci-co .chip2 .k{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700}
-  .ci-co .chip2 .v{font-family:"Playfair Display",serif;font-weight:700;font-size:20px;margin-top:3px;color:var(--gold-soft)}
-  .ci-co-note{margin-top:10px;font-size:12.5px;color:var(--muted);line-height:1.5}
-  .why{margin-top:12px;font-size:12.5px;color:var(--muted);line-height:1.55;border-top:1px dashed var(--line);padding-top:12px}
+  .ci-co{display:flex;gap:var(--s-3);margin-top:var(--s-4)}
+  .ci-co .chip2{flex:1;background:rgba(212,169,78,.08);border:1px solid var(--line-gold);border-radius:var(--r-s);
+    padding:var(--s-3) var(--s-3);text-align:center}
+  .ci-co .chip2 .k{font-size:var(--f-12);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700}
+  .ci-co .chip2 .v{font-family:"Playfair Display",serif;font-weight:700;font-size:var(--f-22);margin-top:3px;color:var(--gold-soft)}
+  .ci-co-note{margin-top:var(--s-3);font-size:var(--f-12);color:var(--muted);line-height:1.5}
+  .why{margin-top:var(--s-3);font-size:var(--f-12);color:var(--muted);line-height:1.55;border-top:1px dashed var(--line);padding-top:var(--s-3)}
   .why b{color:var(--ink)}
 
   /* voli */
-  .flight{display:flex;align-items:center;gap:10px;margin-top:14px;padding-top:14px;border-top:1px dashed var(--line)}
-  .flight:first-of-type{margin-top:12px;padding-top:12px}
-  .flight .ap{font-family:"Playfair Display",serif;font-weight:700;font-size:22px;line-height:1}
-  .flight .ap small{display:block;font-family:system-ui,sans-serif;font-weight:400;font-size:11px;color:var(--muted);margin-top:3px}
-  .flight .mid{flex:1;text-align:center;color:var(--gold);font-size:12px;position:relative}
+  .flight{display:flex;align-items:center;gap:var(--s-3);margin-top:var(--s-4);padding-top:var(--s-4);border-top:1px dashed var(--line)}
+  .flight:first-of-type{margin-top:var(--s-3);padding-top:var(--s-3)}
+  .flight .ap{font-family:"Playfair Display",serif;font-weight:700;font-size:var(--f-22);line-height:1}
+  .flight .ap small{display:block;font-family:system-ui,sans-serif;font-weight:400;font-size:var(--f-12);color:var(--muted);margin-top:3px}
+  .flight .mid{flex:1;text-align:center;color:var(--gold);font-size:var(--f-12);position:relative}
   .flight .mid::before{content:"";position:absolute;left:0;right:0;top:50%;height:1px;
     background:repeating-linear-gradient(90deg,var(--gold-dim) 0 5px,transparent 5px 10px)}
-  .flight .mid span{position:relative;background:var(--night-1);padding:0 8px}
+  .flight .mid span{position:relative;background:var(--night-1);padding:0 var(--s-2)}
   .flight .t{text-align:right}
-  .flight .t b{font-variant-numeric:tabular-nums;font-size:15px}
-  .flight .t small{display:block;color:var(--muted);font-size:11.5px}
+  .flight .t b{font-variant-numeric:tabular-nums;font-size:var(--f-16)}
+  .flight .t small{display:block;color:var(--muted);font-size:var(--f-12)}
 
   /* accordion giornate */
-  details.acc{background:linear-gradient(180deg,var(--night-1),var(--night-2));border:1px solid var(--line);
-    border-radius:18px;box-shadow:var(--shadow-card);margin-top:14px;overflow:hidden}
+  details.acc{overflow:hidden}
   details.acc[open]{border-color:var(--line-gold)}
-  details.acc > summary{list-style:none;cursor:pointer;display:block;padding:16px 18px;
+  details.acc > summary{list-style:none;cursor:pointer;display:block;padding:var(--s-4) var(--s-4);
     -webkit-tap-highlight-color:transparent}
   details.acc > summary::-webkit-details-marker{display:none}
-  .srow{display:flex;align-items:center;gap:13px}
+  .srow{display:flex;align-items:center;gap:var(--s-3)}
 
   /* meteo ora per ora (modello Barcellona): una card sola in cima al programma.
      Chiusa: adesso + i tre giorni del viaggio. Aperta: striscia scorrevole fino alle 23, alba e tramonto.
      Compare solo da 10 giorni prima della partenza; senza dati non compare affatto. */
-  .meteo{margin:0 0 16px;background:var(--night-1);border:1px solid var(--line-gold);border-radius:16px;overflow:hidden}
+  .meteo{margin:0 0 var(--s-4);background:var(--night-1);border:1px solid var(--line-gold);border-radius:var(--r-m);overflow:hidden}
   .meteo[hidden]{display:none}
-  .meteo__riga{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;min-height:56px;
-    padding:8px 14px;border:0;background:none;color:var(--ink);font:inherit;text-align:left;cursor:pointer}
-  .meteo__ora{display:inline-flex;align-items:center;gap:9px;min-width:0}
-  .meteo__ora .ico{font-size:24px;line-height:1}
-  .meteo__ora b{display:block;font-family:"Playfair Display",serif;font-size:22px;line-height:1;font-variant-numeric:tabular-nums}
-  .meteo__dove{display:block;font-size:11.5px;color:var(--muted);white-space:nowrap}
-  .meteo__giorni{display:inline-flex;gap:10px;flex:none}
-  .meteo__giorni > span{display:flex;flex-direction:column;align-items:center;gap:1px;font-size:11.5px;line-height:1.2;color:var(--muted);white-space:nowrap}
+  .meteo__riga{justify-content:space-between;gap:var(--s-3);min-height:56px;padding:var(--s-2) var(--s-4);border:0;border-radius:0;font-weight:400;text-align:left}
+  .meteo__ora{display:inline-flex;align-items:center;gap:var(--s-2);min-width:0}
+  .meteo__ora .ico{font-size:var(--f-28);line-height:1}
+  .meteo__ora b{display:block;font-family:"Playfair Display",serif;font-size:var(--f-22);line-height:1;font-variant-numeric:tabular-nums}
+  .meteo__dove{display:block;font-size:var(--f-12);color:var(--muted);white-space:nowrap}
+  .meteo__giorni{display:inline-flex;gap:var(--s-3);flex:none}
+  .meteo__giorni > span{display:flex;flex-direction:column;align-items:center;gap:1px;font-size:var(--f-12);line-height:1.2;color:var(--muted);white-space:nowrap}
   .meteo__giorni > span > b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
-  .meteo__chev{color:var(--gold);font-size:11px;transition:transform .2s}
+  .meteo__chev{color:var(--gold);font-size:var(--f-12);transition:transform var(--t-base) var(--ease-out)}
   .meteo__riga[aria-expanded="true"] .meteo__chev{transform:rotate(180deg)}
-  .meteo__dett{display:flex;flex-direction:column;gap:12px;padding:12px 14px 14px;border-top:1px solid var(--line)}
+  .meteo__dett{display:flex;flex-direction:column;gap:var(--s-3);padding:var(--s-3) var(--s-4) var(--s-4);border-top:1px solid var(--line)}
   .meteo__dett[hidden]{display:none}
-  .meteo__chips{display:flex;gap:8px}
-  .meteo__chips button{border:1px solid var(--line-gold);background:none;color:var(--muted);font:inherit;font-size:12.5px;font-weight:700;
-    border-radius:999px;padding:5px 12px;cursor:pointer}
+  .meteo__chips{display:flex;gap:var(--s-2)}
+  .meteo__chips button{background:none;color:var(--muted);font-size:var(--f-12);padding:0 var(--s-3)}
   .meteo__chips button[aria-selected="true"]{background:var(--gold-fill);border-color:var(--gold);color:var(--on-accent)}
   .meteo__striscia{display:flex;gap:2px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;
-    overscroll-behavior-x:contain;scrollbar-width:none;margin:0 -14px;padding:0 14px}
+    overscroll-behavior-x:contain;scrollbar-width:none;margin:0 -14px;padding:0 var(--s-4)}
   .meteo__striscia::-webkit-scrollbar{display:none}
-  .meteo__col{flex:0 0 50px;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 0;scroll-snap-align:start;font-size:12px}
+  .meteo__col{flex:0 0 50px;display:flex;flex-direction:column;align-items:center;gap:var(--s-1);padding:var(--s-2) 0;scroll-snap-align:start;font-size:var(--f-12)}
   .meteo__col .h{color:var(--muted)}
   .meteo__col--forte .h{color:var(--ink);font-weight:700}
-  .meteo__col .ico{font-size:18px;line-height:1.1}
-  .meteo__col b{font-size:14px;font-variant-numeric:tabular-nums}
+  .meteo__col .ico{font-size:var(--f-18);line-height:1.1}
+  .meteo__col b{font-size:var(--f-14);font-variant-numeric:tabular-nums}
   .meteo__col .p{min-height:1.2em;color:var(--sky);font-weight:700;font-variant-numeric:tabular-nums}
-  .meteo__sole{font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
-  .daynum{flex:none;width:46px;height:46px;border-radius:13px;display:flex;flex-direction:column;align-items:center;justify-content:center;
-    font-family:"Playfair Display",serif;font-weight:700;font-size:19px;line-height:1;border:1px solid var(--line-gold)}
-  .daynum small{font-family:system-ui,sans-serif;font-weight:600;font-size:8.5px;letter-spacing:.1em;margin-top:2px;opacity:.8}
+  .meteo__sole{font-size:var(--f-12);color:var(--muted);font-variant-numeric:tabular-nums}
+  .daynum{flex:none;width:46px;height:46px;border-radius:var(--r-m);display:flex;flex-direction:column;align-items:center;justify-content:center;
+    font-family:"Playfair Display",serif;font-weight:700;font-size:var(--f-18);line-height:1;border:1px solid var(--line-gold)}
+  .daynum small{font-family:system-ui,sans-serif;font-weight:600;font-size:var(--f-12);letter-spacing:.1em;margin-top:2px;opacity:.8}
   .acc.dom .daynum{color:var(--gold);background:rgba(212,169,78,.1)}
   .acc.lun .daynum{color:var(--rosso-testo);background:rgba(200,54,43,.14);border-color:rgba(200,54,43,.45)}
   .acc.mar .daynum{color:var(--sky);background:rgba(109,179,216,.1);border-color:rgba(109,179,216,.4)}
   .dtit{flex:1;min-width:0}
-  .dtit h3{font-size:18.5px}
-  .dtit p{color:var(--muted);font-size:12.5px;margin-top:2px}
-  .chev{flex:none;color:var(--gold);font-size:13px;transition:transform .25s}
+  .dtit h3{font-size:var(--f-18)}
+  .dtit p{color:var(--muted);font-size:var(--f-12);margin-top:2px}
+  .chev{flex:none;color:var(--gold);font-size:var(--f-14);transition:transform var(--t-base) var(--ease-out)}
   details[open] .chev{transform:rotate(180deg)}
-  .dbody{padding:2px 18px 18px}
+  .dbody{padding:2px var(--s-4) var(--s-4)}
 
   /* timeline verticale */
-  .tl{list-style:none;position:relative;margin-top:4px}
+  .tl{list-style:none;position:relative;margin-top:var(--s-1)}
   .tl::before{content:"";position:absolute;left:57px;top:8px;bottom:8px;width:1px;
     background:linear-gradient(180deg,var(--gold-dim),var(--line))}
-  .tl li{display:flex;gap:14px;padding:9px 0;position:relative}
-  .tl .hh{flex:none;width:44px;text-align:right;font-size:12px;font-weight:700;color:var(--gold-soft);
+  .tl li{display:flex;gap:var(--s-4);padding:var(--s-2) 0;position:relative}
+  .tl .hh{flex:none;width:44px;text-align:right;font-size:var(--f-12);font-weight:700;color:var(--gold-soft);
     font-variant-numeric:tabular-nums;padding-top:2px}
   .tl .hh.na{color:var(--muted);font-weight:500}
   .tl .pt{flex:none;width:27px;display:flex;justify-content:center;align-items:flex-start;position:relative;z-index:1}
   .tl .pt span{width:26px;height:26px;border-radius:50%;background:var(--night-0);border:1px solid var(--line-gold);
-    display:flex;align-items:center;justify-content:center;font-size:13px}
-  .tl .tx{flex:1;min-width:0;font-size:14.5px}
+    display:flex;align-items:center;justify-content:center;font-size:var(--f-14)}
+  .tl .tx{flex:1;min-width:0;font-size:var(--f-14)}
   .tl .tx b{font-weight:600}
-  .tl .tx small{display:block;color:var(--muted);font-size:12.5px;margin-top:1px;line-height:1.45}
-  .tl .tx .st{margin-left:6px;transform:translateY(-1px)}
-  .alt{margin-top:4px;border:1px dashed var(--line-gold);border-radius:12px;padding:9px 11px;font-size:12.5px;line-height:1.5}
+  .tl .tx small{display:block;color:var(--muted);font-size:var(--f-12);margin-top:1px;line-height:1.45}
+  .tl .tx .st{margin-left:var(--s-2);transform:translateY(-1px)}
+  .alt{margin-top:var(--s-1);border:1px dashed var(--line-gold);border-radius:var(--r-s);padding:var(--s-2) var(--s-3);font-size:var(--f-12);line-height:1.5}
   .alt b{color:var(--gold-soft)}
   /* un solo pulsante Maps per card, alto 44 px: "Portami qui" parte dalla posizione attuale */
-  .gmap{display:inline-flex;align-items:center;gap:6px;min-height:44px;margin-top:10px;font-size:14.5px;font-weight:700;
-    color:var(--sky);text-decoration:none;border:1px solid rgba(109,179,216,.4);border-radius:999px;
-    padding:0 16px;background:rgba(109,179,216,.1)}
-  .gmap__modo{font-size:12.5px;font-weight:600;color:var(--muted)}
-  .cred-tit{margin:4px 0 6px;font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--gold-soft)}
-  .cred-tit:not(:first-child){margin-top:18px}
-  .gmap:active{transform:scale(.97)}
-  .alt .gmap{margin-top:8px}
+  .gmap{margin-top:var(--s-3)}
+  .gmap__modo{font-size:var(--f-12);font-weight:600;color:var(--muted)}
+  .cred-tit{margin:var(--s-1) 0 var(--s-2);font-size:var(--f-14);font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--gold-soft)}
+  .cred-tit:not(:first-child){margin-top:var(--s-4)}
+  .alt .gmap{margin-top:var(--s-2)}
 
   /* card tappa con foto: immagine 16:9 in cima, orario in sovrimpressione, credito sotto */
-  .tcard{background:linear-gradient(180deg,var(--night-1),var(--night-2));border:1px solid var(--line);
-    border-radius:18px;overflow:hidden;box-shadow:var(--shadow-card);margin-top:14px}
-  .tcard__foto{position:relative;aspect-ratio:16/9;overflow:hidden;border-radius:18px 18px 0 0;
+  .tcard{overflow:hidden}
+  .tcard__foto{position:relative;aspect-ratio:16/9;overflow:hidden;border-radius:var(--r-m) var(--r-m) 0 0;
     background-color:var(--night-2);
     background-image:linear-gradient(135deg,rgba(212,169,78,.20) 25%,transparent 25%),
       linear-gradient(225deg,rgba(200,54,43,.16) 25%,transparent 25%),
@@ -253,122 +277,115 @@
   .tcard__foto::after{content:"";position:absolute;left:0;right:0;bottom:0;height:52%;pointer-events:none;
     background:linear-gradient(180deg,transparent,rgba(13,19,33,.92))}
   .tcard__ora{position:absolute;left:16px;bottom:7px;z-index:1;font-family:"Playfair Display",serif;
-    font-weight:700;font-size:22px;line-height:1;color:#f5f0e8;font-variant-numeric:tabular-nums;
+    font-weight:700;font-size:var(--f-22);line-height:1;color:#f5f0e8;font-variant-numeric:tabular-nums;
     text-shadow:0 2px 10px rgba(0,0,0,.7)}
-  .tcard__body{padding:14px 16px 2px}
-  .tcard__body h4{font-family:"Playfair Display",Georgia,serif;font-size:19px;font-weight:700;line-height:1.15}
-  .tcard__body p{color:var(--muted);font-size:13.5px;line-height:1.5;margin-top:5px}
-  .tcard__credito{padding:10px 16px 14px;font-size:12px;color:var(--muted);line-height:1.35}
+  .tcard__body{padding:var(--s-4) var(--s-4) 2px}
+  .tcard__body h4{font-family:"Playfair Display",Georgia,serif;font-size:var(--f-18);font-weight:700;line-height:1.15}
+  .tcard__body p{color:var(--muted);font-size:var(--f-14);line-height:1.5;margin-top:var(--s-1)}
+  .tcard__credito{padding:var(--s-3) var(--s-4) var(--s-4);font-size:var(--f-12);color:var(--muted);line-height:1.35}
   .tcard__credito a{color:inherit}
   /* durata stimata della visita: solo sulle tappe fisse che ce l'hanno */
-  .tcard__body .tdur{display:inline-block;margin-top:6px;font-size:12px;font-weight:700;color:var(--gold-soft);
-    background:rgba(212,169,78,.1);border:1px solid var(--line-gold);border-radius:999px;padding:2px 9px}
-  .margine{margin:2px 0 14px}
+  .tcard__body .tdur{margin-top:var(--s-2)}
+  .margine{margin:2px 0 var(--s-4)}
 
   /* percorso di mezza giornata: un link Maps fisso, in testa al blocco che copre */
-  .percorso{display:flex;align-items:center;gap:11px;margin:4px 0 14px;padding:11px 14px;border-radius:14px;
+  .percorso{display:flex;align-items:center;gap:var(--s-3);margin:var(--s-1) 0 var(--s-4);padding:var(--s-3) var(--s-4);border-radius:var(--r-m);
     background:rgba(109,179,216,.1);border:1px solid rgba(109,179,216,.35);color:var(--ink);text-decoration:none}
   .percorso:active{transform:scale(.995)}
-  .percorso__ic{font-size:22px;line-height:1}
+  .percorso__ic{font-size:var(--f-22);line-height:1}
   .percorso__txt{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}
-  .percorso__txt b{font-size:13.5px;color:var(--sky)}
-  .percorso__txt span{font-size:12px;color:var(--muted);line-height:1.35}
-  .percorso__modo{flex:none;font-size:11px;font-weight:700;color:var(--ink);background:rgba(245,240,232,.07);
-    border:1px solid var(--line);border-radius:999px;padding:3px 9px;white-space:nowrap}
+  .percorso__txt b{font-size:var(--f-14);color:var(--sky)}
+  .percorso__txt span{font-size:var(--f-12);color:var(--muted);line-height:1.35}
+  .percorso__modo{flex:none}
 
   /* tappa "plus": non è nel programma, è un di più da fare se avanza tempo.
      Bordo tratteggiato e misura ridotta perché si veda a colpo d'occhio che non è fissa. */
   .tcard--plus{border-style:dashed;border-color:var(--gold-dim);background:rgba(26,35,50,.45)}
-  .tcard--plus .tcard__body{padding:12px 14px 2px}
-  .tcard--plus .tcard__body h4{font-size:17px}
-  .tcard--plus .tcard__body p{font-size:13px}
-  .plus-badge{position:absolute;bottom:8px;right:12px;z-index:1;font-size:10.5px;font-weight:700;
+  .tcard--plus .tcard__body{padding:var(--s-3) var(--s-4) 2px}
+  .tcard--plus .tcard__body h4{font-size:var(--f-18)}
+  .tcard--plus .tcard__body p{font-size:var(--f-14)}
+  .plus-badge{position:absolute;bottom:8px;right:12px;z-index:1;font-size:var(--f-12);font-weight:700;
     letter-spacing:.08em;text-transform:uppercase;color:#0d1321;background:var(--gold-fill);
-    border-radius:999px;padding:4px 10px;box-shadow:0 2px 10px rgba(0,0,0,.5)}
-  .plus-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-  .plus-meta span{font-size:11.5px;color:var(--muted);background:rgba(245,240,232,.06);
-    border:1px solid var(--line);border-radius:999px;padding:3px 9px}
+    border-radius:999px;padding:var(--s-1) var(--s-3);box-shadow:0 2px 10px rgba(0,0,0,.5)}
+  .plus-meta{display:flex;flex-wrap:wrap;gap:var(--s-2);margin-top:var(--s-2)}
+  .plus-meta span{color:var(--muted);font-weight:500}
   /* card di trasferimento: due opzioni e la regola in evidenza; alcune senza foto */
-  .opzioni{list-style:none;margin-top:8px;display:flex;flex-direction:column;gap:8px}
-  .opzioni li{font-size:15px;line-height:1.45;color:var(--ink);padding-left:10px;border-left:3px solid rgba(109,179,216,.45)}
-  .regola{margin-top:10px;padding:10px 12px;border-radius:12px;font-size:15px;line-height:1.45;font-weight:700;color:var(--ink);
+  .opzioni{list-style:none;margin-top:var(--s-2);display:flex;flex-direction:column;gap:var(--s-2)}
+  .opzioni li{font-size:var(--f-16);line-height:1.45;color:var(--ink);padding-left:var(--s-3);border-left:3px solid rgba(109,179,216,.45)}
+  .regola{margin-top:var(--s-3);padding:var(--s-3) var(--s-3);border-radius:var(--r-s);font-size:var(--f-16);line-height:1.45;font-weight:700;color:var(--ink);
     background:rgba(109,179,216,.12);border:1px solid rgba(109,179,216,.45)}
-  .tcard--nofoto .tcard__body{padding-top:14px}
-  .tcard--nofoto .tcard__ora{position:static;display:inline-block;margin-bottom:4px;font-size:18px;color:var(--gold-soft);text-shadow:none}
-  .ad-regola{white-space:pre-line;margin-top:12px;padding:10px 12px;border-radius:12px;font-size:15px;line-height:1.45;font-weight:700;
+  .tcard--nofoto .tcard__body{padding-top:var(--s-4)}
+  .tcard--nofoto .tcard__ora{position:static;display:inline-block;margin-bottom:var(--s-1);font-size:var(--f-18);color:var(--gold-soft);text-shadow:none}
+  .ad-regola{white-space:pre-line;margin-top:var(--s-3);padding:var(--s-3) var(--s-3);border-radius:var(--r-s);font-size:var(--f-16);line-height:1.45;font-weight:700;
     color:var(--ink);background:rgba(109,179,216,.12);border:1px solid rgba(109,179,216,.45)}
   .ad-regola[hidden]{display:none}
-  .pianob{margin-top:10px;padding:10px 12px;border-radius:12px;font-size:14px;line-height:1.45;color:var(--ink);
+  .pianob{margin-top:var(--s-3);padding:var(--s-3) var(--s-3);border-radius:var(--r-s);font-size:var(--f-14);line-height:1.45;color:var(--ink);
     background:rgba(212,169,78,.1);border:1px dashed var(--line-gold)}
-  .tcard__body .percorso--secondario{margin:8px 0 0;padding:8px 12px;opacity:.9}
-  .tcard__body .percorso--secondario .percorso__txt b{font-size:12px}
-  .plus-warn{margin-top:8px;font-size:12px;line-height:1.45;color:var(--rosso-testo)}
+  .tcard__body .percorso--secondario{margin:var(--s-2) 0 0;padding:var(--s-2) var(--s-3);opacity:.9}
+  .tcard__body .percorso--secondario .percorso__txt b{font-size:var(--f-12)}
+  .plus-warn{margin-top:var(--s-2);font-size:var(--f-12);line-height:1.45;color:var(--rosso-testo)}
 
   /* biglietti: il riquadro del barcode resta bianco, serve contrasto per lo scanner */
-  .tk-when{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px}
+  .tk-when{display:flex;flex-wrap:wrap;gap:var(--s-3);margin-top:var(--s-1)}
   .tk-when > div:nth-child(3){flex-basis:100%}   /* la terza casella (ordine di SEA LIFE) va a capo: in tre non ci stanno a 375 px */
-  .tk-when > div{flex:1;background:rgba(212,169,78,.08);border:1px solid var(--line-gold);border-radius:12px;
-    padding:10px 12px;text-align:center}
-  .tk-when .k{display:block;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700}
-  .tk-when .v{display:block;font-family:"Playfair Display",serif;font-weight:700;font-size:17px;margin-top:3px;color:var(--gold-soft)}
-  .tk{margin-top:16px}
-  .tk figcaption{font-size:13px;font-weight:700;color:var(--gold-soft);margin-bottom:7px}
-  .tk figcaption small{font-weight:500;color:var(--muted);font-size:11.5px;margin-left:6px}
-  .tk-box{background:#fff;border-radius:12px;padding:14px 10px 10px;text-align:center;
-    box-shadow:0 6px 18px -10px rgba(0,0,0,.8)}
+  .tk-when > div{flex:1;background:rgba(212,169,78,.08);border:1px solid var(--line-gold);border-radius:var(--r-s);
+    padding:var(--s-3) var(--s-3);text-align:center}
+  .tk-when .k{display:block;font-size:var(--f-12);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700}
+  .tk-when .v{display:block;font-family:"Playfair Display",serif;font-weight:700;font-size:var(--f-18);margin-top:3px;color:var(--gold-soft)}
+  .tk{margin-top:var(--s-4)}
+  .tk figcaption{font-size:var(--f-14);font-weight:700;color:var(--gold-soft);margin-bottom:var(--s-2)}
+  .tk figcaption small{font-weight:500;color:var(--muted);font-size:var(--f-12);margin-left:var(--s-2)}
+  .tk-box{background:#fff;border-radius:var(--r-s);padding:var(--s-4) var(--s-3) var(--s-3);text-align:center;
+    box-shadow:var(--shadow-1)}
   .tk-svg{display:block;width:100%;max-width:330px;height:auto;margin:0 auto}
   .tk-box--qr .tk-svg{width:min(60%,220px);aspect-ratio:1;height:auto;margin:0 auto;display:block}
-  .tk-sub{font-size:12px;color:#4a4740;margin:2px 0 0}   /* sul bianco del box: --muted del tema scuro non avrebbe contrasto */
-  .tk-num{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13.5px;font-weight:700;
-    color:#000;letter-spacing:.06em;margin-top:6px;font-variant-numeric:tabular-nums}
-  .tk-note{margin-top:16px;font-size:12.5px;line-height:1.55;color:var(--rosso-testo);
-    background:rgba(200,54,43,.1);border:1px solid rgba(200,54,43,.35);border-radius:12px;padding:11px 13px}
-  .tk-order{margin-top:10px;font-size:11px;color:var(--muted);text-align:center}
+  .tk-sub{font-size:var(--f-12);color:#4a4740;margin:2px 0 0}   /* sul bianco del box: --muted del tema scuro non avrebbe contrasto */
+  .tk-num{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:var(--f-14);font-weight:700;
+    color:#000;letter-spacing:.06em;margin-top:var(--s-2);font-variant-numeric:tabular-nums}
+  .tk-note{margin-top:var(--s-4);font-size:var(--f-12);line-height:1.55;color:var(--rosso-testo);
+    background:rgba(200,54,43,.1);border:1px solid rgba(200,54,43,.35);border-radius:var(--r-s);padding:var(--s-3) var(--s-3)}
+  .tk-order{margin-top:var(--s-3);font-size:var(--f-12);color:var(--muted);text-align:center}
 
   /* parcheggio: il QR sta in un riquadro bianco pieno e si apre a schermo intero,
      perché alla sbarra lo legge un lettore ottico dallo schermo del telefono */
-  .pk{margin:14px 0 18px;background:linear-gradient(180deg,rgba(212,169,78,.09),rgba(33,44,64,.55));
-    border:1px solid var(--line-gold);border-radius:18px;padding:16px;box-shadow:var(--shadow-card)}
-  .pk__eyebrow{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);font-weight:700}
-  .pk__tit{font-family:"Playfair Display",Georgia,serif;font-size:19px;font-weight:700;margin-top:4px}
-  .pk__grid{display:flex;gap:10px;margin-top:12px}
-  .pk__grid > div{flex:1;background:rgba(212,169,78,.08);border:1px solid var(--line-gold);border-radius:12px;
-    padding:9px 10px;text-align:center;min-width:0}
-  .pk__grid .k{display:block;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700}
-  .pk__grid .v{display:block;font-family:"Playfair Display",serif;font-weight:700;font-size:16px;margin-top:3px;
+  .pk{margin:var(--s-4) 0 var(--s-4);background:linear-gradient(180deg,rgba(212,169,78,.09),rgba(33,44,64,.55));border-color:var(--line-gold);padding:var(--s-4)}
+  .pk__eyebrow{font-size:var(--f-12);letter-spacing:.16em;text-transform:uppercase;color:var(--gold);font-weight:700}
+  .pk__tit{font-family:"Playfair Display",Georgia,serif;font-size:var(--f-18);font-weight:700;margin-top:var(--s-1)}
+  .pk__grid{display:flex;gap:var(--s-3);margin-top:var(--s-3)}
+  .pk__grid > div{flex:1;background:rgba(212,169,78,.08);border:1px solid var(--line-gold);border-radius:var(--r-s);
+    padding:var(--s-2) var(--s-3);text-align:center;min-width:0}
+  .pk__grid .k{display:block;font-size:var(--f-12);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700}
+  .pk__grid .v{display:block;font-family:"Playfair Display",serif;font-weight:700;font-size:var(--f-16);margin-top:3px;
     color:var(--gold-soft);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
-  .pk__box{display:block;width:100%;margin:12px 0 0;background:#fff;border:0;border-radius:14px;
-    padding:14px 14px 10px;text-align:center;cursor:pointer;box-shadow:0 6px 18px -10px rgba(0,0,0,.85)}
+  .pk__box{display:block;width:100%;margin:var(--s-3) 0 0;background:#fff;border:0;border-radius:var(--r-m);
+    padding:var(--s-4) var(--s-4) var(--s-3);text-align:center;cursor:pointer;box-shadow:var(--shadow-1)}
   .pk__box:active{transform:scale(.995)}
   .pk__svg{display:block;width:min(64vw,240px);height:auto;margin:0 auto}
-  .pk__cta{display:block;margin-top:8px;font-size:12.5px;font-weight:700;color:#0d1321}
-  .pk__tot{display:flex;align-items:center;justify-content:center;gap:9px;margin-top:12px;font-size:14px}
-  .pk__tot b{font-family:"Playfair Display",serif;font-size:19px;color:var(--gold-soft)}
-  .pk__paid{font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ok);
-    background:rgba(79,174,124,.13);border:1px solid rgba(79,174,124,.4);border-radius:999px;padding:3px 9px}
-  .pk__note{margin-top:12px;font-size:12.5px;line-height:1.55;color:var(--muted)}
+  .pk__cta{display:block;margin-top:var(--s-2);font-size:var(--f-12);font-weight:700;color:#0d1321}
+  .pk__tot{display:flex;align-items:center;justify-content:center;gap:var(--s-2);margin-top:var(--s-3);font-size:var(--f-14)}
+  .pk__tot b{font-family:"Playfair Display",serif;font-size:var(--f-18);color:var(--gold-soft)}
+  .pk__note{margin-top:var(--s-3);font-size:var(--f-12);line-height:1.55;color:var(--muted)}
 
   /* schermo pieno: tutto bianco, QR il più grande possibile, di notte in auto */
   html.pk-open{overflow:hidden}
 
   /* mappa */
-  #map{height:300px;border-radius:18px;border:1px solid var(--line-gold);box-shadow:var(--shadow-card);
-    margin-top:14px;background:var(--night-1);z-index:0}
+  #map{height:300px;border-radius:var(--r-m);border:1px solid var(--line-gold);box-shadow:var(--shadow-card);
+    margin-top:var(--s-4);background:var(--night-1);z-index:0}
   /* mappa senza rete: messaggio sopra lo sfondo vuoto */
   #map{position:relative}
   #map.map-offline::after{content:"🗺️ Mappa non disponibile senza rete";position:absolute;inset:0;z-index:1000;
-    display:grid;place-items:center;padding:20px;text-align:center;font-size:15px;color:var(--muted);
+    display:grid;place-items:center;padding:var(--s-5);text-align:center;font-size:var(--f-16);color:var(--muted);
     background:var(--night-1);border-radius:inherit}
   /* sul telefono la mappa si sposta con due dita: con un dito si scorre la pagina */
-  .map-hint{position:absolute;inset:0;z-index:1000;display:grid;place-items:center;padding:20px;text-align:center;
-    font-size:16px;font-weight:700;color:#fff;background:rgba(5,8,15,.72);border-radius:inherit;pointer-events:none;
-    opacity:0;transition:opacity .25s}
+  .map-hint{position:absolute;inset:0;z-index:1000;display:grid;place-items:center;padding:var(--s-5);text-align:center;
+    font-size:var(--f-16);font-weight:700;color:#fff;background:rgba(5,8,15,.72);border-radius:inherit;pointer-events:none;
+    opacity:0;transition:opacity var(--t-base) var(--ease-out)}
   .map-hint.on{opacity:1}
-  #map .leaflet-control-attribution{font-size:12px;line-height:1.35}
-  .pop-vai{display:inline-flex;align-items:center;min-height:44px;margin-top:4px;font-weight:700;font-size:14px}
-  .legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;font-size:12px;font-weight:600}
-  .legend span{display:inline-flex;align-items:center;gap:6px;background:var(--night-1);border:1px solid var(--line);
-    border-radius:999px;padding:5px 11px}
+  #map .leaflet-control-attribution{font-size:var(--f-12);line-height:1.35}
+  .pop-vai{margin-top:var(--s-1)}
+  .legend{display:flex;flex-wrap:wrap;gap:var(--s-2);margin-top:var(--s-3);font-size:var(--f-12);font-weight:600}
+  .legend span{background:var(--night-1);font-weight:600}
   .legend i{width:10px;height:10px;border-radius:50%;flex:none}
   .legend i.line{width:20px;height:0;border-radius:0;border-top:3px solid var(--ink)}
   .legend i.line.dash{border-top-style:dashed}
@@ -376,370 +393,343 @@
     border:2px solid rgba(245,240,232,.85);box-shadow:0 2px 8px rgba(0,0,0,.6)}
   .pin::after{content:"";position:absolute;inset:5px;border-radius:50%;background:rgba(13,19,33,.4)}
   .pin-home{width:30px;height:30px;border-radius:50%;background:var(--night-0);border:2px solid var(--gold);
-    display:flex;align-items:center;justify-content:center;font-size:15px;box-shadow:0 0 0 4px rgba(212,169,78,.22),0 2px 10px rgba(0,0,0,.7)}
+    display:flex;align-items:center;justify-content:center;font-size:var(--f-16);box-shadow:0 0 0 4px rgba(212,169,78,.22),0 2px 10px rgba(0,0,0,.7)}
   .leaflet-popup-content-wrapper{background:var(--night-1);color:var(--ink);border:1px solid var(--line-gold);
-    border-radius:12px;box-shadow:var(--shadow-card)}
-  .leaflet-popup-content{margin:11px 14px;font-family:system-ui,sans-serif;font-size:13px;line-height:1.45}
-  .leaflet-popup-content b{font-size:13.5px}
+    border-radius:var(--r-s);box-shadow:var(--shadow-card)}
+  .leaflet-popup-content{margin:var(--s-3) var(--s-4);font-family:system-ui,sans-serif;font-size:var(--f-14);line-height:1.45}
+  .leaflet-popup-content b{font-size:var(--f-14)}
   .leaflet-popup-content small{color:var(--muted)}
   .leaflet-popup-tip{background:var(--night-1);border:1px solid var(--line-gold)}
   .leaflet-container a.leaflet-popup-close-button{color:var(--muted)}
   .leaflet-container{font-family:system-ui,sans-serif}
 
   /* budget */
-  .btable{width:100%;border-collapse:collapse;margin-top:14px;font-size:14px}
-  .btable th{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
-    text-align:left;font-weight:700;padding:0 8px 8px 0}
+  .btable{width:100%;border-collapse:collapse;margin-top:var(--s-4);font-size:var(--f-14)}
+  .btable th{font-size:var(--f-12);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
+    text-align:left;font-weight:700;padding:0 var(--s-2) var(--s-2) 0}
   .btable th:last-child{padding-right:0}
-  .btable td{padding:10px 8px 10px 0;border-top:1px solid var(--line);vertical-align:middle}
+  .btable td{padding:var(--s-3) var(--s-2) var(--s-3) 0;border-top:1px solid var(--line);vertical-align:middle}
   .btable td:last-child{padding-right:0;text-align:right}
-  .btable td.imp{font-variant-numeric:tabular-nums;font-weight:600;white-space:nowrap}
-  .btable tr.tot td{border-top:1px solid var(--line-gold);padding-top:13px;font-family:"Playfair Display",serif;
-    font-size:17px;font-weight:700}
+  .btable td.imp{font-variant-numeric:tabular-nums;font-weight:600}   /* niente nowrap: a 320 px «~€1.514 · ~€1.561» deve poter andare a capo */
+  .btable tr.tot td{border-top:1px solid var(--line-gold);padding-top:var(--s-3);font-family:"Playfair Display",serif;
+    font-size:var(--f-18);font-weight:700}
   .btable tr.tot td.imp{color:var(--gold-soft)}
-  .pass{display:inline-flex;align-items:center;gap:6px;margin-top:12px;font-size:12.5px;font-weight:600;
-    color:var(--verde-testo);background:rgba(79,174,124,.1);border:1px solid rgba(79,174,124,.35);border-radius:999px;padding:6px 13px}
+  .pass{display:inline-flex;align-items:center;gap:var(--s-2);margin-top:var(--s-3);font-size:var(--f-12);font-weight:600;
+    color:var(--verde-testo);background:rgba(79,174,124,.1);border:1px solid rgba(79,174,124,.35);border-radius:999px;padding:var(--s-2) var(--s-3)}
 
-  .prio{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;
-    color:#fff;background:var(--bus);border-radius:5px;padding:1px 7px;margin-left:6px;vertical-align:1px}
-  .cprog{font-size:12.5px;color:var(--muted);margin-top:10px}
+  .prio{display:inline-block;font-size:var(--f-12);font-weight:800;letter-spacing:.08em;text-transform:uppercase;
+    color:#fff;background:var(--bus);border-radius:5px;padding:1px var(--s-2);margin-left:var(--s-2);vertical-align:1px}
+  .cprog{font-size:var(--f-12);color:var(--muted);margin-top:var(--s-3)}
   .cprog b{color:var(--gold-soft)}
-  .cnote{font-size:11.5px;color:var(--muted);margin-top:4px;font-style:italic}
+  .cnote{font-size:var(--f-12);color:var(--muted);margin-top:var(--s-1);font-style:italic}
 
   /* programma ora per ora */
-  .hp-day{margin-top:24px}
-  .hp-day:first-of-type{margin-top:4px}
-  .hp-badge{display:inline-flex;align-items:center;font-family:"Playfair Display",serif;font-weight:700;font-size:15px;
-    padding:6px 16px;border-radius:999px;margin-bottom:12px}
-  .hp-badge.dom{background:rgba(212,169,78,.15);color:var(--gold-soft);border:1px solid var(--line-gold)}
-  .hp-badge.lun{background:rgba(200,54,43,.16);color:var(--rosso-testo);border:1px solid rgba(200,54,43,.45)}
-  .hp-badge.mar{background:rgba(109,179,216,.14);color:var(--sky);border:1px solid rgba(109,179,216,.4)}
-  .hp-tl{list-style:none;padding-left:16px;border-left:2px solid var(--line)}
+  .hp-day{margin-top:var(--s-5)}
+  .hp-day:first-of-type{margin-top:var(--s-1)}
+  .hp-badge{font-family:"Playfair Display",serif;font-size:var(--f-16);padding:var(--s-2) var(--s-4);margin-bottom:var(--s-3)}
+  .hp-tl{list-style:none;padding-left:var(--s-4);border-left:2px solid var(--line)}
   .hp-day.dom .hp-tl{border-left-color:rgba(212,169,78,.4)}
   .hp-day.lun .hp-tl{border-left-color:rgba(200,54,43,.4)}
   .hp-day.mar .hp-tl{border-left-color:rgba(109,179,216,.4)}
-  .hp-tl li{padding:7px 0;font-size:14px;line-height:1.45;display:flex;gap:10px}
+  .hp-tl li{padding:var(--s-2) 0;font-size:var(--f-14);line-height:1.45;display:flex;gap:var(--s-3)}
   .hp-tl li:not(:last-child){border-bottom:1px solid var(--line)}
   .hp-t{flex:none;width:50px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-weight:700;
-    font-size:12.5px;color:var(--gold-soft);padding-top:1px}
+    font-size:var(--f-12);color:var(--gold-soft);padding-top:1px}
   .hp-day.lun .hp-t{color:var(--rosso-testo)}
   .hp-day.mar .hp-t{color:var(--sky)}
   .hp-d{flex:1;color:var(--ink)}
-  .hp-notes{margin-top:20px;display:flex;flex-direction:column;gap:10px}
-  .hp-note{font-size:13px;line-height:1.55;border-radius:12px;padding:11px 13px}
+  .hp-notes{margin-top:var(--s-5);display:flex;flex-direction:column;gap:var(--s-3)}
+  .hp-note{font-size:var(--f-14);line-height:1.55;border-radius:var(--r-s);padding:var(--s-3) var(--s-3)}
   .hp-note.warn{background:rgba(200,54,43,.1);border:1px solid rgba(200,54,43,.35);color:var(--rosso-testo)}
   .hp-note.info{background:rgba(109,179,216,.1);border:1px solid rgba(109,179,216,.35);color:var(--info-testo)}
 
   /* sezione Olly */
-  .olly-count{text-align:center;font-family:"Playfair Display",serif;font-weight:700;font-size:17px;
-    color:var(--gold-soft);margin:2px 0 16px}
-  .olly-count b{color:var(--ink);font-size:19px}
-  .olly-nav{display:flex;gap:8px;margin-bottom:18px}
-  .olly-nav button{flex:1;font-family:inherit;font-weight:700;font-size:13px;padding:10px 6px;border-radius:12px;
-    cursor:pointer;background:var(--night-1);border:1px solid var(--line);color:var(--muted);transition:.15s}
+  .olly-count{text-align:center;font-family:"Playfair Display",serif;font-weight:700;font-size:var(--f-18);
+    color:var(--gold-soft);margin:2px 0 var(--s-4)}
+  .olly-count b{color:var(--ink);font-size:var(--f-18)}
+  .olly-nav{display:flex;gap:var(--s-2);margin-bottom:var(--s-4)}
+  .olly-nav button{flex:1;padding:0 var(--s-2);border-radius:var(--r-s);background:var(--night-1);border-color:var(--line);color:var(--muted)}
   .olly-nav button.active{color:#0d1321}
   .olly-nav button.dom.active{background:var(--gold-fill);border-color:var(--gold)}
   .olly-nav button.lun.active{background:var(--bus);border-color:var(--bus);color:#fff}
   .olly-nav button.mar.active{background:var(--sky-fill);border-color:var(--sky-fill)}
-  .olly-grid{display:flex;flex-direction:column;gap:16px}
+  .olly-grid{display:flex;flex-direction:column;gap:var(--s-4)}
   .olly-grid[hidden]{display:none}
-  .olly-card{background:linear-gradient(180deg,var(--night-1),var(--night-2));border:1px solid var(--line);
-    border-radius:20px;overflow:hidden;box-shadow:var(--shadow-card)}
+  .olly-card{border-radius:var(--r-l);overflow:hidden;margin-top:0}
   .oc-photo{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:cover;object-position:center;background-color:var(--night-2)}
-  .oc-name{font-family:"Playfair Display",serif;font-weight:700;font-size:25px;text-align:center;padding:16px 16px 4px}
-  .oc-seen{display:flex;align-items:center;justify-content:center;gap:9px;width:calc(100% - 32px);margin:6px 16px 16px;
-    padding:12px;border-radius:999px;font-family:inherit;font-weight:700;font-size:14px;cursor:pointer;
-    background:rgba(212,169,78,.05);border:1.5px solid var(--line-gold);color:var(--ink);transition:.15s}
+  .oc-name{font-family:"Playfair Display",serif;font-weight:700;font-size:var(--f-28);text-align:center;padding:var(--s-4) var(--s-4) var(--s-1)}
+  .oc-seen{display:flex;width:calc(100% - 32px);margin:var(--s-2) var(--s-4) var(--s-4);min-height:48px;background:rgba(212,169,78,.05)}
   .oc-seen .seen-dot{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--line-gold);flex:none;
-    display:flex;align-items:center;justify-content:center;transition:.15s}
+    display:flex;align-items:center;justify-content:center;transition:background-color var(--t-fast),border-color var(--t-fast),color var(--t-fast)}
   .oc-seen.seen{background:rgba(212,169,78,.14);border-color:var(--gold)}
   .oc-seen.seen .seen-dot{background:var(--gold-fill);border-color:var(--gold)}
-  .oc-seen.seen .seen-dot::after{content:"✓";color:#0d1321;font-size:13px;font-weight:800}
-  .olly-lede{font-size:13.5px;color:var(--muted);line-height:1.6;margin-bottom:16px}
-  .credits li small{display:block;color:var(--muted);font-size:11.5px;margin-top:2px}
+  .oc-seen.seen .seen-dot::after{content:"✓";color:#0d1321;font-size:var(--f-14);font-weight:800}
+  .olly-lede{font-size:var(--f-14);color:var(--muted);line-height:1.6;margin-bottom:var(--s-4)}
+  .credits li small{display:block;color:var(--muted);font-size:var(--f-12);margin-top:2px}
   .credits a{color:var(--sky)}
 
   /* note pratiche */
-  .notes{list-style:none;margin-top:8px}
-  .notes li{display:flex;gap:11px;padding:9px 0;font-size:13.5px;color:var(--ink);border-top:1px solid var(--line)}
+  .notes{list-style:none;margin-top:var(--s-2)}
+  .notes li{display:flex;gap:var(--s-3);padding:var(--s-2) 0;font-size:var(--f-14);color:var(--ink);border-top:1px solid var(--line)}
   .notes li:first-child{border-top:0}
   .notes .ic{flex:none}
 
-  footer{text-align:center;padding:44px 18px calc(34px + env(safe-area-inset-bottom));color:var(--muted);font-size:12.5px}
-  footer .fam2{font-family:"Playfair Display",serif;font-style:italic;font-size:15px;color:var(--gold-soft);margin-bottom:6px}
+  footer{text-align:center;padding:44px 18px calc(34px + env(safe-area-inset-bottom));color:var(--muted);font-size:var(--f-12)}
+  footer .fam2{font-family:"Playfair Display",serif;font-style:italic;font-size:var(--f-16);color:var(--gold-soft);margin-bottom:var(--s-2)}
 
   /* novità: pannello dal basso con quello che è cambiato dall'ultima visita */
   .nov-velo{position:fixed;inset:0;z-index:1500;background:rgba(5,8,15,.66);display:flex;align-items:flex-end;justify-content:center}
   .nov-velo[hidden]{display:none}
-  .nov{width:100%;max-width:560px;max-height:82vh;display:flex;flex-direction:column;background:var(--night-1);
-    border:1px solid var(--line-gold);border-bottom:0;border-radius:22px 22px 0 0;box-shadow:0 -20px 50px -10px rgba(0,0,0,.7)}
-  .nov__testa{padding:20px 20px 8px}
-  .nov__testa .eyebrow{margin-bottom:6px}
-  .nov__testa h2{font-family:"Playfair Display",Georgia,serif;font-size:24px;line-height:1.15}
-  .nov__testa p{margin-top:5px;font-size:13px;color:var(--muted)}
-  .nov__lista{overflow-y:auto;overscroll-behavior:contain;padding:8px 20px 12px;display:flex;flex-direction:column;gap:18px}
-  .nov__voce{padding-left:14px;border-left:3px solid var(--line-gold)}
-  .nov__data{display:flex;align-items:center;gap:7px;font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .nov__testa{padding:var(--s-5) var(--s-5) var(--s-2)}
+  .nov__testa .eyebrow{margin-bottom:var(--s-2)}
+  .nov__testa h2{font-family:"Playfair Display",Georgia,serif;font-size:var(--f-28);line-height:1.15}
+  .nov__testa p{margin-top:var(--s-1);font-size:var(--f-14);color:var(--muted)}
+  .nov__lista{overflow-y:auto;overscroll-behavior:contain;padding:var(--s-2) var(--s-5) var(--s-3);display:flex;flex-direction:column;gap:var(--s-4)}
+  .nov__voce{padding-left:var(--s-4);border-left:3px solid var(--line-gold)}
+  .nov__data{display:flex;align-items:center;gap:var(--s-2);font-size:var(--f-12);font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
   .nov__punto{width:8px;height:8px;border-radius:50%;background:var(--bus);flex:none}
-  .nov__voce h3{font-family:"Playfair Display",Georgia,serif;font-size:17px;line-height:1.25;margin-top:4px}
-  .nov__voce ul{margin-top:6px;padding-left:16px;display:flex;flex-direction:column;gap:4px;font-size:13.5px;line-height:1.45;color:var(--muted)}
+  .nov__voce h3{font-family:"Playfair Display",Georgia,serif;font-size:var(--f-18);line-height:1.25;margin-top:var(--s-1)}
+  .nov__voce ul{margin-top:var(--s-2);padding-left:var(--s-4);display:flex;flex-direction:column;gap:var(--s-1);font-size:var(--f-14);line-height:1.45;color:var(--muted)}
   .nov__piede{position:sticky;bottom:0;padding:12px 20px calc(14px + env(safe-area-inset-bottom));
     background:linear-gradient(180deg,rgba(26,35,50,0),var(--night-1) 30%)}
-  .nov__ok{width:100%;border:0;border-radius:14px;padding:14px;background:var(--gold-fill);color:var(--on-accent);
-    font:inherit;font-weight:800;font-size:15px;cursor:pointer}
+  .nov__ok{min-height:52px;border-radius:var(--r-m);font-size:var(--f-16)}
   html.nov-aperto{overflow:hidden}
   /* testata compatta: il link per Olly c'è, ma non è la cosa più evidente della pagina */
-  .pics-link{display:inline-flex;align-items:center;min-height:44px;margin-top:2px;font-size:13.5px;font-weight:600;color:var(--gold-soft)}
+  .pics-link{margin-top:2px;font-weight:600;text-decoration:underline;text-underline-offset:3px}
   /* barra fissa in basso, a portata di pollice; rispetta la safe area dell'iPhone */
   body{padding-bottom:calc(68px + env(safe-area-inset-bottom))}
   .barra{position:fixed;left:0;right:0;bottom:0;z-index:900;display:grid;grid-template-columns:repeat(4,1fr);
     background:rgba(13,19,33,.96);border-top:1px solid var(--line-gold);padding-bottom:env(safe-area-inset-bottom);
     -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
-  .barra a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:60px;
-    font-size:12.5px;font-weight:700;color:var(--muted);text-decoration:none}
-  .barra a span{font-size:20px;line-height:1}
+  .barra a{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:60px;
+    font-size:var(--f-12);font-weight:700;color:var(--muted);text-decoration:none;-webkit-tap-highlight-color:transparent}
+  .barra a span{font-size:var(--f-22);line-height:1}
+  /* voce attiva: colore e barretta sopra l'icona, così si vede anche senza distinguere i colori */
   .barra a[aria-current="true"]{color:var(--gold-soft)}
+  .barra a::before{content:"";position:absolute;top:0;left:50%;width:28px;height:3px;border-radius:0 0 3px 3px;background:var(--gold-fill);
+    transform:translateX(-50%) scaleX(0);transition:transform var(--t-base) var(--ease-out)}
+  .barra a[aria-current="true"]::before{transform:translateX(-50%) scaleX(1)}
   /* portafoglio */
-  .pk-riga{display:flex;align-items:center;gap:12px;width:100%;min-height:60px;margin:2px 0 14px;padding:10px 14px;text-align:left;
-    border:1px solid var(--line-gold);border-radius:14px;background:rgba(212,169,78,.08);color:var(--ink);font:inherit;cursor:pointer}
-  .pk-riga b{display:block;font-size:15.5px}
-  .pk-riga small{display:block;font-size:13px;color:var(--muted)}
-  .pk-riga > span:last-child{margin-left:auto;font-size:22px;color:var(--gold)}
-  .pk-riga__ic{font-size:24px}
+  .pk-riga{justify-content:flex-start;gap:var(--s-3);min-height:60px;margin:2px 0 var(--s-4);padding:var(--s-3) var(--s-4);text-align:left;border-radius:var(--r-m);font-weight:400}
+  .pk-riga b{display:block;font-size:var(--f-16)}
+  .pk-riga small{display:block;font-size:var(--f-14);color:var(--muted)}
+  .pk-riga > span:last-child{margin-left:auto;font-size:var(--f-22);color:var(--gold)}
+  .pk-riga__ic{font-size:var(--f-28)}
   .tk-box[role="button"]{cursor:pointer}
-  .tk-card h3,.casa-card h3{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-  .gmap--btn{border:0;font:inherit;cursor:pointer}
-  .casa-indirizzo{font-family:"Playfair Display",Georgia,serif;font-size:24px;line-height:1.2;margin-top:8px}
-  .casa-azioni{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;align-items:center}
-  .casa-mostra{min-height:48px;padding:0 16px;border-radius:12px;border:0;background:var(--gold-fill);color:var(--on-accent);font:inherit;font-weight:800;font-size:15px;cursor:pointer}
+  .tk-card h3,.casa-card h3{display:flex;align-items:center;gap:var(--s-2);flex-wrap:wrap}
+  .casa-indirizzo{font-family:"Playfair Display",Georgia,serif;font-size:var(--f-28);line-height:1.2;margin-top:var(--s-2)}
+  .casa-azioni{display:flex;flex-wrap:wrap;gap:var(--s-3);margin-top:var(--s-4);align-items:center}
+  .casa-mostra{min-height:48px;border-radius:var(--r-s);font-size:var(--f-16)}
   /* Piove e badge nei nuovi posti */
-  .prog-azioni{margin-top:8px}
-  .ad-codice{display:flex;align-items:center;justify-content:center;width:100%;min-height:56px;margin-top:12px;border-radius:14px;
-    border:2px solid #fff;background:#fff;color:#0d1321;font:inherit;font-weight:800;font-size:17px;cursor:pointer}
+  .prog-azioni{margin-top:var(--s-2)}
+  .ad-codice{margin-top:var(--s-3);border:2px solid #fff;background:#fff;color:#0d1321;font-weight:800;font-size:var(--f-18)}
   .ad-codice[hidden]{display:none}
   /* codici a schermo pieno: fondo bianco, uno alla volta, frecce in basso */
   .cod-full{position:fixed;inset:0;z-index:2000;background:#fff;color:#0d1321;display:flex;flex-direction:column;
-    align-items:center;justify-content:center;gap:14px;padding:64px 3vw calc(96px + env(safe-area-inset-bottom));text-align:center}
-  .cod-tit{font-size:17px;font-weight:800;max-width:34ch}
+    align-items:center;justify-content:center;gap:var(--s-4);padding:64px 3vw calc(96px + env(safe-area-inset-bottom));text-align:center}
+  .cod-tit{font-size:var(--f-18);font-weight:800;max-width:34ch}
   .cod-code{display:flex;align-items:center;justify-content:center;width:100%}
   .cod-code .pk__svg{width:min(88vw,62vh);height:auto}
   .cod-code .tk-svg{width:min(94vw,640px);height:max(160px,24vh);max-width:none}
   .cod-code .tk-svg.tk-qr{width:min(88vw,62vh);height:auto;aspect-ratio:1}
   .cod-num{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:clamp(20px,6vw,28px);font-weight:800;letter-spacing:.04em;font-variant-numeric:tabular-nums}
-  .cod-hint{font-size:15px;color:#3d3a34;max-width:34ch;line-height:1.45}
+  .cod-hint{font-size:var(--f-16);color:#3d3a34;max-width:34ch;line-height:1.45}
   .cod-indirizzo{font-family:"Playfair Display",Georgia,serif;font-size:clamp(34px,11vw,56px);line-height:1.15}
-  .cod-x{position:absolute;top:12px;right:12px;width:52px;height:52px;border:0;border-radius:999px;background:#efe8dd;color:#0d1321;font-size:22px;cursor:pointer}
-  .cod-nav{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:space-between;gap:10px;
+  .cod-x{position:absolute;top:12px;right:12px;width:52px;height:52px;border:0;border-radius:999px;background:#efe8dd;color:#0d1321;font-size:var(--f-22);cursor:pointer}
+  .cod-nav{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:space-between;gap:var(--s-3);
     padding:12px 12px calc(12px + env(safe-area-inset-bottom))}
-  .cod-nav button{min-width:120px;min-height:56px;border:0;border-radius:14px;background:#0d1321;color:#fff;font:inherit;font-weight:800;font-size:16px;cursor:pointer}
+  .cod-nav button{min-width:120px;background:#0d1321;border-color:#0d1321;color:#fff;font-weight:800}
   .cod-nav button:disabled{opacity:.25}
   .cod-n{font-weight:800;font-variant-numeric:tabular-nums}
   html.cod-aperto{overflow:hidden}
   /* pannelli "Prima di partire" e "Adesso", in cima alla pagina */
-  .ora-pan{margin:18px 0 6px;padding:16px;border-radius:18px;background:linear-gradient(180deg,var(--night-1),var(--night-2));
-    border:1px solid var(--line-gold);box-shadow:var(--shadow-card)}
+  .ora-pan{margin:var(--s-4) 0 var(--s-2);padding:var(--s-4);border-color:var(--line-gold)}
   .ora-pan[hidden]{display:none}
-  .ora-tit{font-family:"Playfair Display",Georgia,serif;font-size:24px;line-height:1.2;margin-top:6px}
+  .ora-tit{font-family:"Playfair Display",Georgia,serif;font-size:var(--f-28);line-height:1.2;margin-top:var(--s-2)}
   /* lista unica "Prima di partire": lo stato lo scrive Alessandro con un commit, niente caselle */
-  .pp-voci{list-style:none;margin-top:10px;display:flex;flex-direction:column;gap:8px}
-  .pp-voce{display:flex;align-items:flex-start;gap:10px;font-size:15px;line-height:1.4}
-  .pp-voce small{display:block;margin-top:2px;font-size:13px;line-height:1.45;color:var(--muted)}
-  .pp-voce .det{margin-top:4px}
-  .pp-stato{flex:none;min-width:94px;margin-top:1px;padding:2px 8px;border-radius:999px;font-size:11.5px;font-weight:800;
-    letter-spacing:.04em;text-align:center;text-transform:uppercase;border:1px solid}
-  .pp-stato--da_fare{color:var(--gold-soft);border-color:var(--line-gold);background:rgba(212,169,78,.1)}
-  .pp-stato--da_verificare{color:var(--rosso-testo);border-color:rgba(200,54,43,.55);background:rgba(200,54,43,.12)}
-  .pp-stato--fatto{color:var(--ok);border-color:rgba(79,174,124,.45);background:rgba(79,174,124,.1)}
+  .pp-voci{list-style:none;margin-top:var(--s-3);display:flex;flex-direction:column;gap:var(--s-2)}
+  .pp-voce{display:flex;align-items:flex-start;gap:var(--s-3);font-size:var(--f-16);line-height:1.4}
+  .pp-voce small{display:block;margin-top:2px;font-size:var(--f-14);line-height:1.45;color:var(--muted)}
+  .pp-voce .det{margin-top:var(--s-1)}
+  .pp-stato{flex:none;min-width:94px;margin-top:1px;justify-content:center;font-weight:800}
+  .pp-voce > span:last-child{flex:1;min-width:0;overflow-wrap:anywhere}   /* a 320 px il testo deve potersi restringere accanto al badge */
+  .btable .st{padding-left:var(--s-2);padding-right:var(--s-2)}   /* nella tabella del budget il badge tiene stretto, se no a 320 px sborda di 1 px */
   .pp-voce--fatto > span:last-child{color:var(--muted)}
-  .pp-conti{margin-top:4px;font-size:13px;color:var(--muted)}
+  .pp-conti{margin-top:var(--s-1);font-size:var(--f-14);color:var(--muted)}
   /* "Dettagli" chiusi nelle card: quello che serve sul posto resta fuori */
-  .det{margin-top:8px;font-size:13.5px;line-height:1.5;color:var(--muted)}
-  .det summary{display:inline-flex;align-items:center;min-height:44px;color:var(--gold-soft);font-weight:700;font-size:14px;cursor:pointer;list-style:none}
+  .det{margin-top:var(--s-2);font-size:var(--f-14);line-height:1.5;color:var(--muted)}
+  .det summary{display:inline-flex;align-items:center;min-height:44px;color:var(--gold-soft);font-weight:700;font-size:var(--f-14);cursor:pointer;list-style:none}
   .det summary::-webkit-details-marker{display:none}
-  .det summary::after{content:"▾";margin-left:6px;font-size:12px}
+  .det summary::after{content:"▾";margin-left:var(--s-2);font-size:var(--f-12)}
   .det[open] summary::after{content:"▴"}
   .det p{margin-top:2px}
   /* scaletta in cima a ogni giorno: un colpo d'occhio, ogni riga porta alla sua card */
-  .scaletta{list-style:none;margin:2px 0 14px;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .scaletta{list-style:none;margin:2px 0 var(--s-4);border:1px solid var(--line);border-radius:var(--r-m);overflow:hidden}
   .scaletta li + li{border-top:1px solid var(--line)}
-  .sc-riga{display:flex;align-items:center;gap:12px;min-height:44px;padding:6px 14px;color:var(--ink);text-decoration:none;font-size:15px}
+  .sc-riga{display:flex;align-items:center;gap:var(--s-3);min-height:44px;padding:var(--s-2) var(--s-4);color:var(--ink);text-decoration:none;font-size:var(--f-16)}
   .sc-ora{flex:none;min-width:46px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--gold-soft)}
-  .sc-ora small{display:block;font-size:10.5px;font-weight:700;color:var(--muted);letter-spacing:.02em}
+  .sc-ora small{display:block;font-size:var(--f-12);font-weight:700;color:var(--muted);letter-spacing:.02em}
   .scaletta .solo-pioggia{display:none}
   html.piove .scaletta .solo-pioggia{display:block}
   html.piove .scaletta .solo-asciutto{display:none}
   .tcard[id]{scroll-margin-top:12px}
   /* tappe "se avanza tempo": una riga, la scheda si apre al tocco */
-  .plus-riga{display:flex;align-items:center;gap:10px;width:100%;min-height:48px;margin:4px 0 10px;padding:10px 14px;text-align:left;
-    border:1px dashed var(--line-gold);border-radius:14px;background:none;color:var(--ink);font:inherit;font-size:14.5px;cursor:pointer}
-  .plus-riga > span:last-child{margin-left:auto;font-size:22px;color:var(--gold)}
-  .plus-foglio .nov__lista{padding-top:16px}
+  .plus-riga{justify-content:flex-start;gap:var(--s-3);min-height:48px;margin:var(--s-1) 0 var(--s-3);padding:var(--s-3) var(--s-4);text-align:left;border-style:dashed;border-radius:var(--r-m);background:none;font-weight:400}
+  .plus-riga > span:last-child{margin-left:auto;font-size:var(--f-22);color:var(--gold)}
+  .plus-foglio .nov__lista{padding-top:var(--s-4)}
   .plus-foglio .tcard{margin:0}
   /* novità: un banner sottile, si apre solo se toccato */
-  .nov-banner{display:flex;align-items:center;gap:8px;width:100%;min-height:44px;margin:14px 0 0;padding:8px 14px;
-    border:1px solid var(--line-gold);border-radius:999px;background:rgba(212,169,78,.1);color:var(--gold-soft);
-    font:inherit;font-size:14px;font-weight:700;text-align:left;cursor:pointer}
+  .nov-banner{justify-content:flex-start;margin:var(--s-4) 0 0;padding:var(--s-2) var(--s-4);color:var(--gold-soft);text-align:left}
   .nov-banner[hidden]{display:none}
-  .nov-banner span:last-child{margin-left:auto;font-size:20px}
-  .pp-link{display:flex;align-items:center;min-height:44px;margin-top:6px;color:var(--gold-soft);font-weight:700;font-size:15px}
-  .ad-testa{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+  .nov-banner span:last-child{margin-left:auto;font-size:var(--f-22)}
+  .pp-link{display:flex;margin-top:var(--s-2);font-size:var(--f-16)}
+  .ad-testa{display:flex;align-items:baseline;justify-content:space-between;gap:var(--s-3)}
   .ad-testa .eyebrow{flex:1}
-  .ad-orologio{font-size:14px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap}
-  .ad-corso{margin-top:10px;font-size:15px;line-height:1.4;color:var(--ink)}
+  .ad-orologio{font-size:var(--f-14);font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .ad-corso{margin-top:var(--s-3);font-size:var(--f-16);line-height:1.4;color:var(--ink)}
   .ad-corso[hidden],.ad-pross[hidden],.ad-vincolo[hidden],.ad-vai[hidden]{display:none}
-  .ad-pross{display:flex;gap:12px;align-items:center;margin-top:12px}
-  .ad-foto{width:96px;height:54px;object-fit:cover;border-radius:10px;flex:none;background:var(--night-2)}
+  .ad-pross{display:flex;gap:var(--s-3);align-items:center;margin-top:var(--s-3)}
+  .ad-foto{width:96px;height:54px;object-fit:cover;border-radius:var(--r-s);flex:none;background:var(--night-2)}
   .ad-foto[src=""]{display:none}
-  .ad-quando{font-size:14px;font-weight:700;color:var(--gold-soft);font-variant-numeric:tabular-nums}
-  .ad-nome{font-family:"Playfair Display",Georgia,serif;font-size:21px;line-height:1.2;margin-top:2px}
-  .ad-vincolo{white-space:pre-line;margin-top:12px;padding:10px 12px;border-radius:12px;font-size:15px;line-height:1.4;font-weight:700;
+  .ad-quando{font-size:var(--f-14);font-weight:700;color:var(--gold-soft);font-variant-numeric:tabular-nums}
+  .ad-nome{font-family:"Playfair Display",Georgia,serif;font-size:var(--f-22);line-height:1.2;margin-top:2px}
+  .ad-vincolo{white-space:pre-line;margin-top:var(--s-3);padding:var(--s-3) var(--s-3);border-radius:var(--r-s);font-size:var(--f-16);line-height:1.4;font-weight:700;
     color:var(--rosso-testo);background:rgba(200,54,43,.16);border:1px solid rgba(200,54,43,.45)}
-  .ad-azioni{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
-  .ad-azioni .piove-btn{margin-top:0;min-height:56px;padding:0 16px;border-radius:14px}
-  .ad-vai{flex:1 1 180px;display:flex;align-items:center;justify-content:center;min-height:56px;border-radius:14px;
-    background:var(--gold-fill);color:var(--on-accent);font-weight:800;font-size:17px;text-decoration:none}
-  .ad-scheda{flex:0 1 auto;min-height:56px;padding:0 16px;border-radius:14px;border:1px solid var(--line-gold);
-    background:none;color:var(--ink);font:inherit;font-weight:700;font-size:15px;cursor:pointer}
+  .ad-azioni{display:flex;gap:var(--s-3);margin-top:var(--s-4);flex-wrap:wrap}
+  .ad-azioni .piove-btn{margin-top:0}
+  .ad-vai{flex:1 1 180px;display:flex;font-size:var(--f-18)}
+  .ad-scheda{flex:0 1 auto;background:none}
   /* offline: indicatore discreto in testata, versione in fondo */
-  .offline-ok{margin-top:8px;font-size:12.5px;font-weight:700;color:var(--verde-testo);letter-spacing:.02em}
+  .offline-ok{margin-top:var(--s-2);font-size:var(--f-12);font-weight:700;color:var(--verde-testo);letter-spacing:.02em}
   .offline-ok[hidden]{display:none}
-  .ver-sito{margin-top:10px;font-size:12px;color:var(--muted)}
+  .ver-sito{margin-top:var(--s-3);font-size:var(--f-12);color:var(--muted)}
   /* passeggino a noleggio: piano B, nelle note pratiche */
-  .psg{margin-top:14px}
-  .psg h3{font-family:"Playfair Display",Georgia,serif;font-size:19px}
-  .psg-lede{margin-top:6px;font-size:13.5px;line-height:1.55;color:var(--muted)}
+  .psg{margin-top:var(--s-4)}
+  .psg h3{font-family:"Playfair Display",Georgia,serif;font-size:var(--f-18)}
+  .psg-lede{margin-top:var(--s-2);font-size:var(--f-14);line-height:1.55;color:var(--muted)}
   .psg-lede b{color:var(--gold-soft)}
-  .psg .notes{margin-top:10px}
+  .psg .notes{margin-top:var(--s-3)}
   .psg .notes a{color:var(--sky)}
-  .psg-nota{margin-top:10px;font-size:12.5px;line-height:1.5;color:var(--muted);font-style:italic}
+  .psg-nota{margin-top:var(--s-3);font-size:var(--f-12);line-height:1.5;color:var(--muted);font-style:italic}
   /* piano pioggia: solo note contestuali, compaiono quando il toggle "Piove" è acceso */
-  .piove-btn{margin-top:10px;display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(109,179,216,.45);
-    background:rgba(109,179,216,.08);color:var(--ink);border-radius:999px;padding:6px 13px;font:inherit;font-size:12.5px;font-weight:700;cursor:pointer}
-  .piove-stato{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border-left:1px solid var(--line);padding-left:7px}
+  .piove-btn{margin-top:var(--s-3);border-color:rgba(109,179,216,.45);background:rgba(109,179,216,.08);padding:0 var(--s-3);font-size:var(--f-12)}
+  .piove-stato{font-size:var(--f-12);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border-left:1px solid var(--line);padding-left:var(--s-2)}
   .piove-btn[aria-pressed="true"]{background:var(--sky-fill);border-color:var(--sky);color:var(--on-accent)}
   .piove-btn[aria-pressed="true"] .piove-stato{color:var(--on-accent);border-color:rgba(13,19,33,.3)}
   /* riepilogo del piano pioggia, sotto il pulsante appena toccato */
-  .piove-riepilogo{position:relative;margin:10px 0 4px;padding:12px 48px 10px 14px;border-radius:14px;
-    background:rgba(109,179,216,.12);border:1px solid rgba(109,179,216,.45);font-size:15px;line-height:1.4}
-  .piove-riepilogo ul{list-style:none;margin-top:4px}
-  .piove-riepilogo a{display:flex;align-items:center;gap:6px;min-height:44px;color:var(--ink);text-decoration:none}
+  .piove-riepilogo{position:relative;margin:var(--s-3) 0 var(--s-1);padding:var(--s-3) 48px var(--s-3) var(--s-4);border-radius:var(--r-m);
+    background:rgba(109,179,216,.12);border:1px solid rgba(109,179,216,.45);font-size:var(--f-16);line-height:1.4}
+  .piove-riepilogo ul{list-style:none;margin-top:var(--s-1)}
+  .piove-riepilogo a{display:flex;align-items:center;gap:var(--s-2);min-height:44px;color:var(--ink);text-decoration:none}
   .piove-riepilogo a b{color:var(--sky);min-width:76px}
-  .piove-riepilogo a::after{content:"›";margin-left:auto;font-size:20px;color:var(--sky)}
-  .piove-riepilogo__x{position:absolute;top:2px;right:2px;width:44px;height:44px;border:0;background:none;color:var(--muted);font-size:20px;cursor:pointer}
-  .ad-pioggia{margin-top:12px;padding:10px 12px;border-radius:12px;font-size:15px;line-height:1.4;
+  .piove-riepilogo a::after{content:"›";margin-left:auto;font-size:var(--f-22);color:var(--sky)}
+  .piove-riepilogo__x{position:absolute;top:2px;right:2px;width:44px;height:44px;border:0;background:none;color:var(--muted);font-size:var(--f-22);cursor:pointer}
+  .ad-pioggia{margin-top:var(--s-3);padding:var(--s-3) var(--s-3);border-radius:var(--r-s);font-size:var(--f-16);line-height:1.4;
     background:rgba(109,179,216,.12);border:1px solid rgba(109,179,216,.45);color:var(--ink)}
   .ad-pioggia[hidden],.ad-proposta[hidden]{display:none}
-  .ad-proposta{margin-top:12px;padding:12px;border-radius:12px;border:1px solid rgba(109,179,216,.45);background:rgba(109,179,216,.08);font-size:15px;line-height:1.4}
-  .ad-proposta__az{display:flex;gap:10px;margin-top:10px}
-  .ad-proposta__az button{flex:1;min-height:48px;border-radius:12px;font:inherit;font-weight:700;cursor:pointer}
-  .ad-proposta__si{border:0;background:var(--sky-fill);color:var(--on-accent)}
-  .ad-proposta__no{border:1px solid var(--line);background:none;color:var(--ink)}
+  .ad-proposta{margin-top:var(--s-3);padding:var(--s-3);border-radius:var(--r-s);border:1px solid rgba(109,179,216,.45);background:rgba(109,179,216,.08);font-size:var(--f-16);line-height:1.4}
+  .ad-proposta__az{display:flex;gap:var(--s-3);margin-top:var(--s-3)}
+  .ad-proposta__az button{flex:1;min-height:48px;border-radius:var(--r-s)}
+  .ad-proposta__si{background:var(--sky-fill);border-color:var(--sky-fill)}
+  .ad-proposta__no{border-color:var(--line);background:none}
   .pioggia-nota{display:none}
   html.piove .pioggia-nota{display:block}
   /* con "Piove" acceso una card può cedere il posto a un'alternativa al coperto */
   .tcard.solo-pioggia{display:none}
   html.piove .tcard.solo-pioggia{display:block}
   html.piove .tcard.solo-asciutto{display:none}
-  .tcard__body .pioggia-nota{margin-top:8px;font-size:12.5px;line-height:1.45;color:var(--sky)}
-  .pioggia-nota--blocco{margin:2px 0 14px;background:rgba(109,179,216,.1);border:1px solid rgba(109,179,216,.35);color:var(--ink)}
-  .nov__testa code{font-size:12px;color:var(--gold-soft)}
-  .nov-link{background:none;border:0;color:var(--gold-soft);font:inherit;font-size:12.5px;text-decoration:underline;cursor:pointer;padding:0}
+  .tcard__body .pioggia-nota{margin-top:var(--s-2);font-size:var(--f-12);line-height:1.45;color:var(--sky)}
+  .pioggia-nota--blocco{margin:2px 0 var(--s-4);background:rgba(109,179,216,.1);border:1px solid rgba(109,179,216,.35);color:var(--ink)}
+  .nov__testa code{font-size:var(--f-12);color:var(--gold-soft)}
+  .nov-link{font-size:var(--f-12);text-decoration:underline;font-weight:600}
   /* ====== R7: leggibilità e tocchi ======
      corpo delle card 15 px, nessun testo sotto 12 px, etichette operative 14 px; ogni controllo almeno 44 × 44 */
-  .tcard__body p,.tcard--plus .tcard__body p{font-size:15px}
-  .tcard__body .tdur{font-size:14px}
-  .tcard__body .plus-warn,.tcard__body .pioggia-nota{font-size:14px}
-  .eyebrow,.hero .badge,.st,.pk__eyebrow,.pk__paid,.pp-stato,.btable th,.percorso__modo,.piove-stato{font-size:12px}
-  .daynum small,.sc-ora small,.credits li small,.flight .ap small,.flight .t small,.tk figcaption small{font-size:12px}
-  .ci-co .chip2 .k,.tk-when .k,.pk__grid .k{font-size:12px}
-  .tk-order{font-size:14px}
-  .nov__data,.plus-badge,.plus-meta span{font-size:12px}
+  .tcard__body p,.tcard--plus .tcard__body p{font-size:var(--f-16)}
+  .tcard__body .tdur{font-size:var(--f-14)}
+  .tcard__body .plus-warn,.tcard__body .pioggia-nota{font-size:var(--f-14)}
+  .eyebrow,.hero .badge,.st,.pk__eyebrow,.pk__paid,.pp-stato,.btable th,.percorso__modo,.piove-stato{font-size:var(--f-12)}
+  .daynum small,.sc-ora small,.credits li small,.flight .ap small,.flight .t small,.tk figcaption small{font-size:var(--f-12)}
+  .ci-co .chip2 .k,.tk-when .k,.pk__grid .k{font-size:var(--f-12)}
+  .tk-order{font-size:var(--f-14)}
+  .nov__data,.plus-badge,.plus-meta span{font-size:var(--f-12)}
   .big-casa{text-decoration:none}
   #casaCard{scroll-margin-top:12px}
-  .bnota{display:block;margin-top:2px;font-size:12px;line-height:1.4;color:var(--muted)}
+  .bnota{display:block;margin-top:2px;font-size:var(--f-12);line-height:1.4;color:var(--muted)}
   .casa-num{font-variant-numeric:tabular-nums;letter-spacing:.02em;user-select:all;-webkit-user-select:all}
-  .leaflet-container .leaflet-control-attribution{font-size:12px}
-  .piove-btn,.olly-nav button,.nov-link{min-height:44px}
-  .nov-link{display:inline-flex;align-items:center}
-  .leaflet-touch .leaflet-bar a{width:44px;height:44px;line-height:44px;font-size:22px}
-  .pin-hit{width:44px;height:44px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:4px}
+  .leaflet-container .leaflet-control-attribution{font-size:var(--f-12)}
+  .leaflet-touch .leaflet-bar a{width:44px;height:44px;line-height:44px;font-size:var(--f-22)}
+  .pin-hit{width:44px;height:44px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:var(--s-1)}
   .pin-home-hit{width:44px;height:44px;display:grid;place-items:center}
   #map .leaflet-control-attribution{background:rgba(13,19,33,.85);color:#c9cfdd}
   #map .leaflet-control-attribution a{color:#8fcbeb}
   /* ====== bagni puliti ====== */
-  .bagno-box,.ad-bagno{margin-top:10px}
-  .bagno-riga{display:flex;align-items:center;gap:8px;width:100%;min-height:44px;padding:8px 12px;text-align:left;
-    border:1px solid var(--line-gold);border-radius:12px;background:rgba(212,169,78,.08);color:var(--ink);
-    font:inherit;font-size:15px;line-height:1.35;cursor:pointer}
+  .bagno-box,.ad-bagno{margin-top:var(--s-3)}
+  .bagno-riga{justify-content:flex-start;padding:var(--s-2) var(--s-3);text-align:left;border-radius:var(--r-s);font-size:var(--f-16);font-weight:400;line-height:1.35}
   .bagno-riga__txt{flex:1;min-width:0}
-  .bagno-riga::after{content:"▾";flex:none;margin-left:auto;font-size:14px;color:var(--gold-soft)}
+  .bagno-riga::after{content:"▾";flex:none;margin-left:auto;font-size:var(--f-14);color:var(--gold-soft)}
   .bagno-riga[aria-expanded="true"]::after{content:"▴"}
-  .bagno-chiusa{display:inline-block;margin-left:4px;padding:1px 8px;border-radius:999px;font-size:12px;font-weight:800;
-    color:var(--rosso-testo);background:rgba(200,54,43,.14);border:1px solid rgba(200,54,43,.45)}
-  .bagno-pan{margin-top:8px;padding:12px;border:1px solid var(--line);border-radius:12px;background:rgba(128,128,128,.07);
-    display:flex;flex-direction:column;gap:12px}
+  .bagno-chiusa{margin-left:var(--s-1);font-weight:800}
+  .bagno-pan{margin-top:var(--s-2);padding:var(--s-3);border:1px solid var(--line);border-radius:var(--r-s);background:rgba(128,128,128,.07);
+    display:flex;flex-direction:column;gap:var(--s-3)}
   .bagno-pan[hidden]{display:none}
-  .bagno-per{font-size:14px;color:var(--muted)}
-  .bagno-avviso{padding:10px 12px;border-radius:10px;font-size:15px;line-height:1.45;font-weight:700;color:var(--gold-soft);
+  .bagno-per{font-size:var(--f-14);color:var(--muted)}
+  .bagno-avviso{padding:var(--s-3) var(--s-3);border-radius:var(--r-s);font-size:var(--f-16);line-height:1.45;font-weight:700;color:var(--gold-soft);
     background:rgba(212,169,78,.12);border:1px solid var(--line-gold)}
   .bagno-avviso--alert{color:var(--rosso-testo);background:rgba(200,54,43,.14);border-color:rgba(200,54,43,.45)}
-  .bagno-avviso--riga{margin-top:8px}
-  .bagno-voce{padding-left:10px;border-left:3px solid var(--gold)}
+  .bagno-avviso--riga{margin-top:var(--s-2)}
+  .bagno-voce{padding-left:var(--s-3);border-left:3px solid var(--gold)}
   .bagno-voce--riserva{border-left-style:dashed}
-  .bagno-voce__testa{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
-  .bagno-ruolo{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--gold-soft)}
-  .bagno-scale{padding:1px 8px;border-radius:999px;font-size:12px;font-weight:800;color:var(--rosso-testo);
-    background:rgba(200,54,43,.14);border:1px solid rgba(200,54,43,.5)}
-  .bagno-nome{margin-top:2px;font-size:15px;font-weight:700;line-height:1.35;color:var(--ink)}
-  .bagno-ind{margin-top:2px;font-size:14px;line-height:1.4;color:var(--muted)}
-  .bagno-dati{list-style:none;margin-top:6px;display:flex;flex-direction:column;gap:4px}
-  .bagno-dati li{font-size:14px;line-height:1.45;color:var(--ink)}
+  .bagno-voce__testa{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s-2)}
+  .bagno-ruolo{font-size:var(--f-12);font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--gold-soft)}
+  .bagno-scale{font-weight:800}
+  .bagno-nome{margin-top:2px;font-size:var(--f-16);font-weight:700;line-height:1.35;color:var(--ink)}
+  .bagno-ind{margin-top:2px;font-size:var(--f-14);line-height:1.4;color:var(--muted)}
+  .bagno-dati{list-style:none;margin-top:var(--s-2);display:flex;flex-direction:column;gap:var(--s-1)}
+  .bagno-dati li{font-size:var(--f-14);line-height:1.45;color:var(--ink)}
   .bagno-et{font-weight:700;color:var(--muted)}
-  .bagno-nota,.bagno-fonte{margin-top:6px;font-size:13px;line-height:1.45;color:var(--muted)}
-  .bagno-maps{display:inline-flex;align-items:center;gap:6px;min-height:44px;margin-top:6px;padding:0 16px;border-radius:999px;
-    font-size:14.5px;font-weight:700;text-decoration:none;color:var(--sky);border:1px solid rgba(109,179,216,.4);background:rgba(109,179,216,.1)}
-  .bagno-regola{padding:12px;border-radius:12px;font-size:15px;line-height:1.5;font-weight:700;color:var(--gold-soft);
+  .bagno-nota,.bagno-fonte{margin-top:var(--s-2);font-size:var(--f-14);line-height:1.45;color:var(--muted)}
+  .bagno-maps{margin-top:var(--s-2)}
+  .bagno-regola{padding:var(--s-3);border-radius:var(--r-s);font-size:var(--f-16);line-height:1.5;font-weight:700;color:var(--gold-soft);
     background:rgba(212,169,78,.12);border:1px solid var(--line-gold)}
-  .bagno-legenda{margin-top:10px;font-size:14px;line-height:1.5;color:var(--muted)}
-  .bagno-giorno{margin-top:18px;font-family:"Playfair Display",Georgia,serif;font-size:19px;line-height:1.25}
-  .bagno-tappa{margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
-  .bagno-tappa__nome{font-size:15px;font-weight:800;line-height:1.35;color:var(--ink)}
-  .bagno-tappa .bagno-pan,.bagno-tappa > .bagno-avviso,.bagno-tappa > .bagno-voce{margin-top:8px}
-  .bagno-evita{list-style:none;margin-top:8px;display:flex;flex-direction:column;gap:6px}
-  .bagno-evita li{font-size:14px;line-height:1.45;color:var(--ink)}
-  .bagno-metodo{margin-top:14px;font-size:12px;line-height:1.5;color:var(--muted)}
+  .bagno-legenda{margin-top:var(--s-3);font-size:var(--f-14);line-height:1.5;color:var(--muted)}
+  .bagno-giorno{margin-top:var(--s-4);font-family:"Playfair Display",Georgia,serif;font-size:var(--f-18);line-height:1.25}
+  .bagno-tappa{margin-top:var(--s-4);padding-top:var(--s-3);border-top:1px solid var(--line)}
+  .bagno-tappa__nome{font-size:var(--f-16);font-weight:800;line-height:1.35;color:var(--ink)}
+  .bagno-tappa .bagno-pan,.bagno-tappa > .bagno-avviso,.bagno-tappa > .bagno-voce{margin-top:var(--s-2)}
+  .bagno-evita{list-style:none;margin-top:var(--s-2);display:flex;flex-direction:column;gap:var(--s-2)}
+  .bagno-evita li{font-size:var(--f-14);line-height:1.45;color:var(--ink)}
+  .bagno-metodo{margin-top:var(--s-4);font-size:var(--f-12);line-height:1.5;color:var(--muted)}
   /* mappa: marker 🚻 (principale pieno, riserva bordato, spostato in alto a destra del luogo) e livello a un tocco */
   .bagno-pin-hit{width:44px;height:44px;display:grid;place-items:center}
-  .bagno-pin{width:32px;height:32px;display:grid;place-items:center;border-radius:50%;font-size:17px;line-height:1;
+  .bagno-pin{width:32px;height:32px;display:grid;place-items:center;border-radius:50%;font-size:var(--f-18);line-height:1;
     background:var(--gold-fill);border:2px solid var(--gold-fill);color:var(--on-accent)}
   .bagno-pin--riserva{background:var(--night-0);color:var(--ink);border-color:var(--gold-fill)}
-  .deposito-azioni{display:flex;flex-wrap:wrap;gap:8px}
-  .deposito-azioni .bagno-maps{margin-top:6px}
-  .bagno-pop{font-size:13px;line-height:1.5;color:var(--muted)}
+  .deposito-azioni{display:flex;flex-wrap:wrap;gap:var(--s-2)}
+  .deposito-azioni .bagno-maps{margin-top:var(--s-2)}
+  .bagno-pop{font-size:var(--f-14);line-height:1.5;color:var(--muted)}
   .leaflet-control-layers-toggle{background-image:none!important;width:64px!important;height:44px!important;display:grid;place-items:center}
-  .leaflet-control-layers-toggle::before{content:"🚻🧳";font-size:20px;line-height:1}
-  .leaflet-control-layers label{position:relative;display:block;min-height:44px;margin:0;padding:11px 14px;font-size:15px;cursor:pointer}
+  .leaflet-control-layers-toggle::before{content:"🚻🧳";font-size:var(--f-22);line-height:1}
+  .leaflet-control-layers label{position:relative;display:block;min-height:44px;margin:0;padding:var(--s-3) var(--s-4);font-size:var(--f-16);cursor:pointer}
   .leaflet-control-layers-selector{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:pointer}
   .leaflet-control-layers-selector + span::before{content:"☐ "}
   .leaflet-control-layers-selector:checked + span::before{content:"☑ "}
   /* ====== cambio della guardia ====== */
-  .chip-vincolo{display:inline-block;margin-top:6px;padding:2px 10px;border-radius:999px;font-size:14px;font-weight:800;
+  .chip-vincolo{margin-top:var(--s-2);font-size:var(--f-14);font-weight:800}
+  .guardia-avviso{margin-top:var(--s-3);padding:var(--s-3) var(--s-3);border-radius:var(--r-s);font-size:var(--f-16);line-height:1.45;font-weight:700;
     color:var(--rosso-testo);background:rgba(200,54,43,.14);border:1px solid rgba(200,54,43,.45)}
-  .guardia-avviso{margin-top:10px;padding:10px 12px;border-radius:12px;font-size:15px;line-height:1.45;font-weight:700;
-    color:var(--rosso-testo);background:rgba(200,54,43,.14);border:1px solid rgba(200,54,43,.45)}
-  .guardia-ok{margin-top:10px;padding:10px 12px;border-radius:12px;background:rgba(79,174,124,.12);border:1px solid rgba(79,174,124,.4)}
-  .guardia-ok p{margin-top:6px;font-size:15px;line-height:1.45;color:var(--ink)}
+  .guardia-ok{margin-top:var(--s-3);padding:var(--s-3) var(--s-3);border-radius:var(--r-s);background:rgba(79,174,124,.12);border:1px solid rgba(79,174,124,.4)}
+  .guardia-ok p{margin-top:var(--s-2);font-size:var(--f-16);line-height:1.45;color:var(--ink)}
   .guardia-ok p:first-child{margin-top:0}
   .guardia-ok__tit b{color:var(--verde-testo)}
   .guardia-ok .st{background:var(--night-1)}   /* badge su fondo pieno: il verde del riquadro sotto il testo farebbe scendere il contrasto sotto 7:1 */
-  .tcard__body .guardia-ok .guardia-ok__fonte{font-size:13px;color:var(--muted)}
-  .guardia-link{display:inline-flex;align-items:center;min-height:44px;margin-top:4px;font-size:14.5px;font-weight:700;color:var(--sky);text-decoration:none}
-  .nota-piccola{margin-top:8px;font-size:14px;line-height:1.45;color:var(--muted)}
-  .ad-guardia{list-style:none;margin-top:12px;display:flex;flex-direction:column;gap:8px}
+  .tcard__body .guardia-ok .guardia-ok__fonte{font-size:var(--f-14);color:var(--muted)}
+  .guardia-link{margin-top:var(--s-1);color:var(--sky)}
+  .nota-piccola{margin-top:var(--s-2);font-size:var(--f-14);line-height:1.45;color:var(--muted)}
+  .ad-guardia{list-style:none;margin-top:var(--s-3);display:flex;flex-direction:column;gap:var(--s-2)}
   .ad-guardia[hidden]{display:none}
-  .ad-guardia li{padding:10px 12px;border-radius:12px;font-size:15px;line-height:1.45;font-weight:700;color:var(--ink);
+  .ad-guardia li{padding:var(--s-3) var(--s-3);border-radius:var(--r-s);font-size:var(--f-16);line-height:1.45;font-weight:700;color:var(--ink);
     background:rgba(212,169,78,.12);border:1px solid var(--line-gold)}
-  .ad-guardia a{display:inline-flex;align-items:center;min-height:44px;margin-right:14px;color:var(--sky);text-decoration:none}
+  .ad-guardia a{margin-right:var(--s-3);color:var(--sky)}
 </style>
 </head>
 <body>
@@ -753,7 +743,7 @@
   <p class="sub"><b>15–17 novembre 2026</b> · 3 giorni, 2 notti</p>
   <p class="fam">Alessandro, Vale e Olly</p>
   <p class="offline-ok" id="offlineOk" hidden>✓ Disponibile offline</p>
-  <a class="pics-link" href="londra-illustrata.html">🖼️ Versione per immagini, per Olly</a>
+  <a class="btn btn--ghost pics-link" href="londra-illustrata.html">🖼️ Versione per immagini, per Olly</a>
   <div class="skyline" aria-hidden="true">
     <svg viewBox="0 0 640 90" fill="currentColor" preserveAspectRatio="xMidYMax meet">
       <!-- skyline stilizzata: Big Ben, London Eye, Tower Bridge, St Paul's -->
@@ -776,7 +766,7 @@
 <main>
 <div class="wrap">
 
-  <button class="nov-banner" id="novBanner" type="button" hidden></button>
+  <button class="btn btn--secondario btn--blocco nov-banner" id="novBanner" type="button" hidden></button>
 
   <!-- ============ PRIMA DI PARTIRE / ADESSO ============
        Uno solo dei due è visibile: "Prima di partire" fino al 14 novembre, "Adesso" dal 15 al 17.
@@ -785,7 +775,7 @@
     <div class="eyebrow">Prima di partire</div>
     <h2 class="ora-tit" id="ppTit"><span id="ppGiorni"></span></h2>
     <div id="ppLista"></div>
-    <a class="pp-link" href="#listaPartenza">Tutta la lista, con le cose già fatte ↓</a>
+    <a class="btn btn--ghost pp-link" href="#listaPartenza">Tutta la lista, con le cose già fatte ↓</a>
   </section>
   <section class="ora-pan" id="adesso" hidden aria-labelledby="adTit">
     <div class="ad-testa"><span class="eyebrow" id="adTit">Adesso</span><span class="ad-orologio" id="adOrologio"></span></div>
@@ -801,16 +791,16 @@
     <p class="ad-regola" id="adRegola" hidden></p>
     <ul class="ad-guardia" id="adGuardia" hidden></ul>
     <p class="ad-pioggia" id="adPioggia" hidden></p>
-    <button class="ad-codice" id="adCodice" type="button" hidden></button>
+    <button class="btn btn--grande btn--blocco ad-codice" id="adCodice" type="button" hidden></button>
     <div class="ad-azioni">
-      <a class="ad-vai" id="adVai" target="_blank" rel="noopener" hidden>🧭 Portami lì</a>
-      <button class="ad-scheda" id="adScheda" type="button">Vedi la scheda ↓</button>
-      <button class="piove-btn" type="button" data-piove aria-pressed="false" id="pioveBtnAd"><span class="piove-ic">🌧️</span> Piove <span class="piove-stato">no</span></button>
+      <a class="btn btn--primario btn--grande ad-vai" id="adVai" target="_blank" rel="noopener" hidden>🧭 Portami lì</a>
+      <button class="btn btn--secondario btn--grande ad-scheda" id="adScheda" type="button">Vedi la scheda ↓</button>
+      <button class="btn btn--secondario piove-btn" type="button" data-piove aria-pressed="false" id="pioveBtnAd"><span class="piove-ic">🌧️</span> Piove <span class="piove-stato">no</span></button>
     </div>
     <div class="ad-bagno" id="adBagno" hidden></div>
     <div class="ad-proposta" id="adProposta" hidden>
       <p id="adPropostaTesto"></p>
-      <div class="ad-proposta__az"><button type="button" class="ad-proposta__si" id="adPropostaSi">Sì, attiva</button><button type="button" class="ad-proposta__no" id="adPropostaNo">No</button></div>
+      <div class="ad-proposta__az"><button type="button" class="btn btn--primario ad-proposta__si" id="adPropostaSi">Sì, attiva</button><button type="button" class="btn btn--secondario ad-proposta__no" id="adPropostaNo">No</button></div>
     </div>
   </section>
 
@@ -818,7 +808,7 @@
   <section id="programma">
     <div class="eyebrow">Programma</div>
     <h2>Tre giorni, una zona al giorno</h2>
-    <p class="prog-azioni"><button class="piove-btn" type="button" data-piove aria-pressed="false" id="pioveBtn"><span class="piove-ic">🌧️</span> Piove <span class="piove-stato">no</span></button></p>
+    <p class="prog-azioni"><button class="btn btn--secondario piove-btn" type="button" data-piove aria-pressed="false" id="pioveBtn"><span class="piove-ic">🌧️</span> Piove <span class="piove-stato">no</span></button></p>
     <p class="sub2">Tocca una giornata per aprire il dettaglio. <b>Gli orari sono una proposta</b>, ricavata da voli, check-in e distanze: vanno confermati.</p>
     <section class="meteo" id="meteo" hidden aria-label="Meteo di Londra, previsione Open-Meteo">
       <button class="meteo__riga" type="button" aria-expanded="false" aria-controls="meteoDett"></button>
@@ -840,7 +830,7 @@
       <div class="dbody">
         <div class="hp-note info" id="ajex-dom">📅 Ore 14:00 parata AJEX al Cenotaph (Whitehall): possibili chiusure stradali. Household Cavalry Museum chiuso tutto il giorno.</div>
         <div class="hp-note pioggia-nota pioggia-nota--blocco" id="pioggia-dom" data-giorno="2026-11-15" data-fino="12:30">🌧️ Domenica è già quasi tutta al coperto (SEA LIFE, Hamleys): con la pioggia il pranzo si fa dentro il Southbank Centre.</div>
-        <button class="pk-riga" type="button" data-codice="0"><span class="pk-riga__ic" aria-hidden="true">🅿️</span><span><b>QR del parcheggio P1</b><small>Tocca per mostrarlo alla sbarra, anche senza rete</small></span><span aria-hidden="true">›</span></button>
+        <button class="btn btn--secondario btn--blocco pk-riga" type="button" data-codice="0"><span class="pk-riga__ic" aria-hidden="true">🅿️</span><span><b>QR del parcheggio P1</b><small>Tocca per mostrarlo alla sbarra, anche senza rete</small></span><span aria-hidden="true">›</span></button>
         <article class="tcard" data-giorno="2026-11-15" data-ora="05:15" data-tipo="trasporto" data-fuso="Europe/Rome" data-mostra="qr">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/blq.webp" width="800" height="450" alt="Il terminal dell’aeroporto di Bologna con le arcate rosse della pensilina" decoding="async">
@@ -849,7 +839,7 @@
           <div class="tcard__body">
             <h4>Aeroporto di Bologna</h4>
             <p>Due ore prima del volo: banco British Airways, controlli e gate.</p>
-            <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=44.5293704,11.2930801&amp;travelmode=driving" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚗 in auto</span></a>
+            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=44.5293704,11.2930801&amp;travelmode=driving" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚗 in auto</span></a>
           </div>
           <p class="tcard__credito">foto: Threecharlie / CC BY-SA 3.0</p>
         </article>
@@ -897,7 +887,7 @@
             <p class="regola">📌 Appena superati i passaporti, aprite TfL Go o Google Maps: se c’è un’Elizabeth line entro una decina di minuti, prendetela; se il prossimo è fra mezz’ora, prendete la Piccadilly: arrivate alla stessa ora e spendete meno.</p>
             <p>Olly gratis in entrambi i casi. Contactless o telefono, una carta per adulto.</p>
             <details class="det"><summary>Dettagli</summary><p>Elizabeth la domenica: per esempio 09:49 → Waterloo 10:40, poi 10:20 → 11:07. Treni nuovi e spaziosi. Piccadilly: per esempio 09:53 → Waterloo 10:54, poi 10:05, 10:17. Si tira dritto a Southbank, senza passare da casa: i bagagli si lasciano da Bounce Waterloo, in Chicheley St vicino alla stazione (riga 🧳 nella card del SEA LIFE).</p></details>
-            <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5054668,-0.1171985&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚇 coi mezzi</span></a>
+            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5054668,-0.1171985&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚇 coi mezzi</span></a>
           </div>
           <p class="tcard__credito">foto: Chris McKenna (Thryduulf) / CC BY-SA 4.0</p>
         </article>
@@ -917,7 +907,7 @@
             <p class="tdur">⏱️ 1 h 15</p>
             <p>Lungofiume e pranzo. Winter Market se è già aperto: la data non è confermata.</p>
             <details class="det"><summary>Dettagli</summary><p>Se le bancarelle non ci sono ancora, il pranzo si fa dentro il Southbank Centre o lungo il fiume.</p></details>
-            <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5054668,-0.1171985&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚇 coi mezzi</span></a>
+            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5054668,-0.1171985&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚇 coi mezzi</span></a>
           </div>
           <p class="tcard__credito">foto: Robin Stott / CC BY-SA 2.0</p>
         </article>
@@ -931,8 +921,8 @@
             <p class="tdur">⏱️ 2 h</p>
             <p>Domenica 10:00–17:00. Ingresso in qualsiasi momento, biglietti già presi. Zaini fino a 30 litri; guardaroba non c’è.</p>
             <details class="det"><summary>Dettagli</summary><p>Squali, pinguini e il tunnel sottomarino, dentro County Hall.</p></details>
-            <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.501558,-0.119506&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
-            <button class="gmap gmap--btn" type="button" data-codice="sealife-1">🎟️ Mostra i biglietti</button>
+            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.501558,-0.119506&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
+            <button class="btn btn--secondario btn--cielo gmap gmap--btn" type="button" data-codice="sealife-1">🎟️ Mostra i biglietti</button>
           </div>
           <p class="tcard__credito">foto: ʘx / CC BY-SA 4.0</p>
         </article>
@@ -947,7 +937,7 @@
             <h4>Bus 12 verso Piccadilly Circus</h4>
             <p class="tdur">⏱️ ~25 min</p>
             <p>Fermata St Thomas’ Hospital / County Hall (3 min a piedi), bus 12 fino a Piccadilly Circus (14 min), poi 8 min a piedi. Olly gratis.</p>
-            <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5123401,-0.1342553&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚌 coi mezzi</span></a>
+            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5123401,-0.1342553&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚌 coi mezzi</span></a>
           </div>
         </article>
         <article class="tcard" data-giorno="2026-11-15" data-ora="15:00" data-tipo="tappa" data-durata="15-15" data-entro="18:00" data-vincolo="Lina Stores la domenica chiude alle 18:00" data-piano-b="Whole Foods a Piccadilly Circus, aperto fino alle 18:00" data-bagno="lina">
@@ -960,7 +950,7 @@
             <p class="tdur">⏱️ 15 min</p>
             <p>18 Brewer Street, 2 minuti da casa. Domenica 11:00–18:00. Piano B: Whole Foods a Piccadilly Circus, aperto fino alle 18:00.</p>
             <details class="det"><summary>Dettagli</summary><p>Gastronomia italiana: pasta fresca, salumi, sughi. Si compra prima di salire a casa, così la cena è già in frigo.</p></details>
-            <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5123401,-0.1342553&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
+            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5123401,-0.1342553&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
           </div>
           <p class="tcard__credito">foto: Ewan-M / CC BY-SA 2.0</p>
         </article>
@@ -973,7 +963,7 @@
             <h4>Check-in Clevio e riposo</h4>
             <p class="tdur">⏱️ 1 h 15</p>
             <p>Chiave digitale Clevio, ingresso libero dopo le 15:00. Zaini giù e riposo vero, dopo la sveglia all’alba.</p>
-            <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5129114,-0.1364381&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
+            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5129114,-0.1364381&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
           </div>
           <p class="tcard__credito">foto: No Swan So Fine / CC BY-SA 4.0</p>
         </article>
@@ -992,7 +982,7 @@
             <p class="tdur">⏱️ 1 h</p>
             <p>188-196 Regent Street, 3-4 minuti a piedi. Domenica 12:00–18:00. La sorpresa per Olly, dopo il riposo e col buio (tramonto ~16:10).</p>
             <details class="det"><summary>Dettagli</summary><p>Con le luci di Regent Street, se sono già accese. Le dimostrazioni dei commessi sono visive.</p></details>
-            <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.51283,-0.1400828&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
+            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.51283,-0.1400828&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
           </div>
           <p class="tcard__credito">foto: DAVID HOLT / CC BY-SA 2.0</p>
         </article>
@@ -1004,7 +994,7 @@
           <div class="tcard__body">
             <h4>Luci di Carnaby Street</h4>
             <p>Sulla via di casa da Hamleys, due minuti a piedi: a quell’ora sono accese da un pezzo.</p>
-            <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5133,-0.1391&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
+            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5133,-0.1391&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
           </div>
           <p class="tcard__credito">foto: Christine Matthews / CC BY-SA 2.0</p>
         </article>
@@ -1016,7 +1006,7 @@
           <div class="tcard__body">
             <h4>Cena in appartamento</h4>
             <p>Con la spesa di Lina Stores, già in frigo dal pomeriggio.</p>
-            <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5129114,-0.1364381&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
+            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5129114,-0.1364381&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
           </div>
           <p class="tcard__credito">foto: No Swan So Fine / CC BY-SA 4.0</p>
         </article>
@@ -1047,7 +1037,7 @@
           <div class="tcard__body">
             <h4>Si parte da Soho</h4>
             <p>Colazione in zona e via a piedi: Trafalgar Square è a venti minuti.</p>
-            <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5129114,-0.1364381&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
+            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5129114,-0.1364381&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
           </div>
           <p class="tcard__credito">foto: No Swan So Fine / CC BY-SA 4.0</p>
         </article>
@@ -1061,7 +1051,7 @@
             <p class="tdur">⏱️ 15 min</p>
             <p>I leoni e le fontane. Bagno: National Gallery (apre alle 10:00) o Café in the Crypt.</p>
             <details class="det"><summary>Dettagli</summary><p>L’albero norvegese di solito arriva a inizio dicembre: il 16 novembre potrebbe non esserci ancora.</p></details>
-            <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.508039,-0.128069&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
+            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.508039,-0.128069&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
           </div>
           <p class="tcard__credito">foto: Diliff / CC BY-SA 3.0</p>
         </article>
@@ -1074,7 +1064,7 @@
             <h4>Whitehall e Horse Guards</h4>
             <p class="tdur">⏱️ 15 min</p>
             <p>Alle 10:00 le sentinelle a cavallo prendono servizio: 5 min di cavalli da vicino.</p>
-            <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5047752,-0.1272358&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
+            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5047752,-0.1272358&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
           </div>
           <p class="tcard__credito">foto: Lewis Clarke / CC BY-SA 2.0</p>
         </article>
@@ -1087,7 +1077,7 @@
             <h4>Big Ben e il Parlamento</h4>
             <p class="tdur">⏱️ 10 min</p>
             <p>Foto veloce, poi Birdcage Walk.</p>
-            <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5007292,-0.1246254&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
+            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5007292,-0.1246254&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
           </div>
           <p class="tcard__credito">foto: Domob / CC BY-SA 4.0</p>
         </article>
@@ -1108,7 +1098,7 @@
               <p class="guardia-ok__fonte">Fonte: calendario ufficiale Household Division, letto il 23/10/2026</p>
               <p>Possibile seconda banda (Irish Guards): solo fonti non ufficiali <span class="st est">stimato</span></p>
               <p>💂 Curiosità per Olly: oggi la guardia la fanno i soldati del Genio, gli ‘Shamrocks’: stessa giacca rossa e cappellone di pelo!</p>
-              <a class="guardia-link" href="https://www.householddivision.org.uk/changing-the-guard-calendar" target="_blank" rel="noopener">📅 Calendario ufficiale</a>
+              <a class="btn btn--ghost guardia-link" href="https://www.householddivision.org.uk/changing-the-guard-calendar" target="_blank" rel="noopener">📅 Calendario ufficiale</a>
             </div>
             <details class="det piano-b" id="piano-b-lun"><summary>Piano B</summary>
               <ul class="opzioni">
@@ -1117,7 +1107,7 @@
                 <li><b>Guards Museum</b>, accanto a Wellington Barracks: al coperto, si può provare un’uniforme. 10:00–16:00, ultimo ingresso 15:30. Prezzo: <span class="st est">stimato</span>, da verificare.</li>
               </ul>
             </details>
-            <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5003309,-0.1356875&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
+            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5003309,-0.1356875&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
           </div>
           <p class="tcard__credito">foto: Adrian Snood / CC BY 2.0</p>
         </article>
@@ -1135,7 +1125,7 @@
             <h4>St James’s Park</h4>
             <p class="tdur">⏱️ 40 min</p>
             <p>Pausa seduti, papere e pellicani. Bagno: St James’s Café.</p>
-            <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.502967,-0.1339534&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
+            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.502967,-0.1339534&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
           </div>
           <p class="tcard__credito">foto: Colin / CC BY-SA 3.0</p>
         </article>
@@ -1149,7 +1139,7 @@
             <p class="tdur">⏱️ 20 min</p>
             <p class="chip-vincolo">⏰ alle 11:40 per i cavalli</p>
             <p>Buckingham Palace e Victoria Memorial, lì accanto: rientra la Old Guard con la banda e passa la Household Cavalry a cavallo (~11:45).</p>
-            <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.501364,-0.14189&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
+            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.501364,-0.14189&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
           </div>
           <p class="tcard__credito">foto: Diliff / CC BY-SA 3.0</p>
         </article>
@@ -1177,7 +1167,7 @@
             <h4>District line, Westminster → South Kensington</h4>
             <p class="tdur">⏱️ 7 min</p>
             <p>Diretta, passa ogni pochi minuti, ~£3 a testa, Olly gratis. Poi ~10 min a piedi fino a Harrods.</p>
-            <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.494094,-0.174138&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚇 coi mezzi</span></a>
+            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.494094,-0.174138&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚇 coi mezzi</span></a>
           </div>
         </article>
         <a class="percorso" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.494094,-0.174138&amp;destination=51.4994055,-0.1632344&amp;travelmode=walking" target="_blank" rel="noopener" data-percorso="Lunedì · South Kensington → Harrods">
@@ -1194,7 +1184,7 @@
             <h4>Harrods</h4>
             <p class="tdur">⏱️ 1 h 50</p>
             <p>Vetrine di Natale e tè alle Tea Rooms. Dieci minuti a piedi da South Kensington.</p>
-            <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.4994055,-0.1632344&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
+            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.4994055,-0.1632344&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
           </div>
           <p class="tcard__credito">foto: Editor5807 / CC BY-SA 4.0</p>
         </article>
@@ -1204,7 +1194,7 @@
             <h4>A piedi verso il Natural History Museum</h4>
             <p class="tdur">⏱️ 10 min</p>
             <p>Da Harrods lungo Brompton Road: l’ingresso al museo è alle 16:30, non prima.</p>
-            <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.4967150,-0.1763672&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
+            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.4967150,-0.1763672&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
           </div>
         </article>
         <a class="percorso" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.4994055,-0.1632344&amp;destination=51.4967150,-0.1763672&amp;travelmode=walking" target="_blank" rel="noopener" data-percorso="Lunedì · Harrods → Natural History Museum">
@@ -1222,8 +1212,8 @@
             <p class="tdur">⏱️ 1 h 15</p>
             <p>Ingresso a fascia oraria alle 16:30, non prima. Chiude alle 17:50. Dieci minuti a piedi da Harrods.</p>
             <details class="det"><summary>Dettagli</summary><p>I tre biglietti sono già presi: sono nella sezione Biglietti, da mostrare allo schermo.</p></details>
-            <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.4967150,-0.1763672&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
-            <button class="gmap gmap--btn" type="button" data-codice="1">🎟️ Mostra i biglietti</button>
+            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.4967150,-0.1763672&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
+            <button class="btn btn--secondario btn--cielo gmap gmap--btn" type="button" data-codice="1">🎟️ Mostra i biglietti</button>
           </div>
           <p class="tcard__credito">foto: Diliff / CC BY-SA 3.0</p>
         </article>
@@ -1245,11 +1235,11 @@
           <div class="tcard__body">
             <h4>Luci di Regent Street</h4>
             <p>Gli angeli sospesi sopra la strada, sulla via del rientro verso Soho. Cena in zona.</p>
-            <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5131,-0.1400&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚇 coi mezzi</span></a>
+            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5131,-0.1400&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚇 coi mezzi</span></a>
           </div>
           <p class="tcard__credito">foto: Oast House Archive / CC BY-SA 2.0</p>
         </article>
-        <button class="plus-riga" type="button" data-plus="mms"><span aria-hidden="true">✨</span><span>Se avanza tempo: <b>M&amp;M’S London</b>, 7 min a piedi</span><span aria-hidden="true">›</span></button>
+        <button class="btn btn--secondario btn--blocco plus-riga" type="button" data-plus="mms"><span aria-hidden="true">✨</span><span>Se avanza tempo: <b>M&amp;M’S London</b>, 7 min a piedi</span><span aria-hidden="true">›</span></button>
       </div>
     </details>
 
@@ -1277,7 +1267,7 @@
             <h4>Check-out e bagagli in deposito</h4>
             <p>Camera da lasciare alle 10:30. Bagagli in un deposito, uno solo scelto la mattina: qui a Carnaby, a Camden o a Covent Garden. Poi Camden, Covent Garden e l’aeroporto.</p>
             <details class="det"><summary>Dettagli</summary><p>Carnaby è a 60 m da casa, ma poi si ripassa a riprenderli. Camden o Covent Garden: si portano con sé in metro fin lì.</p></details>
-            <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5129114,-0.1364381&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
+            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5129114,-0.1364381&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
           </div>
           <p class="tcard__credito">foto: No Swan So Fine / CC BY-SA 4.0</p>
         </article>
@@ -1287,7 +1277,7 @@
             <h4>Verso Camden</h4>
             <p class="tdur">⏱️ ~25 min</p>
             <p>15 min a piedi fino a Tottenham Court Road, poi <b>Northern line diretta</b> fino a Camden Town (9 min). Arrivo ~11:00. ~£3 a testa, Olly gratis.</p>
-            <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.539292,-0.14274&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚇 coi mezzi</span></a>
+            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.539292,-0.14274&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚇 coi mezzi</span></a>
           </div>
         </article>
         <article class="tcard" data-tappa="camden" data-durata="75-75" data-comprimibile data-giorno="2026-11-17" data-ora="11:00" data-tipo="tappa" data-bagno="camden" data-deposito="camden">
@@ -1305,7 +1295,7 @@
           <span class="percorso__txt"><b>Percorso · Martedì</b><span>Piano B: Camden Town → Heathrow T5</span></span>
           <span class="percorso__modo">🚇 con i mezzi</span>
         </a>
-            <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.539292,-0.14274&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚇 coi mezzi</span></a>
+            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.539292,-0.14274&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚇 coi mezzi</span></a>
           </div>
           <p class="tcard__credito">foto: Can Pac Swire / CC BY-SA 2.0</p>
         </article>
@@ -1323,7 +1313,7 @@
             <h4>Pranzo da Poppies Fish &amp; Chips</h4>
             <p class="tdur">⏱️ 1 h</p>
             <p>30 Hawley Crescent, martedì 11:00–22:00. Locale anni ’50, 4,2 su ~6.000 recensioni Google. Fish &amp; chips: il piatto più tipico di Londra, semplice per Olly.</p>
-            <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5409723,-0.143961&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
+            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5409723,-0.143961&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
           </div>
           <p class="tcard__credito">foto: Robert Lamb / CC BY-SA 2.0</p>
         </article>
@@ -1338,7 +1328,7 @@
             <h4>Verso Covent Garden</h4>
             <p class="tdur">⏱️ ~15 min</p>
             <p><b>Northern line diretta</b> Camden Town → Leicester Square (8 min), poi 5 min a piedi. ~£3 a testa, Olly gratis.</p>
-            <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5122737,-0.1234492&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚇 coi mezzi</span></a>
+            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5122737,-0.1234492&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚇 coi mezzi</span></a>
           </div>
         </article>
         <article class="tcard" data-tappa="covent" data-durata="105-105" data-comprimibile data-giorno="2026-11-17" data-ora="13:30" data-tipo="tappa" data-bagno="coventgarden" data-deposito="coventgarden">
@@ -1350,7 +1340,7 @@
             <h4>Covent Garden</h4>
             <p class="tdur">⏱️ 1 h 45</p>
             <p>Dalla metro di Leicester Square, 5 minuti a piedi: il mercato coperto e gli artisti di strada. Il pranzo è già fatto a Camden.</p>
-            <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5122737,-0.1234492&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
+            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5122737,-0.1234492&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
           </div>
           <p class="tcard__credito">foto: Dietmar Rabich / CC BY-SA 4.0</p>
         </article>
@@ -1379,7 +1369,7 @@
             <p class="regola">📌 Volo alle 18:10: puntate ad arrivare a T5 verso le 16:10. Alle 15:10 guardate TfL Go: se l’Elizabeth delle 15:30 da Tottenham Court Road è confermata, andate a piedi fin lì; altrimenti prendete la Piccadilly delle 15:25 da Covent Garden.</p>
             <p>Olly gratis in entrambi i casi.</p>
             <details class="det"><summary>Dettagli</summary><p>Elizabeth: per esempio 15:30 → 16:06, 16:00 → 16:36. Piccadilly: per esempio 15:25 → 16:21, 15:37 → 16:34. Prima si ritirano i bagagli dal deposito scelto la mattina: se è quello di Covent Garden, si parte da lì.</p></details>
-            <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.4723,-0.4887&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚇 coi mezzi</span></a>
+            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.4723,-0.4887&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚇 coi mezzi</span></a>
           </div>
           <p class="tcard__credito">foto: DiscoA340 / CC BY-SA 4.0</p>
         </article>
@@ -1391,7 +1381,7 @@
           <div class="tcard__body">
             <h4>Heathrow, Terminal 5 · BA546</h4>
             <p>Circa 50 minuti di metro dal centro. Check-in, controlli e gate al Terminal 5.</p>
-            <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.4723,-0.4887&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚇 coi mezzi</span></a>
+            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.4723,-0.4887&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚇 coi mezzi</span></a>
           </div>
           <p class="tcard__credito">foto: Andrew Milligan sumo / CC BY 2.0</p>
         </article>
@@ -1418,8 +1408,8 @@
           </div>
           <p class="tcard__credito">foto: Ex13 / CC BY-SA 3.0</p>
         </article>
-        <button class="plus-riga" type="button" data-plus="pollock"><span aria-hidden="true">✨</span><span>Se avanza tempo: <b>Benjamin Pollock’s Toyshop</b>, dentro il mercato</span><span aria-hidden="true">›</span></button>
-        <button class="plus-riga" type="button" data-plus="mms"><span aria-hidden="true">✨</span><span>Se avanza tempo: <b>M&amp;M’S London</b>, 7 min a piedi</span><span aria-hidden="true">›</span></button>
+        <button class="btn btn--secondario btn--blocco plus-riga" type="button" data-plus="pollock"><span aria-hidden="true">✨</span><span>Se avanza tempo: <b>Benjamin Pollock’s Toyshop</b>, dentro il mercato</span><span aria-hidden="true">›</span></button>
+        <button class="btn btn--secondario btn--blocco plus-riga" type="button" data-plus="mms"><span aria-hidden="true">✨</span><span>Se avanza tempo: <b>M&amp;M’S London</b>, 7 min a piedi</span><span aria-hidden="true">›</span></button>
       </div>
     </details>
   </section>
@@ -1429,8 +1419,8 @@
     <div class="eyebrow">Biglietti</div>
     <h2 id="bigTit">Portafoglio</h2>
     <p class="sub2">Tocca un codice per aprirlo a schermo pieno. Funzionano anche senza rete.</p>
-    <a class="pk-riga big-casa" href="#casaCard"><span class="pk-riga__ic" aria-hidden="true">🏠</span><span><b>Appartamento · Booking 5946777151</b><small>79 Beak Street, W1F 9SU · indirizzo per il taxi più sotto</small></span><span aria-hidden="true">›</span></a>
-    <a class="pk-riga big-casa" href="#sealifeCard"><span class="pk-riga__ic" aria-hidden="true">🐠</span><span><b>SEA LIFE · 3 QR</b><small>Domenica 15, ingresso in qualsiasi momento · uno per persona</small></span><span aria-hidden="true">›</span></a>
+    <a class="btn btn--secondario btn--blocco pk-riga big-casa" href="#casaCard"><span class="pk-riga__ic" aria-hidden="true">🏠</span><span><b>Appartamento · Booking 5946777151</b><small>79 Beak Street, W1F 9SU · indirizzo per il taxi più sotto</small></span><span aria-hidden="true">›</span></a>
+    <a class="btn btn--secondario btn--blocco pk-riga big-casa" href="#sealifeCard"><span class="pk-riga__ic" aria-hidden="true">🐠</span><span><b>SEA LIFE · 3 QR</b><small>Domenica 15, ingresso in qualsiasi momento · uno per persona</small></span><span aria-hidden="true">›</span></a>
 
       <article class="pk" aria-labelledby="pkTit">
     <p class="pk__eyebrow">🅿️ Parcheggio aeroporto · domenica all’ingresso, martedì sera all’uscita</p>
@@ -1462,7 +1452,7 @@
 
       <figure class="tk">
         <figcaption>Adulto 1 <small>Adult 16+ · £33,00</small></figcaption>
-        <div class="tk-box tk-box--qr" role="button" tabindex="0" data-codice="sealife-1" aria-label="772334430770151846: mostra a schermo pieno il biglietto SEA LIFE 1">
+        <div class="tk-box tk-box--qr" role="button" tabindex="0" data-codice="sealife-1" aria-label="772334430770151846, ID biglietto 152344597: mostra a schermo pieno il biglietto SEA LIFE 1">
           <svg class="tk-svg tk-qr" id="sealife-1" viewBox="0 0 25 25" shape-rendering="crispEdges" role="img" aria-label="QR del biglietto SEA LIFE 772334430770151846" xmlns="http://www.w3.org/2000/svg"><rect width="25" height="25" fill="#fff"/><path fill="#000" d="M2 2h1v1h-1zM3 2h1v1h-1zM4 2h1v1h-1zM5 2h1v1h-1zM6 2h1v1h-1zM7 2h1v1h-1zM8 2h1v1h-1zM10 2h1v1h-1zM11 2h1v1h-1zM16 2h1v1h-1zM17 2h1v1h-1zM18 2h1v1h-1zM19 2h1v1h-1zM20 2h1v1h-1zM21 2h1v1h-1zM22 2h1v1h-1zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h1v1h-1zM12 3h1v1h-1zM13 3h1v1h-1zM14 3h1v1h-1zM16 3h1v1h-1zM22 3h1v1h-1zM2 4h1v1h-1zM4 4h1v1h-1zM5 4h1v1h-1zM6 4h1v1h-1zM8 4h1v1h-1zM12 4h1v1h-1zM13 4h1v1h-1zM16 4h1v1h-1zM18 4h1v1h-1zM19 4h1v1h-1zM20 4h1v1h-1zM22 4h1v1h-1zM2 5h1v1h-1zM4 5h1v1h-1zM5 5h1v1h-1zM6 5h1v1h-1zM8 5h1v1h-1zM10 5h1v1h-1zM11 5h1v1h-1zM13 5h1v1h-1zM14 5h1v1h-1zM16 5h1v1h-1zM18 5h1v1h-1zM19 5h1v1h-1zM20 5h1v1h-1zM22 5h1v1h-1zM2 6h1v1h-1zM4 6h1v1h-1zM5 6h1v1h-1zM6 6h1v1h-1zM8 6h1v1h-1zM10 6h1v1h-1zM11 6h1v1h-1zM13 6h1v1h-1zM14 6h1v1h-1zM16 6h1v1h-1zM18 6h1v1h-1zM19 6h1v1h-1zM20 6h1v1h-1zM22 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM14 7h1v1h-1zM16 7h1v1h-1zM22 7h1v1h-1zM2 8h1v1h-1zM3 8h1v1h-1zM4 8h1v1h-1zM5 8h1v1h-1zM6 8h1v1h-1zM7 8h1v1h-1zM8 8h1v1h-1zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM17 8h1v1h-1zM18 8h1v1h-1zM19 8h1v1h-1zM20 8h1v1h-1zM21 8h1v1h-1zM22 8h1v1h-1zM10 9h1v1h-1zM11 9h1v1h-1zM2 10h1v1h-1zM6 10h1v1h-1zM8 10h1v1h-1zM9 10h1v1h-1zM10 10h1v1h-1zM11 10h1v1h-1zM12 10h1v1h-1zM14 10h1v1h-1zM15 10h1v1h-1zM16 10h1v1h-1zM17 10h1v1h-1zM18 10h1v1h-1zM19 10h1v1h-1zM22 10h1v1h-1zM3 11h1v1h-1zM5 11h1v1h-1zM6 11h1v1h-1zM7 11h1v1h-1zM11 11h1v1h-1zM14 11h1v1h-1zM15 11h1v1h-1zM17 11h1v1h-1zM18 11h1v1h-1zM19 11h1v1h-1zM20 11h1v1h-1zM21 11h1v1h-1zM22 11h1v1h-1zM2 12h1v1h-1zM3 12h1v1h-1zM4 12h1v1h-1zM6 12h1v1h-1zM7 12h1v1h-1zM8 12h1v1h-1zM9 12h1v1h-1zM10 12h1v1h-1zM11 12h1v1h-1zM14 12h1v1h-1zM17 12h1v1h-1zM18 12h1v1h-1zM21 12h1v1h-1zM2 13h1v1h-1zM3 13h1v1h-1zM10 13h1v1h-1zM11 13h1v1h-1zM12 13h1v1h-1zM13 13h1v1h-1zM14 13h1v1h-1zM18 13h1v1h-1zM19 13h1v1h-1zM2 14h1v1h-1zM5 14h1v1h-1zM6 14h1v1h-1zM7 14h1v1h-1zM8 14h1v1h-1zM10 14h1v1h-1zM11 14h1v1h-1zM12 14h1v1h-1zM13 14h1v1h-1zM15 14h1v1h-1zM16 14h1v1h-1zM17 14h1v1h-1zM18 14h1v1h-1zM19 14h1v1h-1zM21 14h1v1h-1zM22 14h1v1h-1zM10 15h1v1h-1zM13 15h1v1h-1zM14 15h1v1h-1zM17 15h1v1h-1zM18 15h1v1h-1zM2 16h1v1h-1zM3 16h1v1h-1zM4 16h1v1h-1zM5 16h1v1h-1zM6 16h1v1h-1zM7 16h1v1h-1zM8 16h1v1h-1zM10 16h1v1h-1zM11 16h1v1h-1zM12 16h1v1h-1zM13 16h1v1h-1zM16 16h1v1h-1zM18 16h1v1h-1zM22 16h1v1h-1zM2 17h1v1h-1zM8 17h1v1h-1zM12 17h1v1h-1zM15 17h1v1h-1zM16 17h1v1h-1zM18 17h1v1h-1zM19 17h1v1h-1zM20 17h1v1h-1zM2 18h1v1h-1zM4 18h1v1h-1zM5 18h1v1h-1zM6 18h1v1h-1zM8 18h1v1h-1zM10 18h1v1h-1zM11 18h1v1h-1zM14 18h1v1h-1zM15 18h1v1h-1zM16 18h1v1h-1zM18 18h1v1h-1zM22 18h1v1h-1zM2 19h1v1h-1zM4 19h1v1h-1zM5 19h1v1h-1zM6 19h1v1h-1zM8 19h1v1h-1zM12 19h1v1h-1zM14 19h1v1h-1zM15 19h1v1h-1zM16 19h1v1h-1zM19 19h1v1h-1zM21 19h1v1h-1zM22 19h1v1h-1zM2 20h1v1h-1zM4 20h1v1h-1zM5 20h1v1h-1zM6 20h1v1h-1zM8 20h1v1h-1zM11 20h1v1h-1zM14 20h1v1h-1zM15 20h1v1h-1zM17 20h1v1h-1zM19 20h1v1h-1zM20 20h1v1h-1zM2 21h1v1h-1zM8 21h1v1h-1zM12 21h1v1h-1zM13 21h1v1h-1zM14 21h1v1h-1zM17 21h1v1h-1zM18 21h1v1h-1zM20 21h1v1h-1zM21 21h1v1h-1zM2 22h1v1h-1zM3 22h1v1h-1zM4 22h1v1h-1zM5 22h1v1h-1zM6 22h1v1h-1zM7 22h1v1h-1zM8 22h1v1h-1zM10 22h1v1h-1zM11 22h1v1h-1zM12 22h1v1h-1zM13 22h1v1h-1zM16 22h1v1h-1zM20 22h1v1h-1zM21 22h1v1h-1zM22 22h1v1h-1z"/></svg>
           <p class="tk-num">772334430770151846</p>
           <p class="tk-sub">ID biglietto 152344597</p>
@@ -1470,7 +1460,7 @@
       </figure>
       <figure class="tk">
         <figcaption>Adulto 2 <small>Adult 16+ · £33,00</small></figcaption>
-        <div class="tk-box tk-box--qr" role="button" tabindex="0" data-codice="sealife-2" aria-label="773215047000220012: mostra a schermo pieno il biglietto SEA LIFE 2">
+        <div class="tk-box tk-box--qr" role="button" tabindex="0" data-codice="sealife-2" aria-label="773215047000220012, ID biglietto 152344597: mostra a schermo pieno il biglietto SEA LIFE 2">
           <svg class="tk-svg tk-qr" id="sealife-2" viewBox="0 0 25 25" shape-rendering="crispEdges" role="img" aria-label="QR del biglietto SEA LIFE 773215047000220012" xmlns="http://www.w3.org/2000/svg"><rect width="25" height="25" fill="#fff"/><path fill="#000" d="M2 2h1v1h-1zM3 2h1v1h-1zM4 2h1v1h-1zM5 2h1v1h-1zM6 2h1v1h-1zM7 2h1v1h-1zM8 2h1v1h-1zM13 2h1v1h-1zM14 2h1v1h-1zM16 2h1v1h-1zM17 2h1v1h-1zM18 2h1v1h-1zM19 2h1v1h-1zM20 2h1v1h-1zM21 2h1v1h-1zM22 2h1v1h-1zM2 3h1v1h-1zM8 3h1v1h-1zM16 3h1v1h-1zM22 3h1v1h-1zM2 4h1v1h-1zM4 4h1v1h-1zM5 4h1v1h-1zM6 4h1v1h-1zM8 4h1v1h-1zM11 4h1v1h-1zM13 4h1v1h-1zM16 4h1v1h-1zM18 4h1v1h-1zM19 4h1v1h-1zM20 4h1v1h-1zM22 4h1v1h-1zM2 5h1v1h-1zM4 5h1v1h-1zM5 5h1v1h-1zM6 5h1v1h-1zM8 5h1v1h-1zM13 5h1v1h-1zM16 5h1v1h-1zM18 5h1v1h-1zM19 5h1v1h-1zM20 5h1v1h-1zM22 5h1v1h-1zM2 6h1v1h-1zM4 6h1v1h-1zM5 6h1v1h-1zM6 6h1v1h-1zM8 6h1v1h-1zM11 6h1v1h-1zM13 6h1v1h-1zM14 6h1v1h-1zM16 6h1v1h-1zM18 6h1v1h-1zM19 6h1v1h-1zM20 6h1v1h-1zM22 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM11 7h1v1h-1zM16 7h1v1h-1zM22 7h1v1h-1zM2 8h1v1h-1zM3 8h1v1h-1zM4 8h1v1h-1zM5 8h1v1h-1zM6 8h1v1h-1zM7 8h1v1h-1zM8 8h1v1h-1zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM17 8h1v1h-1zM18 8h1v1h-1zM19 8h1v1h-1zM20 8h1v1h-1zM21 8h1v1h-1zM22 8h1v1h-1zM11 9h1v1h-1zM12 9h1v1h-1zM2 10h1v1h-1zM5 10h1v1h-1zM7 10h1v1h-1zM8 10h1v1h-1zM10 10h1v1h-1zM11 10h1v1h-1zM13 10h1v1h-1zM14 10h1v1h-1zM15 10h1v1h-1zM17 10h1v1h-1zM2 11h1v1h-1zM9 11h1v1h-1zM11 11h1v1h-1zM13 11h1v1h-1zM15 11h1v1h-1zM18 11h1v1h-1zM19 11h1v1h-1zM4 12h1v1h-1zM5 12h1v1h-1zM6 12h1v1h-1zM7 12h1v1h-1zM8 12h1v1h-1zM9 12h1v1h-1zM10 12h1v1h-1zM11 12h1v1h-1zM13 12h1v1h-1zM15 12h1v1h-1zM16 12h1v1h-1zM19 12h1v1h-1zM22 12h1v1h-1zM2 13h1v1h-1zM3 13h1v1h-1zM4 13h1v1h-1zM5 13h1v1h-1zM6 13h1v1h-1zM11 13h1v1h-1zM14 13h1v1h-1zM15 13h1v1h-1zM16 13h1v1h-1zM17 13h1v1h-1zM19 13h1v1h-1zM21 13h1v1h-1zM22 13h1v1h-1zM2 14h1v1h-1zM6 14h1v1h-1zM7 14h1v1h-1zM8 14h1v1h-1zM9 14h1v1h-1zM10 14h1v1h-1zM13 14h1v1h-1zM16 14h1v1h-1zM18 14h1v1h-1zM19 14h1v1h-1zM20 14h1v1h-1zM22 14h1v1h-1zM10 15h1v1h-1zM12 15h1v1h-1zM15 15h1v1h-1zM16 15h1v1h-1zM17 15h1v1h-1zM18 15h1v1h-1zM20 15h1v1h-1zM21 15h1v1h-1zM22 15h1v1h-1zM2 16h1v1h-1zM3 16h1v1h-1zM4 16h1v1h-1zM5 16h1v1h-1zM6 16h1v1h-1zM7 16h1v1h-1zM8 16h1v1h-1zM11 16h1v1h-1zM12 16h1v1h-1zM13 16h1v1h-1zM14 16h1v1h-1zM16 16h1v1h-1zM17 16h1v1h-1zM19 16h1v1h-1zM20 16h1v1h-1zM22 16h1v1h-1zM2 17h1v1h-1zM8 17h1v1h-1zM10 17h1v1h-1zM11 17h1v1h-1zM12 17h1v1h-1zM16 17h1v1h-1zM19 17h1v1h-1zM21 17h1v1h-1zM2 18h1v1h-1zM4 18h1v1h-1zM5 18h1v1h-1zM6 18h1v1h-1zM8 18h1v1h-1zM12 18h1v1h-1zM14 18h1v1h-1zM15 18h1v1h-1zM16 18h1v1h-1zM17 18h1v1h-1zM18 18h1v1h-1zM22 18h1v1h-1zM2 19h1v1h-1zM4 19h1v1h-1zM5 19h1v1h-1zM6 19h1v1h-1zM8 19h1v1h-1zM10 19h1v1h-1zM11 19h1v1h-1zM12 19h1v1h-1zM15 19h1v1h-1zM16 19h1v1h-1zM17 19h1v1h-1zM19 19h1v1h-1zM20 19h1v1h-1zM21 19h1v1h-1zM22 19h1v1h-1zM2 20h1v1h-1zM4 20h1v1h-1zM5 20h1v1h-1zM6 20h1v1h-1zM8 20h1v1h-1zM11 20h1v1h-1zM12 20h1v1h-1zM13 20h1v1h-1zM15 20h1v1h-1zM16 20h1v1h-1zM18 20h1v1h-1zM19 20h1v1h-1zM22 20h1v1h-1zM2 21h1v1h-1zM8 21h1v1h-1zM11 21h1v1h-1zM12 21h1v1h-1zM13 21h1v1h-1zM14 21h1v1h-1zM17 21h1v1h-1zM18 21h1v1h-1zM19 21h1v1h-1zM21 21h1v1h-1zM2 22h1v1h-1zM3 22h1v1h-1zM4 22h1v1h-1zM5 22h1v1h-1zM6 22h1v1h-1zM7 22h1v1h-1zM8 22h1v1h-1zM10 22h1v1h-1zM12 22h1v1h-1zM15 22h1v1h-1zM18 22h1v1h-1zM19 22h1v1h-1zM20 22h1v1h-1z"/></svg>
           <p class="tk-num">773215047000220012</p>
           <p class="tk-sub">ID biglietto 152344597</p>
@@ -1478,7 +1468,7 @@
       </figure>
       <figure class="tk">
         <figcaption>Bambina (Olly) <small>Child 2–15 · £30,00</small></figcaption>
-        <div class="tk-box tk-box--qr" role="button" tabindex="0" data-codice="sealife-3" aria-label="777155289086963187: mostra a schermo pieno il biglietto SEA LIFE 3">
+        <div class="tk-box tk-box--qr" role="button" tabindex="0" data-codice="sealife-3" aria-label="777155289086963187, ID biglietto 152344598: mostra a schermo pieno il biglietto SEA LIFE 3">
           <svg class="tk-svg tk-qr" id="sealife-3" viewBox="0 0 25 25" shape-rendering="crispEdges" role="img" aria-label="QR del biglietto SEA LIFE 777155289086963187" xmlns="http://www.w3.org/2000/svg"><rect width="25" height="25" fill="#fff"/><path fill="#000" d="M2 2h1v1h-1zM3 2h1v1h-1zM4 2h1v1h-1zM5 2h1v1h-1zM6 2h1v1h-1zM7 2h1v1h-1zM8 2h1v1h-1zM10 2h1v1h-1zM11 2h1v1h-1zM14 2h1v1h-1zM16 2h1v1h-1zM17 2h1v1h-1zM18 2h1v1h-1zM19 2h1v1h-1zM20 2h1v1h-1zM21 2h1v1h-1zM22 2h1v1h-1zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h1v1h-1zM12 3h1v1h-1zM14 3h1v1h-1zM16 3h1v1h-1zM22 3h1v1h-1zM2 4h1v1h-1zM4 4h1v1h-1zM5 4h1v1h-1zM6 4h1v1h-1zM8 4h1v1h-1zM10 4h1v1h-1zM12 4h1v1h-1zM14 4h1v1h-1zM16 4h1v1h-1zM18 4h1v1h-1zM19 4h1v1h-1zM20 4h1v1h-1zM22 4h1v1h-1zM2 5h1v1h-1zM4 5h1v1h-1zM5 5h1v1h-1zM6 5h1v1h-1zM8 5h1v1h-1zM12 5h1v1h-1zM13 5h1v1h-1zM16 5h1v1h-1zM18 5h1v1h-1zM19 5h1v1h-1zM20 5h1v1h-1zM22 5h1v1h-1zM2 6h1v1h-1zM4 6h1v1h-1zM5 6h1v1h-1zM6 6h1v1h-1zM8 6h1v1h-1zM12 6h1v1h-1zM14 6h1v1h-1zM16 6h1v1h-1zM18 6h1v1h-1zM19 6h1v1h-1zM20 6h1v1h-1zM22 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM16 7h1v1h-1zM22 7h1v1h-1zM2 8h1v1h-1zM3 8h1v1h-1zM4 8h1v1h-1zM5 8h1v1h-1zM6 8h1v1h-1zM7 8h1v1h-1zM8 8h1v1h-1zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM17 8h1v1h-1zM18 8h1v1h-1zM19 8h1v1h-1zM20 8h1v1h-1zM21 8h1v1h-1zM22 8h1v1h-1zM11 9h1v1h-1zM12 9h1v1h-1zM13 9h1v1h-1zM2 10h1v1h-1zM4 10h1v1h-1zM8 10h1v1h-1zM9 10h1v1h-1zM11 10h1v1h-1zM12 10h1v1h-1zM13 10h1v1h-1zM14 10h1v1h-1zM17 10h1v1h-1zM20 10h1v1h-1zM22 10h1v1h-1zM4 11h1v1h-1zM5 11h1v1h-1zM6 11h1v1h-1zM10 11h1v1h-1zM11 11h1v1h-1zM12 11h1v1h-1zM15 11h1v1h-1zM16 11h1v1h-1zM18 11h1v1h-1zM21 11h1v1h-1zM2 12h1v1h-1zM5 12h1v1h-1zM7 12h1v1h-1zM8 12h1v1h-1zM10 12h1v1h-1zM12 12h1v1h-1zM15 12h1v1h-1zM16 12h1v1h-1zM19 12h1v1h-1zM21 12h1v1h-1zM4 13h1v1h-1zM7 13h1v1h-1zM11 13h1v1h-1zM12 13h1v1h-1zM14 13h1v1h-1zM18 13h1v1h-1zM19 13h1v1h-1zM3 14h1v1h-1zM4 14h1v1h-1zM6 14h1v1h-1zM8 14h1v1h-1zM10 14h1v1h-1zM11 14h1v1h-1zM12 14h1v1h-1zM15 14h1v1h-1zM16 14h1v1h-1zM17 14h1v1h-1zM18 14h1v1h-1zM19 14h1v1h-1zM21 14h1v1h-1zM22 14h1v1h-1zM10 15h1v1h-1zM12 15h1v1h-1zM13 15h1v1h-1zM15 15h1v1h-1zM16 15h1v1h-1zM17 15h1v1h-1zM18 15h1v1h-1zM19 15h1v1h-1zM20 15h1v1h-1zM21 15h1v1h-1zM22 15h1v1h-1zM2 16h1v1h-1zM3 16h1v1h-1zM4 16h1v1h-1zM5 16h1v1h-1zM6 16h1v1h-1zM7 16h1v1h-1zM8 16h1v1h-1zM10 16h1v1h-1zM13 16h1v1h-1zM14 16h1v1h-1zM15 16h1v1h-1zM17 16h1v1h-1zM18 16h1v1h-1zM20 16h1v1h-1zM21 16h1v1h-1zM2 17h1v1h-1zM8 17h1v1h-1zM12 17h1v1h-1zM13 17h1v1h-1zM15 17h1v1h-1zM16 17h1v1h-1zM2 18h1v1h-1zM4 18h1v1h-1zM5 18h1v1h-1zM6 18h1v1h-1zM8 18h1v1h-1zM11 18h1v1h-1zM12 18h1v1h-1zM13 18h1v1h-1zM14 18h1v1h-1zM15 18h1v1h-1zM16 18h1v1h-1zM19 18h1v1h-1zM22 18h1v1h-1zM2 19h1v1h-1zM4 19h1v1h-1zM5 19h1v1h-1zM6 19h1v1h-1zM8 19h1v1h-1zM11 19h1v1h-1zM17 19h1v1h-1zM18 19h1v1h-1zM2 20h1v1h-1zM4 20h1v1h-1zM5 20h1v1h-1zM6 20h1v1h-1zM8 20h1v1h-1zM10 20h1v1h-1zM12 20h1v1h-1zM16 20h1v1h-1zM17 20h1v1h-1zM20 20h1v1h-1zM21 20h1v1h-1zM22 20h1v1h-1zM2 21h1v1h-1zM8 21h1v1h-1zM14 21h1v1h-1zM17 21h1v1h-1zM21 21h1v1h-1zM2 22h1v1h-1zM3 22h1v1h-1zM4 22h1v1h-1zM5 22h1v1h-1zM6 22h1v1h-1zM7 22h1v1h-1zM8 22h1v1h-1zM10 22h1v1h-1zM12 22h1v1h-1zM16 22h1v1h-1zM18 22h1v1h-1zM20 22h1v1h-1zM21 22h1v1h-1zM22 22h1v1h-1z"/></svg>
           <p class="tk-num">777155289086963187</p>
           <p class="tk-sub">ID biglietto 152344598</p>
@@ -1555,8 +1545,8 @@
       <p class="meta">📶 Wi-Fi gratuito in tutto l’appartamento. Il PIN della prenotazione non è scritto qui: sta nell’app e nell’email di Booking.</p>
       <p class="ci-co-note">🔑 Check-in autonomo con chiave digitale <b>Clevio</b> — arriva via email ~2 giorni prima dell'arrivo, ingresso libero dopo le 15:00. Verificare che il link/dominio sia legittimo (<b>clevio.io</b> o dominio ufficiale) e che non venga richiesto alcun pagamento in quel passaggio.</p>
       <div class="casa-azioni">
-        <button class="casa-mostra" type="button" data-indirizzo>🚕 Mostra l’indirizzo</button>
-  <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5129114,-0.1364381&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
+        <button class="btn btn--primario casa-mostra" type="button" data-indirizzo>🚕 Mostra l’indirizzo</button>
+  <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5129114,-0.1364381&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
       </div>
     </div>
   </section>
@@ -1774,9 +1764,9 @@
       <h3>👶 Passeggino a noleggio — piano B</h3>
       <p class="psg-lede">Il piano base resta a piedi e in braccio. Se Olly si stanca troppo, a Londra ci sono servizi che portano il passeggino dove state. Nessuno pubblica chiaramente il prezzo di un noleggio di due o tre giorni: <b>prezzo da verificare al momento della prenotazione</b>.</p>
       <ul class="notes">
-        <li><span class="ic">🛒</span><span><a href="https://baboodle.co.uk/collections/pram-hire-london" target="_blank" rel="noopener"><b>Baboodle</b></a> — consegna il giorno dopo in tutta Londra, con una finestra di due ore, e ritiro gratuito. Il listino sul sito è mensile: per due notti il prezzo va chiesto, e va chiesto se consegnano all’indirizzo di un appartamento per le vacanze.</span></li>
-        <li><span class="ic">🏨</span><span><a href="https://www.babyequipmenthirelondon.co.uk/" target="_blank" rel="noopener"><b>The London Baby Equipment Hire Company</b></a> — specialisti londinesi, lavorano con chi è in vacanza e consegnano anche a hotel e alloggi. Prezzi in un listino a parte: da verificare.</span></li>
-        <li><span class="ic">✈️</span><span><a href="https://www.babonbo.com/en/places/united-kingdom/london" target="_blank" rel="noopener"><b>Babonbo</b></a> — piattaforma di noleggiatori locali: consegna in hotel e case vacanza, anche a Heathrow. Prezzo e durata minima si vedono solo prenotando.</span></li>
+        <li><span class="ic">🛒</span><span><a class="btn btn--ghost btn--inline" href="https://baboodle.co.uk/collections/pram-hire-london" target="_blank" rel="noopener">Baboodle ↗</a> — consegna il giorno dopo in tutta Londra, con una finestra di due ore, e ritiro gratuito. Il listino sul sito è mensile: per due notti il prezzo va chiesto, e va chiesto se consegnano all’indirizzo di un appartamento per le vacanze.</span></li>
+        <li><span class="ic">🏨</span><span><a class="btn btn--ghost btn--inline" href="https://www.babyequipmenthirelondon.co.uk/" target="_blank" rel="noopener">The London Baby Equipment Hire Company ↗</a> — specialisti londinesi, lavorano con chi è in vacanza e consegnano anche a hotel e alloggi. Prezzi in un listino a parte: da verificare.</span></li>
+        <li><span class="ic">✈️</span><span><a class="btn btn--ghost btn--inline" href="https://www.babonbo.com/en/places/united-kingdom/london" target="_blank" rel="noopener">Babonbo ↗</a> — piattaforma di noleggiatori locali: consegna in hotel e case vacanza, anche a Heathrow. Prezzo e durata minima si vedono solo prenotando.</span></li>
       </ul>
       <p class="psg-nota">Prima di prenotare: controllare il peso massimo del modello rispetto a Olly, che ha 5 anni, e che si chiuda abbastanza da salire in metro.</p>
     </div>
@@ -1864,7 +1854,7 @@
               <span>🚶 dentro Covent Garden Market</span>
               <span>📍 Covent Garden Piazza</span>
             </div>
-            <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5119629,-0.1226650&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
+            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5119629,-0.1226650&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
           </div>
           <p class="tcard__credito">foto: Jack1956 / CC0</p>
         </article>
@@ -1881,7 +1871,7 @@
               <span>📍 1 Swiss Ct, W1D 6AP</span>
             </div>
             <p class="plus-warn">⚠️ Prezzi alti segnalati nelle recensioni: occhio al Pick &amp; Mix a peso.</p>
-            <a class="gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5106715,-0.1312887&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
+            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5106715,-0.1312887&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
           </div>
           <p class="tcard__credito">foto di famiglia</p>
         </article>
@@ -1889,7 +1879,7 @@
   <div class="nov-velo" id="plusVelo" hidden>
     <section class="nov plus-foglio" role="dialog" aria-modal="true" aria-label="Se avanza tempo">
       <div class="nov__lista" id="plusCorpo"></div>
-      <div class="nov__piede"><button class="nov__ok" type="button" id="plusOk">Chiudi</button></div>
+      <div class="nov__piede"><button class="btn btn--primario btn--blocco nov__ok" type="button" id="plusOk">Chiudi</button></div>
     </section>
   </div>
 
@@ -1907,8 +1897,8 @@
 <footer>
   <p class="fam2">Famiglia in viaggio</p>
   <p>Londra 2026</p>
-  <p style="margin-top:14px"><a href="londra-illustrata.html">🖼️ Versione per immagini, per Olly →</a></p>
-  <p style="margin-top:10px"><button class="nov-link" type="button" id="novApri">📋 Cosa è cambiato nel sito</button></p>
+  <p style="margin-top:14px"><a class="btn btn--ghost" href="londra-illustrata.html">🖼️ Versione per immagini, per Olly →</a></p>
+  <p style="margin-top:10px"><button class="btn btn--ghost nov-link" type="button" id="novApri">📋 Cosa è cambiato nel sito</button></p>
   <p class="ver-sito" id="verSito"></p>
 </footer>
 
@@ -1920,7 +1910,7 @@
       <p id="novSub"></p>
     </div>
     <div class="nov__lista" id="novLista"></div>
-    <div class="nov__piede"><button class="nov__ok" type="button" id="novOk">Ho capito</button></div>
+    <div class="nov__piede"><button class="btn btn--primario btn--blocco nov__ok" type="button" id="novOk">Ho capito</button></div>
   </section>
 </div>
 
@@ -2116,7 +2106,7 @@
       el.innerHTML = '<button class="cod-x" type="button" aria-label="Chiudi">✕</button><p class="cod-tit"></p>'
         + (soloTesto ? '' : '<div class="cod-code"></div><p class="cod-num"></p>')
         + '<p class="cod-hint"></p>'
-        + (soloTesto ? '' : '<div class="cod-nav"><button class="cod-prec" type="button">‹ Prima</button><span class="cod-n"></span><button class="cod-succ" type="button">Dopo ›</button></div>');
+        + (soloTesto ? '' : '<div class="cod-nav"><button class="btn btn--grande cod-prec" type="button">‹ Prima</button><span class="cod-n"></span><button class="btn btn--grande cod-succ" type="button">Dopo ›</button></div>');
       document.body.appendChild(el); document.documentElement.classList.add('cod-aperto');
       tieniAcceso(); document.addEventListener('visibilitychange', riprendi);
       try { if (el.requestFullscreen) { var p = el.requestFullscreen({ navigationUI: 'hide' }); if (p && p.catch) p.catch(function(){}); } } catch (e) {}
@@ -2438,7 +2428,7 @@
         + '</ul>'
         + (b.note ? '<p class="bagno-nota">' + esc(b.note) + '</p>' : '')
         + '<p class="bagno-fonte">Fonte: ' + esc(b.fonte) + ' · verificato il ' + dataIt(b.verificato_il) + '</p>'
-        + '<a class="bagno-maps" href="' + maps(b) + '" target="_blank" rel="noopener">📍 Maps</a>'
+        + '<a class="btn btn--secondario btn--cielo bagno-maps" href="' + maps(b) + '" target="_blank" rel="noopener">📍 Maps</a>'
         + '</div>';
     }
     // il contenuto del mini-pannello: avviso della tappa (oro, rosso se ha ⚠️), principale e riserva
@@ -2447,7 +2437,7 @@
       return av + voce(t.principale, 'principale', key) + voce(t.riserva, 'riserva', key);
     }
     function bottone(b, id, extra){
-      return '<button class="bagno-riga" type="button" aria-expanded="false" aria-controls="' + id + '"><span class="bagno-riga__txt">🚻 '
+      return '<button class="btn btn--secondario btn--blocco bagno-riga" type="button" aria-expanded="false" aria-controls="' + id + '"><span class="bagno-riga__txt">🚻 '
         + esc(b.nome) + ' · ~' + b.minuti + ' min' + (stimato(b, ['minuti', 'distanza_m'], '') ? BADGE : '') + (extra || '') + '</span></button>';
     }
     // le righe nelle card: sotto «Portami qui»
@@ -2533,7 +2523,7 @@
       return '<b>🚻 ' + esc(b.nome) + '</b><br><span class="bagno-pop">' + esc(b.piano) + (stimato(b, ['piano'], b.piano) ? BADGE : '') + '</span>'
         + '<br><span class="bagno-pop">' + giorni + '</span>'
         + '<br><span class="bagno-pop">Usato da: ' + o.usi.map(esc).join(' · ') + '</span>'
-        + '<br><a class="pop-vai" href="' + maps(b) + '" target="_blank" rel="noopener">📍 Apri in Maps</a>';
+        + '<br><a class="btn btn--ghost pop-vai" href="' + maps(b) + '" target="_blank" rel="noopener">📍 Apri in Maps</a>';
     }
     function monta(json){
       S.dati = json; json.tappe.forEach(function(t){ S.tappe[t.tappa] = t; });
@@ -2600,8 +2590,8 @@
         + '</ul>'
         + (d.note ? '<p class="bagno-nota">' + esc(d.note) + '</p>' : '')
         + '<p class="bagno-fonte">Fonte: ' + esc(d.fonte) + ' · verificato il ' + U.dataIt(d.verificato_il) + '</p>'
-        + '<p class="deposito-azioni"><a class="bagno-maps" href="' + maps(d) + '" target="_blank" rel="noopener">📍 Maps</a>'
-        + '<a class="bagno-maps" href="' + esc(d.prenota) + '" target="_blank" rel="noopener">📲 Prenota</a></p>'
+        + '<p class="deposito-azioni"><a class="btn btn--secondario btn--cielo bagno-maps" href="' + maps(d) + '" target="_blank" rel="noopener">📍 Maps</a>'
+        + '<a class="btn btn--secondario btn--cielo bagno-maps" href="' + esc(d.prenota) + '" target="_blank" rel="noopener">📲 Prenota</a></p>'
         + '</div>';
     }
     function pannello(tappa, giorno){
@@ -2612,7 +2602,7 @@
       var t = card.dataset.deposito; if (!S.per[t]) return false;
       var d = S.per[t][0], id = 'deposito-' + (++S.n);
       var box = document.createElement('div'); box.className = 'bagno-box deposito-box';
-      box.innerHTML = '<button class="bagno-riga" type="button" aria-expanded="false" aria-controls="' + id + '"><span class="bagno-riga__txt">🧳 '
+      box.innerHTML = '<button class="btn btn--secondario btn--blocco bagno-riga" type="button" aria-expanded="false" aria-controls="' + id + '"><span class="bagno-riga__txt">🧳 '
         + esc(d.nome) + ' · ~' + d.minuti[t] + ' min' + (stimato(d, ['minuti', 'distanze_m'], '') ? BADGE : '') + '</span></button>'
         + '<div class="bagno-pan" id="' + id + '" hidden>' + pannello(t, card.dataset.giorno) + '</div>';
       // sotto la riga del bagno, se c'è; altrimenti sotto «Portami qui»
@@ -2650,8 +2640,8 @@
         + '<br><span class="bagno-pop">🕒 ' + esc(d.orari) + '</span>'
         + '<br><span class="bagno-pop">⭐ ' + voto(d) + ' · 💷 prezzo nell’app' + BADGE + '</span>'
         + (o.usi.length ? '<br><span class="bagno-pop">Per: ' + o.usi.map(esc).join(' · ') + '</span>' : '')
-        + '<br><a class="pop-vai" href="' + maps(d) + '" target="_blank" rel="noopener">📍 Maps</a>'
-        + ' · <a class="pop-vai" href="' + esc(d.prenota) + '" target="_blank" rel="noopener">📲 Prenota</a>';
+        + '<br><a class="btn btn--ghost pop-vai" href="' + maps(d) + '" target="_blank" rel="noopener">📍 Maps</a>'
+        + ' · <a class="btn btn--ghost pop-vai" href="' + esc(d.prenota) + '" target="_blank" rel="noopener">📲 Prenota</a>';
     }
     function monta(json){
       var perId = {}; json.depositi.forEach(function(d){ perId[d.id] = d; });
@@ -3175,7 +3165,7 @@
     },{passive:true});
   }
   function vai(p){
-    return '<br><a class="pop-vai" href="https://www.google.com/maps/dir/?api=1&amp;destination='+p.lat+','+p.lng
+    return '<br><a class="btn btn--ghost pop-vai" href="https://www.google.com/maps/dir/?api=1&amp;destination='+p.lat+','+p.lng
       +'&amp;travelmode='+(p.modo||'walking')+'" target="_blank" rel="noopener">🧭 Portami qui</a>';
   }
   var tileOk=0;

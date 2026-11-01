@@ -30,6 +30,8 @@ const r = { nome, data: new Date().toISOString(), url: PAGINA }
 // ---------- Lighthouse mobile ----------
 const lhDir = [path.resolve('node_modules/lighthouse'), process.env.LIGHTHOUSE_DIR && path.resolve(process.env.LIGHTHOUSE_DIR, 'node_modules/lighthouse'), process.env.LIGHTHOUSE_DIR && path.resolve(process.env.LIGHTHOUSE_DIR)].filter(Boolean).find((d) => existsSync(path.join(d, 'cli/index.js')))
 const ripeti = argv.includes('--solo-foto') ? 0 : +opz('ripeti', 3)
+// con --solo-foto il riassunto tiene il Lighthouse già salvato con lo stesso nome, se c'è
+if (!ripeti && existsSync(`${OUT}/ux-${nome}.json`)) { try { const v = JSON.parse(readFileSync(`${OUT}/ux-${nome}.json`, 'utf8')); if (v.lighthouse) { r.lighthouse = v.lighthouse; r.lighthouseCorse = v.lighthouseCorse; r.lighthouseDi = v.data } } catch {} }
 if (!lhDir && ripeti) { r.lighthouse = null; console.log('· Lighthouse non trovato: installa lighthouse nel repo o indica LIGHTHOUSE_DIR (cartella con node_modules/lighthouse). Le altre misure si fanno lo stesso.') }
 else if (ripeti) {
   const corse = []
@@ -117,7 +119,8 @@ r.scrollOrizzontale = {}
 for (const w of [320, 375, 430]) {
   const { p, ctx } = await apri('dark', w, 812)
   await vai(p, '#programma')
-  r.scrollOrizzontale[w] = await p.evaluate(() => { document.querySelectorAll('[data-vista]').forEach((v) => { v.hidden = false }); document.querySelectorAll('details').forEach((d) => { d.open = true }); return { larghezza: innerWidth, scroll: document.documentElement.scrollWidth, ok: document.documentElement.scrollWidth <= innerWidth } })
+  // confronto con la larghezza chiesta, non con innerWidth: in emulazione mobile il viewport si allarga da solo al contenuto
+  r.scrollOrizzontale[w] = await p.evaluate((w) => { document.querySelectorAll('[data-vista]').forEach((v) => { v.hidden = false }); document.querySelectorAll('details').forEach((d) => { d.open = true }); return { larghezza: w, scroll: document.documentElement.scrollWidth, ok: document.documentElement.scrollWidth <= w } }, w)
   await ctx.close()
 }
 console.log(`${Object.values(r.scrollOrizzontale).every((x) => x.ok) ? '✓' : '✗'} scroll orizzontale: ` + Object.entries(r.scrollOrizzontale).map(([w, x]) => `${w} px → ${x.scroll}${x.ok ? '' : ' ✗'}`).join(' · '))

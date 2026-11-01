@@ -1,0 +1,98 @@
+{
+  "nome": "f1",
+  "data": "2026-11-01T11:45:23.454Z",
+  "url": "http://localhost:4173/londra.html?now=2026-11-16T10:30",
+  "lighthouse": {
+    "performance": 97,
+    "accessibilita": 100,
+    "bestPractices": 96,
+    "seo": 66,
+    "fcp_ms": 1356,
+    "lcp_ms": 2631,
+    "speedIndex_ms": 1356,
+    "tbt_ms": 5,
+    "cls": 0.024,
+    "threadPrincipale_ms": 2078,
+    "nodiDom": 3865,
+    "pesoTrasferito_kB": 440,
+    "richieste": 17,
+    "a11yFalliti": [],
+    "bpFalliti": [
+      "errors-in-console"
+    ]
+  },
+  "lighthouseCorse": [
+    {
+      "performance": 97,
+      "accessibilita": 100,
+      "bestPractices": 96,
+      "seo": 66,
+      "fcp_ms": 1356,
+      "lcp_ms": 2631,
+      "speedIndex_ms": 1356,
+      "tbt_ms": 5,
+      "cls": 0.024,
+      "threadPrincipale_ms": 2078,
+      "nodiDom": 3865,
+      "pesoTrasferito_kB": 440,
+      "richieste": 17,
+      "a11yFalliti": [],
+      "bpFalliti": [
+        "errors-in-console"
+      ]
+    }
+  ],
+  "viste": {
+    "adesso": {
+      "altezza": 22839,
+      "schermate": 28.1,
+      "nodi": 3898,
+      "nodiVisibili": 2705
+    },
+    "programma": {
+      "altezza": 22839,
+      "schermate": 28.1,
+      "nodi": 3898,
+      "nodiVisibili": 2705
+    },
+    "biglietti": {
+      "altezza": 22839,
+      "schermate": 28.1,
+      "nodi": 3898,
+      "nodiVisibili": 2705
+    },
+    "mappa": {
+      "altezza": 22839,
+      "schermate": 28.1,
+      "nodi": 4015,
+      "nodiVisibili": 2810
+    },
+    "info": {
+      "altezza": 22839,
+      "schermate": 28.1,
+      "nodi": 4015,
+      "nodiVisibili": 2810
+    }
+  },
+  "errori": [],
+  "altezzaMax": 22839,
+  "schermateMax": 28.1,
+  "toccabiliPiccoli": [],
+  "scrollOrizzontale": {
+    "320": {
+      "larghezza": 320,
+      "scroll": 320,
+      "ok": true
+    },
+    "375": {
+      "larghezza": 375,
+      "scroll": 375,
+      "ok": true
+    },
+    "430": {
+      "larghezza": 430,
+      "scroll": 430,
+      "ok": true
+    }
+  }
+}
