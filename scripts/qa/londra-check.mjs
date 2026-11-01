@@ -193,7 +193,8 @@ const sw = await p.evaluate(async () => {
   return { lista: /"data\/bagni-londra\.json"/.test(testo), cache: nelleCache.some(Boolean) }
 })
 ok('bagni: il JSON è nel precache del service worker (nella lista e nella cache)', sw.lista && sw.cache, JSON.stringify(sw))
-const righe = await p.$$eval('#programma article.tcard[data-bagno]', (c) => c.filter((x) => x.querySelector('.bagno-box .bagno-riga')).length)
+// la riga «🚻» sta accanto a «Portami qui» (fase 6 UX), il pannello sotto in .bagno-box: si cerca per aria-controls
+const righe = await p.$$eval('#programma article.tcard[data-bagno]', (c) => c.filter((x) => x.querySelector('.bagno-riga[aria-controls^="bagno-"]')).length)
 ok('bagni: ogni card con data-bagno ha la sua riga «🚻»', righe === dataBagno.length, `${righe}/${dataBagno.length}`)
 // «i 18 URL Maps esistenti non sono stati toccati»: è il controllo dei percorsi qui sopra, e i bagni non ne aggiungono
 // (i loro link Maps sono ricerche per coordinate dentro i pannelli, non «a.percorso»)
