@@ -657,7 +657,7 @@
   #info > .card,#sicurezza .card,#note .card,#crediti .card,#biglietti > .card{content-visibility:auto;contain-intrinsic-size:auto 320px}
   /* card compatte: fuori dagli eventi (data-tipo="evento") la foto è 96×96 a sinistra e il testo a destra, come la card
      di «Adesso». Gli eventi restano a tutta larghezza con la foto 16:9. Le schede «se avanza tempo» e le card senza foto non cambiano. */
-  .tcard:not([data-tipo="evento"]):not(.tcard--plus):not(.tcard--nofoto){display:grid;grid-template-columns:96px minmax(0,1fr);grid-template-areas:"foto body" "credito credito";align-items:start;contain-intrinsic-size:auto 220px}
+  .tcard:not([data-tipo="evento"]):not(.tcard--plus):not(.tcard--nofoto){display:grid;grid-template-columns:calc(96px + var(--s-4)) minmax(0,1fr);grid-template-areas:"foto body" "credito credito";align-items:start;contain-intrinsic-size:auto 220px}
   .tcard:not([data-tipo="evento"]):not(.tcard--plus):not(.tcard--nofoto) > .tcard__foto{grid-area:foto;width:96px;height:96px;aspect-ratio:1;margin:var(--s-4) 0 0 var(--s-4);border-radius:var(--r-s);background-size:24px 24px}
   .tcard:not([data-tipo="evento"]):not(.tcard--plus):not(.tcard--nofoto) > .tcard__foto::after{height:60%}
   .tcard:not([data-tipo="evento"]):not(.tcard--plus):not(.tcard--nofoto) > .tcard__foto .tcard__ora{left:var(--s-2);bottom:var(--s-1);font-size:var(--f-14)}

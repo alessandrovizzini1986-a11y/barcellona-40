@@ -1,6 +1,6 @@
 {
   "nome": "compatte",
-  "data": "2026-11-01T15:38:02.972Z",
+  "data": "2026-11-01T15:41:22.396Z",
   "url": "http://localhost:4173/londra.html?now=2026-11-16T10:30",
   "viste": {
     "adesso": {
@@ -10,8 +10,8 @@
       "nodiVisibili": 107
     },
     "programma": {
-      "altezza": 7080,
-      "schermate": 8.7,
+      "altezza": 7152,
+      "schermate": 8.8,
       "nodi": 3962,
       "nodiVisibili": 378
     },
@@ -35,8 +35,8 @@
     }
   },
   "errori": [],
-  "altezzaMax": 7080,
-  "schermateMax": 8.7,
+  "altezzaMax": 7152,
+  "schermateMax": 8.8,
   "toccabiliPiccoli": [],
   "scrollOrizzontale": {
     "320": {
