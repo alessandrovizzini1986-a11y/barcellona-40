@@ -655,6 +655,14 @@
   .tcard{content-visibility:auto;contain-intrinsic-size:auto 460px}
   .olly-card{content-visibility:auto;contain-intrinsic-size:auto 400px}
   #info > .card,#sicurezza .card,#note .card,#crediti .card,#biglietti > .card{content-visibility:auto;contain-intrinsic-size:auto 320px}
+  /* card compatte: fuori dagli eventi (data-tipo="evento") la foto è 96×96 a sinistra e il testo a destra, come la card
+     di «Adesso». Gli eventi restano a tutta larghezza con la foto 16:9. Le schede «se avanza tempo» e le card senza foto non cambiano. */
+  .tcard:not([data-tipo="evento"]):not(.tcard--plus):not(.tcard--nofoto){display:grid;grid-template-columns:calc(96px + var(--s-4)) minmax(0,1fr);grid-template-areas:"foto body" "credito credito";align-items:start;contain-intrinsic-size:auto 220px}
+  .tcard:not([data-tipo="evento"]):not(.tcard--plus):not(.tcard--nofoto) > .tcard__foto{grid-area:foto;width:96px;height:96px;aspect-ratio:1;margin:var(--s-4) 0 0 var(--s-4);border-radius:var(--r-s);background-size:24px 24px}
+  .tcard:not([data-tipo="evento"]):not(.tcard--plus):not(.tcard--nofoto) > .tcard__foto::after{height:60%}
+  .tcard:not([data-tipo="evento"]):not(.tcard--plus):not(.tcard--nofoto) > .tcard__foto .tcard__ora{left:var(--s-2);bottom:var(--s-1);font-size:var(--f-14)}
+  .tcard:not([data-tipo="evento"]):not(.tcard--plus):not(.tcard--nofoto) > .tcard__body{grid-area:body;padding:var(--s-3) var(--s-4) 2px var(--s-3)}
+  .tcard:not([data-tipo="evento"]):not(.tcard--plus):not(.tcard--nofoto) > .tcard__credito{grid-area:credito}
   /* niente salto quando compare «Disponibile offline»: lo spazio è già riservato */
   .offline-ok[hidden]{display:block;visibility:hidden}
   /* portafoglio */
@@ -1074,7 +1082,7 @@
           </div>
           <p class="tcard__credito">foto: Robin Stott / CC BY-SA 2.0</p>
         </article>
-        <article class="tcard" data-tappa="sealife" data-durata="120-120" data-giorno="2026-11-15" data-ora="12:30" data-tipo="tappa" data-mostra="sealife" data-bagno="sealife" data-deposito="sealife">
+        <article class="tcard" data-tappa="sealife" data-durata="120-120" data-giorno="2026-11-15" data-ora="12:30" data-tipo="evento" data-mostra="sealife" data-bagno="sealife" data-deposito="sealife">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/sealife.webp" width="800" height="450" alt="Il tunnel sottomarino dell’acquario, con la volta di vetro e i pesci sopra la testa" loading="lazy" decoding="async">
             <span class="tcard__ora">12:30</span>
@@ -1135,7 +1143,7 @@
           <span class="percorso__txt"><b>Percorso · Domenica</b><span>Casa → Hamleys → luci di Carnaby</span></span>
           <span class="percorso__modo">🚶 a piedi</span>
         </a>
-        <article class="tcard" data-tappa="hamleys" data-durata="60-60" data-giorno="2026-11-15" data-ora="16:30" data-tipo="tappa" data-bagno="hamleys">
+        <article class="tcard" data-tappa="hamleys" data-durata="60-60" data-giorno="2026-11-15" data-ora="16:30" data-tipo="evento" data-bagno="hamleys">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/hamleys.webp" width="800" height="450" alt="La facciata di Hamleys su Regent Street, con le tende rosse e l’insegna sopra le vetrine" loading="lazy" decoding="async">
             <span class="tcard__ora">16:30</span>
@@ -1365,7 +1373,7 @@
           <span class="percorso__txt"><b>Percorso · Lunedì</b><span>Harrods → Natural History Museum</span></span>
           <span class="percorso__modo">🚶 a piedi</span>
         </a>
-        <article class="tcard" data-tappa="nhm" data-durata="75-75" data-giorno="2026-11-16" data-ora="16:30" data-tipo="tappa" data-non-prima="16:30" data-fine-entro="17:50" data-vincolo="Ingresso a fascia oraria alle 16:30, non prima · il museo chiude alle 17:50" data-mostra="nhm" data-bagno="nhm">
+        <article class="tcard" data-tappa="nhm" data-durata="75-75" data-giorno="2026-11-16" data-ora="16:30" data-tipo="evento" data-non-prima="16:30" data-fine-entro="17:50" data-vincolo="Ingresso a fascia oraria alle 16:30, non prima · il museo chiude alle 17:50" data-mostra="nhm" data-bagno="nhm">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/nhm.webp" width="800" height="450" alt="La facciata in terracotta del Natural History Museum, con le torri e il portale ad arco" loading="lazy" decoding="async">
             <span class="tcard__ora">16:30</span>
@@ -1443,7 +1451,7 @@
             <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.539292,-0.14274&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚇 coi mezzi</span></a>
           </div>
         </article>
-        <article class="tcard" data-tappa="camden" data-durata="75-75" data-comprimibile data-giorno="2026-11-17" data-ora="11:00" data-tipo="tappa" data-bagno="camden" data-deposito="camden">
+        <article class="tcard" data-tappa="camden" data-durata="75-75" data-comprimibile data-giorno="2026-11-17" data-ora="11:00" data-tipo="evento" data-bagno="camden" data-deposito="camden">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/camden.webp" width="800" height="450" alt="Barche ormeggiate sul Regent’s Canal a Camden Lock, con gli edifici del mercato sull’acqua" loading="lazy" decoding="async">
             <span class="tcard__ora">11:00</span>
@@ -1494,7 +1502,7 @@
             <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5122737,-0.1234492&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚇 coi mezzi</span></a>
           </div>
         </article>
-        <article class="tcard" data-tappa="covent" data-durata="105-105" data-comprimibile data-giorno="2026-11-17" data-ora="13:30" data-tipo="tappa" data-bagno="coventgarden" data-deposito="coventgarden">
+        <article class="tcard" data-tappa="covent" data-durata="105-105" data-comprimibile data-giorno="2026-11-17" data-ora="13:30" data-tipo="evento" data-bagno="coventgarden" data-deposito="coventgarden">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/covent.webp" width="800" height="450" alt="La galleria coperta di Covent Garden, con il tetto in ferro e vetro verde e i carretti di fiori" loading="lazy" decoding="async">
             <span class="tcard__ora">13:30</span>
@@ -3248,6 +3256,8 @@
      Il pannello non si apre mai da solo: in cima c'è un banner sottile «N novità», e si apre solo se toccato.
      Il link in fondo alla pagina lo riapre con tutto lo storico, in ogni caso. */
   var NOVITA = [
+    { v: 35, data: '2026-11-01', titolo: '📋 Programma più corto', voci: [
+      'Nel Programma le card dei trasferimenti e delle tappe brevi sono compatte: foto piccola a sinistra e testo a destra. Restano grandi, con la foto intera, SEA LIFE, Hamleys, Wellington Barracks, il Natural History Museum, Camden e Covent Garden' ] },
     { v: 34, data: '2026-11-01', titolo: '🗺️ Popup della mappa di lunedì', voci: [
       'I popup dei marker di lunedì hanno gli orari nuovi del Cambio della Guardia: Trafalgar 09:30, Horse Guards 09:50 (cavalli dalle 10:00), Big Ben 10:05, St James’s Park 11:00, Buckingham 11:40 (Old Guard e cavalleria alle 11:45)' ] },
     { v: 33, data: '2026-11-01', titolo: '📱 La pagina è diventata un’app', voci: [

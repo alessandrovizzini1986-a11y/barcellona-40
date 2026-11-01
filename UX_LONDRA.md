@@ -20,8 +20,8 @@ Le misure sono di `scripts/qa/londra-ux.mjs` (`npm run qa:londra:ux`): Lighthous
 | Thread principale | 5,17 s | 1,84 s | ≤ 3,0 s |
 | Nodi DOM | 3868 | 3930 | — |
 | Peso al primo caricamento | 524 kB in 18 richieste | 206 kB in 10 richieste | ≤ 220 kB |
-| Altezza della vista più lunga (375 px) | 22071 px (27.2 schermate) | 8663 px (10.7 schermate) | ≤ 8 schermate |
-| Altezza per vista | adesso 27.2 · programma 27.2 · biglietti 27.2 · mappa 27.2 · info 27.2 | adesso 1.8 · programma 10.7 · biglietti 7.9 · mappa 2 · info 7.2 | — |
+| Altezza della vista più lunga (375 px) | 22071 px (27.2 schermate) | 8663 px (10.7 schermate) → **7152 px (8,8)** con le card compatte, 9,8 con tutte le card disegnate | ≤ 8 schermate |
+| Altezza per vista | adesso 27.2 · programma 27.2 · biglietti 27.2 · mappa 27.2 · info 27.2 | adesso 1.8 · programma **8.8** (era 10.7) · biglietti 7.9 · mappa 2 · info 7.2 | — |
 | Toccabili sotto 44×44 px | 4 | 0 | 0 |
 | Scroll orizzontale 320/375/430 | no | no | no |
 | Errori JS | 0 | 0 | 0 |
@@ -44,6 +44,8 @@ Note:
 | 5 · Mappa | fatta | 60 svh, schermo intero, ventaglio a mano senza toccare le coordinate, legenda-filtro, «Tappa di adesso», «Sei qui» con minuti stimati. Tile Esri invariate. |
 | 6 · Sul posto | fatta | Modalità Sole (≥ 7:1 sul testo principale), striscia «Prossima», Copia, bordo nero e wake lock sul QR, «Portami qui» + «Bagno» a metà. |
 | 7 · Chiusura | fatta | Questo file, `ux-finale.json`, `dopo-*.png`, voce riassuntiva in NOVITA (v33). |
+| Dopo · card compatte | fatta | Fuori dagli eventi (SEA LIFE, Hamleys, Wellington, NHM, Camden, Covent Garden) le card hanno la foto 96×96 a sinistra, solo CSS. Programma di lunedì **10,7 → 8,8 schermate** (9,8 con tutte le card disegnate, senza le stime di `content-visibility`): sopra l'obiettivo di 8, accettato così, senza chiudere percorsi né righe bagno/deposito. Novità v35. |
+| Dopo · popup della mappa | fatta | Note dei marker di lunedì allineate alle card del Cambio della Guardia. `londra-check` (22 controlli) ora verifica che l'orario in testa alla nota di ogni marker sia il `data-ora` della card della stessa tappa: falliva su 5 marker, passa con 13. Novità v34. |
 
 Nessuna fase saltata. Ogni fase è un commit con la sua entry in `data/changelog.json` e `CHANGELOG.md`; il merge su main è avvenuto a verifica verde (`londra-check` 21/21, la verifica della fase, e per la fase 2 anche l'e2e di Barcellona 81/81).
 
@@ -59,8 +61,7 @@ Nessuna fase saltata. Ogni fase è un commit con la sua entry in `data/changelog
 
 ## Cosa resta da fare
 
-- **Programma sotto le 8 schermate**: servirebbe una card più densa (foto a banda 2:1 o come miniatura per i trasferimenti, scaletta richiudibile). È una scelta di contenuto e di design da fare insieme, non l'ho presa da solo.
-- **Note dei popup della mappa**: hanno ancora gli orari di lunedì precedenti al Cambio della Guardia (Trafalgar 09:45, Buckingham 11:05, St James's 11:15, Horse Guards 12:05, Big Ben 12:25). È contenuto: va allineato alle card con una modifica a parte.
+- **Programma sotto le 8 schermate**: con le card compatte si è a 8,8 (9,8 reali). Il resto è testo (percorsi, Dettagli, bagni, depositi): si è deciso di non chiudere nulla.
 - **Spazio sopra le viste**: fuori da Adesso la testata compatta lascia ancora un margine di qualche decina di px sopra il titolo della vista (`main` e `section` tengono i margini della pagina unica); si può stringere.
 - **Pulsante flottante e striscia** fanno la stessa cosa fuori da Adesso: se la striscia basta, il pulsante può restare solo in Adesso oltre la prima schermata.
 - **Lighthouse nel repo**: lo script lo cerca in `node_modules/lighthouse` o in `LIGHTHOUSE_DIR`; non è fra le dipendenze del progetto per non appesantire il deploy. Se serve in CI, va aggiunto come devDependency.
