@@ -123,6 +123,10 @@ const b = await chromium.launch({ executablePath: exe, args: ['--no-sandbox', '-
 const ctx = await b.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, serviceWorkers: 'allow' })
 const p = await ctx.newPage(); const errori = []; p.on('pageerror', (e) => errori.push(e.message))
 await p.goto(PAGINA + '?now=2026-11-16T15:00', { waitUntil: 'load' }); await p.waitForTimeout(1500)
+// le card hanno content-visibility: auto (fase 4 UX): fuori schermo non sono disegnate e misurerebbero 0. Per i controlli di
+// altezza si forza il disegno di tutto, e si rendono visibili tutte le viste (una sola alla volta è visibile)
+await p.addStyleTag({ content: '.tcard,.olly-card,.card{content-visibility:visible!important}' })
+await p.evaluate(() => document.querySelectorAll('[data-vista]').forEach((v) => { v.hidden = false }))
 
 const percorsi = await p.$$eval('a.percorso', (a) => a.map((x) => x.getAttribute('href')))
 const diversi = PERCORSI.filter((u, i) => percorsi[i] !== u).length

@@ -1,6 +1,14 @@
 {
   "entries": [
     {
+      "v": 59,
+      "data": "2026-11-01",
+      "titolo": "Londra: pagina più leggera",
+      "voci": [
+        "Pagina di Londra: si apre più in fretta (200 kB al primo caricamento, la mappa si carica solo quando la si apre) e le card fuori schermo non pesano; tutto continua a funzionare senza rete"
+      ]
+    },
+    {
       "v": 58,
       "data": "2026-11-01",
       "titolo": "Londra: movimento e pannelli",

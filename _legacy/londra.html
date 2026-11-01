@@ -12,7 +12,6 @@
 <meta name="apple-mobile-web-app-title" content="Londra 2026">
 <link rel="manifest" href="londra-manifest.json">
 <link rel="preload" href="vendor/fonts/playfair-display-700-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="icon" type="image/png" sizes="192x192" href="icon-londra-192.png">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-londra-32.png">
 <link rel="apple-touch-icon" href="apple-touch-icon-londra.png">
 <title>Londra · 15–17 novembre 2026</title>
@@ -29,13 +28,13 @@
 <meta property="og:locale" content="it_IT">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://alessandrovizzini1986-a11y.github.io/barcellona-40/og-londra.jpg">
-<link rel="stylesheet" href="vendor/leaflet/leaflet.css"
-  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=">
 <style>
   /* Playfair Display servito dal sito (licenza OFL in vendor/fonts/): solo i due stili usati, caratteri latini.
      Niente Google Fonts, così i titoli restano uguali anche senza rete. */
   @font-face{font-family:"Playfair Display";font-style:normal;font-weight:700;font-display:swap;src:url(vendor/fonts/playfair-display-700-latin.woff2) format("woff2")}
   @font-face{font-family:"Playfair Display";font-style:italic;font-weight:400;font-display:swap;src:url(vendor/fonts/playfair-display-400-italic-latin.woff2) format("woff2")}
+  /* Georgia tarata sulle misure del Playfair: finché il font non arriva il testo occupa quasi lo stesso spazio, niente salto allo swap */
+  @font-face{font-family:"Playfair riserva";src:local("Georgia"),local("Times New Roman");size-adjust:106%;ascent-override:92%;descent-override:24%;line-gap-override:0%}
   *{margin:0;padding:0;box-sizing:border-box}
   :root{
     /* LONDON WINTER NIGHT — design tokens */
@@ -82,7 +81,7 @@
   html{scroll-behavior:smooth;background:var(--night-0)}
   body{background:var(--night-0);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
     line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden;font-variant-numeric:tabular-nums}
-  h1,h2,h3{font-family:"Playfair Display",Georgia,serif;line-height:1.06;letter-spacing:-.01em}
+  h1,h2,h3{font-family:"Playfair Display","Playfair riserva",Georgia,serif;line-height:1.06;letter-spacing:-.01em}
   h1,h2,h3,h4,h5{text-wrap:balance}
   p,li,summary,figcaption,dt,dd{text-wrap:pretty}
   a{color:var(--gold-soft)}
@@ -108,7 +107,7 @@
     text-shadow:0 0 60px rgba(212,169,78,.25)}
   .hero .sub{margin-top:var(--s-3);font-size:var(--f-16);color:var(--muted)}
   .hero .sub b{color:var(--ink);font-weight:600}
-  .hero .fam{margin-top:var(--s-2);font-family:"Playfair Display",serif;font-style:italic;font-size:var(--f-18);color:var(--gold-soft)}
+  .hero .fam{margin-top:var(--s-2);font-family:"Playfair Display","Playfair riserva",Georgia,serif;font-style:italic;font-size:var(--f-18);color:var(--gold-soft)}
   /* skyline decorativa (SVG inline, leggerissima) */
   .skyline{display:block;width:100%;max-width:640px;margin:10px auto -1px;color:#060a14}
   .skyline svg{display:block;width:auto;height:34px;margin:0 auto}
@@ -172,7 +171,7 @@
   .ci-co .chip2{flex:1;background:rgba(212,169,78,.08);border:1px solid var(--line-gold);border-radius:var(--r-s);
     padding:var(--s-3) var(--s-3);text-align:center}
   .ci-co .chip2 .k{font-size:var(--f-12);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700}
-  .ci-co .chip2 .v{font-family:"Playfair Display",serif;font-weight:700;font-size:var(--f-22);margin-top:3px;color:var(--gold-soft)}
+  .ci-co .chip2 .v{font-family:"Playfair Display","Playfair riserva",Georgia,serif;font-weight:700;font-size:var(--f-22);margin-top:3px;color:var(--gold-soft)}
   .ci-co-note{margin-top:var(--s-3);font-size:var(--f-12);color:var(--muted);line-height:1.5}
   .why{margin-top:var(--s-3);font-size:var(--f-12);color:var(--muted);line-height:1.55;border-top:1px dashed var(--line);padding-top:var(--s-3)}
   .why b{color:var(--ink)}
@@ -180,7 +179,7 @@
   /* voli */
   .flight{display:flex;align-items:center;gap:var(--s-3);margin-top:var(--s-4);padding-top:var(--s-4);border-top:1px dashed var(--line)}
   .flight:first-of-type{margin-top:var(--s-3);padding-top:var(--s-3)}
-  .flight .ap{font-family:"Playfair Display",serif;font-weight:700;font-size:var(--f-22);line-height:1}
+  .flight .ap{font-family:"Playfair Display","Playfair riserva",Georgia,serif;font-weight:700;font-size:var(--f-22);line-height:1}
   .flight .ap small{display:block;font-family:system-ui,sans-serif;font-weight:400;font-size:var(--f-12);color:var(--muted);margin-top:3px}
   .flight .mid{flex:1;text-align:center;color:var(--gold);font-size:var(--f-12);position:relative}
   .flight .mid::before{content:"";position:absolute;left:0;right:0;top:50%;height:1px;
@@ -206,7 +205,7 @@
   .meteo__riga{justify-content:space-between;gap:var(--s-3);min-height:56px;padding:var(--s-2) var(--s-4);border:0;border-radius:0;font-weight:400;text-align:left}
   .meteo__ora{display:inline-flex;align-items:center;gap:var(--s-2);min-width:0}
   .meteo__ora .ico{font-size:var(--f-28);line-height:1}
-  .meteo__ora b{display:block;font-family:"Playfair Display",serif;font-size:var(--f-22);line-height:1;font-variant-numeric:tabular-nums}
+  .meteo__ora b{display:block;font-family:"Playfair Display","Playfair riserva",Georgia,serif;font-size:var(--f-22);line-height:1;font-variant-numeric:tabular-nums}
   .meteo__dove{display:block;font-size:var(--f-12);color:var(--muted);white-space:nowrap}
   .meteo__giorni{display:inline-flex;gap:var(--s-3);flex:none}
   .meteo__giorni > span{display:flex;flex-direction:column;align-items:center;gap:1px;font-size:var(--f-12);line-height:1.2;color:var(--muted);white-space:nowrap}
@@ -229,7 +228,7 @@
   .meteo__col .p{min-height:1.2em;color:var(--sky);font-weight:700;font-variant-numeric:tabular-nums}
   .meteo__sole{font-size:var(--f-12);color:var(--muted);font-variant-numeric:tabular-nums}
   .daynum{flex:none;width:46px;height:46px;border-radius:var(--r-m);display:flex;flex-direction:column;align-items:center;justify-content:center;
-    font-family:"Playfair Display",serif;font-weight:700;font-size:var(--f-18);line-height:1;border:1px solid var(--line-gold)}
+    font-family:"Playfair Display","Playfair riserva",Georgia,serif;font-weight:700;font-size:var(--f-18);line-height:1;border:1px solid var(--line-gold)}
   .daynum small{font-family:system-ui,sans-serif;font-weight:600;font-size:var(--f-12);letter-spacing:.1em;margin-top:2px;opacity:.8}
   .acc.dom .daynum{color:var(--gold);background:rgba(212,169,78,.1)}
   .acc.lun .daynum{color:var(--rosso-testo);background:rgba(200,54,43,.14);border-color:rgba(200,54,43,.45)}
@@ -276,11 +275,11 @@
   .tcard__foto img{display:block;width:100%;height:100%;object-fit:cover}
   .tcard__foto::after{content:"";position:absolute;left:0;right:0;bottom:0;height:52%;pointer-events:none;
     background:linear-gradient(180deg,transparent,rgba(13,19,33,.92))}
-  .tcard__ora{position:absolute;left:16px;bottom:7px;z-index:1;font-family:"Playfair Display",serif;
+  .tcard__ora{position:absolute;left:16px;bottom:7px;z-index:1;font-family:"Playfair Display","Playfair riserva",Georgia,serif;
     font-weight:700;font-size:var(--f-22);line-height:1;color:#f5f0e8;font-variant-numeric:tabular-nums;
     text-shadow:0 2px 10px rgba(0,0,0,.7)}
   .tcard__body{padding:var(--s-4) var(--s-4) 2px}
-  .tcard__body h4{font-family:"Playfair Display",Georgia,serif;font-size:var(--f-18);font-weight:700;line-height:1.15}
+  .tcard__body h4{font-family:"Playfair Display","Playfair riserva",Georgia,serif;font-size:var(--f-18);font-weight:700;line-height:1.15}
   .tcard__body p{color:var(--muted);font-size:var(--f-14);line-height:1.5;margin-top:var(--s-1)}
   .tcard__credito{padding:var(--s-3) var(--s-4) var(--s-4);font-size:var(--f-12);color:var(--muted);line-height:1.35}
   .tcard__credito a{color:inherit}
@@ -331,7 +330,7 @@
   .tk-when > div{flex:1;background:rgba(212,169,78,.08);border:1px solid var(--line-gold);border-radius:var(--r-s);
     padding:var(--s-3) var(--s-3);text-align:center}
   .tk-when .k{display:block;font-size:var(--f-12);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700}
-  .tk-when .v{display:block;font-family:"Playfair Display",serif;font-weight:700;font-size:var(--f-18);margin-top:3px;color:var(--gold-soft)}
+  .tk-when .v{display:block;font-family:"Playfair Display","Playfair riserva",Georgia,serif;font-weight:700;font-size:var(--f-18);margin-top:3px;color:var(--gold-soft)}
   .tk{margin-top:var(--s-4)}
   .tk figcaption{font-size:var(--f-14);font-weight:700;color:var(--gold-soft);margin-bottom:var(--s-2)}
   .tk figcaption small{font-weight:500;color:var(--muted);font-size:var(--f-12);margin-left:var(--s-2)}
@@ -350,12 +349,12 @@
      perché alla sbarra lo legge un lettore ottico dallo schermo del telefono */
   .pk{margin:var(--s-4) 0 var(--s-4);background:linear-gradient(180deg,rgba(212,169,78,.09),rgba(33,44,64,.55));border-color:var(--line-gold);padding:var(--s-4)}
   .pk__eyebrow{font-size:var(--f-12);letter-spacing:.16em;text-transform:uppercase;color:var(--gold);font-weight:700}
-  .pk__tit{font-family:"Playfair Display",Georgia,serif;font-size:var(--f-18);font-weight:700;margin-top:var(--s-1)}
+  .pk__tit{font-family:"Playfair Display","Playfair riserva",Georgia,serif;font-size:var(--f-18);font-weight:700;margin-top:var(--s-1)}
   .pk__grid{display:flex;gap:var(--s-3);margin-top:var(--s-3)}
   .pk__grid > div{flex:1;background:rgba(212,169,78,.08);border:1px solid var(--line-gold);border-radius:var(--r-s);
     padding:var(--s-2) var(--s-3);text-align:center;min-width:0}
   .pk__grid .k{display:block;font-size:var(--f-12);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700}
-  .pk__grid .v{display:block;font-family:"Playfair Display",serif;font-weight:700;font-size:var(--f-16);margin-top:3px;
+  .pk__grid .v{display:block;font-family:"Playfair Display","Playfair riserva",Georgia,serif;font-weight:700;font-size:var(--f-16);margin-top:3px;
     color:var(--gold-soft);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
   .pk__box{display:block;width:100%;margin:var(--s-3) 0 0;background:#fff;border:0;border-radius:var(--r-m);
     padding:var(--s-4) var(--s-4) var(--s-3);text-align:center;cursor:pointer;box-shadow:var(--shadow-1)}
@@ -363,7 +362,7 @@
   .pk__svg{display:block;width:min(64vw,240px);height:auto;margin:0 auto}
   .pk__cta{display:block;margin-top:var(--s-2);font-size:var(--f-12);font-weight:700;color:#0d1321}
   .pk__tot{display:flex;align-items:center;justify-content:center;gap:var(--s-2);margin-top:var(--s-3);font-size:var(--f-14)}
-  .pk__tot b{font-family:"Playfair Display",serif;font-size:var(--f-18);color:var(--gold-soft)}
+  .pk__tot b{font-family:"Playfair Display","Playfair riserva",Georgia,serif;font-size:var(--f-18);color:var(--gold-soft)}
   .pk__note{margin-top:var(--s-3);font-size:var(--f-12);line-height:1.55;color:var(--muted)}
 
   /* schermo pieno: tutto bianco, QR il più grande possibile, di notte in auto */
@@ -411,7 +410,7 @@
   .btable td{padding:var(--s-3) var(--s-2) var(--s-3) 0;border-top:1px solid var(--line);vertical-align:middle}
   .btable td:last-child{padding-right:0;text-align:right}
   .btable td.imp{font-variant-numeric:tabular-nums;font-weight:600}   /* niente nowrap: a 320 px «~€1.514 · ~€1.561» deve poter andare a capo */
-  .btable tr.tot td{border-top:1px solid var(--line-gold);padding-top:var(--s-3);font-family:"Playfair Display",serif;
+  .btable tr.tot td{border-top:1px solid var(--line-gold);padding-top:var(--s-3);font-family:"Playfair Display","Playfair riserva",Georgia,serif;
     font-size:var(--f-18);font-weight:700}
   .btable tr.tot td.imp{color:var(--gold-soft)}
   .pass{display:inline-flex;align-items:center;gap:var(--s-2);margin-top:var(--s-3);font-size:var(--f-12);font-weight:600;
@@ -426,7 +425,7 @@
   /* programma ora per ora */
   .hp-day{margin-top:var(--s-5)}
   .hp-day:first-of-type{margin-top:var(--s-1)}
-  .hp-badge{font-family:"Playfair Display",serif;font-size:var(--f-16);padding:var(--s-2) var(--s-4);margin-bottom:var(--s-3)}
+  .hp-badge{font-family:"Playfair Display","Playfair riserva",Georgia,serif;font-size:var(--f-16);padding:var(--s-2) var(--s-4);margin-bottom:var(--s-3)}
   .hp-tl{list-style:none;padding-left:var(--s-4);border-left:2px solid var(--line)}
   .hp-day.dom .hp-tl{border-left-color:rgba(212,169,78,.4)}
   .hp-day.lun .hp-tl{border-left-color:rgba(200,54,43,.4)}
@@ -444,7 +443,7 @@
   .hp-note.info{background:rgba(109,179,216,.1);border:1px solid rgba(109,179,216,.35);color:var(--info-testo)}
 
   /* sezione Olly */
-  .olly-count{text-align:center;font-family:"Playfair Display",serif;font-weight:700;font-size:var(--f-18);
+  .olly-count{text-align:center;font-family:"Playfair Display","Playfair riserva",Georgia,serif;font-weight:700;font-size:var(--f-18);
     color:var(--gold-soft);margin:2px 0 var(--s-4)}
   .olly-count b{color:var(--ink);font-size:var(--f-18)}
   .olly-nav{display:flex;gap:var(--s-2);margin-bottom:var(--s-4)}
@@ -457,7 +456,7 @@
   .olly-grid[hidden]{display:none}
   .olly-card{border-radius:var(--r-l);overflow:hidden;margin-top:0}
   .oc-photo{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:cover;object-position:center;background-color:var(--night-2)}
-  .oc-name{font-family:"Playfair Display",serif;font-weight:700;font-size:var(--f-28);text-align:center;padding:var(--s-4) var(--s-4) var(--s-1)}
+  .oc-name{font-family:"Playfair Display","Playfair riserva",Georgia,serif;font-weight:700;font-size:var(--f-28);text-align:center;padding:var(--s-4) var(--s-4) var(--s-1)}
   .oc-seen{display:flex;width:calc(100% - 32px);margin:var(--s-2) var(--s-4) var(--s-4);min-height:48px;background:rgba(212,169,78,.05)}
   .oc-seen .seen-dot{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--line-gold);flex:none;
     display:flex;align-items:center;justify-content:center;transition:background-color var(--t-fast),border-color var(--t-fast),color var(--t-fast)}
@@ -475,20 +474,20 @@
   .notes .ic{flex:none}
 
   footer{text-align:center;padding:44px 18px calc(34px + env(safe-area-inset-bottom));color:var(--muted);font-size:var(--f-12)}
-  footer .fam2{font-family:"Playfair Display",serif;font-style:italic;font-size:var(--f-16);color:var(--gold-soft);margin-bottom:var(--s-2)}
+  footer .fam2{font-family:"Playfair Display","Playfair riserva",Georgia,serif;font-style:italic;font-size:var(--f-16);color:var(--gold-soft);margin-bottom:var(--s-2)}
 
   /* novità: pannello dal basso con quello che è cambiato dall'ultima visita */
   .nov-velo{position:fixed;inset:0;z-index:1500;background:rgba(5,8,15,.66);display:flex;align-items:flex-end;justify-content:center}
   .nov-velo[hidden]{display:none}
   .nov__testa{padding:var(--s-5) var(--s-5) var(--s-2)}
   .nov__testa .eyebrow{margin-bottom:var(--s-2)}
-  .nov__testa h2{font-family:"Playfair Display",Georgia,serif;font-size:var(--f-28);line-height:1.15}
+  .nov__testa h2{font-family:"Playfair Display","Playfair riserva",Georgia,serif;font-size:var(--f-28);line-height:1.15}
   .nov__testa p{margin-top:var(--s-1);font-size:var(--f-14);color:var(--muted)}
   .nov__lista{overflow-y:auto;overscroll-behavior:contain;padding:var(--s-2) var(--s-5) var(--s-3);display:flex;flex-direction:column;gap:var(--s-4)}
   .nov__voce{padding-left:var(--s-4);border-left:3px solid var(--line-gold)}
   .nov__data{display:flex;align-items:center;gap:var(--s-2);font-size:var(--f-12);font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
   .nov__punto{width:8px;height:8px;border-radius:50%;background:var(--bus);flex:none}
-  .nov__voce h3{font-family:"Playfair Display",Georgia,serif;font-size:var(--f-18);line-height:1.25;margin-top:var(--s-1)}
+  .nov__voce h3{font-family:"Playfair Display","Playfair riserva",Georgia,serif;font-size:var(--f-18);line-height:1.25;margin-top:var(--s-1)}
   .nov__voce ul{margin-top:var(--s-2);padding-left:var(--s-4);display:flex;flex-direction:column;gap:var(--s-1);font-size:var(--f-14);line-height:1.45;color:var(--muted)}
   .nov__piede{position:sticky;bottom:0;padding:12px 20px calc(14px + env(safe-area-inset-bottom));
     background:linear-gradient(180deg,rgba(26,35,50,0),var(--night-1) 30%)}
@@ -526,7 +525,7 @@
   .giorni-seg{position:sticky;top:0;z-index:50;display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s-1);
     margin:0 calc(-1 * var(--s-1));padding:var(--s-2) var(--s-1);background:var(--night-0)}
   .giorni-seg__b{border-radius:var(--r-s);padding:0 var(--s-2);background:var(--night-1);border-color:var(--line);color:var(--muted);font-weight:600}
-  .giorni-seg__b b{font-family:"Playfair Display",Georgia,serif;font-weight:700;font-size:var(--f-16)}
+  .giorni-seg__b b{font-family:"Playfair Display","Playfair riserva",Georgia,serif;font-weight:700;font-size:var(--f-16)}
   .giorni-seg__b[aria-selected="true"]{color:var(--on-accent);font-weight:800}
   .giorni-seg__b.dom[aria-selected="true"]{background:var(--gold-fill);border-color:var(--gold-fill)}
   .giorni-seg__b.lun[aria-selected="true"]{background:var(--bus);border-color:var(--bus);color:#fff}
@@ -583,6 +582,11 @@
     html{scroll-behavior:auto}
     .hero h1,.skyline,.sk{animation:none!important}
   }
+  /* ====== prestazioni (fase 4 UX) ======
+     le card fuori schermo non si disegnano finché non servono; la misura di riserva evita salti della barra di scorrimento */
+  .tcard{content-visibility:auto;contain-intrinsic-size:auto 460px}
+  .olly-card{content-visibility:auto;contain-intrinsic-size:auto 400px}
+  #info > .card,#sicurezza .card,#note .card,#crediti .card,#biglietti > .card{content-visibility:auto;contain-intrinsic-size:auto 320px}
   /* niente salto quando compare «Disponibile offline»: lo spazio è già riservato */
   .offline-ok[hidden]{display:block;visibility:hidden}
   /* portafoglio */
@@ -593,7 +597,7 @@
   .pk-riga__ic{font-size:var(--f-28)}
   .tk-box[role="button"]{cursor:pointer}
   .tk-card h3,.casa-card h3{display:flex;align-items:center;gap:var(--s-2);flex-wrap:wrap}
-  .casa-indirizzo{font-family:"Playfair Display",Georgia,serif;font-size:var(--f-28);line-height:1.2;margin-top:var(--s-2)}
+  .casa-indirizzo{font-family:"Playfair Display","Playfair riserva",Georgia,serif;font-size:var(--f-28);line-height:1.2;margin-top:var(--s-2)}
   .casa-azioni{display:flex;flex-wrap:wrap;gap:var(--s-3);margin-top:var(--s-4);align-items:center}
   .casa-mostra{min-height:48px;border-radius:var(--r-s);font-size:var(--f-16)}
   /* Piove e badge nei nuovi posti */
@@ -610,7 +614,7 @@
   .cod-code .tk-svg.tk-qr{width:min(88vw,62svh);height:auto;aspect-ratio:1}
   .cod-num{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:clamp(20px,6vw,28px);font-weight:800;letter-spacing:.04em;font-variant-numeric:tabular-nums}
   .cod-hint{font-size:var(--f-16);color:#3d3a34;max-width:34ch;line-height:1.45}
-  .cod-indirizzo{font-family:"Playfair Display",Georgia,serif;font-size:clamp(34px,11vw,56px);line-height:1.15}
+  .cod-indirizzo{font-family:"Playfair Display","Playfair riserva",Georgia,serif;font-size:clamp(34px,11vw,56px);line-height:1.15}
   .cod-x{position:absolute;top:12px;right:12px;width:52px;height:52px;border:0;border-radius:999px;background:#efe8dd;color:#0d1321;font-size:var(--f-22);cursor:pointer}
   .cod-nav{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:space-between;gap:var(--s-3);
     padding:12px 12px calc(12px + env(safe-area-inset-bottom))}
@@ -621,7 +625,7 @@
   /* pannelli "Prima di partire" e "Adesso", in cima alla pagina */
   .ora-pan{margin:var(--s-4) 0 var(--s-2);padding:var(--s-4);border-color:var(--line-gold)}
   .ora-pan[hidden]{display:none}
-  .ora-tit{font-family:"Playfair Display",Georgia,serif;font-size:var(--f-28);line-height:1.2;margin-top:var(--s-2)}
+  .ora-tit{font-family:"Playfair Display","Playfair riserva",Georgia,serif;font-size:var(--f-28);line-height:1.2;margin-top:var(--s-2)}
   /* lista unica "Prima di partire": lo stato lo scrive Alessandro con un commit, niente caselle */
   .pp-voci{list-style:none;margin-top:var(--s-3);display:flex;flex-direction:column;gap:var(--s-2)}
   .pp-voce{display:flex;align-items:flex-start;gap:var(--s-3);font-size:var(--f-16);line-height:1.4}
@@ -666,7 +670,7 @@
   .ad-foto{width:96px;height:54px;object-fit:cover;border-radius:var(--r-s);flex:none;background:var(--night-2)}
   .ad-foto[src=""]{display:none}
   .ad-quando{font-size:var(--f-14);font-weight:700;color:var(--gold-soft);font-variant-numeric:tabular-nums}
-  .ad-nome{font-family:"Playfair Display",Georgia,serif;font-size:var(--f-22);line-height:1.2;margin-top:2px}
+  .ad-nome{font-family:"Playfair Display","Playfair riserva",Georgia,serif;font-size:var(--f-22);line-height:1.2;margin-top:2px}
   .ad-vincolo{white-space:pre-line;margin-top:var(--s-3);padding:var(--s-3) var(--s-3);border-radius:var(--r-s);font-size:var(--f-16);line-height:1.4;font-weight:700;
     color:var(--rosso-testo);background:rgba(200,54,43,.16);border:1px solid rgba(200,54,43,.45)}
   .ad-azioni{display:flex;gap:var(--s-3);margin-top:var(--s-4);flex-wrap:wrap}
@@ -678,7 +682,7 @@
   .ver-sito{margin-top:var(--s-3);font-size:var(--f-12);color:var(--muted)}
   /* passeggino a noleggio: piano B, nelle note pratiche */
   .psg{margin-top:var(--s-4)}
-  .psg h3{font-family:"Playfair Display",Georgia,serif;font-size:var(--f-18)}
+  .psg h3{font-family:"Playfair Display","Playfair riserva",Georgia,serif;font-size:var(--f-18)}
   .psg-lede{margin-top:var(--s-2);font-size:var(--f-14);line-height:1.55;color:var(--muted)}
   .psg-lede b{color:var(--gold-soft)}
   .psg .notes{margin-top:var(--s-3)}
@@ -765,7 +769,7 @@
   .bagno-regola{padding:var(--s-3);border-radius:var(--r-s);font-size:var(--f-16);line-height:1.5;font-weight:700;color:var(--gold-soft);
     background:rgba(212,169,78,.12);border:1px solid var(--line-gold)}
   .bagno-legenda{margin-top:var(--s-3);font-size:var(--f-14);line-height:1.5;color:var(--muted)}
-  .bagno-giorno{margin-top:var(--s-4);font-family:"Playfair Display",Georgia,serif;font-size:var(--f-18);line-height:1.25}
+  .bagno-giorno{margin-top:var(--s-4);font-family:"Playfair Display","Playfair riserva",Georgia,serif;font-size:var(--f-18);line-height:1.25}
   .bagno-tappa{margin-top:var(--s-4);padding-top:var(--s-3);border-top:1px solid var(--line)}
   .bagno-tappa__nome{font-size:var(--f-16);font-weight:800;line-height:1.35;color:var(--ink)}
   .bagno-tappa .bagno-pan,.bagno-tappa > .bagno-avviso,.bagno-tappa > .bagno-voce{margin-top:var(--s-2)}
@@ -855,7 +859,7 @@
     <div class="ad-testa"><span class="eyebrow" id="adTit">Adesso</span><span class="ad-orologio" id="adOrologio"></span></div>
     <p class="ad-corso" id="adCorso" hidden></p>
     <div class="ad-pross" id="adPross" hidden>
-      <img class="ad-foto" id="adFoto" alt="" width="96" height="54" decoding="async">
+      <img class="ad-foto" id="adFoto" alt="" width="96" height="54" decoding="async" fetchpriority="high">
       <div class="ad-testo">
         <p class="ad-quando" id="adQuando"></p>
         <h2 class="ad-nome" id="adNome"></h2>
@@ -914,7 +918,7 @@
         <button class="btn btn--secondario btn--blocco pk-riga" type="button" data-codice="0"><span class="pk-riga__ic" aria-hidden="true">🅿️</span><span><b>QR del parcheggio P1</b><small>Tocca per mostrarlo alla sbarra, anche senza rete</small></span><span aria-hidden="true">›</span></button>
         <article class="tcard" data-giorno="2026-11-15" data-ora="05:15" data-tipo="trasporto" data-fuso="Europe/Rome" data-mostra="qr">
           <div class="tcard__foto">
-            <img src="assets/tappe/londra/blq.webp" width="800" height="450" alt="Il terminal dell’aeroporto di Bologna con le arcate rosse della pensilina" decoding="async">
+            <img src="assets/tappe/londra/blq.webp" width="800" height="450" alt="Il terminal dell’aeroporto di Bologna con le arcate rosse della pensilina" decoding="async" loading="lazy">
             <span class="tcard__ora">05:15</span>
           </div>
           <div class="tcard__body">
@@ -2006,9 +2010,9 @@
   </section>
 </div>
 
-<script defer src="vendor/leaflet/leaflet.js"
-  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="></script>
 <script>
+  // lavoro che non serve al primo disegno (bagni, depositi, meteo) parte quando il thread è libero
+  var quandoLibero = window.requestIdleCallback ? function(f){ requestIdleCallback(f, { timeout: 2000 }); } : function(f){ setTimeout(f, 300); };
   /* ====== orologio del viaggio ======
      Tutto si calcola sull'ora di Londra, qualunque sia il fuso del telefono. Le card in ora italiana
      (aeroporto e voli da e per Bologna) hanno data-fuso="Europe/Rome": i conti si fanno sull'istante vero.
@@ -2080,12 +2084,14 @@
       card.querySelector('.meteo__riga').innerHTML = '<span class="meteo__ora"><span class="ico">🌦️</span><span><b>Meteo</b><span class="meteo__dove">non disponibile ora</span></span></span>';
       card.querySelector('.meteo__riga').disabled = true;
     }
-    var ctrl = window.AbortController ? new AbortController() : null;
-    var t = setTimeout(function(){ if (ctrl) ctrl.abort(); }, 8000);
-    fetch(URL, ctrl ? { signal: ctrl.signal } : {})
-      .then(function(r){ return r.ok ? r.json() : null; })
-      .then(function(d){ clearTimeout(t); if (valido(d)) { card.classList.remove('meteo--scheletro'); monta(d); } else nonDisponibile(); })
-      .catch(function(){ clearTimeout(t); nonDisponibile(); });
+    quandoLibero(function(){
+      var ctrl = window.AbortController ? new AbortController() : null;
+      var t = setTimeout(function(){ if (ctrl) ctrl.abort(); }, 8000);
+      fetch(URL, ctrl ? { signal: ctrl.signal } : {})
+        .then(function(r){ return r.ok ? r.json() : null; })
+        .then(function(d){ clearTimeout(t); if (valido(d)) { card.classList.remove('meteo--scheletro'); monta(d); } else nonDisponibile(); })
+        .catch(function(){ clearTimeout(t); nonDisponibile(); });
+    });
 
     function valido(d){
       if (!d || d.error || !d.hourly || !d.daily) return false;
@@ -2813,8 +2819,8 @@
       var p = document.getElementById(r.getAttribute('aria-controls')); if (!p) return;
       var apri = p.hidden; p.hidden = !apri; r.setAttribute('aria-expanded', String(apri));
     });
-    if (window.fetch) fetch('data/bagni-londra.json').then(function(r){ return r.ok ? r.json() : null; })
-      .then(function(j){ if (j && j.tappe) monta(j); }).catch(function(){ /* niente bagni: la pagina funziona lo stesso */ });
+    if (window.fetch) quandoLibero(function(){ fetch('data/bagni-londra.json').then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(j){ if (j && j.tappe) monta(j); }).catch(function(){ /* niente bagni: la pagina funziona lo stesso */ }); });
     return { pronto: function(){ return !!S.dati; }, perAdesso: perAdesso, perMappa: perMappa, popup: popup, senzaTappa: [],
              util: { esc: esc, BADGE: BADGE, stimato: stimato, dataIt: dataIt, GIORNO: GIORNO, NOME_GIORNO: NOME_GIORNO } };   // usati anche dai depositi
   })();
@@ -2928,8 +2934,8 @@
       document.dispatchEvent(new CustomEvent('depositi'));
     }
     // il tocco sulle righe è quello dei bagni (stessa classe .bagno-riga)
-    if (window.fetch) fetch('data/depositi-londra.json').then(function(r){ return r.ok ? r.json() : null; })
-      .then(function(j){ if (j && j.depositi) monta(j); }).catch(function(){ /* niente depositi: la pagina funziona lo stesso */ });
+    if (window.fetch) quandoLibero(function(){ fetch('data/depositi-londra.json').then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(j){ if (j && j.depositi) monta(j); }).catch(function(){ /* niente depositi: la pagina funziona lo stesso */ }); });
     return { pronto: function(){ return !!S.dati; }, perMappa: perMappa, popup: popup, scelte: SCELTE, senzaTappa: [] };
   })();
 
@@ -3394,14 +3400,22 @@
      Se per qualunque motivo Leaflet non c'è, il messaggio compare e il resto della pagina va avanti. */
   var mapBox=document.getElementById('map');
   function mappaOffline(si){ mapBox.classList.toggle('map-offline', !!si); }
-  var mappaAvviata = false, map = null;
+  var mappaAvviata = false, map = null, leafletRichiesto = false;
+  // Leaflet (css e js, 46 kB) si carica alla prima apertura della vista Mappa, non col resto della pagina.
+  // Resta nel precache del service worker, quindi arriva anche senza rete.
+  function caricaLeaflet(cb){
+    if (typeof L !== 'undefined') { cb(); return; }
+    if (leafletRichiesto) return;
+    leafletRichiesto = true;
+    var css = document.createElement('link'); css.rel = 'stylesheet'; css.href = 'vendor/leaflet/leaflet.css'; document.head.appendChild(css);
+    var s = document.createElement('script'); s.src = 'vendor/leaflet/leaflet.js';
+    s.onload = cb; s.onerror = function(){ leafletRichiesto = false; mappaOffline(true); };
+    document.head.appendChild(s);
+  }
   function avviaMappa(){
   if (mappaAvviata) return;
-  if (typeof L === 'undefined') {
-    if (document.readyState !== 'complete') { window.addEventListener('load', avviaMappa, { once: true }); return; }
-    mappaOffline(true); return;
-  }
-  mappaAvviata = true;
+  if (typeof L === 'undefined') { caricaLeaflet(avviaMappa); return; }
+  mappaAvviata = true; mappaOffline(false);
   // touch: niente trascinamento con un dito (la pagina scorre); due dita spostano e zoomano
   var touch = !!(window.matchMedia && window.matchMedia('(pointer:coarse)').matches);
   map=L.map('map',{scrollWheelZoom:false, dragging:!touch});
