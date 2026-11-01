@@ -162,6 +162,23 @@ const piccoli = await p.evaluate(() => [...document.querySelectorAll('a[href], b
 }).map((el) => `${el.tagName.toLowerCase()}.${el.className} ${Math.round(el.getBoundingClientRect().width)}×${Math.round(el.getBoundingClientRect().height)}`))
 ok('nessun controllo sotto 44 px', !piccoli.length, piccoli.slice(0, 5).join(', '))
 
+// popup della mappa: se la nota di un marker comincia con un orario, deve essere il data-ora della card della stessa
+// tappa (stesso giorno, stesse coordinate del «Portami qui», entro ~30 m). Le note le scrive a mano chi cambia il
+// programma e si dimenticano: così non restano orari vecchi nei popup
+await p.evaluate(() => { location.hash = '#mappa' })
+await p.waitForFunction(() => window.MAPPA && MAPPA.marcatori().length > 0, null, { timeout: 20000 }).catch(() => {})
+const popup = await p.evaluate(() => {
+  const G = { dom: '2026-11-15', lun: '2026-11-16', mar: '2026-11-17' }
+  const card = [...document.querySelectorAll('#programma article.tcard[data-ora]')].map((c) => { const a = c.querySelector('a.gmap--vai'); const m = a && /destination=(-?[\d.]+),(-?[\d.]+)/.exec(a.getAttribute('href') || ''); return m ? { giorno: c.dataset.giorno, ora: c.dataset.ora, lat: +m[1], lng: +m[2], nome: c.querySelector('h4')?.textContent.trim() } : null }).filter(Boolean)
+  return (window.MAPPA ? MAPPA.marcatori() : []).filter((x) => G[x.g] && /^\d{2}:\d{2}/.test(x.nota)).map((x) => {
+    const ora = x.nota.slice(0, 5)
+    const c = card.filter((k) => k.giorno === G[x.g] && Math.abs(k.lat - x.reale[0]) < 0.0003 && Math.abs(k.lng - x.reale[1]) < 0.0005)
+    return { marker: x.n, giorno: x.g, nota: ora, card: c.map((k) => k.ora), ok: c.length > 0 && c.some((k) => k.ora === ora) }
+  })
+})
+const popupKo = popup.filter((x) => !x.ok)
+ok('popup della mappa: l\'orario nella nota è il data-ora della card della tappa', popup.length > 0 && popupKo.length === 0, `${popup.length} marker con orario` + (popupKo.length ? ' · sbagliati: ' + popupKo.map((x) => `${x.marker} ${x.nota}≠${x.card.join('/') || 'nessuna card'}`).join(', ') : ''))
+await p.evaluate(() => { location.hash = '#programma' }); await p.waitForTimeout(500)
 // storage: si usa la pagina come la usa qualcuno (novità, Piove, plus, codici) e poi si guarda cosa resta
 await p.evaluate(() => scrollTo(0, 0))
 await p.evaluate(() => { document.getElementById('novApri').click(); document.getElementById('novOk').click(); document.getElementById('pioveBtnAd').click(); document.querySelector('.plus-riga').click(); document.getElementById('plusOk').click(); document.getElementById('pkBox').click() })

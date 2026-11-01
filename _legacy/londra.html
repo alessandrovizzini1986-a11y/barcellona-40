@@ -3248,6 +3248,8 @@
      Il pannello non si apre mai da solo: in cima c'è un banner sottile «N novità», e si apre solo se toccato.
      Il link in fondo alla pagina lo riapre con tutto lo storico, in ogni caso. */
   var NOVITA = [
+    { v: 34, data: '2026-11-01', titolo: '🗺️ Popup della mappa di lunedì', voci: [
+      'I popup dei marker di lunedì hanno gli orari nuovi del Cambio della Guardia: Trafalgar 09:30, Horse Guards 09:50 (cavalli dalle 10:00), Big Ben 10:05, St James’s Park 11:00, Buckingham 11:40 (Old Guard e cavalleria alle 11:45)' ] },
     { v: 33, data: '2026-11-01', titolo: '📱 La pagina è diventata un’app', voci: [
       'Barra in basso con cinque voci: Adesso, Programma, Biglietti, Mappa, Info. Una vista alla volta, e il Programma mostra un giorno per volta: si cambia con i tre pulsanti in cima o scorrendo di lato',
       'Pulsante «🕒 Adesso» sempre a portata di pollice e, durante il viaggio, la striscia «Prossima: …» sopra la barra',
@@ -3518,12 +3520,12 @@
     {p:SEALIFE,     g:'dom', note:'12:30 · County Hall, squali e pinguini'},
     {p:LINA,        g:'dom', note:'15:00 · spesa per la cena, 2 min da casa'},
     {p:HAMLEYS,     g:'dom', note:'16:30 · la sorpresa, col buio 🧸'},
-    {p:TRAFALGAR,   g:'lun', note:'09:45 · leoni e fontane'},
+    {p:TRAFALGAR,   g:'lun', note:'09:30 · leoni e fontane'},
     {p:WELLINGTON,  g:'lun', note:'10:15 · la banda e la nuova guardia, cancellate su Birdcage Walk 🎺'},
-    {p:PALACE,      g:'lun', note:'11:05 · si arriva seguendo la banda'},
-    {p:STJAMES,     g:'lun', note:'11:15 · pellicani, scoiattoli e area giochi 🐿️'},
-    {p:HORSEGUARDS, g:'lun', note:'12:05 · i cavalli nelle garitte (10:00–16:00)'},
-    {p:BIGBEN,      g:'lun', note:'12:25 · Parliament Square e Westminster Bridge 🕰️'},
+    {p:PALACE,      g:'lun', note:'11:40 · rientro della Old Guard e cavalleria alle 11:45'},
+    {p:STJAMES,     g:'lun', note:'11:00 · pellicani, scoiattoli e area giochi 🐿️'},
+    {p:HORSEGUARDS, g:'lun', note:'09:50 · cavalli nelle garitte dalle 10:00'},
+    {p:BIGBEN,      g:'lun', note:'10:05 · Parliament Square e Westminster Bridge 🕰️'},
     {p:HARRODS,     g:'lun', note:'14:10 · vetrine di Natale + tè alle Tea Rooms ☕'},
     {p:NHM,         g:'lun', note:'Ingresso gratuito · chiude alle 17:50 🦕'},
     {p:CAMDEN,      g:'mar', note:'11:00 · il canale con le barche e i mercati 🛶'},
@@ -3726,7 +3728,7 @@
   if(btnChiudi) btnChiudi.addEventListener('click',esciPieno);
   document.addEventListener('fullscreenchange',dopoPieno);
   document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&pienoFallback) esciPieno(); });
-  window.MAPPA={ marcatori:function(){ return marcatori.map(function(x){ var ll=x.m.getLatLng(); return { n:x.p.n, g:x.t?x.t.g:'casa', reale:[x.reale.lat,x.reale.lng], mostrato:[ll.lat,ll.lng], visibile:map.hasLayer(x.m) }; }); },
+  window.MAPPA={ marcatori:function(){ return marcatori.map(function(x){ var ll=x.m.getLatLng(); return { n:x.p.n, g:x.t?x.t.g:'casa', nota:x.t?x.t.note:'', reale:[x.reale.lat,x.reale.lng], mostrato:[ll.lat,ll.lng], visibile:map.hasLayer(x.m) }; }); },
     filtra:filtra, filtro:function(){ return filtro; }, chiudiVentaglio:chiudiVentaglio, aperto:function(){ return aperti?aperti.items.length:0; }, centro:function(){ var c=map.getCenter(); return [c.lat,c.lng,map.getZoom()]; }, pieno:pienoAttivo };
   // livelli "🚻 Bagni" e "🧳 Depositi", spenti di default, nello stesso controllo (compare col primo dei due)
   var livelli=L.control.layers(null,null,{collapsed:true,position:'topright'}), livelliSullaMappa=false;
