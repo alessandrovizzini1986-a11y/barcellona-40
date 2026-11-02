@@ -1329,6 +1329,9 @@ function statoProg(e,w){
     const s=sedutaSett(sc,k,e.id);if(!s){st.storia.push({w:k,nulla:true,kg:st.kg,rip:st.rip});continue;}
     const arr=s.esercizi[e.id]||[], mx=arr[p.serie], normali=arr.slice(0,p.serie);
     const maxRip=mx&&mx.fatta?(mx.reps||0):0;
+    /* in sala comanda il trainer: si riparte dal carico usato davvero nella
+       serie a max, non da quello che c'era scritto */
+    if(mx&&mx.fatta&&mx.kg!=null)st.kg=mx.kg;
     const prima={w:k,kg:st.kg,rip:st.rip,max:maxRip};
     if(p.tipo==='kgMax'){
       if(maxRip>=p.soglia){st.kg=+(st.kg+p.passo).toFixed(2);prima.su='+'+p.passo+(e.doppio?'+'+p.passo:'')+' kg';}
@@ -1346,7 +1349,8 @@ function statoProgTxt(id){
   const e=defById(id);if(!e||!e.prog||schedaDiEs(id)!==SCHEDA)return '';
   const st=statoProg(e,SETT), ult=st.storia.filter(x=>!x.nulla).pop();
   if(!ult)return '<br>Settimana '+SETT+': si parte dal carico base.';
-  return '<br>Settimana '+ult.w+': max '+ult.max+' rip → '+(ult.su?'<b>'+esc(ult.su)+'</b>':'target invariato')+'.';
+  const e2=defById(id);
+  return '<br>Settimana '+ult.w+': max '+ult.max+' rip a '+kgCorto(ult.kg,e2)+' kg → '+(ult.su?'<b>'+esc(ult.su)+'</b>':'target invariato')+'.';
 }
 /* Target di un esercizio per una settimana: array di {kg,rip,ripMax,max} */
 function targetSerie(e,w){
