@@ -1,6 +1,6 @@
 {
  "v": 2,
- "aggiornato": "2026-10-29T20:27:54.975253Z",
+ "aggiornato": "2026-11-02T20:46:03.136923Z",
  "scheda": {
   "id": 2,
   "giorni": [
@@ -126,18 +126,18 @@
        },
        {
         "kg": null,
-        "rip": 3,
+        "rip": 4,
         "ripMax": null,
         "max": false
        },
        {
         "kg": null,
-        "rip": 3,
+        "rip": 4,
         "ripMax": null,
         "max": false
        }
       ],
-      "repMin": 3,
+      "repMin": 4,
       "repMax": 4
      },
      {
@@ -178,14 +178,14 @@
       "serie": 3,
       "target": [
        {
-        "kg": 15,
-        "rip": 14,
+        "kg": 25,
+        "rip": 6,
         "ripMax": null,
         "max": false
        },
        {
-        "kg": 17.5,
-        "rip": 12,
+        "kg": 22.5,
+        "rip": 8,
         "ripMax": null,
         "max": false
        },
@@ -196,8 +196,8 @@
         "max": false
        }
       ],
-      "repMin": 10,
-      "repMax": 14
+      "repMin": 6,
+      "repMax": 10
      },
      {
       "id": "distensioni-manubri",
@@ -240,30 +240,30 @@
        {
         "kg": 16,
         "rip": 5,
-        "ripMax": null,
+        "ripMax": 7,
         "max": false
        },
        {
         "kg": 16,
         "rip": 5,
-        "ripMax": null,
+        "ripMax": 7,
         "max": false
        },
        {
         "kg": 16,
         "rip": 5,
-        "ripMax": null,
+        "ripMax": 7,
         "max": false
        },
        {
         "kg": 16,
         "rip": 5,
-        "ripMax": null,
+        "ripMax": 7,
         "max": false
        }
       ],
       "repMin": 5,
-      "repMax": 5
+      "repMax": 7
      },
      {
       "id": "australian-pull-up",
@@ -546,25 +546,25 @@
       "serie": 4,
       "target": [
        {
-        "kg": 18,
+        "kg": 20,
         "rip": 6,
         "ripMax": null,
         "max": false
        },
        {
-        "kg": 18,
+        "kg": 20,
         "rip": 6,
         "ripMax": null,
         "max": false
        },
        {
-        "kg": 18,
+        "kg": 20,
         "rip": 6,
         "ripMax": null,
         "max": false
        },
        {
-        "kg": 18,
+        "kg": 20,
         "rip": null,
         "ripMax": null,
         "max": true
@@ -612,19 +612,19 @@
       "target": [
        {
         "kg": -35,
-        "rip": 7,
+        "rip": 8,
         "ripMax": null,
         "max": false
        },
        {
         "kg": -35,
-        "rip": 7,
+        "rip": 8,
         "ripMax": null,
         "max": false
        },
        {
         "kg": -35,
-        "rip": 7,
+        "rip": 8,
         "ripMax": null,
         "max": false
        },
@@ -635,8 +635,8 @@
         "max": true
        }
       ],
-      "repMin": 7,
-      "repMax": 7
+      "repMin": 8,
+      "repMax": 8
      },
      {
       "id": "leg-ext-mono",
@@ -676,14 +676,8 @@
       "serie": 3,
       "target": [
        {
-        "kg": 20,
-        "rip": 12,
-        "ripMax": null,
-        "max": false
-       },
-       {
-        "kg": 22.5,
-        "rip": 10,
+        "kg": 27.5,
+        "rip": 6,
         "ripMax": null,
         "max": false
        },
@@ -692,10 +686,16 @@
         "rip": 8,
         "ripMax": null,
         "max": false
+       },
+       {
+        "kg": 22.5,
+        "rip": 10,
+        "ripMax": null,
+        "max": false
        }
       ],
-      "repMin": 8,
-      "repMax": 12
+      "repMin": 6,
+      "repMax": 10
      },
      {
       "id": "lat-monobraccio",
@@ -735,26 +735,26 @@
       "serie": 3,
       "target": [
        {
-        "kg": 15,
-        "rip": 10,
+        "kg": 20,
+        "rip": 5,
         "ripMax": null,
         "max": false
        },
        {
-        "kg": 15,
-        "rip": 10,
+        "kg": 20,
+        "rip": 5,
         "ripMax": null,
         "max": false
        },
        {
-        "kg": 15,
-        "rip": 10,
+        "kg": 20,
+        "rip": 5,
         "ripMax": null,
         "max": false
        }
       ],
-      "repMin": 10,
-      "repMax": 10
+      "repMin": 5,
+      "repMax": 5
      },
      {
       "id": "shoulder-press",
@@ -3499,6 +3499,172 @@
     "stretch": true
    },
    "warmOpen": false
+  },
+  {
+   "id": "2026-11-02-33d57wo",
+   "data": "2026-11-02",
+   "scheda": 2,
+   "giorno": "A",
+   "settimana": 4,
+   "chiusa": true,
+   "inizio": 1793646960433,
+   "fine": 1793652292021,
+   "esercizi": {
+    "hack-squat": [
+     {
+      "kg": 17.5,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": 17.5,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": 17.5,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": 17.5,
+      "reps": 10,
+      "fatta": true
+     }
+    ],
+    "chin-up": [
+     {
+      "kg": null,
+      "reps": 4,
+      "fatta": true
+     },
+     {
+      "kg": null,
+      "reps": 4,
+      "fatta": true
+     },
+     {
+      "kg": null,
+      "reps": 4,
+      "fatta": true
+     },
+     {
+      "kg": null,
+      "reps": 4,
+      "fatta": true
+     }
+    ],
+    "leg-curl-mono": [
+     {
+      "kg": 22.5,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": 20,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 17.5,
+      "reps": 10,
+      "fatta": true
+     }
+    ],
+    "distensioni-manubri": [
+     {
+      "kg": 16,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": 16,
+      "reps": 5,
+      "fatta": true
+     },
+     {
+      "kg": 16,
+      "reps": 5,
+      "fatta": true
+     },
+     {
+      "kg": 16,
+      "reps": 5,
+      "fatta": true
+     }
+    ],
+    "australian-pull-up": [
+     {
+      "kg": null,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": null,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": null,
+      "reps": 8,
+      "fatta": true
+     }
+    ],
+    "push-up-sbarra": [
+     {
+      "kg": null,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": null,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": null,
+      "reps": 8,
+      "fatta": true
+     }
+    ],
+    "curl-ez": [
+     {
+      "kg": 8.75,
+      "reps": 7,
+      "fatta": true
+     },
+     {
+      "kg": 8.75,
+      "reps": 7,
+      "fatta": true
+     },
+     {
+      "kg": 8.75,
+      "reps": 9,
+      "fatta": true
+     }
+    ],
+    "french-press-ez": [
+     {
+      "kg": 8.75,
+      "reps": 7,
+      "fatta": true
+     },
+     {
+      "kg": 8.75,
+      "reps": 7,
+      "fatta": true
+     },
+     {
+      "kg": 8.75,
+      "reps": 9,
+      "fatta": true
+     }
+    ]
+   },
+   "warm": {
+    "stretch": true
+   }
   }
  ],
  "luoghi": [
