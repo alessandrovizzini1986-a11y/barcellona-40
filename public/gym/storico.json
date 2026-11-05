@@ -1,6 +1,6 @@
 {
  "v": 2,
- "aggiornato": "2026-11-02T20:46:03.136923Z",
+ "aggiornato": "2026-11-05T20:35:40.803279Z",
  "scheda": {
   "id": 2,
   "giorni": [
@@ -47,25 +47,25 @@
       "serie": 4,
       "target": [
        {
-        "kg": 12.5,
+        "kg": 15,
         "rip": 6,
         "ripMax": null,
         "max": false
        },
        {
-        "kg": 12.5,
+        "kg": 15,
         "rip": 6,
         "ripMax": null,
         "max": false
        },
        {
-        "kg": 12.5,
+        "kg": 15,
         "rip": 6,
         "ripMax": null,
         "max": false
        },
        {
-        "kg": 12.5,
+        "kg": 15,
         "rip": null,
         "ripMax": null,
         "max": true
@@ -3665,6 +3665,172 @@
    "warm": {
     "stretch": true
    }
+  },
+  {
+   "id": "2026-11-05-n2btee7",
+   "data": "2026-11-05",
+   "scheda": 2,
+   "giorno": "B",
+   "settimana": 4,
+   "chiusa": true,
+   "inizio": 1793907478365,
+   "fine": 1793910892067,
+   "esercizi": {
+    "stacchi-rumeni": [
+     {
+      "kg": 20,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": 20,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": 20,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": 20,
+      "reps": 10,
+      "fatta": true
+     }
+    ],
+    "dip-assistiti": [
+     {
+      "kg": -35,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": -35,
+      "reps": 9,
+      "fatta": true
+     },
+     {
+      "kg": -35,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": -35,
+      "reps": 9,
+      "fatta": true
+     }
+    ],
+    "leg-ext-mono": [
+     {
+      "kg": 27.5,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": 25,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 22.5,
+      "reps": 10,
+      "fatta": true
+     }
+    ],
+    "lat-monobraccio": [
+     {
+      "kg": 20,
+      "reps": 5,
+      "fatta": true
+     },
+     {
+      "kg": 20,
+      "reps": 5,
+      "fatta": true
+     },
+     {
+      "kg": 20,
+      "reps": 5,
+      "fatta": true
+     }
+    ],
+    "shoulder-press": [
+     {
+      "kg": 12,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 12,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 12,
+      "reps": 8,
+      "fatta": true
+     }
+    ],
+    "rematore-inclinata": [
+     {
+      "kg": 16,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 16,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 16,
+      "reps": 8,
+      "fatta": true
+     }
+    ],
+    "push-down-corda": [
+     {
+      "kg": 12.5,
+      "reps": 10,
+      "fatta": true
+     },
+     {
+      "kg": null,
+      "reps": null,
+      "fatta": false
+     },
+     {
+      "kg": 12.5,
+      "reps": 10,
+      "fatta": true
+     }
+    ],
+    "curl-cavo-basso": [
+     {
+      "kg": 12.5,
+      "reps": 10,
+      "fatta": true
+     },
+     {
+      "kg": 12.5,
+      "reps": 10,
+      "fatta": true
+     },
+     {
+      "kg": 12.5,
+      "reps": 10,
+      "fatta": true
+     }
+    ]
+   },
+   "warm": {
+    "w0": true,
+    "w1": true,
+    "stretch": true
+   },
+   "warmOpen": false,
+   "luogoId": "zlj4znn",
+   "luogoNome": "Mcfit"
   }
  ],
  "luoghi": [
@@ -3690,6 +3856,10 @@
   },
   {
    "id": "au2vmbf",
+   "nome": "Mcfit"
+  },
+  {
+   "id": "zlj4znn",
    "nome": "Mcfit"
   }
  ]
