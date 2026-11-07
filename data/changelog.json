@@ -1,6 +1,18 @@
 {
   "entries": [
     {
+      "v": 65,
+      "data": "2026-11-07",
+      "titolo": "Londra: double check a 7 giorni",
+      "voci": [
+        "🔁 Double check a 7 giorni: percorsi di lunedì riallineati al Cambio della Guardia, pranzo da Harrods, bagagli di martedì a Broadwick St, bug Camden corretto",
+        "Lunedì: pranzo alle 12:45 nella Dining Hall di Harrods, Harrods dalle 13:45 alle 16:00, niente buco a mezzogiorno",
+        "Martedì: bagagli da Bounce in Broadwick St, ritiro alle 15:05 e partenza alle 14:45 da Covent Garden verso Piccadilly Circus; anche il piano B da Camden passa dai bagagli",
+        "Domenica: Winter Market dalle 11:00, deposito Bounce di Chicheley St nella card del trasferimento",
+        "Prima di partire: chiusure TfL giovedì 12, Bounce Waterloo e check-in sabato 14 sera, Bounce Broadwick St lunedì 16 sera"
+      ]
+    },
+    {
       "v": 64,
       "data": "2026-11-01",
       "titolo": "Londra: programma più corto",
