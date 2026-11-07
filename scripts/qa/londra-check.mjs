@@ -34,13 +34,13 @@ const PERCORSI = [
   'https://www.google.com/maps/dir/?api=1&origin=51.4994055,-0.1632344&destination=51.4967150,-0.1763672&travelmode=walking',
   'https://www.google.com/maps/dir/?api=1&origin=51.4967150,-0.1763672&destination=51.5098,-0.1342&travelmode=transit',
   'https://www.google.com/maps/dir/?api=1&origin=51.5098,-0.1342&destination=51.5129114,-0.1364381&waypoints=51.5131,-0.1400&travelmode=walking',
-  // martedì (6): C4, il piano B, sta dentro la card di Camden, quindi viene prima di C2
+  // martedì (5): il piano B sta dentro la card di Camden, quindi viene prima di Camden → Poppies. Dal 7/11 i bagagli
+  // stanno a Broadwick St: il piano B e la partenza da Covent Garden passano da lì; via Covent Garden → Tottenham Court Road
   'https://www.google.com/maps/dir/?api=1&origin=51.5129114,-0.1364381&destination=51.539292,-0.14274&travelmode=transit',
-  'https://www.google.com/maps/dir/?api=1&origin=51.539292,-0.14274&destination=51.4723,-0.4887&travelmode=transit',
+  'https://www.google.com/maps/dir/?api=1&origin=51.539292,-0.14274&destination=51.4723,-0.4887&waypoints=51.5132489,-0.1368169&travelmode=transit',
   'https://www.google.com/maps/dir/?api=1&origin=51.539292,-0.14274&destination=51.5409723,-0.143961&travelmode=walking',
   'https://www.google.com/maps/dir/?api=1&origin=51.539292,-0.14274&destination=51.5122737,-0.1234492&travelmode=transit',
-  'https://www.google.com/maps/dir/?api=1&origin=51.5122737,-0.1234492&destination=51.516018,-0.130888&travelmode=walking',
-  'https://www.google.com/maps/dir/?api=1&origin=51.5122737,-0.1234492&destination=51.4723,-0.4887&travelmode=transit'
+  'https://www.google.com/maps/dir/?api=1&origin=51.5122737,-0.1234492&destination=51.4723,-0.4887&waypoints=51.5132489,-0.1368169&travelmode=transit'
 ]
 const QR_PAYLOAD = '$BLQ3039188LGT@'
 const BARCODE = ['1001401807011726169', '1001401807011726170', '1001401807011726171']
@@ -192,6 +192,12 @@ const piccoli = await p.evaluate(() => [...document.querySelectorAll('a[href], b
   return r.width < 44 || r.height < 44
 }).map((el) => `${el.tagName.toLowerCase()}.${el.className} ${Math.round(el.getBoundingClientRect().width)}×${Math.round(el.getBoundingClientRect().height)}`))
 ok('nessun controllo sotto 44 px', !piccoli.length, piccoli.slice(0, 5).join(', '))
+
+// Heathrow (51.4723,-0.4887) è la meta dei soli trasferimenti: nessun «Portami qui» di una card che non è di trasporto
+// deve puntarci (il double check del 7/11 lo aveva sospettato sulla card di Camden). I percorsi del piano B dentro una card
+// sono percorsi, non «Portami qui», e restano fuori
+const heathrow = await p.evaluate(() => [...document.querySelectorAll('#programma article.tcard')].filter((c) => c.dataset.tipo !== 'trasporto').flatMap((c) => [...c.querySelectorAll('a.gmap--vai, a.gmap--btn')].filter((a) => /destination=51\.472\d*,-0\.488\d*/.test(a.getAttribute('href') || '')).map(() => `${c.dataset.giorno} ${c.dataset.ora} ${c.querySelector('h4')?.textContent.trim()}`)))
+ok('nessun «Portami qui» verso Heathrow fuori dalle card di trasporto', heathrow.length === 0, heathrow.join(', '))
 
 // popup della mappa: se la nota di un marker comincia con un orario, deve essere il data-ora della card della stessa
 // tappa (stesso giorno, stesse coordinate del «Portami qui», entro ~30 m). Le note le scrive a mano chi cambia il
