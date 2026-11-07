@@ -3,7 +3,7 @@
 Incertezze ancora aperte del viaggio a Londra (15–17 novembre 2026), con il contesto e chi le chiude.
 Il sito le mostra nella lista «Prima di partire» (in cima alla pagina fino al 14/11, e in Info), con lo stato «da verificare»: **l’elenco in pagina (`DA_VERIFICARE` in `_legacy/londra.html`) va tenuto allineato a questo file** — chiudendone una qui, si toglie anche lì, e viceversa.
 
-## Aperte (9)
+## Aperte (10)
 
 ### 1. Apertura del Winter Market del Southbank Centre il 15/11/2026
 
@@ -49,6 +49,11 @@ Il sito le mostra nella lista «Prima di partire» (in cima alla pagina fino al 
 
 - **Contesto:** Domenica alle 14:00 parata AJEX al Cenotaph, in Whitehall: possibili chiusure stradali. Il programma di domenica non passa da Whitehall.
 - **Chi e come:** Alessandro: controllare le chiusure solo se si cambia idea e si passa da Whitehall.
+
+### 10. Ascensori senza scale a Green Park e Knightsbridge
+
+- **Contesto:** Lunedì da Buckingham a Harrods si va con la Piccadilly line da Green Park a Knightsbridge, con il passeggino. Le due stazioni risultano con accesso senza scale, ma non è confermato sulla mappa ufficiale.
+- **Chi e come:** Alessandro: prima di partire aprire la mappa step-free di TfL (tfl.gov.uk) e controllare Green Park (linea Piccadilly) e Knightsbridge, uscita Brompton Road; se una delle due non è senza scale, il tratto si fa in bus o a piedi lungo Constitution Hill e Knightsbridge.
 
 ## Risolte
 

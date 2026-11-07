@@ -3,7 +3,7 @@
 //
 //   npm run build && npm run preview &   poi   node scripts/qa/londra-check.mjs [http://localhost:4173]
 //
-// Controlla: i 18 percorsi identici al riferimento, il payload del QR, i 3 barcode del museo e i 3 QR di SEA LIFE (decodificati
+// Controlla: i percorsi Maps identici al riferimento (17 dal double check del 7/11), l'ordine dei percorsi di lunedì, il payload del QR, i 3 barcode del museo e i 3 QR di SEA LIFE (decodificati
 // dagli SVG, non letti dal testo), le voci «da verificare» uguali fra pagina e DA_VERIFICARE_LONDRA.md,
 // nessuna chiave di storage oltre londra:novita:vista, cartella foto sotto 1,5 MB, alt su tutte le
 // immagini, nessun controllo sotto 44 px, service worker che non copre le pagine di Barcellona.
@@ -25,12 +25,12 @@ const PERCORSI = [
   'https://www.google.com/maps/dir/?api=1&origin=51.5054668,-0.1171985&destination=51.501558,-0.119506&travelmode=walking',
   'https://www.google.com/maps/dir/?api=1&origin=51.501558,-0.119506&destination=51.5123401,-0.1342553&travelmode=transit',
   'https://www.google.com/maps/dir/?api=1&origin=51.5129114,-0.1364381&destination=51.5133,-0.1391&waypoints=51.51283,-0.1400828&travelmode=walking',
-  // lunedì (8)
-  'https://www.google.com/maps/dir/?api=1&origin=51.5129114,-0.1364381&destination=51.5003309,-0.1356875&waypoints=51.508039,-0.128069%7C51.502967,-0.1339534&travelmode=walking',
-  'https://www.google.com/maps/dir/?api=1&origin=51.5003309,-0.1356875&destination=51.501364,-0.14189&travelmode=walking',
-  'https://www.google.com/maps/dir/?api=1&origin=51.501364,-0.14189&destination=51.5007292,-0.1246254&waypoints=51.502967,-0.1339534%7C51.5047752,-0.1272358&travelmode=walking',
-  'https://www.google.com/maps/dir/?api=1&origin=51.501603,-0.125984&destination=51.494094,-0.174138&travelmode=transit',
-  'https://www.google.com/maps/dir/?api=1&origin=51.494094,-0.174138&destination=51.4994055,-0.1632344&travelmode=walking',
+  // lunedì (8): L1–L5 nell'ordine delle card dopo il Cambio della Guardia (double check del 7/11), poi i tre del pomeriggio
+  'https://www.google.com/maps/dir/?api=1&origin=51.5129114,-0.1364381&destination=51.508039,-0.128069&travelmode=walking',
+  'https://www.google.com/maps/dir/?api=1&origin=51.508039,-0.128069&destination=51.5007292,-0.1246254&waypoints=51.5047752,-0.1272358&travelmode=walking',
+  'https://www.google.com/maps/dir/?api=1&origin=51.5007292,-0.1246254&destination=51.5003309,-0.1356875&travelmode=walking',
+  'https://www.google.com/maps/dir/?api=1&origin=51.5003309,-0.1356875&destination=51.501364,-0.14189&waypoints=51.502967,-0.1339534&travelmode=walking',
+  'https://www.google.com/maps/dir/?api=1&origin=51.501364,-0.14189&destination=51.4994055,-0.1632344&travelmode=transit',
   'https://www.google.com/maps/dir/?api=1&origin=51.4994055,-0.1632344&destination=51.4967150,-0.1763672&travelmode=walking',
   'https://www.google.com/maps/dir/?api=1&origin=51.4967150,-0.1763672&destination=51.5098,-0.1342&travelmode=transit',
   'https://www.google.com/maps/dir/?api=1&origin=51.5098,-0.1342&destination=51.5129114,-0.1364381&waypoints=51.5131,-0.1400&travelmode=walking',
@@ -130,7 +130,38 @@ await p.evaluate(() => document.querySelectorAll('[data-vista]').forEach((v) => 
 
 const percorsi = await p.$$eval('a.percorso', (a) => a.map((x) => x.getAttribute('href')))
 const diversi = PERCORSI.filter((u, i) => percorsi[i] !== u).length
-ok('18 percorsi identici al riferimento, carattere per carattere, nessuno in più', percorsi.length === PERCORSI.length && diversi === 0, `${percorsi.length} trovati, ${diversi} diversi`)
+ok(`${PERCORSI.length} percorsi identici al riferimento, carattere per carattere, nessuno in più`, percorsi.length === PERCORSI.length && diversi === 0, `${percorsi.length} trovati, ${diversi} diversi`)
+
+// lunedì: i percorsi, uno dopo l'altro, toccano ogni tappa una sola volta e nell'ordine delle card. Ogni punto
+// (origine, tappe intermedie, arrivo) si riconosce dalle coordinate del «Portami qui» di una card di lunedì; i punti di
+// passaggio senza card (Piccadilly Circus) non contano. Casa può esserci solo all'inizio e alla fine.
+const lun = await p.evaluate(() => {
+  const coord = (s) => s.split(',').map(Number)
+  const card = [...document.querySelectorAll('#programma article.tcard[data-giorno="2026-11-16"]')].map((c, i) => {
+    const a = c.querySelector('a.gmap--vai'); const m = a && /destination=(-?[\d.]+),(-?[\d.]+)/.exec(a.getAttribute('href') || '')
+    return { i, nome: c.querySelector('h4')?.textContent.trim(), tappa: c.dataset.tappa || '', p: m ? [+m[1], +m[2]] : null }
+  }).filter((c) => c.p)
+  const punti = []
+  document.querySelectorAll('#programma a.percorso[data-percorso^="Lunedì"]').forEach((a) => {
+    const u = new URL(a.getAttribute('href')); const q = u.searchParams
+    const seq = [q.get('origin'), ...(q.get('waypoints') ? q.get('waypoints').split('|') : []), q.get('destination')].map(coord)
+    seq.forEach((pt) => { const ult = punti[punti.length - 1]; if (!ult || Math.abs(ult[0] - pt[0]) > 1e-6 || Math.abs(ult[1] - pt[1]) > 1e-6) punti.push(pt) })
+  })
+  const vicino = (a, b) => Math.abs(a[0] - b[0]) < 2e-4 && Math.abs(a[1] - b[1]) < 3e-4
+  const casa = card[0] && card[0].p
+  let ultimo = -1; const errori = [], visti = []
+  punti.forEach((pt, k) => {
+    if (casa && vicino(pt, casa) && (k === 0 || k === punti.length - 1)) return   // si parte e si torna a casa
+    if (visti.some((v) => vicino(v, pt))) { errori.push('punto toccato due volte: ' + pt.join(',')); return }
+    visti.push(pt)
+    const c = card.find((x) => x.i > ultimo && vicino(x.p, pt))
+    if (!c) { if (card.some((x) => vicino(x.p, pt))) errori.push('fuori ordine: ' + (card.find((x) => vicino(x.p, pt)).nome)); return }
+    ultimo = c.i
+  })
+  const mancanti = card.filter((c) => c.tappa && !punti.some((pt) => vicino(pt, c.p))).map((c) => c.nome)
+  return { n: document.querySelectorAll('#programma a.percorso[data-percorso^="Lunedì"]').length, punti: punti.length, errori, mancanti }
+})
+ok('lunedì: i percorsi toccano ogni tappa una sola volta, nell\'ordine delle card', !lun.errori.length && !lun.mancanti.length, `${lun.n} percorsi, ${lun.punti} punti` + (lun.errori.length ? ' · ' + lun.errori.join('; ') : '') + (lun.mancanti.length ? ' · tappe senza percorso: ' + lun.mancanti.join(', ') : ''))
 
 const qr = await p.evaluate(() => { const s = document.querySelector('#biglietti .pk__svg'); return { vb: s.getAttribute('viewBox'), d: s.querySelector('path[stroke]').getAttribute('d'), sfondo: s.querySelector('path[fill]')?.getAttribute('fill') } })
 const lato = +qr.vb.split(/\s+/)[2], quiet = 4, nMod = lato - 2 * quiet
