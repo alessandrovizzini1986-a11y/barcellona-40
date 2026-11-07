@@ -3,7 +3,7 @@
 Incertezze ancora aperte del viaggio a Londra (15–17 novembre 2026), con il contesto e chi le chiude.
 Il sito le mostra nella lista «Prima di partire» (in cima alla pagina fino al 14/11, e in Info), con lo stato «da verificare»: **l’elenco in pagina (`DA_VERIFICARE` in `_legacy/londra.html`) va tenuto allineato a questo file** — chiudendone una qui, si toglie anche lì, e viceversa.
 
-## Aperte (10)
+## Aperte (11)
 
 ### 1. Apertura del Winter Market del Southbank Centre il 15/11/2026
 
@@ -54,6 +54,11 @@ Il sito le mostra nella lista «Prima di partire» (in cima alla pagina fino al 
 
 - **Contesto:** Lunedì da Buckingham a Harrods si va con la Piccadilly line da Green Park a Knightsbridge, con il passeggino. Le due stazioni risultano con accesso senza scale, ma non è confermato sulla mappa ufficiale.
 - **Chi e come:** Alessandro: prima di partire aprire la mappa step-free di TfL (tfl.gov.uk) e controllare Green Park (linea Piccadilly) e Knightsbridge, uscita Brompton Road; se una delle due non è senza scale, il tratto si fa in bus o a piedi lungo Constitution Hill e Knightsbridge.
+
+### 11. Banconi e posti della Dining Hall di Harrods
+
+- **Contesto:** Lunedì si pranza alle 12:45 nella Dining Hall di Harrods: quali banconi ci sono (pasta, pizza) e quanti posti a sedere non è confermato da una fonte ufficiale.
+- **Chi e come:** Sul posto, lunedì: se la Dining Hall è piena o non c’è niente per Olly, piano B la food court del 2° piano, a 5 minuti.
 
 ## Risolte
 
