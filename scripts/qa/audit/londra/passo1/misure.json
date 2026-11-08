@@ -1,0 +1,191 @@
+{
+  "generato": "2026-11-08T19:54:21.970Z",
+  "pagina": "build locale di main + passo 1 (stesso contenuto poi pubblicato)",
+  "viewport": "390×844 @3x, mobile, touch",
+  "base": "revisione-ux-londra.zip, commit 8218879, v76",
+  "scenari": {
+    "01-domenica-1030": {
+      "titolo": "Domenica 10:30",
+      "prima": {
+        "tocchi": 4,
+        "scorrimenti": 4
+      },
+      "dopo": {
+        "tocchi": 2,
+        "scorrimenti": 0
+      },
+      "traguardi_dopo": {
+        "Portami lì nella prima schermata": {
+          "tocchi": 0,
+          "scorrimenti": 0,
+          "visibile": true
+        },
+        "QR del SEA LIFE": {
+          "tocchi": 1,
+          "scorrimenti": 0,
+          "visibile": true
+        }
+      },
+      "pulsante_flottante": false,
+      "errori_js": 0,
+      "obiettivo": {
+        "cosa": "QR del SEA LIFE",
+        "prima": {
+          "tocchi": 4,
+          "scorrimenti": 4
+        },
+        "dopo": {
+          "tocchi": 1,
+          "scorrimenti": 0
+        }
+      }
+    },
+    "04-lunedi-1010": {
+      "titolo": "Lunedì 10:10",
+      "prima": {
+        "tocchi": 1,
+        "scorrimenti": 2
+      },
+      "dopo": {
+        "tocchi": 1,
+        "scorrimenti": 0
+      },
+      "traguardi_dopo": {
+        "Portami lì nella prima schermata": {
+          "tocchi": 0,
+          "scorrimenti": 0,
+          "visibile": true
+        },
+        "Dove mettersi (testo di Wellington)": {
+          "tocchi": 1,
+          "scorrimenti": 0,
+          "visibile": true
+        }
+      },
+      "pulsante_flottante": false,
+      "errori_js": 0
+    },
+    "06-lunedi-1625": {
+      "titolo": "Lunedì 16:25",
+      "prima": {
+        "tocchi": 2,
+        "scorrimenti": 2
+      },
+      "dopo": {
+        "tocchi": 2,
+        "scorrimenti": 0
+      },
+      "traguardi_dopo": {
+        "Portami lì nella prima schermata": {
+          "tocchi": 0,
+          "scorrimenti": 0,
+          "visibile": true
+        },
+        "Biglietto del NHM a schermo pieno": {
+          "tocchi": 1,
+          "scorrimenti": 0,
+          "visibile": true
+        }
+      },
+      "pulsante_flottante": false,
+      "errori_js": 0,
+      "obiettivo": {
+        "cosa": "Biglietto del NHM a schermo pieno",
+        "prima": {
+          "tocchi": 2,
+          "scorrimenti": 2
+        },
+        "dopo": {
+          "tocchi": 1,
+          "scorrimenti": 0
+        }
+      }
+    },
+    "07-lunedi-1230-bagno": {
+      "titolo": "Lunedì 12:30",
+      "prima": {
+        "tocchi": 2,
+        "scorrimenti": 2
+      },
+      "dopo": {
+        "tocchi": 2,
+        "scorrimenti": 0
+      },
+      "traguardi_dopo": {
+        "Portami lì nella prima schermata": {
+          "tocchi": 0,
+          "scorrimenti": 0,
+          "visibile": true
+        },
+        "«Portami al bagno» visibile": {
+          "tocchi": 1,
+          "scorrimenti": 0,
+          "visibile": true
+        }
+      },
+      "pulsante_flottante": false,
+      "errori_js": 0,
+      "obiettivo": {
+        "cosa": "«Portami al bagno» visibile",
+        "prima": {
+          "tocchi": 2,
+          "scorrimenti": 2
+        },
+        "dopo": {
+          "tocchi": 1,
+          "scorrimenti": 0
+        }
+      }
+    },
+    "08-martedi-1030": {
+      "titolo": "Martedì 10:30",
+      "prima": {
+        "tocchi": 2,
+        "scorrimenti": 3
+      },
+      "dopo": {
+        "tocchi": 2,
+        "scorrimenti": 1
+      },
+      "traguardi_dopo": {
+        "Portami lì nella prima schermata": {
+          "tocchi": 0,
+          "scorrimenti": 0,
+          "visibile": true
+        },
+        "Come si va a Camden": {
+          "tocchi": 1,
+          "scorrimenti": 1,
+          "visibile": true
+        }
+      },
+      "pulsante_flottante": false,
+      "errori_js": 0
+    },
+    "09-martedi-1440": {
+      "titolo": "Martedì 14:40",
+      "prima": {
+        "tocchi": 1,
+        "scorrimenti": 4
+      },
+      "dopo": {
+        "tocchi": 1,
+        "scorrimenti": 2
+      },
+      "traguardi_dopo": {
+        "Portami lì nella prima schermata": {
+          "tocchi": 0,
+          "scorrimenti": 0,
+          "visibile": true
+        },
+        "Ritiro bagagli e partenza": {
+          "tocchi": 1,
+          "scorrimenti": 2,
+          "visibile": true
+        }
+      },
+      "pulsante_flottante": false,
+      "errori_js": 0
+    }
+  }
+}

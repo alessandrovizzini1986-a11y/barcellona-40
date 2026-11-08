@@ -5,7 +5,7 @@
 //
 // Controlla: i percorsi Maps identici al riferimento (22 dalla versione definitiva dell'8/11), l'ordine dei percorsi di lunedì, il payload del QR, i 3 barcode del museo i 3 QR di SEA LIFE e il QR del Science Museum (decodificati
 // dagli SVG, non letti dal testo), le voci «da verificare» uguali fra pagina e DA_VERIFICARE_LONDRA.md,
-// nessuna chiave di storage oltre londra:novita:vista, cartella foto sotto 1,5 MB, alt su tutte le
+// nessuna chiave di storage oltre londra:novita:vista e londra:piove, cartella foto sotto 1,5 MB, alt su tutte le
 // immagini, nessun controllo sotto 44 px, service worker che non copre le pagine di Barcellona.
 // Bagni puliti: ogni data-bagno esiste nel JSON, ogni tappa ha principale e riserva, il JSON è nel precache e nella cache
 // del service worker, le righe ci sono, i controlli dei pannelli sono da 44 px e a 375 px non si scorre di lato.
@@ -301,8 +301,10 @@ await p.evaluate(() => { location.hash = '#programma' }); await p.waitForTimeout
 await p.evaluate(() => scrollTo(0, 0))
 await p.evaluate(() => { document.getElementById('novApri').click(); document.getElementById('novOk').click(); document.getElementById('pioveBtnAd').click(); document.querySelector('.plus-riga').click(); document.getElementById('plusOk').click(); document.getElementById('pkBox').click() })
 await p.waitForTimeout(500); await p.keyboard.press('Escape')
-const storage = await p.evaluate(async () => ({ local: Object.keys(localStorage), session: Object.keys(sessionStorage), idb: indexedDB.databases ? (await indexedDB.databases()).map((d) => d.name) : [], cookie: document.cookie }))
-ok('storage: solo londra:novita:vista', storage.local.join() === 'londra:novita:vista' && !storage.session.length && !storage.idb.length && !storage.cookie, JSON.stringify(storage))
+const storage = await p.evaluate(async () => ({ piove: localStorage.getItem('londra:piove'), local: Object.keys(localStorage).sort(), session: Object.keys(sessionStorage), idb: indexedDB.databases ? (await indexedDB.databases()).map((d) => d.name) : [], cookie: document.cookie }))
+// Piove si ricorda solo per il giorno: londra:piove = {"data":"AAAA-MM-GG","valore":true}
+const pioveOk = !storage.piove || /^\{"data":"\d{4}-\d{2}-\d{2}","valore":true\}$/.test(storage.piove)
+ok('storage: solo londra:novita:vista e londra:piove (data del giorno, valore)', storage.local.every((k) => k === 'londra:novita:vista' || k === 'londra:piove') && storage.local.includes('londra:novita:vista') && pioveOk && !storage.session.length && !storage.idb.length && !storage.cookie, JSON.stringify(storage))
 
 // service worker: controlla le pagine di Londra, non quelle di Barcellona
 const reg = await p.evaluate(async () => { const r = await navigator.serviceWorker.ready; return r.scope })
