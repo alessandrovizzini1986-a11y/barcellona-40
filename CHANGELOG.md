@@ -944,3 +944,8 @@ Cercati bug dello stesso tipo di "portiere che si rituffa nel replay": due cambi
 - «Lascia i bagagli — Bounce Piccadilly Circus»: badge «da prenotare» (martedì 10:30–15:15, 3 valigie regolari) e testo «a 2 min dalla stazione della Piccadilly line per Heathrow». «Ritira i bagagli e parti»: «Piccadilly Circus ha solo scale mobili». Camden (nota del mercato), Poppies (apre alle 11:00) e la partenza delle 14:45 erano già allineati.
 - Percorsi: nuovo «Beak St → Bounce Rupert St» (a piedi). Per la regola «ogni tappa una sola volta, nell'ordine delle card» cambiano anche due origini non elencate nel prompt: «Beak St → Camden Town» diventa «Bounce Rupert St → Camden Town» (si parte dal deposito, non di nuovo da casa) e «Camden Town → Covent Garden» diventa «Poppies → Covent Garden» (si parte dal pranzo). «Covent Garden → Tottenham Court Road» e «Covent Garden → Heathrow T5» diretti non c'erano più.
 - `londra-check`: percorsi 22, ordine controllato anche il martedì (il piano B di Camden è un'alternativa e non conta). Novità v44.
+
+## Londra · versione definitiva · E. depositi
+- `depositi-londra.json`: `bounce_waterloo` diventa «Food Express (Bounce) — Waterloo» (`negozio`, `prenotato: true`, `prenotazione` con fascia 10:30–15:30, 3 valigie regolari, rif. ZGHR956Q). `bounce_rupert` principale del martedì e `bounce_broadwick` riserva, `stasher_countyhall` con coordinate e place_id nuovi: già così dall'8/11. `verificato_il` 2026-11-08.
+- Pannello e popup dei depositi: per un deposito prenotato compare «✅ Prenotato … rif. …» e non il pulsante «Prenota». Nessun QR, PIN o link della prenotazione in pagina.
+- `londra-check`: lasciata e ritiro dentro gli orari del deposito e, per un deposito prenotato, dentro la fascia prenotata. Novità v45.

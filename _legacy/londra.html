@@ -3242,7 +3242,8 @@
         + (d.note ? '<p class="bagno-nota">' + esc(d.note) + '</p>' : '')
         + '<p class="bagno-fonte">Fonte: ' + esc(d.fonte) + ' · verificato il ' + U.dataIt(d.verificato_il) + '</p>'
         + '<p class="deposito-azioni"><a class="btn btn--secondario btn--cielo bagno-maps" href="' + maps(d) + '" target="_blank" rel="noopener">📍 Maps</a>'
-        + (d.prenota ? '<a class="btn btn--secondario btn--cielo bagno-maps" href="' + esc(d.prenota) + '" target="_blank" rel="noopener">📲 Prenota</a>' : '') + '</p>'   // senza link nel file, niente pulsante
+        + (d.prenota && !d.prenotato ? '<a class="btn btn--secondario btn--cielo bagno-maps" href="' + esc(d.prenota) + '" target="_blank" rel="noopener">📲 Prenota</a>' : '') + '</p>'   // senza link nel file, o già prenotato, niente pulsante
+        + (d.prenotato ? '<p class="bagno-nota"><span class="st ok">✅ Prenotato</span> ' + esc(d.prenotazione.fascia) + ', ' + esc(d.prenotazione.colli) + ', rif. <b>' + esc(d.prenotazione.rif) + '</b> · QR e PIN nell’app</p>' : '')
         + '</div>';
     }
     function pannello(tappa, giorno){
@@ -3292,7 +3293,8 @@
         + '<br><span class="bagno-pop">⭐ ' + voto(d) + ' · 💷 prezzo nell’app' + BADGE + '</span>'
         + (o.usi.length ? '<br><span class="bagno-pop">Per: ' + o.usi.map(esc).join(' · ') + '</span>' : '')
         + '<br><a class="btn btn--ghost pop-vai" href="' + maps(d) + '" target="_blank" rel="noopener">📍 Maps</a>'
-        + (d.prenota ? ' · <a class="btn btn--ghost pop-vai" href="' + esc(d.prenota) + '" target="_blank" rel="noopener">📲 Prenota</a>' : '');
+        + (d.prenota && !d.prenotato ? ' · <a class="btn btn--ghost pop-vai" href="' + esc(d.prenota) + '" target="_blank" rel="noopener">📲 Prenota</a>' : '')
+        + (d.prenotato ? '<br><span class="bagno-pop">✅ Prenotato ' + esc(d.prenotazione.fascia) + ' · rif. ' + esc(d.prenotazione.rif) + '</span>' : '');
     }
     function monta(json){
       var perId = {}; json.depositi.forEach(function(d){ perId[d.id] = d; });
@@ -3487,6 +3489,8 @@
      Il pannello non si apre mai da solo: in cima c'è un banner sottile «N novità», e si apre solo se toccato.
      Il link in fondo alla pagina lo riapre con tutto lo storico, in ogni caso. */
   var NOVITA = [
+    { v: 45, data: '2026-11-08', titolo: '🧳 Depositi: prenotazione di domenica', voci: [
+      'Nel pannello dei depositi Food Express (Bounce) di Waterloo risulta prenotato, 10:30–15:30, rif. ZGHR956Q, al posto del pulsante «Prenota»' ] },
     { v: 44, data: '2026-11-08', titolo: '🧳 Martedì definitivo', voci: [
       'Martedì: Bounce Piccadilly Circus (53 Rupert St) da prenotare, a 2 minuti dalla Piccadilly line per Heathrow; al ritiro delle 15:00 si torna in stazione (solo scale mobili)',
       'Percorsi del martedì in fila: Beak St → Bounce Rupert St, Rupert St → Camden, Camden → Poppies, Poppies → Covent Garden, Covent Garden → Rupert St → Heathrow' ] },

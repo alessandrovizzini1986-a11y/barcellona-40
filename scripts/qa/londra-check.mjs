@@ -252,8 +252,8 @@ ok('nessun controllo sotto 44 px', !piccoli.length, piccoli.slice(0, 5).join(', 
 // data-deposito-id), e tutte e due, dall'ora d'inizio alla fine della durata, cadono dentro gli orari di apertura di quel
 // deposito in data/depositi-londra.json per quel giorno («24 ore», «H:MM–H:MM», o la parte del giorno di «dom … · mar …»)
 const depCard = await p.evaluate(async () => {
-  const j = await (await fetch('data/depositi-londra.json')).json(); const orari = {}; j.depositi.forEach((d) => { orari[d.id] = d.orari })
-  return { orari, card: [...document.querySelectorAll('#programma article.tcard[data-tipo="deposito"]')].map((c) => ({ id: c.dataset.depositoId, giorno: c.dataset.giorno, ora: c.dataset.ora, dur: +((c.dataset.durata || '0-0').split('-')[1]), nome: c.querySelector('h4').textContent.trim() })) }
+  const j = await (await fetch('data/depositi-londra.json')).json(); const orari = {}, pren = {}; j.depositi.forEach((d) => { orari[d.id] = d.orari; if (d.prenotato) pren[d.id] = d.prenotazione })
+  return { orari, pren, card: [...document.querySelectorAll('#programma article.tcard[data-tipo="deposito"]')].map((c) => ({ id: c.dataset.depositoId, giorno: c.dataset.giorno, ora: c.dataset.ora, dur: +((c.dataset.durata || '0-0').split('-')[1]), nome: c.querySelector('h4').textContent.trim() })) }
 })
 const SIGLE = ['lun', 'mar', 'mer', 'gio', 'ven', 'sab', 'dom'], SIGLA = { '2026-11-15': 'dom', '2026-11-16': 'lun', '2026-11-17': 'mar' }
 const orarioDel = (txt, giorno) => { const g = SIGLE.indexOf(SIGLA[giorno]); let conGiorni = false, out = null
@@ -267,9 +267,12 @@ for (const k of depCard.card) {
   const f = fascia(orarioDel(depCard.orari[k.id], k.giorno)); const da = +k.ora.slice(0, 2) * 60 + +k.ora.slice(3)
   if (!depCard.orari[k.id]) depKo.push(`${k.nome}: deposito «${k.id}» non nel JSON`)
   else if (!f || da < f[0] || da + k.dur > f[1]) depKo.push(`${k.giorno} ${k.ora} ${k.nome} fuori orario (${orarioDel(depCard.orari[k.id], k.giorno) || 'non indicato'})`)
+  // se il deposito è prenotato, lasciata e ritiro stanno anche dentro la fascia della prenotazione (domenica 10:30–15:30)
+  const pr = depCard.pren[k.id], fp = pr && fascia(pr.fascia)
+  if (pr && (!fp || da < fp[0] || da + k.dur > fp[1])) depKo.push(`${k.giorno} ${k.ora} ${k.nome} fuori dalla fascia prenotata ${pr.fascia}`)
 }
 for (const [g, l] of Object.entries(gruppi)) if (l.length < 2 || !/^Lascia/.test(l[0].nome) || !/^Ritira/.test(l[l.length - 1].nome)) depKo.push(`${g}: manca la lasciata o il ritiro`)
-ok('depositi nell\'itinerario: lasciata e ritiro dentro gli orari del deposito per quel giorno', depCard.card.length > 0 && !depKo.length, `${depCard.card.length} card, ${Object.keys(gruppi).length} depositi` + (depKo.length ? ' · ' + depKo.join('; ') : ''))
+ok('depositi nell\'itinerario: lasciata e ritiro dentro gli orari del deposito per quel giorno e, se prenotato, dentro la fascia prenotata', depCard.card.length > 0 && !depKo.length, `${depCard.card.length} card, ${Object.keys(gruppi).length} depositi` + (depKo.length ? ' · ' + depKo.join('; ') : ''))
 
 // Heathrow (51.4723,-0.4887) è la meta dei soli trasferimenti: nessun «Portami qui» di una card che non è di trasporto
 // deve puntarci (il double check del 7/11 lo aveva sospettato sulla card di Camden). I percorsi del piano B dentro una card
