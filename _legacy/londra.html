@@ -793,9 +793,8 @@
   .pioggia-nota{display:none}
   html.piove .pioggia-nota{display:block}
   /* con "Piove" acceso una card può cedere il posto a un'alternativa al coperto */
-  .tcard.solo-pioggia{display:none}
-  html.piove .tcard.solo-pioggia{display:block}
-  html.piove .tcard.solo-asciutto{display:none}
+  /* piano asciutto / piano pioggia: si nasconde solo la variante spenta, le altre tengono il loro display (griglia delle compatte) */
+  html:not(.piove) .tcard.solo-pioggia,html:not(.piove) .percorso.solo-pioggia,html.piove .tcard.solo-asciutto,html.piove .percorso.solo-asciutto{display:none}
   .tcard__body .pioggia-nota{margin-top:var(--s-2);font-size:var(--f-12);line-height:1.45;color:var(--sky)}
   .pioggia-nota--blocco{margin:2px 0 var(--s-4);background:rgba(109,179,216,.1);border:1px solid rgba(109,179,216,.35);color:var(--ink)}
   .nov__testa code{font-size:var(--f-12);color:var(--gold-soft)}
@@ -1365,14 +1364,15 @@
           <span class="percorso__txt"><b>Percorso · Lunedì</b><span>Buckingham → Green Park station → Knightsbridge (Harrods)</span></span>
           <span class="percorso__modo">🚇 con i mezzi</span>
         </a>
-        <article class="tcard tcard--nofoto" data-giorno="2026-11-16" data-ora="12:00" data-tipo="trasporto" data-durata="25-25">
+        <article class="tcard tcard--nofoto" data-giorno="2026-11-16" data-ora="12:00" data-tipo="trasporto" data-durata="20-20">
           <div class="tcard__body">
             <span class="tcard__ora">12:00</span>
-            <h4>Piccadilly line, Green Park → Knightsbridge</h4>
-            <p class="tdur">⏱️ ~25 min</p>
-            <p>Canada Gate → Green Park station 10 min, Piccadilly line 2 fermate → Knightsbridge, uscita Brompton Road, Harrods a 2 min. ~£3 a testa, Olly gratis.</p>
-            <p class="nota-piccola">🛗 Green Park e Knightsbridge risultano con accesso senza scale <span class="st est">stimato</span>: da confermare sulla mappa step-free di TfL prima di partire.</p>
-            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.4994055,-0.1632344&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚇 coi mezzi</span></a>
+            <h4>Bus a due piani Green Park → Knightsbridge</h4>
+            <p class="tdur">⏱️ ~20 min</p>
+            <p>Saliamo al piano di sopra, posti davanti. Dal finestrino: il Ritz, Hyde Park Corner con il Wellington Arch e Hyde Park. Si scende a Knightsbridge, Harrods a 2 minuti. Niente scale mobili.</p>
+            <p class="nota-piccola">🚌 Linee che fanno Piccadilly → Knightsbridge: controllare alla fermata (es. 14, 9, 22) <span class="st todo">da verificare</span></p>
+            <p class="nota-piccola">Alternativa: Piccadilly line Green Park → Knightsbridge.</p>
+            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.4994055,-0.1632344&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚌 coi mezzi</span></a>
           </div>
         </article>
         <article class="tcard tcard--nofoto" data-tappa="pranzo-lun" data-durata="60-60" data-giorno="2026-11-16" data-ora="12:45" data-tipo="tappa" data-bagno="harrods">
@@ -1398,34 +1398,74 @@
           </div>
           <p class="tcard__credito">foto: Editor5807 / CC BY-SA 4.0</p>
         </article>
-        <a class="percorso" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.4994055,-0.1632344&amp;destination=51.4978,-0.1745&amp;travelmode=transit" target="_blank" rel="noopener" data-percorso="Lunedì · Harrods → Science Museum">
+        <a class="percorso solo-asciutto" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.4994055,-0.1632344&amp;destination=51.501461,-0.178819&amp;travelmode=transit" target="_blank" rel="noopener" data-percorso="Lunedì · Harrods → Royal Albert Hall">
           <span class="percorso__ic" aria-hidden="true">🗺️</span>
-          <span class="percorso__txt"><b>Percorso · Lunedì</b><span>Harrods → Science Museum</span></span>
+          <span class="percorso__txt"><b>Percorso · Lunedì</b><span>Harrods → Royal Albert Hall</span></span>
           <span class="percorso__modo">🚌 con i mezzi</span>
         </a>
-        <article class="tcard tcard--nofoto" data-giorno="2026-11-16" data-ora="14:25" data-tipo="trasporto" data-durata="20-20">
+        <article class="tcard tcard--nofoto solo-asciutto" data-giorno="2026-11-16" data-ora="14:30" data-tipo="trasporto" data-durata="15-15">
           <div class="tcard__body">
-            <span class="tcard__ora">14:25</span>
-            <h4>Bus verso South Kensington</h4>
-            <p class="tdur">⏱️ ~20 min</p>
-            <p>Bus 14 o 74 su Brompton Road, fermata V&amp;A (~5 min), poi ~5 min a piedi su Exhibition Road <span class="st est">stimato</span>. Alternativa: Piccadilly line Knightsbridge → South Kensington, poi tunnel pedonale coperto verso i musei.</p>
-            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.4978,-0.1745&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚌 coi mezzi</span></a>
+            <span class="tcard__ora">14:30</span>
+            <h4>Bus verso la Royal Albert Hall</h4>
+            <p class="tdur">⏱️ ~15 min</p>
+            <p>Dalla fermata di Knightsbridge, bus verso Kensington (linee 9, 52 o 452 <span class="st todo">da verificare</span>). Si scende alla fermata <b>Royal Albert Hall (RC)</b>.</p>
+            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.501461,-0.178819&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚌 coi mezzi</span></a>
           </div>
         </article>
-        <article class="tcard tcard--nofoto" data-tappa="sciencemuseum" data-durata="95-95" data-giorno="2026-11-16" data-ora="14:45" data-tipo="evento" data-vincolo="Ingresso tra le 14:45 e le 15:15 · il biglietto è nel Portafoglio" data-vincolo-da="14:45" data-mostra="sciencemuseum" data-mostra-da="14:15" data-mostra-a="15:15" data-bagno="sciencemuseum">
+        <article class="tcard tcard--nofoto solo-asciutto" id="albert-lun" data-tappa="albert" data-durata="60-60" data-giorno="2026-11-16" data-ora="14:45" data-tipo="evento">
+          <div class="tcard__body">
+            <span class="tcard__ora">14:45</span>
+            <h4>Albert Memorial e Royal Albert Hall</h4>
+            <p class="tdur">⏱️ 1 h</p>
+            <p class="deposito-ind">Albert Memorial, Kensington Gardens W2 2UH · parco aperto 6:00–21:30</p>
+            <p>La Royal Albert Hall (Kensington Gore SW7 2AP) si vede da fuori: è proprio di fronte al monumento.</p>
+            <p class="nota-piccola">☕ Pausa seduti con una cioccolata calda in zona (orari dei caffè della Royal Albert Hall <span class="st todo">da verificare</span>).</p>
+            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5023516,-0.177707&amp;destination_place_id=ChIJlbSG51oFdkgRLEF7gT6hWDM&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
+          </div>
+        </article>
+        <a class="percorso solo-asciutto" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.5023516,-0.177707&amp;destination=51.496715,-0.1763672&amp;travelmode=walking" target="_blank" rel="noopener" data-percorso="Lunedì · Albert Memorial → Natural History Museum">
+          <span class="percorso__ic" aria-hidden="true">🗺️</span>
+          <span class="percorso__txt"><b>Percorso · Lunedì</b><span>Albert Memorial → Natural History Museum</span></span>
+          <span class="percorso__modo">🚶 a piedi</span>
+        </a>
+        <article class="tcard tcard--nofoto solo-asciutto" data-giorno="2026-11-16" data-ora="15:50" data-tipo="trasporto" data-durata="25-25">
+          <div class="tcard__body">
+            <span class="tcard__ora">15:50</span>
+            <h4>A piedi lungo Exhibition Road fino al Natural History Museum</h4>
+            <p class="tdur">⏱️ ~25 min</p>
+            <p>~800 m <span class="st est">stimato</span>, in discesa. Se serve un bagno o una sosta: Science Museum a metà strada.</p>
+            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.4967150,-0.1763672&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
+          </div>
+        </article>
+        <a class="percorso solo-pioggia" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.4994055,-0.1632344&amp;destination=51.4972216,-0.1767283&amp;travelmode=transit" target="_blank" rel="noopener" data-percorso="Lunedì · Piano pioggia: Harrods → Science Museum">
+          <span class="percorso__ic" aria-hidden="true">🗺️</span>
+          <span class="percorso__txt"><b>Percorso · Lunedì · 🌧️ piano pioggia</b><span>Harrods → Science Museum</span></span>
+          <span class="percorso__modo">🚌 con i mezzi</span>
+        </a>
+        <article class="tcard tcard--nofoto solo-pioggia" data-giorno="2026-11-16" data-ora="14:25" data-tipo="trasporto" data-durata="20-20">
+          <div class="tcard__body">
+            <span class="tcard__ora">14:25</span>
+            <h4>Bus 14 o 74 verso South Kensington</h4>
+            <p class="tdur">⏱️ ~20 min</p>
+            <p>Bus 14 o 74 su Brompton Road, fermata V&amp;A (~5 min), poi ~5 min a piedi su Exhibition Road <span class="st est">stimato</span>. Alternativa: Piccadilly line Knightsbridge → South Kensington, poi tunnel pedonale coperto verso i musei.</p>
+            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.4972216,-0.1767283&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚌 coi mezzi</span></a>
+          </div>
+        </article>
+        <article class="tcard tcard--nofoto solo-pioggia" id="sm-lun" data-tappa="sciencemuseum" data-durata="95-95" data-giorno="2026-11-16" data-ora="14:45" data-tipo="evento" data-vincolo="Ingresso tra le 14:45 e le 15:15 · il biglietto è nel Portafoglio" data-vincolo-da="14:45" data-mostra="sciencemuseum" data-mostra-da="14:15" data-mostra-a="15:15" data-bagno="sciencemuseum">
           <div class="tcard__body">
             <span class="tcard__ora">14:45</span>
             <h4>Science Museum · The Garden</h4>
+            <p class="nota-piccola">🌧️ Piano pioggia: compare con «Piove» acceso</p>
             <p class="tdur">⏱️ 1 h 35</p>
             <p class="chip-vincolo">⏰ ingresso 14:45–15:15</p>
             <p class="deposito-ind">Exhibition Road, London SW7 2DD</p>
-            <p>Biglietti presi: ingresso tra le 14:45 e le 15:15. Per Olly: <b>The Garden</b>, livello -1, area gioco per 3-6 anni (costruzioni, acqua, luci e suoni), e <b>Pattern Pod</b>, livello 0. Museo aperto 10:00–18:00. Per noi: ci si siede mentre lei gioca.</p>
+            <p>Biglietti presi (ingresso 14:45–15:15): li teniamo come piano pioggia. Per Olly: <b>The Garden</b>, livello -1, area gioco per 3-6 anni (costruzioni, acqua, luci e suoni), e <b>Pattern Pod</b>, livello 0. Museo aperto 10:00–18:00. Per noi: ci si siede mentre lei gioca.</p>
             <p class="nota-piccola">🧸 The Garden gratuita e aperta il lunedì <span class="st todo">da verificare</span>: da controllare sul sito del museo prima di partire.</p>
-            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.4978,-0.1745&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
+            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.4972216,-0.1767283&amp;destination_place_id=ChIJP9oAE0MFdkgR3iKGFKZO1SE&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
             <button class="btn btn--secondario btn--cielo gmap gmap--btn" type="button" data-codice="sciencemuseum-1">🎟️ Mostra il biglietto</button>
           </div>
         </article>
-        <article class="tcard tcard--nofoto" data-giorno="2026-11-16" data-ora="16:20" data-tipo="trasporto" data-durata="10-10">
+        <article class="tcard tcard--nofoto solo-pioggia" data-giorno="2026-11-16" data-ora="16:20" data-tipo="trasporto" data-durata="10-10">
           <div class="tcard__body">
             <span class="tcard__ora">16:20</span>
             <h4>A piedi al Natural History Museum</h4>
@@ -1434,9 +1474,9 @@
             <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.4967150,-0.1763672&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
           </div>
         </article>
-        <a class="percorso" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.4978,-0.1745&amp;destination=51.496715,-0.1763672&amp;travelmode=walking" target="_blank" rel="noopener" data-percorso="Lunedì · Science Museum → Natural History Museum">
+        <a class="percorso solo-pioggia" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.4972216,-0.1767283&amp;destination=51.496715,-0.1763672&amp;travelmode=walking" target="_blank" rel="noopener" data-percorso="Lunedì · Piano pioggia: Science Museum → Natural History Museum">
           <span class="percorso__ic" aria-hidden="true">🗺️</span>
-          <span class="percorso__txt"><b>Percorso · Lunedì</b><span>Science Museum → Natural History Museum</span></span>
+          <span class="percorso__txt"><b>Percorso · Lunedì · 🌧️ piano pioggia</b><span>Science Museum → Natural History Museum</span></span>
           <span class="percorso__modo">🚶 a piedi</span>
         </a>
         <article class="tcard" data-tappa="nhm" data-durata="75-75" data-giorno="2026-11-16" data-ora="16:30" data-tipo="evento" data-non-prima="16:30" data-fine-entro="17:50" data-vincolo="Ingresso a fascia oraria alle 16:30, non prima · il museo chiude alle 17:50" data-mostra="nhm" data-bagno="nhm">
@@ -1447,7 +1487,7 @@
           <div class="tcard__body">
             <h4>Natural History Museum</h4>
             <p class="tdur">⏱️ 1 h 15</p>
-            <p>Ingresso a fascia oraria alle 16:30, non prima. Chiude alle 17:50. Tre minuti a piedi dal Science Museum.</p>
+            <p>Ingresso a fascia oraria alle 16:30, non prima. Chiude alle 17:50. In fondo a Exhibition Road.</p>
             <details class="det"><summary>Dettagli</summary><p>I tre biglietti sono già presi: sono nella sezione Biglietti, da mostrare allo schermo.</p></details>
             <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.4967150,-0.1763672&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
             <button class="btn btn--secondario btn--cielo gmap gmap--btn" type="button" data-codice="1">🎟️ Mostra i biglietti</button>
@@ -2530,11 +2570,12 @@
      finché la pagina resta aperta: nessuno storage, una ricarica lo rimette su "no". */
   (function(){
     var btns = document.querySelectorAll('[data-piove]'); if (!btns.length) return;
-    var piove = false;
+    var piove = /[?&]piove=1(&|$)/.test(location.search);   // ?piove=1: si apre col piano pioggia acceso (per le prove)
     // cosa cambia con la pioggia, giorno per giorno: ogni voce porta alla card (o alla nota) che cambia
     var CAMBI = [
       { g: 'Domenica', testo: 'pranzo dentro il Southbank Centre; acquario e Hamleys sono al coperto', sel: '#pioggia-dom' },
       { g: 'Lunedì', testo: 'cerimonia a rischio: piano B a Horse Guards alle 11:00', sel: '#piano-b-lun' },
+      { g: 'Lunedì', testo: 'pomeriggio al Science Museum (biglietti presi) invece dell’Albert Memorial', sel: '#sm-lun' },
       { g: 'Martedì', testo: 'con pioggia forte Camden più corta e Covent Garden prima, che è al coperto', sel: '#pioggia-mar' }
     ];
     function vaiA(el){ VISTE.vaiA(el); }   // apre vista, giorno e <details>, poi scorre
@@ -2564,6 +2605,7 @@
       var r = box.getBoundingClientRect(), barra = document.querySelector('.barra'), fondo = window.innerHeight - (barra ? barra.offsetHeight : 0);
       if (r.bottom > fondo) window.scrollBy({ top: Math.min(r.bottom - fondo + 12, r.top - 12), behavior: 'smooth' });
     }
+    if (piove) { document.documentElement.classList.add('piove'); btns.forEach(function(b){ b.setAttribute('aria-pressed', 'true'); b.querySelector('.piove-stato').textContent = 'sì'; }); }
     btns.forEach(function(btn){ btn.addEventListener('click', function(){
       piove = !piove;
       if (navigator.vibrate) try { navigator.vibrate(10); } catch (e) {}
@@ -2629,7 +2671,7 @@
  },
  {
   "cosa": "Ascensori senza scale a Green Park e Knightsbridge",
-  "contesto": "Lunedì da Buckingham a Harrods si va con la Piccadilly line da Green Park a Knightsbridge, con il passeggino. Le due stazioni risultano con accesso senza scale, ma non è confermato sulla mappa ufficiale.",
+  "contesto": "Lunedì da Buckingham a Harrods si va col bus a due piani; l’alternativa è la Piccadilly line da Green Park a Knightsbridge, con il passeggino. Le due stazioni risultano con accesso senza scale, ma non è confermato sulla mappa ufficiale.",
   "come": "Alessandro: prima di partire aprire la mappa step-free di TfL (tfl.gov.uk) e controllare Green Park (linea Piccadilly) e Knightsbridge, uscita Brompton Road; se una delle due non è senza scale, il tratto si fa in bus o a piedi lungo Constitution Hill e Knightsbridge."
  },
  {
@@ -2641,6 +2683,16 @@
   "cosa": "The Garden del Science Museum gratuita e aperta lunedì 16/11",
   "contesto": "Lunedì dalle 14:45 il Science Museum è la tappa per Olly: The Garden (livello -1, 3-6 anni) e Pattern Pod (livello 0). Il biglietto d’ingresso è preso, ma che The Garden sia gratuita e aperta di lunedì non è confermato.",
   "come": "Alessandro: prima di partire controllare la pagina di The Garden su sciencemuseum.org.uk; se è chiusa, Pattern Pod al livello 0 e le gallerie del piano terra."
+ },
+ {
+  "cosa": "Linee dei bus di lunedì: Piccadilly → Knightsbridge e Knightsbridge → Royal Albert Hall",
+  "contesto": "Lunedì alle 12:00 bus a due piani da Green Park a Knightsbridge (es. 14, 9, 22) e, col piano asciutto, alle 14:30 da Knightsbridge alla fermata Royal Albert Hall (RC) (linee 9, 52 o 452): le linee non sono confermate.",
+  "come": "Alessandro: prima di partire controllare su TfL Go le linee dalle due fermate; sul posto, guardare il cartello della fermata."
+ },
+ {
+  "cosa": "Orari dei caffè della Royal Albert Hall lunedì 16/11",
+  "contesto": "Lunedì col piano asciutto, all’Albert Memorial dalle 14:45, è prevista una pausa seduti con una cioccolata calda in zona: gli orari dei caffè della Royal Albert Hall non sono confermati.",
+  "come": "Alessandro: controllare su royalalberthall.com gli orari dei caffè di lunedì; in alternativa un caffè su Kensington Gore o il bar del Science Museum, a metà strada verso il museo."
  }
 ];
 
@@ -3324,7 +3376,8 @@
       var cod = $('adCodice'), m = null;
       // card con data-mostra-da/-a: la scorciatoia compare nella sua finestra, anche se la card non è ancora la prossima
       [].forEach.call(document.querySelectorAll('#programma article.tcard[data-mostra-da]'), function(c){
-        var d = c.dataset; if (m || d.giorno !== lo.data) return;
+        var d = c.dataset, p = document.documentElement.classList.contains('piove'); if (m || d.giorno !== lo.data) return;
+        if (c.classList.contains(p ? 'solo-asciutto' : 'solo-pioggia')) return;
         if (now >= OROLOGIO.istante(d.giorno, d.mostraDa, 'Europe/London') && now < OROLOGIO.istante(d.giorno, d.mostraA, 'Europe/London')) m = d.mostra;
       });
       [corrente, prossima].forEach(function(x){
@@ -3386,6 +3439,11 @@
      Il pannello non si apre mai da solo: in cima c'è un banner sottile «N novità», e si apre solo se toccato.
      Il link in fondo alla pagina lo riapre con tutto lo storico, in ogni caso. */
   var NOVITA = [
+    { v: 39, data: '2026-11-08', titolo: '☀️🌧️ Lunedì con piano A e piano pioggia', voci: [
+      '🗺️ Lunedì con piano A (Albert Memorial) e piano pioggia (Science Museum), e il bus a due piani da Green Park a Knightsbridge',
+      'Alle 12:00 bus a due piani fino a Knightsbridge, al piano di sopra davanti: il Ritz, Hyde Park Corner, Hyde Park. La Piccadilly line resta come alternativa',
+      'Col tempo asciutto: 14:30 bus verso la Royal Albert Hall, 14:45 Albert Memorial e Royal Albert Hall, 15:50 a piedi lungo Exhibition Road fino al Natural History Museum delle 16:30',
+      'Con «🌧️ Piove» acceso il pomeriggio diventa il Science Museum (i biglietti presi restano il piano pioggia); anche «Adesso» e la scaletta seguono il piano scelto' ] },
     { v: 38, data: '2026-11-08', titolo: '🔬 Science Museum', voci: [
       '🔬 Lunedì: Harrods più corto, Science Museum con l\'area gioco per Olly, biglietto nel Portafoglio',
       'Lunedì pomeriggio: Harrods dalle 13:45 alle 14:25 (reparto Natale e giocattoli), bus 14 o 74 fino al V&A, Science Museum dalle 14:45 (ingresso entro le 15:15) con The Garden e Pattern Pod, alle 16:20 due passi fino al Natural History Museum, che resta alle 16:30',
@@ -3669,7 +3727,8 @@
   var CAMDEN={n:'Camden Town e Camden Lock', lat:51.539292, lng:-0.14274, modo:'transit'};
   var POPPIES={n:'Poppies Fish & Chips', lat:51.5409723, lng:-0.143961};
   var HARRODS={n:'Harrods', lat:51.4994055, lng:-0.1632344, modo:'transit'};
-  var SCIENCE={n:'Science Museum', lat:51.4978, lng:-0.1745};
+  var SCIENCE={n:'Science Museum', lat:51.4972216, lng:-0.1767283};
+  var ALBERT={n:'Albert Memorial e Royal Albert Hall', lat:51.5023516, lng:-0.177707, modo:'transit'};
   var NHM={n:'Natural History Museum', lat:51.4967150, lng:-0.1763672};
   var BWATERLOO={n:'Bounce Waterloo · 7 Chicheley St', lat:51.5025654, lng:-0.1165451};
   var BRUPERT={n:'Bounce Piccadilly Circus · 53 Rupert St', lat:51.5120078, lng:-0.1336085};
@@ -3687,7 +3746,8 @@
     {p:HORSEGUARDS, g:'lun', note:'09:50 · cavalli nelle garitte dalle 10:00'},
     {p:BIGBEN,      g:'lun', note:'10:05 · Parliament Square e Westminster Bridge 🕰️'},
     {p:HARRODS,     g:'lun', note:'13:45 · reparto Natale e giocattoli, pranzo alle 12:45 nella Dining Hall 🎄'},
-    {p:SCIENCE,     g:'lun', note:'14:45 · The Garden, l’area gioco per Olly (ingresso 14:45–15:15) 🔬'},
+    {p:ALBERT,      g:'lun', note:'14:45 · piano asciutto: il principe d’oro sul trono, di fronte la Royal Albert Hall 👑'},
+    {p:SCIENCE,     g:'lun', note:'14:45 · piano pioggia: The Garden, l’area gioco per Olly (ingresso 14:45–15:15) 🔬'},
     {p:NHM,         g:'lun', note:'Ingresso gratuito · chiude alle 17:50 🦕'},
     {p:BRUPERT,     g:'mar', note:'10:35 · 🧳 si lasciano i bagagli, ritiro alle 15:00'},
     {p:CAMDEN,      g:'mar', note:'11:00 · il canale con le barche e i mercati 🛶'},
@@ -3704,7 +3764,7 @@
     {g:'lun', stops:[
       {p:CASA}, {p:TRAFALGAR, mode:'walk'}, {p:HORSEGUARDS, mode:'walk'}, {p:BIGBEN, mode:'walk'},
       {p:WELLINGTON, mode:'walk'}, {p:STJAMES, mode:'walk'}, {p:PALACE, mode:'walk'},
-      {p:HARRODS, mode:'metro'}, {p:SCIENCE, mode:'metro'}, {p:NHM, mode:'walk'}, {p:CASA, mode:'metro'}
+      {p:HARRODS, mode:'metro'}, {p:ALBERT, mode:'metro'}, {p:NHM, mode:'walk'}, {p:CASA, mode:'metro'}
     ]},
     {g:'mar', stops:[
       {p:CASA}, {p:BRUPERT, mode:'walk'}, {p:CAMDEN, mode:'metro'}, {p:POPPIES, mode:'walk'}, {p:COVENT, mode:'metro'}, {p:BRUPERT, mode:'metro'}

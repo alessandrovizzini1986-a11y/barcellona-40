@@ -904,3 +904,12 @@ Cercati bug dello stesso tipo di "portiere che si rituffa nel replay": due cambi
 - **Portafoglio**: card Science Museum dopo SEA LIFE con il QR dell'ordine (`ON18896320`, SVG identico a quello fornito), nel visualizzatore a schermo pieno come «Science Museum · ordine 18896320»; link rapido «🔬 Science Museum · 1 QR». In «Adesso», lunedì dalle 14:15 alle 15:15, scorciatoia «🔬 Mostra il biglietto del Science Museum» (`data-mostra-da`/`data-mostra-a` sulla card).
 - Bagni: nuova tappa `sciencemuseum` (bagni interni del museo, piano e fasciatoio stimati; riserva i bagni del NHM). Da verificare n. 12: The Garden gratuita e aperta il lunedì. Checklist: «Biglietti Science Museum lun 16, 14:45» fatto.
 - `londra-check`: percorsi di riferimento **20**, nuovo controllo sul QR del Science Museum (decodificato = `ON18896320`). Novità v38.
+
+## Londra · ☀️🌧️ lunedì con piano A e piano pioggia (8/11/2026)
+- 12:00 «Bus a due piani Green Park → Knightsbridge» al posto della Piccadilly line (che resta come alternativa in piccolo); linee da verificare alla fermata.
+- **Piano A (asciutto, di default)**: 14:30 bus verso la Royal Albert Hall (9, 52 o 452, da verificare; fermata Royal Albert Hall (RC)) · 14:45 «Albert Memorial e Royal Albert Hall» (60 min, Portami qui con place_id) · 15:50 a piedi lungo Exhibition Road fino al NHM (~800 m stimati). Percorsi «Harrods → Royal Albert Hall» e «Albert Memorial → Natural History Museum».
+- **Piano B (solo con «Piove» acceso)**: bus 14 o 74 alle 14:25, Science Museum alle 14:45, a piedi al NHM alle 16:20, con i loro due percorsi. Coordinate del Science Museum corrette (51.4972216,-0.1767283, place_id nella card), anche in mappa e nei bagni.
+- Il meccanismo di «Piove» ora vale anche per i percorsi (`.percorso.solo-pioggia/.solo-asciutto`), le card compatte restano a griglia, `?piove=1` apre la pagina col piano pioggia acceso. Riepilogo di «Piove» con la voce del lunedì; la scorciatoia del biglietto del Science Museum compare solo col piano pioggia.
+- Mappa: marker Albert Memorial (piano asciutto) e Science Museum (piano pioggia), entrambi alle 14:45; linea di lunedì Harrods → Albert Memorial → NHM.
+- Harrods resta di 40 min (13:45–14:25): con 45 il piano pioggia (bus alle 14:25) si sovrapporrebbe.
+- Da verificare n. 13 (linee dei bus di lunedì) e n. 14 (caffè della Royal Albert Hall). `londra-check`: percorsi 22, ordine di lunedì controllato per ciascun piano, nuovo controllo sui due piani. Novità v39.
