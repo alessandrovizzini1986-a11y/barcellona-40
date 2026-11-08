@@ -3,7 +3,7 @@
 //
 //   npm run build && npm run preview &   poi   node scripts/qa/londra-check.mjs [http://localhost:4173]
 //
-// Controlla: i percorsi Maps identici al riferimento (22 dall'8/11, col lunedì a due piani), l'ordine dei percorsi di lunedì, il payload del QR, i 3 barcode del museo i 3 QR di SEA LIFE e il QR del Science Museum (decodificati
+// Controlla: i percorsi Maps identici al riferimento (23 dall'8/11, col lunedì a due piani e il battello), l'ordine dei percorsi di lunedì, il payload del QR, i 3 barcode del museo i 3 QR di SEA LIFE e il QR del Science Museum (decodificati
 // dagli SVG, non letti dal testo), le voci «da verificare» uguali fra pagina e DA_VERIFICARE_LONDRA.md,
 // nessuna chiave di storage oltre londra:novita:vista, cartella foto sotto 1,5 MB, alt su tutte le
 // immagini, nessun controllo sotto 44 px, service worker che non copre le pagine di Barcellona.
@@ -20,12 +20,13 @@ const ok = (n, c, x = '') => { if (!c) process.exitCode = 1; console.log(`${c ? 
 
 // Riferimenti scritti a mano: se qualcuno li "ripulisce" nella pagina, il controllo cade.
 const PERCORSI = [
-  // domenica (6): dall'8/11 con il deposito Bounce Waterloo (lasciata e ritiro sono tappe del programma)
+  // domenica (7): dall'8/11 con il deposito Bounce Waterloo (lasciata e ritiro sono tappe del programma) e il battello
   'https://www.google.com/maps/dir/?api=1&origin=51.4723,-0.4887&destination=51.5054668,-0.1171985&travelmode=transit',
   'https://www.google.com/maps/dir/?api=1&origin=51.5031,-0.1132&destination=51.5054668,-0.1171985&waypoints=51.5025654,-0.1165451&travelmode=walking',
   'https://www.google.com/maps/dir/?api=1&origin=51.5054668,-0.1171985&destination=51.501558,-0.119506&travelmode=walking',
   'https://www.google.com/maps/dir/?api=1&origin=51.501558,-0.119506&destination=51.5025654,-0.1165451&travelmode=walking',
-  'https://www.google.com/maps/dir/?api=1&origin=51.5025654,-0.1165451&destination=51.5123401,-0.1342553&travelmode=transit',
+  'https://www.google.com/maps/dir/?api=1&origin=51.5025654,-0.1165451&destination=51.5034333,-0.1196629&travelmode=walking',
+  'https://www.google.com/maps/dir/?api=1&origin=51.5073974,-0.1213608&destination=51.5098,-0.1342&travelmode=transit',
   'https://www.google.com/maps/dir/?api=1&origin=51.5129114,-0.1364381&destination=51.5133,-0.1391&waypoints=51.51283,-0.1400828&travelmode=walking',
   // lunedì (11): L1–L5 nell'ordine delle card dopo il Cambio della Guardia (double check del 7/11), poi il pomeriggio:
   // piano asciutto (Harrods → Royal Albert Hall, Albert Memorial → NHM) e piano pioggia (Harrods → Science Museum → NHM)

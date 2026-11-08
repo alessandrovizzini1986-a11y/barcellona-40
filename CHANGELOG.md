@@ -913,3 +913,9 @@ Cercati bug dello stesso tipo di "portiere che si rituffa nel replay": due cambi
 - Mappa: marker Albert Memorial (piano asciutto) e Science Museum (piano pioggia), entrambi alle 14:45; linea di lunedì Harrods → Albert Memorial → NHM.
 - Harrods resta di 40 min (13:45–14:25): con 45 il piano pioggia (bus alle 14:25) si sovrapporrebbe.
 - Da verificare n. 13 (linee dei bus di lunedì) e n. 14 (caffè della Royal Albert Hall). `londra-check`: percorsi 22, ordine di lunedì controllato per ciascun piano, nuovo controllo sui due piani. Novità v39.
+
+## Londra · ⛴️ battello sul Tamigi domenica (8/11/2026)
+- Dopo «Ritira i bagagli — Bounce Waterloo» (14:40): 14:55 «Battello sul Tamigi: London Eye → Embankment» (Uber Boat, contactless, adulti £10,80, Olly gratis; imbarco London Eye Waterloo Pier, sbarco Embankment Pier; Portami qui con place_id) · 15:15 «Embankment → Bakerloo line → Piccadilly Circus» · Lina Stores 15:30 · check-in 15:45 (45 min) · Hamleys 16:30 invariato. Via la card del bus 12.
+- Percorsi: «Bounce → Lina Stores» sostituito da «Bounce Waterloo → London Eye Pier» (a piedi) e «Embankment Pier → Embankment station → Piccadilly Circus» (coi mezzi; Google Maps non accetta tappe intermedie in modalità mezzi, la stazione è nel nome).
+- Mappa: marker London Eye Pier (14:55), Lina Stores 15:30, linea Bounce → molo → Embankment → Lina. Budget: «Battello sul Tamigi · £21,60 · stimato» (~€26), totale ~€1.540 / ~€1.587. Riepilogo di «Piove» con la voce del battello.
+- Da verificare n. 15: scalo a Embankment Pier. `londra-check`: percorsi 23. Novità v40.

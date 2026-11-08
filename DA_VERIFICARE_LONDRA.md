@@ -3,7 +3,7 @@
 Incertezze ancora aperte del viaggio a Londra (15–17 novembre 2026), con il contesto e chi le chiude.
 Il sito le mostra nella lista «Prima di partire» (in cima alla pagina fino al 14/11, e in Info), con lo stato «da verificare»: **l’elenco in pagina (`DA_VERIFICARE` in `_legacy/londra.html`) va tenuto allineato a questo file** — chiudendone una qui, si toglie anche lì, e viceversa.
 
-## Aperte (14)
+## Aperte (15)
 
 ### 1. Apertura del Winter Market del Southbank Centre il 15/11/2026
 
@@ -74,6 +74,11 @@ Il sito le mostra nella lista «Prima di partire» (in cima alla pagina fino al 
 
 - **Contesto:** Lunedì col piano asciutto, all’Albert Memorial dalle 14:45, è prevista una pausa seduti con una cioccolata calda in zona: gli orari dei caffè della Royal Albert Hall non sono confermati.
 - **Chi e come:** Alessandro: controllare su royalalberthall.com gli orari dei caffè di lunedì; in alternativa un caffè su Kensington Gore o il bar del Science Museum, a metà strada verso il museo.
+
+### 15. Scalo del battello a Embankment Pier domenica 15/11
+
+- **Contesto:** Domenica alle 14:55 si prende l’Uber Boat dal London Eye Waterloo Pier fino a Embankment Pier: non è confermato che la corsa da London Eye Pier faccia scalo a Embankment.
+- **Chi e come:** Sul posto, domenica: guardare la mappa delle linee sull’app Uber o al molo. Se non fa scalo, piano B: metro da Waterloo verso Piccadilly Circus, come prima.
 
 ## Risolte
 
