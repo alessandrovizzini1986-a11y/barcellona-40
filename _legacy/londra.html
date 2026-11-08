@@ -757,6 +757,27 @@
     color:var(--rosso-testo);background:rgba(200,54,43,.16);border:1px solid rgba(200,54,43,.45)}
   .ad-azioni{display:flex;gap:var(--s-3);margin-top:var(--s-4);flex-wrap:wrap}
   .ad-azioni .piove-btn{margin-top:0}
+
+  /* testata di una riga dal 15 al 17 novembre (ora di Londra, anche con ?now=): html.in-viaggio */
+  .hero-riga{display:none}
+  html.in-viaggio .hero{padding:8px var(--s-4);text-align:left;max-height:56px}
+  html.in-viaggio .hero>:not(.hero-riga){display:none!important}
+  html.in-viaggio .hero-riga{display:flex;align-items:center;gap:var(--s-2);height:40px;margin:0;font-family:"Playfair Display","Playfair riserva",Georgia,serif;font-size:var(--f-18);font-weight:700;color:var(--gold-soft);white-space:nowrap;overflow:hidden}
+  .hero-riga__punto{width:9px;height:9px;flex:none;border-radius:50%;background:var(--verde-testo)}
+  .hero-riga__punto[hidden]{display:none}
+  .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  html.in-viaggio .nov-banner{display:none!important}
+  /* «Adesso» a una mano: Portami lì, biglietti di oggi, bagno, poi scheda e Piove affiancati; promemoria in fondo */
+  .ad-vai{margin-top:var(--s-4);width:100%}
+  .ad-biglietti{margin-top:var(--s-3);flex-direction:column;align-items:flex-start;gap:2px;text-align:left;padding:var(--s-2) var(--s-4)}
+  .ad-biglietti small{font-size:var(--f-14);font-weight:600;color:#3a4256}
+  .ad-biglietti[hidden]{display:none}
+  .ad-azioni{flex-wrap:nowrap}
+  .ad-azioni>*{flex:1 1 0;min-width:0}
+  .ad-bagno{margin-top:var(--s-3)}
+  .bagno-vai{margin-bottom:var(--s-3)}
+  .ad-guardia,.ad-vincolo,.ad-regola,.ad-pioggia{margin-top:var(--s-3)}
+  .sole-ad{margin-top:var(--s-4)}
   .ad-vai{flex:1 1 180px;display:flex;font-size:var(--f-18)}
   .ad-scheda{flex:0 1 auto;background:none}
   /* offline: indicatore discreto in testata, versione in fondo */
@@ -824,7 +845,10 @@
   .bagno-box,.ad-bagno{margin-top:var(--s-3)}
   .bagno-box:empty,.bagno-box > .bagno-pan[hidden]:only-child{display:none}
   /* nella card: «Portami qui» e «Bagno» metà e metà, alti 48 px, a portata di pollice */
-  .azioni-tappa{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-2);margin-top:var(--s-3)}
+  .azioni-tappa{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--s-2);margin-top:var(--s-3)}
+  .azioni-tappa .bagno-riga__txt{min-width:0;overflow-wrap:anywhere}
+  /* le etichette di durata e di vincolo vanno a capo invece di uscire dalla card stretta (320–375 px) */
+  .tcard .tdur,.tcard .chip-vincolo{white-space:normal;max-width:100%;flex-wrap:wrap}
   .azioni-tappa .gmap,.azioni-tappa .bagno-riga{margin-top:0;min-height:48px;justify-content:center;text-align:center;padding:var(--s-1) var(--s-2);line-height:1.2}
   .azioni-tappa .gmap{flex-wrap:wrap}
   .azioni-tappa .bagno-riga{border-radius:999px;font-weight:700}
@@ -908,6 +932,7 @@
 
 <!-- ============ HERO ============ -->
 <header class="hero">
+  <p class="hero-riga" id="heroRiga"><span id="heroRigaTesto">Londra</span><span class="hero-riga__punto" id="heroOffline" title="Disponibile offline" hidden><span class="sr">Disponibile offline</span></span></p>
   <div class="snow" id="snow" aria-hidden="true"></div>
   <span class="badge"><span class="dot"></span>Viaggio di famiglia</span>
   <h1>Londra</h1>
@@ -960,21 +985,22 @@
         <h2 class="ad-nome" id="adNome"></h2>
       </div>
     </div>
+    <a class="btn btn--primario btn--grande ad-vai" id="adVai" target="_blank" rel="noopener" hidden>🧭 Portami lì</a>
+    <button class="btn btn--grande btn--blocco ad-codice ad-biglietti" id="adBiglietti" type="button" hidden><span>🎟️ I biglietti di oggi</span><small id="adBigliettiSub"></small></button>
+    <div class="ad-bagno" id="adBagno" hidden></div>
+    <div class="ad-azioni">
+      <button class="btn btn--secondario btn--grande ad-scheda" id="adScheda" type="button">Vedi la scheda ↓</button>
+      <button class="btn btn--secondario piove-btn" type="button" data-piove aria-pressed="false" id="pioveBtnAd"><span class="piove-ic">🌧️</span> Piove? <span class="piove-stato">NO</span></button>
+    </div>
     <p class="ad-vincolo" id="adVincolo" hidden></p>
     <p class="ad-regola" id="adRegola" hidden></p>
     <ul class="ad-guardia" id="adGuardia" hidden></ul>
     <p class="ad-pioggia" id="adPioggia" hidden></p>
-    <button class="btn btn--grande btn--blocco ad-codice" id="adCodice" type="button" hidden></button>
-    <div class="ad-azioni">
-      <a class="btn btn--primario btn--grande ad-vai" id="adVai" target="_blank" rel="noopener" hidden>🧭 Portami lì</a>
-      <button class="btn btn--secondario btn--grande ad-scheda" id="adScheda" type="button">Vedi la scheda ↓</button>
-      <button class="btn btn--secondario piove-btn" type="button" data-piove aria-pressed="false" id="pioveBtnAd"><span class="piove-ic">🌧️</span> Piove <span class="piove-stato">no</span></button>
-    </div>
-    <div class="ad-bagno" id="adBagno" hidden></div>
     <div class="ad-proposta" id="adProposta" hidden>
       <p id="adPropostaTesto"></p>
       <div class="ad-proposta__az"><button type="button" class="btn btn--primario ad-proposta__si" id="adPropostaSi">Sì, attiva</button><button type="button" class="btn btn--secondario ad-proposta__no" id="adPropostaNo">No</button></div>
     </div>
+    <button class="btn btn--secondario btn--blocco sole-ad" type="button" data-sole aria-pressed="false">☀️ Più leggibile al sole</button>
   </section>
 
 </div>
@@ -983,7 +1009,7 @@
   <section id="programma">
     <div class="eyebrow">Programma</div>
     <h2>Tre giorni, una zona al giorno</h2>
-    <p class="prog-azioni"><button class="btn btn--secondario piove-btn" type="button" data-piove aria-pressed="false" id="pioveBtn"><span class="piove-ic">🌧️</span> Piove <span class="piove-stato">no</span></button></p>
+    <p class="prog-azioni"><button class="btn btn--secondario piove-btn" type="button" data-piove aria-pressed="false" id="pioveBtn"><span class="piove-ic">🌧️</span> Piove? <span class="piove-stato">NO</span></button></p>
     <p class="sub2">Scegli il giorno qui sotto, o scorri di lato. <b>Gli orari sono una proposta</b>, ricavata da voli, check-in e distanze: vanno confermati.</p>
     <section class="meteo" id="meteo" hidden aria-label="Meteo di Londra, previsione Open-Meteo">
       <button class="meteo__riga" type="button" aria-expanded="false" aria-controls="meteoDett"></button>
@@ -2070,6 +2096,8 @@
   <section id="info" aria-labelledby="infoTit">
     <div class="eyebrow">Info</div>
     <h2 id="infoTit">Da sapere</h2>
+    <p><button class="btn btn--secondario btn--blocco sole-ad" type="button" data-sole aria-pressed="false">☀️ Più leggibile al sole</button></p>
+    <p style="margin-top:var(--s-2)"><a class="btn btn--ghost pics-link" href="londra-illustrata.html">🖼️ Versione per immagini, per Olly</a></p>
     <div class="card sole-card">
       <h3>☀️ Lettura al sole</h3>
       <p>Sfondo chiaro, contrasto più alto, testo più grande e niente ombre: per leggere la pagina in strada con la luce forte. Si ricorda su questo telefono.</p>
@@ -2275,7 +2303,6 @@
 
 <!-- barra fissa in basso, a portata di pollice -->
 <button class="striscia" id="striscia" type="button" hidden><span class="striscia__k">Prossima</span><span class="striscia__v" id="strisciaTesto"></span><span class="striscia__fr" aria-hidden="true">›</span></button>
-<button class="btn btn--primario fab-adesso" id="fabAdesso" type="button" hidden>🕒 Adesso</button>
 <nav class="barra" aria-label="Sezioni della pagina">
   <a href="#adesso" data-barra="adesso"><span aria-hidden="true">🕒</span>Adesso</a>
   <a href="#programma" data-barra="programma"><span aria-hidden="true">🗓️</span>Programma</a>
@@ -2552,6 +2579,11 @@
       apri: function(k, da){ if (el) chiudi(); prima = da || document.activeElement;
         var s = slides(), x = s.filter(function(y){ return y.k === String(k); })[0] || s[0]; if (!x) return;
         lista = s.filter(function(y){ return y.g === x.g; }); idx = lista.indexOf(x); costruisci(false); disegna(); },
+      // «I biglietti di oggi»: tutti i codici dei gruppi del giorno in fila, si parte dal primo del gruppo «inizio»
+      apriGruppi: function(gruppi, inizio, da){ if (el) chiudi(); prima = da || document.activeElement;
+        var s = slides(); lista = []; gruppi.forEach(function(g){ s.forEach(function(y){ if (y.g === g && lista.indexOf(y) < 0) lista.push(y); }); });
+        if (!lista.length) return; idx = 0; for (var i = 0; i < lista.length; i++) if (lista[i].g === inizio) { idx = i; break; }
+        costruisci(false); disegna(); },
       indirizzo: function(da){ if (el) chiudi(); prima = da || document.activeElement; costruisci(true);
         el.setAttribute('aria-label', 'Indirizzo dell’appartamento per il tassista');
         el.querySelector('.cod-tit').outerHTML = '<p class="cod-indirizzo">79 Beak Street<br>London W1F 9SU</p>';
@@ -2560,6 +2592,7 @@
     };
   })();
   document.addEventListener('click', function(e){
+    var b = e.target.closest('#adBiglietti'); if (b) { CODICI.apriGruppi(b.dataset.gruppi.split(','), b.dataset.inizio, b); return; }
     var t = e.target.closest('[data-codice]'); if (t) { e.preventDefault(); CODICI.apri(t.dataset.codice, t); return; }
     var a = e.target.closest('[data-indirizzo]'); if (a) CODICI.indirizzo(a);
   });
@@ -2623,7 +2656,13 @@
      finché la pagina resta aperta: nessuno storage, una ricarica lo rimette su "no". */
   (function(){
     var btns = document.querySelectorAll('[data-piove]'); if (!btns.length) return;
-    var piove = /[?&]piove=1(&|$)/.test(location.search);   // ?piove=1: si apre col piano pioggia acceso (per le prove)
+    // stato ricordato solo per il giorno di Londra in cui lo si accende (localStorage londra:piove = {"data","valore"});
+    // a mezzanotte di Londra torna spento. ?piove=1 lo accende per le prove, senza salvarlo
+    var CHIAVE = 'londra:piove', oggi = function(){ return OROLOGIO.parti(OROLOGIO.adesso()).data; };
+    function ricordato(){ try { var o = JSON.parse(localStorage.getItem(CHIAVE) || 'null'); if (o && o.data !== oggi()) localStorage.removeItem(CHIAVE); return !!(o && o.valore && o.data === oggi()); } catch (e) { return false; } }
+    function ricorda(){ try { if (piove) localStorage.setItem(CHIAVE, JSON.stringify({ data: oggi(), valore: true })); else localStorage.removeItem(CHIAVE); } catch (e) {} }
+    function etichetta(b){ b.innerHTML = piove ? '<span class="piove-ic">🌧️</span> Piano pioggia <span class="piove-stato">ATTIVO</span>' : '<span class="piove-ic">🌧️</span> Piove? <span class="piove-stato">NO</span>'; b.setAttribute('aria-pressed', String(piove)); }
+    var piove = /[?&]piove=1(&|$)/.test(location.search) || ricordato();
     // cosa cambia con la pioggia, giorno per giorno: ogni voce porta alla card (o alla nota) che cambia
     var CAMBI = [
       { g: 'Domenica', testo: 'pranzo dentro il Southbank Centre; acquario e Hamleys sono al coperto', sel: '#pioggia-dom' },
@@ -2659,12 +2698,13 @@
       var r = box.getBoundingClientRect(), barra = document.querySelector('.barra'), fondo = window.innerHeight - (barra ? barra.offsetHeight : 0);
       if (r.bottom > fondo) window.scrollBy({ top: Math.min(r.bottom - fondo + 12, r.top - 12), behavior: 'smooth' });
     }
-    if (piove) { document.documentElement.classList.add('piove'); btns.forEach(function(b){ b.setAttribute('aria-pressed', 'true'); b.querySelector('.piove-stato').textContent = 'sì'; }); }
+    if (piove) document.documentElement.classList.add('piove');
+    btns.forEach(etichetta);
     btns.forEach(function(btn){ btn.addEventListener('click', function(){
       piove = !piove;
       if (navigator.vibrate) try { navigator.vibrate(10); } catch (e) {}
       document.documentElement.classList.toggle('piove', piove);
-      btns.forEach(function(b){ b.setAttribute('aria-pressed', String(piove)); b.querySelector('.piove-stato').textContent = piove ? 'sì' : 'no'; });
+      btns.forEach(etichetta); ricorda();
       riepilogo(btn);
       document.dispatchEvent(new CustomEvent('piove', { detail: piove }));
       inVista();
@@ -2673,6 +2713,7 @@
 
   // il «Piano B» della cerimonia (details.piano-b) è chiuso; con «Piove» acceso si apre da solo
   document.addEventListener('piove', function(e){ document.querySelectorAll('details.piano-b').forEach(function(d){ d.open = !!e.detail; }); });
+  if (document.documentElement.classList.contains('piove')) document.querySelectorAll('details.piano-b').forEach(function(d){ d.open = true; });
 
   /* ====== DA VERIFICARE: le incertezze aperte, con chi le chiude ======
      Allineato a DA_VERIFICARE_LONDRA.md nella radice del repository: chiudendone una, si toglie da
@@ -2791,6 +2832,17 @@
     [].forEach.call(btns, function(b){ b.addEventListener('click', function(){ applica(!document.documentElement.classList.contains('sole'), true); }); });
     applica(leggi(), false);
     return { attivo: function(){ return document.documentElement.classList.contains('sole'); } };
+  })();
+  (function(){
+    var GG = ['dom', 'lun', 'mar', 'mer', 'gio', 'ven', 'sab'];
+    function testata(){
+      var now = OROLOGIO.adesso(), p = OROLOGIO.parti(now), dentro = p.data >= '2026-11-15' && p.data <= '2026-11-17';
+      document.documentElement.classList.toggle('in-viaggio', dentro);
+      if (!dentro) return;
+      var d = p.data.split('-').map(Number), g = GG[new Date(Date.UTC(d[0], d[1] - 1, d[2])).getUTCDay()];
+      var t = document.getElementById('heroRigaTesto'); if (t) t.textContent = 'Londra · ' + g + ' ' + d[2] + ' · ' + OROLOGIO.pad(p.h) + ':' + OROLOGIO.pad(p.m);
+    }
+    testata(); setInterval(testata, 20000);
   })();
   var MOTO = { ridotto: function(){ return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches); } };
   /* ====== SHEET: il pannello dal basso, uno per tutti (Novità, schede «se avanza tempo») ======
@@ -3114,7 +3166,8 @@
       var allarme = /⚠️/.test(t.avviso || '');
       box.innerHTML = bottone(uso, 'adBagnoPan', etichetta ? ' <span class="bagno-chiusa">' + esc(etichetta) + '</span>' : '')
         + (allarme ? '<p class="bagno-avviso bagno-avviso--alert bagno-avviso--riga">' + esc(t.avviso) + '</p>' : '')
-        + '<div class="bagno-pan" id="adBagnoPan" hidden><p class="bagno-per">Vicino a: <b>' + esc(x.nome) + '</b></p>' + pannello(t, key, allarme) + '</div>';
+        + '<div class="bagno-pan" id="adBagnoPan" hidden><a class="btn btn--primario btn--blocco bagno-vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=' + uso.lat + ',' + uso.lng + '&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami al bagno · ' + esc(uso.nome) + '</a>'
+        + '<p class="bagno-per">Vicino a: <b>' + esc(x.nome) + '</b></p>' + pannello(t, key, allarme) + '</div>';
       box.hidden = false; box.dataset.chiave = chiave;
     }
     // mappa: un solo marker per bagno, con l'elenco delle tappe che lo usano
@@ -3152,6 +3205,12 @@
       var r = e.target.closest('.bagno-riga'); if (!r) return;
       var p = document.getElementById(r.getAttribute('aria-controls')); if (!p) return;
       var apri = p.hidden; p.hidden = !apri; r.setAttribute('aria-expanded', String(apri));
+      // in «Adesso» il pannello si apre sotto la piega: lo si porta in vista, tenendo conto della barra e della striscia
+      if (apri && p.id === 'adBagnoPan') requestAnimationFrame(function(){
+        var v = p.querySelector('.bagno-vai') || p, q = v.getBoundingClientRect(), fondo = window.innerHeight - 8;
+        ['.barra', '#striscia'].forEach(function(s){ var x = document.querySelector(s); if (x && !x.hidden && x.offsetHeight) fondo -= x.offsetHeight; });
+        if (q.bottom > fondo) window.scrollBy({ top: Math.min(q.bottom - fondo, q.top - 16), behavior: MOTO.ridotto() ? 'auto' : 'smooth' });
+      });
     });
     if (window.fetch) quandoLibero(function(){ fetch('data/bagni-londra.json').then(function(r){ return r.ok ? r.json() : null; })
       .then(function(j){ if (j && j.tappe) monta(j); }).catch(function(){ /* niente bagni: la pagina funziona lo stesso */ }); });
@@ -3384,26 +3443,26 @@
         $('adFoto').setAttribute('src', prossima.foto); $('adPross').hidden = false;
         var l = link(prossima); $('adVai').hidden = !l; if (l) $('adVai').href = l;
       } else { $('adPross').hidden = true; $('adVai').hidden = true; }
-      // scorciatoia al codice giusto: QR attorno alle card con data-mostra="qr" (aeroporto di Bologna),
-      // biglietti del museo da mezz'ora prima dell'ingresso (data-non-prima della card), QR di SEA LIFE sempre
-      var cod = $('adCodice'), m = null;
-      // card con data-mostra-da/-a: la scorciatoia compare nella sua finestra, anche se la card non è ancora la prossima
-      [].forEach.call(document.querySelectorAll('#programma article.tcard[data-mostra-da]'), function(c){
-        var d = c.dataset, p = document.documentElement.classList.contains('piove'); if (m || d.giorno !== lo.data) return;
-        if (c.classList.contains(p ? 'solo-asciutto' : 'solo-pioggia')) return;
-        if (now >= OROLOGIO.istante(d.giorno, d.mostraDa, 'Europe/London') && now < OROLOGIO.istante(d.giorno, d.mostraA, 'Europe/London')) m = d.mostra;
-      });
-      [corrente, prossima].forEach(function(x){
-        if (m || !x || !x.el.dataset.mostra || x.el.dataset.mostraDa) return;
-        var d = x.el.dataset;
-        if (d.mostra === 'nhm' && d.nonPrima && now < OROLOGIO.istante(d.giorno, d.nonPrima, d.fuso || 'Europe/London') - 30 * 6e4) return;
-        m = d.mostra;
-      });
-      if (m) {
-        cod.textContent = { qr: '🅿️ Mostra il QR del parcheggio', sealife: '🐠 Mostra i biglietti dell’acquario', sciencemuseum: '🔬 Mostra il biglietto del Science Museum' }[m] || '🎟️ Mostra i biglietti del museo';
-        cod.dataset.codice = { qr: '0', sealife: 'sealife-1', sciencemuseum: 'sciencemuseum-1' }[m] || '1';
+      // «🎟️ I biglietti di oggi»: i codici delle card del giorno (data-mostra), nell'ordine dell'orario e del piano
+      // (asciutto o pioggia). Un tocco apre a schermo pieno il primo che serve ancora, con le frecce per gli altri
+      var big = $('adBiglietti'), pg = document.documentElement.classList.contains('piove');
+      var GRUPPO = { qr: 'pk', sealife: 'sealife', nhm: 'nhm', sciencemuseum: 'sciencemuseum' };
+      var NOME = { qr: '🅿️ parcheggio', sealife: '🐠 SEA LIFE ×3', nhm: '🦕 Natural History Museum ×3', sciencemuseum: '🔬 Science Museum' };
+      var codici = [].filter.call(document.querySelectorAll('#programma article.tcard[data-mostra]'), function(c){
+        return c.dataset.giorno === lo.data && !c.classList.contains(pg ? 'solo-asciutto' : 'solo-pioggia');
+      }).map(function(c){ var d = c.dataset, t = OROLOGIO.istante(d.giorno, d.ora, d.fuso || 'Europe/London');
+        return { g: GRUPPO[d.mostra], nome: NOME[d.mostra], t: t, fine: t + (+((d.durata || '60-60').split('-').pop()) || 60) * 6e4 };
+      }).sort(function(a, b){ return a.t - b.t; });
+      // i codici di tappe già finite non servono più (es. il parcheggio di Bologna domenica mattina); se sono finite tutte resta l'ultima
+      if (codici.length) codici = codici.filter(function(x){ return x.fine > now; }).length ? codici.filter(function(x){ return x.fine > now; }) : codici.slice(-1);
+      if (codici.length) {
+        var primo = codici[0];
+        var bounce = document.querySelector('#programma article.tcard[data-tipo="deposito"][data-giorno="' + lo.data + '"]');
+        big.dataset.gruppi = codici.map(function(x){ return x.g; }).join(','); big.dataset.inizio = primo.g;
+        $('adBigliettiSub').textContent = [primo.nome].concat(codici.filter(function(x){ return x !== primo; }).map(function(x){ return x.nome; })).join(' · ')
+          + (bounce ? ' · 🧳 deposito: QR nell’app Bounce' : '');
       }
-      cod.hidden = !m;
+      big.hidden = !codici.length;
       mostrata = prossima || corrente;
       window.ADESSO_STATO = { corrente: corrente ? corrente.el : null, prossima: prossima ? prossima.el : null };   // lo legge la mappa («Tappa di adesso», «Sei qui»)
       // striscia sopra la barra: «Prossima: 11:00 St James's Park · tra 30 min», con lo stesso orologio
@@ -3452,6 +3511,11 @@
      Il pannello non si apre mai da solo: in cima c'è un banner sottile «N novità», e si apre solo se toccato.
      Il link in fondo alla pagina lo riapre con tutto lo storico, in ogni caso. */
   var NOVITA = [
+    { v: 50, data: '2026-11-08', titolo: '🕒 Adesso a una mano', voci: [
+      '🕒 Adesso più comodo con una mano: biglietti di oggi a un tocco, bagno a portata, Piove che resta acceso, testata più bassa durante il viaggio',
+      'Subito sotto la prossima tappa: «Portami lì», poi «🎟️ I biglietti di oggi» (un tocco apre il primo codice, le frecce gli altri), poi il bagno con «Portami al bagno»; promemoria e regole in fondo',
+      'Dal 15 al 17 la testata è una riga sola; «Le novità del sito» resta nel piè di pagina e «Versione per immagini» in Info. Niente più pulsante flottante «Adesso»: c’è la striscia «Prossima»',
+      '«🌧️ Piove» resta acceso per tutta la giornata anche ricaricando la pagina; «☀️ Più leggibile al sole» è anche in fondo ad Adesso e in Info' ] },
     { v: 49, data: '2026-11-08', titolo: '🔎 Dati dell’8/11, ritocchi', voci: [
       'A Knightsbridge, se si usa la metro, l’ingresso con gli ascensori è Hooper’s Court su Brompton Road. Science Museum: grembiuli non forniti, maglietta di ricambio per Olly',
       'Café Bar della Royal Albert Hall (Door 12) per la cioccolata di lunedì; le chiusure stradali per l’AJEX di domenica restano da verificare' ] },
@@ -3696,6 +3760,7 @@
     var segno = document.getElementById('offlineOk');
     navigator.serviceWorker.addEventListener('message', function(e){
       if (e.data && e.data.tipo === 'stato' && segno) segno.hidden = !e.data.pronto;
+      var punto = document.getElementById('heroOffline'); if (e.data && e.data.tipo === 'stato' && punto) punto.hidden = !e.data.pronto;
     });
     window.addEventListener('load', function(){
       navigator.serviceWorker.register('londra-sw.js', { scope: './londra' }).then(function(){
