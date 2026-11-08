@@ -20,10 +20,12 @@ const ok = (n, c, x = '') => { if (!c) process.exitCode = 1; console.log(`${c ? 
 
 // Riferimenti scritti a mano: se qualcuno li "ripulisce" nella pagina, il controllo cade.
 const PERCORSI = [
-  // domenica (4)
+  // domenica (6): dall'8/11 con il deposito Bounce Waterloo (lasciata e ritiro sono tappe del programma)
   'https://www.google.com/maps/dir/?api=1&origin=51.4723,-0.4887&destination=51.5054668,-0.1171985&travelmode=transit',
+  'https://www.google.com/maps/dir/?api=1&origin=51.5031,-0.1132&destination=51.5054668,-0.1171985&waypoints=51.5025654,-0.1165451&travelmode=walking',
   'https://www.google.com/maps/dir/?api=1&origin=51.5054668,-0.1171985&destination=51.501558,-0.119506&travelmode=walking',
-  'https://www.google.com/maps/dir/?api=1&origin=51.501558,-0.119506&destination=51.5123401,-0.1342553&travelmode=transit',
+  'https://www.google.com/maps/dir/?api=1&origin=51.501558,-0.119506&destination=51.5025654,-0.1165451&travelmode=walking',
+  'https://www.google.com/maps/dir/?api=1&origin=51.5025654,-0.1165451&destination=51.5123401,-0.1342553&travelmode=transit',
   'https://www.google.com/maps/dir/?api=1&origin=51.5129114,-0.1364381&destination=51.5133,-0.1391&waypoints=51.51283,-0.1400828&travelmode=walking',
   // lunedì (8): L1–L5 nell'ordine delle card dopo il Cambio della Guardia (double check del 7/11), poi i tre del pomeriggio
   'https://www.google.com/maps/dir/?api=1&origin=51.5129114,-0.1364381&destination=51.508039,-0.128069&travelmode=walking',
@@ -35,12 +37,12 @@ const PERCORSI = [
   'https://www.google.com/maps/dir/?api=1&origin=51.4967150,-0.1763672&destination=51.5098,-0.1342&travelmode=transit',
   'https://www.google.com/maps/dir/?api=1&origin=51.5098,-0.1342&destination=51.5129114,-0.1364381&waypoints=51.5131,-0.1400&travelmode=walking',
   // martedì (5): il piano B sta dentro la card di Camden, quindi viene prima di Camden → Poppies. Dal 7/11 i bagagli
-  // stanno a Broadwick St: il piano B e la partenza da Covent Garden passano da lì; via Covent Garden → Tottenham Court Road
+  // stanno a Bounce Piccadilly Circus, 53 Rupert St (dall'8/11; prima Broadwick St): il piano B e la partenza passano da lì
   'https://www.google.com/maps/dir/?api=1&origin=51.5129114,-0.1364381&destination=51.539292,-0.14274&travelmode=transit',
-  'https://www.google.com/maps/dir/?api=1&origin=51.539292,-0.14274&destination=51.4723,-0.4887&waypoints=51.5132489,-0.1368169&travelmode=transit',
+  'https://www.google.com/maps/dir/?api=1&origin=51.539292,-0.14274&destination=51.4723,-0.4887&waypoints=51.5120078,-0.1336085&travelmode=transit',
   'https://www.google.com/maps/dir/?api=1&origin=51.539292,-0.14274&destination=51.5409723,-0.143961&travelmode=walking',
   'https://www.google.com/maps/dir/?api=1&origin=51.539292,-0.14274&destination=51.5122737,-0.1234492&travelmode=transit',
-  'https://www.google.com/maps/dir/?api=1&origin=51.5122737,-0.1234492&destination=51.4723,-0.4887&waypoints=51.5132489,-0.1368169&travelmode=transit'
+  'https://www.google.com/maps/dir/?api=1&origin=51.5122737,-0.1234492&destination=51.4723,-0.4887&waypoints=51.5120078,-0.1336085&travelmode=transit'
 ]
 const QR_PAYLOAD = '$BLQ3039188LGT@'
 const BARCODE = ['1001401807011726169', '1001401807011726170', '1001401807011726171']
@@ -192,6 +194,29 @@ const piccoli = await p.evaluate(() => [...document.querySelectorAll('a[href], b
   return r.width < 44 || r.height < 44
 }).map((el) => `${el.tagName.toLowerCase()}.${el.className} ${Math.round(el.getBoundingClientRect().width)}×${Math.round(el.getBoundingClientRect().height)}`))
 ok('nessun controllo sotto 44 px', !piccoli.length, piccoli.slice(0, 5).join(', '))
+
+// depositi nell'itinerario: per ogni deposito e giorno ci sono una card «Lascia» e una «Ritira» (data-tipo="deposito",
+// data-deposito-id), e tutte e due, dall'ora d'inizio alla fine della durata, cadono dentro gli orari di apertura di quel
+// deposito in data/depositi-londra.json per quel giorno («24 ore», «H:MM–H:MM», o la parte del giorno di «dom … · mar …»)
+const depCard = await p.evaluate(async () => {
+  const j = await (await fetch('data/depositi-londra.json')).json(); const orari = {}; j.depositi.forEach((d) => { orari[d.id] = d.orari })
+  return { orari, card: [...document.querySelectorAll('#programma article.tcard[data-tipo="deposito"]')].map((c) => ({ id: c.dataset.depositoId, giorno: c.dataset.giorno, ora: c.dataset.ora, dur: +((c.dataset.durata || '0-0').split('-')[1]), nome: c.querySelector('h4').textContent.trim() })) }
+})
+const SIGLE = ['lun', 'mar', 'mer', 'gio', 'ven', 'sab', 'dom'], SIGLA = { '2026-11-15': 'dom', '2026-11-16': 'lun', '2026-11-17': 'mar' }
+const orarioDel = (txt, giorno) => { const g = SIGLE.indexOf(SIGLA[giorno]); let conGiorni = false, out = null
+  for (const parte of String(txt || '').split(/\s*·\s*/)) { const m = /^(lun|mar|mer|gio|ven|sab|dom)(?:\s*[–-]\s*(lun|mar|mer|gio|ven|sab|dom))?\s+(.+)$/i.exec(parte); const ch = /^chiuso\s+(lun|mar|mer|gio|ven|sab|dom)/i.exec(parte)
+    if (m) { conGiorni = true; const a = SIGLE.indexOf(m[1].toLowerCase()), b = m[2] ? SIGLE.indexOf(m[2].toLowerCase()) : a; if (out == null && g >= a && g <= b) out = m[3] } else if (ch) { conGiorni = true; if (SIGLE.indexOf(ch[1].toLowerCase()) === g) out = 'chiuso' } }
+  return conGiorni ? out : String(txt || '') }
+const fascia = (t) => { if (/^24 ore/i.test(t || '')) return [0, 48 * 60]; const m = /^(\d{1,2}):(\d{2})\s*[–-]\s*(\d{1,2}):(\d{2})$/.exec(t || ''); if (!m) return null; const a = +m[1] * 60 + +m[2]; let b = +m[3] * 60 + +m[4]; if (b <= a) b += 24 * 60; return [a, b] }
+const depKo = [], gruppi = {}
+for (const k of depCard.card) {
+  (gruppi[k.id + ' ' + k.giorno] ||= []).push(k)
+  const f = fascia(orarioDel(depCard.orari[k.id], k.giorno)); const da = +k.ora.slice(0, 2) * 60 + +k.ora.slice(3)
+  if (!depCard.orari[k.id]) depKo.push(`${k.nome}: deposito «${k.id}» non nel JSON`)
+  else if (!f || da < f[0] || da + k.dur > f[1]) depKo.push(`${k.giorno} ${k.ora} ${k.nome} fuori orario (${orarioDel(depCard.orari[k.id], k.giorno) || 'non indicato'})`)
+}
+for (const [g, l] of Object.entries(gruppi)) if (l.length < 2 || !/^Lascia/.test(l[0].nome) || !/^Ritira/.test(l[l.length - 1].nome)) depKo.push(`${g}: manca la lasciata o il ritiro`)
+ok('depositi nell\'itinerario: lasciata e ritiro dentro gli orari del deposito per quel giorno', depCard.card.length > 0 && !depKo.length, `${depCard.card.length} card, ${Object.keys(gruppi).length} depositi` + (depKo.length ? ' · ' + depKo.join('; ') : ''))
 
 // Heathrow (51.4723,-0.4887) è la meta dei soli trasferimenti: nessun «Portami qui» di una card che non è di trasporto
 // deve puntarci (il double check del 7/11 lo aveva sospettato sulla card di Camden). I percorsi del piano B dentro una card
