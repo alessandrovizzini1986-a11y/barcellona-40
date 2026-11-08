@@ -3,7 +3,7 @@
 //
 //   npm run build && npm run preview &   poi   node scripts/qa/londra-check.mjs [http://localhost:4173]
 //
-// Controlla: i percorsi Maps identici al riferimento (23 dall'8/11, col lunedì a due piani e il battello), l'ordine dei percorsi di lunedì, il payload del QR, i 3 barcode del museo i 3 QR di SEA LIFE e il QR del Science Museum (decodificati
+// Controlla: i percorsi Maps identici al riferimento (22 dalla versione definitiva dell'8/11), l'ordine dei percorsi di lunedì, il payload del QR, i 3 barcode del museo i 3 QR di SEA LIFE e il QR del Science Museum (decodificati
 // dagli SVG, non letti dal testo), le voci «da verificare» uguali fra pagina e DA_VERIFICARE_LONDRA.md,
 // nessuna chiave di storage oltre londra:novita:vista, cartella foto sotto 1,5 MB, alt su tutte le
 // immagini, nessun controllo sotto 44 px, service worker che non copre le pagine di Barcellona.
@@ -20,13 +20,11 @@ const ok = (n, c, x = '') => { if (!c) process.exitCode = 1; console.log(`${c ? 
 
 // Riferimenti scritti a mano: se qualcuno li "ripulisce" nella pagina, il controllo cade.
 const PERCORSI = [
-  // domenica (7): dall'8/11 con il deposito Bounce Waterloo (lasciata e ritiro sono tappe del programma) e il battello
-  'https://www.google.com/maps/dir/?api=1&origin=51.4723,-0.4887&destination=51.5054668,-0.1171985&travelmode=transit',
+  // domenica (5): versione definitiva dell'8/11, col deposito Food Express e il battello
   'https://www.google.com/maps/dir/?api=1&origin=51.5031,-0.1132&destination=51.5054668,-0.1171985&waypoints=51.5025654,-0.1165451&travelmode=walking',
   'https://www.google.com/maps/dir/?api=1&origin=51.5054668,-0.1171985&destination=51.501558,-0.119506&travelmode=walking',
-  'https://www.google.com/maps/dir/?api=1&origin=51.501558,-0.119506&destination=51.5025654,-0.1165451&travelmode=walking',
-  'https://www.google.com/maps/dir/?api=1&origin=51.5025654,-0.1165451&destination=51.5034333,-0.1196629&travelmode=walking',
-  'https://www.google.com/maps/dir/?api=1&origin=51.5073974,-0.1213608&destination=51.5098,-0.1342&travelmode=transit',
+  'https://www.google.com/maps/dir/?api=1&origin=51.501558,-0.119506&destination=51.5034333,-0.1196629&waypoints=51.5025654,-0.1165451&travelmode=walking',
+  'https://www.google.com/maps/dir/?api=1&origin=51.5073974,-0.1213608&destination=51.5123401,-0.1342553&travelmode=transit',
   'https://www.google.com/maps/dir/?api=1&origin=51.5129114,-0.1364381&destination=51.5133,-0.1391&waypoints=51.51283,-0.1400828&travelmode=walking',
   // lunedì (11): L1–L5 nell'ordine delle card dopo il Cambio della Guardia (double check del 7/11), poi il pomeriggio:
   // piano asciutto (Harrods → Royal Albert Hall, Albert Memorial → NHM) e piano pioggia (Harrods → Science Museum → NHM)
@@ -41,12 +39,13 @@ const PERCORSI = [
   'https://www.google.com/maps/dir/?api=1&origin=51.4972216,-0.1767283&destination=51.496715,-0.1763672&travelmode=walking',
   'https://www.google.com/maps/dir/?api=1&origin=51.4967150,-0.1763672&destination=51.5098,-0.1342&travelmode=transit',
   'https://www.google.com/maps/dir/?api=1&origin=51.5098,-0.1342&destination=51.5129114,-0.1364381&waypoints=51.5131,-0.1400&travelmode=walking',
-  // martedì (5): il piano B sta dentro la card di Camden, quindi viene prima di Camden → Poppies. Dal 7/11 i bagagli
-  // stanno a Bounce Piccadilly Circus, 53 Rupert St (dall'8/11; prima Broadwick St): il piano B e la partenza passano da lì
-  'https://www.google.com/maps/dir/?api=1&origin=51.5129114,-0.1364381&destination=51.539292,-0.14274&travelmode=transit',
+  // martedì (6), versione definitiva dell'8/11: Beak St → Rupert St, Rupert St → Camden, piano B dentro la card di Camden,
+  // Camden → Poppies, Poppies → Covent Garden, Covent Garden → Rupert St → Heathrow T5
+  'https://www.google.com/maps/dir/?api=1&origin=51.5129114,-0.1364381&destination=51.5120078,-0.1336085&travelmode=walking',
+  'https://www.google.com/maps/dir/?api=1&origin=51.5120078,-0.1336085&destination=51.539292,-0.14274&travelmode=transit',
   'https://www.google.com/maps/dir/?api=1&origin=51.539292,-0.14274&destination=51.4723,-0.4887&waypoints=51.5120078,-0.1336085&travelmode=transit',
   'https://www.google.com/maps/dir/?api=1&origin=51.539292,-0.14274&destination=51.5409723,-0.143961&travelmode=walking',
-  'https://www.google.com/maps/dir/?api=1&origin=51.539292,-0.14274&destination=51.5122737,-0.1234492&travelmode=transit',
+  'https://www.google.com/maps/dir/?api=1&origin=51.5409723,-0.143961&destination=51.5122737,-0.1234492&travelmode=transit',
   'https://www.google.com/maps/dir/?api=1&origin=51.5122737,-0.1234492&destination=51.4723,-0.4887&waypoints=51.5120078,-0.1336085&travelmode=transit'
 ]
 const QR_PAYLOAD = '$BLQ3039188LGT@'
@@ -145,41 +144,50 @@ const percorsi = await p.$$eval('a.percorso', (a) => a.map((x) => x.getAttribute
 const diversi = PERCORSI.filter((u, i) => percorsi[i] !== u).length
 ok(`${PERCORSI.length} percorsi identici al riferimento, carattere per carattere, nessuno in più`, percorsi.length === PERCORSI.length && diversi === 0, `${percorsi.length} trovati, ${diversi} diversi`)
 
-// lunedì: i percorsi, uno dopo l'altro, toccano ogni tappa una sola volta e nell'ordine delle card. Ogni punto
-// (origine, tappe intermedie, arrivo) si riconosce dalle coordinate del «Portami qui» di una card di lunedì; i punti di
-// passaggio senza card (Piccadilly Circus) non contano. Casa può esserci solo all'inizio e alla fine.
+// percorsi di ogni giorno: uno dopo l'altro, toccano ogni tappa una sola volta e nell'ordine delle card. Ogni punto
+// (origine, tappe intermedie, arrivo) si riconosce dalle coordinate del «Portami qui» di una card del giorno; i punti di
+// passaggio senza card (Waterloo, Piccadilly Circus) non contano. Eccezioni volute: casa all'inizio e alla fine della
+// giornata, il deposito (lasciata e ritiro). Non contano i percorsi di riserva («Piano B: …» dentro una card).
 // Col piano asciutto contano le card e i percorsi senza .solo-pioggia, con «Piove» quelli senza .solo-asciutto.
-const lunPiano = (piove) => p.evaluate((piove) => {
+const CASA = [51.5129114, -0.1364381]
+const ordineGiorno = (data, prefisso, piove) => p.evaluate(({ data, prefisso, piove, CASA }) => {
   const vede = (el) => !el.classList.contains(piove ? 'solo-asciutto' : 'solo-pioggia')
   const coord = (s) => s.split(',').map(Number)
-  const card = [...document.querySelectorAll('#programma article.tcard[data-giorno="2026-11-16"]')].filter(vede).map((c, i) => {
+  const card = [...document.querySelectorAll(`#programma article.tcard[data-giorno="${data}"]`)].filter(vede).map((c, i) => {
     const a = c.querySelector('a.gmap--vai'); const m = a && /destination=(-?[\d.]+),(-?[\d.]+)/.exec(a.getAttribute('href') || '')
-    return { i, nome: c.querySelector('h4')?.textContent.trim(), tappa: c.dataset.tappa || '', p: m ? [+m[1], +m[2]] : null }
+    return { i, nome: c.querySelector('h4')?.textContent.trim(), tappa: c.dataset.tappa || '', deposito: c.dataset.tipo === 'deposito', p: m ? [+m[1], +m[2]] : null }
   }).filter((c) => c.p)
+  const perc = [...document.querySelectorAll(`#programma a.percorso[data-percorso^="${prefisso}"]`)].filter(vede).filter((a) => !/Piano B:/.test(a.dataset.percorso))
   const punti = []
-  ;[...document.querySelectorAll('#programma a.percorso[data-percorso^="Lunedì"]')].filter(vede).forEach((a) => {
-    const u = new URL(a.getAttribute('href')); const q = u.searchParams
+  perc.forEach((a) => {
+    const q = new URL(a.getAttribute('href')).searchParams
     const seq = [q.get('origin'), ...(q.get('waypoints') ? q.get('waypoints').split('|') : []), q.get('destination')].map(coord)
     seq.forEach((pt) => { const ult = punti[punti.length - 1]; if (!ult || Math.abs(ult[0] - pt[0]) > 1e-6 || Math.abs(ult[1] - pt[1]) > 1e-6) punti.push(pt) })
   })
   const vicino = (a, b) => Math.abs(a[0] - b[0]) < 2e-4 && Math.abs(a[1] - b[1]) < 3e-4
-  const casa = card[0] && card[0].p
   let ultimo = -1; const errori = [], visti = []
   punti.forEach((pt, k) => {
-    if (casa && vicino(pt, casa) && (k === 0 || k === punti.length - 1)) return   // si parte e si torna a casa
-    if (visti.some((v) => vicino(v, pt))) { errori.push('punto toccato due volte: ' + pt.join(',')); return }
+    if (vicino(pt, CASA) && (k === 0 || k === punti.length - 1)) return   // si parte e si torna a casa
+    const dep = card.some((x) => x.deposito && vicino(x.p, pt))
+    if (!dep && visti.some((v) => vicino(v, pt))) { errori.push('punto toccato due volte: ' + pt.join(',')); return }
     visti.push(pt)
     const c = card.find((x) => x.i > ultimo && vicino(x.p, pt))
     if (!c) { if (card.some((x) => vicino(x.p, pt))) errori.push('fuori ordine: ' + (card.find((x) => vicino(x.p, pt)).nome)); return }
     ultimo = c.i
   })
   const mancanti = card.filter((c) => c.tappa && !punti.some((pt) => vicino(pt, c.p))).map((c) => c.nome)
-  return { n: [...document.querySelectorAll('#programma a.percorso[data-percorso^="Lunedì"]')].filter(vede).length, punti: punti.length, errori, mancanti }
-}, piove)
-for (const piove of [false, true]) {
-  const lun = await lunPiano(piove)
-  ok(`lunedì${piove ? ' con «Piove»' : ', asciutto'}: i percorsi toccano ogni tappa una sola volta, nell'ordine delle card`, !lun.errori.length && !lun.mancanti.length, `${lun.n} percorsi, ${lun.punti} punti` + (lun.errori.length ? ' · ' + lun.errori.join('; ') : '') + (lun.mancanti.length ? ' · tappe senza percorso: ' + lun.mancanti.join(', ') : ''))
+  return { n: perc.length, punti: punti.length, errori, mancanti }
+}, { data, prefisso, piove, CASA })
+for (const [data, prefisso, nome, piani] of [['2026-11-15', 'Domenica', 'domenica', [false]], ['2026-11-16', 'Lunedì', 'lunedì', [false, true]], ['2026-11-17', 'Martedì', 'martedì', [false]]]) {
+  for (const piove of piani) {
+    const r = await ordineGiorno(data, prefisso, piove)
+    ok(`${nome}${piani.length > 1 ? (piove ? ' con «Piove»' : ', asciutto') : ''}: i percorsi toccano ogni tappa una sola volta, nell'ordine delle card`, !r.errori.length && !r.mancanti.length, `${r.n} percorsi, ${r.punti} punti` + (r.errori.length ? ' · ' + r.errori.join('; ') : '') + (r.mancanti.length ? ' · tappe senza percorso: ' + r.mancanti.join(', ') : ''))
+  }
 }
+
+// nessun QR né link delle prenotazioni Bounce in pagina (la repo è pubblica): ammesso solo il codice di riferimento
+const bounce = await p.evaluate(() => ({ link: [...document.querySelectorAll('a[href]')].filter((a) => /partner\.bounce\.com|bounce\.com\/(booking|reservation|b\/)/i.test(a.href)).length, testo: /partner\.bounce\.com/i.test(document.documentElement.outerHTML) }))
+ok('nessun link alle prenotazioni Bounce in pagina', !bounce.link && !bounce.testo, JSON.stringify(bounce))
 
 // lunedì, i due piani come li vede chi usa la pagina (classe «piove» sull'html): l'altro piano non si vede, orari crescenti
 // senza sovrapposizioni (ora + durata alta ≤ ora della card dopo), Natural History Museum alle 16:30
@@ -244,8 +252,8 @@ ok('nessun controllo sotto 44 px', !piccoli.length, piccoli.slice(0, 5).join(', 
 // data-deposito-id), e tutte e due, dall'ora d'inizio alla fine della durata, cadono dentro gli orari di apertura di quel
 // deposito in data/depositi-londra.json per quel giorno («24 ore», «H:MM–H:MM», o la parte del giorno di «dom … · mar …»)
 const depCard = await p.evaluate(async () => {
-  const j = await (await fetch('data/depositi-londra.json')).json(); const orari = {}; j.depositi.forEach((d) => { orari[d.id] = d.orari })
-  return { orari, card: [...document.querySelectorAll('#programma article.tcard[data-tipo="deposito"]')].map((c) => ({ id: c.dataset.depositoId, giorno: c.dataset.giorno, ora: c.dataset.ora, dur: +((c.dataset.durata || '0-0').split('-')[1]), nome: c.querySelector('h4').textContent.trim() })) }
+  const j = await (await fetch('data/depositi-londra.json')).json(); const orari = {}, pren = {}; j.depositi.forEach((d) => { orari[d.id] = d.orari; if (d.prenotato) pren[d.id] = d.prenotazione })
+  return { orari, pren, card: [...document.querySelectorAll('#programma article.tcard[data-tipo="deposito"]')].map((c) => ({ id: c.dataset.depositoId, giorno: c.dataset.giorno, ora: c.dataset.ora, dur: +((c.dataset.durata || '0-0').split('-')[1]), nome: c.querySelector('h4').textContent.trim() })) }
 })
 const SIGLE = ['lun', 'mar', 'mer', 'gio', 'ven', 'sab', 'dom'], SIGLA = { '2026-11-15': 'dom', '2026-11-16': 'lun', '2026-11-17': 'mar' }
 const orarioDel = (txt, giorno) => { const g = SIGLE.indexOf(SIGLA[giorno]); let conGiorni = false, out = null
@@ -259,9 +267,12 @@ for (const k of depCard.card) {
   const f = fascia(orarioDel(depCard.orari[k.id], k.giorno)); const da = +k.ora.slice(0, 2) * 60 + +k.ora.slice(3)
   if (!depCard.orari[k.id]) depKo.push(`${k.nome}: deposito «${k.id}» non nel JSON`)
   else if (!f || da < f[0] || da + k.dur > f[1]) depKo.push(`${k.giorno} ${k.ora} ${k.nome} fuori orario (${orarioDel(depCard.orari[k.id], k.giorno) || 'non indicato'})`)
+  // se il deposito è prenotato, lasciata e ritiro stanno anche dentro la fascia della prenotazione (domenica 10:30–15:30)
+  const pr = depCard.pren[k.id], fp = pr && fascia(pr.fascia)
+  if (pr && (!fp || da < fp[0] || da + k.dur > fp[1])) depKo.push(`${k.giorno} ${k.ora} ${k.nome} fuori dalla fascia prenotata ${pr.fascia}`)
 }
 for (const [g, l] of Object.entries(gruppi)) if (l.length < 2 || !/^Lascia/.test(l[0].nome) || !/^Ritira/.test(l[l.length - 1].nome)) depKo.push(`${g}: manca la lasciata o il ritiro`)
-ok('depositi nell\'itinerario: lasciata e ritiro dentro gli orari del deposito per quel giorno', depCard.card.length > 0 && !depKo.length, `${depCard.card.length} card, ${Object.keys(gruppi).length} depositi` + (depKo.length ? ' · ' + depKo.join('; ') : ''))
+ok('depositi nell\'itinerario: lasciata e ritiro dentro gli orari del deposito per quel giorno e, se prenotato, dentro la fascia prenotata', depCard.card.length > 0 && !depKo.length, `${depCard.card.length} card, ${Object.keys(gruppi).length} depositi` + (depKo.length ? ' · ' + depKo.join('; ') : ''))
 
 // Heathrow (51.4723,-0.4887) è la meta dei soli trasferimenti: nessun «Portami qui» di una card che non è di trasporto
 // deve puntarci (il double check del 7/11 lo aveva sospettato sulla card di Camden). I percorsi del piano B dentro una card

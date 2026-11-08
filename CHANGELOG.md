@@ -924,3 +924,36 @@ Cercati bug dello stesso tipo di "portiere che si rituffa nel replay": due cambi
 - 🗺️ Lunedì con piano A (Albert Memorial) e piano pioggia (Science Museum), bus a due piani, battello sul Tamigi domenica, e per ogni tappa la descrizione semplice di cosa vediamo.
 - 21 card luogo (`data-luogo`) con il blocco `.cosa` sotto il titolo, visibile senza aprire nulla: «📖 Cosa vediamo» (2-3 frasi, al massimo ~280 caratteri) e «👧 Per Olly». Testi del prompt, con gli apostrofi tipografici della pagina. Il testo di Harrods sta sulla card di Harrods, non su quella del pranzo nella Dining Hall; il bus a due piani ha il suo, gli altri bus no.
 - `londra-check`: ogni card luogo ha «📖 Cosa vediamo» e «👧 Per Olly» non vuoti, e ogni card con `data-tappa` (tranne il pranzo da Harrods) è una card luogo. Novità v41.
+
+## Londra · versione definitiva (8/11/2026) · A. domenica
+- Deposito: «Lascia i bagagli — Food Express (Bounce)» con «✅ Prenotato» (domenica 15/11, 10:30–15:30, 3 valigie regolari, rif. ZGHR956Q; QR e PIN restano nell'app, non in pagina) e «Ritira i bagagli — Food Express» («la prenotazione copre fino alle 15:30»). Trasferimento: «Si scende a Waterloo: deposito bagagli a 5 min».
+- Battello: «si paga con la carta contactless al molo», piano B «Bakerloo diretta a Piccadilly Circus». 15:15 «Embankment → Piccadilly Circus».
+- Percorsi: «Waterloo → Food Express → Southbank Centre» (stesso URL), «Southbank Centre → SEA LIFE» invariato, nuovo «SEA LIFE → Food Express → London Eye Pier» al posto di «SEA LIFE → Bounce» e «Bounce Waterloo → London Eye Pier», «Embankment Pier → Piccadilly Circus → Lina Stores» (arrivo a Lina Stores) al posto di «… → Piccadilly Circus». Tolto «Heathrow → Southbank»: toccava il Southbank prima del deposito, contro la regola «ogni tappa una sola volta, nell'ordine delle card»; il trasferimento ha il suo «Portami qui».
+- Budget: «Deposito bagagli domenica · pagato in app · importo da inserire». Mappa e promemoria di «Adesso» col nome Food Express.
+- `londra-check`: l'ordine dei percorsi si controlla anche la domenica (eccezione voluta: il deposito, lasciata e ritiro); nessun QR né link `partner.bounce.com` in pagina. Novità v42.
+
+## Londra · versione definitiva · C. lunedì pomeriggio
+- Già in pagina dai commit precedenti: piano A (asciutto) e piano B (con «Piove»), bus a due piani alle 12:00, card 16:15 eliminata, percorsi e marker dei due piani, scorciatoia del biglietto solo col piano pioggia.
+- Allineati i testi: bus a due piani (alternativa «2 fermate»), Harrods («il resto dalle vetrine», lunedì 10:00–21:00), bus 14/74, Science Museum («biglietti presi, tenuti come piano pioggia», Pattern Pod gratuita, 10:00–18:00), cammino lungo Exhibition Road.
+- Albert Memorial **65 min** (14:45–15:50) con bagni: nuova tappa `albert` in `bagni-londra.json`, principale i bagni interni del Science Museum, riserva il NHM, distanze e minuti stimati.
+- Harrods resta di **40 min** (13:45–14:25), non 45: con 45 finirebbe alle 14:30 e il bus del piano pioggia delle 14:25 si sovrapporrebbe (la verifica chiede orari senza sovrapposizioni in tutti e due i piani).
+- Checklist: «Biglietti Science Museum (lun 16, 14:45) · piano pioggia» fatto. Novità v43.
+
+## Londra · versione definitiva · D. martedì
+- Bug di Camden: già corretto («Portami qui» verso 51.539292,-0.14274); il controllo «nessun Portami qui verso Heathrow fuori dalle card di trasporto» c'era già.
+- «Lascia i bagagli — Bounce Piccadilly Circus»: badge «da prenotare» (martedì 10:30–15:15, 3 valigie regolari) e testo «a 2 min dalla stazione della Piccadilly line per Heathrow». «Ritira i bagagli e parti»: «Piccadilly Circus ha solo scale mobili». Camden (nota del mercato), Poppies (apre alle 11:00) e la partenza delle 14:45 erano già allineati.
+- Percorsi: nuovo «Beak St → Bounce Rupert St» (a piedi). Per la regola «ogni tappa una sola volta, nell'ordine delle card» cambiano anche due origini non elencate nel prompt: «Beak St → Camden Town» diventa «Bounce Rupert St → Camden Town» (si parte dal deposito, non di nuovo da casa) e «Camden Town → Covent Garden» diventa «Poppies → Covent Garden» (si parte dal pranzo). «Covent Garden → Tottenham Court Road» e «Covent Garden → Heathrow T5» diretti non c'erano più.
+- `londra-check`: percorsi 22, ordine controllato anche il martedì (il piano B di Camden è un'alternativa e non conta). Novità v44.
+
+## Londra · versione definitiva · E. depositi
+- `depositi-londra.json`: `bounce_waterloo` diventa «Food Express (Bounce) — Waterloo» (`negozio`, `prenotato: true`, `prenotazione` con fascia 10:30–15:30, 3 valigie regolari, rif. ZGHR956Q). `bounce_rupert` principale del martedì e `bounce_broadwick` riserva, `stasher_countyhall` con coordinate e place_id nuovi: già così dall'8/11. `verificato_il` 2026-11-08.
+- Pannello e popup dei depositi: per un deposito prenotato compare «✅ Prenotato … rif. …» e non il pulsante «Prenota». Nessun QR, PIN o link della prenotazione in pagina.
+- `londra-check`: lasciata e ritiro dentro gli orari del deposito e, per un deposito prenotato, dentro la fascia prenotata. Novità v45.
+
+## Londra · versione definitiva · F. Portafoglio
+- Card del Science Museum sostituita col blocco del prompt definitivo (cambia solo la nota: «Piano pioggia del lunedì»); SVG del QR identico byte per byte, decodificato `ON18896320`. Visualizzatore, link rapido e scorciatoia in «Adesso» col piano pioggia c'erano già.
+- Nuova card «🧳 Depositi bagagli» senza QR: domenica Food Express (Bounce), prenotato, rif. ZGHR956Q, «QR e PIN nell'app Bounce» (con «Copia»); martedì Bounce Piccadilly Circus, da prenotare. Novità v46.
+
+## Londra · versione definitiva · H. checklist «Prima di partire»
+- Fatte: «Biglietti Science Museum (lun 16, 14:45)», «Deposito bagagli domenica — Food Express, Waterloo».
+- Da fare: «Subito — ETA UK per Vale e Olly. Senza ETA non si parte» (la voce «UK ETA di tutti e tre · fatto» diventa «UK ETA di Alessandro · fatto»; nel budget «Vale e Olly da fare subito»), «Gio 12/11 — chiusure TfL del weekend», «Ven 13/11 — calendario Household Division e meteo di lunedì 10–12», «Sab 14/11 — check-in online BA ed eSIM Holafly sull'iPhone di Vale», «Lun 16/11 sera, o prima — Bounce Piccadilly Circus (Rupert St), 10:30–15:15, 3 valigie regolari». Novità v47.

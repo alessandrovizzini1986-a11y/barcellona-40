@@ -5,7 +5,7 @@
   "depositi": [
     {
       "id": "bounce_waterloo",
-      "nome": "Bounce — Waterloo (minimarket)",
+      "nome": "Food Express (Bounce) — Waterloo",
       "indirizzo": "7 Chicheley St, SE1 7PY",
       "lat": 51.5025654,
       "lng": -0.1165451,
@@ -35,7 +35,15 @@
       ],
       "note": "Borse fotografate e messe dietro il banco. Una recensione segnala borse lasciate sul pavimento per qualche minuto: restare finché non sono riposte.",
       "verificato_il": "2026-11-08",
-      "fonte": "Google Places (orari, voti)"
+      "fonte": "Google Places (orari, voti)",
+      "negozio": "Food Express",
+      "prenotato": true,
+      "prenotazione": {
+        "giorno": "dom15",
+        "fascia": "10:30–15:30",
+        "colli": "3 valigie regolari",
+        "rif": "ZGHR956Q"
+      }
     },
     {
       "id": "stasher_countyhall",
