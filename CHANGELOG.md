@@ -949,3 +949,7 @@ Cercati bug dello stesso tipo di "portiere che si rituffa nel replay": due cambi
 - `depositi-londra.json`: `bounce_waterloo` diventa «Food Express (Bounce) — Waterloo» (`negozio`, `prenotato: true`, `prenotazione` con fascia 10:30–15:30, 3 valigie regolari, rif. ZGHR956Q). `bounce_rupert` principale del martedì e `bounce_broadwick` riserva, `stasher_countyhall` con coordinate e place_id nuovi: già così dall'8/11. `verificato_il` 2026-11-08.
 - Pannello e popup dei depositi: per un deposito prenotato compare «✅ Prenotato … rif. …» e non il pulsante «Prenota». Nessun QR, PIN o link della prenotazione in pagina.
 - `londra-check`: lasciata e ritiro dentro gli orari del deposito e, per un deposito prenotato, dentro la fascia prenotata. Novità v45.
+
+## Londra · versione definitiva · F. Portafoglio
+- Card del Science Museum sostituita col blocco del prompt definitivo (cambia solo la nota: «Piano pioggia del lunedì»); SVG del QR identico byte per byte, decodificato `ON18896320`. Visualizzatore, link rapido e scorciatoia in «Adesso» col piano pioggia c'erano già.
+- Nuova card «🧳 Depositi bagagli» senza QR: domenica Food Express (Bounce), prenotato, rif. ZGHR956Q, «QR e PIN nell'app Bounce» (con «Copia»); martedì Bounce Piccadilly Circus, da prenotare. Novità v46.
