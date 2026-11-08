@@ -2127,7 +2127,7 @@
             <tr><td>Voli (BA547/BA546)</td><td><span class="st ok">✅ pagato</span></td><td class="imp">€433,39</td></tr>
             <tr><td>Alloggio (Bright Carnaby Soho)<small class="bnota">£538,90 addebitati in euro</small></td><td><span class="st ok">✅ pagato</span></td><td class="imp">€648,82</td></tr>
             <tr><td>Transfer e mezzi<small class="bnota">tariffe TfL contactless, Olly gratis, con la Northern line per Camden (+£12, ~€15): ~€63 con la Piccadilly, ~€110 con l’Elizabeth andata e ritorno</small></td><td><span class="st est">💶 stima</span></td><td class="imp">~€63 · ~€110</td></tr>
-            <tr><td>UK ETA ×3<small class="bnota">£20 a persona · tutte e tre fatte; Alessandro €24,31, Vale e Olly importo in euro da confermare</small></td><td><span class="st est">💶 stima</span></td><td class="imp">~€73</td></tr>
+            <tr><td>UK ETA ×3<small class="bnota">£20 a persona · Alessandro fatta (€24,31); Vale e Olly da fare subito, importo in euro da confermare</small></td><td><span class="st est">💶 stima</span></td><td class="imp">~€73</td></tr>
             <tr><td>SEA LIFE<small class="bnota">2 × £33 + 1 × £30 · in euro ~€116 al cambio dell’alloggio (1 £ = 1,204 €): l’addebito vero dipende dal cambio del giorno dell’acquisto</small></td><td><span class="st ok">✅ pagato</span></td><td class="imp">£96,00 · ~€116</td></tr>
             <tr><td>Deposito bagagli domenica<small class="bnota">Food Express (Bounce), Waterloo · pagato in app, importo da inserire</small></td><td><span class="st ok">✅ pagato</span></td><td class="imp">—</td></tr>
             <tr><td>Battello sul Tamigi<small class="bnota">Uber Boat London Eye → Embankment, domenica: 2 adulti × £10,80, Olly gratis · ~€26 al cambio dell’alloggio</small></td><td><span class="st est">💶 stima</span></td><td class="imp">£21,60</td></tr>
@@ -2761,18 +2761,20 @@
   var PRIMA_DI_PARTIRE = [
     { cosa: 'Check-in online e posti vicini', stato: 'da_fare', nota: 'Si apre 24 ore prima del volo. BA fa sedere i bambini sotto i 12 anni accanto a un adulto: controllarlo al check-in.' },
     { cosa: 'Passaporti di tutti e tre, ritirati e validi', stato: 'fatto' },
-    { cosa: 'UK ETA di tutti e tre', stato: 'fatto' },
+    { cosa: 'Subito — ETA UK per Vale e Olly. Senza ETA non si parte', stato: 'da_fare' },
+    { cosa: 'UK ETA di Alessandro', stato: 'fatto' },
     { cosa: 'Volo BA547 / BA546', stato: 'fatto' },
     { cosa: 'Appartamento Bright Carnaby Soho', stato: 'fatto' },
     { cosa: 'Dom 1/11 — ricontrolla sul calendario ufficiale la riga «Mon 16th Nov · Guard Change · 11:00»', stato: 'da_fare', nota: 'Su changing-guard.com le modifiche sono evidenziate in rosso.' },
-    { cosa: 'Gio 12/11 — chiusure TfL del weekend 14–15/11 (tfl.gov.uk → Planned closures; Time Out le pubblica il giovedì)', stato: 'da_fare', nota: 'Se la Piccadilly line è chiusa verso Heathrow: Elizabeth line da T5 a Tottenham Court Road.' },
-    { cosa: 'Ven 13/11 — calendario Household Division: la riga «Mon 16th Nov · Guard Change · 11:00» c’è ancora (e royal.uk); meteo Met Office di lunedì 10–12', stato: 'da_fare' },
-    { cosa: 'Sab 14 sera: prenota Bounce Waterloo per domenica, 10:30–15:00, 3 colli; check-in online BA per tutti e tre', stato: 'da_fare' },
+    { cosa: 'Gio 12/11 — chiusure TfL del weekend (tfl.gov.uk → Planned closures)', stato: 'da_fare', nota: 'Se la Piccadilly line è chiusa verso Heathrow: Elizabeth line da T5 a Tottenham Court Road.' },
+    { cosa: 'Ven 13/11 — calendario Household Division (riga «Mon 16th Nov · Guard Change · 11:00») e meteo di lunedì 10–12', stato: 'da_fare' },
+    { cosa: 'Deposito bagagli domenica — Food Express, Waterloo', stato: 'fatto' },
+    { cosa: 'Sab 14/11 — check-in online BA per tutti e tre; installare la eSIM Holafly sull’iPhone di Vale e lasciare la linea spenta', stato: 'da_fare' },
     { cosa: 'Dom 15/11 sera — calendario e X @ArmyInLondon', stato: 'da_fare' },
     { cosa: 'Lun 16/11, ore 08:30–09:00 — X e calendario', stato: 'da_fare' },
-    { cosa: 'Lun 16 sera: prenota Bounce Piccadilly Circus (Rupert St) per martedì, 10:30–15:15, 3 colli', stato: 'da_fare' },
+    { cosa: 'Lun 16/11 sera, o prima — prenotare Bounce Piccadilly Circus (Rupert St) per martedì, 10:30–15:15, 3 valigie regolari', stato: 'da_fare' },
     { cosa: 'SEA LIFE prenotato · 3 biglietti nel Portafoglio', stato: 'fatto' },
-    { cosa: 'Biglietti Science Museum (lun 16, 14:45) · piano pioggia', stato: 'fatto' },
+    { cosa: 'Biglietti Science Museum (lun 16, 14:45)', stato: 'fatto', nota: 'Piano pioggia del lunedì.' },
     { cosa: 'Scaricare l’app Bounce e Stasher, carta già salvata', stato: 'da_fare' },
     { cosa: 'Assicurazione viaggio', stato: 'fatto' }
   ];
@@ -3500,6 +3502,8 @@
      Il pannello non si apre mai da solo: in cima c'è un banner sottile «N novità», e si apre solo se toccato.
      Il link in fondo alla pagina lo riapre con tutto lo storico, in ogni caso. */
   var NOVITA = [
+    { v: 47, data: '2026-11-08', titolo: '✅ Prima di partire', voci: [
+      'Lista aggiornata: subito l’ETA UK per Vale e Olly; deposito di domenica e biglietti del Science Museum fatti; sabato 14 check-in BA ed eSIM Holafly sull’iPhone di Vale; entro lunedì sera Bounce Piccadilly Circus' ] },
     { v: 46, data: '2026-11-08', titolo: '🎟️ Portafoglio', voci: [
       'Nei Biglietti la card «🧳 Depositi bagagli»: domenica Food Express prenotato (rif. ZGHR956Q, QR e PIN nell’app Bounce), martedì Bounce Piccadilly Circus da prenotare',
       'La card del Science Museum ricorda che è il piano pioggia del lunedì' ] },

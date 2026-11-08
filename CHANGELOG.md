@@ -953,3 +953,7 @@ Cercati bug dello stesso tipo di "portiere che si rituffa nel replay": due cambi
 ## Londra · versione definitiva · F. Portafoglio
 - Card del Science Museum sostituita col blocco del prompt definitivo (cambia solo la nota: «Piano pioggia del lunedì»); SVG del QR identico byte per byte, decodificato `ON18896320`. Visualizzatore, link rapido e scorciatoia in «Adesso» col piano pioggia c'erano già.
 - Nuova card «🧳 Depositi bagagli» senza QR: domenica Food Express (Bounce), prenotato, rif. ZGHR956Q, «QR e PIN nell'app Bounce» (con «Copia»); martedì Bounce Piccadilly Circus, da prenotare. Novità v46.
+
+## Londra · versione definitiva · H. checklist «Prima di partire»
+- Fatte: «Biglietti Science Museum (lun 16, 14:45)», «Deposito bagagli domenica — Food Express, Waterloo».
+- Da fare: «Subito — ETA UK per Vale e Olly. Senza ETA non si parte» (la voce «UK ETA di tutti e tre · fatto» diventa «UK ETA di Alessandro · fatto»; nel budget «Vale e Olly da fare subito»), «Gio 12/11 — chiusure TfL del weekend», «Ven 13/11 — calendario Household Division e meteo di lunedì 10–12», «Sab 14/11 — check-in online BA ed eSIM Holafly sull'iPhone di Vale», «Lun 16/11 sera, o prima — Bounce Piccadilly Circus (Rupert St), 10:30–15:15, 3 valigie regolari». Novità v47.
