@@ -793,9 +793,8 @@
   .pioggia-nota{display:none}
   html.piove .pioggia-nota{display:block}
   /* con "Piove" acceso una card può cedere il posto a un'alternativa al coperto */
-  .tcard.solo-pioggia{display:none}
-  html.piove .tcard.solo-pioggia{display:block}
-  html.piove .tcard.solo-asciutto{display:none}
+  /* piano asciutto / piano pioggia: si nasconde solo la variante spenta, le altre tengono il loro display (griglia delle compatte) */
+  html:not(.piove) .tcard.solo-pioggia,html:not(.piove) .percorso.solo-pioggia,html.piove .tcard.solo-asciutto,html.piove .percorso.solo-asciutto{display:none}
   .tcard__body .pioggia-nota{margin-top:var(--s-2);font-size:var(--f-12);line-height:1.45;color:var(--sky)}
   .pioggia-nota--blocco{margin:2px 0 var(--s-4);background:rgba(109,179,216,.1);border:1px solid rgba(109,179,216,.35);color:var(--ink)}
   .nov__testa code{font-size:var(--f-12);color:var(--gold-soft)}
@@ -891,6 +890,11 @@
   .tcard__body .guardia-ok .guardia-ok__fonte{font-size:var(--f-14);color:var(--muted)}
   .guardia-link{margin-top:var(--s-1);color:var(--sky)}
   .nota-piccola{margin-top:var(--s-2);font-size:var(--f-14);line-height:1.45;color:var(--muted)}
+  /* «Cosa vediamo» e «Per Olly»: visibili senza aprire nulla, sotto il titolo, nello stile delle card compatte */
+  .cosa{margin:var(--s-2) 0 var(--s-1);padding:var(--s-2) var(--s-3);border-left:3px solid var(--gold);border-radius:0 var(--r-2,8px) var(--r-2,8px) 0;background:rgba(212,169,78,.08)}
+  .cosa p{margin:0!important;font-size:var(--f-14);line-height:1.45;color:var(--ink)!important;overflow-wrap:anywhere}
+  .cosa p+p{margin-top:var(--s-1)!important;color:var(--muted)!important}
+  .cosa b{display:block;font-size:var(--f-12);letter-spacing:.04em;color:var(--gold-soft)}
   .ad-guardia{list-style:none;margin-top:var(--s-3);display:flex;flex-direction:column;gap:var(--s-2)}
   .ad-guardia[hidden]{display:none}
   .ad-guardia li{padding:var(--s-3) var(--s-3);border-radius:var(--r-s);font-size:var(--f-16);line-height:1.45;font-weight:700;color:var(--ink);
@@ -1089,13 +1093,14 @@
           <span class="percorso__txt"><b>Percorso · Domenica</b><span>Southbank Centre → SEA LIFE</span></span>
           <span class="percorso__modo">🚶 a piedi</span>
         </a>
-        <article class="tcard" data-tappa="southbank" data-durata="75-75" data-comprimibile data-giorno="2026-11-15" data-ora="10:50" data-tipo="tappa" data-bagno="southbank">
+        <article class="tcard" data-tappa="southbank" data-durata="75-75" data-comprimibile data-giorno="2026-11-15" data-ora="10:50" data-tipo="tappa" data-bagno="southbank" data-luogo>
           <div class="tcard__foto">
             <img src="assets/tappe/londra/southbank.webp" width="800" height="450" alt="Le scale gialle del Southbank Centre, con il palazzo in cemento e la gente che passa" loading="lazy" decoding="async">
             <span class="tcard__ora">10:50</span>
           </div>
           <div class="tcard__body">
             <h4>Southbank Centre e Winter Market</h4>
+            <div class="cosa"><p class="cosa__vedi"><b>📖 Cosa vediamo</b> Il grande centro culturale sul Tamigi, nato per il Festival of Britain del 1951. A novembre lungo il fiume c’è il mercatino d’inverno con le casette di legno.</p><p class="cosa__olly"><b>👧 Per Olly</b> «Le casette di Natale sul fiume, con la ruota gigante lì vicino.»</p></div>
             <p class="tdur">⏱️ 1 h 15</p>
             <p>Lungofiume e pranzo. Le bancarelle del Winter Market aprono alle <b>11:00</b> (2/11/2026–3/1/2027, 11–22): alle 10:50 prima un giro sul lungofiume (fonte Time Out, 28/10/2026).</p>
             <details class="det"><summary>Dettagli</summary><p>Se le bancarelle non ci sono ancora, il pranzo si fa dentro il Southbank Centre o lungo il fiume.</p></details>
@@ -1103,13 +1108,14 @@
           </div>
           <p class="tcard__credito">foto: Robin Stott / CC BY-SA 2.0</p>
         </article>
-        <article class="tcard" data-tappa="sealife" data-durata="120-120" data-giorno="2026-11-15" data-ora="12:30" data-tipo="evento" data-mostra="sealife" data-bagno="sealife" data-deposito="sealife">
+        <article class="tcard" data-tappa="sealife" data-durata="120-120" data-giorno="2026-11-15" data-ora="12:30" data-tipo="evento" data-mostra="sealife" data-bagno="sealife" data-deposito="sealife" data-luogo>
           <div class="tcard__foto">
             <img src="assets/tappe/londra/sealife.webp" width="800" height="450" alt="Il tunnel sottomarino dell’acquario, con la volta di vetro e i pesci sopra la testa" loading="lazy" decoding="async">
             <span class="tcard__ora">12:30</span>
           </div>
           <div class="tcard__body">
             <h4>SEA LIFE London Aquarium</h4>
+            <div class="cosa"><p class="cosa__vedi"><b>📖 Cosa vediamo</b> L’acquario dentro County Hall, il palazzo che era la sede del governo di Londra. Squali, pinguini, tartarughe e un tunnel sotto l’acqua.</p><p class="cosa__olly"><b>👧 Per Olly</b> «Camminiamo sotto gli squali!»</p></div>
             <p class="tdur">⏱️ 2 h</p>
             <p>Domenica 10:00–17:00. Ingresso in qualsiasi momento, biglietti già presi. Zaini fino a 30 litri; guardaroba non c’è.</p>
             <details class="det"><summary>Dettagli</summary><p>Squali, pinguini e il tunnel sottomarino, dentro County Hall.</p></details>
@@ -1129,31 +1135,49 @@
             <h4>Ritira i bagagli — Bounce Waterloo</h4>
             <p class="tdur">⏱️ 10 min</p>
             <p class="deposito-ind">📍 7 Chicheley St, London SE1 7PY · aperto 24 ore <span class="st ok">✅ verificato 8/11</span></p>
-            <p>5 min a piedi dall’uscita del SEA LIFE. Poi metro verso Piccadilly Circus per Lina Stores e casa.</p>
+            <p>5 min a piedi dall’uscita del SEA LIFE. Poi pochi minuti a piedi fino al London Eye Pier per il battello.</p>
             <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5025654,-0.1165451&amp;destination_place_id=ChIJkYdEzbEFdkgRrxXGtTY-Ux4&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
           </div>
         </article>
-        <a class="percorso" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.5025654,-0.1165451&amp;destination=51.5123401,-0.1342553&amp;travelmode=transit" target="_blank" rel="noopener" data-percorso="Domenica · Bounce → Lina Stores">
+        <a class="percorso" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.5025654,-0.1165451&amp;destination=51.5034333,-0.1196629&amp;travelmode=walking" target="_blank" rel="noopener" data-percorso="Domenica · Bounce Waterloo → London Eye Pier">
           <span class="percorso__ic" aria-hidden="true">🗺️</span>
-          <span class="percorso__txt"><b>Percorso · Domenica</b><span>Bounce → Lina Stores</span></span>
-          <span class="percorso__modo">🚌 con i mezzi</span>
+          <span class="percorso__txt"><b>Percorso · Domenica</b><span>Bounce Waterloo → London Eye Pier</span></span>
+          <span class="percorso__modo">🚶 a piedi</span>
         </a>
-        <article class="tcard tcard--nofoto" data-giorno="2026-11-15" data-ora="14:50" data-tipo="trasporto" data-durata="25-25">
+        <article class="tcard tcard--nofoto" id="battello-dom" data-tappa="battello" data-giorno="2026-11-15" data-ora="14:55" data-tipo="evento" data-durata="20-20" data-piano-b="Se il battello non fa scalo a Embankment: metro da Waterloo verso Piccadilly Circus" data-luogo>
           <div class="tcard__body">
-            <span class="tcard__ora">14:50</span>
-            <h4>Bus 12 verso Piccadilly Circus</h4>
-            <p class="tdur">⏱️ ~25 min</p>
-            <p>Dalla fermata St Thomas’ Hospital / County Hall, a pochi minuti da Bounce, bus 12 fino a Piccadilly Circus (14 min), poi 8 min a piedi. Olly gratis.</p>
-            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5123401,-0.1342553&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚌 coi mezzi</span></a>
+            <span class="tcard__ora">14:55</span>
+            <h4>Battello sul Tamigi: London Eye → Embankment</h4>
+            <div class="cosa"><p class="cosa__vedi"><b>📖 Cosa vediamo</b> Il Tamigi è il fiume di Londra. In pochi minuti si vedono dall’acqua il Parlamento con il Big Ben e la London Eye.</p><p class="cosa__olly"><b>👧 Per Olly</b> «Andiamo in barca sul fiume della città.»</p></div>
+            <p class="tdur">⏱️ 20 min</p>
+            <p class="deposito-ind">⛴️ Imbarco: London Eye Waterloo Pier · sbarco: Embankment Pier</p>
+            <p>Uber Boat, si paga con la carta contactless all’imbarco. Dal fiume: Big Ben, il Parlamento e la London Eye. Adulti £10,80 a testa (tariffa centrale, la domenica è tutta «peak»), <b>Olly gratis</b> (fino a 4 anni compresi).</p>
+            <p class="nota-piccola">Che il battello da London Eye Pier faccia scalo a Embankment <span class="st todo">da verificare</span>: guardare la mappa delle linee sull’app Uber o al molo. Se non fa scalo, piano B: metro da Waterloo come prima.</p>
+            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5034333,-0.1196629&amp;destination_place_id=ChIJL7f5NMYEdkgRuIoX6qJRAXo&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
           </div>
         </article>
-        <article class="tcard" data-giorno="2026-11-15" data-ora="15:10" data-tipo="tappa" data-durata="15-15" data-entro="18:00" data-vincolo="Lina Stores la domenica chiude alle 18:00" data-piano-b="Whole Foods a Piccadilly Circus, aperto fino alle 18:00" data-bagno="lina">
+        <a class="percorso" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.5073974,-0.1213608&amp;destination=51.5098,-0.1342&amp;travelmode=transit" target="_blank" rel="noopener" data-percorso="Domenica · Embankment Pier → Embankment station → Piccadilly Circus">
+          <span class="percorso__ic" aria-hidden="true">🗺️</span>
+          <span class="percorso__txt"><b>Percorso · Domenica</b><span>Embankment Pier → Embankment station → Piccadilly Circus</span></span>
+          <span class="percorso__modo">🚇 con i mezzi</span>
+        </a>
+        <article class="tcard tcard--nofoto" data-giorno="2026-11-15" data-ora="15:15" data-tipo="trasporto" data-durata="15-15">
+          <div class="tcard__body">
+            <span class="tcard__ora">15:15</span>
+            <h4>Embankment → Bakerloo line → Piccadilly Circus</h4>
+            <p class="tdur">⏱️ ~15 min</p>
+            <p>Dal molo alla stazione di Embankment, lì accanto; Bakerloo line 2 fermate fino a Piccadilly Circus, poi a piedi fino a Lina Stores <span class="st est">stimato</span>. Olly gratis.</p>
+            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5123401,-0.1342553&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚇 coi mezzi</span></a>
+          </div>
+        </article>
+        <article class="tcard" data-giorno="2026-11-15" data-ora="15:30" data-tipo="tappa" data-durata="15-15" data-entro="18:00" data-vincolo="Lina Stores la domenica chiude alle 18:00" data-piano-b="Whole Foods a Piccadilly Circus, aperto fino alle 18:00" data-bagno="lina" data-luogo>
           <div class="tcard__foto">
             <img src="assets/tappe/londra/lina.webp" width="800" height="450" alt="La vetrina verde di Lina Stores con l’insegna bianca sopra l’ingresso" loading="lazy" decoding="async">
-            <span class="tcard__ora">15:10</span>
+            <span class="tcard__ora">15:30</span>
           </div>
           <div class="tcard__body">
             <h4>Spesa da Lina Stores</h4>
+            <div class="cosa"><p class="cosa__vedi"><b>📖 Cosa vediamo</b> Una storica drogheria italiana di Soho, con pasta fresca, salumi e formaggi. Qui facciamo la spesa per la cena.</p><p class="cosa__olly"><b>👧 Per Olly</b> «Il negozio italiano, prendiamo la pasta per stasera.»</p></div>
             <p class="tdur">⏱️ 15 min</p>
             <p>18 Brewer Street, 2 minuti da casa. Domenica 11:00–18:00. Piano B: Whole Foods a Piccadilly Circus, aperto fino alle 18:00.</p>
             <details class="det"><summary>Dettagli</summary><p>Gastronomia italiana: pasta fresca, salumi, sughi. Si compra prima di salire a casa, così la cena è già in frigo.</p></details>
@@ -1161,14 +1185,14 @@
           </div>
           <p class="tcard__credito">foto: Ewan-M / CC BY-SA 2.0</p>
         </article>
-        <article class="tcard" data-giorno="2026-11-15" data-ora="15:30" data-tipo="casa" data-durata="60-60">
+        <article class="tcard" data-giorno="2026-11-15" data-ora="15:45" data-tipo="casa" data-durata="45-45">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/apt.webp" width="800" height="450" alt="Il civico 79 di Beak Street: la vetrina verde di John Wilkes e, a sinistra, la porta col numero 79" loading="lazy" decoding="async">
-            <span class="tcard__ora">15:30</span>
+            <span class="tcard__ora">15:45</span>
           </div>
           <div class="tcard__body">
             <h4>Check-in Clevio e riposo</h4>
-            <p class="tdur">⏱️ 1 h</p>
+            <p class="tdur">⏱️ 45 min</p>
             <p>Chiave digitale Clevio, ingresso libero dopo le 15:00. Zaini giù e riposo vero, dopo la sveglia all’alba.</p>
             <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5129114,-0.1364381&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
           </div>
@@ -1179,13 +1203,14 @@
           <span class="percorso__txt"><b>Percorso · Domenica</b><span>Casa → Hamleys → luci di Carnaby</span></span>
           <span class="percorso__modo">🚶 a piedi</span>
         </a>
-        <article class="tcard" data-tappa="hamleys" data-durata="60-60" data-giorno="2026-11-15" data-ora="16:30" data-tipo="evento" data-bagno="hamleys">
+        <article class="tcard" data-tappa="hamleys" data-durata="60-60" data-giorno="2026-11-15" data-ora="16:30" data-tipo="evento" data-bagno="hamleys" data-luogo>
           <div class="tcard__foto">
             <img src="assets/tappe/londra/hamleys.webp" width="800" height="450" alt="La facciata di Hamleys su Regent Street, con le tende rosse e l’insegna sopra le vetrine" loading="lazy" decoding="async">
             <span class="tcard__ora">16:30</span>
           </div>
           <div class="tcard__body">
             <h4>Hamleys</h4>
+            <div class="cosa"><p class="cosa__vedi"><b>📖 Cosa vediamo</b> Il negozio di giocattoli più antico del mondo, aperto nel 1760, su Regent Street. Sette piani e commessi che fanno vedere i giochi.</p><p class="cosa__olly"><b>👧 Per Olly</b> «Il palazzo dei giocattoli: sette piani!»</p></div>
             <p class="tdur">⏱️ 1 h</p>
             <p>188-196 Regent Street, 3-4 minuti a piedi. Domenica 12:00–18:00. La sorpresa per Olly, dopo il riposo e col buio (tramonto ~16:10).</p>
             <details class="det"><summary>Dettagli</summary><p>Con le luci di Regent Street, se sono già accese. Le dimostrazioni dei commessi sono visive.</p></details>
@@ -1193,13 +1218,14 @@
           </div>
           <p class="tcard__credito">foto: DAVID HOLT / CC BY-SA 2.0</p>
         </article>
-        <article class="tcard" data-giorno="2026-11-15" data-ora="17:30" data-tipo="tappa">
+        <article class="tcard" data-giorno="2026-11-15" data-ora="17:30" data-tipo="tappa" data-luogo>
           <div class="tcard__foto">
             <img src="assets/tappe/londra/carnaby.webp" width="800" height="450" alt="L’arco luminoso con la scritta Carnaby sopra la strada affollata, di sera" loading="lazy" decoding="async">
             <span class="tcard__ora">17:30</span>
           </div>
           <div class="tcard__body">
             <h4>Luci di Carnaby Street</h4>
+            <div class="cosa"><p class="cosa__vedi"><b>📖 Cosa vediamo</b> La via della moda della Londra anni ’60, a due passi da casa. A Natale si riempie di luci e decorazioni sospese.</p><p class="cosa__olly"><b>👧 Per Olly</b> «La via sotto casa tutta illuminata.»</p></div>
             <p>Sulla via di casa da Hamleys, due minuti a piedi: a quell’ora sono accese da un pezzo.</p>
             <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5133,-0.1391&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
           </div>
@@ -1248,13 +1274,14 @@
           </div>
           <p class="tcard__credito">foto: No Swan So Fine / CC BY-SA 4.0</p>
         </article>
-        <article class="tcard" data-tappa="trafalgar" data-durata="15-15" data-giorno="2026-11-16" data-ora="09:30" data-tipo="tappa" data-bagno="trafalgar">
+        <article class="tcard" data-tappa="trafalgar" data-durata="15-15" data-giorno="2026-11-16" data-ora="09:30" data-tipo="tappa" data-bagno="trafalgar" data-luogo>
           <div class="tcard__foto">
             <img src="assets/tappe/londra/trafalgar.webp" width="800" height="450" alt="Le fontane di Trafalgar Square con la National Gallery sullo sfondo" loading="lazy" decoding="async">
             <span class="tcard__ora">09:30</span>
           </div>
           <div class="tcard__body">
             <h4>Trafalgar Square</h4>
+            <div class="cosa"><p class="cosa__vedi"><b>📖 Cosa vediamo</b> La piazza più famosa di Londra. Al centro la colonna dell’ammiraglio Nelson, ai piedi quattro grandi leoni di bronzo, in fondo la National Gallery.</p><p class="cosa__olly"><b>👧 Per Olly</b> «Andiamo a trovare i quattro leoni giganti.»</p></div>
             <p class="tdur">⏱️ 15 min</p>
             <p>I leoni e le fontane. Bagno: National Gallery (apre alle 10:00) o Café in the Crypt.</p>
             <details class="det"><summary>Dettagli</summary><p>L’albero norvegese di solito arriva a inizio dicembre: il 16 novembre potrebbe non esserci ancora.</p></details>
@@ -1267,26 +1294,28 @@
           <span class="percorso__txt"><b>Percorso · Lunedì</b><span>Trafalgar → Horse Guards → Big Ben</span></span>
           <span class="percorso__modo">🚶 a piedi</span>
         </a>
-        <article class="tcard" data-tappa="horseguards" data-durata="15-15" data-giorno="2026-11-16" data-ora="09:50" data-tipo="tappa" data-bagno="horseguards">
+        <article class="tcard" data-tappa="horseguards" data-durata="15-15" data-giorno="2026-11-16" data-ora="09:50" data-tipo="tappa" data-bagno="horseguards" data-luogo>
           <div class="tcard__foto">
             <img src="assets/tappe/londra/horseguards.webp" width="800" height="450" alt="Una sentinella della Household Cavalry in tunica rossa ed elmo col pennacchio, sotto l’arco" loading="lazy" decoding="async">
             <span class="tcard__ora">09:50</span>
           </div>
           <div class="tcard__body">
             <h4>Whitehall e Horse Guards</h4>
+            <div class="cosa"><p class="cosa__vedi"><b>📖 Cosa vediamo</b> La caserma storica della guardia a cavallo del Re. Dalle 10 alle 16 due soldati a cavallo, con elmo e corazza, stanno immobili nelle garitte sulla strada.</p><p class="cosa__olly"><b>👧 Per Olly</b> «I soldati a cavallo che non si muovono mai. Si guardano, ma i cavalli non si toccano.»</p></div>
             <p class="tdur">⏱️ 15 min</p>
             <p>Alle 10:00 le sentinelle a cavallo prendono servizio: 5 min di cavalli da vicino.</p>
             <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5047752,-0.1272358&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
           </div>
           <p class="tcard__credito">foto: Lewis Clarke / CC BY-SA 2.0</p>
         </article>
-        <article class="tcard" data-tappa="bigben" data-durata="10-10" data-giorno="2026-11-16" data-ora="10:05" data-tipo="tappa" data-bagno="bigben">
+        <article class="tcard" data-tappa="bigben" data-durata="10-10" data-giorno="2026-11-16" data-ora="10:05" data-tipo="tappa" data-bagno="bigben" data-luogo>
           <div class="tcard__foto">
             <img src="assets/tappe/londra/bigben.webp" width="800" height="450" alt="Il Palazzo di Westminster dal fiume, con la torre dell’orologio e il ponte" loading="lazy" decoding="async">
             <span class="tcard__ora">10:05</span>
           </div>
           <div class="tcard__body">
             <h4>Big Ben e il Parlamento</h4>
+            <div class="cosa"><p class="cosa__vedi"><b>📖 Cosa vediamo</b> Big Ben è il nome della grande campana dentro la torre dell’orologio. La torre fa parte del Palazzo di Westminster, dove si riunisce il Parlamento.</p><p class="cosa__olly"><b>👧 Per Olly</b> «L’orologio più famoso del mondo. Ascoltiamo se suona!»</p></div>
             <p class="tdur">⏱️ 10 min</p>
             <p>Foto veloce, poi Birdcage Walk.</p>
             <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5007292,-0.1246254&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
@@ -1298,13 +1327,14 @@
           <span class="percorso__txt"><b>Percorso · Lunedì</b><span>Big Ben → Birdcage Walk → Wellington Barracks</span></span>
           <span class="percorso__modo">🚶 a piedi</span>
         </a>
-        <article class="tcard" data-tappa="wellington" data-durata="45-45" data-giorno="2026-11-16" data-ora="10:15" data-tipo="evento" data-vincolo-da="10:20" data-bagno="wellington">
+        <article class="tcard" data-tappa="wellington" data-durata="45-45" data-giorno="2026-11-16" data-ora="10:15" data-tipo="evento" data-vincolo-da="10:20" data-bagno="wellington" data-luogo>
           <div class="tcard__foto">
             <img src="assets/tappe/londra/wellington.webp" width="800" height="450" alt="La banda delle Guards in cappotto grigio e colbacco esce da Wellington Barracks in una mattina d’autunno" loading="lazy" decoding="async">
             <span class="tcard__ora">10:15</span>
           </div>
           <div class="tcard__body">
             <h4>Wellington Barracks — la banda e la nuova guardia</h4>
+            <div class="cosa"><p class="cosa__vedi"><b>📖 Cosa vediamo</b> La caserma delle guardie a piedi. Qui la nuova guardia si mette in fila, viene controllata e poi parte con la banda verso Buckingham Palace per il Cambio della Guardia.</p><p class="cosa__olly"><b>👧 Per Olly</b> «I soldati con la giacca rossa e il cappellone nero, e la banda che suona.»</p></div>
             <p class="tdur">⏱️ 45 min</p>
             <p class="chip-vincolo">⏰ entro le 10:20</p>
             <p>Arrivo entro le 10:15–10:20 alle ringhiere, lato Palazzo. 10:40 ispezione e banda in cerchio. 10:57 la colonna esce con la Band of the Scots Guards. <b>Non seguirla fino ai cancelli.</b></p>
@@ -1333,26 +1363,28 @@
           <span class="percorso__txt"><b>Percorso · Lunedì</b><span>Wellington Barracks → St James’s Park (Blue Bridge) → Buckingham Palace</span></span>
           <span class="percorso__modo">🚶 a piedi</span>
         </a>
-        <article class="tcard" data-tappa="stjames" data-durata="40-40" data-comprimibile data-giorno="2026-11-16" data-ora="11:00" data-tipo="tappa" data-bagno="stjames">
+        <article class="tcard" data-tappa="stjames" data-durata="40-40" data-comprimibile data-giorno="2026-11-16" data-ora="11:00" data-tipo="tappa" data-bagno="stjames" data-luogo>
           <div class="tcard__foto">
             <img src="assets/tappe/londra/stjames.webp" width="800" height="450" alt="Il lago di St James’s Park visto dal Blue Bridge, con gli alberi e la città in fondo" loading="lazy" decoding="async">
             <span class="tcard__ora">11:00</span>
           </div>
           <div class="tcard__body">
             <h4>St James’s Park</h4>
+            <div class="cosa"><p class="cosa__vedi"><b>📖 Cosa vediamo</b> Il parco reale più antico di Londra. Sul lago vivono i pellicani da secoli; dal ponte blu si vedono Buckingham Palace e la London Eye.</p><p class="cosa__olly"><b>👧 Per Olly</b> «Andiamo a cercare i pellicani con il becco enorme.»</p></div>
             <p class="tdur">⏱️ 40 min</p>
             <p>Pausa seduti, papere e pellicani. Bagno: St James’s Café.</p>
             <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.502967,-0.1339534&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
           </div>
           <p class="tcard__credito">foto: Colin / CC BY-SA 3.0</p>
         </article>
-        <article class="tcard" data-tappa="buckingham" data-durata="20-20" data-giorno="2026-11-16" data-ora="11:40" data-tipo="tappa" data-vincolo-da="11:40" data-bagno="buckingham">
+        <article class="tcard" data-tappa="buckingham" data-durata="20-20" data-giorno="2026-11-16" data-ora="11:40" data-tipo="tappa" data-vincolo-da="11:40" data-bagno="buckingham" data-luogo>
           <div class="tcard__foto">
             <img src="assets/tappe/londra/buckingham.webp" width="800" height="450" alt="La facciata di Buckingham Palace con il Victoria Memorial e le aiuole fiorite" loading="lazy" decoding="async">
             <span class="tcard__ora">11:40</span>
           </div>
           <div class="tcard__body">
             <h4>Buckingham Palace</h4>
+            <div class="cosa"><p class="cosa__vedi"><b>📖 Cosa vediamo</b> La casa del Re a Londra. Davanti c’è il monumento alla regina Vittoria con un angelo dorato in cima. Se sul tetto c’è la bandiera reale, il Re è in casa.</p><p class="cosa__olly"><b>👧 Per Olly</b> «La casa del Re! Guardiamo se c’è la sua bandiera.»</p></div>
             <p class="tdur">⏱️ 20 min</p>
             <p class="chip-vincolo">⏰ alle 11:40 per i cavalli</p>
             <p>Buckingham Palace e Victoria Memorial, lì accanto: rientra la Old Guard con la banda e passa la Household Cavalry a cavallo (~11:45).</p>
@@ -1365,14 +1397,16 @@
           <span class="percorso__txt"><b>Percorso · Lunedì</b><span>Buckingham → Green Park station → Knightsbridge (Harrods)</span></span>
           <span class="percorso__modo">🚇 con i mezzi</span>
         </a>
-        <article class="tcard tcard--nofoto" data-giorno="2026-11-16" data-ora="12:00" data-tipo="trasporto" data-durata="25-25">
+        <article class="tcard tcard--nofoto" data-giorno="2026-11-16" data-ora="12:00" data-tipo="trasporto" data-durata="20-20" data-luogo>
           <div class="tcard__body">
             <span class="tcard__ora">12:00</span>
-            <h4>Piccadilly line, Green Park → Knightsbridge</h4>
-            <p class="tdur">⏱️ ~25 min</p>
-            <p>Canada Gate → Green Park station 10 min, Piccadilly line 2 fermate → Knightsbridge, uscita Brompton Road, Harrods a 2 min. ~£3 a testa, Olly gratis.</p>
-            <p class="nota-piccola">🛗 Green Park e Knightsbridge risultano con accesso senza scale <span class="st est">stimato</span>: da confermare sulla mappa step-free di TfL prima di partire.</p>
-            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.4994055,-0.1632344&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚇 coi mezzi</span></a>
+            <h4>Bus a due piani Green Park → Knightsbridge</h4>
+            <div class="cosa"><p class="cosa__vedi"><b>📖 Cosa vediamo</b> I bus rossi a due piani sono un simbolo di Londra. Dal piano di sopra si vede la città come da un balcone.</p><p class="cosa__olly"><b>👧 Per Olly</b> «Saliamo al piano di sopra, davanti, come i piloti.»</p></div>
+            <p class="tdur">⏱️ ~20 min</p>
+            <p>Saliamo al piano di sopra, posti davanti. Dal finestrino: il Ritz, Hyde Park Corner con il Wellington Arch e Hyde Park. Si scende a Knightsbridge, Harrods a 2 minuti. Niente scale mobili.</p>
+            <p class="nota-piccola">🚌 Linee che fanno Piccadilly → Knightsbridge: controllare alla fermata (es. 14, 9, 22) <span class="st todo">da verificare</span></p>
+            <p class="nota-piccola">Alternativa: Piccadilly line Green Park → Knightsbridge.</p>
+            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.4994055,-0.1632344&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚌 coi mezzi</span></a>
           </div>
         </article>
         <article class="tcard tcard--nofoto" data-tappa="pranzo-lun" data-durata="60-60" data-giorno="2026-11-16" data-ora="12:45" data-tipo="tappa" data-bagno="harrods">
@@ -1385,47 +1419,90 @@
             <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.4994055,-0.1632344&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
           </div>
         </article>
-        <article class="tcard" data-tappa="harrods" data-durata="40-40" data-comprimibile data-giorno="2026-11-16" data-ora="13:45" data-tipo="tappa" data-bagno="harrods">
+        <article class="tcard" data-tappa="harrods" data-durata="40-40" data-comprimibile data-giorno="2026-11-16" data-ora="13:45" data-tipo="tappa" data-bagno="harrods" data-luogo>
           <div class="tcard__foto">
             <img src="assets/tappe/londra/harrods.webp" width="800" height="450" alt="La facciata di Harrods illuminata dalle luminarie natalizie" loading="lazy" decoding="async">
             <span class="tcard__ora">13:45</span>
           </div>
           <div class="tcard__body">
             <h4>Harrods</h4>
+            <div class="cosa"><p class="cosa__vedi"><b>📖 Cosa vediamo</b> Il grande magazzino più famoso di Londra, a Knightsbridge dalla metà dell’Ottocento. Da vedere: le vetrine di Natale, la scala mobile in stile egizio e il reparto giocattoli.</p><p class="cosa__olly"><b>👧 Per Olly</b> «Il negozio gigante con le vetrine di Natale.»</p></div>
             <p class="tdur">⏱️ 40 min</p>
             <p>Reparto Natale e giocattoli, poi si esce. Il resto lo vediamo dalle vetrine.</p>
             <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.4994055,-0.1632344&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
           </div>
           <p class="tcard__credito">foto: Editor5807 / CC BY-SA 4.0</p>
         </article>
-        <a class="percorso" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.4994055,-0.1632344&amp;destination=51.4978,-0.1745&amp;travelmode=transit" target="_blank" rel="noopener" data-percorso="Lunedì · Harrods → Science Museum">
+        <a class="percorso solo-asciutto" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.4994055,-0.1632344&amp;destination=51.501461,-0.178819&amp;travelmode=transit" target="_blank" rel="noopener" data-percorso="Lunedì · Harrods → Royal Albert Hall">
           <span class="percorso__ic" aria-hidden="true">🗺️</span>
-          <span class="percorso__txt"><b>Percorso · Lunedì</b><span>Harrods → Science Museum</span></span>
+          <span class="percorso__txt"><b>Percorso · Lunedì</b><span>Harrods → Royal Albert Hall</span></span>
           <span class="percorso__modo">🚌 con i mezzi</span>
         </a>
-        <article class="tcard tcard--nofoto" data-giorno="2026-11-16" data-ora="14:25" data-tipo="trasporto" data-durata="20-20">
+        <article class="tcard tcard--nofoto solo-asciutto" data-giorno="2026-11-16" data-ora="14:30" data-tipo="trasporto" data-durata="15-15">
           <div class="tcard__body">
-            <span class="tcard__ora">14:25</span>
-            <h4>Bus verso South Kensington</h4>
-            <p class="tdur">⏱️ ~20 min</p>
-            <p>Bus 14 o 74 su Brompton Road, fermata V&amp;A (~5 min), poi ~5 min a piedi su Exhibition Road <span class="st est">stimato</span>. Alternativa: Piccadilly line Knightsbridge → South Kensington, poi tunnel pedonale coperto verso i musei.</p>
-            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.4978,-0.1745&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚌 coi mezzi</span></a>
+            <span class="tcard__ora">14:30</span>
+            <h4>Bus verso la Royal Albert Hall</h4>
+            <p class="tdur">⏱️ ~15 min</p>
+            <p>Dalla fermata di Knightsbridge, bus verso Kensington (linee 9, 52 o 452 <span class="st todo">da verificare</span>). Si scende alla fermata <b>Royal Albert Hall (RC)</b>.</p>
+            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.501461,-0.178819&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚌 coi mezzi</span></a>
           </div>
         </article>
-        <article class="tcard tcard--nofoto" data-tappa="sciencemuseum" data-durata="95-95" data-giorno="2026-11-16" data-ora="14:45" data-tipo="evento" data-vincolo="Ingresso tra le 14:45 e le 15:15 · il biglietto è nel Portafoglio" data-vincolo-da="14:45" data-mostra="sciencemuseum" data-mostra-da="14:15" data-mostra-a="15:15" data-bagno="sciencemuseum">
+        <article class="tcard tcard--nofoto solo-asciutto" id="albert-lun" data-tappa="albert" data-durata="60-60" data-giorno="2026-11-16" data-ora="14:45" data-tipo="evento" data-luogo>
+          <div class="tcard__body">
+            <span class="tcard__ora">14:45</span>
+            <h4>Albert Memorial e Royal Albert Hall</h4>
+            <div class="cosa"><p class="cosa__vedi"><b>📖 Cosa vediamo</b> La regina Vittoria fece costruire questo monumento per il marito Alberto, morto nel 1861: lui è la statua dorata seduta sotto la torre. Di fronte, la Royal Albert Hall, la sala dei concerti rotonda.</p><p class="cosa__olly"><b>👧 Per Olly</b> «Il principe d’oro sul trono, e di fronte il teatro tondo come una torta.»</p></div>
+            <p class="tdur">⏱️ 1 h</p>
+            <p class="deposito-ind">Albert Memorial, Kensington Gardens W2 2UH · parco aperto 6:00–21:30</p>
+            <p>La Royal Albert Hall (Kensington Gore SW7 2AP) si vede da fuori: è proprio di fronte al monumento.</p>
+            <p class="nota-piccola">☕ Pausa seduti con una cioccolata calda in zona (orari dei caffè della Royal Albert Hall <span class="st todo">da verificare</span>).</p>
+            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5023516,-0.177707&amp;destination_place_id=ChIJlbSG51oFdkgRLEF7gT6hWDM&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
+          </div>
+        </article>
+        <a class="percorso solo-asciutto" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.5023516,-0.177707&amp;destination=51.496715,-0.1763672&amp;travelmode=walking" target="_blank" rel="noopener" data-percorso="Lunedì · Albert Memorial → Natural History Museum">
+          <span class="percorso__ic" aria-hidden="true">🗺️</span>
+          <span class="percorso__txt"><b>Percorso · Lunedì</b><span>Albert Memorial → Natural History Museum</span></span>
+          <span class="percorso__modo">🚶 a piedi</span>
+        </a>
+        <article class="tcard tcard--nofoto solo-asciutto" data-giorno="2026-11-16" data-ora="15:50" data-tipo="trasporto" data-durata="25-25">
+          <div class="tcard__body">
+            <span class="tcard__ora">15:50</span>
+            <h4>A piedi lungo Exhibition Road fino al Natural History Museum</h4>
+            <p class="tdur">⏱️ ~25 min</p>
+            <p>~800 m <span class="st est">stimato</span>, in discesa. Se serve un bagno o una sosta: Science Museum a metà strada.</p>
+            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.4967150,-0.1763672&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
+          </div>
+        </article>
+        <a class="percorso solo-pioggia" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.4994055,-0.1632344&amp;destination=51.4972216,-0.1767283&amp;travelmode=transit" target="_blank" rel="noopener" data-percorso="Lunedì · Piano pioggia: Harrods → Science Museum">
+          <span class="percorso__ic" aria-hidden="true">🗺️</span>
+          <span class="percorso__txt"><b>Percorso · Lunedì · 🌧️ piano pioggia</b><span>Harrods → Science Museum</span></span>
+          <span class="percorso__modo">🚌 con i mezzi</span>
+        </a>
+        <article class="tcard tcard--nofoto solo-pioggia" data-giorno="2026-11-16" data-ora="14:25" data-tipo="trasporto" data-durata="20-20">
+          <div class="tcard__body">
+            <span class="tcard__ora">14:25</span>
+            <h4>Bus 14 o 74 verso South Kensington</h4>
+            <p class="tdur">⏱️ ~20 min</p>
+            <p>Bus 14 o 74 su Brompton Road, fermata V&amp;A (~5 min), poi ~5 min a piedi su Exhibition Road <span class="st est">stimato</span>. Alternativa: Piccadilly line Knightsbridge → South Kensington, poi tunnel pedonale coperto verso i musei.</p>
+            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.4972216,-0.1767283&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚌 coi mezzi</span></a>
+          </div>
+        </article>
+        <article class="tcard tcard--nofoto solo-pioggia" id="sm-lun" data-tappa="sciencemuseum" data-durata="95-95" data-giorno="2026-11-16" data-ora="14:45" data-tipo="evento" data-vincolo="Ingresso tra le 14:45 e le 15:15 · il biglietto è nel Portafoglio" data-vincolo-da="14:45" data-mostra="sciencemuseum" data-mostra-da="14:15" data-mostra-a="15:15" data-bagno="sciencemuseum" data-luogo>
           <div class="tcard__body">
             <span class="tcard__ora">14:45</span>
             <h4>Science Museum · The Garden</h4>
+            <div class="cosa"><p class="cosa__vedi"><b>📖 Cosa vediamo</b> Il museo della scienza e delle invenzioni, gratuito. Al piano -1 c’è The Garden, un’area gioco per i bambini dai 3 ai 6 anni con acqua, costruzioni, luci e suoni.</p><p class="cosa__olly"><b>👧 Per Olly</b> «Il posto dove si gioca con l’acqua e le luci.»</p></div>
+            <p class="nota-piccola">🌧️ Piano pioggia: compare con «Piove» acceso</p>
             <p class="tdur">⏱️ 1 h 35</p>
             <p class="chip-vincolo">⏰ ingresso 14:45–15:15</p>
             <p class="deposito-ind">Exhibition Road, London SW7 2DD</p>
-            <p>Biglietti presi: ingresso tra le 14:45 e le 15:15. Per Olly: <b>The Garden</b>, livello -1, area gioco per 3-6 anni (costruzioni, acqua, luci e suoni), e <b>Pattern Pod</b>, livello 0. Museo aperto 10:00–18:00. Per noi: ci si siede mentre lei gioca.</p>
+            <p>Biglietti presi (ingresso 14:45–15:15): li teniamo come piano pioggia. Per Olly: <b>The Garden</b>, livello -1, area gioco per 3-6 anni (costruzioni, acqua, luci e suoni), e <b>Pattern Pod</b>, livello 0. Museo aperto 10:00–18:00. Per noi: ci si siede mentre lei gioca.</p>
             <p class="nota-piccola">🧸 The Garden gratuita e aperta il lunedì <span class="st todo">da verificare</span>: da controllare sul sito del museo prima di partire.</p>
-            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.4978,-0.1745&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
+            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.4972216,-0.1767283&amp;destination_place_id=ChIJP9oAE0MFdkgR3iKGFKZO1SE&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
             <button class="btn btn--secondario btn--cielo gmap gmap--btn" type="button" data-codice="sciencemuseum-1">🎟️ Mostra il biglietto</button>
           </div>
         </article>
-        <article class="tcard tcard--nofoto" data-giorno="2026-11-16" data-ora="16:20" data-tipo="trasporto" data-durata="10-10">
+        <article class="tcard tcard--nofoto solo-pioggia" data-giorno="2026-11-16" data-ora="16:20" data-tipo="trasporto" data-durata="10-10">
           <div class="tcard__body">
             <span class="tcard__ora">16:20</span>
             <h4>A piedi al Natural History Museum</h4>
@@ -1434,20 +1511,21 @@
             <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.4967150,-0.1763672&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
           </div>
         </article>
-        <a class="percorso" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.4978,-0.1745&amp;destination=51.496715,-0.1763672&amp;travelmode=walking" target="_blank" rel="noopener" data-percorso="Lunedì · Science Museum → Natural History Museum">
+        <a class="percorso solo-pioggia" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.4972216,-0.1767283&amp;destination=51.496715,-0.1763672&amp;travelmode=walking" target="_blank" rel="noopener" data-percorso="Lunedì · Piano pioggia: Science Museum → Natural History Museum">
           <span class="percorso__ic" aria-hidden="true">🗺️</span>
-          <span class="percorso__txt"><b>Percorso · Lunedì</b><span>Science Museum → Natural History Museum</span></span>
+          <span class="percorso__txt"><b>Percorso · Lunedì · 🌧️ piano pioggia</b><span>Science Museum → Natural History Museum</span></span>
           <span class="percorso__modo">🚶 a piedi</span>
         </a>
-        <article class="tcard" data-tappa="nhm" data-durata="75-75" data-giorno="2026-11-16" data-ora="16:30" data-tipo="evento" data-non-prima="16:30" data-fine-entro="17:50" data-vincolo="Ingresso a fascia oraria alle 16:30, non prima · il museo chiude alle 17:50" data-mostra="nhm" data-bagno="nhm">
+        <article class="tcard" data-tappa="nhm" data-durata="75-75" data-giorno="2026-11-16" data-ora="16:30" data-tipo="evento" data-non-prima="16:30" data-fine-entro="17:50" data-vincolo="Ingresso a fascia oraria alle 16:30, non prima · il museo chiude alle 17:50" data-mostra="nhm" data-bagno="nhm" data-luogo>
           <div class="tcard__foto">
             <img src="assets/tappe/londra/nhm.webp" width="800" height="450" alt="La facciata in terracotta del Natural History Museum, con le torri e il portale ad arco" loading="lazy" decoding="async">
             <span class="tcard__ora">16:30</span>
           </div>
           <div class="tcard__body">
             <h4>Natural History Museum</h4>
+            <div class="cosa"><p class="cosa__vedi"><b>📖 Cosa vediamo</b> Il museo di storia naturale, in un palazzo che sembra una cattedrale, con animali scolpiti sulla facciata. Nella sala grande è appeso lo scheletro di una balenottera azzurra; poi ci sono i dinosauri.</p><p class="cosa__olly"><b>👧 Per Olly</b> «Andiamo a vedere la balena gigante e i dinosauri.»</p></div>
             <p class="tdur">⏱️ 1 h 15</p>
-            <p>Ingresso a fascia oraria alle 16:30, non prima. Chiude alle 17:50. Tre minuti a piedi dal Science Museum.</p>
+            <p>Ingresso a fascia oraria alle 16:30, non prima. Chiude alle 17:50. In fondo a Exhibition Road.</p>
             <details class="det"><summary>Dettagli</summary><p>I tre biglietti sono già presi: sono nella sezione Biglietti, da mostrare allo schermo.</p></details>
             <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.4967150,-0.1763672&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
             <button class="btn btn--secondario btn--cielo gmap gmap--btn" type="button" data-codice="1">🎟️ Mostra i biglietti</button>
@@ -1464,13 +1542,14 @@
           <span class="percorso__txt"><b>Percorso · Lunedì</b><span>Piccadilly Circus → luci Regent Street → casa</span></span>
           <span class="percorso__modo">🚶 a piedi</span>
         </a>
-        <article class="tcard" data-giorno="2026-11-16" data-ora="18:00" data-tipo="tappa" data-bagno="regentst">
+        <article class="tcard" data-giorno="2026-11-16" data-ora="18:00" data-tipo="tappa" data-bagno="regentst" data-luogo>
           <div class="tcard__foto">
             <img src="assets/tappe/londra/regent.webp" width="800" height="450" alt="Un angelo luminoso sospeso sopra Regent Street, con un autobus rosso sotto" loading="lazy" decoding="async">
             <span class="tcard__ora">18:00</span>
           </div>
           <div class="tcard__body">
             <h4>Luci di Regent Street</h4>
+            <div class="cosa"><p class="cosa__vedi"><b>📖 Cosa vediamo</b> La grande via curva dei negozi, illuminata per Natale. All’inizio c’è Piccadilly Circus, con gli schermi giganti e la statua con le ali.</p><p class="cosa__olly"><b>👧 Per Olly</b> «La strada delle luci e degli schermi enormi.»</p></div>
             <p>Gli angeli sospesi sopra la strada, sulla via del rientro verso Soho. Cena in zona.</p>
             <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5131,-0.1400&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚇 coi mezzi</span></a>
           </div>
@@ -1527,13 +1606,14 @@
             <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.539292,-0.14274&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚇 coi mezzi</span></a>
           </div>
         </article>
-        <article class="tcard" data-tappa="camden" data-durata="75-75" data-comprimibile data-giorno="2026-11-17" data-ora="11:00" data-tipo="evento" data-bagno="camden" data-deposito="camden">
+        <article class="tcard" data-tappa="camden" data-durata="75-75" data-comprimibile data-giorno="2026-11-17" data-ora="11:00" data-tipo="evento" data-bagno="camden" data-deposito="camden" data-luogo>
           <div class="tcard__foto">
             <img src="assets/tappe/londra/camden.webp" width="800" height="450" alt="Barche ormeggiate sul Regent’s Canal a Camden Lock, con gli edifici del mercato sull’acqua" loading="lazy" decoding="async">
             <span class="tcard__ora">11:00</span>
           </div>
           <div class="tcard__body">
             <h4>Camden Town e Camden Lock</h4>
+            <div class="cosa"><p class="cosa__vedi"><b>📖 Cosa vediamo</b> Il quartiere dei mercati lungo il Regent’s Canal. Camden Lock è la chiusa dove le barche cambiano livello d’acqua. Negozi colorati, bancarelle e street food.</p><p class="cosa__olly"><b>👧 Per Olly</b> «Le barche sul canale e le case colorate.»</p></div>
             <p class="tdur">⏱️ 1 h 15</p>
             <p>Il canale con le barche e i mercati, da vedere la mattina con poca folla. Martedì il mercato è tranquillo: Camden Lock 10:00–19:00. Il mercatino di Natale di Camden apre il 26/11, non lo troveremo (fonte Time Out, 28/10/2026).</p>
             <p class="pianob">↪️ In ritardo? Saltate Covent Garden: metro fino a Piccadilly Circus (il giro dell’andata al contrario), bagagli da Bounce in Rupert St, poi Piccadilly line diretta fino a Heathrow T5, come nel piano normale.</p>
@@ -1551,13 +1631,14 @@
           <span class="percorso__txt"><b>Percorso · Martedì</b><span>Camden Town → Poppies</span></span>
           <span class="percorso__modo">🚶 a piedi</span>
         </a>
-        <article class="tcard" data-tappa="poppies" data-durata="60-60" data-giorno="2026-11-17" data-ora="12:15" data-tipo="tappa">
+        <article class="tcard" data-tappa="poppies" data-durata="60-60" data-giorno="2026-11-17" data-ora="12:15" data-tipo="tappa" data-luogo>
           <div class="tcard__foto">
             <img src="assets/tappe/londra/poppies.webp" width="800" height="450" alt="L’ingresso di Poppies Fish &amp; Chips a Camden, con l’insegna sopra la facciata" loading="lazy" decoding="async">
             <span class="tcard__ora">12:15</span>
           </div>
           <div class="tcard__body">
             <h4>Pranzo da Poppies Fish &amp; Chips</h4>
+            <div class="cosa"><p class="cosa__vedi"><b>📖 Cosa vediamo</b> Il piatto tipico inglese: pesce fritto con patatine. Locale in stile anni ’50, il fish and chips arriva incartato come una volta.</p><p class="cosa__olly"><b>👧 Per Olly</b> «Pesce e patatine incartati nel giornale.»</p></div>
             <p class="tdur">⏱️ 1 h</p>
             <p>30 Hawley Crescent, martedì 11:00–22:00. Locale anni ’50, 4,2 su ~6.000 recensioni Google. Fish &amp; chips: il piatto più tipico di Londra, semplice per Olly.</p>
             <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5409723,-0.143961&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
@@ -1578,13 +1659,14 @@
             <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5122737,-0.1234492&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚇 coi mezzi</span></a>
           </div>
         </article>
-        <article class="tcard" data-tappa="covent" data-durata="75-75" data-comprimibile data-giorno="2026-11-17" data-ora="13:30" data-tipo="evento" data-bagno="coventgarden" data-deposito="coventgarden">
+        <article class="tcard" data-tappa="covent" data-durata="75-75" data-comprimibile data-giorno="2026-11-17" data-ora="13:30" data-tipo="evento" data-bagno="coventgarden" data-deposito="coventgarden" data-luogo>
           <div class="tcard__foto">
             <img src="assets/tappe/londra/covent.webp" width="800" height="450" alt="La galleria coperta di Covent Garden, con il tetto in ferro e vetro verde e i carretti di fiori" loading="lazy" decoding="async">
             <span class="tcard__ora">13:30</span>
           </div>
           <div class="tcard__body">
             <h4>Covent Garden</h4>
+            <div class="cosa"><p class="cosa__vedi"><b>📖 Cosa vediamo</b> Una piazza coperta che una volta era il mercato della frutta e verdura di Londra. Oggi ci sono negozi, artisti di strada e, a Natale, un grande albero e decorazioni giganti.</p><p class="cosa__olly"><b>👧 Per Olly</b> «Gli artisti di strada e l’albero di Natale gigante.»</p></div>
             <p class="tdur">⏱️ 1 h 15</p>
             <p>Dalla metro di Leicester Square, 5 minuti a piedi: il mercato coperto e gli artisti di strada. Il pranzo è già fatto a Camden. Si riparte alle 14:45.</p>
             <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5122737,-0.1234492&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
@@ -2026,7 +2108,7 @@
     <details class="acc" open>
       <summary>
         <span class="daynum" style="color:var(--gold);background:rgba(212,169,78,.1)">💶</span>
-        <span class="dtit"><h3>Quanto ci costa</h3><p>Stima ~€1.514 con la Piccadilly, ~€1.561 con l’Elizabeth</p></span>
+        <span class="dtit"><h3>Quanto ci costa</h3><p>Stima ~€1.540 con la Piccadilly, ~€1.587 con l’Elizabeth</p></span>
         <span class="chev">▼</span>
       </summary>
       <div class="dbody">
@@ -2038,8 +2120,9 @@
             <tr><td>Transfer e mezzi<small class="bnota">tariffe TfL contactless, Olly gratis, con la Northern line per Camden (+£12, ~€15): ~€63 con la Piccadilly, ~€110 con l’Elizabeth andata e ritorno</small></td><td><span class="st est">💶 stima</span></td><td class="imp">~€63 · ~€110</td></tr>
             <tr><td>UK ETA ×3<small class="bnota">£20 a persona · tutte e tre fatte; Alessandro €24,31, Vale e Olly importo in euro da confermare</small></td><td><span class="st est">💶 stima</span></td><td class="imp">~€73</td></tr>
             <tr><td>SEA LIFE<small class="bnota">2 × £33 + 1 × £30 · in euro ~€116 al cambio dell’alloggio (1 £ = 1,204 €): l’addebito vero dipende dal cambio del giorno dell’acquisto</small></td><td><span class="st ok">✅ pagato</span></td><td class="imp">£96,00 · ~€116</td></tr>
+            <tr><td>Battello sul Tamigi<small class="bnota">Uber Boat London Eye → Embankment, domenica: 2 adulti × £10,80, Olly gratis · ~€26 al cambio dell’alloggio</small></td><td><span class="st est">💶 stima</span></td><td class="imp">£21,60</td></tr>
             <tr><td>Spesa e pasti</td><td><span class="st est">💶 stima</span></td><td class="imp">~€180</td></tr>
-            <tr class="tot"><td>Totale<small class="bnota">con la Piccadilly · con l’Elizabeth A/R</small></td><td></td><td class="imp">~€1.514 · ~€1.561</td></tr>
+            <tr class="tot"><td>Totale<small class="bnota">con la Piccadilly · con l’Elizabeth A/R</small></td><td></td><td class="imp">~€1.540 · ~€1.587</td></tr>
           </tbody>
         </table>
         <p class="meta" style="margin-top:8px">Acquisti da Hamleys esclusi dal budget.</p>
@@ -2530,11 +2613,13 @@
      finché la pagina resta aperta: nessuno storage, una ricarica lo rimette su "no". */
   (function(){
     var btns = document.querySelectorAll('[data-piove]'); if (!btns.length) return;
-    var piove = false;
+    var piove = /[?&]piove=1(&|$)/.test(location.search);   // ?piove=1: si apre col piano pioggia acceso (per le prove)
     // cosa cambia con la pioggia, giorno per giorno: ogni voce porta alla card (o alla nota) che cambia
     var CAMBI = [
       { g: 'Domenica', testo: 'pranzo dentro il Southbank Centre; acquario e Hamleys sono al coperto', sel: '#pioggia-dom' },
+      { g: 'Domenica', testo: 'battello coperto, ma con pioggia forte va bene anche la metro da Waterloo', sel: '#battello-dom' },
       { g: 'Lunedì', testo: 'cerimonia a rischio: piano B a Horse Guards alle 11:00', sel: '#piano-b-lun' },
+      { g: 'Lunedì', testo: 'pomeriggio al Science Museum (biglietti presi) invece dell’Albert Memorial', sel: '#sm-lun' },
       { g: 'Martedì', testo: 'con pioggia forte Camden più corta e Covent Garden prima, che è al coperto', sel: '#pioggia-mar' }
     ];
     function vaiA(el){ VISTE.vaiA(el); }   // apre vista, giorno e <details>, poi scorre
@@ -2564,6 +2649,7 @@
       var r = box.getBoundingClientRect(), barra = document.querySelector('.barra'), fondo = window.innerHeight - (barra ? barra.offsetHeight : 0);
       if (r.bottom > fondo) window.scrollBy({ top: Math.min(r.bottom - fondo + 12, r.top - 12), behavior: 'smooth' });
     }
+    if (piove) { document.documentElement.classList.add('piove'); btns.forEach(function(b){ b.setAttribute('aria-pressed', 'true'); b.querySelector('.piove-stato').textContent = 'sì'; }); }
     btns.forEach(function(btn){ btn.addEventListener('click', function(){
       piove = !piove;
       if (navigator.vibrate) try { navigator.vibrate(10); } catch (e) {}
@@ -2629,7 +2715,7 @@
  },
  {
   "cosa": "Ascensori senza scale a Green Park e Knightsbridge",
-  "contesto": "Lunedì da Buckingham a Harrods si va con la Piccadilly line da Green Park a Knightsbridge, con il passeggino. Le due stazioni risultano con accesso senza scale, ma non è confermato sulla mappa ufficiale.",
+  "contesto": "Lunedì da Buckingham a Harrods si va col bus a due piani; l’alternativa è la Piccadilly line da Green Park a Knightsbridge, con il passeggino. Le due stazioni risultano con accesso senza scale, ma non è confermato sulla mappa ufficiale.",
   "come": "Alessandro: prima di partire aprire la mappa step-free di TfL (tfl.gov.uk) e controllare Green Park (linea Piccadilly) e Knightsbridge, uscita Brompton Road; se una delle due non è senza scale, il tratto si fa in bus o a piedi lungo Constitution Hill e Knightsbridge."
  },
  {
@@ -2641,6 +2727,21 @@
   "cosa": "The Garden del Science Museum gratuita e aperta lunedì 16/11",
   "contesto": "Lunedì dalle 14:45 il Science Museum è la tappa per Olly: The Garden (livello -1, 3-6 anni) e Pattern Pod (livello 0). Il biglietto d’ingresso è preso, ma che The Garden sia gratuita e aperta di lunedì non è confermato.",
   "come": "Alessandro: prima di partire controllare la pagina di The Garden su sciencemuseum.org.uk; se è chiusa, Pattern Pod al livello 0 e le gallerie del piano terra."
+ },
+ {
+  "cosa": "Linee dei bus di lunedì: Piccadilly → Knightsbridge e Knightsbridge → Royal Albert Hall",
+  "contesto": "Lunedì alle 12:00 bus a due piani da Green Park a Knightsbridge (es. 14, 9, 22) e, col piano asciutto, alle 14:30 da Knightsbridge alla fermata Royal Albert Hall (RC) (linee 9, 52 o 452): le linee non sono confermate.",
+  "come": "Alessandro: prima di partire controllare su TfL Go le linee dalle due fermate; sul posto, guardare il cartello della fermata."
+ },
+ {
+  "cosa": "Orari dei caffè della Royal Albert Hall lunedì 16/11",
+  "contesto": "Lunedì col piano asciutto, all’Albert Memorial dalle 14:45, è prevista una pausa seduti con una cioccolata calda in zona: gli orari dei caffè della Royal Albert Hall non sono confermati.",
+  "come": "Alessandro: controllare su royalalberthall.com gli orari dei caffè di lunedì; in alternativa un caffè su Kensington Gore o il bar del Science Museum, a metà strada verso il museo."
+ },
+ {
+  "cosa": "Scalo del battello a Embankment Pier domenica 15/11",
+  "contesto": "Domenica alle 14:55 si prende l’Uber Boat dal London Eye Waterloo Pier fino a Embankment Pier: non è confermato che la corsa da London Eye Pier faccia scalo a Embankment.",
+  "come": "Sul posto, domenica: guardare la mappa delle linee sull’app Uber o al molo. Se non fa scalo, piano B: metro da Waterloo verso Piccadilly Circus, come prima."
  }
 ];
 
@@ -3324,7 +3425,8 @@
       var cod = $('adCodice'), m = null;
       // card con data-mostra-da/-a: la scorciatoia compare nella sua finestra, anche se la card non è ancora la prossima
       [].forEach.call(document.querySelectorAll('#programma article.tcard[data-mostra-da]'), function(c){
-        var d = c.dataset; if (m || d.giorno !== lo.data) return;
+        var d = c.dataset, p = document.documentElement.classList.contains('piove'); if (m || d.giorno !== lo.data) return;
+        if (c.classList.contains(p ? 'solo-asciutto' : 'solo-pioggia')) return;
         if (now >= OROLOGIO.istante(d.giorno, d.mostraDa, 'Europe/London') && now < OROLOGIO.istante(d.giorno, d.mostraA, 'Europe/London')) m = d.mostra;
       });
       [corrente, prossima].forEach(function(x){
@@ -3386,6 +3488,18 @@
      Il pannello non si apre mai da solo: in cima c'è un banner sottile «N novità», e si apre solo se toccato.
      Il link in fondo alla pagina lo riapre con tutto lo storico, in ogni caso. */
   var NOVITA = [
+    { v: 41, data: '2026-11-08', titolo: '📖 Cosa vediamo', voci: [
+      '🗺️ Lunedì con piano A (Albert Memorial) e piano pioggia (Science Museum), bus a due piani, battello sul Tamigi domenica, e per ogni tappa la descrizione semplice di cosa vediamo',
+      'Su ogni tappa, sotto il titolo e senza aprire nulla: «📖 Cosa vediamo» in due o tre frasi e «👧 Per Olly», una frase da dirle' ] },
+    { v: 40, data: '2026-11-08', titolo: '⛴️ Battello sul Tamigi', voci: [
+      '⛴️ Domenica dopo i bagagli si va in battello: dal London Eye Pier a Embankment, con Big Ben e il Parlamento dal fiume',
+      'Domenica pomeriggio: 14:40 ritiro dei bagagli, 14:55 battello (adulti £10,80, Olly gratis), 15:15 Bakerloo line da Embankment a Piccadilly Circus, 15:30 Lina Stores, 15:45 check-in, Hamleys alle 16:30 come prima',
+      'Nel budget la riga del battello: £21,60, stimata' ] },
+    { v: 39, data: '2026-11-08', titolo: '☀️🌧️ Lunedì con piano A e piano pioggia', voci: [
+      '🗺️ Lunedì con piano A (Albert Memorial) e piano pioggia (Science Museum), e il bus a due piani da Green Park a Knightsbridge',
+      'Alle 12:00 bus a due piani fino a Knightsbridge, al piano di sopra davanti: il Ritz, Hyde Park Corner, Hyde Park. La Piccadilly line resta come alternativa',
+      'Col tempo asciutto: 14:30 bus verso la Royal Albert Hall, 14:45 Albert Memorial e Royal Albert Hall, 15:50 a piedi lungo Exhibition Road fino al Natural History Museum delle 16:30',
+      'Con «🌧️ Piove» acceso il pomeriggio diventa il Science Museum (i biglietti presi restano il piano pioggia); anche «Adesso» e la scaletta seguono il piano scelto' ] },
     { v: 38, data: '2026-11-08', titolo: '🔬 Science Museum', voci: [
       '🔬 Lunedì: Harrods più corto, Science Museum con l\'area gioco per Olly, biglietto nel Portafoglio',
       'Lunedì pomeriggio: Harrods dalle 13:45 alle 14:25 (reparto Natale e giocattoli), bus 14 o 74 fino al V&A, Science Museum dalle 14:45 (ingresso entro le 15:15) con The Garden e Pattern Pod, alle 16:20 due passi fino al Natural History Museum, che resta alle 16:30',
@@ -3669,8 +3783,11 @@
   var CAMDEN={n:'Camden Town e Camden Lock', lat:51.539292, lng:-0.14274, modo:'transit'};
   var POPPIES={n:'Poppies Fish & Chips', lat:51.5409723, lng:-0.143961};
   var HARRODS={n:'Harrods', lat:51.4994055, lng:-0.1632344, modo:'transit'};
-  var SCIENCE={n:'Science Museum', lat:51.4978, lng:-0.1745};
+  var SCIENCE={n:'Science Museum', lat:51.4972216, lng:-0.1767283};
+  var ALBERT={n:'Albert Memorial e Royal Albert Hall', lat:51.5023516, lng:-0.177707, modo:'transit'};
   var NHM={n:'Natural History Museum', lat:51.4967150, lng:-0.1763672};
+  var PIER={n:'London Eye Waterloo Pier', lat:51.5034333, lng:-0.1196629};
+  var EMBPIER={n:'Embankment Pier', lat:51.5073974, lng:-0.1213608};
   var BWATERLOO={n:'Bounce Waterloo · 7 Chicheley St', lat:51.5025654, lng:-0.1165451};
   var BRUPERT={n:'Bounce Piccadilly Circus · 53 Rupert St', lat:51.5120078, lng:-0.1336085};
 
@@ -3678,7 +3795,8 @@
     {p:BWATERLOO,   g:'dom', note:'10:35 · 🧳 si lasciano i bagagli, ritiro alle 14:40'},
     {p:SOUTHBANK,   g:'dom', note:'Lungofiume e pranzo · da Heathrow coi mezzi'},
     {p:SEALIFE,     g:'dom', note:'12:30 · County Hall, squali e pinguini'},
-    {p:LINA,        g:'dom', note:'15:10 · spesa per la cena, 2 min da casa'},
+    {p:PIER,        g:'dom', note:'14:55 · battello fino a Embankment: Big Ben e Parlamento dal fiume ⛴️'},
+    {p:LINA,        g:'dom', note:'15:30 · spesa per la cena, 2 min da casa'},
     {p:HAMLEYS,     g:'dom', note:'16:30 · la sorpresa, col buio 🧸'},
     {p:TRAFALGAR,   g:'lun', note:'09:30 · leoni e fontane'},
     {p:WELLINGTON,  g:'lun', note:'10:15 · la banda e la nuova guardia, cancellate su Birdcage Walk 🎺'},
@@ -3687,7 +3805,8 @@
     {p:HORSEGUARDS, g:'lun', note:'09:50 · cavalli nelle garitte dalle 10:00'},
     {p:BIGBEN,      g:'lun', note:'10:05 · Parliament Square e Westminster Bridge 🕰️'},
     {p:HARRODS,     g:'lun', note:'13:45 · reparto Natale e giocattoli, pranzo alle 12:45 nella Dining Hall 🎄'},
-    {p:SCIENCE,     g:'lun', note:'14:45 · The Garden, l’area gioco per Olly (ingresso 14:45–15:15) 🔬'},
+    {p:ALBERT,      g:'lun', note:'14:45 · piano asciutto: il principe d’oro sul trono, di fronte la Royal Albert Hall 👑'},
+    {p:SCIENCE,     g:'lun', note:'14:45 · piano pioggia: The Garden, l’area gioco per Olly (ingresso 14:45–15:15) 🔬'},
     {p:NHM,         g:'lun', note:'Ingresso gratuito · chiude alle 17:50 🦕'},
     {p:BRUPERT,     g:'mar', note:'10:35 · 🧳 si lasciano i bagagli, ritiro alle 15:00'},
     {p:CAMDEN,      g:'mar', note:'11:00 · il canale con le barche e i mercati 🛶'},
@@ -3698,13 +3817,13 @@
   /* percorsi: sequenza di tappe con la modalità del tragitto che porta al punto */
   var ROUTES=[
     {g:'dom', stops:[
-      {p:BWATERLOO}, {p:SOUTHBANK, mode:'walk'}, {p:SEALIFE, mode:'walk'}, {p:BWATERLOO, mode:'walk'}, {p:LINA, mode:'metro'}, {p:CASA, mode:'walk'},
+      {p:BWATERLOO}, {p:SOUTHBANK, mode:'walk'}, {p:SEALIFE, mode:'walk'}, {p:BWATERLOO, mode:'walk'}, {p:PIER, mode:'walk'}, {p:EMBPIER, mode:'metro'}, {p:LINA, mode:'metro'}, {p:CASA, mode:'walk'},
       {p:HAMLEYS, mode:'walk'}, {p:CASA, mode:'walk'}
     ]},
     {g:'lun', stops:[
       {p:CASA}, {p:TRAFALGAR, mode:'walk'}, {p:HORSEGUARDS, mode:'walk'}, {p:BIGBEN, mode:'walk'},
       {p:WELLINGTON, mode:'walk'}, {p:STJAMES, mode:'walk'}, {p:PALACE, mode:'walk'},
-      {p:HARRODS, mode:'metro'}, {p:SCIENCE, mode:'metro'}, {p:NHM, mode:'walk'}, {p:CASA, mode:'metro'}
+      {p:HARRODS, mode:'metro'}, {p:ALBERT, mode:'metro'}, {p:NHM, mode:'walk'}, {p:CASA, mode:'metro'}
     ]},
     {g:'mar', stops:[
       {p:CASA}, {p:BRUPERT, mode:'walk'}, {p:CAMDEN, mode:'metro'}, {p:POPPIES, mode:'walk'}, {p:COVENT, mode:'metro'}, {p:BRUPERT, mode:'metro'}

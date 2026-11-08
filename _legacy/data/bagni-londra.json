@@ -688,8 +688,8 @@
         "nome": "Science Museum (bagni interni)",
         "indirizzo": "Exhibition Rd, London SW7 2DD",
         "piano": "vicino a The Garden, livello -1",
-        "lat": 51.4978,
-        "lng": -0.1745,
+        "lat": 51.4972216,
+        "lng": -0.1767283,
         "distanza_m": 0,
         "minuti": 1,
         "orari": {
@@ -716,8 +716,8 @@
         "piano": "piano terra vicino sicurezza; Red/Orange Zone; 3° piano vicino ascensore",
         "lat": 51.496715,
         "lng": -0.1763672,
-        "distanza_m": 230,
-        "minuti": 3,
+        "distanza_m": 80,
+        "minuti": 2,
         "orari": {
           "lun16": "10:00–17:50"
         },

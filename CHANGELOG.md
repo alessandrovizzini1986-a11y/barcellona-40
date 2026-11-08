@@ -904,3 +904,23 @@ Cercati bug dello stesso tipo di "portiere che si rituffa nel replay": due cambi
 - **Portafoglio**: card Science Museum dopo SEA LIFE con il QR dell'ordine (`ON18896320`, SVG identico a quello fornito), nel visualizzatore a schermo pieno come «Science Museum · ordine 18896320»; link rapido «🔬 Science Museum · 1 QR». In «Adesso», lunedì dalle 14:15 alle 15:15, scorciatoia «🔬 Mostra il biglietto del Science Museum» (`data-mostra-da`/`data-mostra-a` sulla card).
 - Bagni: nuova tappa `sciencemuseum` (bagni interni del museo, piano e fasciatoio stimati; riserva i bagni del NHM). Da verificare n. 12: The Garden gratuita e aperta il lunedì. Checklist: «Biglietti Science Museum lun 16, 14:45» fatto.
 - `londra-check`: percorsi di riferimento **20**, nuovo controllo sul QR del Science Museum (decodificato = `ON18896320`). Novità v38.
+
+## Londra · ☀️🌧️ lunedì con piano A e piano pioggia (8/11/2026)
+- 12:00 «Bus a due piani Green Park → Knightsbridge» al posto della Piccadilly line (che resta come alternativa in piccolo); linee da verificare alla fermata.
+- **Piano A (asciutto, di default)**: 14:30 bus verso la Royal Albert Hall (9, 52 o 452, da verificare; fermata Royal Albert Hall (RC)) · 14:45 «Albert Memorial e Royal Albert Hall» (60 min, Portami qui con place_id) · 15:50 a piedi lungo Exhibition Road fino al NHM (~800 m stimati). Percorsi «Harrods → Royal Albert Hall» e «Albert Memorial → Natural History Museum».
+- **Piano B (solo con «Piove» acceso)**: bus 14 o 74 alle 14:25, Science Museum alle 14:45, a piedi al NHM alle 16:20, con i loro due percorsi. Coordinate del Science Museum corrette (51.4972216,-0.1767283, place_id nella card), anche in mappa e nei bagni.
+- Il meccanismo di «Piove» ora vale anche per i percorsi (`.percorso.solo-pioggia/.solo-asciutto`), le card compatte restano a griglia, `?piove=1` apre la pagina col piano pioggia acceso. Riepilogo di «Piove» con la voce del lunedì; la scorciatoia del biglietto del Science Museum compare solo col piano pioggia.
+- Mappa: marker Albert Memorial (piano asciutto) e Science Museum (piano pioggia), entrambi alle 14:45; linea di lunedì Harrods → Albert Memorial → NHM.
+- Harrods resta di 40 min (13:45–14:25): con 45 il piano pioggia (bus alle 14:25) si sovrapporrebbe.
+- Da verificare n. 13 (linee dei bus di lunedì) e n. 14 (caffè della Royal Albert Hall). `londra-check`: percorsi 22, ordine di lunedì controllato per ciascun piano, nuovo controllo sui due piani. Novità v39.
+
+## Londra · ⛴️ battello sul Tamigi domenica (8/11/2026)
+- Dopo «Ritira i bagagli — Bounce Waterloo» (14:40): 14:55 «Battello sul Tamigi: London Eye → Embankment» (Uber Boat, contactless, adulti £10,80, Olly gratis; imbarco London Eye Waterloo Pier, sbarco Embankment Pier; Portami qui con place_id) · 15:15 «Embankment → Bakerloo line → Piccadilly Circus» · Lina Stores 15:30 · check-in 15:45 (45 min) · Hamleys 16:30 invariato. Via la card del bus 12.
+- Percorsi: «Bounce → Lina Stores» sostituito da «Bounce Waterloo → London Eye Pier» (a piedi) e «Embankment Pier → Embankment station → Piccadilly Circus» (coi mezzi; Google Maps non accetta tappe intermedie in modalità mezzi, la stazione è nel nome).
+- Mappa: marker London Eye Pier (14:55), Lina Stores 15:30, linea Bounce → molo → Embankment → Lina. Budget: «Battello sul Tamigi · £21,60 · stimato» (~€26), totale ~€1.540 / ~€1.587. Riepilogo di «Piove» con la voce del battello.
+- Da verificare n. 15: scalo a Embankment Pier. `londra-check`: percorsi 23. Novità v40.
+
+## Londra · 📖 «Cosa vediamo» su ogni tappa (8/11/2026)
+- 🗺️ Lunedì con piano A (Albert Memorial) e piano pioggia (Science Museum), bus a due piani, battello sul Tamigi domenica, e per ogni tappa la descrizione semplice di cosa vediamo.
+- 21 card luogo (`data-luogo`) con il blocco `.cosa` sotto il titolo, visibile senza aprire nulla: «📖 Cosa vediamo» (2-3 frasi, al massimo ~280 caratteri) e «👧 Per Olly». Testi del prompt, con gli apostrofi tipografici della pagina. Il testo di Harrods sta sulla card di Harrods, non su quella del pranzo nella Dining Hall; il bus a due piani ha il suo, gli altri bus no.
+- `londra-check`: ogni card luogo ha «📖 Cosa vediamo» e «👧 Per Olly» non vuoti, e ogni card con `data-tappa` (tranne il pranzo da Harrods) è una card luogo. Novità v41.

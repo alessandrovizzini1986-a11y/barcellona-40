@@ -3,7 +3,7 @@
 Incertezze ancora aperte del viaggio a Londra (15–17 novembre 2026), con il contesto e chi le chiude.
 Il sito le mostra nella lista «Prima di partire» (in cima alla pagina fino al 14/11, e in Info), con lo stato «da verificare»: **l’elenco in pagina (`DA_VERIFICARE` in `_legacy/londra.html`) va tenuto allineato a questo file** — chiudendone una qui, si toglie anche lì, e viceversa.
 
-## Aperte (12)
+## Aperte (15)
 
 ### 1. Apertura del Winter Market del Southbank Centre il 15/11/2026
 
@@ -52,7 +52,7 @@ Il sito le mostra nella lista «Prima di partire» (in cima alla pagina fino al 
 
 ### 10. Ascensori senza scale a Green Park e Knightsbridge
 
-- **Contesto:** Lunedì da Buckingham a Harrods si va con la Piccadilly line da Green Park a Knightsbridge, con il passeggino. Le due stazioni risultano con accesso senza scale, ma non è confermato sulla mappa ufficiale.
+- **Contesto:** Lunedì da Buckingham a Harrods si va col bus a due piani; l’alternativa è la Piccadilly line da Green Park a Knightsbridge, con il passeggino. Le due stazioni risultano con accesso senza scale, ma non è confermato sulla mappa ufficiale.
 - **Chi e come:** Alessandro: prima di partire aprire la mappa step-free di TfL (tfl.gov.uk) e controllare Green Park (linea Piccadilly) e Knightsbridge, uscita Brompton Road; se una delle due non è senza scale, il tratto si fa in bus o a piedi lungo Constitution Hill e Knightsbridge.
 
 ### 11. Banconi e posti della Dining Hall di Harrods
@@ -64,6 +64,21 @@ Il sito le mostra nella lista «Prima di partire» (in cima alla pagina fino al 
 
 - **Contesto:** Lunedì dalle 14:45 il Science Museum è la tappa per Olly: The Garden (livello -1, 3-6 anni) e Pattern Pod (livello 0). Il biglietto d’ingresso è preso, ma che The Garden sia gratuita e aperta di lunedì non è confermato.
 - **Chi e come:** Alessandro: prima di partire controllare la pagina di The Garden su sciencemuseum.org.uk; se è chiusa, Pattern Pod al livello 0 e le gallerie del piano terra.
+
+### 13. Linee dei bus di lunedì: Piccadilly → Knightsbridge e Knightsbridge → Royal Albert Hall
+
+- **Contesto:** Lunedì alle 12:00 bus a due piani da Green Park a Knightsbridge (es. 14, 9, 22) e, col piano asciutto, alle 14:30 da Knightsbridge alla fermata Royal Albert Hall (RC) (linee 9, 52 o 452): le linee non sono confermate.
+- **Chi e come:** Alessandro: prima di partire controllare su TfL Go le linee dalle due fermate; sul posto, guardare il cartello della fermata.
+
+### 14. Orari dei caffè della Royal Albert Hall lunedì 16/11
+
+- **Contesto:** Lunedì col piano asciutto, all’Albert Memorial dalle 14:45, è prevista una pausa seduti con una cioccolata calda in zona: gli orari dei caffè della Royal Albert Hall non sono confermati.
+- **Chi e come:** Alessandro: controllare su royalalberthall.com gli orari dei caffè di lunedì; in alternativa un caffè su Kensington Gore o il bar del Science Museum, a metà strada verso il museo.
+
+### 15. Scalo del battello a Embankment Pier domenica 15/11
+
+- **Contesto:** Domenica alle 14:55 si prende l’Uber Boat dal London Eye Waterloo Pier fino a Embankment Pier: non è confermato che la corsa da London Eye Pier faccia scalo a Embankment.
+- **Chi e come:** Sul posto, domenica: guardare la mappa delle linee sull’app Uber o al molo. Se non fa scalo, piano B: metro da Waterloo verso Piccadilly Circus, come prima.
 
 ## Risolte
 
