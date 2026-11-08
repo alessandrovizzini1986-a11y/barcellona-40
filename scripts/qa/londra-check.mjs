@@ -3,7 +3,7 @@
 //
 //   npm run build && npm run preview &   poi   node scripts/qa/londra-check.mjs [http://localhost:4173]
 //
-// Controlla: i percorsi Maps identici al riferimento (21 dalla versione definitiva dell'8/11), l'ordine dei percorsi di lunedì, il payload del QR, i 3 barcode del museo i 3 QR di SEA LIFE e il QR del Science Museum (decodificati
+// Controlla: i percorsi Maps identici al riferimento (22 dalla versione definitiva dell'8/11), l'ordine dei percorsi di lunedì, il payload del QR, i 3 barcode del museo i 3 QR di SEA LIFE e il QR del Science Museum (decodificati
 // dagli SVG, non letti dal testo), le voci «da verificare» uguali fra pagina e DA_VERIFICARE_LONDRA.md,
 // nessuna chiave di storage oltre londra:novita:vista, cartella foto sotto 1,5 MB, alt su tutte le
 // immagini, nessun controllo sotto 44 px, service worker che non copre le pagine di Barcellona.
@@ -39,12 +39,13 @@ const PERCORSI = [
   'https://www.google.com/maps/dir/?api=1&origin=51.4972216,-0.1767283&destination=51.496715,-0.1763672&travelmode=walking',
   'https://www.google.com/maps/dir/?api=1&origin=51.4967150,-0.1763672&destination=51.5098,-0.1342&travelmode=transit',
   'https://www.google.com/maps/dir/?api=1&origin=51.5098,-0.1342&destination=51.5129114,-0.1364381&waypoints=51.5131,-0.1400&travelmode=walking',
-  // martedì (5): il piano B sta dentro la card di Camden, quindi viene prima di Camden → Poppies. Dal 7/11 i bagagli
-  // stanno a Bounce Piccadilly Circus, 53 Rupert St (dall'8/11; prima Broadwick St): il piano B e la partenza passano da lì
-  'https://www.google.com/maps/dir/?api=1&origin=51.5129114,-0.1364381&destination=51.539292,-0.14274&travelmode=transit',
+  // martedì (6), versione definitiva dell'8/11: Beak St → Rupert St, Rupert St → Camden, piano B dentro la card di Camden,
+  // Camden → Poppies, Poppies → Covent Garden, Covent Garden → Rupert St → Heathrow T5
+  'https://www.google.com/maps/dir/?api=1&origin=51.5129114,-0.1364381&destination=51.5120078,-0.1336085&travelmode=walking',
+  'https://www.google.com/maps/dir/?api=1&origin=51.5120078,-0.1336085&destination=51.539292,-0.14274&travelmode=transit',
   'https://www.google.com/maps/dir/?api=1&origin=51.539292,-0.14274&destination=51.4723,-0.4887&waypoints=51.5120078,-0.1336085&travelmode=transit',
   'https://www.google.com/maps/dir/?api=1&origin=51.539292,-0.14274&destination=51.5409723,-0.143961&travelmode=walking',
-  'https://www.google.com/maps/dir/?api=1&origin=51.539292,-0.14274&destination=51.5122737,-0.1234492&travelmode=transit',
+  'https://www.google.com/maps/dir/?api=1&origin=51.5409723,-0.143961&destination=51.5122737,-0.1234492&travelmode=transit',
   'https://www.google.com/maps/dir/?api=1&origin=51.5122737,-0.1234492&destination=51.4723,-0.4887&waypoints=51.5120078,-0.1336085&travelmode=transit'
 ]
 const QR_PAYLOAD = '$BLQ3039188LGT@'
@@ -177,7 +178,7 @@ const ordineGiorno = (data, prefisso, piove) => p.evaluate(({ data, prefisso, pi
   const mancanti = card.filter((c) => c.tappa && !punti.some((pt) => vicino(pt, c.p))).map((c) => c.nome)
   return { n: perc.length, punti: punti.length, errori, mancanti }
 }, { data, prefisso, piove, CASA })
-for (const [data, prefisso, nome, piani] of [['2026-11-15', 'Domenica', 'domenica', [false]], ['2026-11-16', 'Lunedì', 'lunedì', [false, true]]]) {
+for (const [data, prefisso, nome, piani] of [['2026-11-15', 'Domenica', 'domenica', [false]], ['2026-11-16', 'Lunedì', 'lunedì', [false, true]], ['2026-11-17', 'Martedì', 'martedì', [false]]]) {
   for (const piove of piani) {
     const r = await ordineGiorno(data, prefisso, piove)
     ok(`${nome}${piani.length > 1 ? (piove ? ' con «Piove»' : ', asciutto') : ''}: i percorsi toccano ogni tappa una sola volta, nell'ordine delle card`, !r.errori.length && !r.mancanti.length, `${r.n} percorsi, ${r.punti} punti` + (r.errori.length ? ' · ' + r.errori.join('; ') : '') + (r.mancanti.length ? ' · tappe senza percorso: ' + r.mancanti.join(', ') : ''))

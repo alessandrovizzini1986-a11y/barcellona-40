@@ -938,3 +938,9 @@ Cercati bug dello stesso tipo di "portiere che si rituffa nel replay": due cambi
 - Albert Memorial **65 min** (14:45–15:50) con bagni: nuova tappa `albert` in `bagni-londra.json`, principale i bagni interni del Science Museum, riserva il NHM, distanze e minuti stimati.
 - Harrods resta di **40 min** (13:45–14:25), non 45: con 45 finirebbe alle 14:30 e il bus del piano pioggia delle 14:25 si sovrapporrebbe (la verifica chiede orari senza sovrapposizioni in tutti e due i piani).
 - Checklist: «Biglietti Science Museum (lun 16, 14:45) · piano pioggia» fatto. Novità v43.
+
+## Londra · versione definitiva · D. martedì
+- Bug di Camden: già corretto («Portami qui» verso 51.539292,-0.14274); il controllo «nessun Portami qui verso Heathrow fuori dalle card di trasporto» c'era già.
+- «Lascia i bagagli — Bounce Piccadilly Circus»: badge «da prenotare» (martedì 10:30–15:15, 3 valigie regolari) e testo «a 2 min dalla stazione della Piccadilly line per Heathrow». «Ritira i bagagli e parti»: «Piccadilly Circus ha solo scale mobili». Camden (nota del mercato), Poppies (apre alle 11:00) e la partenza delle 14:45 erano già allineati.
+- Percorsi: nuovo «Beak St → Bounce Rupert St» (a piedi). Per la regola «ogni tappa una sola volta, nell'ordine delle card» cambiano anche due origini non elencate nel prompt: «Beak St → Camden Town» diventa «Bounce Rupert St → Camden Town» (si parte dal deposito, non di nuovo da casa) e «Camden Town → Covent Garden» diventa «Poppies → Covent Garden» (si parte dal pranzo). «Covent Garden → Tottenham Court Road» e «Covent Garden → Heathrow T5» diretti non c'erano più.
+- `londra-check`: percorsi 22, ordine controllato anche il martedì (il piano B di Camden è un'alternativa e non conta). Novità v44.
