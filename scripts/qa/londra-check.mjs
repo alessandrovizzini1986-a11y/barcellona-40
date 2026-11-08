@@ -3,7 +3,7 @@
 //
 //   npm run build && npm run preview &   poi   node scripts/qa/londra-check.mjs [http://localhost:4173]
 //
-// Controlla: i percorsi Maps identici al riferimento (17 dal double check del 7/11), l'ordine dei percorsi di lunedì, il payload del QR, i 3 barcode del museo e i 3 QR di SEA LIFE (decodificati
+// Controlla: i percorsi Maps identici al riferimento (20 dall'8/11, col Science Museum), l'ordine dei percorsi di lunedì, il payload del QR, i 3 barcode del museo i 3 QR di SEA LIFE e il QR del Science Museum (decodificati
 // dagli SVG, non letti dal testo), le voci «da verificare» uguali fra pagina e DA_VERIFICARE_LONDRA.md,
 // nessuna chiave di storage oltre londra:novita:vista, cartella foto sotto 1,5 MB, alt su tutte le
 // immagini, nessun controllo sotto 44 px, service worker che non copre le pagine di Barcellona.
@@ -27,13 +27,15 @@ const PERCORSI = [
   'https://www.google.com/maps/dir/?api=1&origin=51.501558,-0.119506&destination=51.5025654,-0.1165451&travelmode=walking',
   'https://www.google.com/maps/dir/?api=1&origin=51.5025654,-0.1165451&destination=51.5123401,-0.1342553&travelmode=transit',
   'https://www.google.com/maps/dir/?api=1&origin=51.5129114,-0.1364381&destination=51.5133,-0.1391&waypoints=51.51283,-0.1400828&travelmode=walking',
-  // lunedì (8): L1–L5 nell'ordine delle card dopo il Cambio della Guardia (double check del 7/11), poi i tre del pomeriggio
+  // lunedì (9): L1–L5 nell'ordine delle card dopo il Cambio della Guardia (double check del 7/11), poi il pomeriggio
+  // col Science Museum (dall'8/11: Harrods → Science Museum coi mezzi, Science Museum → NHM a piedi)
   'https://www.google.com/maps/dir/?api=1&origin=51.5129114,-0.1364381&destination=51.508039,-0.128069&travelmode=walking',
   'https://www.google.com/maps/dir/?api=1&origin=51.508039,-0.128069&destination=51.5007292,-0.1246254&waypoints=51.5047752,-0.1272358&travelmode=walking',
   'https://www.google.com/maps/dir/?api=1&origin=51.5007292,-0.1246254&destination=51.5003309,-0.1356875&travelmode=walking',
   'https://www.google.com/maps/dir/?api=1&origin=51.5003309,-0.1356875&destination=51.501364,-0.14189&waypoints=51.502967,-0.1339534&travelmode=walking',
   'https://www.google.com/maps/dir/?api=1&origin=51.501364,-0.14189&destination=51.4994055,-0.1632344&travelmode=transit',
-  'https://www.google.com/maps/dir/?api=1&origin=51.4994055,-0.1632344&destination=51.4967150,-0.1763672&travelmode=walking',
+  'https://www.google.com/maps/dir/?api=1&origin=51.4994055,-0.1632344&destination=51.4978,-0.1745&travelmode=transit',
+  'https://www.google.com/maps/dir/?api=1&origin=51.4978,-0.1745&destination=51.496715,-0.1763672&travelmode=walking',
   'https://www.google.com/maps/dir/?api=1&origin=51.4967150,-0.1763672&destination=51.5098,-0.1342&travelmode=transit',
   'https://www.google.com/maps/dir/?api=1&origin=51.5098,-0.1342&destination=51.5129114,-0.1364381&waypoints=51.5131,-0.1400&travelmode=walking',
   // martedì (5): il piano B sta dentro la card di Camden, quindi viene prima di Camden → Poppies. Dal 7/11 i bagagli
@@ -46,10 +48,11 @@ const PERCORSI = [
 ]
 const QR_PAYLOAD = '$BLQ3039188LGT@'
 const BARCODE = ['1001401807011726169', '1001401807011726170', '1001401807011726171']
+const SCIENCE_MUSEUM = 'ON18896320'   // codice dell'ordine 18896320, un QR per 2 adulti + 1 bambina
 const SEALIFE = ['772334430770151846', '773215047000220012', '777155289086963187']   // codici numerici del PDF ufficiale, ordine 129390167
 const LIMITE_FOTO_KB = 1500
 
-// ---------- decodifica QR (versioni 1–3, un blocco, modalità byte o numerica) da un path SVG a tratti orizzontali ----------
+// ---------- decodifica QR (versioni 1–3, un blocco, modalità byte, numerica o alfanumerica) da un path SVG a tratti orizzontali ----------
 function moduliDaPath(d, quiet) {
   const righe = new Map(); let x = 0, y = 0
   for (const [, c, a, b] of d.matchAll(/([MmHh])\s*(-?[\d.]+)(?:\s+(-?[\d.]+))?/g)) {
@@ -85,6 +88,11 @@ function decodificaQR(scuro, n) {
     } else if (modo === 1) {                                       // numerica: 3 cifre in 10 bit, poi 2 in 7 o 1 in 4
       const len = leggi(10); if (len < 1) continue
       for (let r = len; r > 0; r -= 3) { const k = Math.min(r, 3), x = leggi([0, 4, 7, 10][k]); if (x >= 10 ** k) { s = ''; break } s += String(x).padStart(k, '0') }
+      if (s.length !== len || p > flusso.length) continue
+    } else if (modo === 2) {                                       // alfanumerica: 2 caratteri in 11 bit, l'ultimo da solo in 6
+      const AN = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ $%*+-./:'
+      const len = leggi(9); if (len < 1) continue
+      for (let r = len; r > 0; r -= 2) { if (r >= 2) { const x = leggi(11); if (x >= 45 * 45) { s = ''; break } s += AN[Math.floor(x / 45)] + AN[x % 45] } else { const x = leggi(6); if (x >= 45) { s = ''; break } s += AN[x] } }
       if (s.length !== len || p > flusso.length) continue
     } else continue
     if (leggi(4) !== 0) continue                                   // terminatore
@@ -177,6 +185,10 @@ ok('3 barcode del museo: CODE128 decodificati, numero in chiaro uguale, fondo bi
 const sl = await p.evaluate(() => [...document.querySelectorAll('#sealifeCard .tk-qr')].map((s) => ({ vb: s.getAttribute('viewBox'), d: s.querySelector('path').getAttribute('d'), sfondo: s.querySelector('rect')?.getAttribute('fill'), num: s.closest('.tk-box')?.querySelector('.tk-num')?.textContent.trim() })))
 const slLetti = sl.map((x) => { const n = +x.vb.split(/\s+/)[2] - 4; return decodificaQR(moduliDaPath(x.d, 2), n) })
 ok('3 QR di SEA LIFE: decodificati, uguali al codice numerico del PDF e al numero in chiaro, fondo bianco', sl.length === 3 && SEALIFE.every((n, i) => slLetti[i].length === 1 && slLetti[i][0] === n && sl[i].num === n && sl[i].sfondo === '#fff'), slLetti.map((x) => x.join('|')).join(' · '))
+
+const sm = await p.evaluate(() => [...document.querySelectorAll('#scienceMuseumCard .tk-qr')].map((s) => ({ vb: s.getAttribute('viewBox'), d: s.querySelector('path').getAttribute('d'), sfondo: s.querySelector('rect')?.getAttribute('fill'), num: s.closest('.tk-box')?.querySelector('.tk-num')?.textContent.trim() })))
+const smLetti = sm.map((x) => decodificaQR(moduliDaPath(x.d, 2), +x.vb.split(/\s+/)[2] - 4))
+ok('QR del Science Museum: uno solo, decodificato = codice dell\'ordine e numero in chiaro, fondo bianco', sm.length === 1 && smLetti[0].length === 1 && smLetti[0][0] === SCIENCE_MUSEUM && sm[0].num === SCIENCE_MUSEUM && sm[0].sfondo === '#fff', smLetti.map((x) => x.join('|')).join(' · '))
 
 const dvPagina = await p.evaluate(() => (window.DA_VERIFICARE || []).length)
 const dvLista = await p.$$eval('#ppTutta .pp-voce--da_verificare', (x) => x.length)

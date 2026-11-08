@@ -1,6 +1,6 @@
 {
   "versione": 1,
-  "aggiornato_il": "2026-10-08",
+  "aggiornato_il": "2026-11-08",
   "metodo_distanze": "haversine × 1,3, passo bambina 4 km/h — sempre STIMATO",
   "regola_caffe": "Negli hotel 4-5★ si entra nella hall, si ordina un caffè o una cioccolata al bar e si usano i bagni dei clienti. Mai entrare solo per il bagno.",
   "da_evitare": [
@@ -674,6 +674,64 @@
           "fasciatoio"
         ],
         "note": ""
+      },
+      "avviso": ""
+    },
+    {
+      "tappa": "sciencemuseum",
+      "nome_tappa": "Science Museum · The Garden",
+      "giorni": [
+        "lun16"
+      ],
+      "principale": {
+        "id": "sciencemuseum",
+        "nome": "Science Museum (bagni interni)",
+        "indirizzo": "Exhibition Rd, London SW7 2DD",
+        "piano": "vicino a The Garden, livello -1",
+        "lat": 51.4978,
+        "lng": -0.1745,
+        "distanza_m": 0,
+        "minuti": 1,
+        "orari": {
+          "lun16": "10:00–18:00"
+        },
+        "costo": "gratis",
+        "per_bambini": "no",
+        "fasciatoio": "sì, vicino a The Garden",
+        "ascensore": "sì",
+        "fonte": "Science Museum (orari del museo)",
+        "verificato_il": "2026-11-08",
+        "stimati": [
+          "distanza_m",
+          "minuti",
+          "piano",
+          "fasciatoio"
+        ],
+        "note": "dentro il museo, dopo l’ingresso"
+      },
+      "riserva": {
+        "id": "nhm",
+        "nome": "Natural History Museum (bagni interni)",
+        "indirizzo": "Cromwell Rd, London SW7 5BD",
+        "piano": "piano terra vicino sicurezza; Red/Orange Zone; 3° piano vicino ascensore",
+        "lat": 51.496715,
+        "lng": -0.1763672,
+        "distanza_m": 230,
+        "minuti": 3,
+        "orari": {
+          "lun16": "10:00–17:50"
+        },
+        "costo": "gratis",
+        "per_bambini": "no",
+        "fasciatoio": "sì (piano terra Red Zone, Orange Zone, piano interrato area picnic, 3° piano)",
+        "ascensore": "sì",
+        "fonte": "AccessAble + NHM Visual Guide (ufficiali)",
+        "verificato_il": "2026-10-08",
+        "stimati": [
+          "distanza_m",
+          "minuti"
+        ],
+        "note": "~200 m su Exhibition Road / Cromwell Road"
       },
       "avviso": ""
     },

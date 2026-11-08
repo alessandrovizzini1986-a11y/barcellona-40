@@ -3,7 +3,7 @@
 Incertezze ancora aperte del viaggio a Londra (15–17 novembre 2026), con il contesto e chi le chiude.
 Il sito le mostra nella lista «Prima di partire» (in cima alla pagina fino al 14/11, e in Info), con lo stato «da verificare»: **l’elenco in pagina (`DA_VERIFICARE` in `_legacy/londra.html`) va tenuto allineato a questo file** — chiudendone una qui, si toglie anche lì, e viceversa.
 
-## Aperte (11)
+## Aperte (12)
 
 ### 1. Apertura del Winter Market del Southbank Centre il 15/11/2026
 
@@ -60,6 +60,11 @@ Il sito le mostra nella lista «Prima di partire» (in cima alla pagina fino al 
 - **Contesto:** Lunedì si pranza alle 12:45 nella Dining Hall di Harrods: quali banconi ci sono (pasta, pizza) e quanti posti a sedere non è confermato da una fonte ufficiale.
 - **Chi e come:** Sul posto, lunedì: se la Dining Hall è piena o non c’è niente per Olly, piano B la food court del 2° piano, a 5 minuti.
 
+### 12. The Garden del Science Museum gratuita e aperta lunedì 16/11
+
+- **Contesto:** Lunedì dalle 14:45 il Science Museum è la tappa per Olly: The Garden (livello -1, 3-6 anni) e Pattern Pod (livello 0). Il biglietto d’ingresso è preso, ma che The Garden sia gratuita e aperta di lunedì non è confermato.
+- **Chi e come:** Alessandro: prima di partire controllare la pagina di The Garden su sciencemuseum.org.uk; se è chiusa, Pattern Pod al livello 0 e le gallerie del piano terra.
+
 ## Risolte
 
 Tenute per memoria, non compaiono più nella pagina.
@@ -79,6 +84,7 @@ Funzione «Bagni puliti» (`_legacy/data/bagni-londra.json`, dati del 08/10/2026
 - Hall degli hotel (Marriott County Hall, Ham Yard, Royal Horseguards, voco Camden, NoMad): piano dei bagni, ascensore, fasciatoio.
 - National Gallery: piano dei bagni vicino all'ingresso Getty.
 - Supreme Court: piano dei bagni e accesso libero ai bagni dopo i controlli.
+- Science Museum: piano dei bagni vicino a The Garden e fasciatoio.
 - Harrods: a quale piano si trovano i bagni con fasciatoio più vicini all'ingresso.
 - Poppies Camden: orari di martedì 17.
 - voco Camden: indirizzo.
