@@ -6,3 +6,6 @@ __pycache__/
 .DS_Store
 scripts/qa/audit/londra/lighthouse-*.json
 scripts/qa/audit/out/
+
+# pacchetto per la revisione esterna della fruibilità di Londra (~24 MB): si rigenera, non si versiona
+scripts/qa/audit/londra/revisione-ux-londra.zip
