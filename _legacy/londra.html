@@ -663,6 +663,10 @@
   .tcard:not([data-tipo="evento"]):not(.tcard--plus):not(.tcard--nofoto) > .tcard__foto .tcard__ora{left:var(--s-2);bottom:var(--s-1);font-size:var(--f-14)}
   .tcard:not([data-tipo="evento"]):not(.tcard--plus):not(.tcard--nofoto) > .tcard__body{grid-area:body;padding:var(--s-3) var(--s-4) 2px var(--s-3)}
   .tcard:not([data-tipo="evento"]):not(.tcard--plus):not(.tcard--nofoto) > .tcard__credito{grid-area:credito}
+  /* card deposito (data-tipo="deposito"): compatta come le altre, con 🧳 al posto della foto (nessuna immagine in più) */
+  .tcard__foto--icona{display:grid;place-items:center;background-image:none;background-color:rgba(212,169,78,.16)}
+  .tcard__icona{font-size:44px;line-height:1;margin-bottom:12px}
+  .deposito-ind{font-weight:600;color:var(--ink)!important}
   /* niente salto quando compare «Disponibile offline»: lo spazio è già riservato */
   .offline-ok[hidden]{display:block;visibility:hidden}
   /* portafoglio */
@@ -1064,20 +1068,36 @@
           <p class="tcard__credito">foto: Chris McKenna (Thryduulf) / CC BY-SA 4.0</p>
         </article>
         
+        <a class="percorso" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.5031,-0.1132&amp;destination=51.5054668,-0.1171985&amp;waypoints=51.5025654,-0.1165451&amp;travelmode=walking" target="_blank" rel="noopener" data-percorso="Domenica · Waterloo → Bounce → Southbank Centre">
+          <span class="percorso__ic" aria-hidden="true">🗺️</span>
+          <span class="percorso__txt"><b>Percorso · Domenica</b><span>Waterloo → Bounce → Southbank Centre</span></span>
+          <span class="percorso__modo">🚶 a piedi</span>
+        </a>
+        <article class="tcard tcard--deposito" data-giorno="2026-11-15" data-ora="10:35" data-tipo="deposito" data-durata="10-10" data-deposito-id="bounce_waterloo">
+          <div class="tcard__foto tcard__foto--icona"><span class="tcard__icona" aria-hidden="true">🧳</span><span class="tcard__ora">10:35</span></div>
+          <div class="tcard__body">
+            <h4>Lascia i bagagli — Bounce Waterloo</h4>
+            <p class="tdur">⏱️ 10 min</p>
+            <p class="deposito-ind">📍 7 Chicheley St, London SE1 7PY · minimarket di fronte alla stazione di Waterloo · aperto 24 ore <span class="st ok">✅ verificato 8/11</span></p>
+            <p>Uscita Waterloo, ~5 min a piedi. Mostra il QR di Bounce, 3 trolley. Le borse piccole restano con noi: documenti, farmaci, power bank. Resta finché non mettono via le valigie.</p>
+            <p class="nota-piccola">Riserva: Stasher London Eye, dentro County Hall, Belvedere Rd SE1 7PB · 7:00–23:00.</p>
+            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5025654,-0.1165451&amp;destination_place_id=ChIJkYdEzbEFdkgRrxXGtTY-Ux4&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
+          </div>
+        </article>
         <a class="percorso" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.5054668,-0.1171985&amp;destination=51.501558,-0.119506&amp;travelmode=walking" target="_blank" rel="noopener" data-percorso="Domenica · Southbank Centre → SEA LIFE">
           <span class="percorso__ic" aria-hidden="true">🗺️</span>
           <span class="percorso__txt"><b>Percorso · Domenica</b><span>Southbank Centre → SEA LIFE</span></span>
           <span class="percorso__modo">🚶 a piedi</span>
         </a>
-        <article class="tcard" data-tappa="southbank" data-durata="75-75" data-comprimibile data-giorno="2026-11-15" data-ora="10:45" data-tipo="tappa" data-bagno="southbank">
+        <article class="tcard" data-tappa="southbank" data-durata="75-75" data-comprimibile data-giorno="2026-11-15" data-ora="10:50" data-tipo="tappa" data-bagno="southbank">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/southbank.webp" width="800" height="450" alt="Le scale gialle del Southbank Centre, con il palazzo in cemento e la gente che passa" loading="lazy" decoding="async">
-            <span class="tcard__ora">10:45</span>
+            <span class="tcard__ora">10:50</span>
           </div>
           <div class="tcard__body">
             <h4>Southbank Centre e Winter Market</h4>
             <p class="tdur">⏱️ 1 h 15</p>
-            <p>Lungofiume e pranzo. Le bancarelle del Winter Market aprono alle <b>11:00</b> (2/11/2026–3/1/2027, 11–22): alle 10:45 prima un giro sul lungofiume (fonte Time Out, 28/10/2026).</p>
+            <p>Lungofiume e pranzo. Le bancarelle del Winter Market aprono alle <b>11:00</b> (2/11/2026–3/1/2027, 11–22): alle 10:50 prima un giro sul lungofiume (fonte Time Out, 28/10/2026).</p>
             <details class="det"><summary>Dettagli</summary><p>Se le bancarelle non ci sono ancora, il pranzo si fa dentro il Southbank Centre o lungo il fiume.</p></details>
             <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5054668,-0.1171985&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚇 coi mezzi</span></a>
           </div>
@@ -1098,24 +1118,39 @@
           </div>
           <p class="tcard__credito">foto: ʘx / CC BY-SA 4.0</p>
         </article>
-                        <a class="percorso" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.501558,-0.119506&amp;destination=51.5123401,-0.1342553&amp;travelmode=transit" target="_blank" rel="noopener" data-percorso="Domenica · SEA LIFE → Lina Stores">
+        <a class="percorso" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.501558,-0.119506&amp;destination=51.5025654,-0.1165451&amp;travelmode=walking" target="_blank" rel="noopener" data-percorso="Domenica · SEA LIFE → Bounce">
           <span class="percorso__ic" aria-hidden="true">🗺️</span>
-          <span class="percorso__txt"><b>Percorso · Domenica</b><span>SEA LIFE → Lina Stores</span></span>
+          <span class="percorso__txt"><b>Percorso · Domenica</b><span>SEA LIFE → Bounce</span></span>
+          <span class="percorso__modo">🚶 a piedi</span>
+        </a>
+        <article class="tcard tcard--deposito" data-giorno="2026-11-15" data-ora="14:40" data-tipo="deposito" data-durata="10-10" data-deposito-id="bounce_waterloo">
+          <div class="tcard__foto tcard__foto--icona"><span class="tcard__icona" aria-hidden="true">🧳</span><span class="tcard__ora">14:40</span></div>
+          <div class="tcard__body">
+            <h4>Ritira i bagagli — Bounce Waterloo</h4>
+            <p class="tdur">⏱️ 10 min</p>
+            <p class="deposito-ind">📍 7 Chicheley St, London SE1 7PY · aperto 24 ore <span class="st ok">✅ verificato 8/11</span></p>
+            <p>5 min a piedi dall’uscita del SEA LIFE. Poi metro verso Piccadilly Circus per Lina Stores e casa.</p>
+            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5025654,-0.1165451&amp;destination_place_id=ChIJkYdEzbEFdkgRrxXGtTY-Ux4&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
+          </div>
+        </article>
+        <a class="percorso" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.5025654,-0.1165451&amp;destination=51.5123401,-0.1342553&amp;travelmode=transit" target="_blank" rel="noopener" data-percorso="Domenica · Bounce → Lina Stores">
+          <span class="percorso__ic" aria-hidden="true">🗺️</span>
+          <span class="percorso__txt"><b>Percorso · Domenica</b><span>Bounce → Lina Stores</span></span>
           <span class="percorso__modo">🚌 con i mezzi</span>
         </a>
-        <article class="tcard tcard--nofoto" data-giorno="2026-11-15" data-ora="14:35" data-tipo="trasporto" data-durata="25-25">
+        <article class="tcard tcard--nofoto" data-giorno="2026-11-15" data-ora="14:50" data-tipo="trasporto" data-durata="25-25">
           <div class="tcard__body">
-            <span class="tcard__ora">14:35</span>
+            <span class="tcard__ora">14:50</span>
             <h4>Bus 12 verso Piccadilly Circus</h4>
             <p class="tdur">⏱️ ~25 min</p>
-            <p>Fermata St Thomas’ Hospital / County Hall (3 min a piedi), bus 12 fino a Piccadilly Circus (14 min), poi 8 min a piedi. Olly gratis.</p>
+            <p>Dalla fermata St Thomas’ Hospital / County Hall, a pochi minuti da Bounce, bus 12 fino a Piccadilly Circus (14 min), poi 8 min a piedi. Olly gratis.</p>
             <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5123401,-0.1342553&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚌 coi mezzi</span></a>
           </div>
         </article>
-        <article class="tcard" data-giorno="2026-11-15" data-ora="15:00" data-tipo="tappa" data-durata="15-15" data-entro="18:00" data-vincolo="Lina Stores la domenica chiude alle 18:00" data-piano-b="Whole Foods a Piccadilly Circus, aperto fino alle 18:00" data-bagno="lina">
+        <article class="tcard" data-giorno="2026-11-15" data-ora="15:10" data-tipo="tappa" data-durata="15-15" data-entro="18:00" data-vincolo="Lina Stores la domenica chiude alle 18:00" data-piano-b="Whole Foods a Piccadilly Circus, aperto fino alle 18:00" data-bagno="lina">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/lina.webp" width="800" height="450" alt="La vetrina verde di Lina Stores con l’insegna bianca sopra l’ingresso" loading="lazy" decoding="async">
-            <span class="tcard__ora">15:00</span>
+            <span class="tcard__ora">15:10</span>
           </div>
           <div class="tcard__body">
             <h4>Spesa da Lina Stores</h4>
@@ -1126,14 +1161,14 @@
           </div>
           <p class="tcard__credito">foto: Ewan-M / CC BY-SA 2.0</p>
         </article>
-        <article class="tcard" data-giorno="2026-11-15" data-ora="15:15" data-tipo="casa" data-durata="75-75">
+        <article class="tcard" data-giorno="2026-11-15" data-ora="15:30" data-tipo="casa" data-durata="60-60">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/apt.webp" width="800" height="450" alt="Il civico 79 di Beak Street: la vetrina verde di John Wilkes e, a sinistra, la porta col numero 79" loading="lazy" decoding="async">
-            <span class="tcard__ora">15:15</span>
+            <span class="tcard__ora">15:30</span>
           </div>
           <div class="tcard__body">
             <h4>Check-in Clevio e riposo</h4>
-            <p class="tdur">⏱️ 1 h 15</p>
+            <p class="tdur">⏱️ 1 h</p>
             <p>Chiave digitale Clevio, ingresso libero dopo le 15:00. Zaini giù e riposo vero, dopo la sveglia all’alba.</p>
             <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5129114,-0.1364381&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
           </div>
@@ -1440,18 +1475,28 @@
           </div>
           <div class="tcard__body">
             <h4>Check-out e bagagli in deposito</h4>
-            <p>10:30 check-out → Bounce, 43 Broadwick St (prenotare lunedì sera, 3 colli) → Tottenham Court Road → Northern line → Camden Town.</p>
-            <details class="det"><summary>Dettagli</summary><p>Bounce Broadwick St è a 60 m da casa e martedì apre 9:00–23:00. Con Camden e poi Covent Garden è l’unico deposito sensato: i bagagli si riprendono alle 15:05, sulla strada fra Covent Garden e Piccadilly Circus.</p></details>
+            <p>10:30 check-out → Bounce Piccadilly Circus, 53 Rupert St (prenotare lunedì sera, 3 colli) → metro da Piccadilly Circus verso Camden Town.</p>
+            <details class="det"><summary>Dettagli</summary><p>Bounce Rupert St è a 2 minuti dalla stazione della Piccadilly line per Heathrow e aperto 24 ore: alle 15:00 si ritirano i bagagli e si riparte da lì. Riserva: Bounce Broadwick St, a 60 m da casa (martedì 9:00–23:00).</p></details>
             <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5129114,-0.1364381&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
           </div>
           <p class="tcard__credito">foto: No Swan So Fine / CC BY-SA 4.0</p>
         </article>
-        <article class="tcard tcard--nofoto" data-giorno="2026-11-17" data-ora="10:35" data-tipo="trasporto" data-durata="25-25">
+        <article class="tcard tcard--deposito" data-giorno="2026-11-17" data-ora="10:35" data-tipo="deposito" data-durata="10-10" data-deposito-id="bounce_rupert">
+          <div class="tcard__foto tcard__foto--icona"><span class="tcard__icona" aria-hidden="true">🧳</span><span class="tcard__ora">10:35</span></div>
           <div class="tcard__body">
-            <span class="tcard__ora">10:35</span>
+            <h4>Lascia i bagagli — Bounce Piccadilly Circus</h4>
+            <p class="tdur">⏱️ 10 min</p>
+            <p class="deposito-ind">📍 53 Rupert St, London W1D 7PH · aperto 24 ore <span class="st ok">✅ verificato 8/11</span></p>
+            <p>~5 min a piedi da casa. Poi metro da Piccadilly Circus verso Camden (Bakerloo → Charing Cross, Northern → Camden Town; oppure Oxford Circus → Victoria → Euston → Northern).</p>
+            <p class="nota-piccola">Riserva: Bounce Broadwick St, 43 Broadwick St W1F 9QN · martedì 9:00–23:00.</p>
+            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5120078,-0.1336085&amp;destination_place_id=ChIJH0BzxroFdkgRPY_OmmzrcnA&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
+          </div>
+        </article>
+        <article class="tcard tcard--nofoto" data-giorno="2026-11-17" data-ora="10:45" data-tipo="trasporto" data-durata="15-15">
+          <div class="tcard__body">
+            <span class="tcard__ora">10:45</span>
             <h4>Verso Camden</h4>
-            <p class="tdur">⏱️ ~25 min</p>
-            <p>15 min a piedi fino a Tottenham Court Road, poi <b>Northern line diretta</b> fino a Camden Town (9 min). Arrivo ~11:00. ~£3 a testa, Olly gratis.</p>
+            <p>Da Piccadilly Circus: <b>Bakerloo</b> fino a Charing Cross, poi <b>Northern line</b> fino a Camden Town; oppure Oxford Circus → Victoria line fino a Euston → Northern line. Arrivo verso le 11:00: controllate su TfL Go. ~£3 a testa, Olly gratis.</p>
             <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.539292,-0.14274&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚇 coi mezzi</span></a>
           </div>
         </article>
@@ -1464,10 +1509,10 @@
             <h4>Camden Town e Camden Lock</h4>
             <p class="tdur">⏱️ 1 h 15</p>
             <p>Il canale con le barche e i mercati, da vedere la mattina con poca folla. Martedì il mercato è tranquillo: Camden Lock 10:00–19:00. Il mercatino di Natale di Camden apre il 26/11, non lo troveremo (fonte Time Out, 28/10/2026).</p>
-            <p class="pianob">↪️ In ritardo? Saltate Covent Garden: Northern line fino a Tottenham Court Road (7 min), a piedi fino a Bounce in Broadwick St per i bagagli, poi Piccadilly Circus e Piccadilly line fino a Heathrow T5, come nel piano normale.</p>
-        <a class="percorso percorso--secondario" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.539292,-0.14274&amp;destination=51.4723,-0.4887&amp;waypoints=51.5132489,-0.1368169&amp;travelmode=transit" target="_blank" rel="noopener" data-percorso="Martedì · Piano B: Camden Town → Broadwick St (bagagli) → Heathrow T5">
+            <p class="pianob">↪️ In ritardo? Saltate Covent Garden: metro fino a Piccadilly Circus (il giro dell’andata al contrario), bagagli da Bounce in Rupert St, poi Piccadilly line diretta fino a Heathrow T5, come nel piano normale.</p>
+        <a class="percorso percorso--secondario" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.539292,-0.14274&amp;destination=51.4723,-0.4887&amp;waypoints=51.5120078,-0.1336085&amp;travelmode=transit" target="_blank" rel="noopener" data-percorso="Martedì · Piano B: Camden Town → Bounce Rupert St (bagagli) → Heathrow T5">
           <span class="percorso__ic" aria-hidden="true">🗺️</span>
-          <span class="percorso__txt"><b>Percorso · Martedì</b><span>Piano B: Camden Town → Broadwick St (bagagli) → Heathrow T5</span></span>
+          <span class="percorso__txt"><b>Percorso · Martedì</b><span>Piano B: Camden Town → Bounce Rupert St (bagagli) → Heathrow T5</span></span>
           <span class="percorso__modo">🚇 con i mezzi</span>
         </a>
             <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.539292,-0.14274&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚇 coi mezzi</span></a>
@@ -1497,7 +1542,7 @@
           <span class="percorso__txt"><b>Percorso · Martedì</b><span>Camden Town → Covent Garden</span></span>
           <span class="percorso__modo">🚇 con i mezzi</span>
         </a>
-        <article class="tcard tcard--nofoto" data-giorno="2026-11-17" data-ora="13:15" data-tipo="trasporto" data-durata="15-15" data-vincolo="Lasciare Camden entro le 13:15" data-vincolo-da="12:50" data-piano-b="In ritardo? Saltate Covent Garden: Northern line fino a Tottenham Court Road (7 min), a piedi fino a Bounce in Broadwick St per i bagagli, poi Piccadilly Circus e Piccadilly line fino a Heathrow T5, come nel piano normale." data-piano-b-dopo>
+        <article class="tcard tcard--nofoto" data-giorno="2026-11-17" data-ora="13:15" data-tipo="trasporto" data-durata="15-15" data-vincolo="Lasciare Camden entro le 13:15" data-vincolo-da="12:50" data-piano-b="In ritardo? Saltate Covent Garden: metro fino a Piccadilly Circus (il giro dell’andata al contrario), bagagli da Bounce in Rupert St, poi Piccadilly line diretta fino a Heathrow T5, come nel piano normale." data-piano-b-dopo>
           <div class="tcard__body">
             <span class="tcard__ora">13:15</span>
             <h4>Verso Covent Garden</h4>
@@ -1519,30 +1564,41 @@
           </div>
           <p class="tcard__credito">foto: Dietmar Rabich / CC BY-SA 4.0</p>
         </article>
-        <a class="percorso" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.5122737,-0.1234492&amp;destination=51.4723,-0.4887&amp;waypoints=51.5132489,-0.1368169&amp;travelmode=transit" target="_blank" rel="noopener" data-percorso="Martedì · Covent Garden → Piccadilly Circus → Broadwick St (ritiro bagagli) → Piccadilly Circus → Heathrow T5">
+        <a class="percorso" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.5122737,-0.1234492&amp;destination=51.4723,-0.4887&amp;waypoints=51.5120078,-0.1336085&amp;travelmode=transit" target="_blank" rel="noopener" data-percorso="Martedì · Covent Garden → Bounce Rupert St → Heathrow T5">
           <span class="percorso__ic" aria-hidden="true">🗺️</span>
-          <span class="percorso__txt"><b>Percorso · Martedì</b><span>Covent Garden → Piccadilly Circus → Broadwick St (ritiro bagagli) → Piccadilly Circus → Heathrow T5</span></span>
+          <span class="percorso__txt"><b>Percorso · Martedì</b><span>Covent Garden → Bounce Rupert St → Heathrow T5</span></span>
           <span class="percorso__modo">🚇 con i mezzi</span>
         </a>
-        <article class="tcard" data-giorno="2026-11-17" data-ora="14:45" data-tipo="trasporto" data-durata="85-85" data-entro="14:45" data-vincolo-da="14:45" data-vincolo="Uscire da Covent Garden alle 14:45: il volo BA546 parte alle 18:10" data-regola="Volo alle 18:10: 14:45 si parte da Covent Garden, 15:05 bagagli da Bounce in Broadwick St, 15:20 Piccadilly line da Piccadilly Circus, a T5 verso le 16:10.">
+        <article class="tcard" data-giorno="2026-11-17" data-ora="14:45" data-tipo="trasporto" data-durata="15-15" data-entro="14:45" data-vincolo-da="14:45" data-vincolo="Uscire da Covent Garden alle 14:45: il volo BA546 parte alle 18:10" data-regola="Volo alle 18:10: 14:45 si parte da Covent Garden, 1 fermata di Piccadilly line fino a Piccadilly Circus, 15:00 bagagli da Bounce in Rupert St, poi Piccadilly line diretta per Heathrow T5, a T5 verso le 16:10.">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/piccadilly.webp" width="800" height="450" alt="Una banchina della stazione di Piccadilly Circus, col nome sul muro e un treno della metropolitana in arrivo" loading="lazy" decoding="async">
             <span class="tcard__ora">14:45</span>
           </div>
           <div class="tcard__body">
             <h4>Si parte da Covent Garden</h4>
-            <p class="tdur">⏱️ ~1 h 25 · con il ritiro dei bagagli</p>
+            <p class="tdur">⏱️ ~15 min fino a Piccadilly Circus</p>
             <ul class="opzioni">
-              <li><b>14:45</b> · si lascia Covent Garden verso Piccadilly Circus e Broadwick St</li>
-              <li><b>15:05</b> · ritiro dei bagagli da Bounce, 43 Broadwick St</li>
-              <li><b>15:20</b> · Piccadilly Circus, <b>Piccadilly line</b> diretta fino a Heathrow T5. <b>£5,90 a testa</b>, Olly gratis.</li>
+              <li><b>14:45</b> · da Covent Garden <b>1 fermata di Piccadilly line</b> fino a Piccadilly Circus</li>
+              <li><b>15:00</b> · bagagli da Bounce, 53 Rupert St, a 2 min dalla stazione</li>
+              <li><b>~15:10</b> · Piccadilly line diretta fino a Heathrow T5, ~55 min. <b>£5,90 a testa</b>, Olly gratis.</li>
               <li><b>~16:10</b> · Heathrow, Terminal 5</li>
             </ul>
-            <p class="regola">📌 Volo alle 18:10: alle 14:45 si parte da Covent Garden. Con i bagagli a Broadwick St si torna verso Piccadilly Circus, non a Tottenham Court Road.</p>
-            <details class="det"><summary>Dettagli</summary><p>Se la Piccadilly line ha problemi: da Broadwick St a piedi fino a Tottenham Court Road ed Elizabeth line fino a Heathrow T5 (36 min, £15,50 a testa).</p></details>
+            <p class="regola">📌 Volo alle 18:10: alle 14:45 si parte da Covent Garden. I bagagli sono a 2 minuti dalla stazione di Piccadilly Circus: si ritirano e si riparte dalla stessa linea.</p>
+            <details class="det"><summary>Dettagli</summary><p>Se la Piccadilly line ha problemi: Elizabeth line da Tottenham Court Road fino a Heathrow T5 (36 min, £15,50 a testa).</p></details>
             <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.4723,-0.4887&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚇 coi mezzi</span></a>
           </div>
           <p class="tcard__credito">foto: DiscoA340 / CC BY-SA 4.0</p>
+        </article>
+        <article class="tcard tcard--deposito" data-giorno="2026-11-17" data-ora="15:00" data-tipo="deposito" data-durata="10-10" data-deposito-id="bounce_rupert" data-vincolo-da="15:00">
+          <div class="tcard__foto tcard__foto--icona"><span class="tcard__icona" aria-hidden="true">🧳</span><span class="tcard__ora">15:00</span></div>
+          <div class="tcard__body">
+            <h4>Ritira i bagagli e parti — Bounce Piccadilly Circus</h4>
+            <p class="tdur">⏱️ 10 min</p>
+            <p class="chip-vincolo">⏰ alle 15:00</p>
+            <p class="deposito-ind">📍 53 Rupert St, London W1D 7PH · aperto 24 ore <span class="st ok">✅ verificato 8/11</span></p>
+            <p>Da Covent Garden 1 fermata di Piccadilly line fino a Piccadilly Circus, 2 min a piedi, ritiro, si torna in stazione: <b>Piccadilly line diretta per Heathrow T5</b>, ~55 min.</p>
+            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5120078,-0.1336085&amp;destination_place_id=ChIJH0BzxroFdkgRPY_OmmzrcnA&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
+          </div>
         </article>
         <article class="tcard" data-giorno="2026-11-17" data-ora="16:10" data-tipo="trasporto">
           <div class="tcard__foto">
@@ -1888,7 +1944,7 @@
     </div>
     <div class="card">
       <h3>🏠 Note sull’alloggio</h3>
-      <p class="ci-co-note">🧳 I due buchi (domenica prima delle 15:00, martedì dopo le 10:30): con <b>3 trolley 56×45×25 e 3 borse 40×30×15</b> (franchigia BA, zero stiva) non si gira. Domenica deposito vicino al SEA LIFE, martedì dopo il check-out da Bounce in Broadwick St, a 60 m da casa: è tutto in «🧳 Depositi bagagli», in Info. Da sapere però: il check-in è self-service, <b>una reception dove lasciare i bagagli potrebbe non esserci</b> — va chiarito con l’host prima di un eventuale viaggio con la valigia.</p>
+      <p class="ci-co-note">🧳 I due buchi (domenica prima delle 15:00, martedì dopo le 10:30): con <b>3 trolley 56×45×25 e 3 borse 40×30×15</b> (franchigia BA, zero stiva) non si gira. Domenica deposito vicino al SEA LIFE, martedì dopo il check-out da Bounce a Piccadilly Circus (53 Rupert St), a 5 minuti da casa: è tutto in «🧳 Depositi bagagli», in Info. Da sapere però: il check-in è self-service, <b>una reception dove lasciare i bagagli potrebbe non esserci</b> — va chiarito con l’host prima di un eventuale viaggio con la valigia.</p>
       <p class="meta" style="margin-top:8px">Prenotazione Booking <b>5946777151</b> · totale <b>£538,90</b>, addebitati €648,82 · Wi-Fi gratuito in tutto l’appartamento.</p>
       <p class="meta" style="margin-top:8px">Host confermato: nessuna unità sostitutiva (sarà esattamente l'appartamento fotografato), nessun costo extra, contatto diretto tramite numero Booking.com.</p>
       <p class="why"><b>Perché questa zona:</b> è il punto di minor cammino cumulativo per la giornata di lunedì (la Royal walk, sette tappe), tutte raggiungibili in 12–21 minuti a piedi, zero attraversamenti del fiume. Si sacrifica la comodità verso Southbank e South Kensington (serve la metro), accettabile perché cadono su giornate più leggere (domenica e martedì).</p>
@@ -2033,8 +2089,8 @@
     <li data-giorno="2026-11-16" data-da="08:30" data-a="10:45"><b>💂 Controlla se la cerimonia è confermata</b><br><a href="https://www.householddivision.org.uk/changing-the-guard-calendar" target="_blank" rel="noopener">📅 Calendario ufficiale</a><a href="https://x.com/ArmyInLondon" target="_blank" rel="noopener">𝕏 @ArmyInLondon</a></li>
     <li data-giorno="2026-11-16" data-da="10:00" data-a="10:20" data-non-in="wellington">⏰ Vai a Wellington Barracks: arrivo entro le 10:20</li>
     <li data-giorno="2026-11-16" data-da="11:30" data-a="11:40">🐎 Torna al Victoria Memorial: cavalli alle 11:45</li>
-    <li data-giorno="2026-11-15" data-da="09:30" data-a="12:30">🧳 Lascia i bagagli da Bounce Waterloo prima del SEA LIFE</li>
-    <li data-giorno="2026-11-17" data-da="10:00" data-a="15:05">🧳 Bagagli da Bounce, 43 Broadwick St (9:00–23:00): ritiro alle 15:05, poi Piccadilly line da Piccadilly Circus<br><a href="https://www.google.com/maps/dir/?api=1&amp;origin=51.5122737,-0.1234492&amp;destination=51.4723,-0.4887&amp;waypoints=51.5132489,-0.1368169&amp;travelmode=transit" target="_blank" rel="noopener">🗺️ Percorso con i bagagli</a></li>
+    <li data-giorno="2026-11-15" data-da="09:30" data-a="10:35">🧳 Prima tappa: Bounce Waterloo, 7 Chicheley St (24 ore). Lasciata alle 10:35, ritiro alle 14:40</li>
+    <li data-giorno="2026-11-17" data-da="10:00" data-a="15:00">🧳 Bagagli da Bounce Piccadilly Circus, 53 Rupert St (24 ore): ritiro alle 15:00, poi Piccadilly line per Heathrow<br><a href="https://www.google.com/maps/dir/?api=1&amp;origin=51.5122737,-0.1234492&amp;destination=51.4723,-0.4887&amp;waypoints=51.5120078,-0.1336085&amp;travelmode=transit" target="_blank" rel="noopener">🗺️ Percorso con i bagagli</a></li>
   </template>
 
   <!-- schede complete delle tappe "se avanza tempo": una copia sola, si aprono dalle righe dei giorni -->
@@ -2544,10 +2600,10 @@
     { cosa: 'Dom 1/11 — ricontrolla sul calendario ufficiale la riga «Mon 16th Nov · Guard Change · 11:00»', stato: 'da_fare', nota: 'Su changing-guard.com le modifiche sono evidenziate in rosso.' },
     { cosa: 'Gio 12/11 — chiusure TfL del weekend 14–15/11 (tfl.gov.uk → Planned closures; Time Out le pubblica il giovedì)', stato: 'da_fare', nota: 'Se la Piccadilly line è chiusa verso Heathrow: Elizabeth line da T5 a Tottenham Court Road.' },
     { cosa: 'Ven 13/11 — calendario Household Division: la riga «Mon 16th Nov · Guard Change · 11:00» c’è ancora (e royal.uk); meteo Met Office di lunedì 10–12', stato: 'da_fare' },
-    { cosa: 'Sab 14/11 sera — prenotare Bounce Waterloo per domenica (3 colli); check-in online BA per tutti e tre', stato: 'da_fare' },
+    { cosa: 'Sab 14 sera: prenota Bounce Waterloo per domenica, 10:30–15:00, 3 colli; check-in online BA per tutti e tre', stato: 'da_fare' },
     { cosa: 'Dom 15/11 sera — calendario e X @ArmyInLondon', stato: 'da_fare' },
     { cosa: 'Lun 16/11, ore 08:30–09:00 — X e calendario', stato: 'da_fare' },
-    { cosa: 'Lun 16/11 sera — prenotare Bounce Broadwick St per martedì (3 colli)', stato: 'da_fare' },
+    { cosa: 'Lun 16 sera: prenota Bounce Piccadilly Circus (Rupert St) per martedì, 10:30–15:15, 3 colli', stato: 'da_fare' },
     { cosa: 'SEA LIFE prenotato · 3 biglietti nel Portafoglio', stato: 'fatto' },
     { cosa: 'Scaricare l’app Bounce e Stasher, carta già salvata', stato: 'da_fare' },
     { cosa: 'Assicurazione viaggio', stato: 'fatto' }
@@ -2992,16 +3048,16 @@
     var U = BAGNI.util, esc = U.esc, BADGE = U.BADGE, stimato = U.stimato, NOME_GIORNO = U.NOME_GIORNO;
     var SCELTE = {
       sealife: ['bounce_waterloo', 'stasher_countyhall'],
-      casa: ['bounce_broadwick', 'stasher_marshall'],
+      casa: ['bounce_rupert', 'bounce_broadwick'],   // dall'8/11 Rupert St (24 ore, a 2 min dalla Piccadilly line) principale, Broadwick riserva
       camden: ['radical_camden', 'camden_station', 'bounce_camden'],   // Bounce Camden solo come terza: apre alle 11:00
       coventgarden: ['bounce_covent', 'stasher_shelton']
     };
-    var AVVISO = { '2026-11-17': 'Martedì i bagagli vanno da Bounce Broadwick St, a 60 m da casa: si lasciano dopo il check-out e si riprendono alle 15:05, fra Covent Garden e Piccadilly Circus. Camden e Covent Garden restano solo come riserva.' };
+    var AVVISO = { '2026-11-17': 'Martedì i bagagli vanno da Bounce Piccadilly Circus, 53 Rupert St, a 2 minuti dalla Piccadilly line per Heathrow: si lasciano alle 10:35 e si riprendono alle 15:00. Broadwick St è la riserva; Camden e Covent Garden solo in emergenza.' };
     var RUOLO = ['Principale', 'Riserva', 'Terza opzione'];
     var NOME_TAPPA = { sealife: 'SEA LIFE', casa: 'casa (Carnaby)', camden: 'Camden', coventgarden: 'Covent Garden' };
     var SIGLE = ['lun', 'mar', 'mer', 'gio', 'ven', 'sab', 'dom'], SIGLA = { dom15: 'dom', lun16: 'lun', mar17: 'mar' };
     var S = { dati: null, per: {}, n: 0 };
-    var maps = function(d){ return 'https://www.google.com/maps/search/?api=1&query=' + d.lat + ',' + d.lng + '&query_place_id=' + encodeURIComponent(d.place_id); };
+    var maps = function(d){ return 'https://www.google.com/maps/search/?api=1&query=' + d.lat + ',' + d.lng + (d.place_id ? '&query_place_id=' + encodeURIComponent(d.place_id) : ''); };
     var voto = function(d){ return String(d.voto).replace('.', ',') + ' su 5 · ' + d.recensioni + ' recensioni'; };
     // orari del giorno della card: dal testo «dom 12:00–21:00 · lun 9:00–23:00», «lun–ven …», «CHIUSO domenica»;
     // se il testo non distingue i giorni vale tutto com'è. Nessun orario dedotto.
@@ -3029,7 +3085,7 @@
         + (d.note ? '<p class="bagno-nota">' + esc(d.note) + '</p>' : '')
         + '<p class="bagno-fonte">Fonte: ' + esc(d.fonte) + ' · verificato il ' + U.dataIt(d.verificato_il) + '</p>'
         + '<p class="deposito-azioni"><a class="btn btn--secondario btn--cielo bagno-maps" href="' + maps(d) + '" target="_blank" rel="noopener">📍 Maps</a>'
-        + '<a class="btn btn--secondario btn--cielo bagno-maps" href="' + esc(d.prenota) + '" target="_blank" rel="noopener">📲 Prenota</a></p>'
+        + (d.prenota ? '<a class="btn btn--secondario btn--cielo bagno-maps" href="' + esc(d.prenota) + '" target="_blank" rel="noopener">📲 Prenota</a>' : '') + '</p>'   // senza link nel file, niente pulsante
         + '</div>';
     }
     function pannello(tappa, giorno){
@@ -3079,7 +3135,7 @@
         + '<br><span class="bagno-pop">⭐ ' + voto(d) + ' · 💷 prezzo nell’app' + BADGE + '</span>'
         + (o.usi.length ? '<br><span class="bagno-pop">Per: ' + o.usi.map(esc).join(' · ') + '</span>' : '')
         + '<br><a class="btn btn--ghost pop-vai" href="' + maps(d) + '" target="_blank" rel="noopener">📍 Maps</a>'
-        + ' · <a class="btn btn--ghost pop-vai" href="' + esc(d.prenota) + '" target="_blank" rel="noopener">📲 Prenota</a>';
+        + (d.prenota ? ' · <a class="btn btn--ghost pop-vai" href="' + esc(d.prenota) + '" target="_blank" rel="noopener">📲 Prenota</a>' : '');
     }
     function monta(json){
       var perId = {}; json.depositi.forEach(function(d){ perId[d.id] = d; });
@@ -3268,6 +3324,11 @@
      Il pannello non si apre mai da solo: in cima c'è un banner sottile «N novità», e si apre solo se toccato.
      Il link in fondo alla pagina lo riapre con tutto lo storico, in ogni caso. */
   var NOVITA = [
+    { v: 37, data: '2026-11-08', titolo: '🧳 Depositi nell’itinerario', voci: [
+      '🧳 Depositi nell’itinerario: Bounce Waterloo domenica, Bounce Piccadilly Circus martedì, con posizione esatta e orari verificati',
+      'Domenica: 10:35 si lasciano i bagagli in Chicheley St, Southbank alle 10:50, SEA LIFE alle 12:30, ritiro alle 14:40, Lina Stores alle 15:10 e check-in alle 15:30',
+      'Martedì il deposito è a Piccadilly Circus, 53 Rupert St (24 ore, a 2 minuti dalla Piccadilly line per Heathrow), non più a Broadwick St: lasciata alle 10:35, ritiro alle 15:00 e via diretti a T5',
+      'Le due prenotazioni Bounce in «Prima di partire» hanno le fasce orarie: domenica 10:30–15:00, martedì 10:30–15:15' ] },
     { v: 36, data: '2026-11-07', titolo: '🔁 Double check a 7 giorni', voci: [
       '🔁 Double check a 7 giorni: percorsi di lunedì riallineati al Cambio della Guardia, pranzo da Harrods, bagagli di martedì a Broadwick St, bug Camden corretto',
       'Lunedì i percorsi Maps seguono l’ordine nuovo: Beak St → Trafalgar, Trafalgar → Horse Guards → Big Ben, Big Ben → Birdcage Walk → Wellington Barracks, Wellington → St James’s Park → Buckingham, poi Piccadilly line da Green Park a Knightsbridge per Harrods. Niente più doppi passaggi da St James’s Park',
@@ -3543,11 +3604,14 @@
   var POPPIES={n:'Poppies Fish & Chips', lat:51.5409723, lng:-0.143961};
   var HARRODS={n:'Harrods', lat:51.4994055, lng:-0.1632344, modo:'transit'};
   var NHM={n:'Natural History Museum', lat:51.4967150, lng:-0.1763672};
+  var BWATERLOO={n:'Bounce Waterloo · 7 Chicheley St', lat:51.5025654, lng:-0.1165451};
+  var BRUPERT={n:'Bounce Piccadilly Circus · 53 Rupert St', lat:51.5120078, lng:-0.1336085};
 
   var TAPPE=[
+    {p:BWATERLOO,   g:'dom', note:'10:35 · 🧳 si lasciano i bagagli, ritiro alle 14:40'},
     {p:SOUTHBANK,   g:'dom', note:'Lungofiume e pranzo · da Heathrow coi mezzi'},
     {p:SEALIFE,     g:'dom', note:'12:30 · County Hall, squali e pinguini'},
-    {p:LINA,        g:'dom', note:'15:00 · spesa per la cena, 2 min da casa'},
+    {p:LINA,        g:'dom', note:'15:10 · spesa per la cena, 2 min da casa'},
     {p:HAMLEYS,     g:'dom', note:'16:30 · la sorpresa, col buio 🧸'},
     {p:TRAFALGAR,   g:'lun', note:'09:30 · leoni e fontane'},
     {p:WELLINGTON,  g:'lun', note:'10:15 · la banda e la nuova guardia, cancellate su Birdcage Walk 🎺'},
@@ -3557,6 +3621,7 @@
     {p:BIGBEN,      g:'lun', note:'10:05 · Parliament Square e Westminster Bridge 🕰️'},
     {p:HARRODS,     g:'lun', note:'13:45 · vetrine di Natale + tè alle Tea Rooms, pranzo alle 12:45 nella Dining Hall ☕'},
     {p:NHM,         g:'lun', note:'Ingresso gratuito · chiude alle 17:50 🦕'},
+    {p:BRUPERT,     g:'mar', note:'10:35 · 🧳 si lasciano i bagagli, ritiro alle 15:00'},
     {p:CAMDEN,      g:'mar', note:'11:00 · il canale con le barche e i mercati 🛶'},
     {p:POPPIES,     g:'mar', note:'12:15 · fish & chips, 30 Hawley Crescent 🍟'},
     {p:COVENT,      g:'mar', note:'13:30 · mercato coperto e artisti di strada 🎭'}
@@ -3565,7 +3630,7 @@
   /* percorsi: sequenza di tappe con la modalità del tragitto che porta al punto */
   var ROUTES=[
     {g:'dom', stops:[
-      {p:SOUTHBANK}, {p:SEALIFE, mode:'walk'}, {p:LINA, mode:'metro'}, {p:CASA, mode:'walk'},
+      {p:BWATERLOO}, {p:SOUTHBANK, mode:'walk'}, {p:SEALIFE, mode:'walk'}, {p:BWATERLOO, mode:'walk'}, {p:LINA, mode:'metro'}, {p:CASA, mode:'walk'},
       {p:HAMLEYS, mode:'walk'}, {p:CASA, mode:'walk'}
     ]},
     {g:'lun', stops:[
@@ -3574,7 +3639,7 @@
       {p:HARRODS, mode:'metro'}, {p:NHM, mode:'walk'}, {p:CASA, mode:'metro'}
     ]},
     {g:'mar', stops:[
-      {p:CASA}, {p:CAMDEN, mode:'metro'}, {p:POPPIES, mode:'walk'}, {p:COVENT, mode:'metro'}
+      {p:CASA}, {p:BRUPERT, mode:'walk'}, {p:CAMDEN, mode:'metro'}, {p:POPPIES, mode:'walk'}, {p:COVENT, mode:'metro'}, {p:BRUPERT, mode:'metro'}
     ]}
   ];
 

@@ -1,6 +1,6 @@
 {
   "versione": 1,
-  "aggiornato_il": "2026-10-25",
+  "aggiornato_il": "2026-11-08",
   "regola": "Prenotare dall'app (Bounce o Stasher) la sera prima: si paga a collo, si riceve un QR. Foto dei bagagli al deposito. Niente documenti, farmaci o power bank dentro: BA li vuole con voi e il deposito non li assicura.",
   "depositi": [
     {
@@ -34,29 +34,29 @@
         "prezzo"
       ],
       "note": "Borse fotografate e messe dietro il banco. Una recensione segnala borse lasciate sul pavimento per qualche minuto: restare finché non sono riposte.",
-      "verificato_il": "2026-10-25",
+      "verificato_il": "2026-11-08",
       "fonte": "Google Places (orari, voti)"
     },
     {
       "id": "stasher_countyhall",
-      "nome": "Stasher — County Hall (hotel)",
-      "indirizzo": "County Hall, Belvedere Rd, SE1 7GP",
-      "lat": 51.5019633,
-      "lng": -0.1188522,
-      "place_id": "ChIJVzad37UFdkgRYlTAHFaFeM4",
+      "nome": "Stasher — London Eye (County Hall)",
+      "indirizzo": "County Hall, Belvedere Rd, SE1 7PB",
+      "lat": 51.50259,
+      "lng": -0.11808,
+      "place_id": "ChIJtdaef1EFdkgRbZwtlzazYV4",
       "orari": "7:00–23:00",
       "voto": 4.6,
-      "recensioni": 9,
+      "recensioni": 16,
       "prenota": "https://stasher.com/luggage-storage/united-kingdom/london/london-eye/stashpoints/68a734d2aabc",
       "tappe": [
         "sealife"
       ],
       "giorno": "dom15",
       "distanze_m": {
-        "sealife": 83
+        "sealife": 200
       },
       "minuti": {
-        "sealife": 1
+        "sealife": 3
       },
       "prezzo": "da verificare al momento della prenotazione (app)",
       "stimati": [
@@ -65,7 +65,7 @@
         "prezzo"
       ],
       "note": "Stesso edificio del SEA LIFE, deposito in un locale separato dell'hotel. Poche recensioni.",
-      "verificato_il": "2026-10-25",
+      "verificato_il": "2026-11-08",
       "fonte": "Google Places (orari, voti)"
     },
     {
@@ -100,6 +100,37 @@
       ],
       "note": "",
       "verificato_il": "2026-10-25",
+      "fonte": "Google Places (orari, voti)"
+    },
+    {
+      "id": "bounce_rupert",
+      "nome": "Bounce — Piccadilly Circus (53 Rupert St)",
+      "indirizzo": "53 Rupert St, W1D 7PH",
+      "lat": 51.5120078,
+      "lng": -0.1336085,
+      "place_id": "ChIJH0BzxroFdkgRPY_OmmzrcnA",
+      "orari": "24 ore",
+      "voto": 4.9,
+      "recensioni": 308,
+      "prenota": "",
+      "tappe": [
+        "casa"
+      ],
+      "giorno": "mar17",
+      "distanze_m": {
+        "casa": 290
+      },
+      "minuti": {
+        "casa": 5
+      },
+      "prezzo": "da verificare al momento della prenotazione (app)",
+      "stimati": [
+        "distanze_m",
+        "minuti",
+        "prezzo"
+      ],
+      "note": "A 2 minuti dalla stazione di Piccadilly Circus (Piccadilly line diretta per Heathrow). Il link per prenotare è nell’app Bounce.",
+      "verificato_il": "2026-11-08",
       "fonte": "Google Places (orari, voti)"
     },
     {
