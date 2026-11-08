@@ -931,3 +931,10 @@ Cercati bug dello stesso tipo di "portiere che si rituffa nel replay": due cambi
 - Percorsi: «Waterloo → Food Express → Southbank Centre» (stesso URL), «Southbank Centre → SEA LIFE» invariato, nuovo «SEA LIFE → Food Express → London Eye Pier» al posto di «SEA LIFE → Bounce» e «Bounce Waterloo → London Eye Pier», «Embankment Pier → Piccadilly Circus → Lina Stores» (arrivo a Lina Stores) al posto di «… → Piccadilly Circus». Tolto «Heathrow → Southbank»: toccava il Southbank prima del deposito, contro la regola «ogni tappa una sola volta, nell'ordine delle card»; il trasferimento ha il suo «Portami qui».
 - Budget: «Deposito bagagli domenica · pagato in app · importo da inserire». Mappa e promemoria di «Adesso» col nome Food Express.
 - `londra-check`: l'ordine dei percorsi si controlla anche la domenica (eccezione voluta: il deposito, lasciata e ritiro); nessun QR né link `partner.bounce.com` in pagina. Novità v42.
+
+## Londra · versione definitiva · C. lunedì pomeriggio
+- Già in pagina dai commit precedenti: piano A (asciutto) e piano B (con «Piove»), bus a due piani alle 12:00, card 16:15 eliminata, percorsi e marker dei due piani, scorciatoia del biglietto solo col piano pioggia.
+- Allineati i testi: bus a due piani (alternativa «2 fermate»), Harrods («il resto dalle vetrine», lunedì 10:00–21:00), bus 14/74, Science Museum («biglietti presi, tenuti come piano pioggia», Pattern Pod gratuita, 10:00–18:00), cammino lungo Exhibition Road.
+- Albert Memorial **65 min** (14:45–15:50) con bagni: nuova tappa `albert` in `bagni-londra.json`, principale i bagni interni del Science Museum, riserva il NHM, distanze e minuti stimati.
+- Harrods resta di **40 min** (13:45–14:25), non 45: con 45 finirebbe alle 14:30 e il bus del piano pioggia delle 14:25 si sovrapporrebbe (la verifica chiede orari senza sovrapposizioni in tutti e due i piani).
+- Checklist: «Biglietti Science Museum (lun 16, 14:45) · piano pioggia» fatto. Novità v43.
