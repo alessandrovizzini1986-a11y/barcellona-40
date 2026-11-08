@@ -209,6 +209,16 @@ const sl = await p.evaluate(() => [...document.querySelectorAll('#sealifeCard .t
 const slLetti = sl.map((x) => { const n = +x.vb.split(/\s+/)[2] - 4; return decodificaQR(moduliDaPath(x.d, 2), n) })
 ok('3 QR di SEA LIFE: decodificati, uguali al codice numerico del PDF e al numero in chiaro, fondo bianco', sl.length === 3 && SEALIFE.every((n, i) => slLetti[i].length === 1 && slLetti[i][0] === n && sl[i].num === n && sl[i].sfondo === '#fff'), slLetti.map((x) => x.join('|')).join(' · '))
 
+// «Cosa vediamo»: ogni card luogo (data-luogo) ha i due blocchi non vuoti; ogni tappa con data-tappa è una card luogo,
+// tranne il pranzo da Harrods (la descrizione sta sulla card di Harrods)
+const cosa = await p.evaluate(() => {
+  const luoghi = [...document.querySelectorAll('#programma article.tcard[data-luogo]')]
+  const senza = luoghi.filter((c) => { const v = c.querySelector('.cosa .cosa__vedi'), o = c.querySelector('.cosa .cosa__olly'); const t = (x, k) => x && x.textContent.includes(k) ? x.textContent.replace(k, '').trim() : ''; return !t(v, '📖 Cosa vediamo') || !t(o, '👧 Per Olly') }).map((c) => c.querySelector('h4').textContent.trim())
+  const fuori = [...document.querySelectorAll('#programma article.tcard[data-tappa]:not([data-luogo])')].map((c) => c.dataset.tappa).filter((t) => t !== 'pranzo-lun')
+  return { n: luoghi.length, senza, fuori }
+})
+ok('«Cosa vediamo»: ogni card luogo ha «📖 Cosa vediamo» e «👧 Per Olly» non vuoti', cosa.n >= 20 && !cosa.senza.length && !cosa.fuori.length, `${cosa.n} card` + (cosa.senza.length ? ' · vuote: ' + cosa.senza.join(', ') : '') + (cosa.fuori.length ? ' · tappe senza descrizione: ' + cosa.fuori.join(', ') : ''))
+
 const sm = await p.evaluate(() => [...document.querySelectorAll('#scienceMuseumCard .tk-qr')].map((s) => ({ vb: s.getAttribute('viewBox'), d: s.querySelector('path').getAttribute('d'), sfondo: s.querySelector('rect')?.getAttribute('fill'), num: s.closest('.tk-box')?.querySelector('.tk-num')?.textContent.trim() })))
 const smLetti = sm.map((x) => decodificaQR(moduliDaPath(x.d, 2), +x.vb.split(/\s+/)[2] - 4))
 ok('QR del Science Museum: uno solo, decodificato = codice dell\'ordine e numero in chiaro, fondo bianco', sm.length === 1 && smLetti[0].length === 1 && smLetti[0][0] === SCIENCE_MUSEUM && sm[0].num === SCIENCE_MUSEUM && sm[0].sfondo === '#fff', smLetti.map((x) => x.join('|')).join(' · '))

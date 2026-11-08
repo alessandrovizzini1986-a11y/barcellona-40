@@ -919,3 +919,8 @@ Cercati bug dello stesso tipo di "portiere che si rituffa nel replay": due cambi
 - Percorsi: «Bounce → Lina Stores» sostituito da «Bounce Waterloo → London Eye Pier» (a piedi) e «Embankment Pier → Embankment station → Piccadilly Circus» (coi mezzi; Google Maps non accetta tappe intermedie in modalità mezzi, la stazione è nel nome).
 - Mappa: marker London Eye Pier (14:55), Lina Stores 15:30, linea Bounce → molo → Embankment → Lina. Budget: «Battello sul Tamigi · £21,60 · stimato» (~€26), totale ~€1.540 / ~€1.587. Riepilogo di «Piove» con la voce del battello.
 - Da verificare n. 15: scalo a Embankment Pier. `londra-check`: percorsi 23. Novità v40.
+
+## Londra · 📖 «Cosa vediamo» su ogni tappa (8/11/2026)
+- 🗺️ Lunedì con piano A (Albert Memorial) e piano pioggia (Science Museum), bus a due piani, battello sul Tamigi domenica, e per ogni tappa la descrizione semplice di cosa vediamo.
+- 21 card luogo (`data-luogo`) con il blocco `.cosa` sotto il titolo, visibile senza aprire nulla: «📖 Cosa vediamo» (2-3 frasi, al massimo ~280 caratteri) e «👧 Per Olly». Testi del prompt, con gli apostrofi tipografici della pagina. Il testo di Harrods sta sulla card di Harrods, non su quella del pranzo nella Dining Hall; il bus a due piani ha il suo, gli altri bus no.
+- `londra-check`: ogni card luogo ha «📖 Cosa vediamo» e «👧 Per Olly» non vuoti, e ogni card con `data-tappa` (tranne il pranzo da Harrods) è una card luogo. Novità v41.
