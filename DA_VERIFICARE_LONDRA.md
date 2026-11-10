@@ -1,11 +1,11 @@
 # DA VERIFICARE · Londra 2026
 
-**Ultimo controllo: 8/11/2026. Ricontrollo finale ven 13/11.**
+**Ultimo controllo: 10/11/2026. Ricontrollo finale ven 13/11 (meteo, stato TfL, ascensori).**
 
 Incertezze ancora aperte del viaggio a Londra (15–17 novembre 2026), con il contesto e chi le chiude.
 Il sito le mostra nella lista «Prima di partire» (in cima alla pagina fino al 14/11, e in Info), con lo stato «da verificare»: **l’elenco in pagina (`DA_VERIFICARE` in `_legacy/londra.html`) va tenuto allineato a questo file** — chiudendone una qui, si toglie anche lì, e viceversa.
 
-## Aperte (5)
+## Aperte (4)
 
 ### 1. Ispezione domenicale a Horse Guards: 11:00 o 10:00
 
@@ -14,28 +14,24 @@ Il sito le mostra nella lista «Prima di partire» (in cima alla pagina fino al 
 
 ### 2. Meteo di lunedì 16/11, 10–12
 
-- **Contesto:** Il Met Office (long range London & SE 12–21/11, aggiornato il 7/11) prevede tempo più variabile, con fronti atlantici, pioggia e vento a tratti, temperature probabilmente sopra la media. Previsioni ora per ora non ancora pubblicate. Con pioggia forte la cerimonia può essere cancellata fino alle 10:45.
+- **Contesto:** Met Office per Londra, aggiornato il 10/11 alle 17:00: lunedì 16 fra 9 e 15 °C, pioggia forte possibile all’alba (50% alle 6), fra le 10 e le 12 probabilità di pioggia 30–40% e raffiche fino a ~28 mph. Domenica 15 circa 9 °C, asciutto al mattino (10%), 30% verso le 16. Martedì 17 rovesci leggeri, 7–11 °C. Con pioggia forte la cerimonia può essere cancellata fino alle 10:45: c’è il piano pioggia.
 - **Chi e come:** Alessandro: ricontrollo dal 13/11 su weather.metoffice.gov.uk (Londra) per lunedì 10–12, e di nuovo la mattina del 16.
 
 ### 3. Ascensore senza scale a Green Park
 
-- **Contesto:** Serve solo per l’alternativa in metro del lunedì (si va col bus a due piani). Knightsbridge è verificata: ascensori dall’ingresso di Hooper’s Court su Brompton Road (TfL, 28/4/2025). Per Green Park TfL indica gli ascensori ma non da quale ingresso: secondo fonti non ufficiali sono all’ingresso nel parco, lato sud di Piccadilly, vicino alla fermata H.
+- **Contesto:** Serve solo per l’alternativa in metro del lunedì (si va col bus a due piani). Knightsbridge è verificata (ascensori da Hooper’s Court). Per Green Park le fonti non concordano: recensioni di aprile 2026 parlano di accesso senza scale a tutte le linee, ma una pagina TfL riporta un avviso, senza data, di ascensori guasti per Jubilee e Piccadilly (controllo del 10/11; la pagina ufficiale non è leggibile in automatico).
 - **Chi e come:** Il giorno stesso: tfl.gov.uk → Stations, lifts, escalators works & closures (vale anche per Piccadilly Circus, Waterloo, Embankment, Camden Town, Covent Garden e T5).
 
-### 4. Battello di domenica: scalo a Embankment e orario invernale
+### 4. Chiusure stradali del 15/11 per la parata AJEX
 
-- **Contesto:** Uber Boat linea RB1: under 5 gratis (al massimo due per adulto), circa ogni 30 min il pomeriggio del weekend, contactless Central Zone £10,80 in peak (£9,90 off-peak). Lo scalo a Embankment verso est è confermato nei feriali, nel weekend è dedotto; dal 9/11 c’è l’orario invernale.
-- **Chi e come:** Alessandro: da lunedì 9/11 controllare sulla pagina del London Eye Waterloo Pier (thamesclippers.com) la partenza delle ~14:55 di domenica e lo scalo a Embankment.
-
-### 5. Chiusure stradali del 15/11 per la parata AJEX
-
-- **Contesto:** Domenica alle 14:00 parata AJEX al Cenotaph, raduno a Horse Guards Parade (ajex.org.uk, 8/11/2026): Whitehall probabilmente chiusa nel primo pomeriggio. Al 8/11 TfL non ha pubblicato avvisi. Il programma di domenica non passa da Whitehall.
+- **Contesto:** Domenica alle 14:00 parata AJEX al Cenotaph, raduno a Horse Guards Parade (ajex.org.uk, 8/11/2026): Whitehall probabilmente chiusa nel primo pomeriggio. Al 10/11 non risultano avvisi di chiusure pubblicati. Il programma di domenica non passa da Whitehall.
 - **Chi e come:** Alessandro: venerdì 13/11 guardare tfl.gov.uk → Major works and events; serve solo se si cambia idea e si passa da Whitehall.
 
 ## Risolte
 
 Tenute per memoria, non compaiono più nella pagina.
 
+- ~~Battello di domenica: scalo a Embankment e orario invernale~~ — Chiusa il 10/11/2026: orario invernale Thames Clippers in vigore dal 9/11 (PDF ufficiale, thamesclippers.com/media/0bsihnsk/winter-timetable-from-9november2026.pdf), weekend verso est: London Eye (Waterloo) 14:29, 14:53, 15:05, 15:21 → Embankment 14:34, 14:59, 15:10, 15:27. Lo scalo c’è e la traversata dura 5–6 minuti.
 - ~~Orario dei caffè della Royal Albert Hall lunedì 16/11~~ — Chiusa l’8/11/2026: Café Bar al piano terra, Door 12, aperto dalle 9 nei giorni di spettacolo, senza prenotazione; lunedì 16 c’è un concerto alle 18:45 (royalalberthall.com). L’orario di chiusura non è pubblicato: in pagina è «stimato».
 - ~~Apertura del Winter Market del Southbank Centre il 15/11/2026~~ — Chiusa l’8/11/2026: Aperto dal 2/11/2026 al 3/1/2027 tutti i giorni, bancarelle 11:00–22:00, bar 11:00–23:00 (chiuso 25/12, 31/12, 1/1). Fonte southbankcentre.co.uk/activity/winter-market (8/11/2026). Il Southbank in programma passa alle 11:15.
 - ~~Lavori programmati TfL nel weekend del 14-15/11 e martedì 17/11~~ — Chiusa l’8/11/2026: Piccadilly: nessun lavoro il 14–15/11 (Hammersmith–Heathrow chiusa solo il 21–22/11). **Elizabeth line domenica 15/11 chiusa Paddington–Liverpool Street e Whitechapel–Abbey Wood fino alle 10:15**: da T5 Piccadilly line, la card del trasferimento è cambiata. Bakerloo nessun lavoro. Northern: chiusura diurna 14–15/11 solo a sud (Morden/Battersea–Charing Cross/Euston via Bank), ramo di Camden non toccato. Martedì 17/11 nessuna chiusura. Fonte content.tfl.gov.uk/planned-track-closures.pdf (3/11/2026). Scioperi RMT: 26/11, 17/12, 19/12/2026 e 4/1, 6/1, 17/2, 23/2, 25/2/2027, nessuno fra il 15 e il 17/11; ASLEF non sciopera (Londonist e City AM, 6/11/2026). Heathrow T5: nessuno sciopero noto (strikecalendar.co.uk 8/11/2026; Trainline 4/11/2026 per l'Heathrow Express; fonti non ufficiali).

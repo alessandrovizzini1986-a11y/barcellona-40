@@ -978,3 +978,8 @@ Cercati bug dello stesso tipo di "portiere che si rituffa nel replay": due cambi
 - **Sole** anche in fondo ad Adesso e in Info («☀️ Più leggibile al sole»).
 - Card strette: durata e vincolo vanno a capo, la riga del bagno accanto a «Portami qui» non esce più dalla card (a 320–375 px «⏰ alle 11:40 per i cavalli» e simili venivano tagliati).
 - `londra-check`: lo storage ammette `londra:piove` col suo formato. Scenari 01, 04, 06, 07, 08, 09 rigenerati in `scripts/qa/audit/londra/passo1/` con `misure.json` prima → dopo. Novità v50.
+
+## Londra · 🔎 controlli del 10/11/2026
+- **Battello di domenica verificato** sull'orario invernale ufficiale (dal 9/11): verso est dal London Eye Pier alle 14:53 e 15:05 (Embankment 14:59 e 15:10), traversata di 5–6 minuti, scalo a Embankment presente. Voce chiusa in `DA_VERIFICARE_LONDRA.md` (restano 4).
+- **ETA UK** fatta per tutti e tre (checklist e budget). Calendario Household Division riletto il 10/11: riga del 16/11 invariata, una sola banda. Elenco TfL del 9/11: nessuna novità (Elizabeth chiusa in centro domenica fino alle 10:15; Piccadilly e Bakerloo regolari; nessuna chiusura il 16 e 17).
+- Note aggiornate su meteo (Met Office, 10/11 ore 17: lunedì 30–40% di pioggia fra le 10 e le 12, raffiche fino a ~28 mph), ascensore di Green Park (fonti discordi) e AJEX (nessun avviso). Novità v51.
