@@ -1012,3 +1012,7 @@ Cercati bug dello stesso tipo di "portiere che si rituffa nel replay": due cambi
 
 ## Londra · 🍝 pranzo di lunedì confermato (10/11/2026)
 - Card «Pranzo da Harrods · Dining Hall»: aggiunti i link alla Dining Hall e a Pasta Evangelists sul sito di Harrods e la nota «non si prenota». Novità v57.
+
+## Londra · 🍽️ i pranzi (10/11/2026)
+- **Domenica**: nella card del Southbank il pranzo da Giraffe (Royal Festival Hall, Riverside Level 1), menù bambini «stimato» (fonte: guida South Bank London), consiglio di prenotare per le 11:30, link a OpenTable, scheda e Maps.
+- **Martedì**: nella card di Poppies il menù bambini letto dal menù ufficiale (£9,95: bocconcini di pesce, fish cake o salsiccia con patatine), link per prenotare e al menù; piano B se si salta Camden: Poppies Soho, 55–59 Old Compton Street, martedì 11–22 (pagina ufficiale). Novità v58.
