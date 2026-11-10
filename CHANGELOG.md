@@ -1009,3 +1009,6 @@ Cercati bug dello stesso tipo di "portiere che si rituffa nel replay": due cambi
 
 ## Londra · 🥞 merenda di martedì (10/11/2026)
 - Nella card di Covent Garden: merenda da Crème de la Crêpe (Unit 29, The Market Building), senza prenotazione, con link alla scheda e a Maps. Orari «stimato»: le fonti danno 10–20:30 oppure 11–19:30. Novità v56.
+
+## Londra · 🍝 pranzo di lunedì confermato (10/11/2026)
+- Card «Pranzo da Harrods · Dining Hall»: aggiunti i link alla Dining Hall e a Pasta Evangelists sul sito di Harrods e la nota «non si prenota». Novità v57.
