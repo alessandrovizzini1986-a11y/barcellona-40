@@ -1003,3 +1003,6 @@ Cercati bug dello stesso tipo di "portiere che si rituffa nel replay": due cambi
 - **Testi**: in tutte le viste il gradino più piccolo passa a 14 px (resta a 12 solo la barra in basso). Testi sotto i 14 px: Info da 94 a 3, Biglietti da 67 a 3 (i 3 sono nel piè di pagina).
 - **Controlli**: i link dei crediti fotografici sono alti 44 px (erano 15): controlli sotto i 44 px in Info da 38 a 0. La tabella del budget va a capo invece di allargarsi a 320 px. Tolto da Info il secondo pulsante del Sole, doppione della card «Lettura al sole».
 - `londra-check` 33/33, nessuno scroll orizzontale a 320/375/430 px. Novità v54.
+
+## Londra · 🧳 deposito di martedì prenotato (10/11/2026)
+- Bounce Piccadilly Circus è il negozio **Soho Mart**, 53 Rupert St: prenotato martedì 17/11 dalle 10:30 alle 15:30, 3 valigie regolari, rif. CLVQZVM4. Aggiornati le due card del deposito, la card «Depositi bagagli» in Biglietti (con «Copia il rif. di martedì»), il promemoria di «Adesso», la checklist (fatto) e `depositi-londra.json` (`prenotato`, `prenotazione`). PIN e QR non sono in pagina: restano nell'app Bounce. `londra-check` controlla che lasciata (10:35) e ritiro (15:00) stiano nella fascia prenotata. Novità v55.
