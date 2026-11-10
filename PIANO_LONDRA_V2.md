@@ -38,7 +38,7 @@ revisione), non aggiungere funzioni.
 - Verifica: screenshot prima → dopo di Adesso, una card compatta, una card evento, in scuro, chiaro e Sole; contrasto
   minimo ≥ 4,5:1 sul testo.
 
-### Passo 3 · Biglietti e Info
+### Passo 3 · Biglietti e Info (pubblicato il 10/11)
 - Biglietti nell'ordine in cui servono (per giorno), col biglietto di oggi in cima durante il viaggio.
 - Info: i 38 controlli sotto i 44 px e i testi sotto i 14 px (tabelle, crediti) portati a misura.
 - Verifica: `misure.json` prima → dopo per le due viste.

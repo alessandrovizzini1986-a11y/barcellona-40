@@ -979,6 +979,19 @@
   .ad-regola,.ad-guardia li{font-weight:400}
   .ad-guardia li b{font-weight:700}
   .ad-guardia a{display:inline-flex;margin:var(--s-2) var(--s-2) 0 0;padding:0 var(--s-3);min-height:44px;border:1px solid rgba(109,179,216,.4);border-radius:999px;font-weight:700}
+
+  /* ====== v2 · passo 3: Biglietti e Info ======
+     Nessun testo sotto i 14 px nelle viste (resta a 12 solo la barra in basso); i link dei crediti sono alti 44 px;
+     in Biglietti, durante il viaggio, i codici di oggi salgono in cima sotto «Oggi». */
+  main{--f-12:14px}
+  main small,main .bnota,main .k,main .tk-sub,main figcaption small{font-size:14px}
+  #crediti li small a{display:inline-flex;align-items:center;min-height:44px;padding-right:var(--s-3)}
+  .big-oggi{margin:var(--s-5) 0 var(--s-1);font-size:14px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--gold-soft)}
+  .big-oggi[hidden]{display:none}
+  /* tabella del budget: con il testo a 14 px le etichette vanno a capo invece di allargare la tabella */
+  .btable .st{white-space:normal;text-align:center}
+  .btable th,.btable td{overflow-wrap:anywhere}
+  .btable th{letter-spacing:0}
 </style>
 </head>
 <body>
@@ -1839,7 +1852,7 @@
     <a class="btn btn--secondario btn--blocco pk-riga big-casa" href="#sealifeCard"><span class="pk-riga__ic" aria-hidden="true">🐠</span><span><b>SEA LIFE · 3 QR</b><small>Domenica 15, ingresso in qualsiasi momento · uno per persona</small></span><span aria-hidden="true">›</span></a>
     <a class="btn btn--secondario btn--blocco pk-riga big-casa" href="#scienceMuseumCard"><span class="pk-riga__ic" aria-hidden="true">🔬</span><span><b>Science Museum · 1 QR</b><small>Lunedì 16, ingresso 14:45–15:15 · un QR per tutti e tre</small></span><span aria-hidden="true">›</span></a>
 
-      <article class="pk" aria-labelledby="pkTit">
+      <article class="pk" id="pkCard" aria-labelledby="pkTit">
     <p class="pk__eyebrow">🅿️ Parcheggio aeroporto · domenica all’ingresso, martedì sera all’uscita</p>
     <h3 class="pk__tit" id="pkTit">P1 · Aeroporto di Bologna</h3>
     <div class="pk__grid">
@@ -1915,7 +1928,7 @@
       <p class="pk__tot"><b>Gratuito</b> <span class="pk__paid">Prenotato</span></p>
     </div>
 
-    <div class="card tk-card">
+    <div class="card tk-card" id="nhmCard">
       <h3>🎟️ Natural History Museum <span class="st ok">3 ingressi</span></h3>
       <div class="tk-when">
         <div><span class="k">Data</span><span class="v">lunedì 16 nov</span></div>
@@ -1962,7 +1975,7 @@
       <p class="copia-riga"><button class="btn btn--ghost copia" type="button" data-copia="ZGHR956Q">📋 Copia il rif. di domenica</button></p>
     </div>
 
-    <div class="card">
+    <div class="card" id="voliCard">
       <h3>✈️ Voli — British Airways <span class="st ok">✅ prenotato</span></h3>
       <p class="meta">Diretti, Heathrow Terminal 5 · Economy · €433,39 totale famiglia</p>
       <div class="flight">
@@ -2150,7 +2163,6 @@
   <section id="info" aria-labelledby="infoTit">
     <div class="eyebrow">Info</div>
     <h2 id="infoTit">Da sapere</h2>
-    <p><button class="btn btn--secondario btn--blocco sole-ad" type="button" data-sole aria-pressed="false">☀️ Più leggibile al sole</button></p>
     <p style="margin-top:var(--s-2)"><a class="btn btn--ghost pics-link" href="londra-illustrata.html">🖼️ Versione per immagini, per Olly</a></p>
     <div class="card sole-card">
       <h3>☀️ Lettura al sole</h3>
@@ -2892,6 +2904,28 @@
     }
     testata(); setInterval(testata, 20000);
   })();
+  /* Biglietti: dal 15 al 17 le card che servono oggi salgono in cima, sotto «Oggi», nell'ordine d'uso; le altre restano
+     sotto «Gli altri giorni» nell'ordine di sempre. Con «Piove» lunedì il Science Museum passa davanti al NHM. */
+  (function(){
+    var OGGI = { '2026-11-15': ['sealifeCard', 'depositiCard', 'casaCard', 'pkCard'], '2026-11-16': ['nhmCard', 'scienceMuseumCard'], '2026-11-17': ['depositiCard', 'voliCard', 'pkCard'] };
+    var sez = document.getElementById('biglietti'); if (!sez) return;
+    var tutte = ['pkCard', 'sealifeCard', 'scienceMuseumCard', 'nhmCard', 'depositiCard', 'voliCard', 'casaCard'].map(function(id){ return document.getElementById(id); }).filter(Boolean);
+    if (tutte.length < 7) return;
+    var t1 = document.createElement('p'), t2 = document.createElement('p'); t1.className = t2.className = 'big-oggi'; t1.textContent = 'Oggi'; t2.textContent = 'Gli altri giorni';
+    var ancora = document.createComment('fine biglietti'); tutte[tutte.length - 1].after(ancora); var ultimo = null;
+    function ordina(){
+      var data = OROLOGIO.parti(OROLOGIO.adesso()).data, ids = (OGGI[data] || []).slice(), chiave = data + (document.documentElement.classList.contains('piove') ? 'p' : '');
+      if (chiave === ultimo) return; ultimo = chiave;
+      if (data === '2026-11-16' && document.documentElement.classList.contains('piove')) ids.reverse();
+      var oggi = ids.map(function(id){ return document.getElementById(id); }), altre = tutte.filter(function(c){ return oggi.indexOf(c) < 0; });
+      var padre = ancora.parentNode;
+      if (oggi.length) padre.insertBefore(t1, ancora); else t1.remove();
+      oggi.forEach(function(c){ padre.insertBefore(c, ancora); });
+      if (oggi.length) padre.insertBefore(t2, ancora); else t2.remove();
+      altre.forEach(function(c){ padre.insertBefore(c, ancora); });
+    }
+    ordina(); setInterval(ordina, 60000); document.addEventListener('piove', ordina);
+  })();
   var MOTO = { ridotto: function(){ return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches); } };
   /* ====== SHEET: il pannello dal basso, uno per tutti (Novità, schede «se avanza tempo») ======
      Sale in 250 ms, si chiude trascinandolo in giù (80 px), toccando lo sfondo o con Esc. Il markup ha già
@@ -3602,6 +3636,9 @@
      Il pannello non si apre mai da solo: in cima c'è un banner sottile «N novità», e si apre solo se toccato.
      Il link in fondo alla pagina lo riapre con tutto lo storico, in ogni caso. */
   var NOVITA = [
+    { v: 54, data: '2026-11-10', titolo: '🎟️ Biglietti di oggi in cima', voci: [
+      'In Biglietti, durante il viaggio, i codici che servono oggi salgono in cima sotto «Oggi»; gli altri restano sotto',
+      'In Biglietti e Info niente più testo minuscolo: note, etichette e tabelle sono a 14 px; i link dei crediti si toccano bene' ] },
     { v: 53, data: '2026-11-10', titolo: '🎨 Card più pulite', voci: [
       'Nelle card piccole il testo ora usa tutta la larghezza: foto e titolo in testa, poi «Cosa vediamo» e il resto senza colonne strette',
       '«Portami qui» e «Bagno» sono due pulsanti uguali e ordinati, sempre in fondo alla card',

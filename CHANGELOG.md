@@ -997,3 +997,9 @@ Cercati bug dello stesso tipo di "portiere che si rituffa nel replay": due cambi
 - **Tipografia**: nelle card, nei percorsi, nella scaletta e in «Adesso» il gradino più piccolo passa da 12 a 14 px.
 - **Adesso**: via la miniatura, nome della prossima tappa più grande, «in corso» in secondo piano, promemoria in peso normale con i link come pulsanti.
 - Verifiche: `londra-check` 33/33, nessuno scroll orizzontale a 320/375/430 px, tema scuro, chiaro e Sole. Novità v53.
+
+## Londra v2 · passo 3: Biglietti e Info (10/11/2026)
+- **Biglietti**: dal 15 al 17 le card che servono quel giorno salgono in cima sotto «Oggi», nell'ordine d'uso (domenica SEA LIFE, depositi, appartamento, parcheggio; lunedì NHM e Science Museum, invertiti con «Piove»; martedì depositi, voli, parcheggio); le altre sotto «Gli altri giorni». Fuori dal viaggio l'ordine è quello di sempre. Le card hanno ora un id (`pkCard`, `nhmCard`, `voliCard`); i codici non sono toccati.
+- **Testi**: in tutte le viste il gradino più piccolo passa a 14 px (resta a 12 solo la barra in basso). Testi sotto i 14 px: Info da 94 a 3, Biglietti da 67 a 3 (i 3 sono nel piè di pagina).
+- **Controlli**: i link dei crediti fotografici sono alti 44 px (erano 15): controlli sotto i 44 px in Info da 38 a 0. La tabella del budget va a capo invece di allargarsi a 320 px. Tolto da Info il secondo pulsante del Sole, doppione della card «Lettura al sole».
+- `londra-check` 33/33, nessuno scroll orizzontale a 320/375/430 px. Novità v54.
