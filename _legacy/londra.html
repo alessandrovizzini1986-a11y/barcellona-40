@@ -738,6 +738,21 @@
   .plus-riga > span:last-child{margin-left:auto;font-size:var(--f-22);color:var(--gold)}
   .plus-foglio .nov__lista{padding-top:var(--s-4)}
   .plus-foglio .tcard{margin:0}
+  /* foglio di «Vedi la scheda»: la tappa e quella dopo */
+  .foglio-poi{margin:0;font-size:var(--f-12);font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--gold-soft)}
+  .foglio-prog{align-self:center}
+  .plus-foglio .nov__lista>*{flex:none}
+  .tcard--foglio{content-visibility:visible;contain-intrinsic-size:none}
+  /* tappe già finite: una riga, un tocco le riapre */
+  .tcard__riga{display:none}
+  .tcard--passata>.tcard__riga{display:flex;grid-column:1/-1;align-items:center;gap:var(--s-3);width:100%;min-height:44px;padding:var(--s-2) var(--s-4);border:0;background:none;color:var(--muted);font:inherit;font-size:var(--f-14);text-align:left;cursor:pointer}
+  .tcard__riga-ora{flex:none;font-weight:700;font-variant-numeric:tabular-nums}
+  .tcard__riga-nome{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .tcard--passata>.tcard__riga::after{content:"▾";flex:none}
+  .tcard--passata.tcard--aperta>.tcard__riga::after{content:"▴"}
+  .tcard--passata:not(.tcard--aperta)>:not(.tcard__riga){display:none!important}
+  .tcard--passata:not(.tcard--aperta){opacity:.8;contain-intrinsic-size:auto 46px}
+  .percorso--passato{display:none!important}
   /* novità: un banner sottile, si apre solo se toccato */
   .nov-banner{justify-content:flex-start;margin:var(--s-4) 0 0;padding:var(--s-2) var(--s-4);color:var(--gold-soft);text-align:left}
   .nov-banner[hidden]{display:none}
@@ -989,7 +1004,7 @@
     <button class="btn btn--grande btn--blocco ad-codice ad-biglietti" id="adBiglietti" type="button" hidden><span>🎟️ I biglietti di oggi</span><small id="adBigliettiSub"></small></button>
     <div class="ad-bagno" id="adBagno" hidden></div>
     <div class="ad-azioni">
-      <button class="btn btn--secondario btn--grande ad-scheda" id="adScheda" type="button">Vedi la scheda ↓</button>
+      <button class="btn btn--secondario btn--grande ad-scheda" id="adScheda" type="button">Vedi la scheda</button>
       <button class="btn btn--secondario piove-btn" type="button" data-piove aria-pressed="false" id="pioveBtnAd"><span class="piove-ic">🌧️</span> Piove? <span class="piove-stato">NO</span></button>
     </div>
     <p class="ad-vincolo" id="adVincolo" hidden></p>
@@ -2990,6 +3005,7 @@
       mostra(nome, function(){
         var g = el.closest('details.acc.giorno'); if (g) giorno(GIORNI_SEG.filter(function(k){ return g.classList.contains(k); })[0]);
         for (var d = el.closest('details'); d; d = d.parentElement && d.parentElement.closest('details')) d.open = true;
+        if (el.classList && el.classList.contains('tcard--passata')) { el.classList.add('tcard--aperta'); var rg = el.querySelector('.tcard__riga'); if (rg) rg.setAttribute('aria-expanded', 'true'); }
         bersaglio = el; tBersaglio = Date.now();
         requestAnimationFrame(function(){ allinea(el, morbido); setTimeout(function(){ if (bersaglio === el) allinea(el, false); }, morbido ? 1300 : 350); });
       });
@@ -3372,6 +3388,25 @@
     var mostrata = null;
     // quando cambia la coppia tappa in corso / prossima, il pannello si dissolve invece di cambiare di colpo
     var chiaveAdesso = null;
+    // Durante il viaggio, nel Programma le tappe già finite si riducono a una riga («✓ 09:30 Trafalgar Square»):
+    // un tocco le riapre. Vale anche per i percorsi che portano a una tappa finita. Fuori dal viaggio non cambia niente
+    function segnaPassate(now){
+      var dentro = document.documentElement.classList.contains('in-viaggio');
+      [].forEach.call(document.querySelectorAll('#programma article.tcard[data-ora]'), function(c){
+        var d = c.dataset, t = OROLOGIO.istante(d.giorno, d.ora, d.fuso || 'Europe/London'), fine = t + (+((d.durata || '0-0').split('-').pop()) || 0) * 6e4;
+        var passata = dentro && now > fine && now > t + 5 * 6e4;
+        if (passata && !c.querySelector('.tcard__riga')) {
+          var r = document.createElement('button'); r.type = 'button'; r.className = 'tcard__riga';
+          r.innerHTML = '<span class="tcard__riga-ora"></span><span class="tcard__riga-nome"></span>';
+          r.firstChild.textContent = '✓ ' + d.ora; r.lastChild.textContent = c.querySelector('h4').textContent;
+          r.addEventListener('click', function(){ r.setAttribute('aria-expanded', String(c.classList.toggle('tcard--aperta'))); });
+          r.setAttribute('aria-expanded', 'false'); c.insertBefore(r, c.firstChild);
+        }
+        if (c.classList.contains('tcard--passata') !== passata) { c.classList.toggle('tcard--passata', passata); if (!passata) c.classList.remove('tcard--aperta'); }
+        // i percorsi subito prima della card seguono la sua sorte
+        for (var e = c.previousElementSibling; e && e.matches('a.percorso'); e = e.previousElementSibling) e.classList.toggle('percorso--passato', passata);
+      });
+    }
     function adesso(){
       var now = OROLOGIO.adesso(), l = tappe(), c = null, p = null;
       l.forEach(function(x){ if (x.t <= now) c = x; else if (!p) p = x; });
@@ -3467,9 +3502,32 @@
       }
       $('adScheda').hidden = !mostrata;
       BAGNI.perAdesso(corrente, prossima, now, lo.data);
+      segnaPassate(now);
       $('adesso').hidden = false;
     }
-    $('adScheda').addEventListener('click', function(){ if (mostrata) VISTE.vaiA(mostrata.el); });
+    // «Vedi la scheda»: la card della tappa (e quella subito dopo) in un foglio dal basso, senza lasciare «Adesso».
+    // Sono copie delle card del Programma: gli id vengono rinominati perché i pannelli bagno/deposito restino i loro
+    $('adScheda').addEventListener('click', function(){
+      if (!mostrata) return;
+      var velo = document.getElementById('plusVelo'), corpo = document.getElementById('plusCorpo'), foglio = velo.querySelector('.nov');
+      var l = tappe(), i = -1; l.forEach(function(x, k){ if (x.el === mostrata.el) i = k; });
+      var dopo = i >= 0 && l[i + 1] && l[i + 1].giorno === mostrata.giorno ? l[i + 1] : null;
+      function copia(x){
+        var k = x.el.cloneNode(true); k.classList.remove('tcard--passata'); k.classList.add('tcard--foglio');
+        var r = k.querySelector('.tcard__riga'); if (r) r.remove();
+        [].forEach.call(k.querySelectorAll('[id]'), function(e){ e.id += '-f'; }); if (k.id) k.id += '-f';
+        [].forEach.call(k.querySelectorAll('[aria-controls]'), function(e){ e.setAttribute('aria-controls', e.getAttribute('aria-controls') + '-f'); });
+        [].forEach.call(k.querySelectorAll('img'), function(im){ im.loading = 'eager'; });
+        return k;
+      }
+      corpo.innerHTML = ''; corpo.appendChild(copia(mostrata));
+      if (dopo) { var t = document.createElement('p'); t.className = 'foglio-poi'; t.textContent = 'Poi · ' + dopo.ora; corpo.appendChild(t); corpo.appendChild(copia(dopo)); }
+      var vai = document.createElement('button'); vai.type = 'button'; vai.className = 'btn btn--ghost foglio-prog'; vai.textContent = '🗓️ Vedi tutta la giornata nel Programma';
+      var bersaglio = mostrata.el; vai.addEventListener('click', function(){ SHEET.chiudi(true); VISTE.vaiA(bersaglio); });
+      corpo.appendChild(vai);
+      var vecchia = foglio.getAttribute('aria-label'); foglio.setAttribute('aria-label', 'Scheda della tappa'); corpo.scrollTop = 0;
+      SHEET.apri(velo, { da: this, focus: document.getElementById('plusOk'), chiudi: function(){ corpo.innerHTML = ''; foglio.setAttribute('aria-label', vecchia); } });
+    });
 
     // proposta del piano pioggia: se il meteo dà pioggia >= 60% per oggi. Non lo accende mai da sola;
     // "No" la nasconde finché la pagina resta aperta (in memoria, nessuno storage)
@@ -3505,6 +3563,9 @@
      Il pannello non si apre mai da solo: in cima c'è un banner sottile «N novità», e si apre solo se toccato.
      Il link in fondo alla pagina lo riapre con tutto lo storico, in ogni caso. */
   var NOVITA = [
+    { v: 52, data: '2026-11-10', titolo: '🗂️ La scheda viene da te', voci: [
+      '«Vedi la scheda» in Adesso apre la tappa in un foglio dal basso, con sotto quella che viene dopo: non si salta più nel Programma',
+      'Durante il viaggio, nel Programma le tappe già fatte diventano una riga sola (un tocco le riapre): la giornata comincia da dove siete' ] },
     { v: 51, data: '2026-11-10', titolo: '🔎 Controlli del 10/11', voci: [
       '⛴️ Battello di domenica confermato: con l’orario invernale parte dal London Eye Pier alle 14:53 e alle 15:05 e ferma a Embankment dopo 5–6 minuti',
       '✅ ETA UK fatta per tutti e tre. Calendario del Cambio della Guardia e chiusure TfL ricontrollati: niente di nuovo',

@@ -983,3 +983,9 @@ Cercati bug dello stesso tipo di "portiere che si rituffa nel replay": due cambi
 - **Battello di domenica verificato** sull'orario invernale ufficiale (dal 9/11): verso est dal London Eye Pier alle 14:53 e 15:05 (Embankment 14:59 e 15:10), traversata di 5–6 minuti, scalo a Embankment presente. Voce chiusa in `DA_VERIFICARE_LONDRA.md` (restano 4).
 - **ETA UK** fatta per tutti e tre (checklist e budget). Calendario Household Division riletto il 10/11: riga del 16/11 invariata, una sola banda. Elenco TfL del 9/11: nessuna novità (Elizabeth chiusa in centro domenica fino alle 10:15; Piccadilly e Bakerloo regolari; nessuna chiusura il 16 e 17).
 - Note aggiornate su meteo (Met Office, 10/11 ore 17: lunedì 30–40% di pioggia fra le 10 e le 12, raffiche fino a ~28 mph), ascensore di Green Park (fonti discordi) e AJEX (nessun avviso). Novità v51.
+
+## Londra v2 · passo 1: la scheda viene da te (10/11/2026)
+- Piano di lavoro in `PIANO_LONDRA_V2.md`: logica e grafica riviste un passo alla volta, contenuti intoccabili, merge solo con `londra-check` verde, niente main dal 12 al 17.
+- «Vedi la scheda» in «Adesso» apre un foglio dal basso (lo stesso di «Se avanza tempo») con la copia della card della tappa e, sotto «Poi · hh:mm», quella successiva dello stesso giorno; gli id delle copie sono rinominati, così bagno e deposito si aprono dentro il foglio. In fondo «🗓️ Vedi tutta la giornata nel Programma».
+- Nel Programma, con `html.in-viaggio`, le card finite (`tcard--passata`) si riducono a una riga «✓ ora titolo» riapribile (`tcard--aperta`); i percorsi che le precedono si nascondono (`percorso--passato`). Arrivando a una card passata da un link, si apre da sola. Lunedì alle 14:50: da 13,7 a 5,7 schermate. Fuori dal viaggio niente cambia.
+- Novità v52.
