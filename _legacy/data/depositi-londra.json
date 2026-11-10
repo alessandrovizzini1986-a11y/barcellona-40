@@ -1,6 +1,6 @@
 {
   "versione": 1,
-  "aggiornato_il": "2026-11-08",
+  "aggiornato_il": "2026-11-10",
   "regola": "Prenotare dall'app (Bounce o Stasher) la sera prima: si paga a collo, si riceve un QR. Foto dei bagagli al deposito. Niente documenti, farmaci o power bank dentro: BA li vuole con voi e il deposito non li assicura.",
   "depositi": [
     {
@@ -112,7 +112,7 @@
     },
     {
       "id": "bounce_rupert",
-      "nome": "Bounce — Piccadilly Circus (53 Rupert St)",
+      "nome": "Soho Mart (Bounce) — Piccadilly Circus, 53 Rupert St",
       "indirizzo": "53 Rupert St, W1D 7PH",
       "lat": 51.5120078,
       "lng": -0.1336085,
@@ -138,8 +138,16 @@
         "prezzo"
       ],
       "note": "A 2 minuti dalla stazione di Piccadilly Circus (Piccadilly line diretta per Heathrow). Il link per prenotare è nell’app Bounce.",
-      "verificato_il": "2026-11-08",
-      "fonte": "Google Places (orari, voti)"
+      "verificato_il": "2026-11-10",
+      "fonte": "Google Places (orari, voti)",
+      "negozio": "Soho Mart",
+      "prenotato": true,
+      "prenotazione": {
+        "giorno": "mar17",
+        "fascia": "10:30–15:30",
+        "colli": "3 valigie regolari",
+        "rif": "CLVQZVM4"
+      }
     },
     {
       "id": "bounce_broadwick",
