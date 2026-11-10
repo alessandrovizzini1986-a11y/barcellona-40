@@ -30,7 +30,7 @@ revisione), non aggiungere funzioni.
   tocco; spariscono anche i percorsi che portavano lì. Lunedì alle 14:50 la giornata passa da 13,7 a 5,7 schermate.
 - Verifica: scenari 02, 04, 08, 09 con al massimo 1 tocco e 1 scorrimento per arrivare all'informazione.
 
-### Passo 2 · Grafica: gerarchia delle card e tipografia
+### Passo 2 · Grafica: gerarchia delle card e tipografia (pubblicato il 10/11)
 - Una sola scala di testo (titolo, corpo, nota) e nessun testo sotto i 14 px nelle card.
 - Card più pulite: un solo livello di bordo, badge solo dove dicono qualcosa («stimato», «da verificare», «prenotato»),
   orario e titolo sempre nello stesso punto, azioni sempre in fondo e nello stesso ordine.

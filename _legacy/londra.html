@@ -940,6 +940,45 @@
   .ad-guardia li{padding:var(--s-3) var(--s-3);border-radius:var(--r-s);font-size:var(--f-16);line-height:1.45;font-weight:700;color:var(--ink);
     background:rgba(212,169,78,.12);border:1px solid var(--line-gold)}
   .ad-guardia a{margin-right:var(--s-3);color:var(--sky)}
+
+  /* ====== v2 · passo 2: gerarchia e tipografia (solo stile, nessun contenuto) ======
+     Nelle card nessun testo sotto i 14 px; azioni rettangolari, sempre in fondo e nello stesso ordine;
+     la durata è testo, non una pillola; «Adesso» mette la prossima tappa davanti a tutto. */
+  .tcard,.percorso,.scaletta,.ora-pan,.plus-foglio{--f-12:14px}
+  .tcard .st,.ora-pan .st,.tcard .piove-stato{letter-spacing:.02em}
+  .tcard .tdur{padding:0;border:0;background:none;color:var(--muted);font-weight:600}
+  .tcard .gmap,.tcard .bagno-riga{border-radius:var(--r-m)}
+  .azioni-tappa .gmap,.azioni-tappa .bagno-riga{min-height:52px;flex-direction:column;flex-wrap:nowrap;gap:2px;justify-content:center;border-radius:var(--r-m)}
+  .azioni-tappa .gmap__modo{font-weight:600}
+  .azioni-tappa .bagno-riga{position:relative;padding-right:var(--s-5)}
+  .azioni-tappa .bagno-riga::after{position:absolute;right:var(--s-2);top:50%;transform:translateY(-50%);margin:0}
+  .azioni-tappa .bagno-riga__txt{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:2px var(--s-2);font-size:var(--f-14)}
+  .tcard .gmap{white-space:nowrap}
+  .azioni-tappa .bagno-riga__txt{white-space:nowrap}
+  /* schermo stretto o testo grande (Sole): le due azioni una sotto l'altra, così restano su una riga */
+  html.sole .azioni-tappa{grid-template-columns:minmax(0,1fr)}
+  @media (max-width:359px){.azioni-tappa{grid-template-columns:minmax(0,1fr)}}
+  .ad-testa{flex-wrap:wrap;row-gap:2px}
+  /* card compatte: foto piccola e titolo in testa, poi il testo a tutta larghezza (prima stava in una colonna stretta) */
+  .tcard:not([data-tipo="evento"]):not(.tcard--plus):not(.tcard--nofoto){grid-template-areas:none}
+  .tcard:not([data-tipo="evento"]):not(.tcard--plus):not(.tcard--nofoto) > .tcard__foto{grid-area:auto;grid-column:1;grid-row:1;width:72px;height:72px}
+  .tcard:not([data-tipo="evento"]):not(.tcard--plus):not(.tcard--nofoto) > .tcard__body{display:contents}
+  .tcard:not([data-tipo="evento"]):not(.tcard--plus):not(.tcard--nofoto) > .tcard__body > *{grid-column:1/-1;margin-left:var(--s-4);margin-right:var(--s-4)}
+  .tcard:not([data-tipo="evento"]):not(.tcard--plus):not(.tcard--nofoto) > .tcard__body > h4{grid-column:2;grid-row:1;align-self:center;margin:var(--s-4) var(--s-4) 0 calc(-1 * var(--s-2))}
+  .tcard:not([data-tipo="evento"]):not(.tcard--plus):not(.tcard--nofoto) > .tcard__body > :last-child{margin-bottom:var(--s-4)}
+  .tcard:not([data-tipo="evento"]):not(.tcard--plus):not(.tcard--nofoto) > .tcard__credito{grid-area:auto;grid-column:1/-1;padding-top:0}
+  .tcard:not([data-tipo="evento"]):not(.tcard--plus):not(.tcard--nofoto){grid-template-columns:calc(72px + var(--s-4) + var(--s-4)) minmax(0,1fr)}
+  /* percorso: un collegamento fra due tappe, più leggero di una card */
+  .percorso{padding:var(--s-2) var(--s-3);border-color:transparent;background:rgba(109,179,216,.07)}
+  /* Adesso come cruscotto */
+  .ad-foto{display:none}
+  .ad-corso{font-size:var(--f-14);color:var(--muted)}
+  .ad-corso b{color:var(--ink)}
+  .ad-quando{font-size:var(--f-16)}
+  .ad-nome{font-size:var(--f-28);line-height:1.12;margin-top:var(--s-1)}
+  .ad-regola,.ad-guardia li{font-weight:400}
+  .ad-guardia li b{font-weight:700}
+  .ad-guardia a{display:inline-flex;margin:var(--s-2) var(--s-2) 0 0;padding:0 var(--s-3);min-height:44px;border:1px solid rgba(109,179,216,.4);border-radius:999px;font-weight:700}
 </style>
 </head>
 <body>
@@ -3563,6 +3602,10 @@
      Il pannello non si apre mai da solo: in cima c'è un banner sottile «N novità», e si apre solo se toccato.
      Il link in fondo alla pagina lo riapre con tutto lo storico, in ogni caso. */
   var NOVITA = [
+    { v: 53, data: '2026-11-10', titolo: '🎨 Card più pulite', voci: [
+      'Nelle card piccole il testo ora usa tutta la larghezza: foto e titolo in testa, poi «Cosa vediamo» e il resto senza colonne strette',
+      '«Portami qui» e «Bagno» sono due pulsanti uguali e ordinati, sempre in fondo alla card',
+      'In Adesso la prossima tappa è scritta più grande e i promemoria pesano meno; nelle card non c’è più testo minuscolo' ] },
     { v: 52, data: '2026-11-10', titolo: '🗂️ La scheda viene da te', voci: [
       '«Vedi la scheda» in Adesso apre la tappa in un foglio dal basso, con sotto quella che viene dopo: non si salta più nel Programma',
       'Durante il viaggio, nel Programma le tappe già fatte diventano una riga sola (un tocco le riapre): la giornata comincia da dove siete' ] },
