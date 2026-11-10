@@ -1,6 +1,14 @@
 {
   "entries": [
     {
+      "v": 83,
+      "data": "2026-11-10",
+      "titolo": "Londra v2, passo 3: Biglietti e Info",
+      "voci": [
+        "🎟️ In Biglietti i codici di oggi salgono in cima durante il viaggio; in Biglietti e Info niente più testo sotto i 14 px"
+      ]
+    },
+    {
       "v": 82,
       "data": "2026-11-10",
       "titolo": "Londra v2, passo 2: card più pulite",
