@@ -989,3 +989,11 @@ Cercati bug dello stesso tipo di "portiere che si rituffa nel replay": due cambi
 - «Vedi la scheda» in «Adesso» apre un foglio dal basso (lo stesso di «Se avanza tempo») con la copia della card della tappa e, sotto «Poi · hh:mm», quella successiva dello stesso giorno; gli id delle copie sono rinominati, così bagno e deposito si aprono dentro il foglio. In fondo «🗓️ Vedi tutta la giornata nel Programma».
 - Nel Programma, con `html.in-viaggio`, le card finite (`tcard--passata`) si riducono a una riga «✓ ora titolo» riapribile (`tcard--aperta`); i percorsi che le precedono si nascondono (`percorso--passato`). Arrivando a una card passata da un link, si apre da sola. Lunedì alle 14:50: da 13,7 a 5,7 schermate. Fuori dal viaggio niente cambia.
 - Novità v52.
+
+## Londra v2 · passo 2: gerarchia delle card e tipografia (10/11/2026)
+- Solo stile, in un blocco in fondo al foglio di stile (`v2 · passo 2`): nessun contenuto, orario o link toccato.
+- **Card compatte**: foto 72 px e titolo sulla stessa riga, poi tutto il testo a tutta larghezza (`.tcard__body{display:contents}`); prima «Cosa vediamo» stava in una colonna di ~180 px.
+- **Azioni**: «Portami qui» e «Bagno» rettangolari, due colonne uguali con etichetta e dettaglio su due righe; una sotto l'altra sotto i 360 px e in modalità Sole. La durata è testo semplice, non una pillola; il percorso fra due tappe è più leggero.
+- **Tipografia**: nelle card, nei percorsi, nella scaletta e in «Adesso» il gradino più piccolo passa da 12 a 14 px.
+- **Adesso**: via la miniatura, nome della prossima tappa più grande, «in corso» in secondo piano, promemoria in peso normale con i link come pulsanti.
+- Verifiche: `londra-check` 33/33, nessuno scroll orizzontale a 320/375/430 px, tema scuro, chiaro e Sole. Novità v53.
