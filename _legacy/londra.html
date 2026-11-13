@@ -980,6 +980,23 @@
   .ad-guardia li b{font-weight:700}
   .ad-guardia a{display:inline-flex;margin:var(--s-2) var(--s-2) 0 0;padding:0 var(--s-3);min-height:44px;border:1px solid rgba(109,179,216,.4);border-radius:999px;font-weight:700}
 
+  /* ====== v3 (13/11): in viaggio si vede prima quello che serve adesso ======
+     Programma: via titolo e avvertenza «orari da confermare», scaletta senza le tappe già fatte (riapribili).
+     Meno vuoto sotto la testata di una riga. Meteo: la scritta sotto i gradi non finisce più sopra le previsioni. */
+  html.in-viaggio main{padding-top:var(--s-2)}
+  html.in-viaggio .vista>section:first-child{margin-top:var(--s-3)}
+  html.in-viaggio #programma>.meteo{margin-top:var(--s-3)}
+  html.in-viaggio #programma>h2,html.in-viaggio #programma>.sub2{display:none}
+  html.in-viaggio #programma>.prog-azioni{margin-top:var(--s-2)}
+  .scaletta:not(.scaletta--tutta) li.sc-passata{display:none}
+  .scaletta--tutta li.sc-passata .sc-riga,.scaletta--tutta li.sc-passata .sc-ora{color:var(--muted)}
+  .sc-fatte__b{display:flex;align-items:center;justify-content:space-between;gap:var(--s-3);width:100%;min-height:44px;padding:var(--s-2) var(--s-4);border:0;background:none;color:var(--muted);font:inherit;font-size:var(--f-14);font-weight:700;text-align:left;cursor:pointer}
+  .sc-fatte__b span:last-child{color:var(--gold-soft);font-weight:700}
+  .meteo__ora>span:last-child{min-width:0;overflow:hidden}
+  /* proposta «attivo il piano pioggia?»: i due pulsanti erano trasparenti, ora si vede qual è il sì */
+  .ad-proposta__az .ad-proposta__si{background:var(--sky-fill);border:1px solid var(--sky-fill);color:var(--on-accent);font-weight:800}
+  .ad-proposta__az .ad-proposta__no{background:none;border:1px solid var(--line-gold);color:var(--ink)}
+  .meteo__dove{overflow:hidden;text-overflow:ellipsis}
   /* ====== v2 · passo 3: Biglietti e Info ======
      Nessun testo sotto i 14 px nelle viste (resta a 12 solo la barra in basso); i link dei crediti sono alti 44 px;
      in Biglietti, durante il viaggio, i codici di oggi salgono in cima sotto «Oggi». */
@@ -2483,7 +2500,7 @@
 
     // scheletro: la riga chiusa, con le forme di quello che arriverà
     card.classList.add('meteo--scheletro'); card.hidden = false;
-    card.querySelector('.meteo__riga').innerHTML = '<span class="meteo__ora"><span class="ico sk">🌦️</span><span><b class="sk">12°</b><span class="meteo__dove sk">Londra, adesso</span></span></span>'
+    card.querySelector('.meteo__riga').innerHTML = '<span class="meteo__ora"><span class="ico sk">🌦️</span><span><b class="sk">12°</b><span class="meteo__dove sk">adesso</span></span></span>'
       + '<span class="meteo__giorni">' + GIORNI.map(function(g){ return '<span class="sk">' + g[1] + ' 00/00°</span>'; }).join('') + '</span>';
     function nonDisponibile(){
       card.classList.remove('meteo--scheletro');
@@ -2515,7 +2532,7 @@
       // riga chiusa: adesso a Londra (se c'è) + i tre giorni del viaggio
       var c = d.current, cCod = c && (c.weathercode != null ? c.weathercode : c.weather_code);
       var adesso = c && c.temperature_2m != null
-        ? '<span class="meteo__ora"><span class="ico">' + icona(cCod) + '</span><span><b>' + arr(c.temperature_2m) + '</b><span class="meteo__dove">Londra, adesso</span></span></span>'
+        ? '<span class="meteo__ora"><span class="ico">' + icona(cCod) + '</span><span><b>' + arr(c.temperature_2m) + '</b><span class="meteo__dove">adesso</span></span></span>'
         : '<span class="meteo__ora"><span class="ico">🌦️</span><span><b>Meteo</b><span class="meteo__dove">Londra, previsione</span></span></span>';
       var riga = card.querySelector('.meteo__riga');
       riga.innerHTML = adesso + '<span class="meteo__giorni">' + giorni.map(function(x){
@@ -2934,6 +2951,10 @@
       if (oggi.length) padre.insertBefore(t1, ancora); else t1.remove();
       oggi.forEach(function(c){ padre.insertBefore(c, ancora); });
       if (oggi.length) padre.insertBefore(t2, ancora); else t2.remove();
+      // le scorciatoie (appartamento, SEA LIFE, Science Museum) non stanno più sopra i biglietti di oggi
+      var sc = [].slice.call(sez.querySelectorAll('a.big-casa')), sub = sez.querySelector('.sub2');
+      if (oggi.length) sc.forEach(function(a){ padre.insertBefore(a, ancora); });
+      else if (sub) sc.reverse().forEach(function(a){ sub.after(a); });
       altre.forEach(function(c){ padre.insertBefore(c, ancora); });
     }
     ordina(); setInterval(ordina, 60000); document.addEventListener('piove', ordina);
@@ -3490,6 +3511,24 @@
         if (c.classList.contains('tcard--passata') !== passata) { c.classList.toggle('tcard--passata', passata); if (!passata) c.classList.remove('tcard--aperta'); }
         // i percorsi subito prima della card seguono la sua sorte
         for (var e = c.previousElementSibling; e && e.matches('a.percorso'); e = e.previousElementSibling) e.classList.toggle('percorso--passato', passata);
+        // la riga della scaletta segue la card: le tappe fatte spariscono dalla scaletta, dietro «✓ N tappe fatte»
+        var sc = c.id && document.querySelector('#programma .scaletta a.sc-riga[href="#' + c.id + '"]');
+        if (sc) sc.parentNode.classList.toggle('sc-passata', passata);
+      });
+      var pg = document.documentElement.classList.contains('piove');
+      [].forEach.call(document.querySelectorAll('#programma .scaletta'), function(ul){
+        var n = [].filter.call(ul.querySelectorAll('li.sc-passata'), function(li){ return !li.classList.contains(pg ? 'solo-asciutto' : 'solo-pioggia'); }).length;
+        var li = ul.querySelector('.sc-fatte');
+        if (!n) { if (li) li.remove(); ul.classList.remove('scaletta--tutta'); return; }
+        if (!li) {
+          li = document.createElement('li'); li.className = 'sc-fatte';
+          var b = document.createElement('button'); b.type = 'button'; b.className = 'sc-fatte__b'; b.setAttribute('aria-expanded', 'false');
+          b.appendChild(document.createElement('span')); b.appendChild(document.createElement('span'));
+          b.addEventListener('click', function(){ var su = ul.classList.toggle('scaletta--tutta'); b.setAttribute('aria-expanded', String(su)); b.lastChild.textContent = su ? 'nascondi' : 'mostra'; });
+          li.appendChild(b); ul.insertBefore(li, ul.firstChild);
+        }
+        li.firstChild.firstChild.textContent = '✓ ' + n + (n === 1 ? ' tappa fatta' : ' tappe fatte');
+        li.firstChild.lastChild.textContent = ul.classList.contains('scaletta--tutta') ? 'nascondi' : 'mostra';
       });
     }
     function adesso(){
@@ -3648,6 +3687,10 @@
      Il pannello non si apre mai da solo: in cima c'è un banner sottile «N novità», e si apre solo se toccato.
      Il link in fondo alla pagina lo riapre con tutto lo storico, in ogni caso. */
   var NOVITA = [
+    { v: 60, data: '2026-11-13', titolo: '🧭 In viaggio si vede prima quello che serve', voci: [
+      'Dal 15 al 17 il Programma di oggi parte dalla prossima tappa: quelle già fatte stanno dietro «✓ tappe fatte · mostra»',
+      'In Biglietti il biglietto di oggi è in cima; la Mappa si apre sul giorno di oggi',
+      'Meno spazio vuoto sotto la testata, meteo che non si sovrappone, pulsanti «Sì, attiva» e «No» del piano pioggia ben visibili' ] },
     { v: 59, data: '2026-11-13', titolo: '🌧️ Martedì a Soho, merende e meteo', voci: [
       'Martedì è prevista pioggia tutto il giorno: il programma resta a Soho, al coperto e a piedi. 10:45 LEGO Store di Leicester Square, 12:00 pranzo da Poppies Soho, 13:15 Covent Garden. Camden resta solo se non piove: la riga «Se non piove» sotto il LEGO Store ha orari e percorsi',
       'Merende: domenica churros o cioccolata alle bancarelle dopo il SEA LIFE; lunedì cioccolata al St James’s Café e, col piano pioggia, Energy Café al Science Museum; martedì crêpe a Covent Garden e cena da Giraffe a Heathrow prima del volo',
@@ -4160,7 +4203,7 @@
   }
   map.on('click zoomstart',chiudiVentaglio);
   /* legenda = filtro: un tocco mostra solo quel giorno, un altro tocco rimette tutto (stato nella pagina, nessuno storage) */
-  var filtro=null, legenda=document.querySelector('.legend');
+  var filtro=null, legenda=document.querySelector('.legend'), boundsOggi=null;
   function filtra(g){
     filtro = filtro===g ? null : g; chiudiVentaglio();
     ['dom','lun','mar'].forEach(function(k){ if(!filtro||k===filtro) map.addLayer(gruppiGiorno[k]); else map.removeLayer(gruppiGiorno[k]); });
@@ -4168,6 +4211,12 @@
     if(legenda) legenda.classList.toggle('legend--filtro',!!filtro);
   }
   document.addEventListener('click',function(e){ var b=e.target.closest('.legend__b'); if(b) filtra(b.dataset.giornoMappa); });
+  /* dal 15 al 17 la mappa si apre già sul giorno di oggi, inquadrata sulle sue tappe; un tocco sulla legenda rimette tutto */
+  (function(){
+    var k={'2026-11-15':'dom','2026-11-16':'lun','2026-11-17':'mar'}[OROLOGIO.parti(OROLOGIO.adesso()).data]; if(!k) return;
+    filtra(k);
+    try{ var pt=marcatori.filter(function(x){ return x.t&&x.t.g===k; }).map(function(x){ return x.reale; }); if(pt.length>1) boundsOggi=L.latLngBounds(pt); }catch(e){}
+  })();
   /* «Tappa di adesso» e «Sei qui» */
   var riga=document.getElementById('mapRiga');
   function scrivi(html){ if(!riga) return; riga.innerHTML=html; riga.hidden=!html; }
@@ -4258,7 +4307,7 @@
     aggiungiLivello('🧳 Depositi',gruppoDepositi);
   }
   montaDepositi(); document.addEventListener('depositi',montaDepositi);
-  map.fitBounds(bounds,{padding:[30,30]});
+  map.fitBounds(boundsOggi||bounds,{padding:[30,30]});
   }
   // la mappa parte quando si apre la vista Mappa (e si ridimensiona: era nascosta)
   function vistaMappa(){ avviaMappa(); if (map) requestAnimationFrame(function(){ map.invalidateSize(); }); }

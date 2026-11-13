@@ -1022,3 +1022,10 @@ Cercati bug dello stesso tipo di "portiere che si rituffa nel replay": due cambi
 - **Merende**: domenica bancarelle dopo il SEA LIFE; lunedì St James’s Café (Royal Parks, inverno 8–16) e, col piano pioggia, Energy Café o The Diner al Science Museum (orari Benugo); martedì cena da Giraffe a Heathrow T5, «stimato».
 - **Ultimo controllo del 13/11**: Household Division conferma il Guard Change di lunedì 16 alle 11:00 con la Band of the Scots Guards; API TfL: Piccadilly, Bakerloo, Victoria, Jubilee regolari dal 15 al 17, Elizabeth chiusa in centro domenica fino alle 10:15, nessun ascensore fermo nelle nostre stazioni. `DA_VERIFICARE_LONDRA.md`: meteo aggiornato, restano 4 voci aperte.
 - `londra-check`: riferimento dei percorsi a 21, card con deposito vicino 3 (senza Camden). Novità v59.
+
+## Londra · 🧭 v3: in viaggio si vede prima quello che serve (13/11/2026)
+- Piano in `PIANO_LONDRA_V3.md`: revisione di grafica e logica sulle schermate di ogni vista, limitata a ciò che conviene toccare a due giorni dalla partenza.
+- **Programma** (solo `html.in-viaggio`): nascosti titolo e avvertenza; `segnaPassate` marca anche le righe della scaletta (`sc-passata`) e aggiunge «✓ N tappe fatte · mostra/nascondi».
+- **Biglietti**: con «Oggi» presente, le scorciatoie `a.big-casa` scendono sotto «Gli altri giorni».
+- **Mappa**: dal 15 al 17 si apre col filtro del giorno e inquadrata sulle sue tappe.
+- **Difetti corretti**: scritta del meteo sovrapposta alle previsioni (ora «adesso», con ellissi); pulsanti della proposta pioggia trasparenti; ~70 px vuoti sotto la testata di una riga. Novità v60.
