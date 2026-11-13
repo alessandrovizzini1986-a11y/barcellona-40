@@ -980,6 +980,23 @@
   .ad-guardia li b{font-weight:700}
   .ad-guardia a{display:inline-flex;margin:var(--s-2) var(--s-2) 0 0;padding:0 var(--s-3);min-height:44px;border:1px solid rgba(109,179,216,.4);border-radius:999px;font-weight:700}
 
+  /* ====== v3 (13/11): in viaggio si vede prima quello che serve adesso ======
+     Programma: via titolo e avvertenza «orari da confermare», scaletta senza le tappe già fatte (riapribili).
+     Meno vuoto sotto la testata di una riga. Meteo: la scritta sotto i gradi non finisce più sopra le previsioni. */
+  html.in-viaggio main{padding-top:var(--s-2)}
+  html.in-viaggio .vista>section:first-child{margin-top:var(--s-3)}
+  html.in-viaggio #programma>.meteo{margin-top:var(--s-3)}
+  html.in-viaggio #programma>h2,html.in-viaggio #programma>.sub2{display:none}
+  html.in-viaggio #programma>.prog-azioni{margin-top:var(--s-2)}
+  .scaletta:not(.scaletta--tutta) li.sc-passata{display:none}
+  .scaletta--tutta li.sc-passata .sc-riga,.scaletta--tutta li.sc-passata .sc-ora{color:var(--muted)}
+  .sc-fatte__b{display:flex;align-items:center;justify-content:space-between;gap:var(--s-3);width:100%;min-height:44px;padding:var(--s-2) var(--s-4);border:0;background:none;color:var(--muted);font:inherit;font-size:var(--f-14);font-weight:700;text-align:left;cursor:pointer}
+  .sc-fatte__b span:last-child{color:var(--gold-soft);font-weight:700}
+  .meteo__ora>span:last-child{min-width:0;overflow:hidden}
+  /* proposta «attivo il piano pioggia?»: i due pulsanti erano trasparenti, ora si vede qual è il sì */
+  .ad-proposta__az .ad-proposta__si{background:var(--sky-fill);border:1px solid var(--sky-fill);color:var(--on-accent);font-weight:800}
+  .ad-proposta__az .ad-proposta__no{background:none;border:1px solid var(--line-gold);color:var(--ink)}
+  .meteo__dove{overflow:hidden;text-overflow:ellipsis}
   /* ====== v2 · passo 3: Biglietti e Info ======
      Nessun testo sotto i 14 px nelle viste (resta a 12 solo la barra in basso); i link dei crediti sono alti 44 px;
      in Biglietti, durante il viaggio, i codici di oggi salgono in cima sotto «Oggi». */
@@ -1194,7 +1211,7 @@
             <p class="tdur">⏱️ 1 h 15</p>
             <p>Lungofiume e pranzo. Winter Market aperto tutti i giorni dal 2/11/2026 al 3/1/2027: bancarelle <b>11:00–22:00</b>, bar 11:00–23:00, sul Queen’s Walk sotto l’Hungerford Bridge <span class="st ok">✅ verificato 8/11</span> (southbankcentre.co.uk). Dal 15/11, la domenica 12:00–17:00, anche la SoLo Craft Fair.</p>
             <p class="nota-piccola">🍽️ Pranzo: <b>Giraffe</b>, Royal Festival Hall, Riverside Level 1 (sul lungofiume, accanto alle bancarelle). Menù bambini con bastoncini di pesce o salsiccia e fagioli, più due contorni, da £6 <span class="st est">stimato</span>. Domenica risulta aperto dalle 9. Conviene prenotare per le 11:30; se non dà posto, arrivare presto: la fila scorre. <a href="https://www.opentable.co.uk/r/giraffe-south-bank-london" target="_blank" rel="noopener">Prenota</a> · <a href="https://southbank.london/eat-and-drink/giraffe" target="_blank" rel="noopener">Scheda</a> · <a href="https://www.google.com/maps/search/?api=1&amp;query=Giraffe+Royal+Festival+Hall+London" target="_blank" rel="noopener">Maps</a></p>
-            <details class="det"><summary>Dettagli</summary><p>Alle bancarelle del mercatino si prendono patatine, churros o cioccolata, prima o dopo.</p></details>
+            <p class="nota-piccola">🧁 Merenda: churros o cioccolata alle bancarelle del mercatino, all’uscita dal SEA LIFE (verso le 14:15), prima di ritirare i bagagli. Se all’arrivo piove, si entra subito da Giraffe e le bancarelle si guardano dopo.</p>
             <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5054668,-0.1171985&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚇 coi mezzi</span></a>
           </div>
           <p class="tcard__credito">foto: Robin Stott / CC BY-SA 2.0</p>
@@ -1459,6 +1476,7 @@
             <div class="cosa"><p class="cosa__vedi"><b>📖 Cosa vediamo</b> Il parco reale più antico di Londra. Sul lago vivono i pellicani da secoli; dal ponte blu si vedono Buckingham Palace e la London Eye.</p><p class="cosa__olly"><b>👧 Per Olly</b> «Andiamo a cercare i pellicani con il becco enorme.»</p></div>
             <p class="tdur">⏱️ 40 min</p>
             <p>Pausa seduti, papere e pellicani. Bagno: St James’s Café.</p>
+            <p class="nota-piccola">☕ Merenda: <b>St James’s Café</b>, dentro il parco. Cioccolata calda e qualcosa da mangiare al caldo; orario invernale 8:00–16:00 (Royal Parks, letto il 13/11). Senza prenotazione. <a href="https://www.royalparks.org.uk/visit/parks/st-jamess-park/st-jamess-cafe" target="_blank" rel="noopener">Scheda</a> · <a href="https://www.google.com/maps/search/?api=1&amp;query=St+James%27s+Caf%C3%A9+St+James%27s+Park+London" target="_blank" rel="noopener">Maps</a></p>
             <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.502967,-0.1339534&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
           </div>
           <p class="tcard__credito">foto: Colin / CC BY-SA 3.0</p>
@@ -1584,6 +1602,7 @@
             <p class="deposito-ind">Exhibition Rd, London SW7 2DD · aperto 10:00–18:00</p>
             <p>Biglietti presi, tenuti come piano pioggia. <b>The Garden</b> (livello -1, 3–6 anni: acqua, costruzioni, luci e suoni) e <b>Pattern Pod</b> (livello 0, gratuita).</p>
             <p class="nota-piccola">🧸 The Garden e Pattern Pod sono <b>gratuiti</b> <span class="st ok">✅ verificato 8/11</span>. Grembiuli <b>non</b> forniti: maglietta di ricambio per Olly. Se in fase di prenotazione compaiono slot a parte per The Garden, prenotarli.</p>
+            <p class="nota-piccola">🧁 Merenda: <b>Energy Café</b>, al piano terra, aperto fino alle 17:30. <b>The Diner</b>, quello col menù bambini, chiude alle 16:00: se volete quello, andateci appena entrati (orari Benugo, letti il 13/11). <a href="https://www.benugo.com/sites/cafes/the-diner/" target="_blank" rel="noopener">The Diner</a></p>
             <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.4972216,-0.1767283&amp;destination_place_id=ChIJP9oAE0MFdkgR3iKGFKZO1SE&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
             <button class="btn btn--secondario btn--cielo gmap gmap--btn" type="button" data-codice="sciencemuseum-1">🎟️ Mostra il biglietto</button>
           </div>
@@ -1649,12 +1668,12 @@
       <summary>
         <span class="srow">
           <span class="daynum">17<small>MAR</small></span>
-          <span class="dtit"><h3>Camden, Covent Garden e rientro</h3><p>Canale, fish &amp; chips, mercato, poi Heathrow</p></span>
+          <span class="dtit"><h3>Soho, Covent Garden e rientro</h3><p>LEGO Store, fish &amp; chips, mercato coperto, poi Heathrow</p></span>
           <span class="chev">▼</span>
         </span>
       </summary>
       <div class="dbody">
-        <div class="hp-note pioggia-nota pioggia-nota--blocco" id="pioggia-mar" data-giorno="2026-11-17" data-fino="13:30">🌧️ I mercati di Camden sono in parte all’aperto: con pioggia forte accorciate Camden e anticipate Covent Garden, che ha il mercato coperto.</div>
+        <div class="hp-note pioggia-nota pioggia-nota--blocco" id="pioggia-mar" data-giorno="2026-11-17" data-fino="13:15">🌧️ Martedì è tutto al coperto e a piedi: LEGO Store, Poppies Soho e il mercato di Covent Garden. Fra una tappa e l’altra 5–10 minuti: ombrello a portata.</div>
         <article class="tcard" data-giorno="2026-11-17" data-ora="10:30" data-tipo="casa" data-deposito="casa">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/apt.webp" width="800" height="450" alt="Il civico 79 di Beak Street: la vetrina verde di John Wilkes e, a sinistra, la porta col numero 79" loading="lazy" decoding="async">
@@ -1662,7 +1681,7 @@
           </div>
           <div class="tcard__body">
             <h4>Check-out e bagagli in deposito</h4>
-            <p>10:30 check-out → Bounce Piccadilly Circus, 53 Rupert St (prenotare lunedì sera, 3 colli) → metro da Piccadilly Circus verso Camden Town.</p>
+            <p>10:30 check-out → Bounce Piccadilly Circus, 53 Rupert St (prenotato, 3 colli) → a piedi al LEGO Store di Leicester Square.</p>
             <details class="det"><summary>Dettagli</summary><p>Bounce Rupert St è a 2 minuti dalla stazione della Piccadilly line per Heathrow e aperto 24 ore: alle 15:00 si ritirano i bagagli e si riparte da lì. Riserva: Bounce Broadwick St, a 60 m da casa (martedì 9:00–23:00).</p></details>
             <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5129114,-0.1364381&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
           </div>
@@ -1685,84 +1704,65 @@
             <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5120078,-0.1336085&amp;destination_place_id=ChIJH0BzxroFdkgRPY_OmmzrcnA&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
           </div>
         </article>
-        <a class="percorso" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.5120078,-0.1336085&amp;destination=51.539292,-0.14274&amp;travelmode=transit" target="_blank" rel="noopener" data-percorso="Martedì · Bounce Rupert St → Camden Town">
+        <a class="percorso" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.5120078,-0.1336085&amp;destination=51.5103680,-0.1311098&amp;travelmode=walking" target="_blank" rel="noopener" data-percorso="Martedì · Bounce Rupert St → LEGO Store">
           <span class="percorso__ic" aria-hidden="true">🗺️</span>
-          <span class="percorso__txt"><b>Percorso · Martedì</b><span>Bounce Rupert St → Camden Town</span></span>
-          <span class="percorso__modo">🚇 con i mezzi</span>
-        </a>
-        <article class="tcard tcard--nofoto" data-giorno="2026-11-17" data-ora="10:45" data-tipo="trasporto" data-durata="15-15">
-          <div class="tcard__body">
-            <span class="tcard__ora">10:45</span>
-            <h4>Verso Camden</h4>
-            <p>Da Piccadilly Circus: <b>Bakerloo</b> fino a Charing Cross, poi <b>Northern line</b> fino a Camden Town; oppure Oxford Circus → Victoria line fino a Euston → Northern line. Arrivo verso le 11:00: controllate su TfL Go. ~£3 a testa, Olly gratis.</p>
-            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.539292,-0.14274&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚇 coi mezzi</span></a>
-          </div>
-        </article>
-        <article class="tcard" data-tappa="camden" data-durata="75-75" data-comprimibile data-giorno="2026-11-17" data-ora="11:00" data-tipo="evento" data-bagno="camden" data-deposito="camden" data-luogo>
-          <div class="tcard__foto">
-            <img src="assets/tappe/londra/camden.webp" width="800" height="450" alt="Barche ormeggiate sul Regent’s Canal a Camden Lock, con gli edifici del mercato sull’acqua" loading="lazy" decoding="async">
-            <span class="tcard__ora">11:00</span>
-          </div>
-          <div class="tcard__body">
-            <h4>Camden Town e Camden Lock</h4>
-            <div class="cosa"><p class="cosa__vedi"><b>📖 Cosa vediamo</b> Il quartiere dei mercati lungo il Regent’s Canal. Camden Lock è la chiusa dove le barche cambiano livello d’acqua. Negozi colorati, bancarelle e street food.</p><p class="cosa__olly"><b>👧 Per Olly</b> «Le barche sul canale e le case colorate.»</p></div>
-            <p class="tdur">⏱️ 1 h 15</p>
-            <p>Il canale con le barche e i mercati, da vedere la mattina con poca folla. Martedì il mercato è tranquillo: Camden Market 10:00–19:00, Hawley Wharf 12:00–18:00 <span class="st ok">✅ verificato 8/11</span> (camdenmarket.com; i singoli banchi possono avere orari loro). Il mercatino di Natale di Camden apre il 26/11, non lo troveremo.</p>
-            <p class="pianob">↪️ In ritardo? Saltate Covent Garden: metro fino a Piccadilly Circus (il giro dell’andata al contrario), bagagli da Bounce in Rupert St, poi Piccadilly line diretta fino a Heathrow T5, come nel piano normale.</p>
-        <a class="percorso percorso--secondario" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.539292,-0.14274&amp;destination=51.4723,-0.4887&amp;waypoints=51.5120078,-0.1336085&amp;travelmode=transit" target="_blank" rel="noopener" data-percorso="Martedì · Piano B: Camden Town → Bounce Rupert St (bagagli) → Heathrow T5">
-          <span class="percorso__ic" aria-hidden="true">🗺️</span>
-          <span class="percorso__txt"><b>Percorso · Martedì</b><span>Piano B: Camden Town → Bounce Rupert St (bagagli) → Heathrow T5</span></span>
-          <span class="percorso__modo">🚇 con i mezzi</span>
-        </a>
-            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.539292,-0.14274&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚇 coi mezzi</span></a>
-          </div>
-          <p class="tcard__credito">foto: Can Pac Swire / CC BY-SA 2.0</p>
-        </article>
-        <a class="percorso" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.539292,-0.14274&amp;destination=51.5409723,-0.143961&amp;travelmode=walking" target="_blank" rel="noopener" data-percorso="Martedì · Camden Town → Poppies">
-          <span class="percorso__ic" aria-hidden="true">🗺️</span>
-          <span class="percorso__txt"><b>Percorso · Martedì</b><span>Camden Town → Poppies</span></span>
+          <span class="percorso__txt"><b>Percorso · Martedì</b><span>Bounce Rupert St → LEGO Store</span></span>
           <span class="percorso__modo">🚶 a piedi</span>
         </a>
-        <article class="tcard" data-tappa="poppies" data-durata="60-60" data-giorno="2026-11-17" data-ora="12:15" data-tipo="tappa" data-luogo>
-          <div class="tcard__foto">
-            <img src="assets/tappe/londra/poppies.webp" width="800" height="450" alt="L’ingresso di Poppies Fish &amp; Chips a Camden, con l’insegna sopra la facciata" loading="lazy" decoding="async">
-            <span class="tcard__ora">12:15</span>
-          </div>
+        <article class="tcard tcard--nofoto" id="lego-mar" data-tappa="lego" data-durata="65-65" data-comprimibile data-giorno="2026-11-17" data-ora="10:45" data-tipo="evento" data-luogo>
           <div class="tcard__body">
-            <h4>Pranzo da Poppies Fish &amp; Chips</h4>
+            <span class="tcard__ora">10:45</span>
+            <h4>LEGO Store, Leicester Square</h4>
+            <div class="cosa"><p class="cosa__vedi"><b>📖 Cosa vediamo</b> Due piani di LEGO in Leicester Square, con grandi modelli di Londra costruiti con i mattoncini: il Big Ben e un vagone della metropolitana in cui ci si può sedere.</p><p class="cosa__olly"><b>👧 Per Olly</b> «Un vagone della metro fatto tutto di mattoncini.»</p></div>
+            <p class="tdur">⏱️ 1 h 05</p>
+            <p class="deposito-ind">📍 3 Swiss Court, London W1D 6AP · martedì 10:00–22:00 <span class="st ok">✅ verificato 13/11</span></p>
+            <p>A 5 minuti a piedi dal deposito, tutto al coperto, ingresso libero. Si resta a Soho: niente metro fino al ritiro dei bagagli.</p>
+            <p class="pianob">☀️ Se non piove si può andare a Camden al posto del LEGO Store: orari e percorsi nella riga qui sotto.</p>
+            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5103680,-0.1311098&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
+          </div>
+        </article>
+        <button class="btn btn--secondario btn--blocco plus-riga" type="button" data-plus="camden"><span aria-hidden="true">☀️</span><span>Se non piove: <b>Camden e il canale</b>, al posto del LEGO Store</span><span aria-hidden="true">›</span></button>
+        <a class="percorso" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.5103680,-0.1311098&amp;destination=51.5125393,-0.1326933&amp;travelmode=walking" target="_blank" rel="noopener" data-percorso="Martedì · LEGO Store → Poppies Soho">
+          <span class="percorso__ic" aria-hidden="true">🗺️</span>
+          <span class="percorso__txt"><b>Percorso · Martedì</b><span>LEGO Store → Poppies Soho</span></span>
+          <span class="percorso__modo">🚶 a piedi</span>
+        </a>
+        <article class="tcard tcard--nofoto" data-tappa="poppies" data-durata="60-60" data-giorno="2026-11-17" data-ora="12:00" data-tipo="tappa" data-luogo>
+          <div class="tcard__body">
+            <span class="tcard__ora">12:00</span>
+            <h4>Pranzo da Poppies Fish &amp; Chips, Soho</h4>
             <div class="cosa"><p class="cosa__vedi"><b>📖 Cosa vediamo</b> Il piatto tipico inglese: pesce fritto con patatine. Locale in stile anni ’50, il fish and chips arriva incartato come una volta.</p><p class="cosa__olly"><b>👧 Per Olly</b> «Pesce e patatine incartati nel giornale.»</p></div>
             <p class="tdur">⏱️ 1 h</p>
-            <p>30 Hawley Crescent, martedì 11:00–22:00. Locale anni ’50, 4,2 su ~6.000 recensioni Google. Fish &amp; chips: il piatto più tipico di Londra, semplice per Olly.</p>
-            <p class="nota-piccola">👧 Menù bambini £9,95: bocconcini di pesce, fish cake o salsiccia, tutti con patatine (menù ufficiale, maggio 2026). Di martedì a mezzogiorno non serve prenotare, ma si può. <a href="https://www.opentable.co.uk/r/poppies-camden-london" target="_blank" rel="noopener">Prenota</a> · <a href="https://poppiesfishandchips.co.uk/wp-content/uploads/2026/05/POPPIES-MENU-NEW-MAY-26.pdf" target="_blank" rel="noopener">Menù</a></p>
-            <p class="nota-piccola">↪️ Se saltiamo Camden: <b>Poppies Soho</b>, 55–59 Old Compton Street, stesso menù, martedì 11:00–22:00, a 4 minuti dal deposito di Rupert St. Poi 10 minuti a piedi fino a Covent Garden. <a href="https://poppiesfishandchips.co.uk/poppies-soho/" target="_blank" rel="noopener">Poppies Soho</a> · <a href="https://www.google.com/maps/search/?api=1&amp;query=Poppies+Fish+and+Chips+Soho+55+Old+Compton+Street" target="_blank" rel="noopener">Maps</a></p>
-            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5409723,-0.143961&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
+            <p class="deposito-ind">📍 55–59 Old Compton Street, Soho · martedì 11:00–22:00</p>
+            <p>A 5 minuti a piedi dal LEGO Store. Fish &amp; chips: il piatto più tipico di Londra, semplice per Olly.</p>
+            <p class="nota-piccola">👧 Menù bambini £9,95: bocconcini di pesce, fish cake o salsiccia, tutti con patatine (menù ufficiale, maggio 2026). Di martedì a mezzogiorno non serve prenotare, ma si può. <a href="https://poppiesfishandchips.co.uk/poppies-soho/" target="_blank" rel="noopener">Poppies Soho, prenotazioni</a> · <a href="https://poppiesfishandchips.co.uk/wp-content/uploads/2026/05/POPPIES-MENU-NEW-MAY-26.pdf" target="_blank" rel="noopener">Menù</a></p>
+            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5125393,-0.1326933&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
           </div>
-          <p class="tcard__credito">foto: Robert Lamb / CC BY-SA 2.0</p>
         </article>
-        <a class="percorso" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.5409723,-0.143961&amp;destination=51.5122737,-0.1234492&amp;travelmode=transit" target="_blank" rel="noopener" data-percorso="Martedì · Poppies → Covent Garden">
+        <a class="percorso" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.5125393,-0.1326933&amp;destination=51.5122737,-0.1234492&amp;travelmode=walking" target="_blank" rel="noopener" data-percorso="Martedì · Poppies Soho → Covent Garden">
           <span class="percorso__ic" aria-hidden="true">🗺️</span>
-          <span class="percorso__txt"><b>Percorso · Martedì</b><span>Poppies → Covent Garden</span></span>
-          <span class="percorso__modo">🚇 con i mezzi</span>
+          <span class="percorso__txt"><b>Percorso · Martedì</b><span>Poppies Soho → Covent Garden</span></span>
+          <span class="percorso__modo">🚶 a piedi</span>
         </a>
-        <article class="tcard tcard--nofoto" data-giorno="2026-11-17" data-ora="13:15" data-tipo="trasporto" data-durata="15-15" data-vincolo="Lasciare Camden entro le 13:15" data-vincolo-da="12:50" data-piano-b="In ritardo? Saltate Covent Garden: metro fino a Piccadilly Circus (il giro dell’andata al contrario), bagagli da Bounce in Rupert St, poi Piccadilly line diretta fino a Heathrow T5, come nel piano normale." data-piano-b-dopo>
+        <article class="tcard tcard--nofoto" data-giorno="2026-11-17" data-ora="13:00" data-tipo="trasporto" data-durata="15-15">
           <div class="tcard__body">
-            <span class="tcard__ora">13:15</span>
+            <span class="tcard__ora">13:00</span>
             <h4>Verso Covent Garden</h4>
-            <p class="tdur">⏱️ ~15 min</p>
-            <p><b>Northern line diretta</b> Camden Town → Leicester Square (8 min), poi 5 min a piedi. ~£3 a testa, Olly gratis.</p>
-            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5122737,-0.1234492&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚇 coi mezzi</span></a>
+            <p class="tdur">⏱️ ~10 min a piedi</p>
+            <p>Da Old Compton Street a Covent Garden si va <b>a piedi</b>, circa 10 minuti: niente metro. Con la pioggia, ombrello a portata.</p>
+            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5122737,-0.1234492&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
           </div>
         </article>
-        <article class="tcard" data-tappa="covent" data-durata="75-75" data-comprimibile data-giorno="2026-11-17" data-ora="13:30" data-tipo="evento" data-bagno="coventgarden" data-deposito="coventgarden" data-luogo>
+        <article class="tcard" data-tappa="covent" data-durata="90-90" data-comprimibile data-giorno="2026-11-17" data-ora="13:15" data-tipo="evento" data-bagno="coventgarden" data-deposito="coventgarden" data-luogo>
           <div class="tcard__foto">
             <img src="assets/tappe/londra/covent.webp" width="800" height="450" alt="La galleria coperta di Covent Garden, con il tetto in ferro e vetro verde e i carretti di fiori" loading="lazy" decoding="async">
-            <span class="tcard__ora">13:30</span>
+            <span class="tcard__ora">13:15</span>
           </div>
           <div class="tcard__body">
             <h4>Covent Garden</h4>
             <div class="cosa"><p class="cosa__vedi"><b>📖 Cosa vediamo</b> Una piazza coperta che una volta era il mercato della frutta e verdura di Londra. Oggi ci sono negozi, artisti di strada e, a Natale, un grande albero e decorazioni giganti.</p><p class="cosa__olly"><b>👧 Per Olly</b> «Gli artisti di strada e l’albero di Natale gigante.»</p></div>
-            <p class="tdur">⏱️ 1 h 15</p>
-            <p>Dalla metro di Leicester Square, 5 minuti a piedi: il mercato coperto e gli artisti di strada. Il pranzo è già fatto a Camden. Si riparte alle 14:45.</p>
+            <p class="tdur">⏱️ 1 h 30</p>
+            <p>Il mercato coperto e gli artisti di strada: con la pioggia si sta sotto la galleria. Il pranzo è già fatto. Si riparte alle 14:45.</p>
             <p class="nota-piccola">🥞 Merenda: <b>Crème de la Crêpe</b>, dentro il mercato (Unit 29, The Market Building): crêpe dolci e salate. Senza prenotazione; orari <span class="st est">stimato</span> (10–20:30 o 11–19:30 secondo la fonte). <a href="https://www.opentable.co.uk/r/creme-de-la-crepe-london" target="_blank" rel="noopener">Scheda e menù</a> · <a href="https://www.google.com/maps/search/?api=1&amp;query=Cr%C3%A8me+de+la+Cr%C3%AApe+Covent+Garden+Market" target="_blank" rel="noopener">Maps</a></p>
             <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5122737,-0.1234492&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
           </div>
@@ -1812,6 +1812,7 @@
           <div class="tcard__body">
             <h4>Heathrow, Terminal 5 · BA546</h4>
             <p>Circa 50 minuti di metro dal centro. Check-in, controlli e gate al Terminal 5.</p>
+            <p class="nota-piccola">🍽️ Cena prima del volo: dopo i controlli c’è <b>Giraffe</b>, lo stesso di domenica, con menù bambini <span class="st est">stimato</span> (la pagina di Heathrow non ha data). In alternativa Pilots Bar &amp; Kitchen. <a href="https://www.heathrow.com/at-the-airport/restaurants-a-z/giraffe.html" target="_blank" rel="noopener">Giraffe a Heathrow</a></p>
             <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.4723,-0.4887&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚇 coi mezzi</span></a>
           </div>
           <p class="tcard__credito">foto: Andrew Milligan sumo / CC BY 2.0</p>
@@ -2224,7 +2225,7 @@
           <tbody>
             <tr><td>Voli (BA547/BA546)</td><td><span class="st ok">✅ pagato</span></td><td class="imp">€433,39</td></tr>
             <tr><td>Alloggio (Bright Carnaby Soho)<small class="bnota">£538,90 addebitati in euro</small></td><td><span class="st ok">✅ pagato</span></td><td class="imp">€648,82</td></tr>
-            <tr><td>Transfer e mezzi<small class="bnota">tariffe TfL contactless, Olly gratis, con la Northern line per Camden (+£12, ~€15): ~€63 con la Piccadilly, ~€110 con l’Elizabeth andata e ritorno</small></td><td><span class="st est">💶 stima</span></td><td class="imp">~€63 · ~€110</td></tr>
+            <tr><td>Transfer e mezzi<small class="bnota">tariffe TfL contactless, Olly gratis, senza Camden (se ci si va: +£12, ~€15 con la Northern line): ~€63 con la Piccadilly, ~€110 con l’Elizabeth andata e ritorno</small></td><td><span class="st est">💶 stima</span></td><td class="imp">~€63 · ~€110</td></tr>
             <tr><td>UK ETA ×3<small class="bnota">£20 a persona · tutte e tre fatte; Alessandro €24,31, Vale e Olly importo in euro da confermare</small></td><td><span class="st est">💶 stima</span></td><td class="imp">~€73</td></tr>
             <tr><td>SEA LIFE<small class="bnota">2 × £33 + 1 × £30 · in euro ~€116 al cambio dell’alloggio (1 £ = 1,204 €): l’addebito vero dipende dal cambio del giorno dell’acquisto</small></td><td><span class="st ok">✅ pagato</span></td><td class="imp">£96,00 · ~€116</td></tr>
             <tr><td>Deposito bagagli domenica<small class="bnota">Food Express (Bounce), Waterloo · pagato in app, importo da inserire</small></td><td><span class="st ok">✅ pagato</span></td><td class="imp">—</td></tr>
@@ -2333,6 +2334,30 @@
 
   <!-- schede complete delle tappe "se avanza tempo": una copia sola, si aprono dalle righe dei giorni -->
   <template id="plusSchede">
+        <article class="tcard tcard--plus" data-plus-id="camden" data-giorno="2026-11-17" data-tipo="plus">
+          <div class="tcard__foto">
+            <img src="assets/tappe/londra/camden.webp" width="800" height="450" alt="Barche ormeggiate sul Regent’s Canal a Camden Lock, con gli edifici del mercato sull’acqua" loading="lazy" decoding="async">
+            <span class="plus-badge">☀️ Solo se non piove</span>
+          </div>
+          <div class="tcard__body">
+            <h4>Camden Town e Camden Lock</h4>
+            <p>Il quartiere dei mercati lungo il Regent’s Canal, con le barche e le case colorate. I mercati sono in parte all’aperto: ha senso solo con il tempo asciutto. Camden Market 10:00–19:00, Hawley Wharf 12:00–18:00 <span class="st ok">✅ verificato 8/11</span>.</p>
+            <ul class="opzioni">
+              <li><b>10:45</b> · da Piccadilly Circus <b>Bakerloo</b> fino a Charing Cross, poi <b>Northern line</b> fino a Camden Town. ~£3 a testa, Olly gratis</li>
+              <li><b>11:00</b> · canale e mercati</li>
+              <li><b>12:15</b> · pranzo da <b>Poppies Camden</b>, 30 Hawley Crescent: stesso menù di Soho</li>
+              <li><b>13:15</b> · al più tardi si riparte: <b>Northern line diretta</b> fino a Leicester Square, poi 5 minuti a piedi fino a Covent Garden</li>
+              <li><b>14:45</b> · da Covent Garden tutto come da programma</li>
+            </ul>
+            <p class="nota-piccola"><a href="https://www.opentable.co.uk/r/poppies-camden-london" target="_blank" rel="noopener">Prenota Poppies Camden</a> · <a href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5409723,-0.143961&amp;travelmode=walking" target="_blank" rel="noopener">Maps: Poppies Camden</a> · <a href="https://www.google.com/maps/dir/?api=1&amp;origin=51.5409723,-0.143961&amp;destination=51.5122737,-0.1234492&amp;travelmode=transit" target="_blank" rel="noopener">Maps: da Poppies a Covent Garden</a></p>
+            <div class="plus-meta">
+              <span>🚇 ~15 min da Piccadilly Circus</span>
+              <span>📍 Camden Town</span>
+            </div>
+            <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.539292,-0.14274&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚇 coi mezzi</span></a>
+          </div>
+          <p class="tcard__credito">foto: Can Pac Swire / CC BY-SA 2.0</p>
+        </article>
         <article class="tcard tcard--plus" data-plus-id="pollock" data-giorno="2026-11-17" data-tipo="plus">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/pollock.webp" width="800" height="450" alt="L’ingresso di Benjamin Pollock’s Toy Shop sotto i portici del mercato di Covent Garden: insegna rossa, porte rosse e figurine di carta" loading="lazy" decoding="async">
@@ -2475,7 +2500,7 @@
 
     // scheletro: la riga chiusa, con le forme di quello che arriverà
     card.classList.add('meteo--scheletro'); card.hidden = false;
-    card.querySelector('.meteo__riga').innerHTML = '<span class="meteo__ora"><span class="ico sk">🌦️</span><span><b class="sk">12°</b><span class="meteo__dove sk">Londra, adesso</span></span></span>'
+    card.querySelector('.meteo__riga').innerHTML = '<span class="meteo__ora"><span class="ico sk">🌦️</span><span><b class="sk">12°</b><span class="meteo__dove sk">adesso</span></span></span>'
       + '<span class="meteo__giorni">' + GIORNI.map(function(g){ return '<span class="sk">' + g[1] + ' 00/00°</span>'; }).join('') + '</span>';
     function nonDisponibile(){
       card.classList.remove('meteo--scheletro');
@@ -2507,7 +2532,7 @@
       // riga chiusa: adesso a Londra (se c'è) + i tre giorni del viaggio
       var c = d.current, cCod = c && (c.weathercode != null ? c.weathercode : c.weather_code);
       var adesso = c && c.temperature_2m != null
-        ? '<span class="meteo__ora"><span class="ico">' + icona(cCod) + '</span><span><b>' + arr(c.temperature_2m) + '</b><span class="meteo__dove">Londra, adesso</span></span></span>'
+        ? '<span class="meteo__ora"><span class="ico">' + icona(cCod) + '</span><span><b>' + arr(c.temperature_2m) + '</b><span class="meteo__dove">adesso</span></span></span>'
         : '<span class="meteo__ora"><span class="ico">🌦️</span><span><b>Meteo</b><span class="meteo__dove">Londra, previsione</span></span></span>';
       var riga = card.querySelector('.meteo__riga');
       riga.innerHTML = adesso + '<span class="meteo__giorni">' + giorni.map(function(x){
@@ -2739,7 +2764,7 @@
       { g: 'Domenica', testo: 'battello coperto, ma con pioggia forte va bene anche la metro da Waterloo', sel: '#battello-dom' },
       { g: 'Lunedì', testo: 'cerimonia a rischio: piano B a Horse Guards alle 11:00', sel: '#piano-b-lun' },
       { g: 'Lunedì', testo: 'pomeriggio al Science Museum (biglietti presi) invece dell’Albert Memorial', sel: '#sm-lun' },
-      { g: 'Martedì', testo: 'con pioggia forte Camden più corta e Covent Garden prima, che è al coperto', sel: '#pioggia-mar' }
+      { g: 'Martedì', testo: 'tutto al coperto e a piedi: LEGO Store, Poppies Soho, mercato di Covent Garden', sel: '#pioggia-mar' }
     ];
     function vaiA(el){ VISTE.vaiA(el); }   // apre vista, giorno e <details>, poi scorre
     function riepilogo(btn){
@@ -2796,8 +2821,8 @@
  },
  {
   "cosa": "Meteo di lunedì 16/11, 10–12",
-  "contesto": "Met Office per Londra, aggiornato il 10/11 alle 17:00: lunedì 16 fra 9 e 15 °C, pioggia forte possibile all’alba (50% alle 6), fra le 10 e le 12 probabilità di pioggia 30–40% e raffiche fino a ~28 mph. Domenica 15 circa 9 °C, asciutto al mattino (10%), 30% verso le 16. Martedì 17 rovesci leggeri, 7–11 °C. Con pioggia forte la cerimonia può essere cancellata fino alle 10:45: c’è il piano pioggia.",
-  "come": "Alessandro: ricontrollo dal 13/11 su weather.metoffice.gov.uk (Londra) per lunedì 10–12, e di nuovo la mattina del 16."
+  "contesto": "Met Office per Londra, aggiornato il 13/11 alle 18:59 (il modello norvegese MET concorda): lunedì 16 fra 3 e 7 °C, mattina asciutta e fredda (pioggia 10–30% fra le 10 e le 12), dalle 12 40–60%, sera 80–90%. Domenica 15 fra 4 e 12 °C, pioggia probabile fra le 10 e le 13 (70–90%), poi in calo dalle 14. Martedì 17 fra 2 e 9 °C, pioggia al 60–70% tutto il giorno, raffiche fino a 30 mph a metà mattina. Nessuna allerta. Per il Cambio della Guardia servono guanti e cappello; il pomeriggio di lunedì è probabile il piano pioggia.",
+  "come": "Alessandro: ricontrollo la mattina del 16 su weather.metoffice.gov.uk (Londra), per decidere fra Albert Memorial e Science Museum."
  },
  {
   "cosa": "Ascensore senza scale a Green Park",
@@ -2822,7 +2847,7 @@
     { cosa: 'Appartamento Bright Carnaby Soho', stato: 'fatto' },
     { cosa: 'Calendario del Cambio della Guardia ricontrollato il 10/11: riga «Mon 16th Nov · Guard Change · 11:00 · Band of the Scots Guards» invariata', stato: 'fatto' },
     { cosa: 'Chiusure TfL controllate il 10/11 (elenco TfL del 9/11)', stato: 'fatto', nota: 'Domenica 15: Elizabeth line chiusa in centro fino alle 10:15, quindi Piccadilly line da Heathrow. Piccadilly e Bakerloo senza lavori dal 14 al 17; Northern chiusa solo a sud di Charing Cross/Euston, Camden non toccata.' },
-    { cosa: 'Ven 13/11 — ultimo controllo: calendario Household Division, meteo di lunedì 10–12, stato TfL e ascensori', stato: 'da_fare' },
+    { cosa: 'Ultimo controllo fatto ven 13/11: calendario, meteo, metro e ascensori', stato: 'fatto', nota: 'Cambio della Guardia di lunedì 16 confermato alle 11:00 con la Band of the Scots Guards. Piccadilly, Bakerloo, Victoria e Jubilee regolari dal 15 al 17; domenica la Elizabeth line resta chiusa in centro fino alle 10:15. Nessun ascensore fermo segnalato nelle nostre stazioni. Meteo: domenica pioggia fra le 10 e le 13, lunedì mattina asciutta e fredda, martedì pioggia.' },
     { cosa: 'Deposito bagagli domenica — Food Express, Waterloo', stato: 'fatto' },
     { cosa: 'Sab 14/11 — check-in online BA per tutti e tre; installare la eSIM Holafly sull’iPhone di Vale e lasciare la linea spenta', stato: 'da_fare' },
     { cosa: 'Dom 15/11 sera — calendario e X @ArmyInLondon', stato: 'da_fare' },
@@ -2926,6 +2951,10 @@
       if (oggi.length) padre.insertBefore(t1, ancora); else t1.remove();
       oggi.forEach(function(c){ padre.insertBefore(c, ancora); });
       if (oggi.length) padre.insertBefore(t2, ancora); else t2.remove();
+      // le scorciatoie (appartamento, SEA LIFE, Science Museum) non stanno più sopra i biglietti di oggi
+      var sc = [].slice.call(sez.querySelectorAll('a.big-casa')), sub = sez.querySelector('.sub2');
+      if (oggi.length) sc.forEach(function(a){ padre.insertBefore(a, ancora); });
+      else if (sub) sc.reverse().forEach(function(a){ sub.after(a); });
       altre.forEach(function(c){ padre.insertBefore(c, ancora); });
     }
     ordina(); setInterval(ordina, 60000); document.addEventListener('piove', ordina);
@@ -3482,6 +3511,24 @@
         if (c.classList.contains('tcard--passata') !== passata) { c.classList.toggle('tcard--passata', passata); if (!passata) c.classList.remove('tcard--aperta'); }
         // i percorsi subito prima della card seguono la sua sorte
         for (var e = c.previousElementSibling; e && e.matches('a.percorso'); e = e.previousElementSibling) e.classList.toggle('percorso--passato', passata);
+        // la riga della scaletta segue la card: le tappe fatte spariscono dalla scaletta, dietro «✓ N tappe fatte»
+        var sc = c.id && document.querySelector('#programma .scaletta a.sc-riga[href="#' + c.id + '"]');
+        if (sc) sc.parentNode.classList.toggle('sc-passata', passata);
+      });
+      var pg = document.documentElement.classList.contains('piove');
+      [].forEach.call(document.querySelectorAll('#programma .scaletta'), function(ul){
+        var n = [].filter.call(ul.querySelectorAll('li.sc-passata'), function(li){ return !li.classList.contains(pg ? 'solo-asciutto' : 'solo-pioggia'); }).length;
+        var li = ul.querySelector('.sc-fatte');
+        if (!n) { if (li) li.remove(); ul.classList.remove('scaletta--tutta'); return; }
+        if (!li) {
+          li = document.createElement('li'); li.className = 'sc-fatte';
+          var b = document.createElement('button'); b.type = 'button'; b.className = 'sc-fatte__b'; b.setAttribute('aria-expanded', 'false');
+          b.appendChild(document.createElement('span')); b.appendChild(document.createElement('span'));
+          b.addEventListener('click', function(){ var su = ul.classList.toggle('scaletta--tutta'); b.setAttribute('aria-expanded', String(su)); b.lastChild.textContent = su ? 'nascondi' : 'mostra'; });
+          li.appendChild(b); ul.insertBefore(li, ul.firstChild);
+        }
+        li.firstChild.firstChild.textContent = '✓ ' + n + (n === 1 ? ' tappa fatta' : ' tappe fatte');
+        li.firstChild.lastChild.textContent = ul.classList.contains('scaletta--tutta') ? 'nascondi' : 'mostra';
       });
     }
     function adesso(){
@@ -3640,6 +3687,15 @@
      Il pannello non si apre mai da solo: in cima c'è un banner sottile «N novità», e si apre solo se toccato.
      Il link in fondo alla pagina lo riapre con tutto lo storico, in ogni caso. */
   var NOVITA = [
+    { v: 60, data: '2026-11-13', titolo: '🧭 In viaggio si vede prima quello che serve', voci: [
+      'Dal 15 al 17 il Programma di oggi parte dalla prossima tappa: quelle già fatte stanno dietro «✓ tappe fatte · mostra»',
+      'In Biglietti il biglietto di oggi è in cima; la Mappa si apre sul giorno di oggi',
+      'Meno spazio vuoto sotto la testata, meteo che non si sovrappone, pulsanti «Sì, attiva» e «No» del piano pioggia ben visibili' ] },
+    { v: 59, data: '2026-11-13', titolo: '🌧️ Martedì a Soho, merende e meteo', voci: [
+      'Martedì è prevista pioggia tutto il giorno: il programma resta a Soho, al coperto e a piedi. 10:45 LEGO Store di Leicester Square, 12:00 pranzo da Poppies Soho, 13:15 Covent Garden. Camden resta solo se non piove: la riga «Se non piove» sotto il LEGO Store ha orari e percorsi',
+      'Merende: domenica churros o cioccolata alle bancarelle dopo il SEA LIFE; lunedì cioccolata al St James’s Café e, col piano pioggia, Energy Café al Science Museum; martedì crêpe a Covent Garden e cena da Giraffe a Heathrow prima del volo',
+      'Meteo del 13/11: domenica pioggia fra le 10 e le 13 (si entra subito da Giraffe), lunedì mattina asciutta ma a 3–5 °C (guanti e cappello), pomeriggio incerto, martedì pioggia',
+      'Ultimo controllo fatto: Cambio della Guardia di lunedì confermato alle 11:00, metro regolare, nessun ascensore fermo nelle nostre stazioni' ] },
     { v: 58, data: '2026-11-10', titolo: '🍽️ I pranzi', voci: [
       'Domenica si pranza da Giraffe, sul lungofiume accanto al mercatino: nella card del Southbank c’è il link per prenotare',
       'Martedì resta Poppies a Camden, col menù bambini (bocconcini di pesce, fish cake o salsiccia con patatine). Se si salta Camden c’è Poppies Soho, a 4 minuti dal deposito' ] },
@@ -3985,8 +4041,8 @@
   var HORSEGUARDS={n:'Horse Guards Parade', lat:51.5047752, lng:-0.1272358};
   var BIGBEN={n:'Big Ben e Parlamento', lat:51.5007292, lng:-0.1246254};
   var COVENT={n:'Covent Garden', lat:51.5122737, lng:-0.1234492};
-  var CAMDEN={n:'Camden Town e Camden Lock', lat:51.539292, lng:-0.14274, modo:'transit'};
-  var POPPIES={n:'Poppies Fish & Chips', lat:51.5409723, lng:-0.143961};
+  var LEGO={n:'LEGO Store, Leicester Square', lat:51.5103680, lng:-0.1311098};
+  var POPPIES={n:'Poppies Fish & Chips, Soho', lat:51.5125393, lng:-0.1326933};
   var HARRODS={n:'Harrods', lat:51.4994055, lng:-0.1632344, modo:'transit'};
   var SCIENCE={n:'Science Museum', lat:51.4972216, lng:-0.1767283};
   var ALBERT={n:'Albert Memorial e Royal Albert Hall', lat:51.5023516, lng:-0.177707, modo:'transit'};
@@ -4014,9 +4070,9 @@
     {p:SCIENCE,     g:'lun', note:'14:45 · piano pioggia: The Garden, l’area gioco per Olly (ingresso 14:45–15:15) 🔬'},
     {p:NHM,         g:'lun', note:'Ingresso gratuito · chiude alle 17:50 🦕'},
     {p:BRUPERT,     g:'mar', note:'10:35 · 🧳 si lasciano i bagagli, ritiro alle 15:00'},
-    {p:CAMDEN,      g:'mar', note:'11:00 · il canale con le barche e i mercati 🛶'},
-    {p:POPPIES,     g:'mar', note:'12:15 · fish & chips, 30 Hawley Crescent 🍟'},
-    {p:COVENT,      g:'mar', note:'13:30 · mercato coperto e artisti di strada 🎭'}
+    {p:LEGO,        g:'mar', note:'10:45 · due piani di LEGO, al coperto 🧱'},
+    {p:POPPIES,     g:'mar', note:'12:00 · fish & chips, 55–59 Old Compton Street 🍟'},
+    {p:COVENT,      g:'mar', note:'13:15 · mercato coperto e artisti di strada 🎭'}
   ];
 
   /* percorsi: sequenza di tappe con la modalità del tragitto che porta al punto */
@@ -4031,7 +4087,7 @@
       {p:HARRODS, mode:'metro'}, {p:ALBERT, mode:'metro'}, {p:NHM, mode:'walk'}, {p:CASA, mode:'metro'}
     ]},
     {g:'mar', stops:[
-      {p:CASA}, {p:BRUPERT, mode:'walk'}, {p:CAMDEN, mode:'metro'}, {p:POPPIES, mode:'walk'}, {p:COVENT, mode:'metro'}, {p:BRUPERT, mode:'metro'}
+      {p:CASA}, {p:BRUPERT, mode:'walk'}, {p:LEGO, mode:'walk'}, {p:POPPIES, mode:'walk'}, {p:COVENT, mode:'walk'}, {p:BRUPERT, mode:'metro'}
     ]}
   ];
 
@@ -4147,7 +4203,7 @@
   }
   map.on('click zoomstart',chiudiVentaglio);
   /* legenda = filtro: un tocco mostra solo quel giorno, un altro tocco rimette tutto (stato nella pagina, nessuno storage) */
-  var filtro=null, legenda=document.querySelector('.legend');
+  var filtro=null, legenda=document.querySelector('.legend'), boundsOggi=null;
   function filtra(g){
     filtro = filtro===g ? null : g; chiudiVentaglio();
     ['dom','lun','mar'].forEach(function(k){ if(!filtro||k===filtro) map.addLayer(gruppiGiorno[k]); else map.removeLayer(gruppiGiorno[k]); });
@@ -4155,6 +4211,12 @@
     if(legenda) legenda.classList.toggle('legend--filtro',!!filtro);
   }
   document.addEventListener('click',function(e){ var b=e.target.closest('.legend__b'); if(b) filtra(b.dataset.giornoMappa); });
+  /* dal 15 al 17 la mappa si apre già sul giorno di oggi, inquadrata sulle sue tappe; un tocco sulla legenda rimette tutto */
+  (function(){
+    var k={'2026-11-15':'dom','2026-11-16':'lun','2026-11-17':'mar'}[OROLOGIO.parti(OROLOGIO.adesso()).data]; if(!k) return;
+    filtra(k);
+    try{ var pt=marcatori.filter(function(x){ return x.t&&x.t.g===k; }).map(function(x){ return x.reale; }); if(pt.length>1) boundsOggi=L.latLngBounds(pt); }catch(e){}
+  })();
   /* «Tappa di adesso» e «Sei qui» */
   var riga=document.getElementById('mapRiga');
   function scrivi(html){ if(!riga) return; riga.innerHTML=html; riga.hidden=!html; }
@@ -4245,7 +4307,7 @@
     aggiungiLivello('🧳 Depositi',gruppoDepositi);
   }
   montaDepositi(); document.addEventListener('depositi',montaDepositi);
-  map.fitBounds(bounds,{padding:[30,30]});
+  map.fitBounds(boundsOggi||bounds,{padding:[30,30]});
   }
   // la mappa parte quando si apre la vista Mappa (e si ridimensiona: era nascosta)
   function vistaMappa(){ avviaMappa(); if (map) requestAnimationFrame(function(){ map.invalidateSize(); }); }

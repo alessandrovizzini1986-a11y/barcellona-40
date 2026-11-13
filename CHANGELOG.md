@@ -1016,3 +1016,16 @@ Cercati bug dello stesso tipo di "portiere che si rituffa nel replay": due cambi
 ## Londra · 🍽️ i pranzi (10/11/2026)
 - **Domenica**: nella card del Southbank il pranzo da Giraffe (Royal Festival Hall, Riverside Level 1), menù bambini «stimato» (fonte: guida South Bank London), consiglio di prenotare per le 11:30, link a OpenTable, scheda e Maps.
 - **Martedì**: nella card di Poppies il menù bambini letto dal menù ufficiale (£9,95: bocconcini di pesce, fish cake o salsiccia con patatine), link per prenotare e al menù; piano B se si salta Camden: Poppies Soho, 55–59 Old Compton Street, martedì 11–22 (pagina ufficiale). Novità v58.
+
+## Londra · 🌧️ martedì a Soho, merende e meteo (13/11/2026)
+- **Martedì**: previsione di pioggia al 60–70% tutto il giorno (Met Office del 13/11 e MET Norway), quindi il programma resta a Soho, a piedi e al coperto: 10:45 LEGO Store di Leicester Square (3 Swiss Court, martedì 10–22, lego.com), 12:00 Poppies Soho (55–59 Old Compton Street), 13:00 a piedi, 13:15 Covent Garden (1 h 30), 14:45 partenza invariata. Camden esce dal programma e diventa la scheda «Se non piove», con orari, Poppies Camden e i percorsi Maps. Percorsi di martedì: Beak St → Rupert St, Rupert St → LEGO Store, LEGO Store → Poppies Soho, Poppies Soho → Covent Garden, Covent Garden → Rupert St → Heathrow (5 invece di 6). Mappa aggiornata.
+- **Merende**: domenica bancarelle dopo il SEA LIFE; lunedì St James’s Café (Royal Parks, inverno 8–16) e, col piano pioggia, Energy Café o The Diner al Science Museum (orari Benugo); martedì cena da Giraffe a Heathrow T5, «stimato».
+- **Ultimo controllo del 13/11**: Household Division conferma il Guard Change di lunedì 16 alle 11:00 con la Band of the Scots Guards; API TfL: Piccadilly, Bakerloo, Victoria, Jubilee regolari dal 15 al 17, Elizabeth chiusa in centro domenica fino alle 10:15, nessun ascensore fermo nelle nostre stazioni. `DA_VERIFICARE_LONDRA.md`: meteo aggiornato, restano 4 voci aperte.
+- `londra-check`: riferimento dei percorsi a 21, card con deposito vicino 3 (senza Camden). Novità v59.
+
+## Londra · 🧭 v3: in viaggio si vede prima quello che serve (13/11/2026)
+- Piano in `PIANO_LONDRA_V3.md`: revisione di grafica e logica sulle schermate di ogni vista, limitata a ciò che conviene toccare a due giorni dalla partenza.
+- **Programma** (solo `html.in-viaggio`): nascosti titolo e avvertenza; `segnaPassate` marca anche le righe della scaletta (`sc-passata`) e aggiunge «✓ N tappe fatte · mostra/nascondi».
+- **Biglietti**: con «Oggi» presente, le scorciatoie `a.big-casa` scendono sotto «Gli altri giorni».
+- **Mappa**: dal 15 al 17 si apre col filtro del giorno e inquadrata sulle sue tappe.
+- **Difetti corretti**: scritta del meteo sovrapposta alle previsioni (ora «adesso», con ellissi); pulsanti della proposta pioggia trasparenti; ~70 px vuoti sotto la testata di una riga. Novità v60.
