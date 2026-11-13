@@ -3,7 +3,7 @@
 //
 //   npm run build && npm run preview &   poi   node scripts/qa/londra-check.mjs [http://localhost:4173]
 //
-// Controlla: i percorsi Maps identici al riferimento (22 dalla versione definitiva dell'8/11), l'ordine dei percorsi di lunedì, il payload del QR, i 3 barcode del museo i 3 QR di SEA LIFE e il QR del Science Museum (decodificati
+// Controlla: i percorsi Maps identici al riferimento (21: versione dell'8/11, martedì riscritto il 13/11), l'ordine dei percorsi di lunedì, il payload del QR, i 3 barcode del museo i 3 QR di SEA LIFE e il QR del Science Museum (decodificati
 // dagli SVG, non letti dal testo), le voci «da verificare» uguali fra pagina e DA_VERIFICARE_LONDRA.md,
 // nessuna chiave di storage oltre londra:novita:vista e londra:piove, cartella foto sotto 1,5 MB, alt su tutte le
 // immagini, nessun controllo sotto 44 px, service worker che non copre le pagine di Barcellona.
@@ -39,13 +39,12 @@ const PERCORSI = [
   'https://www.google.com/maps/dir/?api=1&origin=51.4972216,-0.1767283&destination=51.496715,-0.1763672&travelmode=walking',
   'https://www.google.com/maps/dir/?api=1&origin=51.4967150,-0.1763672&destination=51.5098,-0.1342&travelmode=transit',
   'https://www.google.com/maps/dir/?api=1&origin=51.5098,-0.1342&destination=51.5129114,-0.1364381&waypoints=51.5131,-0.1400&travelmode=walking',
-  // martedì (6), versione definitiva dell'8/11: Beak St → Rupert St, Rupert St → Camden, piano B dentro la card di Camden,
-  // Camden → Poppies, Poppies → Covent Garden, Covent Garden → Rupert St → Heathrow T5
+  // martedì (5), versione del 13/11 (pioggia: si resta a Soho): Beak St → Rupert St, Rupert St → LEGO Store,
+  // LEGO Store → Poppies Soho, Poppies Soho → Covent Garden, Covent Garden → Rupert St → Heathrow T5
   'https://www.google.com/maps/dir/?api=1&origin=51.5129114,-0.1364381&destination=51.5120078,-0.1336085&travelmode=walking',
-  'https://www.google.com/maps/dir/?api=1&origin=51.5120078,-0.1336085&destination=51.539292,-0.14274&travelmode=transit',
-  'https://www.google.com/maps/dir/?api=1&origin=51.539292,-0.14274&destination=51.4723,-0.4887&waypoints=51.5120078,-0.1336085&travelmode=transit',
-  'https://www.google.com/maps/dir/?api=1&origin=51.539292,-0.14274&destination=51.5409723,-0.143961&travelmode=walking',
-  'https://www.google.com/maps/dir/?api=1&origin=51.5409723,-0.143961&destination=51.5122737,-0.1234492&travelmode=transit',
+  'https://www.google.com/maps/dir/?api=1&origin=51.5120078,-0.1336085&destination=51.5103680,-0.1311098&travelmode=walking',
+  'https://www.google.com/maps/dir/?api=1&origin=51.5103680,-0.1311098&destination=51.5125393,-0.1326933&travelmode=walking',
+  'https://www.google.com/maps/dir/?api=1&origin=51.5125393,-0.1326933&destination=51.5122737,-0.1234492&travelmode=walking',
   'https://www.google.com/maps/dir/?api=1&origin=51.5122737,-0.1234492&destination=51.4723,-0.4887&waypoints=51.5120078,-0.1336085&travelmode=transit'
 ]
 const QR_PAYLOAD = '$BLQ3039188LGT@'
@@ -344,7 +343,7 @@ const idDep = dep ? dep.depositi.map((d) => d.id) : []
 const scelte = await p.evaluate(() => window.DEPOSITI ? DEPOSITI.scelte : null)
 const dataDep = await p.$$eval('#programma article.tcard[data-deposito]', (c) => c.map((x) => x.dataset.deposito))
 const depOrfani = dataDep.filter((t) => !scelte || !scelte[t] || scelte[t].length < 2 || scelte[t].some((id) => !idDep.includes(id)))
-ok('depositi: data-deposito sulle 4 card, ogni tappa con principale e riserva che esistono nel JSON', !!dep && dataDep.sort().join() === 'camden,casa,coventgarden,sealife' && !depOrfani.length, `${dataDep.join(', ')}${depOrfani.length ? ' · senza scelta: ' + depOrfani.join(', ') : ''}`)
+ok('depositi: data-deposito sulle 3 card, ogni tappa con principale e riserva che esistono nel JSON', !!dep && dataDep.sort().join() === 'casa,coventgarden,sealife' && !depOrfani.length, `${dataDep.join(', ')}${depOrfani.length ? ' · senza scelta: ' + depOrfani.join(', ') : ''}`)
 const depSw = await p.evaluate(async () => {
   const testo = await (await fetch('londra-sw.js')).text()
   const c = []; for (const k of await caches.keys()) if (k.startsWith('londra-')) c.push(!!(await (await caches.open(k)).match('data/depositi-londra.json')))
@@ -352,7 +351,7 @@ const depSw = await p.evaluate(async () => {
 })
 ok('depositi: il JSON è nel precache del service worker (nella lista e nella cache)', depSw.lista && depSw.cache, JSON.stringify(depSw))
 const depRighe = await p.$$eval('#programma article.tcard[data-deposito]', (c) => c.filter((x) => /^🧳/.test(x.querySelector('.deposito-box .bagno-riga')?.textContent || '')).length)
-ok('depositi: ogni card con data-deposito ha la sua riga «🧳»', depRighe === dataDep.length && depRighe === 4, `${depRighe}/${dataDep.length}`)
+ok('depositi: ogni card con data-deposito ha la sua riga «🧳»', depRighe === dataDep.length && depRighe === 3, `${depRighe}/${dataDep.length}`)
 const depBassi = await p.$$eval('.deposito-box .bagno-riga, .deposito-box .bagno-maps, #depositiLista .bagno-maps', (e) => e.filter((x) => x.offsetParent).map((x) => x.getBoundingClientRect().height).filter((h) => h < 44).length)
 ok('depositi: righe, Maps e Prenota alti almeno 44 px', depBassi === 0, `${depBassi} sotto 44`)
 

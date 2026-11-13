@@ -1,6 +1,6 @@
 # DA VERIFICARE · Londra 2026
 
-**Ultimo controllo: 10/11/2026. Ricontrollo finale ven 13/11 (meteo, stato TfL, ascensori).**
+**Ultimo controllo: 13/11/2026** (meteo, calendario Household Division, stato TfL e ascensori via API TfL). Resta da riguardare il meteo la mattina del 16.
 
 Incertezze ancora aperte del viaggio a Londra (15–17 novembre 2026), con il contesto e chi le chiude.
 Il sito le mostra nella lista «Prima di partire» (in cima alla pagina fino al 14/11, e in Info), con lo stato «da verificare»: **l’elenco in pagina (`DA_VERIFICARE` in `_legacy/londra.html`) va tenuto allineato a questo file** — chiudendone una qui, si toglie anche lì, e viceversa.
@@ -14,8 +14,8 @@ Il sito le mostra nella lista «Prima di partire» (in cima alla pagina fino al 
 
 ### 2. Meteo di lunedì 16/11, 10–12
 
-- **Contesto:** Met Office per Londra, aggiornato il 10/11 alle 17:00: lunedì 16 fra 9 e 15 °C, pioggia forte possibile all’alba (50% alle 6), fra le 10 e le 12 probabilità di pioggia 30–40% e raffiche fino a ~28 mph. Domenica 15 circa 9 °C, asciutto al mattino (10%), 30% verso le 16. Martedì 17 rovesci leggeri, 7–11 °C. Con pioggia forte la cerimonia può essere cancellata fino alle 10:45: c’è il piano pioggia.
-- **Chi e come:** Alessandro: ricontrollo dal 13/11 su weather.metoffice.gov.uk (Londra) per lunedì 10–12, e di nuovo la mattina del 16.
+- **Contesto:** Met Office per Londra, aggiornato il 13/11 alle 18:59 (il modello norvegese MET concorda): lunedì 16 fra 3 e 7 °C, mattina asciutta e fredda (pioggia 10–30% fra le 10 e le 12), dalle 12 40–60%, sera 80–90%. Domenica 15 fra 4 e 12 °C, pioggia probabile fra le 10 e le 13 (70–90%), poi in calo dalle 14. Martedì 17 fra 2 e 9 °C, pioggia al 60–70% tutto il giorno, raffiche fino a 30 mph a metà mattina. Nessuna allerta. Per il Cambio della Guardia servono guanti e cappello; il pomeriggio di lunedì è probabile il piano pioggia.
+- **Chi e come:** Alessandro: ricontrollo la mattina del 16 su weather.metoffice.gov.uk (Londra), per decidere fra Albert Memorial e Science Museum.
 
 ### 3. Ascensore senza scale a Green Park
 
