@@ -1,35 +1,22 @@
 # DA VERIFICARE · Londra 2026
 
-**Ultimo controllo: 13/11/2026** (meteo, calendario Household Division, stato TfL e ascensori via API TfL). Resta da riguardare il meteo la mattina del 16.
+**Ultimo controllo: 14/11/2026** (meteo, stato TfL, ascensori via API TfL). Non resta nessuna voce aperta.
 
 Incertezze ancora aperte del viaggio a Londra (15–17 novembre 2026), con il contesto e chi le chiude.
 Il sito le mostra nella lista «Prima di partire» (in cima alla pagina fino al 14/11, e in Info), con lo stato «da verificare»: **l’elenco in pagina (`DA_VERIFICARE` in `_legacy/londra.html`) va tenuto allineato a questo file** — chiudendone una qui, si toglie anche lì, e viceversa.
 
-## Aperte (4)
+## Aperte (0)
 
-### 1. Ispezione domenicale a Horse Guards: 11:00 o 10:00
-
-- **Contesto:** Household Division e pagina web dell’Household Cavalry Museum dicono 11:00; il PDF del museo (marzo 2026) e Royal Parks dicono 10:00. Prevale 11:00. Non cambia il programma: domenica non si va a Whitehall, e l’ispezione quotidiana delle 16:00 è un’alternativa sicura.
-- **Chi e come:** Alessandro: guardare il calendario ufficiale solo se si cambia idea e si passa da Whitehall.
-
-### 2. Meteo di lunedì 16/11, 10–12
-
-- **Contesto:** Met Office per Londra, aggiornato il 13/11 alle 18:59 (il modello norvegese MET concorda): lunedì 16 fra 3 e 7 °C, mattina asciutta e fredda (pioggia 10–30% fra le 10 e le 12), dalle 12 40–60%, sera 80–90%. Domenica 15 fra 4 e 12 °C, pioggia probabile fra le 10 e le 13 (70–90%), poi in calo dalle 14. Martedì 17 fra 2 e 9 °C, pioggia al 60–70% tutto il giorno, raffiche fino a 30 mph a metà mattina. Nessuna allerta. Per il Cambio della Guardia servono guanti e cappello; il pomeriggio di lunedì è probabile il piano pioggia.
-- **Chi e come:** Alessandro: ricontrollo la mattina del 16 su weather.metoffice.gov.uk (Londra), per decidere fra Albert Memorial e Science Museum.
-
-### 3. Ascensore senza scale a Green Park
-
-- **Contesto:** Serve solo per l’alternativa in metro del lunedì (si va col bus a due piani). Knightsbridge è verificata (ascensori da Hooper’s Court). Per Green Park le fonti non concordano: recensioni di aprile 2026 parlano di accesso senza scale a tutte le linee, ma una pagina TfL riporta un avviso, senza data, di ascensori guasti per Jubilee e Piccadilly (controllo del 10/11; la pagina ufficiale non è leggibile in automatico).
-- **Chi e come:** Il giorno stesso: tfl.gov.uk → Stations, lifts, escalators works & closures (vale anche per Piccadilly Circus, Waterloo, Embankment, Camden Town, Covent Garden e T5).
-
-### 4. Chiusure stradali del 15/11 per la parata AJEX
-
-- **Contesto:** Domenica alle 14:00 parata AJEX al Cenotaph, raduno a Horse Guards Parade (ajex.org.uk, 8/11/2026): Whitehall probabilmente chiusa nel primo pomeriggio. Al 10/11 non risultano avvisi di chiusure pubblicati. Il programma di domenica non passa da Whitehall.
-- **Chi e come:** Alessandro: venerdì 13/11 guardare tfl.gov.uk → Major works and events; serve solo se si cambia idea e si passa da Whitehall.
+Nessuna.
 
 ## Risolte
 
 Tenute per memoria, non compaiono più nella pagina.
+
+- ~~Meteo di lunedì 16/11~~ — Chiusa il 14/11/2026: Met Office per Londra delle 17:59. Domenica 4–11 °C, pioggia 70–95% fra le 10 e le 13, in calo fino al 40% alle 16. Lunedì 5–8 °C, 10% fra le 9 e le 12, 20% alle 15, 40–60% dalle 16 alle 18. Martedì 8–11 °C, rovesci 50–70%, raffiche fino a 34 mph a metà giornata. Uno sguardo la mattina del 16 resta nella checklist.
+- ~~Ascensore senza scale a Green Park~~ — Chiusa il 14/11/2026: API TfL (StopPoint 940GZZLUGPK): 5 ascensori, «AccessViaLift: Yes», nessuna interruzione sulla stazione; nell’elenco dei guasti agli ascensori (20 stazioni) non c’è nessuna delle nostre.
+- ~~Ispezione domenicale a Horse Guards: 11:00 o 10:00~~ — Chiusa il 14/11/2026 perché non riguarda il programma: domenica non si passa da Whitehall. Le fonti restano discordi (11:00 per Household Division, 10:00 per Royal Parks).
+- ~~Chiusure stradali del 15/11 per la parata AJEX~~ — Chiusa il 14/11/2026 perché non riguarda il programma: parata alle 14:00 al Cenotaph, nessun avviso di chiusure trovato; domenica non si passa da Whitehall.
 
 - ~~Battello di domenica: scalo a Embankment e orario invernale~~ — Chiusa il 10/11/2026: orario invernale Thames Clippers in vigore dal 9/11 (PDF ufficiale, thamesclippers.com/media/0bsihnsk/winter-timetable-from-9november2026.pdf), weekend verso est: London Eye (Waterloo) 14:29, 14:53, 15:05, 15:21 → Embankment 14:34, 14:59, 15:10, 15:27. Lo scalo c’è e la traversata dura 5–6 minuti.
 - ~~Orario dei caffè della Royal Albert Hall lunedì 16/11~~ — Chiusa l’8/11/2026: Café Bar al piano terra, Door 12, aperto dalle 9 nei giorni di spettacolo, senza prenotazione; lunedì 16 c’è un concerto alle 18:45 (royalalberthall.com). L’orario di chiusura non è pubblicato: in pagina è «stimato».
