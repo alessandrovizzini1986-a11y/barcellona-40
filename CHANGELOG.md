@@ -1033,3 +1033,6 @@ Cercati bug dello stesso tipo di "portiere che si rituffa nel replay": due cambi
 ## Londra · 🥩 pranzo di lunedì prenotato (14/11/2026)
 - Card delle 12:45: «Pranzo da Harrods · The Grill on Fifth», quinto piano, tavolo per 3 alle 12:45 (rif. 6LAW2Y3M8RSG), tenuto 15 minuti, penale £45 a persona. Consigli per Olly marcati «stimato»: il menù ufficiale non è leggibile in automatico, i piatti vengono da recensioni e da un articolo del 10/11/2025. La Dining Hall resta come riserva.
 - Vista Mappa → Bagni: nuova voce «Codici dei bagni nei bar», da una lista TikTok del 29/10/2026, dichiarata **non verificata** (nessun riscontro online; l'unico elenco pubblico, del 2020, dà codici diversi). Novità v61.
+
+## Londra · 📜 menù di lunedì tradotto (14/11/2026)
+- Card delle 12:45: menù «The Grill» (PDF di aprile 2026 mandato da Alessandro) tradotto in italiano dentro «Il menù tradotto», con i prezzi; consigli per Olly riscritti sul menù (patatine semplici, mezzo pollo ruspante da dividere, purè senza cipolla). Avviso in testa: il PDF è della Dining Hall, la prenotazione è da The Grill on Fifth. Novità v62.
