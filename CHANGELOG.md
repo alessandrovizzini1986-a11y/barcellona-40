@@ -1059,3 +1059,8 @@ Cercati bug dello stesso tipo di "portiere che si rituffa nel replay": due cambi
 
 ## Londra · 💷 i prezzi di Giraffe (14/11/2026)
 - I prezzi c'erano, ma non nella pagina «sample menu»: sono nei PDF collegati dal sito (`giraffe_all-day-main-menu…pdf` di ottobre 2025, `giraffe-kids-menu…pdf` di settembre 2026, menù dolci e bevande di primavera 2026). Ogni voce del menù di Giraffe ha ora prezzo in sterline ed euro e l'ordine calcola il totale (servizio 12,5%, niente coperto). Stima del consiglio ~£58 (~€70), marcata «stimato»: sono menù di catena, al South Bank i prezzi possono differire. Novità v68.
+
+## Londra · 🐟 Poppies, crêpe e lista della spesa (14/11/2026)
+- **Poppies Soho** (martedì 12:00): menù ufficiale (PDF di maggio 2026) tradotto, con nome inglese, prezzi in sterline ed euro, − e +, ordine in inglese e totale. Consigli: salsiccia con patatine o quarto di pollo per Olly; merluzzo ed eglefino per i grandi, o un merluzzo grande in due. Stima ~£74, «stimato».
+- **Crème de la Crêpe** (Covent Garden): otto crêpe note da OpenTable e recensioni, con l'ordine in inglese; niente prezzi per voce (il sito del locale risponde «Private Site»), solo la forbice £5,50–9 marcata «stimato».
+- **Spesa di domenica**: riquadro apribile nella card del check-in, non una tappa. Whole Foods Market, 20 Glasshouse Street, domenica 12–18 (più fonti concordi); riserva Tesco Express Dean Street, domenica 12:30–17:00 (store locator Tesco). Lista minima con i nomi inglesi. Novità v69.
