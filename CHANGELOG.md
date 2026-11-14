@@ -1044,3 +1044,6 @@ Cercati bug dello stesso tipo di "portiere che si rituffa nel replay": due cambi
 ## Londra · 🧾 l'ordine da leggere al cameriere (14/11/2026)
 - Card del pranzo di lunedì: ogni voce del menù ha il nome italiano e, sotto, quello inglese; pulsanti − e + da 44 px. Il riquadro «Il nostro ordine» scrive l'ordine in inglese (bambina, noi, contorni, da bere, alla fine), con la cottura delle bistecche, la richiesta di portare subito il piatto di Olly e il totale (sconto contorni 2×£15 / 3×£22, coperto, servizio). «Carica il nostro consiglio» e «Svuota».
 - Nuova chiave `localStorage` `londra:ordine` (quantità, cottura, casella): `londra-check` la ammette. Novità v64.
+
+## Londra · 🛂 le nostre ETA (14/11/2026)
+- Biglietti, card dei voli: riquadro con le tre UK ETA approvate (date di approvazione e scadenza, dalle email del Home Office) e la nota che alla frontiera basta il passaporto. Numeri di riferimento e cifre dei passaporti **non** sono in pagina: la repo è pubblica. Stessa nota nella checklist. Novità v65.
