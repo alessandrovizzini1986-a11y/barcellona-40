@@ -1047,3 +1047,8 @@ Cercati bug dello stesso tipo di "portiere che si rituffa nel replay": due cambi
 
 ## Londra · 🛂 le nostre ETA (14/11/2026)
 - Biglietti, card dei voli: riquadro con le tre UK ETA approvate (date di approvazione e scadenza, dalle email del Home Office) e la nota che alla frontiera basta il passaporto. Numeri di riferimento e cifre dei passaporti **non** sono in pagina: la repo è pubblica. Stessa nota nella checklist. Novità v65.
+
+## Londra · ✅ tutto pronto (14/11/2026)
+- Checklist: check-in online BA, eSIM Holafly, app Bounce, pranzo di domenica da Giraffe e di lunedì da The Grill on Fifth segnati «fatto» (confermati da Alessandro). Restano «da fare» solo i due controlli sul posto per il Cambio della Guardia.
+- `DA_VERIFICARE` vuoto (pagina e file a 0): meteo aggiornato (Met Office 14/11, 17:59), Green Park verificata con l'API TfL (5 ascensori, nessun guasto), Horse Guards e parata AJEX chiuse perché fuori dal programma. Tolto l'ultimo badge «da verificare» dalla card del bus. Nota meteo sul lunedì. Novità v66.
+- **Domenica**: Giraffe prenotato alle 12:00 (conferma 130239, dallo screenshot dell'email). Nuova card «Pranzo da Giraffe» alle 12:00; Southbank scende a 45 minuti, SEA LIFE passa dalle 12:30 alle 13:05 e da 2 ore a 1 h 25 (il biglietto è a ingresso libero). Ritiro bagagli 14:40 e battello 14:55 invariati.
