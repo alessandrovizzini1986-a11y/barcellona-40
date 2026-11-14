@@ -1056,3 +1056,6 @@ Cercati bug dello stesso tipo di "portiere che si rituffa nel replay": due cambi
 ## Londra · 🦒 il menù di Giraffe (14/11/2026)
 - Card «Pranzo da Giraffe» (domenica 12:00): menù di esempio di giraffe.net (dati della pagina, aggiornati a luglio 2026) tradotto in italiano con il nome inglese sotto, pulsanti − e +, riquadro dell'ordine in inglese. Sezioni: bambini, stuzzichini, piattini, piatti principali, hamburger, contorni, brunch, dolci, bevande. **Senza prezzi**: la pagina non li riporta, quindi niente totale. Consigli per Olly e per i grandi. Tolta dalla card del Southbank la vecchia stima sul menù bambini.
 - Il codice dell'ordine ora gestisce più ristoranti (`data-rist="giraffe"|"grill"`), con consiglio e «Svuota» separati; stessa chiave `londra:ordine`. Novità v67.
+
+## Londra · 💷 i prezzi di Giraffe (14/11/2026)
+- I prezzi c'erano, ma non nella pagina «sample menu»: sono nei PDF collegati dal sito (`giraffe_all-day-main-menu…pdf` di ottobre 2025, `giraffe-kids-menu…pdf` di settembre 2026, menù dolci e bevande di primavera 2026). Ogni voce del menù di Giraffe ha ora prezzo in sterline ed euro e l'ordine calcola il totale (servizio 12,5%, niente coperto). Stima del consiglio ~£58 (~€70), marcata «stimato»: sono menù di catena, al South Bank i prezzi possono differire. Novità v68.
