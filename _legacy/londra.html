@@ -1024,6 +1024,8 @@
   .ordine__riga--check input{width:24px;height:24px;flex:none}
   .ordine__az{display:flex;flex-wrap:wrap;gap:var(--s-2);margin-top:var(--s-3)}
   .ordine__az .btn{flex:1 1 140px}
+  .eta-box{margin:var(--s-3) 0;padding:var(--s-3);border:1px solid var(--line);border-radius:var(--r-m)}
+  .eta-box .btable{margin-top:var(--s-2)}
   /* ====== v2 · passo 3: Biglietti e Info ======
      Nessun testo sotto i 14 px nelle viste (resta a 12 solo la barra in basso); i link dei crediti sono alti 44 px;
      in Biglietti, durante il viaggio, i codici di oggi salgono in cima sotto «Oggi». */
@@ -2032,6 +2034,16 @@
     <div class="card" id="voliCard">
       <h3>✈️ Voli — British Airways <span class="st ok">✅ prenotato</span></h3>
       <p class="meta">Diretti, Heathrow Terminal 5 · Economy · €433,39 totale famiglia</p>
+      <div class="eta-box" id="etaBox">
+        <p><b>🛂 UK ETA</b> <span class="st ok">✅ approvate, tutte e tre</span></p>
+        <table class="btable">
+          <tr><th>Chi</th><th>Approvata</th><th>Valida fino al</th></tr>
+          <tr><td>Alessandro</td><td>27/8/2026</td><td class="imp">27 agosto 2028</td></tr>
+          <tr><td>Valentina</td><td>30/9/2026</td><td class="imp">30 settembre 2028</td></tr>
+          <tr><td>Olivia</td><td>30/9/2026</td><td class="imp">30 settembre 2028</td></tr>
+        </table>
+        <p class="sub2">Alla frontiera basta il <b>passaporto</b> con cui è stata chiesta: la ETA è collegata al passaporto, non serve stampare né mostrare l’email. Se si cambia passaporto va rifatta. I numeri di riferimento sono nelle email «ETA application approved» del Home Office (cercare «ETA» in Gmail): non li scrivo qui perché il sito è pubblico.</p>
+      </div>
       <div class="flight">
         <div class="ap">BLQ<small>Bologna</small></div>
         <div class="mid"><span>✈︎ dom 15/11</span></div>
@@ -2971,7 +2983,7 @@
   var PRIMA_DI_PARTIRE = [
     { cosa: 'Check-in online e posti vicini', stato: 'da_fare', nota: 'Si apre 24 ore prima del volo. BA fa sedere i bambini sotto i 12 anni accanto a un adulto: controllarlo al check-in.' },
     { cosa: 'Passaporti di tutti e tre, ritirati e validi', stato: 'fatto' },
-    { cosa: 'UK ETA di tutti e tre', stato: 'fatto' },
+    { cosa: 'UK ETA di tutti e tre', stato: 'fatto', nota: 'Approvate: Alessandro valida fino al 27/8/2028, Valentina e Olivia fino al 30/9/2028. Alla frontiera basta il passaporto. Dettagli in Biglietti, nella card dei voli.' },
     { cosa: 'Volo BA547 / BA546', stato: 'fatto' },
     { cosa: 'Appartamento Bright Carnaby Soho', stato: 'fatto' },
     { cosa: 'Calendario del Cambio della Guardia ricontrollato il 10/11: riga «Mon 16th Nov · Guard Change · 11:00 · Band of the Scots Guards» invariata', stato: 'fatto' },
@@ -3816,6 +3828,8 @@
      Il pannello non si apre mai da solo: in cima c'è un banner sottile «N novità», e si apre solo se toccato.
      Il link in fondo alla pagina lo riapre con tutto lo storico, in ogni caso. */
   var NOVITA = [
+    { v: 65, data: '2026-11-14', titolo: '🛂 Le nostre ETA', voci: [
+      'In Biglietti, nella card dei voli: le tre UK ETA approvate, con la scadenza (Alessandro 27/8/2028, Valentina e Olivia 30/9/2028). Alla frontiera basta il passaporto' ] },
     { v: 64, data: '2026-11-14', titolo: '🧾 L’ordine da leggere al cameriere', voci: [
       'Nella card del pranzo di lunedì il menù è in italiano e in inglese: con + e − si sceglie cosa prendiamo',
       'In cima compare l’ordine scritto in inglese, da leggere al cameriere, con il totale in sterline ed euro. «Carica il nostro consiglio» lo riempie con la proposta; la scelta resta salvata sul telefono' ] },
