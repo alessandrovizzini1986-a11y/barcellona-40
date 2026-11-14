@@ -46,3 +46,17 @@ Pranzo da Harrods»; prima del viaggio (`?now=2026-11-14T12:00`) nulla cambia.
 - Il rifacimento vero della grafica, se lo si vuole: va fatto con calma e con le foto e le note del viaggio, quando un
   errore non costa niente.
 - Bagno più vicino per LEGO Store e Poppies Soho (oggi quelle due tappe non hanno la riga 🚻: mancano dati verificati).
+
+## Prompt · il pranzo da The Grill on Fifth (14/11)
+
+Lunedì 16 alle 12:45, tavolo per 3 (rif. 6LAW2Y3M8RSG). Fonti: i quattro PDF del ristorante (cibo, bambini, bevande,
+vini). Da fare, in un commit solo:
+
+1. Togliere il menù di «The Grill» della Dining Hall, pubblicato per errore.
+2. Tradurre in italiano cibo e menù bambini per intero; di bevande e vini il calice, la caraffa, gli analcolici e il
+   caffè. Le 500 bottiglie della carta non servono.
+3. Ogni prezzo in sterline e in euro, col cambio dichiarato in pagina.
+4. Consigli: per Olly (pollo, patatine, niente sapori forti, niente hamburger); per i due adulti la spesa minima con
+   la resa massima, dicendo se conviene dividere; due rossi e due bollicine con il motivo.
+5. Stima del conto con coperto e servizio, marcata «stimato».
+6. Solita verifica: `londra-check` verde, niente scroll laterale, changelog nello stesso commit.

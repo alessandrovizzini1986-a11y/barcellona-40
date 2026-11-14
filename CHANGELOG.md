@@ -1036,3 +1036,7 @@ Cercati bug dello stesso tipo di "portiere che si rituffa nel replay": due cambi
 
 ## Londra · 📜 menù di lunedì tradotto (14/11/2026)
 - Card delle 12:45: menù «The Grill» (PDF di aprile 2026 mandato da Alessandro) tradotto in italiano dentro «Il menù tradotto», con i prezzi; consigli per Olly riscritti sul menù (patatine semplici, mezzo pollo ruspante da dividere, purè senza cipolla). Avviso in testa: il PDF è della Dining Hall, la prenotazione è da The Grill on Fifth. Novità v62.
+
+## Londra · 🥩 il menù giusto di The Grill on Fifth (14/11/2026)
+- Il PDF pubblicato prima era di «The Grill» nella Dining Hall: tolto. Al suo posto i quattro menù di The Grill on Fifth mandati da Alessandro (cibo, bambini di febbraio 2025, bevande e vini di gennaio 2026), tradotti nella card delle 12:45 in due riquadri apribili, con i prezzi in sterline e in euro (£1 = €1,20; BCE del 13/11: 1,197).
+- Consigli: per Olly bocconcini di pollo con patatine dal menù bambini; per i grandi flat iron o cotoletta di pollo, due contorni a £15; Pauillac Harrods in caraffa, Valpolicella Ripasso, Harrods Brut Premier Cru e Albury Blanc de Noirs al calice. Stima del conto ~£160–190 (~€190–230), marcata «stimato». Tolta la nota su «Upgrade to a Bottle» (rimosso dalla prenotazione). Novità v63.
