@@ -1029,3 +1029,7 @@ Cercati bug dello stesso tipo di "portiere che si rituffa nel replay": due cambi
 - **Biglietti**: con «Oggi» presente, le scorciatoie `a.big-casa` scendono sotto «Gli altri giorni».
 - **Mappa**: dal 15 al 17 si apre col filtro del giorno e inquadrata sulle sue tappe.
 - **Difetti corretti**: scritta del meteo sovrapposta alle previsioni (ora «adesso», con ellissi); pulsanti della proposta pioggia trasparenti; ~70 px vuoti sotto la testata di una riga. Novità v60.
+
+## Londra · 🥩 pranzo di lunedì prenotato (14/11/2026)
+- Card delle 12:45: «Pranzo da Harrods · The Grill on Fifth», quinto piano, tavolo per 3 alle 12:45 (rif. 6LAW2Y3M8RSG), tenuto 15 minuti, penale £45 a persona. Consigli per Olly marcati «stimato»: il menù ufficiale non è leggibile in automatico, i piatti vengono da recensioni e da un articolo del 10/11/2025. La Dining Hall resta come riserva.
+- Vista Mappa → Bagni: nuova voce «Codici dei bagni nei bar», da una lista TikTok del 29/10/2026, dichiarata **non verificata** (nessun riscontro online; l'unico elenco pubblico, del 2020, dà codici diversi). Novità v61.
