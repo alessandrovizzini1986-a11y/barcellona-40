@@ -37,8 +37,9 @@ const PERCORSI = [
   'https://www.google.com/maps/dir/?api=1&origin=51.5023516,-0.177707&destination=51.496715,-0.1763672&travelmode=walking',
   'https://www.google.com/maps/dir/?api=1&origin=51.4994055,-0.1632344&destination=51.4972216,-0.1767283&travelmode=transit',
   'https://www.google.com/maps/dir/?api=1&origin=51.4972216,-0.1767283&destination=51.496715,-0.1763672&travelmode=walking',
-  'https://www.google.com/maps/dir/?api=1&origin=51.4967150,-0.1763672&destination=51.5098,-0.1342&travelmode=transit',
-  'https://www.google.com/maps/dir/?api=1&origin=51.5098,-0.1342&destination=51.5129114,-0.1364381&waypoints=51.5131,-0.1400&travelmode=walking',
+  // dal 15/11 la sera di lunedì va al Tower Bridge invece che alle luci di Regent Street
+  'https://www.google.com/maps/dir/?api=1&origin=51.4967150,-0.1763672&destination=51.5055,-0.0754&travelmode=transit',
+  'https://www.google.com/maps/dir/?api=1&origin=51.5055,-0.0754&destination=51.5129114,-0.1364381&travelmode=transit',
   // martedì (5), versione del 13/11 (pioggia: si resta a Soho): Beak St → Rupert St, Rupert St → LEGO Store,
   // LEGO Store → Poppies Soho, Poppies Soho → Covent Garden, Covent Garden → Rupert St → Heathrow T5
   'https://www.google.com/maps/dir/?api=1&origin=51.5129114,-0.1364381&destination=51.5120078,-0.1336085&travelmode=walking',

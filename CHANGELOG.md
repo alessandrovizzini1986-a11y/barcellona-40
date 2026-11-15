@@ -1074,3 +1074,6 @@ Cercati bug dello stesso tipo di "portiere che si rituffa nel replay": due cambi
 ## Londra · 🌦️ meteo ora per ora in «Adesso» (15/11/2026)
 - Il meteo ora per ora esisteva già nel Programma (Open-Meteo, senza chiave). Ora: riquadro anche in «Adesso» (oggi dall'ora attuale; dalle 19 il giorno dopo dalle 7), ricarica automatica ogni 30 minuti e al ritorno sulla pagina, percentuale di pioggia mostrata dal 10%, link al Met Office come controprova. Se un aggiornamento fallisce restano i dati precedenti.
 - Fonte: il Met Office è il servizio nazionale ed è il riferimento per Londra, ma non offre dati liberi senza chiave, e una chiave non può stare in una repo pubblica. Resta quindi Open-Meteo. Novità v72.
+
+## Londra · 🌉 Tower Bridge lunedì sera (15/11/2026)
+- Chiesto da Alessandro: la card delle 18:00 «Luci di Regent Street» (già viste domenica) diventa «Tower Bridge illuminato» alle 18:15, con i passi di andata e ritorno (District line diretta South Kensington → Tower Hill; rientro via Embankment e Bakerloo) e il piano B se Olly è stanca. Percorsi di lunedì: «Museo → Tower Bridge» e «Tower Bridge → casa» al posto dei due verso Regent Street; riferimento aggiornato in `londra-check`. Mappa con il nuovo punto. District e Circle regolari il 16/11 (API TfL). Novità v73.
