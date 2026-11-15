@@ -1077,3 +1077,9 @@ Cercati bug dello stesso tipo di "portiere che si rituffa nel replay": due cambi
 
 ## Londra · 🌉 Tower Bridge lunedì sera (15/11/2026)
 - Chiesto da Alessandro: la card delle 18:00 «Luci di Regent Street» (già viste domenica) diventa «Tower Bridge illuminato» alle 18:15, con i passi di andata e ritorno (District line diretta South Kensington → Tower Hill; rientro via Embankment e Bakerloo) e il piano B se Olly è stanca. Percorsi di lunedì: «Museo → Tower Bridge» e «Tower Bridge → casa» al posto dei due verso Regent Street; riferimento aggiornato in `londra-check`. Mappa con il nuovo punto. District e Circle regolari il 16/11 (API TfL). Novità v73.
+
+## Londra · 🔁 lunedì il ponte, martedì il museo (15/11/2026)
+- Scambio chiesto da Alessandro, perché martedì piove e lunedì c'è il sole.
+- **Lunedì**: dopo Harrods, «Tower Bridge, di giorno e illuminato» alle 15:15 (piano asciutto: Piccadilly line fino a South Kensington, District fino a Tower Hill; rientro via Embankment e Bakerloo, a casa ~17:15). Piano pioggia: Science Museum alle 14:45, poi casa. Tolti Albert Memorial, i bus relativi e il Natural History Museum delle 16:30.
+- **Martedì**: Natural History Museum alle 11:00 con i biglietti nuovi (ordine 8155749, ingresso dalle 10:45, due codici CODE128 rigenerati: uno per i due adulti, uno per Olly), Piccadilly line diretta fino a Covent Garden alle 12:35, pranzo di crêpe e mercato dalle 13:00, partenza alle 14:45 invariata. Tolti LEGO Store e Poppies Soho.
+- Biglietti: card del museo con data e codici nuovi, sotto «Oggi» martedì. Mappa, scaletta, note pioggia e `londra-check` (percorsi di riferimento 18, 2 barcode, controllo dei due piani di lunedì) aggiornati. Novità v74.

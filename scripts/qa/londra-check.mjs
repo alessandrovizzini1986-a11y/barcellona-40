@@ -3,7 +3,7 @@
 //
 //   npm run build && npm run preview &   poi   node scripts/qa/londra-check.mjs [http://localhost:4173]
 //
-// Controlla: i percorsi Maps identici al riferimento (21: versione dell'8/11, martedì riscritto il 13/11), l'ordine dei percorsi di lunedì, il payload del QR, i 3 barcode del museo i 3 QR di SEA LIFE e il QR del Science Museum (decodificati
+// Controlla: i percorsi Maps identici al riferimento (18: lunedì pomeriggio e martedì riscritti il 15/11), l'ordine dei percorsi di lunedì, il payload del QR, i 2 barcode del museo i 3 QR di SEA LIFE e il QR del Science Museum (decodificati
 // dagli SVG, non letti dal testo), le voci «da verificare» uguali fra pagina e DA_VERIFICARE_LONDRA.md,
 // nessuna chiave di storage oltre londra:novita:vista, londra:piove e londra:ordine (il pranzo di lunedì), cartella foto sotto 1,5 MB, alt su tutte le
 // immagini, nessun controllo sotto 44 px, service worker che non copre le pagine di Barcellona.
@@ -26,30 +26,26 @@ const PERCORSI = [
   'https://www.google.com/maps/dir/?api=1&origin=51.501558,-0.119506&destination=51.5034333,-0.1196629&waypoints=51.5025654,-0.1165451&travelmode=walking',
   'https://www.google.com/maps/dir/?api=1&origin=51.5073974,-0.1213608&destination=51.5123401,-0.1342553&travelmode=transit',
   'https://www.google.com/maps/dir/?api=1&origin=51.5129114,-0.1364381&destination=51.5133,-0.1391&waypoints=51.51283,-0.1400828&travelmode=walking',
-  // lunedì (11): L1–L5 nell'ordine delle card dopo il Cambio della Guardia (double check del 7/11), poi il pomeriggio:
-  // piano asciutto (Harrods → Royal Albert Hall, Albert Memorial → NHM) e piano pioggia (Harrods → Science Museum → NHM)
+  // lunedì (9), versione del 15/11: L1–L5 nell'ordine delle card dopo il Cambio della Guardia, poi il pomeriggio:
+  // piano asciutto (Harrods → Tower Bridge → casa) e piano pioggia (Harrods → Science Museum → casa)
   'https://www.google.com/maps/dir/?api=1&origin=51.5129114,-0.1364381&destination=51.508039,-0.128069&travelmode=walking',
   'https://www.google.com/maps/dir/?api=1&origin=51.508039,-0.128069&destination=51.5007292,-0.1246254&waypoints=51.5047752,-0.1272358&travelmode=walking',
   'https://www.google.com/maps/dir/?api=1&origin=51.5007292,-0.1246254&destination=51.5003309,-0.1356875&travelmode=walking',
   'https://www.google.com/maps/dir/?api=1&origin=51.5003309,-0.1356875&destination=51.501364,-0.14189&waypoints=51.502967,-0.1339534&travelmode=walking',
   'https://www.google.com/maps/dir/?api=1&origin=51.501364,-0.14189&destination=51.4994055,-0.1632344&travelmode=transit',
-  'https://www.google.com/maps/dir/?api=1&origin=51.4994055,-0.1632344&destination=51.501461,-0.178819&travelmode=transit',
-  'https://www.google.com/maps/dir/?api=1&origin=51.5023516,-0.177707&destination=51.496715,-0.1763672&travelmode=walking',
-  'https://www.google.com/maps/dir/?api=1&origin=51.4994055,-0.1632344&destination=51.4972216,-0.1767283&travelmode=transit',
-  'https://www.google.com/maps/dir/?api=1&origin=51.4972216,-0.1767283&destination=51.496715,-0.1763672&travelmode=walking',
-  // dal 15/11 la sera di lunedì va al Tower Bridge invece che alle luci di Regent Street
-  'https://www.google.com/maps/dir/?api=1&origin=51.4967150,-0.1763672&destination=51.5055,-0.0754&travelmode=transit',
+  'https://www.google.com/maps/dir/?api=1&origin=51.4994055,-0.1632344&destination=51.5055,-0.0754&travelmode=transit',
   'https://www.google.com/maps/dir/?api=1&origin=51.5055,-0.0754&destination=51.5129114,-0.1364381&travelmode=transit',
-  // martedì (5), versione del 13/11 (pioggia: si resta a Soho): Beak St → Rupert St, Rupert St → LEGO Store,
-  // LEGO Store → Poppies Soho, Poppies Soho → Covent Garden, Covent Garden → Rupert St → Heathrow T5
+  'https://www.google.com/maps/dir/?api=1&origin=51.4994055,-0.1632344&destination=51.4972216,-0.1767283&travelmode=transit',
+  'https://www.google.com/maps/dir/?api=1&origin=51.4972216,-0.1767283&destination=51.5129114,-0.1364381&travelmode=transit',
+  // martedì (4), versione del 15/11 (pioggia: museo e Covent Garden): Beak St → Rupert St, Rupert St → Natural History
+  // Museum, museo → Covent Garden, Covent Garden → Rupert St → Heathrow T5
   'https://www.google.com/maps/dir/?api=1&origin=51.5129114,-0.1364381&destination=51.5120078,-0.1336085&travelmode=walking',
-  'https://www.google.com/maps/dir/?api=1&origin=51.5120078,-0.1336085&destination=51.5103680,-0.1311098&travelmode=walking',
-  'https://www.google.com/maps/dir/?api=1&origin=51.5103680,-0.1311098&destination=51.5125393,-0.1326933&travelmode=walking',
-  'https://www.google.com/maps/dir/?api=1&origin=51.5125393,-0.1326933&destination=51.5122737,-0.1234492&travelmode=walking',
+  'https://www.google.com/maps/dir/?api=1&origin=51.5120078,-0.1336085&destination=51.4967150,-0.1763672&travelmode=transit',
+  'https://www.google.com/maps/dir/?api=1&origin=51.4967150,-0.1763672&destination=51.5122737,-0.1234492&travelmode=transit',
   'https://www.google.com/maps/dir/?api=1&origin=51.5122737,-0.1234492&destination=51.4723,-0.4887&waypoints=51.5120078,-0.1336085&travelmode=transit'
 ]
 const QR_PAYLOAD = '$BLQ3039188LGT@'
-const BARCODE = ['1001401807011726169', '1001401807011726170', '1001401807011726171']
+const BARCODE = ['1001401806013732385', '1001401806013732387']   // ordine 8155749 del 15/11: martedì 17 alle 10:45, un codice per i due adulti e uno per la bambina
 const SCIENCE_MUSEUM = 'ON18896320'   // codice dell'ordine 18896320, un QR per 2 adulti + 1 bambina
 const SEALIFE = ['772334430770151846', '773215047000220012', '777155289086963187']   // codici numerici del PDF ufficiale, ordine 129390167
 const LIMITE_FOTO_KB = 1500
@@ -190,7 +186,7 @@ const bounce = await p.evaluate(() => ({ link: [...document.querySelectorAll('a[
 ok('nessun link alle prenotazioni Bounce in pagina', !bounce.link && !bounce.testo, JSON.stringify(bounce))
 
 // lunedì, i due piani come li vede chi usa la pagina (classe «piove» sull'html): l'altro piano non si vede, orari crescenti
-// senza sovrapposizioni (ora + durata alta ≤ ora della card dopo), Natural History Museum alle 16:30
+// senza sovrapposizioni (ora + durata alta ≤ ora della card dopo); dal 15/11 asciutto = Tower Bridge alle 15:15, pioggia = Science Museum
 for (const piove of [false, true]) {
   const g = await p.evaluate((piove) => {
     document.documentElement.classList.toggle('piove', piove)
@@ -199,9 +195,9 @@ for (const piove of [false, true]) {
     return c
   }, piove)
   const ko = []; g.forEach((c, i) => { const n = g[i + 1]; if (n && (n.ini < c.ini || c.ini + c.dur > n.ini)) ko.push(`${c.ora} ${c.nome} → ${n.ora}`) })
-  const vietato = piove ? /Albert Memorial/ : /Science Museum/, intruso = g.filter((c) => vietato.test(c.nome)).map((c) => c.nome)
-  const nhm = g.some((c) => c.ora === '16:30' && /Natural History/.test(c.nome))
-  ok(`lunedì${piove ? ' con «Piove»: niente Albert Memorial' : ' asciutto: niente Science Museum'}, orari crescenti senza sovrapposizioni, NHM alle 16:30`, !ko.length && !intruso.length && nhm, `${g.length} card` + (ko.length ? ' · ' + ko.join('; ') : '') + (intruso.length ? ' · si vede: ' + intruso.join(', ') : '') + (nhm ? '' : ' · NHM non alle 16:30'))
+  const vietato = piove ? /Tower Bridge/ : /Science Museum/, intruso = g.filter((c) => vietato.test(c.nome)).map((c) => c.nome)
+  const nhm = piove ? g.some((c) => c.ora === '14:45' && /Science Museum/.test(c.nome)) : g.some((c) => c.ora === '15:15' && /Tower Bridge/.test(c.nome))
+  ok(`lunedì${piove ? ' con «Piove»: niente Tower Bridge, Science Museum alle 14:45' : ' asciutto: niente Science Museum, Tower Bridge alle 15:15'}, orari crescenti senza sovrapposizioni`, !ko.length && !intruso.length && nhm, `${g.length} card` + (ko.length ? ' · ' + ko.join('; ') : '') + (intruso.length ? ' · si vede: ' + intruso.join(', ') : '') + (nhm ? '' : ' · manca la tappa del pomeriggio'))
 }
 
 const qr = await p.evaluate(() => { const s = document.querySelector('#biglietti .pk__svg'); return { vb: s.getAttribute('viewBox'), d: s.querySelector('path[stroke]').getAttribute('d'), sfondo: s.querySelector('path[fill]')?.getAttribute('fill') } })
@@ -211,7 +207,7 @@ ok('QR del parcheggio: payload esatto, fondo bianco', letti.length === 1 && lett
 
 const bc = await p.evaluate(() => [...document.querySelectorAll('#biglietti .tk-svg:not(.tk-qr)')].map((s) => ({ d: s.querySelector('path').getAttribute('d'), sfondo: s.querySelector('rect')?.getAttribute('fill'), num: s.closest('.tk-box')?.querySelector('.tk-num')?.textContent.trim() })))
 const decod = bc.map((x) => decodificaC128(x.d))
-ok('3 barcode del museo: CODE128 decodificati, numero in chiaro uguale, fondo bianco', bc.length === 3 && BARCODE.every((n, i) => decod[i] === n && bc[i].num === n && bc[i].sfondo === '#fff'), decod.join(' · '))
+ok('2 barcode del museo: CODE128 decodificati, numero in chiaro uguale, fondo bianco', bc.length === 2 && BARCODE.every((n, i) => decod[i] === n && bc[i].num === n && bc[i].sfondo === '#fff'), decod.join(' · '))
 
 const sl = await p.evaluate(() => [...document.querySelectorAll('#sealifeCard .tk-qr')].map((s) => ({ vb: s.getAttribute('viewBox'), d: s.querySelector('path').getAttribute('d'), sfondo: s.querySelector('rect')?.getAttribute('fill'), num: s.closest('.tk-box')?.querySelector('.tk-num')?.textContent.trim() })))
 const slLetti = sl.map((x) => { const n = +x.vb.split(/\s+/)[2] - 4; return decodificaQR(moduliDaPath(x.d, 2), n) })
@@ -225,7 +221,7 @@ const cosa = await p.evaluate(() => {
   const fuori = [...document.querySelectorAll('#programma article.tcard[data-tappa]:not([data-luogo])')].map((c) => c.dataset.tappa).filter((t) => t !== 'pranzo-lun')
   return { n: luoghi.length, senza, fuori }
 })
-ok('«Cosa vediamo»: ogni card luogo ha «📖 Cosa vediamo» e «👧 Per Olly» non vuoti', cosa.n >= 20 && !cosa.senza.length && !cosa.fuori.length, `${cosa.n} card` + (cosa.senza.length ? ' · vuote: ' + cosa.senza.join(', ') : '') + (cosa.fuori.length ? ' · tappe senza descrizione: ' + cosa.fuori.join(', ') : ''))
+ok('«Cosa vediamo»: ogni card luogo ha «📖 Cosa vediamo» e «👧 Per Olly» non vuoti', cosa.n >= 18 && !cosa.senza.length && !cosa.fuori.length, `${cosa.n} card` + (cosa.senza.length ? ' · vuote: ' + cosa.senza.join(', ') : '') + (cosa.fuori.length ? ' · tappe senza descrizione: ' + cosa.fuori.join(', ') : ''))
 
 const sm = await p.evaluate(() => [...document.querySelectorAll('#scienceMuseumCard .tk-qr')].map((s) => ({ vb: s.getAttribute('viewBox'), d: s.querySelector('path').getAttribute('d'), sfondo: s.querySelector('rect')?.getAttribute('fill'), num: s.closest('.tk-box')?.querySelector('.tk-num')?.textContent.trim() })))
 const smLetti = sm.map((x) => decodificaQR(moduliDaPath(x.d, 2), +x.vb.split(/\s+/)[2] - 4))
