@@ -1067,3 +1067,6 @@ Cercati bug dello stesso tipo di "portiere che si rituffa nel replay": due cambi
 
 ## Londra · ☔ pranzo di domenica da The Black Penny (15/11/2026)
 - Correzione chiesta da Alessandro durante il viaggio: Giraffe disdetto per la pioggia, pranzo da The Black Penny (17 Casson Square). La card delle 12:00 diventa «Pranzo da The Black Penny» alle 12:15, col menù trascritto dalle foto del tavolo, tradotto, con prezzi in sterline ed euro e ordine in inglese. Tolto il menù di Giraffe; aggiornati card del Southbank, checklist, mappa e nota sulla cena a Heathrow. L'ordine delle altre card di domenica non è stato toccato. Novità v70.
+
+## Londra · 🍹 aperitivo a Kingly Court (15/11/2026)
+- Chiesto da Alessandro durante il viaggio: nuova card «Aperitivo a Kingly Court» alle 17:45 di domenica (Pizza Pilgrims come scelta, The Rum Kitchen come riserva; locali e orari marcati «stimato»). Cena in appartamento spostata dalle 18:00 alle 18:45. Novità v71.
