@@ -1070,3 +1070,7 @@ Cercati bug dello stesso tipo di "portiere che si rituffa nel replay": due cambi
 
 ## Londra · 🍹 aperitivo a Kingly Court (15/11/2026)
 - Chiesto da Alessandro durante il viaggio: nuova card «Aperitivo a Kingly Court» alle 17:45 di domenica (Pizza Pilgrims come scelta, The Rum Kitchen come riserva; locali e orari marcati «stimato»). Cena in appartamento spostata dalle 18:00 alle 18:45. Novità v71.
+
+## Londra · 🌦️ meteo ora per ora in «Adesso» (15/11/2026)
+- Il meteo ora per ora esisteva già nel Programma (Open-Meteo, senza chiave). Ora: riquadro anche in «Adesso» (oggi dall'ora attuale; dalle 19 il giorno dopo dalle 7), ricarica automatica ogni 30 minuti e al ritorno sulla pagina, percentuale di pioggia mostrata dal 10%, link al Met Office come controprova. Se un aggiornamento fallisce restano i dati precedenti.
+- Fonte: il Met Office è il servizio nazionale ed è il riferimento per Londra, ma non offre dati liberi senza chiave, e una chiave non può stare in una repo pubblica. Resta quindi Open-Meteo. Novità v72.

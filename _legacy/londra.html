@@ -1028,6 +1028,12 @@
   .eta-box .btable{margin-top:var(--s-2)}
   .spesa li{padding:var(--s-2) 0}
   .spesa .mv__en{display:block}
+  /* meteo ora per ora dentro «Adesso» */
+  .ad-meteo{margin-top:var(--s-4);padding:var(--s-3);border:1px solid var(--line);border-radius:var(--r-m)}
+  .ad-meteo[hidden]{display:none}
+  .ad-meteo__tit{font-weight:800;font-size:var(--f-16);margin-bottom:var(--s-2)}
+  .ad-meteo__nota{margin-top:var(--s-2);font-size:var(--f-14);color:var(--muted);line-height:1.4}
+  .ad-meteo__nota a{display:inline-flex;align-items:center;min-height:44px;color:var(--sky)}
   /* ====== v2 · passo 3: Biglietti e Info ======
      Nessun testo sotto i 14 px nelle viste (resta a 12 solo la barra in basso); i link dei crediti sono alti 44 px;
      in Biglietti, durante il viaggio, i codici di oggi salgono in cima sotto «Oggi». */
@@ -1114,6 +1120,11 @@
     <div class="ad-proposta" id="adProposta" hidden>
       <p id="adPropostaTesto"></p>
       <div class="ad-proposta__az"><button type="button" class="btn btn--primario ad-proposta__si" id="adPropostaSi">Sì, attiva</button><button type="button" class="btn btn--secondario ad-proposta__no" id="adPropostaNo">No</button></div>
+    </div>
+    <div class="ad-meteo" id="adMeteo" hidden>
+      <p class="ad-meteo__tit"></p>
+      <div class="meteo__striscia" tabindex="0" aria-label="Meteo ora per ora"></div>
+      <p class="ad-meteo__nota">Gradi e probabilità di pioggia. Si aggiorna da solo ogni mezz’ora · <span class="ad-meteo__agg"></span> · Open-Meteo · <a href="https://weather.metoffice.gov.uk/forecast/gcpvj0v07" target="_blank" rel="noopener">controprova: Met Office</a></p>
     </div>
     <button class="btn btn--secondario btn--blocco sole-ad" type="button" data-sole aria-pressed="false">☀️ Più leggibile al sole</button>
   </section>
@@ -2647,7 +2658,7 @@
     if (oggi.data < '2026-11-05' || oggi.data > '2026-11-17') { card.remove(); return; }
 
     var URL = 'https://api.open-meteo.com/v1/forecast?latitude=51.5129&longitude=-0.1364'
-      + '&hourly=temperature_2m,precipitation_probability,weathercode'
+      + '&hourly=temperature_2m,apparent_temperature,precipitation_probability,weathercode'
       + '&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset,precipitation_probability_max'
       + '&timezone=Europe/London&start_date=2026-11-15&end_date=2026-11-17'
       + '&current=temperature_2m,weathercode';
@@ -2675,14 +2686,20 @@
       card.querySelector('.meteo__riga').innerHTML = '<span class="meteo__ora"><span class="ico">🌦️</span><span><b>Meteo</b><span class="meteo__dove">non disponibile ora</span></span></span>';
       card.querySelector('.meteo__riga').disabled = true;
     }
-    quandoLibero(function(){
+    // si ricarica da solo: ogni 30 minuti a pagina aperta, e quando si torna sulla pagina dopo almeno 10 minuti.
+    // Se un aggiornamento fallisce restano i dati di prima; «non disponibile» compare solo se non è mai arrivato nulla.
+    var montato = false, ultimoOk = 0;
+    function carica(){
       var ctrl = window.AbortController ? new AbortController() : null;
       var t = setTimeout(function(){ if (ctrl) ctrl.abort(); }, 8000);
       fetch(URL, ctrl ? { signal: ctrl.signal } : {})
         .then(function(r){ return r.ok ? r.json() : null; })
-        .then(function(d){ clearTimeout(t); if (valido(d)) { card.classList.remove('meteo--scheletro'); monta(d); } else nonDisponibile(); })
-        .catch(function(){ clearTimeout(t); nonDisponibile(); });
-    });
+        .then(function(d){ clearTimeout(t); if (valido(d)) { ultimoOk = Date.now(); oggi = OROLOGIO.parti(OROLOGIO.adesso()); card.classList.remove('meteo--scheletro'); monta(d); } else if (!montato) nonDisponibile(); })
+        .catch(function(){ clearTimeout(t); if (!montato) nonDisponibile(); });
+    }
+    quandoLibero(carica);
+    setInterval(carica, 30 * 60 * 1000);
+    document.addEventListener('visibilitychange', function(){ if (!document.hidden && Date.now() - ultimoOk > 10 * 60 * 1000) carica(); });
 
     function valido(d){
       if (!d || d.error || !d.hourly || !d.daily) return false;
@@ -2707,24 +2724,29 @@
         return '<span>' + icona(maxCodice(x.iso)) + ' ' + x.breve + '<b>' + Math.round(g.temperature_2m_min[x.i]) + '/' + arr(g.temperature_2m_max[x.i]) + '</b></span>';
       }).join('') + '<span class="meteo__chev" aria-hidden="true">▼</span></span>';
 
-      var scelto = (giorni.filter(function(x){ return x.iso === isoOggi; })[0] || giorni[0]).iso;
       var chips = card.querySelector('.meteo__chips');
+      var prima = chips.querySelector('[aria-selected="true"]');   // a un aggiornamento resta il giorno che si stava guardando
+      var scelto = prima ? prima.dataset.giorno : (giorni.filter(function(x){ return x.iso === isoOggi; })[0] || giorni[0]).iso;
       chips.innerHTML = giorni.map(function(x){
         return '<button type="button" role="tab" data-giorno="' + x.iso + '" aria-selected="' + (x.iso === scelto) + '">' + x.breve + ' ' + +x.iso.slice(8) + '</button>';
       }).join('');
       disegna(scelto);
-
-      riga.addEventListener('click', function(){
-        var box = document.getElementById('meteoDett');
-        box.hidden = !box.hidden;
-        riga.setAttribute('aria-expanded', String(!box.hidden));
-      });
-      chips.addEventListener('click', function(e){
-        var b = e.target.closest('[data-giorno]'); if (!b) return;
-        chips.querySelectorAll('[data-giorno]').forEach(function(x){ x.setAttribute('aria-selected', String(x === b)); });
-        disegna(b.dataset.giorno);
-      });
+      card._disegna = disegna;   // gli ascoltatori si montano una volta sola e usano sempre i dati più recenti
+      if (!montato) {
+        montato = true;
+        riga.addEventListener('click', function(){
+          var box = document.getElementById('meteoDett');
+          box.hidden = !box.hidden;
+          riga.setAttribute('aria-expanded', String(!box.hidden));
+        });
+        chips.addEventListener('click', function(e){
+          var b = e.target.closest('[data-giorno]'); if (!b) return;
+          chips.querySelectorAll('[data-giorno]').forEach(function(x){ x.setAttribute('aria-selected', String(x === b)); });
+          card._disegna(b.dataset.giorno);
+        });
+      }
       card.hidden = false;
+      inAdesso();
 
       // probabilità di pioggia di ogni giorno (massimo della giornata): la usa il pannello "Adesso" per proporre il piano pioggia
       var pioggia = {};
@@ -2743,14 +2765,31 @@
         return m;
       }
       // striscia ora per ora fino alle 23: oggi dall'ora attuale, gli altri giorni dalle 7
-      function disegna(iso){
-        var da = iso === isoOggi ? oggi.h : 7, col = [];
+      function colonne(iso, da){
+        var col = [];
         h.time.forEach(function(t, i){
           if (t.indexOf(iso + 'T') !== 0) return;
           var o = +t.slice(11, 13); if (o < da || o > 23 || h.temperature_2m[i] == null) return;
-          var p = h.precipitation_probability[i];
-          col.push('<div class="meteo__col' + (o % 3 === 0 ? ' meteo__col--forte' : '') + '"><span class="h">' + pad(o) + '</span><span class="ico">' + icona(cod[i]) + '</span><b>' + arr(h.temperature_2m[i]) + '</b><span class="p">' + (p != null && p > 20 ? p + '%' : '') + '</span></div>');
+          var p = (h.precipitation_probability || [])[i];
+          col.push('<div class="meteo__col' + (o % 3 === 0 ? ' meteo__col--forte' : '') + '"><span class="h">' + pad(o) + '</span><span class="ico">' + icona(cod[i]) + '</span><b>' + arr(h.temperature_2m[i]) + '</b><span class="p">' + (p != null && p >= 10 ? p + '%' : '') + '</span></div>');
         });
+        return col;
+      }
+      // «Adesso»: la giornata che serve, ora per ora. Fino alle 19 è oggi dall'ora attuale; dalle 19 è domani dalle 7.
+      function inAdesso(){
+        var box = document.getElementById('adMeteo'); if (!box) return;
+        var k = -1; giorni.forEach(function(x, n){ if (x.iso === isoOggi) k = n; });
+        var x = k < 0 ? giorni[0] : (oggi.h >= 19 && giorni[k + 1] ? giorni[k + 1] : giorni[k]);
+        var eOggi = x.iso === isoOggi, col = colonne(x.iso, eOggi ? oggi.h : 7);
+        if (!col.length) { box.hidden = true; return; }
+        var NOMI = { '2026-11-15': 'domenica 15', '2026-11-16': 'lunedì 16', '2026-11-17': 'martedì 17' };
+        box.querySelector('.ad-meteo__tit').textContent = '🌦️ ' + (eOggi ? 'Oggi' : (k >= 0 ? 'Domani' : 'Il primo giorno')) + ', ' + NOMI[x.iso] + ' · ora per ora';
+        var st = box.querySelector('.meteo__striscia'), sl = st.scrollLeft; st.innerHTML = col.join(''); st.scrollLeft = sl;
+        box.querySelector('.ad-meteo__agg').textContent = 'aggiornato alle ' + pad(oggi.h) + ':' + pad(oggi.m);
+        box.hidden = false;
+      }
+      function disegna(iso){
+        var da = iso === isoOggi ? oggi.h : 7, col = colonne(iso, da);
         var s = card.querySelector('.meteo__striscia');
         s.innerHTML = col.join('');
         s.scrollLeft = 0;
@@ -3907,6 +3946,9 @@
      Il pannello non si apre mai da solo: in cima c'è un banner sottile «N novità», e si apre solo se toccato.
      Il link in fondo alla pagina lo riapre con tutto lo storico, in ogni caso. */
   var NOVITA = [
+    { v: 72, data: '2026-11-15', titolo: '🌦️ Meteo ora per ora in «Adesso»', voci: [
+      'In «Adesso» c’è il meteo ora per ora: di giorno quello di oggi, dalle 19 quello di domani. Gradi e probabilità di pioggia',
+      'Si aggiorna da solo ogni mezz’ora e quando riapri la pagina; sotto c’è il link al Met Office per la controprova' ] },
     { v: 71, data: '2026-11-15', titolo: '🍹 Aperitivo a Kingly Court', voci: [
       'Stasera, dopo Hamleys e le luci: aperitivo a Kingly Court, il cortile di Carnaby a 2 minuti da casa. Scelta: Pizza Pilgrims, con un succo per Olly. La cena in appartamento passa alle 18:45' ] },
     { v: 70, data: '2026-11-15', titolo: '☔ Pranzo di domenica da The Black Penny', voci: [
