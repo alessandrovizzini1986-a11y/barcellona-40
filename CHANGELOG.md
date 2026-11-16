@@ -1086,3 +1086,6 @@ Cercati bug dello stesso tipo di "portiere che si rituffa nel replay": due cambi
 
 ## Londra · ⛴️ dal Tower Bridge si torna in battello (16/11/2026)
 - Chiesto da Alessandro: nella card del Tower Bridge il rientro è con Uber Boat dal Tower Millennium Pier a Embankment (16:40 → 17:01), poi Bakerloo. Partenze feriali verso ovest lette dall'orario invernale ufficiale (PDF dal 9/11/2026): 16:14, 16:40, 16:57, 17:10. Tariffa marcata «stimato». Novità v75.
+
+## Londra · 🚶🚇 a piedi o coi mezzi, e perché (16/11/2026)
+- Chiesto da Alessandro: nelle card di lunedì mattina (Trafalgar, Horse Guards, Big Ben, Wellington Barracks, St James's Park, Buckingham Palace, bus per Harrods) e nella partenza da Covent Garden di martedì, un blocco con le due alternative per arrivare, il motivo di ciascuna, quella consigliata e un pulsante Maps per modo. Tempi a piedi indicativi. I percorsi di riferimento non cambiano. Novità v76.

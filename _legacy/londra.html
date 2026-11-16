@@ -1034,6 +1034,12 @@
   .ad-meteo__tit{font-weight:800;font-size:var(--f-16);margin-bottom:var(--s-2)}
   .ad-meteo__nota{margin-top:var(--s-2);font-size:var(--f-14);color:var(--muted);line-height:1.4}
   .ad-meteo__nota a{display:inline-flex;align-items:center;min-height:44px;color:var(--sky)}
+  /* «a piedi o coi mezzi»: le due alternative per arrivare a una tappa, con il perché */
+  .due-modi{display:flex;flex-direction:column;gap:var(--s-2);margin:var(--s-3) 0}
+  .due-modi__r{padding:var(--s-3);border:1px solid var(--line);border-radius:var(--r-m);font-size:var(--f-14);line-height:1.4}
+  .due-modi__r--ok{border-color:var(--line-gold);background:rgba(212,169,78,.06)}
+  .due-modi__r p{margin:0}
+  .due-modi__b{display:flex;width:100%;min-height:44px;margin-top:var(--s-2);justify-content:center}
   /* ====== v2 · passo 3: Biglietti e Info ======
      Nessun testo sotto i 14 px nelle viste (resta a 12 solo la barra in basso); i link dei crediti sono alti 44 px;
      in Biglietti, durante il viaggio, i codici di oggi salgono in cima sotto «Oggi». */
@@ -1450,7 +1456,7 @@
       <summary>
         <span class="srow">
           <span class="daynum">16<small>LUN</small></span>
-          <span class="dtit"><h3>Royal walk e Tower Bridge</h3><p>Quasi tutto a piedi, una sola tratta in metro</p></span>
+          <span class="dtit"><h3>Royal walk e Tower Bridge</h3><p>Mattina a piedi fra i palazzi reali, pomeriggio in metro e battello</p></span>
           <span class="chev">▼</span>
         </span>
       </summary>
@@ -1484,6 +1490,7 @@
             <p class="tdur">⏱️ 15 min</p>
             <p>I leoni e le fontane. Bagno: National Gallery (apre alle 10:00) o Café in the Crypt.</p>
             <details class="det"><summary>Dettagli</summary><p>L’albero norvegese di solito arriva a inizio dicembre: il 16 novembre potrebbe non esserci ancora.</p></details>
+            <div class="due-modi" aria-label="Come arrivarci"><div class="due-modi__r due-modi__r--ok"><p><b>🚶 A piedi · ~15 min</b> <span class="st ok">✅ consigliato</span><br>Da casa per Regent Street, <b>Piccadilly Circus</b> (schermi giganti e statua con le ali) e giù per Haymarket. Marciapiedi larghi, semafori a ogni incrocio.</p><a class="btn btn--secondario gmap due-modi__b" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.5129114,-0.1364381&amp;destination=51.508039,-0.128069&amp;travelmode=walking" target="_blank" rel="noopener">🚶 Vai a piedi</a></div><div class="due-modi__r"><p><b>🚇 Coi mezzi · ~12 min</b><br>Bakerloo da Piccadilly Circus a Charing Cross, una fermata. Fra scale mobili e attesa non si guadagna tempo e non si vede nulla: solo se piove o Olly è già stanca.</p><a class="btn btn--secondario gmap due-modi__b" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.5129114,-0.1364381&amp;destination=51.508039,-0.128069&amp;travelmode=transit" target="_blank" rel="noopener">🚇 Vai coi mezzi</a></div></div>
             <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.508039,-0.128069&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
           </div>
           <p class="tcard__credito">foto: Diliff / CC BY-SA 3.0</p>
@@ -1503,6 +1510,7 @@
             <div class="cosa"><p class="cosa__vedi"><b>📖 Cosa vediamo</b> La caserma storica della guardia a cavallo del Re. Dalle 10 alle 16 due soldati a cavallo, con elmo e corazza, stanno immobili nelle garitte sulla strada.</p><p class="cosa__olly"><b>👧 Per Olly</b> «I soldati a cavallo che non si muovono mai. Si guardano, ma i cavalli non si toccano.»</p></div>
             <p class="tdur">⏱️ 15 min</p>
             <p>Alle 10:00 le sentinelle a cavallo prendono servizio: 5 min di cavalli da vicino.</p>
+            <div class="due-modi" aria-label="Come arrivarci"><div class="due-modi__r due-modi__r--ok"><p><b>🚶 A piedi · ~6 min</b> <span class="st ok">✅ consigliato</span><br>Da Trafalgar giù per <b>Whitehall</b>: viale largo e dritto, le sentinelle a cavallo si vedono dal marciapiede.</p><a class="btn btn--secondario gmap due-modi__b" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.508039,-0.128069&amp;destination=51.5047752,-0.1272358&amp;travelmode=walking" target="_blank" rel="noopener">🚶 Vai a piedi</a></div><div class="due-modi__r"><p><b>🚌 Coi mezzi</b><br>Un bus lungo Whitehall, una fermata: fra attesa e salita ci si mette di più. Non conviene.</p><a class="btn btn--secondario gmap due-modi__b" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.508039,-0.128069&amp;destination=51.5047752,-0.1272358&amp;travelmode=transit" target="_blank" rel="noopener">🚌 Vai coi mezzi</a></div></div>
             <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5047752,-0.1272358&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
           </div>
           <p class="tcard__credito">foto: Lewis Clarke / CC BY-SA 2.0</p>
@@ -1517,6 +1525,7 @@
             <div class="cosa"><p class="cosa__vedi"><b>📖 Cosa vediamo</b> Big Ben è il nome della grande campana dentro la torre dell’orologio. La torre fa parte del Palazzo di Westminster, dove si riunisce il Parlamento.</p><p class="cosa__olly"><b>👧 Per Olly</b> «L’orologio più famoso del mondo. Ascoltiamo se suona!»</p></div>
             <p class="tdur">⏱️ 10 min</p>
             <p>Foto veloce, poi Birdcage Walk.</p>
+            <div class="due-modi" aria-label="Come arrivarci"><div class="due-modi__r due-modi__r--ok"><p><b>🚶 A piedi · ~8 min</b> <span class="st ok">✅ consigliato</span><br>Si continua su Whitehall: il cancello di <b>Downing Street</b> e il Cenotafio, poi il Big Ben compare in fondo alla strada.</p><a class="btn btn--secondario gmap due-modi__b" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.5047752,-0.1272358&amp;destination=51.5007292,-0.1246254&amp;travelmode=walking" target="_blank" rel="noopener">🚶 Vai a piedi</a></div><div class="due-modi__r"><p><b>🚌 Coi mezzi</b><br>Un bus lungo Whitehall fino a Parliament Square, una o due fermate: solo se Olly non ce la fa.</p><a class="btn btn--secondario gmap due-modi__b" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.5047752,-0.1272358&amp;destination=51.5007292,-0.1246254&amp;travelmode=transit" target="_blank" rel="noopener">🚌 Vai coi mezzi</a></div></div>
             <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5007292,-0.1246254&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
           </div>
           <p class="tcard__credito">foto: Domob / CC BY-SA 4.0</p>
@@ -1553,6 +1562,7 @@
                 <li><b>Guards Museum</b>, accanto a Wellington Barracks: al coperto, si può provare un’uniforme. 10:00–16:00, ultimo ingresso 15:30. Adulti £11, Olly gratis (fino a 5 anni). Solo carta; per lavori niente bagni e niente accesso senza scale <span class="st ok">✅ verificato 8/11</span>.</li>
               </ul>
             </details>
+            <div class="due-modi" aria-label="Come arrivarci"><div class="due-modi__r due-modi__r--ok"><p><b>🚶 A piedi · ~12 min</b> <span class="st ok">✅ consigliato</span><br>Da Parliament Square per <b>Birdcage Walk</b>, lungo il bordo di St James’s Park: in piano, un solo attraversamento col semaforo. È il tratto più lungo della mattina.</p><a class="btn btn--secondario gmap due-modi__b" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.5007292,-0.1246254&amp;destination=51.5003309,-0.1356875&amp;travelmode=walking" target="_blank" rel="noopener">🚶 Vai a piedi</a></div><div class="due-modi__r"><p><b>🚇 Coi mezzi · ~10 min</b><br>District o Circle line da Westminster a St James’s Park, una fermata, poi 4 minuti a piedi. Si risparmia poco, ma Olly sta seduta: da usare se è stanca, con le 10:20 da rispettare.</p><a class="btn btn--secondario gmap due-modi__b" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.5007292,-0.1246254&amp;destination=51.5003309,-0.1356875&amp;travelmode=transit" target="_blank" rel="noopener">🚇 Vai coi mezzi</a></div></div>
             <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5003309,-0.1356875&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
           </div>
           <p class="tcard__credito">foto: Adrian Snood / CC BY 2.0</p>
@@ -1573,6 +1583,7 @@
             <p class="tdur">⏱️ 40 min</p>
             <p>Pausa seduti, papere e pellicani. Bagno: St James’s Café.</p>
             <p class="nota-piccola">☕ Merenda: <b>St James’s Café</b>, dentro il parco. Cioccolata calda e qualcosa da mangiare al caldo; orario invernale 8:00–16:00 (Royal Parks, letto il 13/11). Senza prenotazione. <a href="https://www.royalparks.org.uk/visit/parks/st-jamess-park/st-jamess-cafe" target="_blank" rel="noopener">Scheda</a> · <a href="https://www.google.com/maps/search/?api=1&amp;query=St+James%27s+Caf%C3%A9+St+James%27s+Park+London" target="_blank" rel="noopener">Maps</a></p>
+            <div class="due-modi" aria-label="Come arrivarci"><div class="due-modi__r due-modi__r--ok"><p><b>🚶 Solo a piedi · ~3 min</b> <span class="st ok">✅ consigliato</span><br>Il parco è di fronte alla caserma: si attraversa Birdcage Walk e si è dentro. Niente mezzi.</p><a class="btn btn--secondario gmap due-modi__b" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.5003309,-0.1356875&amp;destination=51.502967,-0.1339534&amp;travelmode=walking" target="_blank" rel="noopener">🚶 Vai a piedi</a></div></div>
             <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.502967,-0.1339534&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
           </div>
           <p class="tcard__credito">foto: Colin / CC BY-SA 3.0</p>
@@ -1588,6 +1599,7 @@
             <p class="tdur">⏱️ 20 min</p>
             <p class="chip-vincolo">⏰ alle 11:40 per i cavalli</p>
             <p>Buckingham Palace e Victoria Memorial, lì accanto: rientra la Old Guard con la banda e passa la Household Cavalry a cavallo (~11:45).</p>
+            <div class="due-modi" aria-label="Come arrivarci"><div class="due-modi__r due-modi__r--ok"><p><b>🚶 Solo a piedi · ~8 min</b> <span class="st ok">✅ consigliato</span><br>Tutto dentro il parco, sui vialetti, senza strade: si esce davanti al Victoria Memorial. Niente mezzi.</p><a class="btn btn--secondario gmap due-modi__b" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.502967,-0.1339534&amp;destination=51.501364,-0.14189&amp;travelmode=walking" target="_blank" rel="noopener">🚶 Vai a piedi</a></div></div>
             <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.501364,-0.14189&amp;travelmode=walking" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚶 a piedi</span></a>
           </div>
           <p class="tcard__credito">foto: Diliff / CC BY-SA 3.0</p>
@@ -1606,6 +1618,7 @@
             <p>Piano di sopra, posti davanti. Dal finestrino il Ritz, Hyde Park Corner con il Wellington Arch e Hyde Park. Si scende a Knightsbridge, Harrods a 2 min. Niente scale mobili.</p>
             <p class="nota-piccola">🚌 Dalla fermata <b>H</b> di Green Park station: bus <b>14</b> (scende a Knightsbridge/Harrods, fermata KC) o <b>9</b> (fermata KE). Il 22 non passa da Harrods <span class="st ok">✅ verificato 8/11</span></p>
             <p class="nota-piccola">Alternativa: Piccadilly line Green Park → Knightsbridge (2 fermate). Se usate la metro: a Knightsbridge l’ingresso con <b>ascensori</b> è <b>Hooper’s Court</b>, su Brompton Road, poco a sud dell’ingresso principale <span class="st ok">✅ verificato 8/11</span>; a Green Park ci sono 5 ascensori, nessun guasto segnalato <span class="st ok">✅ verificato 14/11</span>.</p>
+            <div class="due-modi" aria-label="Come arrivarci"><div class="due-modi__r due-modi__r--ok"><p><b>🚌 Coi mezzi · ~20 min</b> <span class="st ok">✅ consigliato</span><br>Bus a due piani dalla fermata H di Green Park: seduti in alto, con Hyde Park Corner dal finestrino. È una tappa, non solo un trasferimento.</p><a class="btn btn--secondario gmap due-modi__b" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.501364,-0.14189&amp;destination=51.4994055,-0.1632344&amp;travelmode=transit" target="_blank" rel="noopener">🚌 Vai coi mezzi</a></div><div class="due-modi__r"><p><b>🚶 A piedi · ~30 min</b><br>Constitution Hill, Hyde Park Corner e Knightsbridge: lungo e trafficato, prima di pranzo. Non conviene con Olly.</p><a class="btn btn--secondario gmap due-modi__b" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.501364,-0.14189&amp;destination=51.4994055,-0.1632344&amp;travelmode=walking" target="_blank" rel="noopener">🚶 Vai a piedi</a></div></div>
             <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.4994055,-0.1632344&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚌 coi mezzi</span></a>
           </div>
         </article>
@@ -1844,6 +1857,7 @@
               <li><b>~15:10</b> · Piccadilly line diretta fino a Heathrow T5, ~55 min. <b>£5,90 a testa</b>, Olly gratis.</li>
               <li><b>~16:10</b> · Heathrow, Terminal 5</li>
             </ul>
+            <div class="due-modi" aria-label="Come arrivarci"><div class="due-modi__r"><p><b>🚇 Coi mezzi · ~12 min</b><br>Piccadilly line da Covent Garden a Piccadilly Circus, 2 fermate. In stazione si scende solo con l’ascensore, e può esserci coda.</p><a class="btn btn--secondario gmap due-modi__b" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.5122737,-0.1234492&amp;destination=51.5120078,-0.1336085&amp;travelmode=transit" target="_blank" rel="noopener">🚇 Vai coi mezzi</a></div><div class="due-modi__r due-modi__r--ok"><p><b>🚶 A piedi · ~12 min</b> <span class="st ok">✅ consigliato</span><br>Per Long Acre e Leicester Square fino a Rupert Street: stesso tempo, niente coda all’ascensore. Meglio così se non piove e Olly regge; coi mezzi se piove.</p><a class="btn btn--secondario gmap due-modi__b" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.5122737,-0.1234492&amp;destination=51.5120078,-0.1336085&amp;travelmode=walking" target="_blank" rel="noopener">🚶 Vai a piedi</a></div></div>
             <p class="regola">📌 Volo alle 18:10: alle 14:45 si parte da Covent Garden. I bagagli sono a 2 minuti dalla stazione di Piccadilly Circus: si ritirano e si riparte dalla stessa linea.</p>
             <details class="det"><summary>Dettagli</summary><p>Se la Piccadilly line ha problemi: Elizabeth line da Tottenham Court Road fino a Heathrow T5 (36 min, £15,50 a testa).</p></details>
             <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.4723,-0.4887&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚇 coi mezzi</span></a>
@@ -3848,6 +3862,9 @@
      Il pannello non si apre mai da solo: in cima c'è un banner sottile «N novità», e si apre solo se toccato.
      Il link in fondo alla pagina lo riapre con tutto lo storico, in ogni caso. */
   var NOVITA = [
+    { v: 76, data: '2026-11-16', titolo: '🚶🚇 A piedi o coi mezzi, e perché', voci: [
+      'Nelle tappe di lunedì mattina ci sono le due alternative per arrivare: a piedi o coi mezzi, ognuna con il suo pulsante per Maps e il motivo. Quella consigliata è segnata',
+      'A piedi quando lungo la strada c’è qualcosa da vedere e i marciapiedi sono comodi; coi mezzi quando il tratto è lungo o Olly è stanca. Stessa cosa martedì per il ritorno da Covent Garden' ] },
     { v: 75, data: '2026-11-16', titolo: '⛴️ Dal Tower Bridge si torna in battello', voci: [
       'Oggi il rientro dal Tower Bridge è in battello: dal Tower Millennium Pier alle 16:40, 21 minuti sul fiume fino a Embankment, poi due fermate di Bakerloo fino a casa. Nella card ci sono anche le altre partenze' ] },
     { v: 74, data: '2026-11-15', titolo: '🔁 Lunedì il ponte, martedì il museo', voci: [
