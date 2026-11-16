@@ -1089,3 +1089,6 @@ Cercati bug dello stesso tipo di "portiere che si rituffa nel replay": due cambi
 
 ## Londra · 🚶🚇 a piedi o coi mezzi, e perché (16/11/2026)
 - Chiesto da Alessandro: nelle card di lunedì mattina (Trafalgar, Horse Guards, Big Ben, Wellington Barracks, St James's Park, Buckingham Palace, bus per Harrods) e nella partenza da Covent Garden di martedì, un blocco con le due alternative per arrivare, il motivo di ciascuna, quella consigliata e un pulsante Maps per modo. Tempi a piedi indicativi. I percorsi di riferimento non cambiano. Novità v76.
+
+## Londra · 😴 martedì, il piano se Olly è stanca (16/11/2026)
+- In cima alla giornata di martedì un riquadro apribile «Se Olly è stanca»: museo accorciato, niente Covent Garden, bus 14 da South Kensington Station (fermata E) a Piccadilly Circus (percorso verificato con l'API TfL), pranzo da Poppies Soho, aeroporto in anticipo. Nella card di Heathrow dove farla riposare: Stay & Play (gate A2 secondo heathrow.com), sedie, lounge senza prezzi («stimato»). Novità v77.

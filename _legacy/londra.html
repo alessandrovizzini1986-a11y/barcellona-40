@@ -1040,6 +1040,8 @@
   .due-modi__r--ok{border-color:var(--line-gold);background:rgba(212,169,78,.06)}
   .due-modi__r p{margin:0}
   .due-modi__b{display:flex;width:100%;min-height:44px;margin-top:var(--s-2);justify-content:center}
+  .stanca{margin:var(--s-2) 0 var(--s-4);padding:0 var(--s-3);border:1px solid var(--line-gold);border-radius:var(--r-m);background:rgba(212,169,78,.06)}
+  .stanca>summary{font-size:var(--f-16)}
   /* ====== v2 · passo 3: Biglietti e Info ======
      Nessun testo sotto i 14 px nelle viste (resta a 12 solo la barra in basso); i link dei crediti sono alti 44 px;
      in Biglietti, durante il viaggio, i codici di oggi salgono in cima sotto «Oggi». */
@@ -1745,6 +1747,17 @@
       </summary>
       <div class="dbody">
         <div class="hp-note pioggia-nota pioggia-nota--blocco" id="pioggia-mar" data-giorno="2026-11-17" data-fino="13:00">🌧️ Martedì è tutto al coperto: Natural History Museum e mercato di Covent Garden, sempre con la Piccadilly line. All’aperto solo pochi minuti fra metro e ingressi.</div>
+        <details class="det stanca" id="stanca-mar">
+          <summary>😴 Se Olly è stanca: il piano corto</summary>
+          <div class="due-modi">
+            <div class="due-modi__r"><p><b>1 · Al museo si accorcia</b><br>Bastano 45 minuti: sala della balena, dinosauri e via. Dentro ci sono panchine e caffè per una pausa seduti.</p></div>
+            <div class="due-modi__r due-modi__r--ok"><p><b>2 · Dopo il museo si salta Covent Garden</b><br>Alle 12:30 si guarda come sta. Se è stanca: <b>bus 14</b> dalla fermata <b>E</b> di South Kensington Station, direzione Russell Square, fino a <b>Piccadilly Circus</b> (8 fermate, seduti al piano di sopra) <span class="st ok">✅ verificato 16/11</span>. Oppure Piccadilly line, 10 minuti.</p>
+              <a class="btn btn--secondario gmap due-modi__b" href="https://www.google.com/maps/dir/?api=1&amp;origin=51.4967150,-0.1763672&amp;destination=51.5120078,-0.1336085&amp;travelmode=transit" target="_blank" rel="noopener">🚌 Dal museo al deposito, coi mezzi</a></div>
+            <div class="due-modi__r"><p><b>3 · Pranzo seduti vicino ai bagagli</b><br><b>Poppies Soho</b>, 55–59 Old Compton Street, a 4 minuti dal deposito: fish and chips, per Olly salsiccia con patatine dal menù bambini (£9,95). Un’ora ferma a tavola.</p>
+              <a class="btn btn--secondario gmap due-modi__b" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.5125393,-0.1326933&amp;travelmode=walking" target="_blank" rel="noopener">🍟 Portami da Poppies Soho</a></div>
+            <div class="due-modi__r"><p><b>4 · In aeroporto prima</b><br>I bagagli si ritirano quando si vuole (prenotati fino alle 15:30). La <b>Piccadilly line</b> fino a Heathrow T5 sono 55 minuti seduti: lì può dormire. Check-in già fatto, solo bagaglio a mano: si passano subito i controlli. Le <b>14:45</b> restano l’ultimo momento per partire dal centro.</p></div>
+          </div>
+        </details>
         <article class="tcard" data-giorno="2026-11-17" data-ora="10:30" data-tipo="casa" data-deposito="casa">
           <div class="tcard__foto">
             <img src="assets/tappe/londra/apt.webp" width="800" height="450" alt="Il civico 79 di Beak Street: la vetrina verde di John Wilkes e, a sinistra, la porta col numero 79" loading="lazy" decoding="async">
@@ -1883,6 +1896,7 @@
           <div class="tcard__body">
             <h4>Heathrow, Terminal 5 · BA546</h4>
             <p>Circa 50 minuti di metro dal centro. Check-in, controlli e gate al Terminal 5.</p>
+            <p class="nota-piccola">😴 <b>Per far riposare Olly</b>: dopo i controlli c’è l’area giochi gratuita <b>«Stay &amp; Play»</b>, 6:00–21:00, con sedie per i genitori; secondo Heathrow è vicino al <b>gate A2</b> (guide più vecchie dicono A7: guardare la mappa). Per dormire: le file di sedie in fondo alla zona dei gate, lontano dai negozi. Più comodo, a pagamento: le lounge <b>Club Aspire</b> e <b>Plaza Premium</b> (prezzi non trovati: chiedere all’ingresso). Al T5 non c’è una stanza del silenzio.</p>
             <p class="nota-piccola">🍽️ Cena prima del volo: dopo i controlli c’è <b>Giraffe</b>, con menù bambini (bocconcini di pollo, pesce, pasta) <span class="st est">stimato</span> (la pagina di Heathrow non ha data). In alternativa Pilots Bar &amp; Kitchen. <a href="https://www.heathrow.com/at-the-airport/restaurants-a-z/giraffe.html" target="_blank" rel="noopener">Giraffe a Heathrow</a></p>
             <a class="btn btn--secondario btn--cielo gmap gmap--vai" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.4723,-0.4887&amp;travelmode=transit" target="_blank" rel="noopener">🧭 Portami qui <span class="gmap__modo">🚇 coi mezzi</span></a>
           </div>
@@ -3862,6 +3876,9 @@
      Il pannello non si apre mai da solo: in cima c'è un banner sottile «N novità», e si apre solo se toccato.
      Il link in fondo alla pagina lo riapre con tutto lo storico, in ogni caso. */
   var NOVITA = [
+    { v: 77, data: '2026-11-16', titolo: '😴 Martedì: il piano se Olly è stanca', voci: [
+      'In cima a martedì c’è «Se Olly è stanca»: museo più corto, niente Covent Garden, bus 14 seduti fino a Piccadilly Circus, pranzo da Poppies Soho vicino ai bagagli e aeroporto in anticipo',
+      'Nella card di Heathrow: dove farla riposare dopo i controlli (area giochi Stay & Play, sedie tranquille, lounge)' ] },
     { v: 76, data: '2026-11-16', titolo: '🚶🚇 A piedi o coi mezzi, e perché', voci: [
       'Nelle tappe di lunedì mattina ci sono le due alternative per arrivare: a piedi o coi mezzi, ognuna con il suo pulsante per Maps e il motivo. Quella consigliata è segnata',
       'A piedi quando lungo la strada c’è qualcosa da vedere e i marciapiedi sono comodi; coi mezzi quando il tratto è lungo o Olly è stanca. Stessa cosa martedì per il ritorno da Covent Garden' ] },
