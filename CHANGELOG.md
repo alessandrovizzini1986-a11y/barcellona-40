@@ -1083,3 +1083,6 @@ Cercati bug dello stesso tipo di "portiere che si rituffa nel replay": due cambi
 - **Lunedì**: dopo Harrods, «Tower Bridge, di giorno e illuminato» alle 15:15 (piano asciutto: Piccadilly line fino a South Kensington, District fino a Tower Hill; rientro via Embankment e Bakerloo, a casa ~17:15). Piano pioggia: Science Museum alle 14:45, poi casa. Tolti Albert Memorial, i bus relativi e il Natural History Museum delle 16:30.
 - **Martedì**: Natural History Museum alle 11:00 con i biglietti nuovi (ordine 8155749, ingresso dalle 10:45, due codici CODE128 rigenerati: uno per i due adulti, uno per Olly), Piccadilly line diretta fino a Covent Garden alle 12:35, pranzo di crêpe e mercato dalle 13:00, partenza alle 14:45 invariata. Tolti LEGO Store e Poppies Soho.
 - Biglietti: card del museo con data e codici nuovi, sotto «Oggi» martedì. Mappa, scaletta, note pioggia e `londra-check` (percorsi di riferimento 18, 2 barcode, controllo dei due piani di lunedì) aggiornati. Novità v74.
+
+## Londra · ⛴️ dal Tower Bridge si torna in battello (16/11/2026)
+- Chiesto da Alessandro: nella card del Tower Bridge il rientro è con Uber Boat dal Tower Millennium Pier a Embankment (16:40 → 17:01), poi Bakerloo. Partenze feriali verso ovest lette dall'orario invernale ufficiale (PDF dal 9/11/2026): 16:14, 16:40, 16:57, 17:10. Tariffa marcata «stimato». Novità v75.
