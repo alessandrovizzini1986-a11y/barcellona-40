@@ -1042,6 +1042,7 @@
   .due-modi__b{display:flex;width:100%;min-height:44px;margin-top:var(--s-2);justify-content:center}
   .stanca{margin:var(--s-2) 0 var(--s-4);padding:0 var(--s-3);border:1px solid var(--line-gold);border-radius:var(--r-m);background:rgba(212,169,78,.06)}
   .stanca>summary{font-size:var(--f-16)}
+  .meteo-giorno{margin:2px 0 var(--s-3);background:rgba(109,179,216,.1);border:1px solid rgba(109,179,216,.35);color:var(--ink);font-size:var(--f-14);line-height:1.45}
   /* ====== v2 · passo 3: Biglietti e Info ======
      Nessun testo sotto i 14 px nelle viste (resta a 12 solo la barra in basso); i link dei crediti sono alti 44 px;
      in Biglietti, durante il viaggio, i codici di oggi salgono in cima sotto «Oggi». */
@@ -1746,7 +1747,8 @@
         </span>
       </summary>
       <div class="dbody">
-        <div class="hp-note pioggia-nota pioggia-nota--blocco" id="pioggia-mar" data-giorno="2026-11-17" data-fino="13:00">🌧️ Martedì è tutto al coperto: Natural History Museum e mercato di Covent Garden, sempre con la Piccadilly line. All’aperto solo pochi minuti fra metro e ingressi.</div>
+        <div class="hp-note pioggia-nota pioggia-nota--blocco" id="pioggia-mar" data-giorno="2026-11-17" data-fino="13:00">🌧️ Se piove, martedì è comunque tutto al coperto: Natural History Museum e mercato di Covent Garden, sempre con la Piccadilly line. All’aperto solo pochi minuti fra metro e ingressi.</div>
+        <div class="hp-note meteo-giorno" id="meteo-mar">🌦️ <b>Meteo di martedì</b> (previsione di lunedì sera, Met Office delle 20:02 e MET Norway): pioggia fino alle 8–9, poi schiarite e <b>12 °C</b>. Di giorno al più qualche rovescio breve. <b>Vento forte</b>, raffiche fino a 50 km/h fra le 9 e le 14. Ombrello piccolo nello zaino; a Covent Garden meglio i tavoli al coperto. Le ore aggiornate sono in «Adesso».</div>
         <details class="det stanca" id="stanca-mar">
           <summary>😴 Se Olly è stanca: il piano corto</summary>
           <div class="due-modi">
@@ -3876,6 +3878,9 @@
      Il pannello non si apre mai da solo: in cima c'è un banner sottile «N novità», e si apre solo se toccato.
      Il link in fondo alla pagina lo riapre con tutto lo storico, in ogni caso. */
   var NOVITA = [
+    { v: 78, data: '2026-11-16', titolo: '🌦️ Meteo di martedì', voci: [
+      'Martedì è meglio del previsto: piove fino alle 8–9, poi schiarite e 12 °C, con al più qualche rovescio breve. Vento forte, raffiche fino a 50 km/h fra le 9 e le 14',
+      'Il programma non cambia: museo al mattino, Covent Garden a pranzo, partenza alle 14:45' ] },
     { v: 77, data: '2026-11-16', titolo: '😴 Martedì: il piano se Olly è stanca', voci: [
       'In cima a martedì c’è «Se Olly è stanca»: museo più corto, niente Covent Garden, bus 14 seduti fino a Piccadilly Circus, pranzo da Poppies Soho vicino ai bagagli e aeroporto in anticipo',
       'Nella card di Heathrow: dove farla riposare dopo i controlli (area giochi Stay & Play, sedie tranquille, lounge)' ] },

@@ -1092,3 +1092,6 @@ Cercati bug dello stesso tipo di "portiere che si rituffa nel replay": due cambi
 
 ## Londra · 😴 martedì, il piano se Olly è stanca (16/11/2026)
 - In cima alla giornata di martedì un riquadro apribile «Se Olly è stanca»: museo accorciato, niente Covent Garden, bus 14 da South Kensington Station (fermata E) a Piccadilly Circus (percorso verificato con l'API TfL), pranzo da Poppies Soho, aeroporto in anticipo. Nella card di Heathrow dove farla riposare: Stay & Play (gate A2 secondo heathrow.com), sedie, lounge senza prezzi («stimato»). Novità v77.
+
+## Londra · 🌦️ meteo di martedì (16/11/2026)
+- In cima alla giornata di martedì una nota con la previsione di lunedì sera (Met Office delle 20:02, MET Norway): pioggia fino alle 8–9, poi schiarite, 12 °C, raffiche fino a 50 km/h. La nota del piano pioggia non dà più la pioggia per certa. Novità v78.
