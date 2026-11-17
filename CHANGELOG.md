@@ -1095,3 +1095,6 @@ Cercati bug dello stesso tipo di "portiere che si rituffa nel replay": due cambi
 
 ## Londra · 🌦️ meteo di martedì (16/11/2026)
 - In cima alla giornata di martedì una nota con la previsione di lunedì sera (Met Office delle 20:02, MET Norway): pioggia fino alle 8–9, poi schiarite, 12 °C, raffiche fino a 50 km/h. La nota del piano pioggia non dà più la pioggia per certa. Novità v78.
+
+## Londra · 🛶 martedì Camden al posto del museo (17/11/2026)
+- Cambiato in viaggio su richiesta di Alessandro: la card del Natural History Museum di martedì diventa «Camden Town e Camden Lock» (11:30, bus 29 fino a Camden Town Station, pranzo da Poppies Camden), con le scadenze: via da Camden entro le 13:00 (Northern line via Charing Cross fino a Leicester Square), Covent Garden 13:30–14:45, bagagli entro le 15:00; restando a Camden fino alle 14:15 se si salta Covent Garden. Pulsanti Maps per ogni spostamento. Percorsi di riferimento, mappa, piano stanchezza e nota pioggia aggiornati. Novità v79.
