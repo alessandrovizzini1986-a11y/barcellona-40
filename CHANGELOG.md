@@ -1098,3 +1098,6 @@ Cercati bug dello stesso tipo di "portiere che si rituffa nel replay": due cambi
 
 ## Londra · 🛶 martedì Camden al posto del museo (17/11/2026)
 - Cambiato in viaggio su richiesta di Alessandro: la card del Natural History Museum di martedì diventa «Camden Town e Camden Lock» (11:30, bus 29 fino a Camden Town Station, pranzo da Poppies Camden), con le scadenze: via da Camden entro le 13:00 (Northern line via Charing Cross fino a Leicester Square), Covent Garden 13:30–14:45, bagagli entro le 15:00; restando a Camden fino alle 14:15 se si salta Covent Garden. Pulsanti Maps per ogni spostamento. Percorsi di riferimento, mappa, piano stanchezza e nota pioggia aggiornati. Novità v79.
+
+## Londra · ⚠️ Crème de la Crêpe è chiusa (17/11/2026)
+- Alessandro l'ha trovata chiusa definitivamente. Tolti dalla card di Covent Garden la nota, il menù e il riquadro dell'ordine; al loro posto Shake Shack e Venchi nel Market Building, marcati «stimato». Lezione: le schede di OpenTable e delle guide non bastano a dire che un locale è aperto. Novità v80.
