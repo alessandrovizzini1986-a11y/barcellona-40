@@ -60,3 +60,10 @@ vini). Da fare, in un commit solo:
    la resa massima, dicendo se conviene dividere; due rossi e due bollicine con il motivo.
 5. Stima del conto con coperto e servizio, marcata «stimato».
 6. Solita verifica: `londra-check` verde, niente scroll laterale, changelog nello stesso commit.
+
+## Prompt · martedì 17, Camden al posto del museo (scritto in viaggio)
+
+Sono sul bus 29 verso Camden. In un commit solo, veloce e senza rompere nulla: la card del museo di martedì diventa
+Camden (fermata Camden Town Station), con come muoversi, i link Maps e le scadenze per Covent Garden (via da Camden
+entro le 13:00) e per i bagagli (Rupert Street entro le 15:00); alternativa se si salta Covent Garden. Aggiornare
+percorsi di riferimento, mappa, piano stanchezza. `londra-check` verde prima di pubblicare.

@@ -40,8 +40,9 @@ const PERCORSI = [
   // martedì (4), versione del 15/11 (pioggia: museo e Covent Garden): Beak St → Rupert St, Rupert St → Natural History
   // Museum, museo → Covent Garden, Covent Garden → Rupert St → Heathrow T5
   'https://www.google.com/maps/dir/?api=1&origin=51.5129114,-0.1364381&destination=51.5120078,-0.1336085&travelmode=walking',
-  'https://www.google.com/maps/dir/?api=1&origin=51.5120078,-0.1336085&destination=51.4967150,-0.1763672&travelmode=transit',
-  'https://www.google.com/maps/dir/?api=1&origin=51.4967150,-0.1763672&destination=51.5122737,-0.1234492&travelmode=transit',
+  // 17/11, in viaggio: Camden al posto del museo
+  'https://www.google.com/maps/dir/?api=1&origin=51.5120078,-0.1336085&destination=51.539292,-0.14274&travelmode=transit',
+  'https://www.google.com/maps/dir/?api=1&origin=51.539292,-0.14274&destination=51.5122737,-0.1234492&travelmode=transit',
   'https://www.google.com/maps/dir/?api=1&origin=51.5122737,-0.1234492&destination=51.4723,-0.4887&waypoints=51.5120078,-0.1336085&travelmode=transit'
 ]
 const QR_PAYLOAD = '$BLQ3039188LGT@'
