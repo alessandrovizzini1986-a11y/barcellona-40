@@ -1,6 +1,6 @@
 {
-  "name": "Rise · Workout",
-  "short_name": "Rise",
+  "name": "GymRise",
+  "short_name": "GymRise",
   "description": "Scheda del trainer, allenamento guidato, storico, progressi e report. Funziona anche offline.",
   "start_url": ".",
   "scope": ".",
