@@ -1,7 +1,7 @@
 {
-  "name": "GymRise",
-  "short_name": "GymRise",
-  "description": "Scheda del trainer, allenamento guidato, storico, progressi e report. Funziona anche offline.",
+  "name": "IronHorse",
+  "short_name": "IronHorse",
+  "description": "Lift like a horse. Scheda del trainer, allenamento guidato, storico, progressi e report. Funziona anche offline.",
   "start_url": ".",
   "scope": ".",
   "display": "standalone",
