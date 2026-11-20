@@ -1,6 +1,6 @@
 {
  "v": 2,
- "aggiornato": "2026-11-10T20:42:28.695824Z",
+ "aggiornato": "2026-11-20T19:34:57.269962Z",
  "scheda": {
   "id": 2,
   "giorni": [
@@ -47,25 +47,25 @@
       "serie": 4,
       "target": [
        {
-        "kg": 20,
+        "kg": 22.5,
         "rip": 6,
         "ripMax": null,
         "max": false
        },
        {
-        "kg": 20,
+        "kg": 22.5,
         "rip": 6,
         "ripMax": null,
         "max": false
        },
        {
-        "kg": 20,
+        "kg": 22.5,
         "rip": 6,
         "ripMax": null,
         "max": false
        },
        {
-        "kg": 20,
+        "kg": 22.5,
         "rip": null,
         "ripMax": null,
         "max": true
@@ -110,23 +110,17 @@
       "giri": 0,
       "ssRec": 0,
       "ssRecTxt": "",
-      "serie": 5,
+      "serie": 4,
       "target": [
        {
         "kg": null,
-        "rip": 4,
+        "rip": 5,
         "ripMax": null,
         "max": false
        },
        {
         "kg": null,
-        "rip": 4,
-        "ripMax": null,
-        "max": false
-       },
-       {
-        "kg": null,
-        "rip": 4,
+        "rip": 5,
         "ripMax": null,
         "max": false
        },
@@ -144,7 +138,7 @@
        }
       ],
       "repMin": 4,
-      "repMax": 4
+      "repMax": 5
      },
      {
       "id": "leg-curl-mono",
@@ -185,25 +179,25 @@
       "target": [
        {
         "kg": 25,
-        "rip": 7,
+        "rip": 8,
         "ripMax": null,
         "max": false
        },
        {
         "kg": 22.5,
-        "rip": 9,
+        "rip": 10,
         "ripMax": null,
         "max": false
        },
        {
         "kg": 20,
-        "rip": 11,
+        "rip": 12,
         "ripMax": null,
         "max": false
        }
       ],
-      "repMin": 7,
-      "repMax": 11
+      "repMin": 8,
+      "repMax": 12
      },
      {
       "id": "distensioni-manubri",
@@ -246,30 +240,30 @@
        {
         "kg": 18,
         "rip": 4,
-        "ripMax": null,
+        "ripMax": 6,
         "max": false
        },
        {
         "kg": 18,
         "rip": 4,
-        "ripMax": null,
+        "ripMax": 6,
         "max": false
        },
        {
         "kg": 18,
         "rip": 4,
-        "ripMax": null,
+        "ripMax": 6,
         "max": false
        },
        {
         "kg": 18,
         "rip": 4,
-        "ripMax": null,
+        "ripMax": 6,
         "max": false
        }
       ],
       "repMin": 4,
-      "repMax": 4
+      "repMax": 6
      },
      {
       "id": "australian-pull-up",
@@ -683,25 +677,25 @@
       "target": [
        {
         "kg": 27.5,
-        "rip": 7,
+        "rip": 8,
         "ripMax": null,
         "max": false
        },
        {
         "kg": 25,
-        "rip": 9,
+        "rip": 10,
         "ripMax": null,
         "max": false
        },
        {
         "kg": 22.5,
-        "rip": 11,
+        "rip": 12,
         "ripMax": null,
         "max": false
        }
       ],
-      "repMin": 7,
-      "repMax": 11
+      "repMin": 8,
+      "repMax": 12
      },
      {
       "id": "lat-monobraccio",
@@ -742,25 +736,25 @@
       "target": [
        {
         "kg": 20,
-        "rip": 6,
+        "rip": 7,
         "ripMax": null,
         "max": false
        },
        {
         "kg": 20,
-        "rip": 6,
+        "rip": 7,
         "ripMax": null,
         "max": false
        },
        {
         "kg": 20,
-        "rip": 6,
+        "rip": 7,
         "ripMax": null,
         "max": false
        }
       ],
-      "repMin": 6,
-      "repMax": 6
+      "repMin": 7,
+      "repMax": 7
      },
      {
       "id": "shoulder-press",
@@ -4014,6 +4008,169 @@
    "luogoNome": "Mcfit",
    "warmOpen": false,
    "pt": true
+  },
+  {
+   "id": "2026-11-20-d0cpkj5",
+   "data": "2026-11-20",
+   "scheda": 2,
+   "giorno": "B",
+   "settimana": 6,
+   "chiusa": true,
+   "inizio": 1795198968226,
+   "fine": 1795203087610,
+   "esercizi": {
+    "stacchi-rumeni": [
+     {
+      "kg": 22,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": 22,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": 22,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": 22,
+      "reps": 12,
+      "fatta": true
+     }
+    ],
+    "dip-assistiti": [
+     {
+      "kg": -35,
+      "reps": 10,
+      "fatta": true
+     },
+     {
+      "kg": -35,
+      "reps": 10,
+      "fatta": true
+     },
+     {
+      "kg": -35,
+      "reps": 10,
+      "fatta": true
+     },
+     {
+      "kg": -35,
+      "reps": 8,
+      "fatta": true
+     }
+    ],
+    "leg-ext-mono": [
+     {
+      "kg": 27.5,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 25,
+      "reps": 10,
+      "fatta": true
+     },
+     {
+      "kg": 22.5,
+      "reps": 12,
+      "fatta": true
+     }
+    ],
+    "lat-monobraccio": [
+     {
+      "kg": 20,
+      "reps": 7,
+      "fatta": true
+     },
+     {
+      "kg": 20,
+      "reps": 7,
+      "fatta": true
+     },
+     {
+      "kg": null,
+      "reps": null,
+      "fatta": false
+     }
+    ],
+    "shoulder-press": [
+     {
+      "kg": 14,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": 14,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": 14,
+      "reps": 6,
+      "fatta": true
+     }
+    ],
+    "rematore-inclinata": [
+     {
+      "kg": 18,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": 18,
+      "reps": 6,
+      "fatta": true
+     },
+     {
+      "kg": 18,
+      "reps": 6,
+      "fatta": true
+     }
+    ],
+    "push-down-corda": [
+     {
+      "kg": 15,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 15,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 15,
+      "reps": 8,
+      "fatta": true
+     }
+    ],
+    "curl-cavo-basso": [
+     {
+      "kg": 15,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 15,
+      "reps": 8,
+      "fatta": true
+     },
+     {
+      "kg": 15,
+      "reps": 8,
+      "fatta": true
+     }
+    ]
+   },
+   "warm": {
+    "stretch": true
+   },
+   "luogoId": "zlj4znn",
+   "luogoNome": "Mcfit"
   }
  ],
  "luoghi": [
