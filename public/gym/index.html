@@ -847,6 +847,20 @@ nav.tabs button:active{transform:scale(.95)}
   padding:3px 7px;border-radius:5px;background:rgba(180,124,255,.18);color:var(--c5);vertical-align:2px}
 @media print{#glance{display:none}}
 
+.gval{border-color:rgba(255,176,32,.35);background:linear-gradient(160deg,rgba(255,176,32,.08),transparent 60%),var(--s1)}
+.gval .eyebrow{color:var(--warn)}
+.gval ul{list-style:none;margin-top:6px}
+.gval li{padding:7px 0;border-top:1px solid var(--line);font-size:13px;color:var(--mut);line-height:1.4}
+.gval li:first-child{border-top:none}.gval li b{color:var(--ink)}
+.gval.ok{border-color:rgba(61,220,151,.3);background:var(--s1);display:flex;flex-direction:column;gap:2px}
+.gval.ok b{color:var(--ok);font-size:14px}.gval.ok span{font-size:11.5px;color:var(--faint);font-weight:700}
+/* guida vocale */
+.voce{display:flex;align-items:center;gap:10px;margin-top:10px;padding:8px 8px 8px 15px;border-radius:15px;border:1px solid var(--line2);background:var(--s2)}
+.voce>span{flex:1;font-size:14px;font-weight:700}
+.voce .seg{display:flex;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:3px;gap:2px}
+.voce .seg button{min-height:38px;min-width:52px;padding:0 9px;border-radius:9px;font-size:12.5px;font-weight:900;color:var(--mut)}
+.voce .seg button.on{background:var(--acc);color:var(--acc-ink)}
+.voce .prova{flex:none;width:44px;height:44px;border-radius:12px;border:1px solid var(--line2);background:var(--s3);color:var(--acc);font-size:14px}
 /* ---------------- PRINT ---------------- */
 @media print{
   body{background:#fff;color:#111;padding:0;font-size:12px}
@@ -2202,7 +2216,13 @@ function renderHero(){
   const tot=g.esercizi.reduce((n,e)=>n+e.serie,0)||1;
   const pct=Math.min(1,st.serie/tot);
   const min=s.inizio?Math.max(0,Math.round((Date.now()-s.inizio)/60000)):0;
-  $('#hero').onclick=ev=>{if(ev.target.closest('[data-a=ptses]'))togglePTsessione();};
+  $('#hero').onclick=ev=>{
+    if(ev.target.closest('[data-a=ptses]'))togglePTsessione();
+    const vb=ev.target.closest('[data-voce]');
+    if(vb){const l=vb.dataset.voce;buzz(HAP.tap);
+      if(l==='prova'){const cur=livelloVoce();parla('Vai! '+(fraseProssima()||'Hack squat, serie 1, 10 per lato, 6'),cur==='off'?'bassa':cur);return;}
+      impostaVoce(l);renderHero();if(l!=='off')parla(l==='bassa'?'Voce bassa':'Voce media',l);}
+  };
   $('#hero').innerHTML=
     '<div class="top"><div class="ring">'+ringSVG(pct,104)+
       '<div class="mid"><b>'+Math.round(pct*100)+'%</b><i>FATTO</i></div></div>'+
@@ -2217,7 +2237,7 @@ function renderHero(){
       '<span>'+(p.streak?'🔥 '+p.streak+' sett. '+(p.streak===1?'piena':'piene'):p.pct+'%')+'</span></div>'+
       '<div class="bar"><i style="width:'+p.pct+'%"></i></div></div>';})()+
     '<button class="fx-pt'+(ptSessione(s)?' on':'')+'" data-a="ptses" style="margin-top:12px">'+
-      '🧑‍🏫 <span>Oggi seguito dal personal trainer</span><span class="sw"></span></button>';
+      '🧑‍🏫 <span>Oggi seguito dal personal trainer</span><span class="sw"></span></button>'+vocePanel();
 }
 function renderDayChips(){
   const g=giornoCorrente();dayId=g?g.id:null;
@@ -2711,6 +2731,63 @@ function serveSchermo(){
 }
 let timerInt=null;
 /* extra: {modo:'plank',exId,idx} → a fine countdown la serie si spunta da sola */
+/* ===== GUIDA VOCALE: a fine recupero ti dice cosa fare, senza guardare il telefono =====
+   Livelli: off · bassa · media. Ogni nuova seduta riparte da BASSA (non sempre hai le cuffie).
+   Volume reale = volume multimediale del telefono × livello: alcuni telefoni ignorano il livello. */
+const K_VOCE='gym_voce';
+const VOCE_VOL={bassa:.35,media:.8};
+function livelloVoce(){
+  let v=null;try{v=JSON.parse(localStorage.getItem(K_VOCE)||'null');}catch(e){}
+  const s=sessioneCorrente();
+  if(!v||!s||v.sess!==s.id)return 'bassa';
+  return v.lvl;
+}
+function impostaVoce(lvl){
+  const s=sessioneAperta(true);
+  try{localStorage.setItem(K_VOCE,JSON.stringify({lvl,sess:s.id}));}catch(e){}
+}
+let vocIt=null;
+function vocaleIt(){
+  if(vocIt)return vocIt;
+  const vs=('speechSynthesis' in window)?speechSynthesis.getVoices():[];
+  vocIt=vs.find(v=>/^it[-_]IT/i.test(v.lang)&&v.localService)||vs.find(v=>/^it/i.test(v.lang))||null;
+  return vocIt;
+}
+if('speechSynthesis' in window)speechSynthesis.onvoiceschanged=()=>{vocIt=null;};
+function parla(txt,forza){
+  if(!('speechSynthesis' in window))return;
+  const lvl=forza||livelloVoce();if(lvl==='off')return;
+  try{
+    speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(txt);
+    u.lang='it-IT';const v=vocaleIt();if(v)u.voice=v;
+    u.volume=VOCE_VOL[lvl]||.35;u.rate=1.05;
+    speechSynthesis.speak(u);
+  }catch(e){}
+}
+/* numeri come li diresti: 22.5 → "22 e mezzo", 11.25 → "11 virgola 25" */
+const numVoce=n=>{const x=String(Math.abs(n));return x.endsWith('.5')?x.slice(0,-2)+' e mezzo':x.replace('.',' virgola ');};
+/* la prossima serie, letta dalla card attiva: è esattamente quello che vedi */
+function fraseProssima(){
+  const card=document.querySelector('#workoutList .ex.active');if(!card)return '';
+  const ex=exById(card.dataset.ex), row=card.querySelector('.serie.next');if(!ex||!row)return '';
+  const i=+row.dataset.i+1, kg=$('[data-f=kg]',row), rp=$('[data-f=reps]',row);
+  let carico='';
+  if(kg&&kg.value!==''){
+    const n=parseFloat(kg.value);
+    carico=ex.assist?'assistenza '+numVoce(n):(n>0?numVoce(n)+(ex.doppio?' per '+ex.doppio:' chili'):'');
+  }
+  const max=row.classList.contains('maxset');
+  const rip=max?'al massimo':(rp&&rp.value!==''?rp.value+(ex.tipo==='tempo'?' secondi':' ripetizioni'):'');
+  return ex.nome+', serie '+i+(carico?', '+carico:'')+(rip?', '+rip:'');
+}
+function vocePanel(){
+  const lvl=livelloVoce(), ok='speechSynthesis' in window;
+  if(!ok)return '';
+  return '<div class="voce" data-a="voce"><span>🔊 Voce</span><div class="seg">'+
+    ['off','bassa','media'].map(l=>'<button data-voce="'+l+'" class="'+(l===lvl?'on':'')+'">'+(l==='off'?'Off':l[0].toUpperCase()+l.slice(1))+'</button>').join('')+
+    '</div><button class="prova" data-voce="prova" aria-label="Prova la voce">▶︎</button></div>';
+}
 function avviaTimer(sec,label,extra){
   localStorage.setItem(K_TIMER,JSON.stringify(Object.assign({fine:Date.now()+sec*1000,tot:sec,label},extra||{})));
   tickTimer();if(!timerInt)timerInt=setInterval(tickTimer,500);
@@ -2735,9 +2812,9 @@ function tickTimer(){
     $('#timerRing').setAttribute('stroke-dashoffset','0');
     if(!t.beep){
       t.beep=1;localStorage.setItem(K_TIMER,JSON.stringify(t));
-      if(t.modo==='plank')buzz(HAP.esercizio);             // niente suoni: parla la vibrazione
-      else if(t.cavallo)cavallata();                       // esercizio finito: VAI CAVALLO
-      else buzz(HAP.recupero);
+      if(t.modo==='plank'){buzz(HAP.esercizio);parla('Stop. Serie fatta.');}
+      else if(t.cavallo){cavallata();const f=fraseProssima();parla(f?'Esercizio finito. Ora: '+f:'Allenamento finito, grande!');}
+      else{buzz(HAP.recupero);parla('Vai! '+fraseProssima());}
       /* plank finito: segno la serie da solo, così non tocchi il telefono da terra */
       if(t.modo==='plank'){
         const s=sessioneAperta(true), arr=s.esercizi[t.exId];
@@ -2759,6 +2836,7 @@ function tickTimer(){
     return;
   }
   bar.classList.remove('due');
+  if(ms<=10500&&ms>8000&&t.tot>=30&&!t.dieci){t.dieci=1;localStorage.setItem(K_TIMER,JSON.stringify(t));parla(t.modo==='plank'?'Dieci secondi, tieni':'Dieci secondi');}
   const s=Math.ceil(ms/1000);
   $('#timerT').textContent=Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
   $('#timerSub').textContent=t.modo==='plank'?'tieni la posizione':'riposa, poi la prossima serie';
@@ -2767,7 +2845,7 @@ function tickTimer(){
 }
 $('#timerPlus').onclick=()=>{
   let t=null;try{t=JSON.parse(localStorage.getItem(K_TIMER)||'null');}catch(e){}
-  if(!t)return;t.fine=Math.max(t.fine,Date.now())+30000;t.tot=(t.tot||60)+30;delete t.beep;
+  if(!t)return;t.fine=Math.max(t.fine,Date.now())+30000;t.tot=(t.tot||60)+30;delete t.beep;delete t.dieci;
   localStorage.setItem(K_TIMER,JSON.stringify(t));tickTimer();buzz(HAP.tap);
 };
 $('#timerStop').onclick=()=>{buzz(HAP.tap);stopTimer();};
@@ -2893,6 +2971,29 @@ function valoreProg(s,def){
   if(e.length)return Math.max(...e);
   return Math.max(...arr.map(x=>x.reps||0));                                    // corpo libero / elastico
 }
+/* per lo stallo conta anche il miglioramento a parità di carico (es. dip −35 da 8 a 10 rip) */
+function punteggio(s,def){
+  const arr=(s.esercizi[def.id]||[]).filter(x=>x.fatta);if(!arr.length)return null;
+  if(def.assist){const k=Math.max(...arr.map(x=>x.kg??-1e9));return k*100+Math.max(...arr.filter(x=>x.kg===k).map(x=>x.reps||0));}
+  return valoreProg(s,def);
+}
+/* DA VALUTARE: solo segnali per il trainer, nessuna modifica automatica alla scheda */
+function segnaliFatica(sc,mie){
+  const out=[];
+  const defs=sc.giorni.flatMap(g=>g.esercizi).filter(d=>d.tipo!=='rt');
+  for(const d of defs){
+    const ps=mie.filter(p=>(p.esercizi[d.id]||[]).some(x=>x.fatta));
+    const v=ps.map(p=>punteggio(p,d)).filter(x=>x!=null&&isFinite(x));
+    const nome='<b>'+esc((exById(d.id)||{}).nome||d.n||d.id)+'</b>';
+    if(v.length>=4&&Math.max(...v.slice(-3))<=v[v.length-4]+1e-9)
+      out.push(nome+': fermo da 3 sedute → valuta scarico o variante');
+    const rr=ps.slice(-3).map(p=>(p.rir||{})[d.id]).filter(x=>x!=null);
+    if(rr.filter(x=>x===0).length>=2)out.push(nome+': a cedimento (RIR 0) in 2 delle ultime 3 sedute → fatica');
+  }
+  const ad=mie.slice(-2).map(p=>aderenza(p).pct);
+  if(ad.length===2&&ad.every(x=>x!=null&&x<80))out.push('Ultime 2 sedute sotto l\'80% a target → valuta una settimana di scarico');
+  return out;
+}
 function sparkSVG(v){
   const W=96,H=30,mn=Math.min(...v),mx=Math.max(...v),k=mx>mn?(H-6)/(mx-mn):0;
   const pts=v.map((y,i)=>[3+i*(W-6)/Math.max(1,v.length-1),H-3-(y-mn)*k]);
@@ -2972,6 +3073,9 @@ function renderGlance(){
     (segnali?'<div class="gsig"><div class="eyebrow">Da sapere</div><ul>'+segnali+'</ul></div>':'')+
     '<div class="gcard"><div class="eyebrow">'+esc(sc.nome)+' · sedute fatte</div>'+griglia+
       '<div class="glegend"><span><i class="on"></i>a target</span><span><i class="on mid"></i>quasi</span><span><i class="on low"></i>sotto</span><span><i class="miss"></i>saltata</span></div></div>'+
+    (()=>{const f=segnaliFatica(sc,mie);return f.length?
+      '<div class="gcard gval"><div class="eyebrow">Da valutare · stallo e fatica</div><ul>'+f.map(x=>'<li>'+x+'</li>').join('')+'</ul></div>':
+      '<div class="gcard gval ok"><b>✓ Nessun segnale di stallo o fatica</b><span>carichi in crescita, nessun cedimento ripetuto</span></div>';})()+
     (righe?'<div class="gcard"><div class="eyebrow">Progressi della scheda</div>'+righe+'</div>':'')+
   '</div>';
 }
