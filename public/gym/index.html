@@ -674,6 +674,109 @@ nav.tabs button.on::before{content:'';position:absolute;top:0;left:24%;right:24%
   30%{transform:translate(-50%,-50%) scale(1)}
   80%{opacity:1}100%{opacity:0;transform:translate(-50%,-64%) scale(.96)}}
 
+/* ================================================================
+   2026 · "GLASS & STEEL" — strato sopra al design system:
+   barre in vetro che galleggiano, card più pulite, numeri arrotondati,
+   un esercizio alla volta. Il blur solo sulle barre, mai sulle card.
+   ================================================================ */
+:root{
+  --faint:#717C89;                       /* testi secondari: contrasto alzato */
+  --num:ui-rounded,"SF Pro Rounded",system-ui,-apple-system,sans-serif;
+  --r:22px;--r2:14px;
+  --nav-h:64px;
+  --glass:rgba(24,28,35,.58);--glass-line:rgba(255,255,255,.12);
+  --hl:inset 0 1px 0 rgba(255,255,255,.06);
+}
+body{background:
+    radial-gradient(70% 34% at 10% -4%,rgba(214,255,62,.06),transparent 60%),
+    radial-gradient(60% 30% at 95% 2%,rgba(51,214,255,.05),transparent 62%),
+    var(--bg);background-attachment:fixed;
+  padding-bottom:calc(var(--nav-h) + env(safe-area-inset-bottom) + 110px)}
+.tnum,.dspl,input[type=number],.ring .mid b,.hero .kpis b,.tile b,#timerbar .t,.nxt li .kg,
+.ex .miniring i,.rtbox .big b,.rtbox .crono,.fx-name,.serie .n{font-family:var(--num)}
+
+/* card: piatte, bordo di luce in alto, niente gradienti pesanti */
+.card{background:linear-gradient(180deg,rgba(255,255,255,.028),rgba(255,255,255,.008)),var(--s1);
+  border-color:rgba(255,255,255,.075);box-shadow:var(--hl),0 1px 2px rgba(0,0,0,.35);border-radius:var(--r)}
+.btn{border-radius:16px;box-shadow:var(--hl)}
+.btn.pri{box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 14px 30px -16px rgba(214,255,62,.75)}
+
+/* header in vetro che si compatta scorrendo */
+header.top{background:rgba(8,9,11,.62);
+  backdrop-filter:blur(22px) saturate(170%);-webkit-backdrop-filter:blur(22px) saturate(170%);
+  border-bottom-color:rgba(255,255,255,.06);transition:padding .3s var(--ease)}
+header.top .avatar{transition:width .3s var(--ease),height .3s var(--ease)}
+.week{max-height:70px;overflow:hidden;transition:max-height .32s var(--ease),margin .32s var(--ease),opacity .25s}
+body.scrolled .week{max-height:0;margin-top:0;opacity:0}
+body.scrolled header.top{padding-bottom:9px;padding-top:calc(env(safe-area-inset-top) + 9px)}
+body.scrolled header.top .avatar{width:32px;height:32px}
+body.scrolled header.top .hi{font-size:16px}
+
+/* hero e prossimo: più aria, meno gradiente */
+.hero,.nxt{border-radius:26px;border-color:rgba(255,255,255,.09);box-shadow:var(--hl),var(--e2)}
+.nxt .badge,.chips button.on{box-shadow:inset 0 1px 0 rgba(255,255,255,.4)}
+.chips button{border-radius:16px}
+
+/* ---------- un esercizio alla volta ---------- */
+.ex .head{cursor:pointer;-webkit-tap-highlight-color:transparent}
+.ex .chev{flex:none;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  background:var(--s3);border:1px solid var(--line);position:relative;transition:transform .3s var(--ease)}
+.ex .chev::before{content:'';width:7px;height:7px;border-right:2px solid var(--mut);border-bottom:2px solid var(--mut);
+  transform:translateY(-2px) rotate(45deg)}
+.ex:not(.chiuso) .chev{display:none}
+.ex .sum{display:none;margin-top:4px;font-size:12.5px;font-weight:800;color:var(--mut);letter-spacing:-.005em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ex.chiuso .sum{display:block}
+.ex.exdone .sum{color:var(--ok)}
+.ex.chiuso .head{padding:12px 14px 12px 17px}
+.ex.chiuso .tgt,.ex.chiuso .att,.ex.chiuso .modo,.ex.chiuso .focusbtn,.ex.chiuso .figbtn,.ex.chiuso .howbtn,
+.ex.chiuso .sethead,.ex.chiuso .serie,.ex.chiuso .plankrow,.ex.chiuso .regola,.ex.chiuso .tgline,.ex.chiuso .lastrow{display:none}
+.ex.chiuso h3{font-size:15.5px}
+.ex.chiuso .miniring{width:36px;height:36px}
+.ex.exdone{opacity:.72}
+.ex.exdone.chiuso{background:linear-gradient(90deg,rgba(61,220,151,.07),transparent 55%),var(--s1)}
+.ex:not(.chiuso){animation:apri .35s var(--ease)}
+@keyframes apri{from{opacity:.4;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.ex,.ssgrp{scroll-margin-top:calc(env(safe-area-inset-top) + 76px)}
+.ssgrp{border-radius:26px}
+.ssgrp .card.ex.chiuso{margin-bottom:8px}
+
+/* ---------- tab bar flottante "liquid glass" ---------- */
+nav.tabs{left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom));padding:5px;gap:2px;
+  max-width:520px;margin:0 auto;border-radius:30px;border:1px solid var(--glass-line);
+  background:var(--glass);
+  backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 18px 40px -14px rgba(0,0,0,.85)}
+nav.tabs button{min-height:54px;border-radius:24px;gap:3px;font-size:10px;letter-spacing:.02em;text-transform:none;
+  font-weight:800;color:var(--mut);transition:color .25s,background .3s var(--ease)}
+nav.tabs button span:first-child{font-size:0;width:24px;height:24px;display:block}
+nav.tabs button svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+nav.tabs button.on span:first-child{transform:none}
+nav.tabs button.on::before{display:none}
+nav.tabs button.on{background:rgba(255,255,255,.09);box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
+nav.tabs button:active{transform:scale(.95)}
+#timerbar{bottom:calc(var(--nav-h) + env(safe-area-inset-bottom) + 22px);border-radius:24px;
+  background:rgba(30,36,44,.78);backdrop-filter:blur(22px) saturate(170%);-webkit-backdrop-filter:blur(22px) saturate(170%);
+  border-color:var(--glass-line);box-shadow:inset 0 1px 0 rgba(255,255,255,.1),var(--e3)}
+#toasts{bottom:calc(var(--nav-h) + env(safe-area-inset-bottom) + 104px)}
+.toast{border-radius:18px;background:rgba(30,36,44,.88);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.sheet .pan{border-radius:30px 30px 0 0}
+
+/* transizioni tra tab (View Transitions) */
+::view-transition-old(root){animation:.18s ease-in both vtout}
+::view-transition-new(root){animation:.26s cubic-bezier(.2,.9,.25,1) both vtin}
+@keyframes vtout{to{opacity:0}}
+@keyframes vtin{from{opacity:0;transform:translateY(8px)}}
+.view.on{animation:none}
+
+/* accessibilità: meno trasparenza, più contrasto */
+@media (prefers-reduced-transparency:reduce){
+  header.top,nav.tabs,#timerbar,.toast{backdrop-filter:none;-webkit-backdrop-filter:none;background:var(--s2)}
+}
+@media (prefers-contrast:more){
+  :root{--faint:#9AA4B1;--mut:#C3CAD3;--line:rgba(255,255,255,.18);--line2:rgba(255,255,255,.28)}
+}
+
 /* ---------------- PRINT ---------------- */
 @media print{
   body{background:#fff;color:#111;padding:0;font-size:12px}
@@ -828,10 +931,10 @@ body.pausa *,body.pausa *::before,body.pausa *::after{animation-play-state:pause
 <div id="sheetHost"></div>
 
 <nav class="tabs">
-  <button data-v="workout" class="on"><span>💪</span>Allenamento</button>
-  <button data-v="plan"><span>📋</span>Scheda</button>
-  <button data-v="history"><span>📈</span>Storico</button>
-  <button data-v="report"><span>🧾</span>Report</button>
+  <button data-v="workout" class="on"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 6.5v11M17.5 6.5v11M3.5 9v6M20.5 9v6M6.5 12h11"/></svg></span>Allenamento</button>
+  <button data-v="plan"><span><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2.5"/><path d="M9 4V3h6v1M9 10h6M9 14h6M9 18h3"/></svg></span>Scheda</button>
+  <button data-v="history"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19h16"/><path d="M5 15l4.5-4.5 3.5 3L19.5 7"/><path d="M15.5 7h4v4"/></svg></span>Storico</button>
+  <button data-v="report"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M10 12h5M10 16h5"/></svg></span>Report</button>
 </nav>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
@@ -2051,8 +2154,10 @@ function renderDayChips(){
   $('#dayChips').innerHTML=dati.scheda.giorni.map(d=>'<button data-d="'+esc(d.id)+'" class="'+(d.id===dayId?'on ':'')+(d.id===sug?'sugg':'')+'">'+
     esc(d.id)+'<small>'+esc(d.nome)+'</small></button>').join('');
 }
-$('#dayChips').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;buzz(HAP.tap);dayId=b.dataset.d;renderWorkout();});
+$('#dayChips').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;buzz(HAP.tap);dayId=b.dataset.d;ATTIVO_PRIMA=null;APERTI.clear();CHIUSI.clear();renderWorkout();});
 
+/* un esercizio alla volta: aperto solo quello attivo (o la coppia del superset), gli altri a riga compatta */
+const APERTI=new Set(), CHIUSI=new Set();let ATTIVO_PRIMA=null;
 function renderWorkout(){
   renderDayChips();renderHero();renderProssimo();
   const g=giornoCorrente(), box=$('#workoutList');
@@ -2071,6 +2176,11 @@ function renderWorkout(){
     }
     if(nF(e)<e.serie){activeId=e.id;break;}
   }
+  const partner=e=>{const k=g.esercizi.indexOf(e);if(!e.ss)return null;
+    const o=g.esercizi.find((x,j)=>x.ss===e.ss&&j!==k&&Math.abs(j-k)===1);return o?o.id:null;};
+  const attivi=new Set();if(activeId){attivi.add(activeId);const a=g.esercizi.find(x=>x.id===activeId);const pp=a&&partner(a);if(pp)attivi.add(pp);}
+  if(activeId!==ATTIVO_PRIMA){APERTI.clear();CHIUSI.clear();}   /* cambio esercizio: si riparte puliti */
+  const aperto=id=>APERTI.has(id)||(attivi.has(id)&&!CHIUSI.has(id));
   const cards=g.esercizi.map(e=>{
     const arr=s.esercizi[e.id], fatte=arr.filter(x=>x.fatta).length, done=fatte>=e.serie;
     const nextIdx=arr.findIndex(x=>!x.fatta);
@@ -2085,13 +2195,15 @@ function renderWorkout(){
         (e.note?'<button class="howbtn" data-a="how" aria-label="Come si fa">📖</button>':'')+'</div>'+
         '<div data-rt="'+esc(e.id)+'"></div></div>';
     }
-    return '<div class="card ex'+(done?' exdone':'')+(e.id===activeId?' active':'')+'" data-ex="'+esc(e.id)+'" style="--exc:'+colorEx(e.id)+'">'+
+    return '<div class="card ex'+(done?' exdone':'')+(e.id===activeId?' active':'')+(aperto(e.id)?'':' chiuso')+'" data-ex="'+esc(e.id)+'" style="--exc:'+colorEx(e.id)+'">'+
       '<div class="head"><div class="miniring">'+ringSVG(fatte/e.serie,38)+'<i>'+fatte+'/'+e.serie+'</i></div>'+
       '<div class="grow"><h3>'+esc(e.nome)+(hasPR?'<span class="prbadge">RECORD</span>':'')+(ptEs(s,e.id)?'<span class="ptbadge">PT</span>':'')+'</h3><div class="tgt tnum">'+
         (e.ss?e.serie+' giri':e.serie+' serie')+' · '+(e.ssPos===1?'→ '+esc(e.recTxt):'rec '+esc(e.recTxt||e.rec+'s'))+' · '+GRUPPI[gruppoDi(e)].n+(e.perMano?' · kg a mano':'')+'</div>'+
         (e.attrezzo?'<div class="att">🏋️ '+esc(e.attrezzo)+(e.doppio?' · kg per '+e.doppio:'')+(e.uni?' · '+(e.uni==='gamba'?'una gamba':'un braccio')+' alla volta':'')+'</div>':'')+
         (e.modo?'<div class="modo">⏱ '+esc(e.modo)+'</div>':'')+
+        '<div class="sum tnum">'+(done?'✓ fatto · '+arr.filter(x=>x.fatta).map(x=>fattoBreve(x,e)).join(' · '):esc(targetTxt(e)))+'</div>'+
 '</div>'+
+      '<span class="chev" aria-hidden="true"></span>'+
       '<button class="focusbtn" data-a="focus" aria-label="Modalità trainer">🔍</button>'+
       (e.fig?'<button class="figbtn" data-a="how" aria-label="Come si fa">'+figuraSVG(e.id)+'</button>':
         (e.desc?'<button class="howbtn" data-a="how" aria-label="Come si fa">📖</button>':''))+'</div>'+
@@ -2141,6 +2253,13 @@ function renderWorkout(){
   });
   if(!RTint&&document.querySelector('[data-rt]'))RTint=setInterval(tickRT,1000);
   renderWarm();
+  /* finito un esercizio, scorro dolcemente al successivo */
+  if(activeId&&ATTIVO_PRIMA&&activeId!==ATTIVO_PRIMA&&!(FOCUS&&FOCUS.on)&&$('#view-workout').classList.contains('on')){
+    const el=box.querySelector('[data-ex="'+activeId+'"]');
+    const tgt=el&&(el.closest('.ssgrp')||el);
+    if(tgt)setTimeout(()=>tgt.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth',block:'start'}),380);
+  }
+  ATTIVO_PRIMA=activeId;
 }
 /* input diretto: salva senza ri-renderizzare (il cursore non deve saltare) */
 function gestisciInput(e){
@@ -2281,7 +2400,15 @@ function gestisciClick(e){
     return;
   }
 }
-$('#workoutList').addEventListener('click',gestisciClick);
+$('#workoutList').addEventListener('click',e=>{
+  const hd=e.target.closest('.ex .head');
+  if(hd&&!e.target.closest('button')){
+    const card=hd.closest('.ex'), id=card.dataset.ex, chiuso=card.classList.contains('chiuso');
+    if(chiuso){APERTI.add(id);CHIUSI.delete(id);}else{APERTI.delete(id);CHIUSI.add(id);}
+    buzz(HAP.tap);renderWorkout();return;
+  }
+  gestisciClick(e);
+});
 $('#btnCloseSession').onclick=()=>{
   const s=sessioneCorrente();
   if(!s){toast('Nessuna sessione aperta','warn');return;}
@@ -3023,11 +3150,18 @@ function apriSheet(ex){
 }
 $$('nav.tabs button').forEach(b=>b.onclick=()=>{
   buzz(HAP.tap);
-  $$('nav.tabs button').forEach(x=>x.classList.toggle('on',x===b));
-  $$('.view').forEach(v=>v.classList.toggle('on',v.id==='view-'+b.dataset.v));
-  ({workout:renderWorkout,plan:renderPlan,history:renderHistory,report:renderReport}[b.dataset.v]||(()=>{}))();
-  scrollTo({top:0,behavior:'instant'});
+  const cambia=()=>{
+    $$('nav.tabs button').forEach(x=>x.classList.toggle('on',x===b));
+    $$('.view').forEach(v=>v.classList.toggle('on',v.id==='view-'+b.dataset.v));
+    ({workout:renderWorkout,plan:renderPlan,history:renderHistory,report:renderReport}[b.dataset.v]||(()=>{}))();
+    scrollTo({top:0,behavior:'instant'});
+  };
+  /* View Transition dove c'è (Chrome, Safari 18+), altrimenti cambio secco */
+  if(document.startViewTransition&&!matchMedia('(prefers-reduced-motion:reduce)').matches)document.startViewTransition(cambia);
+  else cambia();
 });
+/* scorrendo, l'header si compatta: via la striscia dei giorni, restano saluto e controlli */
+addEventListener('scroll',()=>document.body.classList.toggle('scrolled',scrollY>60),{passive:true});
 function renderAll(){renderWorkout();renderPlan();renderHistory();renderReport();aggiornaContesto();mostraLuogo();}
 
 /* ---- boot in VISTA TRAINER: legge lo storico pubblicato nel sito ---- */
