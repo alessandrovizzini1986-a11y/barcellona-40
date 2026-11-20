@@ -1,6 +1,6 @@
 {
-  "name": "Palestra",
-  "short_name": "Palestra",
+  "name": "Alza · Allenamenti",
+  "short_name": "Alza",
   "description": "Scheda del trainer, allenamento guidato, storico, progressi e report. Funziona anche offline.",
   "start_url": ".",
   "scope": ".",
