@@ -777,6 +777,76 @@ nav.tabs button:active{transform:scale(.95)}
   :root{--faint:#9AA4B1;--mut:#C3CAD3;--line:rgba(255,255,255,.18);--line2:rgba(255,255,255,.28)}
 }
 
+/* ---------------- COLPO D'OCCHIO (storico e vista trainer) ---------------- */
+.glance{margin:16px 0 4px}
+.ghero{display:flex;align-items:center;gap:16px;padding:18px;border-radius:26px;border:1px solid rgba(255,255,255,.09);
+  background:radial-gradient(110% 90% at 0% 0%,rgba(214,255,62,.12),transparent 60%),var(--s1);box-shadow:var(--hl),var(--e2)}
+.gring{width:92px;height:92px}
+.gring .mid b{font-size:24px}
+.gday{font-size:24px;font-weight:900;letter-spacing:-.03em;line-height:1.1;margin-top:3px}
+.gday span{font-size:15px;color:var(--mut);font-weight:800;letter-spacing:-.01em}
+.gchips{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+.gchips span{font-size:11.5px;font-weight:800;padding:4px 9px;border-radius:99px;background:var(--s3);color:var(--mut);border:1px solid var(--line)}
+.gchips span.on{color:var(--c2);border-color:rgba(51,214,255,.4);background:rgba(51,214,255,.1)}
+.gtiles{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:10px}
+.gt{position:relative;display:flex;flex-direction:column;gap:3px;padding:10px 11px 11px;border-radius:18px;background:var(--s1);
+  border:1px solid rgba(255,255,255,.075);box-shadow:var(--hl);overflow:hidden}
+.gt::after{content:'';position:absolute;left:0;right:0;top:0;height:3px;background:var(--gc,var(--line2))}
+.gt.ok{--gc:var(--ok)}.gt.up{--gc:var(--c2)}.gt.down{--gc:var(--warn)}.gt.part,.gt.skip{--gc:var(--err)}
+.gfig{height:52px;display:flex;align-items:center;justify-content:center;background:var(--bg);border-radius:12px;margin-bottom:5px;padding:2px 6px}
+.gfig .fig{height:100%;width:auto;max-width:100%}
+.gfig .fig polyline{stroke-width:6}
+.gdot{width:14px;height:14px;border-radius:50%;background:var(--exc,var(--acc))}
+.gt b{font-size:13.5px;font-weight:900;letter-spacing:-.015em;line-height:1.2}
+.gtx{font-size:12px;font-weight:800;color:var(--ink);opacity:.82;line-height:1.3}
+.gst{display:flex;flex-wrap:wrap;gap:4px;margin-top:3px}
+.gst span{font-size:10px;font-weight:900;letter-spacing:.02em;padding:3px 7px;border-radius:7px;background:var(--s3);color:var(--mut)}
+.gt .ges{color:var(--gc);background:color-mix(in srgb,var(--gc) 14%,transparent)}
+.gst .gmx{color:var(--c4);background:rgba(255,138,61,.13)}
+.gst .grir{color:var(--c5);background:rgba(180,124,255,.14)}
+.gst .gpr{background:rgba(255,138,61,.18)}
+.gsig{margin-top:10px;padding:13px 15px;border-radius:20px;background:var(--s1);border:1px solid rgba(255,255,255,.075)}
+.gsig ul{list-style:none;margin-top:7px}
+.gsig li{position:relative;padding:6px 0 6px 20px;font-size:13px;line-height:1.4;color:var(--mut);border-top:1px solid var(--line)}
+.gsig li:first-child{border-top:none}
+.gsig li b{color:var(--ink)}
+.gsig li::before{position:absolute;left:0;top:6px;font-weight:900}
+.gsig li.up::before{content:'▲';color:var(--c2)}.gsig li.down::before{content:'▼';color:var(--warn)}
+.gsig li.warn::before{content:'!';color:var(--err);left:4px}.gsig li.pr::before{content:'★';color:var(--c4)}
+.gsig li.nota{padding-left:0}
+.gcard{margin-top:10px;padding:14px 15px;border-radius:20px;background:var(--s1);border:1px solid rgba(255,255,255,.075);box-shadow:var(--hl)}
+.gweeks{display:grid;grid-template-columns:22px repeat(var(--n),1fr);gap:7px 6px;align-items:center;justify-items:center;margin-top:11px}
+.gweeks .wh{font-size:10px;font-weight:900;color:var(--faint);letter-spacing:.04em}
+.gweeks .wh.now{color:var(--acc)}
+.gweeks .gh{font-size:12px;font-weight:900;color:var(--mut)}
+.gweeks i,.glegend i{display:block;width:100%;max-width:34px;height:22px;border-radius:8px;background:var(--s3);border:1px dashed transparent}
+.gweeks i.miss,.glegend i.miss{background:transparent;border-color:rgba(255,93,93,.45)}
+.gweeks i.on,.glegend i.on{background:var(--ok);box-shadow:0 0 10px -3px var(--ok)}
+.gweeks i.on.mid,.glegend i.on.mid{background:var(--warn);box-shadow:none}
+.gweeks i.on.low,.glegend i.on.low{background:var(--err);box-shadow:none}
+.gweeks i.pt{outline:2px solid var(--c2);outline-offset:2px}
+.glegend{display:flex;flex-wrap:wrap;gap:12px;margin-top:11px;font-size:10.5px;font-weight:800;color:var(--faint)}
+.glegend span{display:flex;align-items:center;gap:5px}.glegend i{width:14px;height:10px;border-radius:4px}
+.gpr-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--line)}
+.gpr-row:first-of-type{border-top:none;margin-top:6px}
+.gpr-row b{display:block;font-size:13.5px;font-weight:900;letter-spacing:-.01em;color:var(--exc,var(--ink))}
+.gpr-row span{display:block;font-size:11px;color:var(--faint);font-weight:700;margin-top:1px}
+.spark{flex:none;width:96px;height:30px}
+.spark path{fill:none;stroke:var(--exc,var(--acc));stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round}
+.spark circle{fill:var(--exc,var(--acc))}
+.gpr-row em{flex:none;min-width:50px;text-align:right;font-style:normal;font-size:13px;font-weight:900;font-family:var(--num);color:var(--mut)}
+.gpr-row em.su{color:var(--ok)}.gpr-row em.giu{color:var(--warn)}
+/* RIR: un tocco a fine esercizio */
+.rirrow{display:flex;align-items:center;gap:6px;padding:0 14px 12px 17px}
+.rirrow span{flex:1;font-size:11.5px;font-weight:800;color:var(--mut);line-height:1.2}
+.rirrow span i{display:block;font-style:normal;font-size:10px;color:var(--faint);font-weight:700}
+.rirrow button{flex:none;min-width:44px;min-height:44px;border-radius:13px;border:1px solid var(--line2);background:var(--s3);
+  font-weight:900;font-size:15px;font-family:var(--num);color:var(--mut)}
+.rirrow button.on{background:var(--c5);border-color:transparent;color:#1A0838}
+.rirbadge{display:inline-block;margin-left:6px;font-size:8.5px;font-weight:900;letter-spacing:.1em;
+  padding:3px 7px;border-radius:5px;background:rgba(180,124,255,.18);color:var(--c5);vertical-align:2px}
+@media print{#glance{display:none}}
+
 /* ---------------- PRINT ---------------- */
 @media print{
   body{background:#fff;color:#111;padding:0;font-size:12px}
@@ -854,6 +924,7 @@ body.pausa *,body.pausa *::before,body.pausa *::after{animation-play-state:pause
 <!-- ================== STORICO ================== -->
 <main class="view" id="view-history">
   <div id="tbanner"></div>
+  <div id="glance"></div>
   <div id="histTop"></div>
   <h2 class="sec">Gruppi muscolari</h2>
   <div id="gruppiBox"></div>
@@ -2201,7 +2272,7 @@ function renderWorkout(){
         (e.ss?e.serie+' giri':e.serie+' serie')+' · '+(e.ssPos===1?'→ '+esc(e.recTxt):'rec '+esc(e.recTxt||e.rec+'s'))+' · '+GRUPPI[gruppoDi(e)].n+(e.perMano?' · kg a mano':'')+'</div>'+
         (e.attrezzo?'<div class="att">🏋️ '+esc(e.attrezzo)+(e.doppio?' · kg per '+e.doppio:'')+(e.uni?' · '+(e.uni==='gamba'?'una gamba':'un braccio')+' alla volta':'')+'</div>':'')+
         (e.modo?'<div class="modo">⏱ '+esc(e.modo)+'</div>':'')+
-        '<div class="sum tnum">'+(done?'✓ fatto · '+arr.filter(x=>x.fatta).map(x=>fattoBreve(x,e)).join(' · '):esc(targetTxt(e)))+'</div>'+
+        '<div class="sum tnum">'+(done?'✓ '+compatta(arr.filter(x=>x.fatta).map(x=>fattoBreve(x,e))):esc(targetTxt(e)))+'</div>'+
 '</div>'+
       '<span class="chev" aria-hidden="true"></span>'+
       '<button class="focusbtn" data-a="focus" aria-label="Modalità trainer">🔍</button>'+
@@ -2237,6 +2308,8 @@ function renderWorkout(){
       (e.tipo!=='rt'?'<div class="tgline">Target settimana '+SETT+' · '+targetTxt(e)+'</div>':'')+
       (hasLast?'<div class="lastrow"><b>Ultima volta</b> · '+arr.map((_,i)=>{const u=ultimaSerie(e.id,i);return u&&u.fatta?fattoBreve(u,e):'—';}).join('  ·  ')+(pr!=null?'   ·   <b>record</b> '+kgCorto(pr,e)+' kg':'')+
         (()=>{const rr=e.target&&e.target.some(t=>t.max)?recordRip(e.id,s.id):null;return rr!=null?'   ·   <b>max</b> '+rr+' rip':'';})()+'</div>':'')+
+      (done&&e.tipo!=='tempo'?'<div class="rirrow"><span>Quante ne avevi ancora?<i>nell\'ultima serie · 0 = cedimento</i></span>'+
+        [0,1,2,3].map(v=>'<button data-a="rir" data-v="'+v+'" class="'+((s.rir||{})[e.id]===v?'on':'')+'" aria-label="Riserva '+v+'">'+(v===3?'3+':v)+'</button>').join('')+'</div>':'')+
       '</div>';
   });
   box.innerHTML=g.esercizi.map((e,k)=>{
@@ -2309,6 +2382,11 @@ function gestisciClick(e){
     const ex=exById(exId);
     avviaTimer(+btn.dataset.sec,ex?ex.nome:'Plank',{modo:'plank',exId:exId,idx:+btn.dataset.i});
     buzz(HAP.serie);toast('Vai! '+btn.dataset.sec+'\" di tenuta','good');renderWorkout();return;
+  }
+  if(btn.dataset.a==='rir'){
+    const s=sessioneAperta(true);s.rir=s.rir||{};const v=+btn.dataset.v;
+    if(s.rir[exId]===v)delete s.rir[exId];else s.rir[exId]=v;
+    salva();buzz(HAP.tap);renderWorkout();return;
   }
   if(btn.dataset.a==='how'){apriSheet(exById(exId));return;}
   if(btn.dataset.a==='focus'){apriFocus(exId);return;}
@@ -2764,6 +2842,7 @@ function schedaCompilata(s){
     const pr=prima!=null&&arr.some(x=>x.fatta&&x.kg!=null&&x.kg>prima);
     html+='<div class="sc" style="--exc:'+colorEx(id)+'"><div class="sch"><i class="dot"></i><div class="grow"><b>'+esc(ex.nome)+'</b>'+
       (pr?'<span class="prbadge">RECORD</span>':'')+(ptEs(s,id)?'<span class="ptbadge">PT</span>':'')+
+      (s.rir&&s.rir[id]!=null?'<span class="rirbadge">RIR '+(s.rir[id]>=3?'3+':s.rir[id])+'</span>':'')+
       '<div class="scg">'+(ex.ss?'⇄ superset · ':'')+esc(grp)+(ex.attrezzo?' · '+esc(ex.attrezzo):'')+(ex.recTxt?' · rec '+esc(ex.recTxt):'')+
         (ex.perMano?' · kg a mano':'')+(ex.doppio?' · kg per '+ex.doppio:'')+(ex.uni?' · per '+ex.uni:'')+(ex.assist?' · kg = assistenza':'')+'</div>'+
         (ex.modo?'<div class="scg modo">⏱ '+esc(ex.modo)+'</div>':'')+'</div>'+
@@ -2774,7 +2853,130 @@ function schedaCompilata(s){
   if(s.note)html+='<div class="scnota"><b>Nota di Ale</b>'+esc(s.note)+'</div>';
   return html;
 }
+/* ===== COLPO D'OCCHIO: quello che il trainer deve capire in 10 secondi ===== */
+const e1rm=(kg,r)=>(kg>0&&r>0&&r<=15)?kg*(1+r/30):null;      // Epley: 1RM stimato
+function esitoEs(s,id){
+  const def=defById(id);if(!def||def.tipo==='rt')return null;
+  const ex=exById(id)||def, w=settDi(s);
+  const t=targetSerie(def,w), arr=s.esercizi[id]||[];
+  const fatte=arr.filter(x=>x.fatta), tot=t.length||arr.length;
+  let down=0,up=0,maxR=null;
+  arr.forEach((x,i)=>{if(!x.fatta)return;const tg=t[i]||{};
+    if(tg.max){maxR=x.reps||0;return;}
+    if(def.tipo==='tempo'){const d=(x.reps||0)-(tg.rip||0);if(d<0)down++;else if(d>0)up++;return;}
+    if(tg.kg!=null&&x.kg!=null){if(x.kg<tg.kg)down++;else if(x.kg>tg.kg)up++;}
+    if(tg.rip!=null){const r=x.reps||0;if(r<tg.rip)down++;else if(r>(tg.ripMax||tg.rip))up++;}
+  });
+  /* la serie a max di oggi contro quella della volta prima */
+  let maxPrima=null;
+  if(maxR!=null){
+    const prev=dati.sessioni.filter(p=>p.chiusa&&p.id!==s.id&&p.data<s.data&&p.esercizi&&p.esercizi[id]).pop();
+    if(prev){const tp=targetSerie(def,settDi(prev));prev.esercizi[id].forEach((x,i)=>{if(x.fatta&&tp[i]&&tp[i].max)maxPrima=x.reps||0;});}
+  }
+  let prima=null;
+  for(const p of dati.sessioni){if(!p.chiusa||p.id===s.id||p.data>s.data)continue;
+    for(const x of (p.esercizi[id]||[]))if(x.fatta&&x.kg!=null)prima=Math.max(prima??-1e9,x.kg);}
+  const pr=prima!=null&&!def.assist&&fatte.some(x=>x.kg!=null&&x.kg>prima);
+  let cls='ok';
+  if(!fatte.length)cls='skip';
+  else if(fatte.length<tot)cls='part';
+  else if(down)cls='down';
+  else if(up||(maxR!=null&&maxPrima!=null&&maxR>maxPrima))cls='up';
+  return {id,ex,def,fatte:fatte.length,tot,cls,up,down,txt:compatta(fatte.map(x=>fattoBreve(x,ex))),
+    maxR,maxPrima,pr,rir:(s.rir||{})[id]};
+}
+/* il valore che racconta il progresso di un esercizio in una seduta */
+function valoreProg(s,def){
+  const arr=(s.esercizi[def.id]||[]).filter(x=>x.fatta);if(!arr.length)return null;
+  if(def.assist)return Math.max(...arr.map(x=>x.kg??-1e9));                    // meno assistenza = meglio
+  const e=arr.map(x=>e1rm(x.kg,x.reps)).filter(v=>v!=null);
+  if(e.length)return Math.max(...e);
+  return Math.max(...arr.map(x=>x.reps||0));                                    // corpo libero / elastico
+}
+function sparkSVG(v){
+  const W=96,H=30,mn=Math.min(...v),mx=Math.max(...v),k=mx>mn?(H-6)/(mx-mn):0;
+  const pts=v.map((y,i)=>[3+i*(W-6)/Math.max(1,v.length-1),H-3-(y-mn)*k]);
+  const d=pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');
+  const l=pts[pts.length-1];
+  return '<svg class="spark" viewBox="0 0 '+W+' '+H+'" aria-hidden="true"><path d="'+d+'"/><circle cx="'+l[0].toFixed(1)+'" cy="'+l[1].toFixed(1)+'" r="3"/></svg>';
+}
+const ESITO={ok:['✓','a target'],up:['▲','sopra target'],down:['▼','sotto target'],part:['◐','incompleto'],skip:['—','saltato']};
+function renderGlance(){
+  const box=$('#glance');if(!box)return;
+  const list=dati.sessioni.filter(s=>s.chiusa&&statSessione(s).serie);
+  if(!list.length){box.innerHTML='';return;}
+  const s=list[list.length-1], sc=schedaDi(s), w=settDi(s);
+  const giorno=schedaSettimana(w,sc).giorni.find(g=>g.id===s.giorno);
+  const ordine=giorno?giorno.esercizi.map(e=>e.id):[];
+  for(const id of Object.keys(s.esercizi||{}))if(!ordine.includes(id))ordine.push(id);
+  const esiti=ordine.map(id=>esitoEs(s,id)).filter(Boolean);
+  const ad=aderenza(s), min=(s.inizio&&s.fine)?Math.max(1,Math.round((s.fine-s.inizio)/60000)):null;
+  const st=statSessione(s);
+  /* % sulle serie PREVISTE: una serie saltata pesa come una sotto target */
+  const previste=Math.max(ad.tot,esiti.reduce((n,x)=>n+x.tot,0));
+  const pct=previste?Math.round(ad.ok/previste*100):null;
+  /* tessere: una per esercizio, con il disegnino */
+  const tessere=esiti.map(x=>{
+    const [ic,lab]=ESITO[x.cls];
+    const mx=x.maxR!=null?'<span class="gmx">MAX '+x.maxR+(x.maxPrima!=null&&x.maxR!==x.maxPrima?' '+(x.maxR>x.maxPrima?'▲+':'▼')+(x.maxR-x.maxPrima):'')+'</span>':'';
+    return '<div class="gt '+x.cls+'" style="--exc:'+colorEx(x.id)+'">'+
+      '<div class="gfig">'+(figuraSVG(x.id)||'<i class="gdot"></i>')+'</div>'+
+      '<b>'+esc(x.ex.nome)+'</b>'+
+      '<span class="gtx tnum">'+esc(x.txt||'—')+'</span>'+
+      '<div class="gst"><span class="ges">'+ic+' '+(x.cls==='part'?x.fatte+'/'+x.tot+' serie':lab)+'</span>'+mx+
+        (x.rir!=null?'<span class="grir">RIR '+(x.rir>=3?'3+':x.rir)+'</span>':'')+(x.pr?'<span class="gpr">🏆</span>':'')+'</div></div>';
+  }).join('');
+  /* segnali: poche righe, solo quello che serve sapere */
+  const seg=[];
+  for(const x of esiti){
+    if(x.cls==='part')seg.push(['warn','<b>'+esc(x.ex.nome)+'</b>: '+x.fatte+' serie su '+x.tot]);
+    else if(x.cls==='skip')seg.push(['warn','<b>'+esc(x.ex.nome)+'</b>: non fatto']);
+  }
+  for(const x of esiti)if(x.cls==='down')seg.push(['down','<b>'+esc(x.ex.nome)+'</b>: sotto target ('+esc(x.txt)+')']);
+  for(const x of esiti)if(x.cls==='up'&&!x.down&&x.up>=Math.max(1,x.tot-1))seg.push(['up','<b>'+esc(x.ex.nome)+'</b>: tutte sopra target → pronto a salire']);
+  for(const x of esiti)if(x.pr)seg.push(['pr','<b>'+esc(x.ex.nome)+'</b>: nuovo record di carico 🏆']);
+  for(const x of esiti)if(x.rir===0)seg.push(['warn','<b>'+esc(x.ex.nome)+'</b>: a cedimento (RIR 0)']);
+  const segnali=seg.slice(0,4).map(([c,t])=>'<li class="'+c+'">'+t+'</li>').join('')+
+    (s.note?'<li class="nota">💬 '+esc(s.note)+'</li>':'');
+  /* scheda: settimane × giorni, un pallino per seduta */
+  const mie=dati.sessioni.filter(p=>p.chiusa&&statSessione(p).serie&&schedaDi(p)===sc);
+  const wNow=settimanaDi(oggiISO(),sc);
+  const griglia='<div class="gweeks" style="--n:'+sc.settimane+'">'+
+    '<span></span>'+Array.from({length:sc.settimane},(_,i)=>'<span class="wh'+(i+1===wNow?' now':'')+'">S'+(i+1)+'</span>').join('')+
+    sc.giorni.map(g=>'<span class="gh">'+esc(g.id)+'</span>'+Array.from({length:sc.settimane},(_,i)=>{
+      const p=mie.filter(q=>settDi(q)===i+1&&q.giorno===g.id).pop();
+      if(!p)return '<i class="'+(i+1<wNow?'miss':'')+'"></i>';
+      const a=aderenza(p).pct;
+      return '<i class="on '+(a==null||a>=95?'':(a>=75?'mid':'low'))+(p.pt?' pt':'')+'" title="'+fmtData(p.data)+'"></i>';
+    }).join('')).join('')+'</div>';
+  /* progressi: dalla prima all'ultima seduta della scheda */
+  const defs=sc.giorni.flatMap(g=>g.esercizi).filter(d=>d.tipo!=='rt');
+  const righe=defs.map(d=>{
+    const v=mie.map(p=>valoreProg(p,d)).filter(x=>x!=null&&isFinite(x));
+    if(v.length<2)return '';
+    const a=v[0],b=v[v.length-1];
+    const unita=d.assist?'assist.':(mie.some(p=>(p.esercizi[d.id]||[]).some(x=>x.fatta&&x.kg>0))?'1RM':'rip');
+    const fmt=x=>unita==='1RM'?Math.round(x)+(d.doppio?'/'+d.doppio:'')+' kg':(unita==='assist.'?x+' kg':x+' rip');
+    const delta=unita==='assist.'?(b-a?((b>a?'+':'')+(b-a)+' kg'):'='):(a?((b>=a?'+':'')+Math.round((b-a)/Math.abs(a)*100)+'%'):'');
+    return '<div class="gpr-row" style="--exc:'+colorEx(d.id)+'"><div class="grow"><b>'+esc((exById(d.id)||{}).nome||d.n||d.nome||d.id)+'</b>'+
+      '<span>'+(unita==='1RM'?'1RM stimato':unita==='assist.'?'assistenza (meno è meglio)':'ripetizioni')+' · '+fmt(a)+' → '+fmt(b)+'</span></div>'+
+      sparkSVG(v)+'<em class="'+(b>a?'su':(b<a?'giu':''))+'">'+delta+'</em></div>';
+  }).join('');
+  box.innerHTML='<div class="glance">'+
+    '<div class="ghero"><div class="ring gring">'+ringSVG((pct||0)/100,92)+'<div class="mid"><b>'+(pct??'—')+'%</b><i>A TARGET</i></div></div>'+
+      '<div class="grow"><div class="eyebrow">Ultima seduta · '+fmtData(s.data)+'</div>'+
+      '<div class="gday">Giorno '+esc(s.giorno)+' <span>· settimana '+w+'</span></div>'+
+      '<div class="gchips">'+(min?'<span>⏱ '+min+'′</span>':'')+'<span>'+st.serie+' serie</span>'+
+        (st.vol?'<span>'+Math.round(st.vol).toLocaleString('it-IT')+' kg</span>':'')+(ptSessione(s)?'<span class="on">🧑‍🏫 PT</span>':'')+'</div></div></div>'+
+    '<div class="gtiles">'+tessere+'</div>'+
+    (segnali?'<div class="gsig"><div class="eyebrow">Da sapere</div><ul>'+segnali+'</ul></div>':'')+
+    '<div class="gcard"><div class="eyebrow">'+esc(sc.nome)+' · sedute fatte</div>'+griglia+
+      '<div class="glegend"><span><i class="on"></i>a target</span><span><i class="on mid"></i>quasi</span><span><i class="on low"></i>sotto</span><span><i class="miss"></i>saltata</span></div></div>'+
+    (righe?'<div class="gcard"><div class="eyebrow">Progressi della scheda</div>'+righe+'</div>':'')+
+  '</div>';
+}
 function renderHistory(){
+  renderGlance();
   const list=[...dati.sessioni].filter(s=>s.chiusa).reverse();
   // colpo d'occhio: settimana, streak, totale + volume delle ultime 8 sessioni
   const setti=list.filter(s=>(Date.now()-new Date(s.data+'T12:00'))<7*864e5);
